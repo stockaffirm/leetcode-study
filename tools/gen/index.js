@@ -26,8 +26,8 @@ ${topics}
 </div></section>`}
 const html=`<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>LeetCode Study</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><div class="wrap"><h1>LeetCode Study</h1>
+<title>CodeAffirm</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="wrap"><h1>CodeAffirm</h1>
 <div class="tools"><button id="expAll">Expand all</button><button id="colAll">Collapse all</button><span class="gap"></span>${member.map(m=>`<button class="flt" data-flt="${m.key}" aria-pressed="false">${esc(m.title)}</button>`).join("")}</div>
 ${list("LeetCode 75","",g75,()=>true)}
 ${list("LeetCode 150","not in the 75",g150,id=>!in75.has(+id))}
