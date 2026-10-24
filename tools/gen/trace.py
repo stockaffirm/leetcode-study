@@ -9,6 +9,11 @@ from functools import *
 from typing import *
 import builtins
 pow = builtins.pow
+if 'lcm' not in dir():
+    def lcm(*a):
+        r = 1
+        for x in a: r = r * x // gcd(r, x)
+        return r
 
 class ListNode:
     def __init__(self, val=0, next=None): self.val, self.next = val, next
