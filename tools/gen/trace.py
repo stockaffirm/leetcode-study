@@ -151,9 +151,10 @@ def run(code, driver):
     ns["_run_driver"] = None
     ns["RESULT"] = None
     dcode = compile(prep(driver), "<driver>", "exec")
-    sys.settrace(tracer)
+    import threading
+    sys.settrace(tracer); threading.settrace(tracer)
     try: exec(dcode, ns)
-    finally: sys.settrace(None)
+    finally: sys.settrace(None); threading.settrace(None)
     return steps, state["trunc"], ns.get("RESULT")
 
 if __name__ == "__main__":

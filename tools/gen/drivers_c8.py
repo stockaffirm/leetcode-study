@@ -1,0 +1,48 @@
+# Company set batch 8 (Capital One part 1)
+S = lambda call: "Solution()." + call
+UNORD = set()
+CB = "[[3,3,3,4],[2,1,4,4],[2,1,2,4],[1,1,1,2]]"
+D = {
+84: S("largestRectangleArea([2,1,5,6,2,3])"),
+257: S("binaryTreePaths(mk_tree([1,2,3,None,5]))"),
+332: S("findItinerary([['MUC','LHR'],['JFK','MUC'],['SFO','SJC'],['LHR','SFO']])"),
+415: S("addStrings('11','123')"),
+539: S("findMinDifference(['23:59','00:00'])"),
+647: S("countSubstrings('abc')"),
+657: S("judgeCircle('UD')"),
+723: S("candyCrush(%s)" % CB),
+733: S("floodFill([[1,1,1],[1,1,0],[1,0,1]],1,1,2)"),
+759: S("employeeFreeTime([[[1,2],[5,6]],[[1,3]],[[4,10]]])"),
+896: S("isMonotonic([1,2,2,3])"),
+1052: S("maxSatisfied([1,0,1,2,1,1,7,5],[0,1,0,1,0,1,0,1],3)"),
+1390: S("sumFourDivisors([21,4,7])"),
+1438: S("longestSubarray([8,2,4,7],4)"),
+1743: S("restoreArray([[2,1],[3,4],[3,2]])"),
+1814: S("countNicePairs([42,11,1,97])"),
+1861: S("rotateTheBox([['#','.','#']])"),
+1865: "f=FindSumPairs([1,1,2,2,2,3],[1,4,5,2,5,4])\nRESULT=[f.count(7),f.add(3,2),f.count(8),f.count(4),f.add(0,1),f.add(1,1),f.count(7)]",
+2021: S("brightestPosition([[-3,2],[1,2],[3,3]])"),
+2023: S("numOfPairs(['777','7','77','77'],'7777')"),
+}
+D2 = {
+84: (S("largestRectangleArea([2,4])"),"Two options tie: both bars at height 2 (2 × 2 = 4) or the single bar of height 4 (4 × 1 = 4), so the answer is 4.","[2, 4]"),
+257: (S("binaryTreePaths(mk_tree([1]))"),"A single node is itself a leaf: the only path is '1'.","tree [1]"),
+332: (S("findItinerary([['JFK','SFO'],['JFK','ATL'],['SFO','ATL'],['ATL','JFK'],['ATL','SFO']])"),"From JFK both ATL and SFO are possible; the alphabetically smaller ATL is tried first, and the trip still uses every ticket.","five tickets with a choice at JFK"),
+415: (S("addStrings('999','1')"),"The carry ripples through all digits and creates a new leading digit: 1000.","\"999\" + \"1\""),
+539: (S("findMinDifference(['00:00','23:59','00:00'])"),"'00:00' appears twice, so two times are identical: difference 0.","[00:00, 23:59, 00:00]"),
+647: (S("countSubstrings('aaa')"),"Every single letter (3), every adjacent pair (2) and the whole word (1) is a palindrome: 6.","\"aaa\""),
+657: (S("judgeCircle('LL')"),"Two steps left and none right: the robot ends 2 steps from the origin.","\"LL\""),
+723: (S("candyCrush([[1,2],[3,4]])"),"No candy has two equal neighbours in line, so nothing is crushed and the board is returned as it was.","[[1,2],[3,4]]"),
+733: (S("floodFill([[0,0,0],[0,0,0]],0,0,0)"),"The new colour equals the old colour, so nothing needs to change (and a careless version would loop forever).","new colour = old colour"),
+759: (S("employeeFreeTime([[[1,5]],[[2,8]]])"),"The two employees' busy times overlap and cover everything from 1 to 8: no free time.","[[[1,5]],[[2,8]]]"),
+896: (S("isMonotonic([1,3,2])"),"The list goes up and then down, so it is not monotonic.","[1, 3, 2]"),
+1052: (S("maxSatisfied([4,5],[0,0],1)"),"The owner is never grumpy, so everyone is satisfied and the technique adds nothing: 9.","customers [4,5], grumpy [0,0], minutes 1"),
+1390: (S("sumFourDivisors([1,2,3])"),"1, 2 and 3 have 1, 2 and 2 divisors, never exactly four: 0.","[1, 2, 3]"),
+1438: (S("longestSubarray([10,1,2,4,7,2],5)"),"The window [2,4,7,2] has max 7 and min 2, a difference of 5 — still allowed, length 4.","[10,1,2,4,7,2], limit 5"),
+1743: (S("restoreArray([[4,-2],[1,4],[-3,1]])"),"Negative numbers work too; starting from the smaller end gives -3, 1, 4, -2 (the reverse -2, 4, 1, -3 is also correct).","pairs with negative values"),
+1814: (S("countNicePairs([13,10,35,24,76])"),"Numbers whose 'x − reverse(x)' match form pairs: 4 such pairs exist.","[13, 10, 35, 24, 76]"),
+1861: (S("rotateTheBox([['#','.','*','.'],['#','#','*','.']])"),"Stones stop at the obstacle '*' (they cannot pass through it) before the box is rotated.","a box with an obstacle"),
+1865: ("f=FindSumPairs([1],[2])\nRESULT=[f.count(100)]","No pair adds up to 100, so the count is 0.","count(100) with one pair possible"),
+2021: (S("brightestPosition([[5,0]])"),"A single lamp that lights only its own position: the brightest position is 5.","lights [[5,0]]"),
+2023: (S("numOfPairs(['1','1','1'],'11')"),"The same string can pair with a DIFFERENT copy of itself in either order: 3 × 2 = 6 ordered pairs.","[\"1\",\"1\",\"1\"], target \"11\""),
+}

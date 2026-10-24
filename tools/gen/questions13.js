@@ -1,0 +1,5 @@
+// Multithreaded problems: precise, layman-readable statements
+module.exports={
+1195:"A class FizzBuzz(n) has four methods, each run by its own thread at the same time: fizz(printFizz), buzz(printBuzz), fizzbuzz(printFizzBuzz) and number(printNumber). Together the four threads must output the numbers 1 to n in order, but each position is printed by only ONE thread: 'Fizz' for multiples of 3 only, 'Buzz' for multiples of 5 only, 'FizzBuzz' for multiples of both, and the plain number for the rest. The threads must take turns so that the output order is correct. Example: n=15 → 1, 2, fizz, 4, buzz, fizz, 7, 8, fizz, buzz, 11, fizz, 13, 14, fizzbuzz.",
+1242:"You are given a starting web address and an object htmlParser with getUrls(url), which returns all links found on that page. Crawl all pages on the SAME website (same hostname) as the start address, never visiting a page twice, but make the crawl use SEVERAL THREADS so that slow page fetches happen in parallel. Return all pages found, in any order. Example: starting at 'http://news.yahoo.com/news/topics/', which links to its own site and to news.google.com, you return the two yahoo pages.",
+};
