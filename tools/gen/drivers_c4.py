@@ -1,0 +1,46 @@
+# Company set batch 4 (NVIDIA part 3)
+S = lambda call: "Solution()." + call
+UNORD = {1948}
+VALS = "def vals(h):\n    out=[]\n    while h: out.append(h.val); h=h.next\n    return out\n"
+D = {
+1053: S("prevPermOpt1([1,9,4,6,7])"),
+1200: S("minimumAbsDifference([4,2,1,3])"),
+1328: S("breakPalindrome('abccba')"),
+1353: S("maxEvents([[1,2],[2,3],[3,4]])"),
+1570: "a=SparseVector([1,0,0,2,3])\nb=SparseVector([0,3,0,4,0])\nRESULT=a.dotProduct(b)",
+1610: S("visiblePoints([[2,1],[2,2],[3,3]],90,[1,1])"),
+1669: VALS + "RESULT=vals(Solution().mergeInBetween(mk_list([10,1,13,6,9,5]),3,4,mk_list([1000000,1000001,1000002])))",
+1944: S("canSeePersonsCount([10,6,8,5,11,9])"),
+1948: S("deleteDuplicateFolder([['a'],['c'],['d'],['a','b'],['c','b'],['d','a']])"),
+1962: S("minStoneSum([5,4,9],2)"),
+2270: S("waysToSplitArray([10,4,-8,7])"),
+2342: S("maximumSum([18,43,36,13,7])"),
+2360: S("longestCycle([3,3,4,2,3])"),
+2365: S("taskSchedulerII([1,2,1,2,3,1],3)"),
+2433: S("findArray([5,2,0,3,1])"),
+2502: "a=Allocator(10)\nRESULT=[a.allocate(1,1),a.allocate(1,2),a.allocate(1,3),a.freeMemory(2),a.allocate(3,4),a.allocate(1,1),a.allocate(1,1),a.freeMemory(1),a.allocate(10,2),a.freeMemory(7)]",
+2539: S("countGoodSubsequences('aabb')"),
+2571: S("minOperations(39)"),
+2592: S("maximizeGreatness([1,3,5,2,1,3,1])"),
+}
+D2 = {
+1053: (S("prevPermOpt1([1,1,5])"),"The list is already the smallest arrangement (never decreasing from the left), so no swap can make it smaller: it is returned unchanged.","[1, 1, 5]"),
+1200: (S("minimumAbsDifference([1,3,6,10,15])"),"Only the pair (1,3) has the smallest gap of 2.","[1, 3, 6, 10, 15]"),
+1328: (S("breakPalindrome('a')"),"A single letter is always a palindrome and any change keeps it one, so it is impossible: empty string.","\"a\""),
+1353: (S("maxEvents([[1,1],[1,1],[1,1]])"),"All three events can only be attended on day 1, and only one event per day is allowed.","[[1,1],[1,1],[1,1]]"),
+1570: ("a=SparseVector([0,0])\nb=SparseVector([0,0])\nRESULT=a.dotProduct(b)","Both vectors have no non-zero entries, so there is nothing to multiply: 0.","[0, 0] · [0, 0]"),
+1610: (S("visiblePoints([[-1,1],[-1,-1]],90,[0,0])"),"One point is at 135° and the other at 225° (-135°): they are 90° apart ACROSS the 180° line, so a window that wraps around the circle sees both.","points (-1,1) and (-1,-1), angle 90, location (0,0)"),
+1669: (VALS + "RESULT=vals(Solution().mergeInBetween(mk_list([0,1,2]),1,1,mk_list([9])))","Only the single node at position 1 is replaced by the inserted list: 0 → 9 → 2.","list1 = 0→1→2, a=1, b=1, list2 = 9"),
+1944: (S("canSeePersonsCount([1,2,3])"),"Each person can only see the next person, who blocks the rest, and the last person sees nobody.","[1, 2, 3]"),
+1948: (S("deleteDuplicateFolder([['a'],['a','x'],['b']])"),"No two folders have the same contents ('b' is empty, and empty folders are never counted as duplicates), so nothing is deleted.","[[a],[a,x],[b]]"),
+1962: (S("minStoneSum([1],5)"),"Halving a pile of 1 removes 0 stones (rounded down), so no operation changes anything.","piles [1], k=5"),
+2270: (S("waysToSplitArray([1,2])"),"The only cut gives left = 1 and right = 2; 1 is not ≥ 2, so there are 0 valid splits.","[1, 2]"),
+2342: (S("maximumSum([10,12,19,14])"),"The digit sums are 1, 3, 10 and 5: all different, so no pair qualifies and the answer is -1.","[10, 12, 19, 14]"),
+2360: (S("longestCycle([2,-1,3,1])"),"The pointers lead to the dead end (-1) and never loop, so there is no cycle: -1.","[2, -1, 3, 1]"),
+2365: (S("taskSchedulerII([5,5,5],2)"),"The same task must wait 2 full days between runs: days 1, 4 and 7.","tasks [5,5,5], space=2"),
+2433: (S("findArray([13])"),"A single prefix is just the first element itself.","[13]"),
+2502: ("a=Allocator(2)\nRESULT=[a.allocate(3,1),a.freeMemory(1)]","3 cells will not fit in a memory of size 2, so allocate returns -1 and freeing finds nothing (0).","Allocator(2): allocate(3,1), freeMemory(1)"),
+2539: (S("countGoodSubsequences('aaa')"),"With one distinct letter, every non-empty selection of positions is good: 2³ − 1 = 7.","\"aaa\""),
+2571: (S("minOperations(1)"),"1 is itself a power of two: a single subtraction reaches 0.","n = 1"),
+2592: (S("maximizeGreatness([1,1,1])"),"Equal values can never be strictly greater than each other: greatness 0.","[1, 1, 1]"),
+}
