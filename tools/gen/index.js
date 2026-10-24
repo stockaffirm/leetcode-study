@@ -14,14 +14,14 @@ function list(title,note,groups,keep){let sl=0;
 <button class="th" aria-expanded="true"><span class="chev">▾</span><span class="tn">${esc(name)}</span></button>
 <div class="tb">
 ${rows.map(id=>{const{d,P}=byId[id];sl++;return `<div class="rowx" data-id="${id}" data-s="${member.filter(m=>m.ids.has(+id)).map(m=>m.key).join(" ")}">
-<div class="r"><button class="qt" aria-expanded="false" title="Show question">▸</button><span class="sl">${sl}</span><span class="lc">#${id}</span><a class="ti" href="${d}/">${esc(P.title)}</a><span class="tag ${P.level}">${P.level}</span><button class="ck" role="checkbox" aria-checked="false" title="Mark as done"></button></div>
+<div class="r"><button class="qt" aria-expanded="false" title="Show question">▸</button><span class="sl">${sl}</span><span class="lc">#${id}</span><a class="ti" href="${d}/">${esc(P.title)}</a><span class="tag ${P.level}">${P.level}</span><button class="ck rd" role="checkbox" aria-checked="false" title="Mark as read"></button><button class="ck wk" role="checkbox" aria-checked="false" title="Mark as written (check this yourself once you have written it and learned it)"></button></div>
 <div class="qa"><p class="q">${esc(P.question)}</p><div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div><p class="why"><b>Why?</b> ${esc(P.why)}</p><p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>${P.ex2?`<p class="why edge"><b>Edge / failure case</b> ${esc(P.ex2.input)} → ${esc(P.ex2.output)}<br>${esc(P.ex2.why)}</p>`:""}<a class="open" href="${d}/">Open walkthrough ▶</a></div>
 </div>`}).join("\n")}
 </div>
 </section>`}).join("\n");
  if(!sl)return "";
  return `<section class="plist open"><button class="ph" aria-expanded="true"><span class="chev">▾</span>${title}${note?` <small>${note}</small>`:""}</button><div class="pb">
-<div class="thead"><span></span><span class="sl">Sl</span><span class="lc">LC #</span><span class="ti">Problem</span><span>Level</span><span class="dh">Done</span></div>
+<div class="thead"><span></span><span class="sl">Sl</span><span class="lc">LC #</span><span class="ti">Problem</span><span>Level</span><span class="dh">Read</span><span class="dh">Wrote</span></div>
 ${topics}
 </div></section>`}
 const html=`<!doctype html>

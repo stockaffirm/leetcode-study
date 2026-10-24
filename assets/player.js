@@ -30,7 +30,7 @@ ${pnav}
   <button id="prev" title="Previous flow step (←)">◀ Flow</button>
   <button id="play" class="play" title="Play / Pause (space)">▶ Play</button>
   <button id="next" title="Next flow step (→)">Flow ▶</button>
-  <button id="done" class="dn" title="Mark complete">☐ Done</button>
+  <button id="done" class="dn" title="Mark as read">☐ Read</button>
   <div class="prog"><i id="pg"></i></div><span class="ct" id="ct"></span>
   <select id="spd" title="Speed"><option value="2">0.5×</option><option value="1" selected>1×</option><option value="0.5">2×</option></select>
 </div></div>`;
@@ -252,7 +252,7 @@ function render(){
   updDone();
   $("#play").textContent = timer ? "❚❚ Pause" : (idx===last ? "↺ Replay" : "▶ Play");
 }
-function updDone(){ const d=Progress.has(P.id), b=$("#done"); b.classList.toggle("on",d); b.textContent=d?"✓ Done":"☐ Done"; }
+function updDone(){ const d=Progress.has(P.id), b=$("#done"); b.classList.toggle("on",d); b.textContent=d?"✓ Read":"☐ Read"; }
 $("#done").onclick=()=>{Progress.set(P.id,!Progress.has(P.id));updDone();};
 function stop(){ if(timer){clearInterval(timer);timer=null;} }
 function micro1(d){ if(mode==="trace"){ const n=curTrace().steps.length; tidx=Math.min(n-1,Math.max(0,tidx+d)); render(); return; } const n=micro().length; idx=Math.min(n-1,Math.max(0,idx+d)); render(); }

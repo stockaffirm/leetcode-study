@@ -2,23 +2,26 @@
    to Supabase (one private row per GitHub user) so it survives cleared storage and follows you across devices.
    Sync merges per problem by timestamp (latest change wins), so an empty browser can never wipe saved progress. */
 (function(){
-  const KD = "lc75.done", KU = "lc75.undone";
+  const KD = "lc75.done", KU = "lc75.undone", KW = "lc75.wrote", KX = "lc75.unwrote";
   const ls = {
     get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
     set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} },
     del(k){ try { localStorage.removeItem(k); } catch(e){} }
   };
-  const state = () => ({ done: ls.get(KD, {}), undone: ls.get(KU, {}) });
-  const save = s => { ls.set(KD, s.done); ls.set(KU, s.undone); };
+  const state = () => ({ done: ls.get(KD, {}), undone: ls.get(KU, {}), wrote: ls.get(KW, {}), unwrote: ls.get(KX, {}) });
+  const save = s => { ls.set(KD, s.done); ls.set(KU, s.undone); ls.set(KW, s.wrote || {}); ls.set(KX, s.unwrote || {}); };
   /* latest timestamp wins per problem; a tie keeps it done */
-  function merge(a, b){
-    const out = { done: {}, undone: {} };
-    const ids = new Set([...Object.keys(a.done), ...Object.keys(a.undone), ...Object.keys(b.done), ...Object.keys(b.undone)]);
-    ids.forEach(id => {
-      const d = Math.max(a.done[id] || 0, b.done[id] || 0), u = Math.max(a.undone[id] || 0, b.undone[id] || 0);
-      if(d && d >= u) out.done[id] = d; else if(u) out.undone[id] = u;
+  function mergeKind(a, b, k, ku){
+    const out = { on: {}, off: {} }, A = a[k] || {}, AU = a[ku] || {}, B = b[k] || {}, BU = b[ku] || {};
+    new Set([...Object.keys(A), ...Object.keys(AU), ...Object.keys(B), ...Object.keys(BU)]).forEach(id => {
+      const d = Math.max(A[id] || 0, B[id] || 0), u = Math.max(AU[id] || 0, BU[id] || 0);
+      if(d && d >= u) out.on[id] = d; else if(u) out.off[id] = u;
     });
     return out;
+  }
+  function merge(a, b){
+    const r = mergeKind(a, b, "done", "undone"), w = mergeKind(a, b, "wrote", "unwrote");
+    return { done: r.on, undone: r.off, wrote: w.on, unwrote: w.off };
   }
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -46,7 +49,7 @@
     if(method === "GET"){
       const { data, error } = await sb.from("leetcode_progress").select("data").maybeSingle();
       if(error) throw Object.assign(new Error(error.message), { status: 500 });
-      const d = (data && data.data) || {}; return { data: { done: d.done || {}, undone: d.undone || {} } };
+      const d = (data && data.data) || {}; return { data: { done: d.done || {}, undone: d.undone || {}, wrote: d.wrote || {}, unwrote: d.unwrote || {} } };
     }
     const { error } = await sb.from("leetcode_progress").upsert({ user_id: session.user.id, data: body, updated_at: new Date().toISOString() });
     if(error) throw Object.assign(new Error(error.message), { status: 500 });
@@ -79,7 +82,13 @@
       if(on){ if(s.done[id]) return; s.done[id] = now; delete s.undone[id]; } else { delete s.done[id]; s.undone[id] = now; }
       save(s); later();
     },
-    clear(){ ls.del(KD); ls.del(KU); },
+    hasW(id){ return !!state().wrote[id]; },
+    setW(id, on){
+      const s = state(), now = Date.now();
+      if(on){ if(s.wrote[id]) return; s.wrote[id] = now; delete s.unwrote[id]; } else { delete s.wrote[id]; s.unwrote[id] = now; }
+      save(s); later();
+    },
+    clear(){ ls.del(KD); ls.del(KU); ls.del(KW); ls.del(KX); },
     paint(){},
     sync,
     async connect(){ try { const sb = await client(); await sb.auth.signInWithOAuth({ provider: "github", options: { redirectTo: INDEX_URL } }); } catch(e){ say("err", e.message); } },
@@ -90,8 +99,8 @@
 
   /* ---- index page: checkboxes + sync button ---- */
   const rows = [...document.querySelectorAll(".rowx")]; if(!rows.length){ if(gh.cfg()) sync(); return; }
-  P.paint = () => rows.forEach(r => { const d = P.has(r.dataset.id); r.classList.toggle("done", d); r.querySelector(".ck").setAttribute("aria-checked", d); });
-  rows.forEach(r => r.querySelector(".ck").onclick = () => { P.set(r.dataset.id, !P.has(r.dataset.id)); P.paint(); });
+  P.paint = () => rows.forEach(r => { const d = P.has(r.dataset.id), w = P.hasW(r.dataset.id); r.classList.toggle("done", d); r.querySelector(".rd").setAttribute("aria-checked", d); r.querySelector(".wk").setAttribute("aria-checked", w); });
+  rows.forEach(r => { r.querySelector(".rd").onclick = () => { P.set(r.dataset.id, !P.has(r.dataset.id)); P.paint(); }; r.querySelector(".wk").onclick = () => { P.setW(r.dataset.id, !P.hasW(r.dataset.id)); P.paint(); }; });
   const tools = document.querySelector(".tools");
   if(tools){
     const b = document.createElement("button"); b.id = "syncBtn"; b.className = "sync";
