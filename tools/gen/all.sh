@@ -7,6 +7,7 @@ node build.js | tail -1
 node apply.js | tail -1
 node subs.js
 node alts_apply.js
+node qfix.js
 node dump.js
 python3 trace.py
 node inject.js
