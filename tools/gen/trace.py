@@ -159,6 +159,10 @@ def run(code, driver):
 if __name__ == "__main__":
     from drivers import D
     from drivers2 import D2
+    import glob, importlib
+    XU, XS = set(), set()
+    for f in sorted(glob.glob('drivers_c*.py')):
+        m = importlib.import_module(f[:-3]); D.update(m.D); D2.update(m.D2); XU |= getattr(m, 'UNORD', set()); XS |= getattr(m, 'SKIP', set())
     ex2 = {}
     probs = json.load(open("problems.json")); out = {}; bad = []; results = {}; results2 = {}
     for pid, codes in probs.items():
@@ -176,8 +180,8 @@ if __name__ == "__main__":
             except Exception as e:
                 bad.append("%s v%d: %s" % (pid, vi, repr(e)[:90])); res.append(None)
         out[pid] = res
-    UNORD = {15,49,17,46,77,39,216,22,2215,212,30,373,128}
-    SKIP = {210, 450, 162}
+    UNORD = {15,49,17,46,77,39,216,22,2215,212,30,373,128} | XU
+    SKIP = {210, 450, 162} | XS
     def canon(x, unord):
         if isinstance(x, (list, tuple)):
             c = [canon(i, unord) for i in x]

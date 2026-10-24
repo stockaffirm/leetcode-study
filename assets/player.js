@@ -274,5 +274,5 @@ document.querySelectorAll("#modes button").forEach(b=>b.onclick=()=>setMode(b.da
 document.querySelectorAll("#exs button").forEach(b=>b.onclick=()=>{ stop(); ex=+b.dataset.ex; if(mode!=="trace"){ mode="trace"; } tidx=0; idx=0; stage.innerHTML=""; rowEls.clear(); setMode("trace"); });
 if(!P.variants.some(v=>v.trace)) $("#modes").style.display="none";
 renderSummary();
-renderTabs(); renderStatic(); render();
+renderTabs(); renderStatic(); if(!V().frames.length && V().trace) setMode("trace"); else render();
 })();

@@ -2,6 +2,7 @@
 # Full pipeline: curated frames -> plain text -> hand-written sub-steps -> extra approaches -> real-code traces -> index
 set -e
 cd "$(dirname "$0")"
+node mksets.js
 node old7.js
 node build.js | tail -1
 node apply.js | tail -1
