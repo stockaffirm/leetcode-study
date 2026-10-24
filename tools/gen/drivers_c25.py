@@ -1,0 +1,63 @@
+# Meta (1/8)
+S = lambda call: "Solution()." + call
+UNORD = {301, 131}
+SER = "def ser(t):\n    out = []\n    q = deque([t])\n    while q:\n        n = q.popleft()\n        if n is None:\n            out.append(None)\n            continue\n        out.append(n.val)\n        q.append(n.left)\n        q.append(n.right)\n    while out and out[-1] is None: out.pop()\n    return out\n"
+CIRC = "h=mk_list(%s)\nt=h\nwhile t.next: t=t.next\nt.next=h\nr=Solution().insert(h,%d)\nout=[r.val]\np=r.next\nwhile p is not r:\n    out.append(p.val)\n    p=p.next\nRESULT=out"
+DLL = "r=mk_tree(%s)\nh=Solution().treeToDoublyList(r)\nout=[h.val]\np=h.right\nwhile p is not h:\n    out.append(p.val)\n    p=p.right\nRESULT=[out,h.left.val]"
+PICK = "s=Solution([1,2,3,3,3])\nps=[s.pick(3) for _ in range(12)]\nRESULT=[all(p in (2,3,4) for p in ps), s.pick(1)]"
+D = {
+1762: S("findBuildings([4,2,3,1])"),
+938: "r=mk_tree([10,5,15,3,7,None,18])\nRESULT=Solution().rangeSumBST(r,7,15)",
+346: "m=MovingAverage(3)\nRESULT=[m.next(1),m.next(10),m.next(3),m.next(5)]",
+791: S("customSortString('cba','abcd')"),
+921: S("minAddToMakeValid('())')"),
+1539: S("findKthPositive([2,3,4,7,11],5)"),
+498: S("findDiagonalOrder([[1,2,3],[4,5,6],[7,8,9]])"),
+708: CIRC % ("[3,4,1]", 2),
+426: DLL % "[4,2,5,1,3]",
+1216: S("isValidPalindrome('abcdeca',2)"),
+398: PICK,
+958: "r=mk_tree([1,2,3,4,5,6])\nRESULT=Solution().isCompleteTree(r)",
+163: S("findMissingRanges([0,1,3,50,75],0,99)"),
+825: S("numFriendRequests([16,17,18])"),
+301: S("removeInvalidParentheses('()())()')"),
+766: S("isToeplitzMatrix([[1,2,3,4],[5,1,2,3],[9,5,1,2]])"),
+16: S("threeSumClosest([-1,2,1,-4],1)"),
+246: S("isStrobogrammatic('69')"),
+43: S("multiply('123','456')"),
+51: S("solveNQueens(4)"),
+536: SER + "r=Solution().str2tree('4(2(3)(1))(6(5))')\nRESULT=ser(r)",
+131: S("partition('aab')"),
+525: S("findMaxLength([0,1])"),
+852: S("peakIndexInMountainArray([0,2,1,0])"),
+1868: S("findRLEArray([[1,3],[2,3]],[[6,3],[3,3]])"),
+303: "n=NumArray([-2,0,3,-5,2,-1])\nRESULT=[n.sumRange(0,2),n.sumRange(2,5),n.sumRange(0,5)]",
+}
+D2 = {
+1762: (S("findBuildings([1,3,2,4])"), "Only the last building is taller than everything on its right.", "one ocean view"),
+938: ("r=mk_tree([10,5,15,3,7,13,18,1,None,6])\nRESULT=Solution().rangeSumBST(r,6,10)", "Only 6, 7 and 10 are in range: 23.", "a deeper tree"),
+346: ("m=MovingAverage(1)\nRESULT=[m.next(4),m.next(2)]", "Window size 1 always returns the latest number.", "window of one"),
+791: (S("customSortString('bcafg','abcd')"), "b, c, a first; d is not in the order and goes last.", "letter not in order"),
+921: (S("minAddToMakeValid('(((')"), "Three '(' stay open: add three ')'.", "only open brackets"),
+1539: (S("findKthPositive([1,2,3,4],2)"), "Everything up to 4 is present; the missing ones are 5, 6.", "k beyond the array"),
+498: (S("findDiagonalOrder([[1,2],[3,4]])"), "1, then 2, 3 on the next diagonal, then 4.", "2 × 2 matrix"),
+708: ("r=Solution().insert(None,1)\nRESULT=[r.val, r.next is r]", "An empty list becomes one node pointing to itself.", "empty list"),
+426: (DLL % "[2,1,3]", "In-order 1,2,3; 3 links back to 1.", "three nodes"),
+1216: (S("isValidPalindrome('abcdef',2)"), "Six different letters need five deletions: false.", "too many removals"),
+398: ("s=Solution([5])\nRESULT=[s.pick(5)]", "A single element is always picked.", "one element"),
+958: ("r=mk_tree([1,2,3,4,5,None,7])\nRESULT=Solution().isCompleteTree(r)", "The gap before 7 breaks the left-to-right filling.", "gap in the last level"),
+163: (S("findMissingRanges([],1,1)"), "Empty input: the whole range 1–1 is missing.", "empty array"),
+825: (S("numFriendRequests([20,30,100,110,120])"), "Only 110 → 100, 120 → 110 and 120 → 100 qualify.", "large ages"),
+301: (S("removeInvalidParentheses(')(')"), "Both brackets must go: an empty string.", "all brackets invalid"),
+766: (S("isToeplitzMatrix([[1,2],[2,2]])"), "The diagonal 1,2 changes value.", "not Toeplitz"),
+16: (S("threeSumClosest([0,0,0],1)"), "Only one triple exists: 0.", "single triple"),
+246: (S("isStrobogrammatic('962')"), "2 cannot be rotated into a digit: false.", "invalid digit"),
+43: (S("multiply('2','3')"), "A single-digit product.", "single digits"),
+51: (S("solveNQueens(1)"), "One queen on a 1×1 board.", "n = 1"),
+536: (SER + "r=Solution().str2tree('-4(2(3)(1))(6(5)(7))')\nRESULT=ser(r)", "A negative root and a node with two children on the right.", "negative number"),
+131: (S("partition('a')"), "One letter: a single partition.", "single letter"),
+525: (S("findMaxLength([0,1,1,1,1,1,0,0,0])"), "The last six numbers have three 1s and three 0s.", "an unbalanced array"),
+852: (S("peakIndexInMountainArray([3,4,5,1])"), "The array rises to 5 at index 2.", "peak near the end"),
+1868: (S("findRLEArray([[1,3],[2,1],[3,2]],[[2,3],[3,3]])"), "Products 2,2,2,6,9,9: runs [2,3],[6,1],[9,2].", "runs that split"),
+303: ("n=NumArray([5])\nRESULT=[n.sumRange(0,0)]", "A single element.", "one element"),
+}
