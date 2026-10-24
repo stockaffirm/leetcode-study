@@ -1,0 +1,53 @@
+# Company set batch 2 (NVIDIA part 1)
+S = lambda call: "Solution()." + call
+UNORD = {18, 93, 347}
+LVL = "def lvl(r):\n    out=[];q=[r]\n    while q:\n        n=q.pop(0)\n        if n: out.append(n.val); q+=[n.left,n.right]\n        else: out.append(None)\n    while out and out[-1] is None: out.pop()\n    return out\n"
+R4 = lambda data: "data=%r\n_p=[0]\ndef read4(buf4):\n    k=min(4,len(data)-_p[0])\n    for i in range(k): buf4[i]=data[_p[0]+i]\n    _p[0]+=k\n    return k\n" % data
+D = {
+18: S("fourSum([1,0,-1,0,-2,2],0)"),
+41: S("firstMissingPositive([3,4,-1,1])"),
+75: "a=[2,0,2,1,1,0]\nSolution().sortColors(a)\nRESULT=a",
+93: S("restoreIpAddresses('25525511135')"),
+158: R4('abcdefg') + "s=Solution()\nb1=['']*10\nr1=s.read(b1,3)\nb2=['']*10\nr2=s.read(b2,5)\nRESULT=[r1,''.join(b1[:r1]),r2,''.join(b2[:r2])]",
+165: S("compareVersion('1.2','1.10')"),
+179: S("largestNumber([3,30,34,5,9])"),
+204: S("countPrimes(10)"),
+217: S("containsDuplicate([1,2,3,1])"),
+223: S("computeArea(0,0,3,2,1,1,4,3)"),
+231: S("isPowerOfTwo(16)"),
+234: S("isPalindrome(mk_list([1,2,2,1]))"),
+239: S("maxSlidingWindow([1,3,-1,-3,5,3,6,7],3)"),
+268: S("missingNumber([3,0,1])"),
+273: S("numberToWords(1234567)"),
+277: "g=[[1,1,0],[0,1,0],[1,1,1]]\ndef knows(a,b): return bool(g[a][b])\nRESULT=Solution().findCelebrity(3)",
+287: S("findDuplicate([1,3,4,2,2])"),
+297: LVL + "c=Codec()\nt=mk_tree([1,2,3,None,None,4,5])\nu=c.deserialize(c.serialize(t))\nRESULT=lvl(u)",
+340: S("lengthOfLongestSubstringKDistinct('eceba',2)"),
+344: "a=list('hello')\nSolution().reverseString(a)\nRESULT=''.join(a)",
+347: S("topKFrequent([1,1,1,2,2,3],2)"),
+382: "s=Solution(mk_list([1,2,3]))\nRESULT=sorted(set(s.getRandom() for _ in range(12)))",
+}
+D2 = {
+18: (S("fourSum([2,2,2,2,2],8)"),"Five equal numbers: only ONE distinct set of four 2s exists, so duplicates must not be listed five times.","nums=[2,2,2,2,2], target=8"),
+41: (S("firstMissingPositive([7,8,9,11,12])"),"No number from 1 to 5 is present at all, so the answer is simply 1.","[7, 8, 9, 11, 12]"),
+75: ("a=[1,1,1]\nSolution().sortColors(a)\nRESULT=a","Every value is already 1, so nothing needs to move.","[1, 1, 1]"),
+93: (S("restoreIpAddresses('0000')"),"Leading zeros are not allowed in a segment, so each 0 must be its own segment: only 0.0.0.0 works.","\"0000\""),
+158: (R4('') + "s=Solution()\nb1=['']*10\nr1=s.read(b1,5)\nRESULT=[r1,''.join(b1[:r1])]","The file is empty: read4 returns 0 at once, so read returns 0 characters.","empty file, read(5)"),
+165: (S("compareVersion('1.0','1.0.0')"),"A missing part counts as 0, so '1.0' and '1.0.0' are the same version.","\"1.0\", \"1.0.0\""),
+179: (S("largestNumber([0,0])"),"All zeros would glue into '00'; the answer must be written as a single '0'.","[0, 0]"),
+204: (S("countPrimes(2)"),"Primes must be LESS than n; there is no prime below 2.","n = 2"),
+217: (S("containsDuplicate([1,2,3,4])"),"Every number is different, so there is no duplicate.","[1, 2, 3, 4]"),
+223: (S("computeArea(0,0,1,1,5,5,7,7)"),"The rectangles do not touch, so the overlap is 0 and the areas simply add: 1 + 4.","A=(0,0)–(1,1), B=(5,5)–(7,7)"),
+231: (S("isPowerOfTwo(-16)"),"Negative numbers (and 0) are never powers of two.","n = -16"),
+234: (S("isPalindrome(mk_list([1,2]))"),"1 and 2 are different, so reading backwards gives 2→1, not the same list.","1 → 2"),
+239: (S("maxSlidingWindow([4,2,12],1)"),"With windows of size 1 every number is its own maximum.","[4, 2, 12], k=1"),
+268: (S("missingNumber([0,1])"),"Numbers 0 and 1 are present, so the missing one is n = 2, the top of the range.","[0, 1]"),
+273: (S("numberToWords(1000010)"),"The thousands group is zero and must be skipped, not spelled out: 'One Million Ten'.","1000010"),
+277: ("g=[[1,0,1],[1,1,0],[0,1,1]]\ndef knows(a,b): return bool(g[a][b])\nRESULT=Solution().findCelebrity(3)","Everyone knows someone, so nobody is known-by-all and knows-nobody: there is no celebrity (-1).","3 people in a ring of 'knows'"),
+287: (S("findDuplicate([3,1,3,4,2])"),"The repeated value 3 appears at the very start and in the middle; the loop-finding steps still land on it.","[3, 1, 3, 4, 2]"),
+297: (LVL + "c=Codec()\nt=mk_tree([1,None,2,None,3])\nu=c.deserialize(c.serialize(t))\nRESULT=lvl(u)","A tree that only goes down the right side: missing left children are stored as '#' so the shape comes back exactly.","tree [1,null,2,null,3]"),
+340: (S("lengthOfLongestSubstringKDistinct('a',0)"),"With k = 0 no letter is allowed, so the longest piece has length 0.","s=\"a\", k=0"),
+344: ("a=list('a')\nSolution().reverseString(a)\nRESULT=''.join(a)","A single character is its own reverse; the two pointers never even swap.","[\"a\"]"),
+347: (S("topKFrequent([1],1)"),"Only one number exists, so it is trivially the most frequent.","[1], k=1"),
+382: ("s=Solution(mk_list([7]))\nRESULT=[s.getRandom() for _ in range(3)]","With a single node every pick must be that node's value.","single node 7, ask 3 times"),
+}
