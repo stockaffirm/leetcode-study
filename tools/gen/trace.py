@@ -7,6 +7,8 @@ from math import *
 from itertools import *
 from functools import *
 from typing import *
+import builtins
+pow = builtins.pow
 
 class ListNode:
     def __init__(self, val=0, next=None): self.val, self.next = val, next

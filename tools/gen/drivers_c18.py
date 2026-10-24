@@ -1,0 +1,61 @@
+# Apple (2/3)
+S = lambda call: "Solution()." + call
+UNORD = {78}
+SER = "def ser(t):\n    out = []\n    q = deque([t])\n    while q:\n        n = q.popleft()\n        if n is None:\n            out.append(None)\n            continue\n        out.append(n.val)\n        q.append(n.left)\n        q.append(n.right)\n    while out and out[-1] is None: out.pop()\n    return out\n"
+VL = "def vals(h):\n    out = []\n    while h:\n        out.append(h.val)\n        h = h.next\n    return out\n"
+T3 = "r=mk_tree([3,5,1,6,2,0,8,None,None,7,4])\n"
+SKY = "[[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]"
+D = {
+523: S("checkSubarraySum([23,2,4,6,7],6)"),
+731: "c=MyCalendarTwo()\nRESULT=[c.book(10,20),c.book(50,60),c.book(10,40),c.book(5,15),c.book(5,10),c.book(25,55)]",
+736: S("evaluate('(let x 2 (mult x (let x 3 y 4 (add x y))))')"),
+820: S("minimumLengthEncoding(['time','me','bell'])"),
+931: S("minFallingPathSum([[2,1,3],[6,5,4],[7,8,9]])"),
+1011: S("shipWithinDays([1,2,3,4,5,6,7,8,9,10],5)"),
+1740: T3 + "RESULT=Solution().findDistance(r,5,0)",
+2435: S("numberOfPaths([[5,2,4],[3,0,5],[0,7,2]],3)"),
+3074: S("minimumBoxes([1,3,2],[4,3,1,5,2])"),
+3163: S("compressedString('aaaaaaaaaaaaaabb')"),
+3408: "tm=TaskManager([[1,101,10],[2,102,20],[3,103,15]])\nRESULT=[tm.add(4,104,5),tm.edit(102,8),tm.execTop(),tm.rmv(101),tm.add(5,105,15),tm.execTop()]",
+59: S("generateMatrix(3)"),
+78: S("subsets([1,2,3])"),
+109: SER + "RESULT=ser(Solution().sortedListToBST(mk_list([-10,-3,0,5,9])))",
+110: "r=mk_tree([3,9,20,None,None,15,7])\nRESULT=Solution().isBalanced(r)",
+203: VL + "RESULT=vals(Solution().removeElements(mk_list([1,2,6,3,4,5,6]),6))",
+218: S("getSkyline(%s)" % SKY),
+225: "s=MyStack()\nRESULT=[s.push(1),s.push(2),s.top(),s.pop(),s.empty()]",
+278: "def isBadVersion(v): return v >= 4\n" + S("firstBadVersion(5)"),
+355: "t=Twitter()\nRESULT=[t.postTweet(1,5),t.getNewsFeed(1),t.follow(1,2),t.postTweet(2,6),t.getNewsFeed(1),t.unfollow(1,2),t.getNewsFeed(1)]",
+365: S("canMeasureWater(3,5,4)"),
+410: S("splitArray([7,2,5,10,8],2)"),
+416: S("canPartition([1,5,11,5])"),
+463: S("islandPerimeter([[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]])"),
+518: S("change(5,[1,2,5])"),
+}
+D2 = {
+523: (S("checkSubarraySum([23,2,6,4,7],13)"), "No stretch of two or more numbers adds up to a multiple of 13.", "no multiple"),
+731: ("c=MyCalendarTwo()\nRESULT=[c.book(1,5),c.book(2,6),c.book(3,4)]", "A third booking inside the double-booked stretch 2–5 is refused.", "a triple booking"),
+736: (S("evaluate('(let a1 3 b2 (add a1 1) b2)')"), "b2 is defined from a1, then returned as the last expression: 4.", "variables used later"),
+820: (S("minimumLengthEncoding(['t'])"), "One word: 't#' has length 2.", "single word"),
+931: (S("minFallingPathSum([[-19,57],[-40,-5]])"), "−19 then −40 gives −59.", "negative numbers"),
+1011: (S("shipWithinDays([3,2,2,4,1,4],3)"), "Capacity 6: [3,2], [2,4], [1,4].", "uneven packages"),
+1740: (T3 + "RESULT=Solution().findDistance(r,5,5)", "A node is at distance 0 from itself.", "p equals q"),
+2435: (S("numberOfPaths([[0,0]],5)"), "A single path of sum 0, divisible by 5.", "one row"),
+3074: (S("minimumBoxes([5,5,5],[2,4,2,7])"), "15 apples: 7 + 4 + 2 + 2 needs all four boxes.", "all boxes needed"),
+3163: (S("compressedString('abc')"), "Every run has length 1.", "no repeats"),
+3408: ("tm=TaskManager([[1,5,10],[2,9,10]])\nRESULT=[tm.execTop(),tm.execTop(),tm.execTop()]", "Equal priority: the bigger task id (9, user 2) runs first; then nothing is left (−1).", "ties and empty"),
+59: (S("generateMatrix(1)"), "A single cell holds 1.", "n=1"),
+78: (S("subsets([0])"), "The empty subset and [0].", "one number"),
+109: (SER + "RESULT=ser(Solution().sortedListToBST(mk_list([1,2])))", "Two nodes: the second becomes the root with the first as its left child.", "two nodes"),
+110: ("r=mk_tree([1,2,2,3,3,None,None,4,4])\nRESULT=Solution().isBalanced(r)", "The left branch is two levels deeper than the right branch.", "a lopsided tree"),
+203: (VL + "RESULT=vals(Solution().removeElements(mk_list([7,7,7,7]),7))", "Every node is removed.", "all removed"),
+218: (S("getSkyline([[0,2,3],[2,5,3]])"), "Two touching buildings of the same height form one block.", "touching buildings"),
+225: ("s=MyStack()\nRESULT=[s.empty(),s.push(1),s.pop(),s.empty()]", "A new stack is empty; after push and pop it is empty again.", "empty stack"),
+278: ("def isBadVersion(v): return v >= 1\n" + S("firstBadVersion(1)"), "Only one version and it is bad.", "n=1"),
+355: ("t=Twitter()\nfor i in range(1,12): t.postTweet(1,i)\nRESULT=t.getNewsFeed(1)", "Only the 10 most recent of 11 tweets are shown, newest first.", "more than 10 tweets"),
+365: (S("canMeasureWater(2,6,5)"), "Everything measurable is a multiple of 2, and 5 is odd.", "impossible"),
+410: (S("splitArray([1,2,3,4,5],2)"), "[1,2,3,4] and [5] gives 10; [1,2,3] and [4,5] gives 9.", "five numbers"),
+416: (S("canPartition([1,2,3,5])"), "The total 11 is odd.", "odd total"),
+463: (S("islandPerimeter([[1]])"), "A single land cell has four sides.", "one cell"),
+518: (S("change(3,[2])"), "Only 2s are available, but 3 is odd.", "impossible"),
+}

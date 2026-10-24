@@ -1,0 +1,58 @@
+# Apple (3/3)
+S = lambda call: "Solution()." + call
+UNORD = set()
+SER = "def ser(t):\n    out = []\n    q = deque([t])\n    while q:\n        n = q.popleft()\n        if n is None:\n            out.append(None)\n            continue\n        out.append(n.val)\n        q.append(n.left)\n        q.append(n.right)\n    while out and out[-1] is None: out.pop()\n    return out\n"
+MASTER = "class Master:\n    def __init__(self, secret):\n        self.secret = secret\n        self.calls = 0\n        self.found = False\n    def guess(self, w):\n        self.calls += 1\n        if w == self.secret: self.found = True\n        return sum(a == b for a, b in zip(w, self.secret))\n"
+T1038 = "[4,1,6,0,2,5,7,None,None,None,3,None,None,None,8]"
+D = {
+661: S("imageSmoother([[1,1,1],[1,0,1],[1,1,1]])"),
+680: S("validPalindrome('abca')"),
+688: S("knightProbability(3,2,0,0)"),
+704: S("search([-1,0,3,5,9,12],9)"),
+707: "l=MyLinkedList()\nRESULT=[l.addAtHead(1),l.addAtTail(3),l.addAtIndex(1,2),l.get(1),l.deleteAtIndex(1),l.get(1)]",
+729: "c=MyCalendar()\nRESULT=[c.book(10,20),c.book(15,25),c.book(20,30)]",
+737: S("areSentencesSimilarTwo(['great','acting','skills'],['fine','drama','talent'],[['great','good'],['fine','good'],['drama','acting'],['skills','talent']])"),
+769: S("maxChunksToSorted([1,0,2,3,4])"),
+843: MASTER + "m=Master('acckzz')\nSolution().findSecretWord(['acckzz','ccbazz','eiowzz','abcczz'],m)\nRESULT=[m.found,m.calls<=10]",
+889: SER + "RESULT=ser(Solution().constructFromPrePost([1,2,4,5,3,6,7],[4,5,2,6,7,3,1]))",
+953: S("isAlienSorted(['hello','leetcode'],'hlabcdefgijkmnopqrstuvwxyz')"),
+1038: SER + "r=mk_tree(%s)\nRESULT=ser(Solution().bstToGst(r))" % T1038,
+1168: S("minCostToSupplyWater(3,[1,2,2],[[1,2,1],[2,3,1]])"),
+1229: S("minAvailableDuration([[10,50],[60,120],[140,210]],[[0,15],[60,70]],8)"),
+1249: S("minRemoveToMakeValid('lee(t(c)o)de)')"),
+1275: S("tictactoe([[0,0],[2,0],[1,1],[2,1],[2,2]])"),
+1392: S("longestPrefix('level')"),
+1854: S("maximumPopulation([[1993,1999],[2000,2010]])"),
+1870: S("minSpeedOnTime([1,3,2],2.7)"),
+2347: S("bestHand([13,2,3,1,9],['a','a','a','a','a'])"),
+2351: S("repeatedCharacter('abccbaacz')"),
+2788: S("splitWordsBySeparator(['one.two.three','four.five','six'],'.')"),
+3535: S("queryConversions([[0,1,2],[0,2,6]],[[1,2],[1,0]])"),
+3613: S("minCost(5,[[0,1,4],[1,2,3],[1,3,2],[3,4,6]],2)"),
+}
+D2 = {
+661: (S("imageSmoother([[100,200,100],[200,50,200],[100,200,100]])"), "Corners average 4 pixels, edges 6 and the centre 9, each rounded down.", "different neighbourhood sizes"),
+680: (S("validPalindrome('abc')"), "One deletion cannot fix both mismatches.", "not fixable"),
+688: (S("knightProbability(3,0,0,0)"), "With zero moves the knight is certainly still on the board.", "k=0"),
+704: (S("search([-1,0,3,5,9,12],2)"), "2 is not in the list.", "target missing"),
+707: ("l=MyLinkedList()\nRESULT=[l.get(0),l.addAtIndex(1,5),l.get(0),l.addAtIndex(0,5),l.get(0)]", "Inserting beyond the end is ignored; get on an empty list gives −1.", "invalid positions"),
+729: ("c=MyCalendar()\nRESULT=[c.book(5,10),c.book(1,5),c.book(10,15),c.book(7,8)]", "Touching intervals are fine; 7–8 lies inside 5–10.", "touching intervals"),
+737: (S("areSentencesSimilarTwo(['a','b'],['a'],[])"), "Different lengths: never similar.", "different lengths"),
+769: (S("maxChunksToSorted([4,3,2,1,0])"), "The 4 at the front forces one big chunk.", "reversed"),
+843: (MASTER + "m=Master('hamada')\nSolution().findSecretWord(['hamada','khaled'],m)\nRESULT=[m.found,m.calls<=10]", "Two candidates: found within a couple of guesses.", "two words"),
+889: (SER + "RESULT=ser(Solution().constructFromPrePost([1],[1]))", "A single node.", "one node"),
+953: (S("isAlienSorted(['apple','app'],'abcdefghijklmnopqrstuvwxyz')"), "'app' is a prefix of 'apple' and must come first.", "prefix order"),
+1038: (SER + "r=mk_tree([0,None,1])\nRESULT=ser(Solution().bstToGst(r))", "0 + 1 = 1 and 1 stays 1.", "two nodes"),
+1168: (S("minCostToSupplyWater(2,[1,1],[[1,2,1],[1,2,2]])"), "A well at house 1 (1) and a pipe to house 2 (1) costs 2.", "two houses"),
+1229: (S("minAvailableDuration([[10,50],[60,120],[140,210]],[[0,15],[60,70]],12)"), "The only overlap, 60–70, is too short for 12.", "no fit"),
+1249: (S("minRemoveToMakeValid('))((')"), "None of the brackets can be matched.", "all unmatched"),
+1275: (S("tictactoe([[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]])"), "The board is full and nobody has a line: Draw.", "a draw"),
+1392: (S("longestPrefix('abc')"), "No prefix is also a suffix: empty string.", "no happy prefix"),
+1854: (S("maximumPopulation([[1950,1961],[1960,1971],[1970,1981]])"), "In 1960 two people are alive (the first one dies in 1961); the earliest year with the maximum.", "overlapping lives"),
+1870: (S("minSpeedOnTime([1,3,2],1.9)"), "Two trains must wait for whole hours so at least 2 hours are needed.", "impossible"),
+2347: (S("bestHand([4,4,2,4,4],['d','a','a','b','c'])"), "Four equal ranks include three of a kind.", "four of a kind"),
+2351: (S("repeatedCharacter('abcdd')"), "Only 'd' repeats.", "end repeats"),
+2788: (S("splitWordsBySeparator(['|||'],'|')"), "Only empty pieces: nothing is returned.", "empty pieces"),
+3535: (S("queryConversions([[0,1,2],[1,2,3]],[[0,2],[2,0]])"), "0 → 2 is 2·3 = 6, and back is 1/6 modulo 10⁹+7.", "a chain"),
+3613: (S("minCost(4,[[0,1,1],[1,2,9],[2,3,2]],1)"), "One component must keep a path from end to end; the heaviest edge on it is 9.", "k=1"),
+}
