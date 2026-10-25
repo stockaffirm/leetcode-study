@@ -1,0 +1,2099 @@
+{
+ "273": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ones[n], tens[n // 10]",
+       "Lookup lists indexed by value; `ones` goes up to 19 because 11\u201319 are irregular names",
+       "A fixed vocabulary is simpler as a table than as branching code"
+      ],
+      [
+       "below1000(n)",
+       "Recursive helper turning 0\u2013999 into a list of words: hundreds, then the rest < 100, then the rest < 20",
+       "Breaking a number into smaller same-shaped pieces"
+      ],
+      [
+       "divmod(num, unit)",
+       "Returns (quotient, remainder) in one call: how many of this unit, and what is left",
+       "Peeling off billions, millions, thousands in turn"
+      ],
+      [
+       "parts += \u2026; parts.append(name)",
+       "Collects words in order and appends the scale name only if the chunk is nonzero",
+       "Skipping empty groups, e.g. 1,000,005"
+      ],
+      [
+       "' '.join(parts)",
+       "Joins words with single spaces; no trailing space because words are collected in a list",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1234567`. Each row peels one scale off the remainder:"
+    ],
+    "table": {
+     "head": [
+      "unit",
+      "chunk (divmod quotient)",
+      "chunk in words",
+      "remainder"
+     ],
+     "rows": [
+      [
+       "1,000,000,000",
+       "0",
+       "\u2013",
+       "1234567"
+      ],
+      [
+       "1,000,000",
+       "1",
+       "One",
+       "234567"
+      ],
+      [
+       "1,000",
+       "234",
+       "Two Hundred Thirty Four",
+       "567"
+      ],
+      [
+       "1",
+       "567",
+       "Five Hundred Sixty Seven",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final string: `One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven`."
+    ]
+   },
+   {
+    "h": "Why a list of words and not string concatenation?",
+    "p": [
+     "Building a list and joining at the end avoids stray spaces: empty groups simply add nothing, so there is no `strip()` cleanup. The `if chunk:` check handles values like 1,000,000, where the thousands group is zero and must not print 'Thousand'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1). The number has at most 10 digits, so the work is bounded.",
+     "Space: O(1)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "`num == 0` is handled first because the loop would otherwise return an empty string. Teens (11\u201319) never reach `tens[...]`, which is why `ones` is extended to 19."
+    ]
+   }
+  ],
+  "takeaway": "Chunk by powers of 1000, convert each 0\u2013999 piece with a small recursive helper, and join the nonempty words."
+ },
+ "276": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "same",
+       "Number of colourings of the first i posts where the last two posts have the same colour",
+       "DP with a small number of states"
+      ],
+      [
+       "diff",
+       "Number of colourings where the last two posts differ",
+       ""
+      ],
+      [
+       "same, diff = diff, (same + diff) * (k - 1)",
+       "New `same` = old `diff` (copy the previous post's colour, only allowed if the one before differed). New `diff` = any previous colouring times (k \u2212 1) other colours",
+       "Simultaneous assignment uses the old values on the right"
+      ],
+      [
+       "range(3, n + 1)",
+       "Posts 3..n; posts 1 and 2 are the base case",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 2` colours. Row i gives the counts after painting i posts (`n = 3` gives 6, `n = 4` gives 10):"
+    ],
+    "table": {
+     "head": [
+      "posts",
+      "same",
+      "diff",
+      "total"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "2",
+       "4",
+       "6"
+      ],
+      [
+       "4",
+       "4",
+       "6",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can `same` only come from `diff`?",
+    "p": [
+     "At most two adjacent posts may share a colour. Painting post i the same as post i\u22121 is allowed only if post i\u22121 differed from post i\u22122; otherwise three in a row would match. So `same(i) = diff(i\u22121)`. A new colour for post i can follow either state and has k \u2212 1 choices, so `diff(i) = (same(i\u22121) + diff(i\u22121)) * (k \u2212 1)`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "`n == 1` returns k early because there is no 'previous post' to define `same` and `diff`; for n = 2 the loop is skipped and the answer is `k + k(k\u22121) = k\u00b2`."
+    ]
+   }
+  ],
+  "takeaway": "Paint Fence: track colourings ending in a matching pair vs a different pair; a matching pair can only extend a differing pair."
+ },
+ "282": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(i, expr, val, last)",
+       "`i` position in the digit string, `expr` the expression text so far, `val` its value, `last` the last term added (signed)",
+       "Backtracking that builds the answer and its value together"
+      ],
+      [
+       "for j in range(i, len(num))",
+       "Takes `num[i..j]` as the next operand, so multi-digit numbers like 12 are tried",
+       ""
+      ],
+      [
+       "j > i and num[i] == '0': break",
+       "Operands with a leading zero (like '05') are illegal, but '0' alone is fine",
+       ""
+      ],
+      [
+       "val - last + last * n",
+       "Undoes the previous term and re-adds it multiplied: fixes precedence of `*` without an expression parser",
+       "Evaluating on the fly with a correction term"
+      ],
+      [
+       "`i == 0` branch",
+       "First operand has no operator in front of it",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = \"123\"`, `target = 6`. Each row is a completed expression:"
+    ],
+    "table": {
+     "head": [
+      "expression",
+      "value",
+      "result"
+     ],
+     "rows": [
+      [
+       "1+2+3",
+       "6",
+       "== target \u2192 keep"
+      ],
+      [
+       "1+2-3",
+       "0",
+       "\u2260 target"
+      ],
+      [
+       "1+2*3",
+       "7",
+       "\u2260 target"
+      ],
+      [
+       "1-2+3",
+       "2",
+       "\u2260 target"
+      ],
+      [
+       "1-2-3",
+       "-4",
+       "\u2260 target"
+      ],
+      [
+       "1-2*3",
+       "-5",
+       "\u2260 target"
+      ],
+      [
+       "1*2+3",
+       "5",
+       "\u2260 target"
+      ],
+      [
+       "1*2-3",
+       "-1",
+       "\u2260 target"
+      ],
+      [
+       "1*2*3",
+       "6",
+       "== target \u2192 keep"
+      ],
+      [
+       "1+23",
+       "24",
+       "\u2260 target"
+      ],
+      [
+       "1-23",
+       "-22",
+       "\u2260 target"
+      ],
+      [
+       "1*23",
+       "23",
+       "\u2260 target"
+      ],
+      [
+       "12+3",
+       "15",
+       "\u2260 target"
+      ],
+      [
+       "12-3",
+       "9",
+       "\u2260 target"
+      ],
+      [
+       "12*3",
+       "36",
+       "\u2260 target"
+      ],
+      [
+       "123",
+       "123",
+       "\u2260 target"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track `last`?",
+    "p": [
+     "With `1+2*3` the multiplication must bind tighter than the earlier addition. When `*3` arrives, the code removes the last term (`val \u2212 last`, here 2) and adds back `last * n` (2\u00b73). So `1 + 2` (val 3, last 2) becomes `3 \u2212 2 + 6 = 7`, matching 1+2*3 = 7. For subtraction `last` is stored negated (`\u2212n`) so a following `*` still scales the right sign."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(4\u207f \u00b7 n) at worst: each gap between digits has up to 4 choices (nothing, +, \u2212, *), and building each string costs O(n).",
+     "Space: O(n) recursion plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Backtrack over operator choices while keeping the running value and last term, so multiplication is applied by correcting the last term."
+ },
+ "285": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "succ = None",
+       "Best candidate so far: the smallest value greater than p seen on the way down",
+       "Tracking the last 'turn left' ancestor"
+      ],
+      [
+       "p.val < cur.val \u2192 succ = cur; cur = cur.left",
+       "cur is larger than p, so it is a candidate; a smaller candidate may be to the left",
+       ""
+      ],
+      [
+       "else cur = cur.right",
+       "cur is too small (or is p itself), so the successor is to the right, if it exists",
+       ""
+      ],
+      [
+       "return succ",
+       "None if every step turned right (p is the maximum)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[2,1,3]`, p = 1:"
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "comparison",
+      "action"
+     ],
+     "rows": [
+      [
+       "2",
+       "1 < 2",
+       "succ = 2, go left"
+      ],
+      [
+       "1",
+       "1 \u2265 1",
+       "go right"
+      ]
+     ]
+    },
+    "bullets": [
+     "Returns `2`."
+    ]
+   },
+   {
+    "h": "When there is no successor",
+    "p": [
+     "BST `[5,3,6,2,4,null,null,1]`, p = 6 (the largest value):"
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "comparison",
+      "action"
+     ],
+     "rows": [
+      [
+       "5",
+       "6 \u2265 5",
+       "go right"
+      ],
+      [
+       "6",
+       "6 \u2265 6",
+       "go right"
+      ]
+     ]
+    },
+    "bullets": [
+     "Every step goes right and `succ` stays `None`."
+    ]
+   },
+   {
+    "h": "Why does remembering the last left-turn work?",
+    "p": [
+     "The inorder successor is either the leftmost node of p's right subtree or, if p has no right subtree, the lowest ancestor for which p lies in the left subtree. The code never looks at p's own subtree. It just searches by value from the root, and `succ` ends up as the smallest value greater than `p.val`, which is what the successor means. Both cases are covered by the same rule."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h) (O(log n) balanced, O(n) skewed).",
+     "Space: O(1). No parent pointers needed."
+    ]
+   }
+  ],
+  "takeaway": "BST successor by value: search from the root and remember the last node where you went left."
+ },
+ "291": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mp",
+       "Pattern letter \u2192 the string it currently stands for",
+       "Bijection (one-to-one mapping) maintenance"
+      ],
+      [
+       "used",
+       "Set of strings already assigned, so two letters never map to the same string",
+       "Enforcing the reverse direction of a bijection"
+      ],
+      [
+       "s.startswith(w, j)",
+       "Checks whether `w` occurs in `s` starting exactly at index j, without slicing",
+       "Matching a known word at a position"
+      ],
+      [
+       "for end in range(j + 1, len(s) + 1)",
+       "Tries every possible length for a brand-new word",
+       "Backtracking over split points"
+      ],
+      [
+       "del mp[ch]; used.discard(w)",
+       "Undo the assignment when the branch fails",
+       "Backtracking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pattern = \"abab\"`, `s = \"redblueredblue\"`. The search tries 7 fresh word assignments in total, most of them in failed branches, before the assignments below succeed:"
+    ],
+    "table": {
+     "head": [
+      "pattern letter",
+      "word it stands for",
+      "remaining check"
+     ],
+     "rows": [
+      [
+       "a",
+       "red",
+       "first a takes s[0:3]"
+      ],
+      [
+       "b",
+       "blue",
+       "takes s[3:7]"
+      ],
+      [
+       "a (reuse)",
+       "red",
+       "s.startswith('red', 7) \u2192 match"
+      ],
+      [
+       "b (reuse)",
+       "blue",
+       "s.startswith('blue', 10) \u2192 match, i and j both at the end \u2192 True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `True`. Once `a` and `b` are mapped, repeated letters are verified with `startswith` in O(len(word)) without further branching."
+    ]
+   },
+   {
+    "h": "Why is the `used` set needed?",
+    "p": [
+     "Without it `a \u2192 red` and `b \u2192 red` would both be accepted, even though a bijection requires different letters to map to different strings. For `pattern = \"ab\"` and `s = \"redred\"` the answer must be False, and `used` is what rejects the split red + red."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential in the worst case (every letter can take many split points); the checks on mapped letters prune most branches.",
+     "Space: O(len(pattern) + len(s)) for the maps and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking over word assignments with a letter\u2192word map and a used-words set to keep the mapping one-to-one."
+ },
+ "297": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "out.append(str(node.val))  /  '#'",
+       "Preorder write: value for a node, `#` marker for a missing child",
+       "Making the tree shape recoverable from a flat string"
+      ],
+      [
+       "','.join(out)  /  data.split(',')",
+       "Joins tokens into one string / splits them back",
+       "Simple delimiter-based serialization"
+      ],
+      [
+       "it = iter(...); next(it)",
+       "Shared iterator: each `next` consumes the next token across recursive calls",
+       "Reading a sequence without passing indexes"
+      ],
+      [
+       "node.left = build(); node.right = build()",
+       "Same order as the write: left subtree first, then right",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,null,null,4,5]` serializes to `1,2,#,#,3,4,#,#,5,#,#`:"
+    ],
+    "table": {
+     "head": [
+      "pos",
+      "token",
+      "meaning"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "node, then left, then right"
+      ],
+      [
+       "1",
+       "2",
+       "node, then left, then right"
+      ],
+      [
+       "2",
+       "#",
+       "null child \u2192 '#'"
+      ],
+      [
+       "3",
+       "#",
+       "null child \u2192 '#'"
+      ],
+      [
+       "4",
+       "3",
+       "node, then left, then right"
+      ],
+      [
+       "5",
+       "4",
+       "node, then left, then right"
+      ],
+      [
+       "6",
+       "#",
+       "null child \u2192 '#'"
+      ],
+      [
+       "7",
+       "#",
+       "null child \u2192 '#'"
+      ],
+      [
+       "8",
+       "5",
+       "node, then left, then right"
+      ],
+      [
+       "9",
+       "#",
+       "null child \u2192 '#'"
+      ],
+      [
+       "10",
+       "#",
+       "null child \u2192 '#'"
+      ]
+     ]
+    },
+    "bullets": [
+     "`deserialize` reads the same string in the same order and rebuilds the tree: 1(2,3(4,5)) in `v(left,right)` form."
+    ]
+   },
+   {
+    "h": "Why are the `#` markers essential?",
+    "p": [
+     "Preorder alone is ambiguous: `1,2,3` could be a chain or a root with two children. The `#` for each missing child makes every node's subtree end at a known place, so the recursion knows exactly when to return to the parent."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for both directions.",
+     "Space: O(n) for the string and O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Serialize in preorder with null markers; deserialize with the same preorder recursion over a shared iterator."
+ },
+ "300": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "tails",
+       "tails[i] = smallest possible last value of an increasing subsequence of length i+1",
+       "Patience-sorting style LIS"
+      ],
+      [
+       "bisect_left(tails, x)",
+       "Binary search: the first index where tails[i] \u2265 x (insertion point), O(log n); `tails` stays sorted",
+       "Finding where a value fits in a sorted list"
+      ],
+      [
+       "i == len(tails): append",
+       "x is larger than every tail, so the longest subsequence grows",
+       ""
+      ],
+      [
+       "else tails[i] = x",
+       "x is a smaller (or equal) ending for length i+1, which keeps more future options open",
+       ""
+      ],
+      [
+       "len(tails)",
+       "Length of the LIS (not the subsequence itself)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[10,9,2,5,3,7,101,18]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "bisect_left index",
+      "action",
+      "tails"
+     ],
+     "rows": [
+      [
+       "10",
+       "0",
+       "append",
+       "[10]"
+      ],
+      [
+       "9",
+       "0",
+       "replace tails[0]",
+       "[9]"
+      ],
+      [
+       "2",
+       "0",
+       "replace tails[0]",
+       "[2]"
+      ],
+      [
+       "5",
+       "1",
+       "append",
+       "[2, 5]"
+      ],
+      [
+       "3",
+       "1",
+       "replace tails[1]",
+       "[2, 3]"
+      ],
+      [
+       "7",
+       "2",
+       "append",
+       "[2, 3, 7]"
+      ],
+      [
+       "101",
+       "3",
+       "append",
+       "[2, 3, 7, 101]"
+      ],
+      [
+       "18",
+       "3",
+       "replace tails[3]",
+       "[2, 3, 7, 18]"
+      ]
+     ]
+    },
+    "bullets": [
+     "`tails` is not necessarily a real subsequence: for `[3,5,1]` it ends as `[1,5]`, although 5 comes before 1. Only its length is meaningful."
+    ]
+   },
+   {
+    "h": "Why `bisect_left` and not `bisect_right`?",
+    "p": [
+     "The problem wants a strictly increasing subsequence, so an equal value must replace its equal, not extend it."
+    ],
+    "table": {
+     "head": [
+      "x = 5, tails = [2, 5, 7]",
+      "result"
+     ],
+     "rows": [
+      [
+       "bisect_left",
+       "index 1 \u2192 replaces 5 with 5 (length stays 3)"
+      ],
+      [
+       "bisect_right",
+       "index 2 \u2192 replaces 7 with 5, and a duplicate 5 sits in tails: the sequence would count 5, 5 as increasing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n); each element costs one binary search.",
+     "Space: O(n) for tails.",
+     "The DP solution is O(n\u00b2) but easier to extend to reconstructing the sequence."
+    ]
+   }
+  ],
+  "takeaway": "LIS in O(n log n): keep the smallest tail for each length and binary-search where each number fits."
+ },
+ "303": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "accumulate(nums)",
+       "From `itertools`: running totals, yielding nums[0], nums[0]+nums[1], \u2026",
+       "Prefix sums in one call"
+      ],
+      [
+       "[0] + list(...)",
+       "Prepends 0 so that `pre[i]` is the sum of the first i elements; the empty prefix has sum 0",
+       "Avoids a special case when left = 0"
+      ],
+      [
+       "pre[right + 1] - pre[left]",
+       "Sum of nums[left..right] by subtracting two prefixes",
+       "Range sums in O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-2,0,3,-5,2,-1]`, `pre = [0, -2, -2, 1, -4, -2, -3]`:"
+    ],
+    "table": {
+     "head": [
+      "query",
+      "calculation",
+      "result"
+     ],
+     "rows": [
+      [
+       "sumRange(0,2)",
+       "pre[3] \u2212 pre[0] = 1 \u2212 0",
+       "1"
+      ],
+      [
+       "sumRange(2,5)",
+       "pre[6] \u2212 pre[2] = -3 \u2212 -2",
+       "-1"
+      ],
+      [
+       "sumRange(0,5)",
+       "pre[6] \u2212 pre[0] = -3 \u2212 0",
+       "-3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the extra 0 in front helpful?",
+    "p": [
+     "Without it, `sumRange(0, r)` would need `pre[r] - pre[-1]`. Index \u22121 would wrap to the last element in Python and silently give a wrong answer. The leading zero shifts all indexes by one so that every query is the same subtraction."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Build: O(n). Each query: O(1).",
+     "Space: O(n) for the prefix array.",
+     "Works because the array is immutable; if updates were allowed, a Fenwick tree would be needed (problem 307)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums with a leading zero make any range sum a single subtraction."
+ },
+ "309": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "hold",
+       "Best profit while holding a stock at the end of the day",
+       "State-machine DP"
+      ],
+      [
+       "sold",
+       "Best profit if the stock was sold today (so tomorrow must be a cooldown)",
+       ""
+      ],
+      [
+       "rest",
+       "Best profit while holding nothing and free to buy",
+       ""
+      ],
+      [
+       "prev_sold = sold",
+       "Saves yesterday's `sold` before it is overwritten",
+       "Needed because `rest` must see the old value"
+      ],
+      [
+       "rest - p",
+       "Buy today: only allowed from `rest`, not from `sold`",
+       "This is how the cooldown is enforced"
+      ],
+      [
+       "rest = max(rest, prev_sold)",
+       "Yesterday's sale becomes tradeable again today after the cooldown",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [1,2,3,0,2]`. Values are the states at the end of each day:"
+    ],
+    "table": {
+     "head": [
+      "price",
+      "hold",
+      "sold",
+      "rest"
+     ],
+     "rows": [
+      [
+       "1",
+       "-1",
+       "-inf",
+       "0"
+      ],
+      [
+       "2",
+       "-1",
+       "1",
+       "0"
+      ],
+      [
+       "3",
+       "-1",
+       "2",
+       "1"
+      ],
+      [
+       "0",
+       "1",
+       "-1",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `max(sold, rest) = 3` (buy 1, sell 3, cooldown, buy 0, sell 2)."
+    ]
+   },
+   {
+    "h": "Why is `prev_sold` needed?",
+    "p": [
+     "Within one day, `sold` is recomputed first. `rest` must use the *previous* day's `sold`, because a sale today cannot be rebought today. Saving `prev_sold` before the update keeps the cooldown rule."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Cooldown as a three-state machine (hold, sold, rest): buying is only possible from rest, which is reached one day after a sale."
+ },
+ "312": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a = [1] + nums + [1]",
+       "Pads with virtual balloons of value 1 so the edge balloons also have two neighbours",
+       "Removes boundary special cases"
+      ],
+      [
+       "dp[l][r]",
+       "Max coins from bursting every balloon strictly between l and r (l and r themselves stay)",
+       "Interval DP"
+      ],
+      [
+       "for length in range(2, n)",
+       "Solves small intervals first so that `dp[l][k]` and `dp[k][r]` exist",
+       ""
+      ],
+      [
+       "max(\u2026 for k in range(l+1, r))",
+       "k is the LAST balloon burst inside (l, r)",
+       "Choosing the last item makes subproblems independent"
+      ],
+      [
+       "a[l] * a[k] * a[r]",
+       "When k is burst last, its neighbours are exactly l and r",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,5,8]` \u2192 `a = [1,3,1,5,8,1]`. Table rows are intervals in the order they are computed:"
+    ],
+    "table": {
+     "head": [
+      "(l, r)",
+      "boundary values",
+      "best last balloon",
+      "dp[l][r]"
+     ],
+     "rows": [
+      [
+       "(0,2)",
+       "a[0]=1, a[2]=1",
+       "last burst k=1",
+       "3"
+      ],
+      [
+       "(1,3)",
+       "a[1]=3, a[3]=5",
+       "last burst k=2",
+       "15"
+      ],
+      [
+       "(2,4)",
+       "a[2]=1, a[4]=8",
+       "last burst k=3",
+       "40"
+      ],
+      [
+       "(3,5)",
+       "a[3]=5, a[5]=1",
+       "last burst k=4",
+       "40"
+      ],
+      [
+       "(0,3)",
+       "a[0]=1, a[3]=5",
+       "last burst k=1",
+       "30"
+      ],
+      [
+       "(1,4)",
+       "a[1]=3, a[4]=8",
+       "last burst k=3",
+       "135"
+      ],
+      [
+       "(2,5)",
+       "a[2]=1, a[5]=1",
+       "last burst k=4",
+       "48"
+      ],
+      [
+       "(0,4)",
+       "a[0]=1, a[4]=8",
+       "last burst k=1",
+       "159"
+      ],
+      [
+       "(1,5)",
+       "a[1]=3, a[5]=1",
+       "last burst k=4",
+       "159"
+      ],
+      [
+       "(0,5)",
+       "a[0]=1, a[5]=1",
+       "last burst k=4",
+       "167"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer `dp[0][5] = 167`."
+    ]
+   },
+   {
+    "h": "Why choose the LAST balloon, not the first?",
+    "p": [
+     "If you pick the first balloon to burst, its neighbours depend on everything else, and the two sides remain linked. If k is the last one burst in (l, r), then when it is burst only l and r remain beside it, and the two sides (l, k) and (k, r) have already been solved without influencing each other. That independence is what makes the DP work."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b3): O(n\u00b2) intervals, each trying O(n) choices of k.",
+     "Space: O(n\u00b2)."
+    ]
+   }
+  ],
+  "takeaway": "Burst Balloons is interval DP over the last balloon burst: dp[l][r] = max over k of dp[l][k] + dp[k][r] + a[l]\u00b7a[k]\u00b7a[r]."
+ },
+ "321": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pick(nums, t)",
+       "Largest subsequence of length t from one array, using a monotonic stack that may drop `len \u2212 t` smaller earlier digits",
+       "Remove-k-digits style greedy"
+      ],
+      [
+       "while drop and st and st[-1] < x",
+       "A smaller digit before a bigger one is dropped while we still have drops left",
+       ""
+      ],
+      [
+       "st[:t]",
+       "If fewer drops happened than allowed, trims the tail",
+       ""
+      ],
+      [
+       "merge(a, b)",
+       "Greedy merge: take the front digit from the lexicographically larger list",
+       ""
+      ],
+      [
+       "a > b",
+       "List comparison is lexicographic, so ties between equal fronts are broken by looking at later digits",
+       "Essential for correct merging"
+      ],
+      [
+       "max(best, cand)",
+       "Lists compare lexicographically, equal lengths \u2192 numeric order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [3,4,6,5]`, `nums2 = [9,1,2,5,8,3]`, `k = 5`. For each split `i` (digits from nums1) and `k \u2212 i` (from nums2):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "pick(nums1, i)",
+      "k\u2212i",
+      "pick(nums2, k\u2212i)",
+      "merged",
+      "best so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "[]",
+       "5",
+       "[9, 2, 5, 8, 3]",
+       "[9, 2, 5, 8, 3]",
+       "[9, 2, 5, 8, 3]"
+      ],
+      [
+       "1",
+       "[6]",
+       "4",
+       "[9, 5, 8, 3]",
+       "[9, 6, 5, 8, 3]",
+       "[9, 6, 5, 8, 3]"
+      ],
+      [
+       "2",
+       "[6, 5]",
+       "3",
+       "[9, 8, 3]",
+       "[9, 8, 6, 5, 3]",
+       "[9, 8, 6, 5, 3]"
+      ],
+      [
+       "3",
+       "[4, 6, 5]",
+       "2",
+       "[9, 8]",
+       "[9, 8, 4, 6, 5]",
+       "[9, 8, 6, 5, 3]"
+      ],
+      [
+       "4",
+       "[3, 4, 6, 5]",
+       "1",
+       "[9]",
+       "[9, 3, 4, 6, 5]",
+       "[9, 8, 6, 5, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare whole lists in `merge` instead of just the front digits?",
+    "p": [
+     "With fronts equal, say `a = [6,7]` and `b = [6,0]`, taking from `a` first yields `6,7,6,0`; taking from `b` first yields `6,6,7,0`. Looking only at the front would tie and could pick the worse one. Comparing the remaining lists chooses the one whose future is larger."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: about O(k \u00b7 (m + n + k\u00b2)): up to k + 1 splits; each does two picks in O(m + n) and a merge that costs O(k\u00b2) here because of `pop(0)` and the list comparisons.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Split k across both arrays, take the best subsequence of each with a monotonic stack, merge greedily comparing whole remainders, and keep the max."
+ },
+ "324": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(nums)",
+       "Sorted copy, O(n log n)",
+       ""
+      ],
+      [
+       "half = (len(nums) + 1) // 2",
+       "Size of the small half; the extra middle element goes to the small half for odd lengths",
+       ""
+      ],
+      [
+       "s[:half][::-1]",
+       "Smaller half, reversed (largest of the small half first)",
+       "Slicing and reversing with [::-1]"
+      ],
+      [
+       "nums[::2] = \u2026",
+       "Slice assignment: writes into the even positions 0, 2, 4, \u2026 in place",
+       "Interleaving two lists"
+      ],
+      [
+       "nums[1::2] = \u2026",
+       "Writes into the odd positions",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,5,1,1,6,4]`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "value"
+     ],
+     "rows": [
+      [
+       "sorted",
+       "[1, 1, 1, 4, 5, 6]"
+      ],
+      [
+       "small half reversed \u2192 even positions",
+       "[1, 1, 1]"
+      ],
+      [
+       "large half reversed \u2192 odd positions",
+       "[6, 5, 4]"
+      ],
+      [
+       "result",
+       "[1, 6, 1, 5, 1, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse each half?",
+    "p": [
+     "Duplicates are the danger. Take sorted `[1,2,2,2,3,3]`. Interleaving without reversing gives `[1,2,2,3,2,3]`, where `2,2` are adjacent and the required `<`/`>` pattern breaks. With both halves reversed the result is `[2,3,2,3,1,2]`, which satisfies it. Reversing keeps equal values from meeting across the boundary between the halves."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted copy and slices."
+    ]
+   }
+  ],
+  "takeaway": "Wiggle Sort II: sort, then interleave the reversed lower half into even slots and the reversed upper half into odd slots."
+ },
+ "330": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "reach",
+       "Every integer in [1, reach] can already be formed as a subset sum",
+       "The invariant of this greedy"
+      ],
+      [
+       "nums[i] <= reach + 1",
+       "The next number leaves no gap: adding it extends the range to reach + nums[i]",
+       ""
+      ],
+      [
+       "reach += reach + 1",
+       "Patching with the smallest missing number (reach + 1) doubles the range to 2\u00b7reach + 1",
+       "Greedy: the best patch is always the first gap"
+      ],
+      [
+       "while reach < n",
+       "Continue until [1, n] is covered",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3]`, `n = 6`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "reach after",
+      "patches"
+     ],
+     "rows": [
+      [
+       "use nums[0]=1 (\u2264 reach+1=1)",
+       "1",
+       "0"
+      ],
+      [
+       "patch 2",
+       "3",
+       "1"
+      ],
+      [
+       "use nums[1]=3 (\u2264 reach+1=4)",
+       "6",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the best patch always `reach + 1`?",
+    "p": [
+     "The number `reach + 1` is the smallest value that cannot be formed. Any patch must be \u2264 `reach + 1` to close that gap, and among those, the largest (`reach + 1` itself) extends the range most: new reach `2\u00b7reach + 1`. A smaller patch extends it less, so it can never need fewer patches."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(nums) + log n): each patch roughly doubles `reach`.",
+     "Space: O(1).",
+     "`nums` must be sorted (the problem guarantees it)."
+    ]
+   }
+  ],
+  "takeaway": "Patching Array: keep the covered range [1, reach]; use the next number if it fits, otherwise patch reach + 1 to double it."
+ },
+ "336": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "idx = {w: i for \u2026}",
+       "Dict word \u2192 index for O(1) lookup of a reversed piece",
+       "Replace an inner loop over all words with a hash lookup"
+      ],
+      [
+       "pre, suf = w[:k], w[k:]",
+       "Every split point of word w, including k = 0 and k = len(w)",
+       ""
+      ],
+      [
+       "pre == pre[::-1]",
+       "Palindrome test by comparing with the reverse slice",
+       ""
+      ],
+      [
+       "idx.get(suf[::-1])",
+       "Finds a word equal to the reverse of the leftover suffix, or None",
+       ""
+      ],
+      [
+       "[j, i] / [i, j]",
+       "If pre is a palindrome, the partner goes in front: partner + w. If suf is a palindrome, the partner goes after: w + partner",
+       ""
+      ],
+      [
+       "k != len(w)",
+       "Skips the second case at k = len(w), where `suf` is empty and the pair would be duplicated",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = [\"abcd\",\"dcba\",\"lls\",\"s\",\"sssll\"]`. Pairs found while scanning each word's splits:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "palindromic piece",
+      "partner lookup",
+      "pair"
+     ],
+     "rows": [
+      [
+       "abcd",
+       "pre='' is a palindrome",
+       "reverse of suf 'abcd' = 'dcba' is word 1",
+       "[1,0]"
+      ],
+      [
+       "dcba",
+       "pre='' is a palindrome",
+       "reverse of suf 'dcba' = 'abcd' is word 0",
+       "[0,1]"
+      ],
+      [
+       "lls",
+       "pre='ll' is a palindrome",
+       "reverse of suf 's' = 's' is word 3",
+       "[3,2]"
+      ],
+      [
+       "sssll",
+       "pre='ss' is a palindrome",
+       "reverse of suf 'sll' = 'lls' is word 2",
+       "[2,4]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[[1, 0], [0, 1], [3, 2], [2, 4]]`."
+    ]
+   },
+   {
+    "h": "Why only check splits where one side is a palindrome?",
+    "p": [
+     "For `a + b` to be a palindrome, the longer word has a palindromic leftover once the shorter one's reverse is matched against it. So for each word, split it into a matched piece and a palindromic piece; the matched piece's reverse must exist as another word. This turns an O(n\u00b2) pair check into O(n\u00b7L) lookups."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 L\u00b2): n words, L+1 splits each, each split doing O(L) palindrome and reverse work.",
+     "Space: O(n \u00b7 L) for the dict."
+    ]
+   }
+  ],
+  "takeaway": "Palindrome Pairs: for every split of every word, if one side is a palindrome, look up the reverse of the other side in a hash map."
+ },
+ "339": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ni.isInteger()",
+       "Interface method of `NestedInteger`: is this element a single number?",
+       "Branching between a leaf and a list"
+      ],
+      [
+       "ni.getInteger() * d",
+       "Value times its depth",
+       ""
+      ],
+      [
+       "ni.getList()",
+       "The nested list inside a non-integer element",
+       ""
+      ],
+      [
+       "dfs(lst, d)",
+       "Sums a list whose elements sit at depth d; recursion into a list uses d + 1",
+       "Depth-first recursion carrying the level as a parameter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1],2,[1,1]]`. Integers in visit order with their depth:"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "depth",
+      "value \u00d7 depth"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total = 10."
+    ]
+   },
+   {
+    "h": "Why pass depth as a parameter?",
+    "p": [
+     "Depth is local to each call: going into a sublist adds one, and returning leaves the caller's depth unchanged. A global depth counter would need explicit increments and decrements around every recursive call."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N), N = total number of elements at all levels.",
+     "Space: O(D) recursion for maximum depth D."
+    ]
+   }
+  ],
+  "takeaway": "Depth-weighted sum is a DFS that carries the current depth down: integer \u00d7 depth, list \u2192 recurse with depth + 1."
+ },
+ "345": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "vowels = set('aeiouAEIOU')",
+       "Set of vowels in both cases for O(1) membership tests",
+       "Faster and clearer than a long `or` chain"
+      ],
+      [
+       "a = list(s)",
+       "Strings are immutable in Python; a list can be swapped in place",
+       ""
+      ],
+      [
+       "while left < right and a[left] not in vowels",
+       "Moves the left pointer to the next vowel; the `left < right` guard stops it from crossing",
+       "Skipping irrelevant characters with two pointers"
+      ],
+      [
+       "a[left], a[right] = a[right], a[left]",
+       "Swap",
+       ""
+      ],
+      [
+       "''.join(a)",
+       "Back to a string",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"IceCreAm\"`: the vowels are I, e, e, A. Swaps in order:"
+    ],
+    "table": {
+     "head": [
+      "left",
+      "right",
+      "left char",
+      "right char",
+      "string after swap"
+     ],
+     "rows": [
+      [
+       "0",
+       "6",
+       "I",
+       "A",
+       "AceCreIm"
+      ],
+      [
+       "2",
+       "5",
+       "e",
+       "e",
+       "AceCreIm"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why guard the inner whiles with `left < right`?",
+    "p": [
+     "Without the guard, a string with no vowels (e.g. `\"bcd\"`) would run `left` past the end and raise IndexError. With it, the pointers meet and the outer loop ends; the final swap of an element with itself is harmless."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each pointer passes each position once.",
+     "Space: O(n) for the character list."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers that skip non-vowels and swap vowels from the outside in."
+ },
+ "348": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "rows[], cols[]",
+       "Net score per row and per column: +1 for player 1, \u22121 for player 2",
+       "Counting instead of storing the board"
+      ],
+      [
+       "diag, anti",
+       "Net score on the two diagonals",
+       ""
+      ],
+      [
+       "row == col",
+       "Cell lies on the main diagonal",
+       ""
+      ],
+      [
+       "row + col == n - 1",
+       "Cell lies on the anti-diagonal",
+       ""
+      ],
+      [
+       "abs(x) == n",
+       "A line holding n marks of one player has net \u00b1n; a mixed line cannot reach \u00b1n",
+       "The \u00b11 trick"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3\u00d73 board, moves in order. Columns show the counters after each move:"
+    ],
+    "table": {
+     "head": [
+      "move",
+      "rows",
+      "cols",
+      "diag",
+      "anti",
+      "returns"
+     ],
+     "rows": [
+      [
+       "(0,0) by 1",
+       "[1, 0, 0]",
+       "[1, 0, 0]",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "(0,2) by 2",
+       "[0, 0, 0]",
+       "[1, 0, -1]",
+       "1",
+       "-1",
+       "0"
+      ],
+      [
+       "(2,2) by 1",
+       "[0, 0, 1]",
+       "[1, 0, 0]",
+       "2",
+       "-1",
+       "0"
+      ],
+      [
+       "(1,1) by 2",
+       "[0, -1, 1]",
+       "[1, -1, 0]",
+       "1",
+       "-2",
+       "0"
+      ],
+      [
+       "(2,0) by 1",
+       "[0, -1, 2]",
+       "[2, -1, 0]",
+       "1",
+       "-1",
+       "0"
+      ],
+      [
+       "(1,0) by 2",
+       "[0, -2, 2]",
+       "[1, -1, 0]",
+       "1",
+       "-1",
+       "0"
+      ],
+      [
+       "(2,1) by 1",
+       "[0, -2, 3]",
+       "[1, 0, 0]",
+       "1",
+       "-1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why +1/\u22121 instead of two counters per line?",
+    "p": [
+     "A single signed counter per line is enough: it reaches \u00b1n only if all n cells belong to one player, because opposing marks cancel out. This halves the state and makes the win test a single `abs(...) == n`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per move, instead of O(n) for scanning a row/column/diagonal.",
+     "Space: O(n) for the row and column counters."
+    ]
+   }
+  ],
+  "takeaway": "Tic-Tac-Toe in O(1) per move: signed counters for each row, column and both diagonals."
+ },
+ "354": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "envelopes.sort(key=lambda e: (e[0], -e[1]))",
+       "Sort by width ascending, and for equal widths by height DESCENDING",
+       "Multi-key sort with a negated key"
+      ],
+      [
+       "for _, h in envelopes",
+       "After sorting, widths are handled; only heights matter",
+       ""
+      ],
+      [
+       "bisect_left(tails, h)",
+       "Binary search insertion point (strictly increasing LIS)",
+       ""
+      ],
+      [
+       "tails[i] = h / append",
+       "Standard O(n log n) longest increasing subsequence on the heights",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[5,4],[6,4],[6,7],[2,3]]` sorted becomes `[[2, 3], [5, 4], [6, 7], [6, 4]]`:"
+    ],
+    "table": {
+     "head": [
+      "envelope",
+      "bisect_left",
+      "action",
+      "tails (heights)"
+     ],
+     "rows": [
+      [
+       "(2,3)",
+       "0",
+       "append",
+       "[3]"
+      ],
+      [
+       "(5,4)",
+       "1",
+       "append",
+       "[3, 4]"
+      ],
+      [
+       "(6,7)",
+       "2",
+       "append",
+       "[3, 4, 7]"
+      ],
+      [
+       "(6,4)",
+       "1",
+       "replace tails[1]",
+       "[3, 4, 7]"
+      ]
+     ]
+    },
+    "bullets": [
+     "LIS of heights has length 3: (2,3) \u2192 (5,4) \u2192 (6,7)."
+    ]
+   },
+   {
+    "h": "Why sort equal widths by height descending?",
+    "p": [
+     "Envelopes of the same width cannot nest. If equal widths were sorted by height ascending, the LIS on heights could pick both `(6,4)` and `(6,7)` as consecutive increasing heights. Sorting equal widths descending (`(6,7)` before `(6,4)`) means two same-width envelopes can never form an increasing pair, so the height-LIS is automatically valid. Ascending order here: [[6, 4], [6, 7]], descending: [[6, 7], [6, 4]]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort and the LIS.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Russian Doll = LIS on heights after sorting by width ascending and height descending for ties."
+ },
+ "360": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "f = lambda x: a*x*x + b*x + c",
+       "The transform as a callable",
+       ""
+      ],
+      [
+       "l, r",
+       "Two pointers at the ends of the sorted input",
+       "The transformed values are largest (a>0) or smallest (a<0) at the ends"
+      ],
+      [
+       "i = n - 1 if a >= 0 else 0",
+       "Fill the output from the back (largest first) for an upward parabola, from the front (smallest first) for a downward one",
+       ""
+      ],
+      [
+       "fl > fr",
+       "Whichever end maps to the larger value (a \u2265 0) is placed next",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-4,-2,2,4]`, `a=1, b=3, c=5` (upward parabola, so largest values are at the ends). Filling from the right:"
+    ],
+    "table": {
+     "head": [
+      "l,r after",
+      "f(left)",
+      "f(right)",
+      "decision",
+      "res"
+     ],
+     "rows": [
+      [
+       "0,2",
+       "9",
+       "33",
+       "right 33 \u2265 left 9: place 33",
+       "[0, 0, 0, 33]"
+      ],
+      [
+       "0,1",
+       "9",
+       "15",
+       "right 15 \u2265 left 9: place 15",
+       "[0, 0, 15, 33]"
+      ],
+      [
+       "1,1",
+       "9",
+       "3",
+       "left 9 > right 3: place 9",
+       "[0, 9, 15, 33]"
+      ],
+      [
+       "1,0",
+       "3",
+       "3",
+       "right 3 \u2265 left 3: place 3",
+       "[3, 9, 15, 33]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two pointers?",
+    "p": [
+     "`f` is a parabola, so over a sorted input the values form a valley (a > 0) or a hill (a < 0). The extremes of the transformed sequence are therefore at the two ends of the input, and moving inwards gives the next largest (or smallest) value. This replaces an O(n log n) sort with a merge-like O(n) pass. (If `a == 0`, f is linear and monotonic; the `a >= 0` branch still works because the larger end is always one of the two ends.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Sort Transformed Array: a parabola's extremes are at the ends of the sorted input, so fill the output from the outside in with two pointers."
+ },
+ "366": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "height(node)",
+       "Returns the node's height: distance to its farthest leaf (a leaf is 0, None is \u22121)",
+       "Post-order DFS"
+      ],
+      [
+       "1 + max(height(left), height(right))",
+       "Height from the children, so children are processed first",
+       ""
+      ],
+      [
+       "if h == len(groups): groups.append([])",
+       "Opens a new group the first time a height appears",
+       "Grow a list of buckets on demand"
+      ],
+      [
+       "groups[h].append(node.val)",
+       "The node is removed in round h+1, together with every node of the same height",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,5]`; nodes in the order the post-order DFS finishes them:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "height",
+      "groups so far"
+     ],
+     "rows": [
+      [
+       "4",
+       "0",
+       "[[4]]"
+      ],
+      [
+       "5",
+       "0",
+       "[[4, 5]]"
+      ],
+      [
+       "2",
+       "1",
+       "[[4, 5], [2]]"
+      ],
+      [
+       "3",
+       "0",
+       "[[4, 5, 3], [2]]"
+      ],
+      [
+       "1",
+       "2",
+       "[[4, 5, 3], [2], [1]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does height equal the removal round?",
+    "p": [
+     "A node can only be removed after all of its descendants are gone, i.e. in the round after its tallest child subtree is removed. That round number is exactly the node's height (counting leaves as round 0). So grouping by height reproduces repeated leaf removal in a single traversal, with no tree mutation."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion, plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Find Leaves: group nodes by height (distance to the deepest leaf below) with one post-order traversal."
+ }
+}
