@@ -1665,11 +1665,6 @@
        "None",
        "None",
        "True (both empty)"
-      ],
-      [
-       "…",
-       "…",
-       "-1 more calls, all True"
       ]
      ]
     }
@@ -2181,7 +2176,7 @@
    {
     "h": "Why check for a leaf and not just `left == 0`?",
     "p": [
-     "Node `4→11` has remaining sum 22-5-4-11 = 2, not 0, but in other trees an internal node can hit exactly 0 while a child continues (for example, with a node value 0 below it). The problem demands root-to-leaf, so we only accept at leaves."
+     "Take the tree `[1, 2]` with target 1. After subtracting the root, `left` is 0, but node 1 has a child, so `[1]` is not a root-to-leaf path; the real answer is `[]`. The leaf test rejects it, while checking only `left == 0` would wrongly accept it."
     ]
    },
    {
