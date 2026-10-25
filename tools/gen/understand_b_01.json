@@ -1,0 +1,2330 @@
+{
+ "1": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`seen = {}`",
+       "Empty dict: key → value with O(1) average lookup",
+       "Whenever you ask 'have I seen X before?' or need value → position"
+      ],
+      [
+       "`enumerate(nums)`",
+       "Yields `(index, value)` pairs in one pass",
+       "You need both the position and the item, without `range(len(...))`"
+      ],
+      [
+       "`target - x in seen`",
+       "Hash lookup of the complement (average O(1))",
+       "Replaces an inner loop that would scan every earlier number"
+      ],
+      [
+       "`seen[x] = i`",
+       "Stores value → its index",
+       "You must return positions, not values"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,7,11,15]`, `target = 9`. For each `x` we look for `target - x` among numbers already stored."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "Need (9 − x)",
+      "In seen?",
+      "seen after this step"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "7",
+       "no",
+       "{2: 0}"
+      ],
+      [
+       "1",
+       "7",
+       "2",
+       "yes → return [0, 1]",
+       "{2: 0}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check first, store after?",
+    "p": [
+     "The lookup happens before `seen[x] = i`, so a number can never pair with itself. With `nums = [3,3]`, `target = 6`: at `i=0`, `seen` is empty, so we store `3→0`; at `i=1`, the complement `3` is found at index 0, giving `[0,1]`. If we stored first, `[3,2,4]` with target 6 would wrongly return `[0,0]`."
+    ]
+   },
+   {
+    "h": "Why a dict instead of a nested loop?",
+    "p": [
+     "You pay O(n) memory to turn the inner scan into a single lookup."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Lookup of complement",
+      "Total time",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "Nested loops",
+       "scan the rest: O(n)",
+       "O(n²)",
+       "O(1)"
+      ],
+      [
+       "Dict `seen`",
+       "hash lookup: O(1) average",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — one pass, each dict operation is O(1) on average.",
+     "Space: O(n) — the dict can hold every number before the match is found."
+    ]
+   }
+  ],
+  "takeaway": "Complement lookup in a hash map: when you need a pair satisfying a sum, remember what you have seen and ask 'is my partner already there?' in O(1) instead of rescanning."
+ },
+ "4": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`if len(A) > len(B): A, B = B, A`",
+       "Swaps so `A` is the shorter list",
+       "You binary-search one array; pick the shorter so the search is O(log min(m,n)) and `j` never leaves its range"
+      ],
+      [
+       "`float('-inf')` / `float('inf')`",
+       "Sentinels that compare below / above every number",
+       "A cut at the very edge has no real neighbour; sentinels make the comparisons still work"
+      ],
+      [
+       "`A[i-1] if i else -inf`",
+       "Conditional expression; `i` is falsy only when 0",
+       "Guard an index lookup without a separate branch"
+      ],
+      [
+       "`max(a_left, b_left)` / `min(a_right, b_right)`",
+       "Largest of the left half's tail, smallest of the right half's head",
+       "The median is built from the two numbers touching the cut"
+      ],
+      [
+       "`(lo + hi) // 2`",
+       "Integer midpoint",
+       "Standard binary search on a cut position"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`A=[1,3]`, `B=[2]`. A is longer, so they swap to `A=[2]`, `B=[1,3]`; `m=1, n=2, half=(1+2+1)//2=2`. `i` is how many items of `A` go in the left half and `j = half − i` is how many come from `B`. Odd total (3), so the answer is `max(a_left, b_left)` = 2."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "i",
+      "j",
+      "a_left",
+      "a_right",
+      "b_left",
+      "b_right",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "2",
+       "−∞",
+       "2",
+       "3",
+       "+∞",
+       "b_left > a_right → lo = i+1"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "2",
+       "+∞",
+       "1",
+       "3",
+       "valid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Even total: `A=[1,2]`, `B=[3,4]`",
+    "p": [
+     "No swap (equal lengths); `half = (4+1)//2 = 2`. Even total, so the median is the average of the two numbers touching the cut: `(max(a_left,b_left) + min(a_right,b_right)) / 2` = 2.5."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "i",
+      "j",
+      "a_left",
+      "a_right",
+      "b_left",
+      "b_right",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "1",
+       "1",
+       "1",
+       "2",
+       "3",
+       "4",
+       "b_left > a_right → lo = i+1"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "0",
+       "2",
+       "+∞",
+       "−∞",
+       "3",
+       "valid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary search the shorter array, and why `half = (m+n+1)//2`?",
+    "bullets": [
+     "With `m ≤ n`, every `i` in `[0, m]` gives `j = half − i` in `[0, n]`, so `B[j-1]`/`B[j]` are always safe (with the sentinels). If `A` were the longer array, `j` could go negative.",
+     "The `+1` gives the left half the extra element when the total is odd, so for odd totals the median is simply the largest item in the left half: `max(a_left, b_left)`.",
+     "The cut is valid exactly when `a_left ≤ b_right` and `b_left ≤ a_right`; each array is already sorted, so those two checks are enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log min(m, n)) — each iteration halves the range of `i` over the shorter array.",
+     "Space: O(1) — only a handful of variables."
+    ]
+   },
+   {
+    "h": "One subtle point",
+    "p": [
+     "`a_left > b_right` means we took too many from `A` (move the cut left: `hi = i-1`); otherwise `b_left > a_right` means too few (`lo = i+1`). Moving `i` automatically moves `j` the opposite way, which keeps the left half's size fixed at `half`."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the partition, not on values: find the cut that splits the merged order into equal halves, searching only the shorter array."
+ },
+ "7": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`-1 if x < 0 else 1`",
+       "Records the sign separately",
+       "Reversing digits is easiest on a non-negative number"
+      ],
+      [
+       "`abs(x)`",
+       "Drops the minus sign",
+       "Work on magnitude, reattach the sign later"
+      ],
+      [
+       "`str(...)`",
+       "Turns the number into its digit string",
+       "When you need to reorder digits, not do arithmetic"
+      ],
+      [
+       "`[::-1]`",
+       "Slice with step −1: reversed copy",
+       "Quick reverse of any string or list"
+      ],
+      [
+       "`int(...)`",
+       "Parses digits; ignores leading zeros (`int('021') == 21`)",
+       "Trailing zeros of the original (`120`) become leading zeros after reversal and vanish for free"
+      ],
+      [
+       "`-2**31 <= r <= 2**31 - 1`",
+       "Chained comparison: both bounds in one expression",
+       "Range check; Python reads it as `(−2³¹ ≤ r) and (r ≤ 2³¹−1)`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "x",
+      "abs → str",
+      "[::-1]",
+      "× sign",
+      "In 32-bit range?",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "123",
+       "'123'",
+       "'321'",
+       "321",
+       "yes",
+       "321"
+      ],
+      [
+       "-123",
+       "'123'",
+       "'321'",
+       "-321",
+       "yes",
+       "-321"
+      ],
+      [
+       "120",
+       "'120'",
+       "'021' → int → 21",
+       "21",
+       "yes",
+       "21"
+      ],
+      [
+       "1534236469",
+       "'1534236469'",
+       "'9646324351'",
+       "9646324351",
+       "no (> 2³¹−1 = 2147483647)",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check the range after, not before?",
+    "p": [
+     "Python integers never overflow, so the reversed value is computed exactly and then compared with the 32-bit limits. In a language with fixed-width ints you would have to detect overflow before it happens (for example, compare `r` with `INT_MAX // 10` while building digit by digit). Here the check is one line at the end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log x) — the number has about log₁₀(x) digits, and string conversion, reversal and parsing are each linear in that.",
+     "Space: O(log x) for the digit string (the digit-by-digit arithmetic version would be O(1))."
+    ]
+   },
+   {
+    "h": "One subtle point",
+    "p": [
+     "The sign is stripped before reversing, because `str(-123)[::-1]` would be `'321-'`, which `int` rejects. Zero is fine: `sign = 1`, `int('0') = 0`."
+    ]
+   }
+  ],
+  "takeaway": "Reverse digits via string slicing and handle the 32-bit limit with an explicit post-check; strip the sign first so the minus never lands in the wrong place."
+ },
+ "10": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`[[False] * (n+1) for _ in range(m+1)]`",
+       "Builds an (m+1)×(n+1) grid with a separate row each time",
+       "Any 2-D DP table. Writing `[[False]*(n+1)] * (m+1)` would make every row the same list object"
+      ],
+      [
+       "`dp[i][j]`",
+       "True if the first `i` chars of `s` match the first `j` chars of `p`",
+       "The state meaning; the extra row/column 0 stand for the empty prefix"
+      ],
+      [
+       "`p[j-2] in (s[i-1], '.')`",
+       "Membership in a tuple: is the pattern char equal to the text char, or a wildcard?",
+       "A compact 'either of these two values' test"
+      ],
+      [
+       "`or` / `and` on booleans",
+       "Short-circuit: the right side is skipped when the answer is already known",
+       "Combine the 'zero copies' and 'one more copy' options of `*`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'aab'`, `p = 'c*a*b'`. Cell (i, j) answers: does `s[:i]` match `p[:j]`? Computed by the code:"
+    ],
+    "table": {
+     "head": [
+      "s prefix \\ p prefix",
+      "''",
+      "c",
+      "c*",
+      "c*a",
+      "c*a*",
+      "c*a*b"
+     ],
+     "rows": [
+      [
+       "''",
+       "T",
+       "F",
+       "T",
+       "F",
+       "T",
+       "F"
+      ],
+      [
+       "a",
+       "F",
+       "F",
+       "F",
+       "T",
+       "T",
+       "F"
+      ],
+      [
+       "aa",
+       "F",
+       "F",
+       "F",
+       "F",
+       "T",
+       "F"
+      ],
+      [
+       "aab",
+       "F",
+       "F",
+       "F",
+       "F",
+       "F",
+       "T"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The transitions (why these formulas)",
+    "p": [
+     "Row 0 is filled separately: an empty text can match a pattern only if every `x*` pair can vanish, hence `dp[0][j] = dp[0][j-2]` when `p[j-1]` is `*`. The answer is the bottom-right cell, True."
+    ],
+    "table": {
+     "head": [
+      "Pattern char p[j−1]",
+      "Rule",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "letter or `.`",
+       "`dp[i][j] = match(p[j-1], s[i-1]) and dp[i-1][j-1]`",
+       "Both prefixes shrink by one character"
+      ],
+      [
+       "`*` (zero copies)",
+       "`dp[i][j-2]`",
+       "Pretend the pair `x*` was never there"
+      ],
+      [
+       "`*` (one more copy)",
+       "`p[j-2]` matches `s[i-1]` and `dp[i-1][j]`",
+       "Eat one text char, keep the same `x*` available for more"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `dp[i-1][j]` (not `dp[i-1][j-2]`) for the repeat case?",
+    "p": [
+     "Staying in column `j` keeps the `x*` in play, so it can absorb the next character too. That is how `a*` matches `aa`: `dp[2][j]` leans on `dp[1][j]`, which leans on `dp[0][j-2]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — each cell is filled once with O(1) work.",
+     "Space: O(m·n) for the table (it could be cut to two rows, since row i only reads rows i and i−1)."
+    ]
+   }
+  ],
+  "takeaway": "Two-string DP with a prefix-match table: define dp[i][j] for prefixes, and treat `*` as 'drop the pair' or 'consume one more character and stay'."
+ },
+ "13": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`v = {'I':1, …}`",
+       "Dict from symbol to value",
+       "A fixed lookup table; O(1) per symbol"
+      ],
+      [
+       "`enumerate(s)`",
+       "Gives index and character together",
+       "You also need to peek at `s[i+1]`"
+      ],
+      [
+       "`i + 1 < len(s)`",
+       "Bounds guard before looking ahead",
+       "Avoid `IndexError` on the last character"
+      ],
+      [
+       "`total -= v[ch]` / `+=`",
+       "Subtract or add the value",
+       "The only decision is the sign of each symbol"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'MCMXCIV'` (1994). A symbol is subtracted when the next symbol is larger."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "ch",
+      "value",
+      "next",
+      "next value",
+      "value < next?",
+      "Change",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "M",
+       "1000",
+       "C",
+       "100",
+       "no → add",
+       "1000",
+       "1000"
+      ],
+      [
+       "1",
+       "C",
+       "100",
+       "M",
+       "1000",
+       "yes → subtract",
+       "-100",
+       "900"
+      ],
+      [
+       "2",
+       "M",
+       "1000",
+       "X",
+       "10",
+       "no → add",
+       "1000",
+       "1900"
+      ],
+      [
+       "3",
+       "X",
+       "10",
+       "C",
+       "100",
+       "yes → subtract",
+       "-10",
+       "1890"
+      ],
+      [
+       "4",
+       "C",
+       "100",
+       "I",
+       "1",
+       "no → add",
+       "100",
+       "1990"
+      ],
+      [
+       "5",
+       "I",
+       "1",
+       "V",
+       "5",
+       "yes → subtract",
+       "-1",
+       "1989"
+      ],
+      [
+       "6",
+       "V",
+       "5",
+       "—",
+       "—",
+       "no → add",
+       "5",
+       "1994"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare with the next character, not the previous?",
+    "p": [
+     "Looking ahead lets us decide the sign of the current symbol immediately: if the next one is bigger, this one is part of a subtractive pair (`IV`, `CM`). Looking back would mean adding the earlier symbol first and then correcting it by double the amount (`total += 1` for `I`, then at `V` add `5 − 2·1`). The look-ahead needs no correction."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — one pass; each step is O(1).",
+     "Space: O(1) — the dictionary has a fixed 7 entries."
+    ]
+   },
+   {
+    "h": "One subtle point",
+    "p": [
+     "The code never validates the numeral; it only relies on the rule that a smaller symbol before a larger one is subtracted. Because inputs are valid, the sign rule alone reproduces every pair (`IV`, `IX`, `XL`, `XC`, `CD`, `CM`)."
+    ]
+   }
+  ],
+  "takeaway": "Look one symbol ahead to pick the sign: a lookup table plus 'subtract if smaller than next' parses Roman numerals in one pass."
+ },
+ "16": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Sorts in place, O(n log n)",
+       "Two-pointer tricks need order: then 'too small' ⇒ move left pointer right, 'too big' ⇒ move right pointer left"
+      ],
+      [
+       "`abs(s - target)`",
+       "Distance from the target",
+       "'Closest' problems: compare distances, not values"
+      ],
+      [
+       "`l, r = i+1, len(nums)-1`",
+       "Two pointers at the ends of the remaining range",
+       "Search a sorted array for a pair in O(n) instead of O(n²)"
+      ],
+      [
+       "`best = nums[0]+nums[1]+nums[2]`",
+       "Starts with a real triple's sum",
+       "A valid starting candidate, so no infinity sentinel is needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-1,2,1,-4]`, `target = 1`. After sorting: [-4, -1, 1, 2]. Each row is one pointer state."
+    ],
+    "table": {
+     "head": [
+      "nums[i]",
+      "nums[l]",
+      "nums[r]",
+      "sum s",
+      "|s − target|",
+      "best",
+      "Action"
+     ],
+     "rows": [
+      [
+       "-4",
+       "-1",
+       "2",
+       "-3",
+       "4",
+       "-3",
+       "s < target → l += 1"
+      ],
+      [
+       "-4",
+       "1",
+       "2",
+       "-1",
+       "2",
+       "-1",
+       "s < target → l += 1"
+      ],
+      [
+       "-1",
+       "1",
+       "2",
+       "2",
+       "1",
+       "2",
+       "s > target → r -= 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why move the pointer that way?",
+    "p": [
+     "Each move discards a pointer position that cannot give a better answer with the current `nums[i]`, so the inner loop is a single O(n) sweep."
+    ],
+    "table": {
+     "head": [
+      "Situation",
+      "Move",
+      "Why"
+     ],
+     "rows": [
+      [
+       "`s < target`",
+       "`l += 1`",
+       "Array is sorted; only a bigger left value can raise the sum"
+      ],
+      [
+       "`s > target`",
+       "`r -= 1`",
+       "Only a smaller right value can lower the sum"
+      ],
+      [
+       "`s == target`",
+       "return",
+       "Distance 0 cannot be beaten"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) — the outer loop runs n times, the inner two-pointer sweep is O(n); sorting O(n log n) is dominated.",
+     "Space: O(1) extra (sorting in place; Python's sort may use O(n) scratch space internally)."
+    ]
+   },
+   {
+    "h": "One subtle point",
+    "p": [
+     "`best` is updated before the pointers move, for every visited triple, not only when the sum is on one side of the target. The closest sum can be above or below the target, so both directions must be considered."
+    ]
+   }
+  ],
+  "takeaway": "Sort then fix one number and squeeze two pointers; track the sum with the smallest |sum − target|."
+ },
+ "19": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ListNode(0, head)`",
+       "Creates a dummy node placed before the real head",
+       "Any list edit that might remove or replace the head"
+      ],
+      [
+       "`fast = slow = dummy`",
+       "Both pointers start at the dummy",
+       "Chained assignment: they reference the same node, then move independently"
+      ],
+      [
+       "`for _ in range(n): fast = fast.next`",
+       "Moves `fast` exactly n steps ahead",
+       "Create a fixed gap between two pointers"
+      ],
+      [
+       "`while fast.next`",
+       "Stops when `fast` is on the last node",
+       "Ends with `slow` on the node *before* the one to delete"
+      ],
+      [
+       "`slow.next = slow.next.next`",
+       "Unlinks the target node",
+       "Delete from a singly linked list given its predecessor"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "List `1→2→3→4→5`, `n = 2`. Result: 1→2→3→5."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "fast",
+      "slow",
+      "Note"
+     ],
+     "rows": [
+      [
+       "start",
+       "0",
+       "0",
+       "dummy → 1 → 2 → 3 → 4 → 5"
+      ],
+      [
+       "advance fast 2 times",
+       "fast at 2",
+       "slow at 0",
+       ""
+      ],
+      [
+       "step",
+       "fast at 3",
+       "slow at 1",
+       ""
+      ],
+      [
+       "step",
+       "fast at 4",
+       "slow at 2",
+       ""
+      ],
+      [
+       "step",
+       "fast at 5",
+       "slow at 3",
+       ""
+      ],
+      [
+       "unlink",
+       "fast at 5 (last)",
+       "slow at 3",
+       "slow.next = slow.next.next removes 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dummy node?",
+    "p": [
+     "If `n` equals the list length, the node to remove is the head. Without a dummy, `slow` would have to be 'before the head', which does not exist. With it, `[1]` and `n = 1` work: start: fast 0, slow 0 dummy → 1; advance fast 1 times: fast fast at 1, slow slow at 0; unlink: fast fast at 1 (last), slow slow at 0 slow.next = slow.next.next removes 1 → result [] (`dummy.next` is `None`)."
+    ]
+   },
+   {
+    "h": "Why advance fast n steps, then walk until fast.next is None?",
+    "p": [
+     "The gap between `fast` and `slow` stays n. When `fast` is at the last node, `slow` is n nodes behind it, which is exactly the predecessor of the n-th node from the end. One pass, no need to know the length first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — `fast` visits each node once.",
+     "Space: O(1) — two pointers and one dummy node."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers with a fixed gap: advance one pointer n steps ahead, then move both together; a dummy head makes deleting the first node a non-special case."
+ },
+ "22": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`def go(s, open_, close)`",
+       "Nested recursive function reading `n` and `res` from the outer scope",
+       "Backtracking where the answer list is shared by all calls"
+      ],
+      [
+       "`s + '('`",
+       "Builds a *new* string for the child call",
+       "Strings are immutable, so nothing needs undoing after the call (no `pop()`)"
+      ],
+      [
+       "`len(s) == 2 * n`",
+       "Base case: every character has been placed",
+       "Leaf of the recursion tree"
+      ],
+      [
+       "`open_ < n`, `close < open_`",
+       "The two rules that keep the string valid",
+       "Prune bad branches before recursing instead of filtering afterward"
+      ],
+      [
+       "`res.append(s)`",
+       "Collects a finished combination",
+       "Safe without copying because `s` is an immutable string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`: the recursion explores these states (each row is one call, in order). It visits 8 calls and finds ['(())', '()()']."
+    ],
+    "table": {
+     "head": [
+      "s",
+      "open",
+      "close",
+      "Can add '('?",
+      "Can add ')'?"
+     ],
+     "rows": [
+      [
+       "''",
+       "0",
+       "0",
+       "yes (0<2)",
+       "no (0<0)"
+      ],
+      [
+       "'('",
+       "1",
+       "0",
+       "yes",
+       "yes (0<1)"
+      ],
+      [
+       "'(('",
+       "2",
+       "0",
+       "no (2<2)",
+       "yes"
+      ],
+      [
+       "'(()'",
+       "2",
+       "1",
+       "no",
+       "yes"
+      ],
+      [
+       "'(())'",
+       "2",
+       "2",
+       "leaf → saved",
+       "—"
+      ],
+      [
+       "'()'",
+       "1",
+       "1",
+       "yes",
+       "no (1<1)"
+      ],
+      [
+       "'()('",
+       "2",
+       "1",
+       "no",
+       "yes"
+      ],
+      [
+       "'()()'",
+       "2",
+       "2",
+       "leaf → saved",
+       "—"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these two rules and not 'try everything, then check'?",
+    "p": [
+     "`close < open_` is the key: a `)` is allowed only if there is an unmatched `(` to close, so the string can never go negative. `open_ < n` stops us using more than n opens. With both, every path that reaches length 2n is automatically well-formed."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Strings built",
+      "Filter needed?"
+     ],
+     "rows": [
+      [
+       "All 2^(2n) strings, validate each",
+       "4ⁿ",
+       "yes"
+      ],
+      [
+       "Rules `open < n` and `close < open`",
+       "only valid prefixes",
+       "no — every leaf is valid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(4ⁿ/√n), the n-th Catalan number of results times the O(n) to build each string.",
+     "Space: O(n) recursion depth (2n frames), not counting the output.",
+     "For n = 3 the code finds 5 combinations: ['((()))', '(()())', '(())()', '()(())', '()()()']."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking with validity pruning: only extend a prefix when it can still become well-formed (opens < n, closes < opens)."
+ },
+ "25": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`while node and cnt < k`",
+       "Walks up to k nodes ahead, stopping early at the end",
+       "Check whether a full group exists before changing anything"
+      ],
+      [
+       "`self.reverseKGroup(node, k)`",
+       "Recursion: solves the rest of the list first",
+       "The result becomes the tail attached to this group"
+      ],
+      [
+       "`prev` initial value",
+       "Starts as the already-reversed rest",
+       "Reversed group's last node must point to the next group"
+      ],
+      [
+       "`cur.next, prev, cur = prev, cur, cur.next`",
+       "Tuple assignment: right side is evaluated first, then assigned left to right",
+       "One-line link reversal without a temp variable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→3→4→5`, `k = 2`. Each row is one call (depth = recursion level). Final list: 2→1→4→3→5."
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Sublist given",
+      "Nodes found",
+      "What happens"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1, 2, 3, 4, 5]",
+       "2",
+       "enough nodes; recurse on rest starting at 3"
+      ],
+      [
+       "1",
+       "[3, 4, 5]",
+       "2",
+       "enough nodes; recurse on rest starting at 5"
+      ],
+      [
+       "2",
+       "[5]",
+       "1",
+       "cnt < k → return head unchanged"
+      ],
+      [
+       "1",
+       "—",
+       "—",
+       "after reversing group → 4→3→5"
+      ],
+      [
+       "0",
+       "—",
+       "—",
+       "after reversing group → 2→1→4→3→5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "How the one-line reversal works",
+    "p": [
+     "At the start of a group `prev` is the node that must follow it. Each iteration does three things in order using the old values: set `cur.next = prev`, move `prev` forward to `cur`, move `cur` to its old successor. After k iterations `prev` is the group's new head and the old head (`head`) is its tail pointing at the rest. The right-hand side `prev, cur, cur.next` is fully evaluated before any assignment, which is why the old `cur.next` is not lost."
+    ]
+   },
+   {
+    "h": "Why count first, reverse second?",
+    "p": [
+     "If fewer than k nodes remain, the leftovers must stay in the original order. Reversing first and undoing later would be extra work and error-prone; counting first (`cnt < k: return head`) keeps the tail untouched."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — every node is walked once to count and once to reverse.",
+     "Space: O(n/k) — one stack frame per group. An iterative version with a dummy head is O(1) extra space."
+    ]
+   }
+  ],
+  "takeaway": "Reverse in groups: verify k nodes exist, reverse them by re-pointing links, and attach to the recursively solved remainder."
+ },
+ "28": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(len(h) - len(n) + 1)`",
+       "All start positions where the needle could still fit",
+       "Prevents windows that run past the end"
+      ],
+      [
+       "`haystack[i:i+len(needle)]`",
+       "Slice: a copy of the window of the needle's length",
+       "Compare a fixed-size window without manual character loops"
+      ],
+      [
+       "`== needle`",
+       "String equality (compares up to m characters)",
+       "Match test for the window"
+      ],
+      [
+       "`return -1`",
+       "Reached only if no window matched",
+       "Standard 'not found' answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`haystack = 'hello'`, `needle = 'll'`: positions to try are `range(5 - 2 + 1)` = 0..3."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Window haystack[i:i+2]",
+      "Equals 'll'?"
+     ],
+     "rows": [
+      [
+       "0",
+       "'he'",
+       "no"
+      ],
+      [
+       "1",
+       "'el'",
+       "no"
+      ],
+      [
+       "2",
+       "'ll'",
+       "yes → return 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `+ 1` in the range?",
+    "p": [
+     "The last window that fits starts at `len(h) - len(n)`. `range` excludes its end, so we add 1. For `haystack='abc'`, `needle='abc'`, `range(1)` gives only `i = 0`, which is correct. Without the `+ 1` that exact match would be missed."
+    ]
+   },
+   {
+    "h": "Why this and not KMP or `str.find`?",
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "When to use"
+     ],
+     "rows": [
+      [
+       "Window compare (this code)",
+       "O(n·m) worst case",
+       "Short inputs; simplest and least error-prone"
+      ],
+      [
+       "`haystack.find(needle)`",
+       "implementation-defined, fast in practice",
+       "Real code; the interviewer usually wants the algorithm"
+      ],
+      [
+       "KMP / Rabin–Karp",
+       "O(n + m)",
+       "Adversarial inputs like `'aaaa…a'` vs `'aaa…b'`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n − m + 1)·m) ≈ O(n·m) — each of the windows compares up to m characters.",
+     "Space: O(m) in practice for the slice copy created at each step (O(1) with a manual character loop).",
+     "Edge case: an empty needle gives a window `''` that equals `''` at `i = 0`, so the code returns 0, which matches the convention."
+    ]
+   }
+  ],
+  "takeaway": "Brute-force substring search by sliding a fixed-size window; know KMP as the linear-time upgrade."
+ },
+ "31": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`while i >= 0 and nums[i] >= nums[i+1]`",
+       "Scans from the right for the first position that is smaller than its right neighbour",
+       "Find where the suffix stops being non-increasing"
+      ],
+      [
+       "`while nums[j] <= nums[i]`",
+       "Scans from the right for the first value strictly larger than `nums[i]`",
+       "Smallest possible bump of position i; `<=` skips equal values"
+      ],
+      [
+       "`nums[i], nums[j] = nums[j], nums[i]`",
+       "Swap without a temp",
+       "Tuple swap"
+      ],
+      [
+       "`nums[i+1:] = reversed(nums[i+1:])`",
+       "Slice assignment from the reversed iterator",
+       "Reverse the tail in place of the same list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,5,8,4,7,6,5,3,1]`. The tail `7,6,5,3,1` is non-increasing (already the largest arrangement of those numbers). The dip is at `4`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "nums"
+     ],
+     "rows": [
+      [
+       "start",
+       "[1, 5, 8, 4, 7, 6, 5, 3, 1]"
+      ],
+      [
+       "i = 3 (nums[i]=4 < nums[i+1]=7)",
+       "[1, 5, 8, 4, 7, 6, 5, 3, 1]"
+      ],
+      [
+       "j = 6 (rightmost > 4) swap",
+       "[1, 5, 8, 5, 7, 6, 4, 3, 1]"
+      ],
+      [
+       "reverse the tail after i",
+       "[1, 5, 8, 5, 1, 3, 4, 6, 7]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why swap, then reverse?",
+    "bullets": [
+     "The suffix after `i` is non-increasing, i.e. the largest arrangement of its elements. To get the next permutation we must grow position `i` by the smallest amount: swap with the rightmost element larger than `nums[i]`.",
+     "After the swap the suffix is still non-increasing (the swapped-in element sits where a slightly smaller one fits). The smallest arrangement of a non-increasing run is its reverse, so one reversal finishes it in O(n).",
+     "When no dip exists (`[3,2,1]`), `i` ends at −1, the swap is skipped, and `nums[0:] = reversed(...)` wraps around to the lowest order: [1, 2, 3]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — two backward scans, a swap and a reversal, each at most one pass.",
+     "Space: O(1) — in place (the reversed iterator does not copy the list, although the slice read `nums[i+1:]` creates a temporary)."
+    ]
+   },
+   {
+    "h": "One subtle point",
+    "p": [
+     "Use `>=` in the first loop and `<=` in the second so that duplicates are handled: `[1,1,5]` should go to `[1,5,1]`, and equal neighbours must not count as a dip."
+    ]
+   }
+  ],
+  "takeaway": "Next permutation: find the rightmost ascent, swap with the next-larger value from the right, then reverse the suffix to its smallest order."
+ },
+ "34": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`bisect_left(nums, t)`",
+       "First index where `t` could be inserted keeping order = index of the first `t` if it exists",
+       "Lower bound on a sorted list, O(log n)"
+      ],
+      [
+       "`bisect_right(nums, t)`",
+       "Index just past the last `t`",
+       "Upper bound; `bisect_right − 1` is the last occurrence"
+      ],
+      [
+       "`lo == len(nums) or nums[lo] != target`",
+       "Presence test after the insertion point",
+       "`bisect` returns a position even if the value is missing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "nums",
+      "target",
+      "bisect_left",
+      "Present?",
+      "bisect_right",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "[5,7,7,8,8,10]",
+       "8",
+       "3",
+       "nums[3]=8 yes",
+       "5",
+       "[3, 4]"
+      ],
+      [
+       "[5,7,7,8,8,10]",
+       "6",
+       "1",
+       "nums[1]=7 ≠ 6 → no",
+       "—",
+       "[-1, -1]"
+      ],
+      [
+       "[5,7,7,8,8,10]",
+       "11",
+       "6",
+       "lo == len → no (guard stops IndexError)",
+       "—",
+       "[-1, -1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the check order `lo == len(nums)` first?",
+    "p": [
+     "When the target is larger than everything, `lo` equals `len(nums)` and `nums[lo]` would raise an `IndexError`. `or` short-circuits, so the length check protects the access that follows."
+    ]
+   },
+   {
+    "h": "Why two bisects instead of one search and then expanding?",
+    "p": [
+     "Expanding left and right from a found index is O(n) if the whole array is the target (`[8,8,8,8]`). Two binary searches stay O(log n) regardless of duplicates."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) — two binary searches.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Boundary search with lower/upper bound: `bisect_left` for the first occurrence, `bisect_right − 1` for the last."
+ },
+ "37": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`rows`, `cols`, `boxes` (9 sets each)",
+       "Digits already used in each row, column and 3×3 box",
+       "O(1) 'is this digit allowed here?' instead of rescanning 27 cells"
+      ],
+      [
+       "`empties` list of `(r, c)`",
+       "The blank cells in a fixed order",
+       "Recursion index `k` walks this list, so no board scan is needed to find the next blank"
+      ],
+      [
+       "`r // 3 * 3 + c // 3`",
+       "Box number 0–8 (row-major) from a cell",
+       "Map a 2-D cell to its 3×3 region; e.g. (0,2)→0, (4,7)→5"
+      ],
+      [
+       "`set.add` / `set.remove`",
+       "O(1) insert / delete",
+       "Placing a digit and undoing it on backtrack"
+      ],
+      [
+       "`for d in '123456789'`",
+       "Iterates the digit characters",
+       "Board holds strings, so candidates are strings too"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "On the classic LeetCode board there are 51 empty cells. The first placements (computed by running the code) show how the search tries a digit, moves on, and backs up when a later cell has no legal digit:"
+    ],
+    "table": {
+     "head": [
+      "Recursion k",
+      "Cell (r, c)",
+      "Box",
+      "Digit placed",
+      "Note"
+     ],
+     "rows": [
+      [
+       "0",
+       "(0,2)",
+       "0",
+       "1",
+       ""
+      ],
+      [
+       "1",
+       "(0,3)",
+       "1",
+       "2",
+       ""
+      ],
+      [
+       "2",
+       "(0,5)",
+       "1",
+       "4",
+       ""
+      ],
+      [
+       "3",
+       "(0,6)",
+       "2",
+       "8",
+       ""
+      ],
+      [
+       "4",
+       "(0,7)",
+       "2",
+       "9",
+       "leads to a dead end later"
+      ],
+      [
+       "3",
+       "(0,6)",
+       "2",
+       "9",
+       "after backtracking, 8 is replaced by 9"
+      ],
+      [
+       "2",
+       "(0,5)",
+       "1",
+       "6",
+       "backtracked further"
+      ],
+      [
+       "3",
+       "(0,6)",
+       "2",
+       "4",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why undo after a failed recursive call?",
+    "p": [
+     "The three sets and the board are shared by every branch. If the digit were left in `rows`, `cols` and `boxes`, later branches would wrongly think it is used. So every `add` is paired with a `remove`, and the cell is reset to `'.'` when all nine digits fail, so the caller sees a clean board. The return value `False` tells the caller to try its next digit."
+    ]
+   },
+   {
+    "h": "Why a list of empties rather than rescanning the board?",
+    "p": [
+     "The cells are filled in a fixed order, so `k == len(empties)` is also the success test. (Choosing the most constrained cell first would prune much more, but costs a scan.)"
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Finding the next blank"
+     ],
+     "rows": [
+      [
+       "Scan from the start of the board",
+       "O(81) each call"
+      ],
+      [
+       "Index into `empties`",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential in the worst case (up to 9^empties), but constraint checks prune hard. On the classic board the solver makes 4209 calls to `solve`.",
+     "Space: O(1) in terms of board size: three fixed-size set arrays plus recursion depth of at most 81."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking with constraint sets: track used digits per row, column and box, place a digit, recurse, and undo."
+ },
+ "40": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(candidates)`",
+       "Returns a sorted copy",
+       "Makes equal values adjacent (so duplicates are easy to skip) and lets you stop early when values exceed the target"
+      ],
+      [
+       "`path.append(x)` / `path.pop()`",
+       "Add a choice, then undo it",
+       "Backtracking on a shared list"
+      ],
+      [
+       "`res.append(path[:])`",
+       "Saves a copy of the current path",
+       "`path` keeps changing; without `[:]` every saved result would end up empty"
+      ],
+      [
+       "`go(i + 1, rem - candidates[i])`",
+       "Recurse with the next start index",
+       "Each element may be used once: start after the one just taken"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Small case `candidates = [1,1,2]`, `target = 4` (sorted already). The duplicate rule shows up on the second line from the bottom."
+    ],
+    "table": {
+     "head": [
+      "Event"
+     ],
+     "rows": [
+      [
+       "go(start=0, rem=4): take 1 (i=0) → path [1]"
+      ],
+      [
+       "go(start=1, rem=3): take 1 (i=1) → path [1, 1]"
+      ],
+      [
+       "go(start=2, rem=2): take 2 (i=2) → path [1, 1, 2]"
+      ],
+      [
+       "rem = 0 → save [1, 1, 2]"
+      ],
+      [
+       "go(start=1, rem=3): take 2 (i=2) → path [1, 2]  (rem 1 left, no more items)"
+      ],
+      [
+       "go(start=0): skip i=1 (equal to candidates[0], and i > start)"
+      ],
+      [
+       "go(start=0, rem=4): take 2 (i=2) → path [2]  (dead end)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `i > start` and not `i > 0`?",
+    "p": [
+     "Two equal values may both appear in one combination (`[1,1,2]` above takes both 1s). The ban applies only to using the same value twice *at the same recursion level*, which would build the same combination again. `i > start` allows the second `1` as a deeper step (`start` moved to 1) but skips it as an alternative first choice at the top level (`start = 0`). Using `i > 0` would wrongly kill `[1,1,2]` too."
+    ]
+   },
+   {
+    "h": "Why `break` and not `continue` for `candidates[i] > rem`?",
+    "p": [
+     "The list is sorted, so every later value is at least as large and also fails. `break` abandons the loop; `continue` would still be correct but waste work."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ) in the worst case (each element is taken or skipped).",
+     "Space: O(n) recursion depth and path, not counting the output."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then backtrack with a start index; skip duplicates only at the same depth (`i > start`) and break early when the sorted values exceed the remainder."
+ },
+ "43": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`res = [0] * (len1 + len2)`",
+       "Digit array big enough for the product",
+       "The product of an m-digit and n-digit number has at most m+n digits"
+      ],
+      [
+       "`range(len-1, -1, -1)`",
+       "Counts down from the last index to 0",
+       "Process digits from least to most significant, like pen-and-paper"
+      ],
+      [
+       "`int(num1[i])`",
+       "Converts one character to its digit",
+       "Only single digits are converted, never the whole string"
+      ],
+      [
+       "`p % 10`, `p // 10`",
+       "Digit and carry of a two-digit value",
+       "Standard carry handling"
+      ],
+      [
+       "`\"\".join(map(str, res))`",
+       "Joins digits into a string",
+       "Convert the digit list back to text"
+      ],
+      [
+       "`.lstrip(\"0\")`",
+       "Removes leading zeros",
+       "The array is longer than needed when the product has m+n−1 digits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'123' × '456'`. Digit `num1[i] × num2[j]` lands at positions `i+j` (carry) and `i+j+1` (digit). State of `res` after each outer iteration:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "num1[i]",
+      "res after processing all j"
+     ],
+     "rows": [
+      [
+       "2",
+       "3",
+       "[0, 0, 1, 3, 6, 8]"
+      ],
+      [
+       "1",
+       "2",
+       "[0, 1, 0, 4, 8, 8]"
+      ],
+      [
+       "0",
+       "1",
+       "[0, 5, 6, 0, 8, 8]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why positions `i+j` and `i+j+1`?",
+    "p": [
+     "Digit `i` of `num1` has place value 10^(m−1−i), digit `j` of `num2` has 10^(n−1−j); their product has place value 10^(m+n−2−i−j), which is slot `i+j+1` (units digit) with a carry into slot `i+j` (tens). So the final array is [0, 5, 6, 0, 8, 8] and after `lstrip('0')` it reads `56088`. Adding `res[i+j+1]` into `p` first folds in the earlier partial products and carry."
+    ]
+   },
+   {
+    "h": "Why the `\"0\"` guard at the top?",
+    "p": [
+     "Without it, `'0' × '123'` produces `[0,0,0,0]`, `lstrip('0')` returns `''`, and the answer would be an empty string instead of `'0'`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — every pair of digits is multiplied once.",
+     "Space: O(m + n) for the result array."
+    ]
+   }
+  ],
+  "takeaway": "Simulate grade-school multiplication in a digit array: digits i and j land at positions i+j and i+j+1, carrying as you go."
+ },
+ "46": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`used = set()` of indices",
+       "Which positions are already in `path`",
+       "O(1) membership; tracking indexes also works when values repeat"
+      ],
+      [
+       "`path.append(x)` … `path.pop()`",
+       "Choose, recurse, un-choose",
+       "The standard backtracking triple on a shared list"
+      ],
+      [
+       "`used.add(i)` … `used.remove(i)`",
+       "Mark / unmark a position",
+       "Undo the marking after returning from the recursion"
+      ],
+      [
+       "`res.append(path[:])`",
+       "Copy the finished arrangement",
+       "`path` is reused; saving it directly would store the same list repeatedly"
+      ],
+      [
+       "`len(path) == len(nums)`",
+       "Base case: all items placed",
+       "A complete permutation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3]`. The recursion visits 16 calls and produces the six permutations in this order: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]."
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Choices tried at this depth",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1, 2, 3 (nothing used)",
+       "3 branches"
+      ],
+      [
+       "1 (after 1)",
+       "2, 3",
+       "branches [1,2,…], [1,3,…]"
+      ],
+      [
+       "2 (after 1,2)",
+       "3",
+       "leaf [1,2,3]"
+      ],
+      [
+       "2 (after 1,3)",
+       "2",
+       "leaf [1,3,2]"
+      ],
+      [
+       "…",
+       "same pattern for starting 2 and 3",
+       "[2,1,3] [2,3,1] [3,1,2] [3,2,1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why un-choose after recursing?",
+    "p": [
+     "`path` and `used` are shared by all branches. After returning from the recursive call you must pop the element and remove its index from `used`, otherwise sibling branches see a polluted state. Each iteration of the `for` loop must start from the same `path` it started with."
+    ]
+   },
+   {
+    "h": "Why loop over all of `nums` with a used-set rather than swapping?",
+    "p": [
+     "The `used` version is easier to get right and explain; swapping saves memory but is harder to reason about."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Extra memory",
+      "Order of results"
+     ],
+     "rows": [
+      [
+       "`used` set (this code)",
+       "O(n) set + path",
+       "lexicographic by input order"
+      ],
+      [
+       "Swap elements in place",
+       "O(1) beyond recursion",
+       "different order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·n!) — n! permutations, each copied in O(n).",
+     "Space: O(n) for recursion, `path` and `used` (excluding the output)."
+    ]
+   }
+  ],
+  "takeaway": "Permutation backtracking: choose an unused element, recurse, un-choose. Mark by index in a set and copy the path at the leaf."
+ },
+ "49": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`defaultdict(list)`",
+       "Dict that creates an empty list for a missing key",
+       "Grouping: avoids `if key not in d: d[key] = []`"
+      ],
+      [
+       "`sorted(w)`",
+       "Returns a list of the characters in order",
+       "Canonical form: anagrams sort to the same list"
+      ],
+      [
+       "`''.join(...)`",
+       "Turns the list of characters into a string",
+       "A list is unhashable and can't be a dict key; a string can"
+      ],
+      [
+       "`groups[key].append(w)`",
+       "Adds the word to its group",
+       "Collect items sharing a key"
+      ],
+      [
+       "`list(groups.values())`",
+       "The grouped lists",
+       "Return the groups; keys are no longer needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['eat','tea','tan','ate','nat','bat']`; the dict after each word:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Sorted key",
+      "groups after adding"
+     ],
+     "rows": [
+      [
+       "eat",
+       "aet",
+       "{aet: [eat]}"
+      ],
+      [
+       "tea",
+       "aet",
+       "{aet: [eat, tea]}"
+      ],
+      [
+       "tan",
+       "ant",
+       "{aet: [eat, tea], ant: [tan]}"
+      ],
+      [
+       "ate",
+       "aet",
+       "{aet: [eat, tea, ate], ant: [tan]}"
+      ],
+      [
+       "nat",
+       "ant",
+       "{aet: [eat, tea, ate], ant: [tan, nat]}"
+      ],
+      [
+       "bat",
+       "abt",
+       "{aet: [...], ant: [...], abt: [bat]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the sorted word as key, and what is the alternative?",
+    "p": [
+     "Two words are anagrams exactly when their letters sorted (or counted) are identical, so the key identifies the group."
+    ],
+    "table": {
+     "head": [
+      "Key",
+      "Cost per word (length k)",
+      "Note"
+     ],
+     "rows": [
+      [
+       "`''.join(sorted(w))`",
+       "O(k log k)",
+       "Simple; used here"
+      ],
+      [
+       "Tuple of 26 letter counts",
+       "O(k)",
+       "Faster for long words; `tuple(count)` is hashable, a list is not"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·k log k) — n words, sorting each of length k.",
+     "Space: O(n·k) — every word is stored once in the groups, plus the keys."
+    ]
+   }
+  ],
+  "takeaway": "Group by canonical form: map each item to a hashable key (sorted letters or a letter-count tuple) and bucket in a dict."
+ },
+ "52": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cols` set",
+       "Columns that already have a queen",
+       "One queen per column"
+      ],
+      [
+       "`d1` set holding `r - c`",
+       "Down-right diagonals in use",
+       "All cells on one `\\` diagonal share the same `r − c`"
+      ],
+      [
+       "`d2` set holding `r + c`",
+       "Down-left diagonals in use",
+       "All cells on one `/` diagonal share the same `r + c`"
+      ],
+      [
+       "`go(r)` returns a count",
+       "Number of ways to finish from row r",
+       "Counting problems: add up the children's results instead of storing boards"
+      ],
+      [
+       "`set.add` / `set.remove`",
+       "Place / lift a queen",
+       "Undo after the recursive call"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`. Rows are filled one at a time, so no row check is needed. The search makes 17 calls to `go` and finds two solutions (column of the queen in rows 0–3):"
+    ],
+    "table": {
+     "head": [
+      "Solution",
+      "Queen columns by row",
+      "Board"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 3, 0, 2]",
+       ".Q.. / ...Q / Q... / ..Q."
+      ],
+      [
+       "2",
+       "[2, 0, 3, 1]",
+       "..Q. / Q... / ...Q / .Q.."
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `r - c` and `r + c`?",
+    "p": [
+     "Cells on the same `\\` diagonal have equal `r − c`; cells on the same `/` diagonal have equal `r + c`. Two sets give O(1) conflict checks, versus scanning all earlier queens."
+    ],
+    "table": {
+     "head": [
+      "Cell (r, c)",
+      "r − c",
+      "r + c"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "0"
+      ],
+      [
+       "(1,1)",
+       "0",
+       "2"
+      ],
+      [
+       "(2,2)",
+       "0",
+       "4"
+      ],
+      [
+       "(0,2)",
+       "-2",
+       "2"
+      ],
+      [
+       "(1,1) and (2,0)",
+       "0 and 2",
+       "2 and 2 (same / diagonal)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n!) as an upper bound; pruning shrinks it a lot in practice.",
+     "Space: O(n) — three sets of at most n entries plus recursion depth n."
+    ]
+   }
+  ],
+  "takeaway": "Row-by-row backtracking with O(1) conflict checks: columns, and the diagonals indexed by r−c and r+c."
+ },
+ "55": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`reach`",
+       "Farthest index reachable using the positions seen so far",
+       "Greedy state: you only need the frontier, not every path"
+      ],
+      [
+       "`enumerate(nums)`",
+       "Index and jump length together",
+       "One pass with both"
+      ],
+      [
+       "`i > reach`",
+       "Position i cannot be reached",
+       "Detects being stuck before using `nums[i]`"
+      ],
+      [
+       "`max(reach, i + x)`",
+       "Extends the frontier",
+       "Keep the best reach so far"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through two examples",
+    "table": {
+     "head": [
+      "nums",
+      "i",
+      "x",
+      "reach after",
+      "Note"
+     ],
+     "rows": [
+      [
+       "[2,3,1,1,4]",
+       "0",
+       "2",
+       "2",
+       ""
+      ],
+      [
+       "",
+       "1",
+       "3",
+       "4",
+       "1 ≤ 2 reachable; reach = max(2, 4)"
+      ],
+      [
+       "",
+       "2",
+       "1",
+       "4",
+       ""
+      ],
+      [
+       "",
+       "3",
+       "1",
+       "4",
+       ""
+      ],
+      [
+       "",
+       "4",
+       "4",
+       "8",
+       "4 ≤ 4 reachable → loop ends → True"
+      ],
+      [
+       "[3,2,1,0,4]",
+       "0",
+       "3",
+       "3",
+       ""
+      ],
+      [
+       "",
+       "1",
+       "2",
+       "3",
+       ""
+      ],
+      [
+       "",
+       "2",
+       "1",
+       "3",
+       ""
+      ],
+      [
+       "",
+       "3",
+       "0",
+       "3",
+       "reach stays 3"
+      ],
+      [
+       "",
+       "4",
+       "—",
+       "—",
+       "i=4 > reach=3 → return False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check `i > reach` before updating?",
+    "p": [
+     "If index `i` is beyond the farthest known reach, you cannot stand on it, so its jump length is irrelevant. Updating first would let an unreachable cell extend `reach`."
+    ]
+   },
+   {
+    "h": "Why greedy and not DP?",
+    "p": [
+     "Reachable positions always form a prefix `0..reach`: if you can reach index 5 you can reach everything before it. So one number captures all the DP state, giving O(n) time and O(1) space instead of O(n²)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — single pass.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy frontier: track the farthest reachable index; if the scan ever passes it, you're stuck."
+ },
+ "58": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s.split()`",
+       "Splits on runs of whitespace and discards empty pieces",
+       "Messy spacing: leading, trailing or repeated spaces"
+      ],
+      [
+       "`[-1]`",
+       "Last item of the list",
+       "Last element without computing `len - 1`"
+      ],
+      [
+       "`len(...)`",
+       "Length of the word",
+       "The requested answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Expression",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`s`",
+       "'   fly me   to   the moon  '"
+      ],
+      [
+       "`s.split()`",
+       "['fly', 'me', 'to', 'the', 'moon']"
+      ],
+      [
+       "`s.split(' ')`",
+       "['', '', '', 'fly', 'me', '', '', 'to', '', '', 'the', 'moon', '', '']"
+      ],
+      [
+       "`s.split()[-1]`",
+       "'moon' → length 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `split()` and not `split(' ')`?",
+    "p": [
+     "`split(' ')` cuts at every single space, so the extra spaces produce empty strings, and a trailing space would make `[-1]` equal `''` (length 0, wrong). No-argument `split()` treats any run of whitespace as one separator and drops empties."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) — the list of all words is built. Scanning backwards (skip trailing spaces, then count letters) needs O(1) space and is the usual follow-up."
+    ]
+   }
+  ],
+  "takeaway": "Use `split()` with no argument to normalise whitespace; the O(1)-space version scans from the end."
+ }
+}
