@@ -1,0 +1,1902 @@
+{
+ "1005": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "heapify(nums)",
+       "Rearranges the list in place into a min-heap (priority queue whose smallest item is at index 0) in O(n)",
+       "Repeated access to the minimum"
+      ],
+      [
+       "heappop(nums)",
+       "Removes and returns the smallest item, O(log n)",
+       ""
+      ],
+      [
+       "heappush(nums, -x)",
+       "Inserts the negated value, keeping the heap property, O(log n)",
+       ""
+      ],
+      [
+       "sum(nums)",
+       "Total of the heap's items (order inside the heap does not matter)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "`[4,2,3]`, `k = 1`: negate the smallest once."
+    ],
+    "table": {
+     "head": [
+      "step",
+      "heap contents",
+      "sum"
+     ],
+     "rows": [
+      [
+       "start (heap order)",
+       "[2, 4, 3]",
+       "9"
+      ],
+      [
+       "negate smallest (2)",
+       "[-2, 4, 3]",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 5 (the array becomes 4, \u22122, 3)."
+    ]
+   },
+   {
+    "h": "Why negate the smallest each time?",
+    "p": [
+     "Negating the smallest value changes the sum the most in our favour: a negative number becomes positive (gain 2\u00b7|x|). When all numbers are non-negative, the smallest has the smallest loss. A value negated twice returns to itself, so extra turns on a zero or on the same element are harmless pairs.",
+     "Spare turns example: `[-4,-2,-3]` with `k = 4`: each pop shows the smallest value now at the front."
+    ]
+   },
+   {
+    "h": "Spare turns example",
+    "table": {
+     "head": [
+      "turn",
+      "popped (smallest)",
+      "heap sorted",
+      "sum"
+     ],
+     "rows": [
+      [
+       "1",
+       "-4",
+       "[-3, -2, 4]",
+       "-1"
+      ],
+      [
+       "2",
+       "-3",
+       "[-2, 3, 4]",
+       "5"
+      ],
+      [
+       "3",
+       "-2",
+       "[2, 3, 4]",
+       "9"
+      ],
+      [
+       "4",
+       "2",
+       "[-2, 3, 4]",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log n).",
+     "Space: O(1) extra; it modifies the input list in place."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with a min-heap: flip the current smallest element k times."
+ },
+ "1008": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i",
+       "Index of the next unused preorder value, shared by all recursive calls (nonlocal)",
+       "A single moving cursor over a sequence"
+      ],
+      [
+       "build(bound)",
+       "Builds the subtree whose values must all be \u2264 bound",
+       "Upper-bound technique for BST construction"
+      ],
+      [
+       "preorder[i] > bound \u2192 None",
+       "The next value belongs to an ancestor's right side, so this subtree is empty",
+       ""
+      ],
+      [
+       "build(root.val) then build(bound)",
+       "Left subtree: values below the root. Right subtree: values above the root but still within the old bound",
+       "Preorder order: root, left, right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[8,5,1,7,10,12]`. Each created node and the bound that applied when it was created:"
+    ],
+    "table": {
+     "head": [
+      "node created",
+      "bound"
+     ],
+     "rows": [
+      [
+       "8",
+       "inf"
+      ],
+      [
+       "5",
+       "8"
+      ],
+      [
+       "1",
+       "5"
+      ],
+      [
+       "7",
+       "8"
+      ],
+      [
+       "10",
+       "inf"
+      ],
+      [
+       "12",
+       "inf"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result in `v(left,right)` form: `8(5(1,7),10(,12))`."
+    ]
+   },
+   {
+    "h": "Why an upper bound only?",
+    "p": [
+     "Values arrive in preorder, so a value smaller than the current root goes left, and a larger one cannot belong inside the left subtree. Passing only the upper bound is enough: any value \u2264 bound is accepted by the current call; values bigger than the bound must be placed by an ancestor. The lower bound is implied because the cursor only moves forward."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): each value is placed once and the cursor never goes backward.",
+     "Space: O(h) recursion, h = tree height."
+    ]
+   }
+  ],
+  "takeaway": "Build a BST (Binary Search Tree) from preorder in O(n): a shared cursor plus an upper bound for each recursive call."
+ },
+ "1011": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo = max(weights)",
+       "The ship must carry the heaviest package, so capacity can't be smaller",
+       "Lower bound of the answer"
+      ],
+      [
+       "hi = sum(weights)",
+       "Everything in one day always works",
+       "Upper bound of the answer"
+      ],
+      [
+       "need(cap)",
+       "Greedy simulation: how many days with this capacity (start a new day when the next package does not fit)",
+       "Feasibility check inside a binary search"
+      ],
+      [
+       "need(mid) <= days: hi = mid",
+       "mid works, so try something smaller (keep mid)",
+       "Find the smallest feasible value"
+      ],
+      [
+       "else lo = mid + 1",
+       "mid is too small",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Weights 1..10, 5 days:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "days needed",
+      "decision"
+     ],
+     "rows": [
+      [
+       "10",
+       "55",
+       "32",
+       "2",
+       "\u2264 days \u2192 hi = mid"
+      ],
+      [
+       "10",
+       "32",
+       "21",
+       "3",
+       "\u2264 days \u2192 hi = mid"
+      ],
+      [
+       "10",
+       "21",
+       "15",
+       "5",
+       "\u2264 days \u2192 hi = mid"
+      ],
+      [
+       "10",
+       "15",
+       "12",
+       "6",
+       "> days \u2192 lo = mid+1"
+      ],
+      [
+       "13",
+       "15",
+       "14",
+       "6",
+       "> days \u2192 lo = mid+1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 15."
+    ]
+   },
+   {
+    "h": "Why can we binary search on capacity?",
+    "p": [
+     "Feasibility is monotone: a larger capacity never needs more days. So the capacities split into 'too small' then 'enough', and binary search finds the boundary. The check itself is greedy: filling each day as full as possible never hurts."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 log(sum \u2212 max)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the answer (capacity) with a greedy day-counting check."
+ },
+ "1017": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "divmod(n, -2)",
+       "Quotient and remainder for division by \u22122 in Python: the remainder takes the sign of the divisor, so it is 0 or \u22121",
+       "Division by a negative base"
+      ],
+      [
+       "r < 0: r += 2; n += 1",
+       "Fixes a remainder of \u22121 into the digit 1 (\u22121 = 1 \u2212 2), and compensates by adding 1 to the quotient",
+       "Normalizing digits to {0, 1}"
+      ],
+      [
+       "digits.append(str(r))",
+       "Digits come out least significant first",
+       ""
+      ],
+      [
+       "reversed",
+       "Put the most significant digit first",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`:"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "digit",
+      "next n",
+      "note"
+     ],
+     "rows": [
+      [
+       "2",
+       "0",
+       "-1",
+       "\u2013"
+      ],
+      [
+       "-1",
+       "1",
+       "1",
+       "remainder was \u22121 \u2192 +2, carry +1"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "remainder was \u22121 \u2192 +2, carry +1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result `110`: 1\u00b74 + 1\u00b7(\u22122) + 0 = 2. Check: `6` gives `11010`."
+    ]
+   },
+   {
+    "h": "Why the correction step?",
+    "p": [
+     "In base \u22122 every digit must be 0 or 1. Python's `divmod` with a negative divisor can return a remainder of \u22121. Rewriting \u22121 as +1 with an extra \u22122 means the quotient must be increased by 1, which is exactly `n += 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(log n)."
+    ]
+   }
+  ],
+  "takeaway": "Repeated division by \u22122, converting a \u22121 remainder to 1 and carrying +1 into the quotient."
+ },
+ "1020": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque((i, j) for \u2026 if on the border and grid[i][j] == 1)",
+       "Queue seeded with every land cell on the border",
+       "Multi-source BFS (Breadth-First Search)"
+      ],
+      [
+       "for i, j in q: grid[i][j] = 0",
+       "Marks the border land as visited by sinking it (the generator-built deque is iterated before the loop starts)",
+       "Visited marking in place"
+      ],
+      [
+       "grid[a][b] == 1 \u2192 0, append",
+       "Floods inward: land connected to the border can escape and is sunk",
+       ""
+      ],
+      [
+       "sum(map(sum, grid))",
+       "Remaining 1s are land that cannot reach the border",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]`: the only border land cell is `[(1, 0)]`; it is sunk, and its neighbours are checked."
+    ],
+    "table": {
+     "head": [
+      "step",
+      "result"
+     ],
+     "rows": [
+      [
+       "border land cells",
+       "[(1, 0)]"
+      ],
+      [
+       "cells flooded from them",
+       "[]"
+      ],
+      [
+       "land cells left (enclaves)",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why start from the border instead of from each land cell?",
+    "p": [
+     "A land cell is an enclave exactly when it cannot reach the border. Searching from every land cell repeats a lot of work, but one flood from the border eliminates all escapable land at once, leaving the enclaves."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n) for the queue."
+    ]
+   }
+  ],
+  "takeaway": "Flood-fill (BFS) from all border land cells; whatever land remains is an enclave."
+ },
+ "1038": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(node.right) first",
+       "Reverse inorder: visits nodes from the largest value to the smallest",
+       "A BST (Binary Search Tree) inorder is sorted; reversing it gives descending order"
+      ],
+      [
+       "total += node.val",
+       "Running sum of all values visited so far, all of which are \u2265 this node",
+       ""
+      ],
+      [
+       "node.val = total",
+       "The node becomes its own value plus every greater value",
+       "In-place update"
+      ],
+      [
+       "nonlocal total",
+       "Lets the nested function modify the outer running total",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The tree from the problem. Nodes are visited from largest to smallest; each row is (original value, new value):"
+    ],
+    "table": {
+     "head": [
+      "original",
+      "new value"
+     ],
+     "rows": [
+      [
+       "8",
+       "8"
+      ],
+      [
+       "7",
+       "15"
+      ],
+      [
+       "6",
+       "21"
+      ],
+      [
+       "5",
+       "26"
+      ],
+      [
+       "4",
+       "30"
+      ],
+      [
+       "3",
+       "33"
+      ],
+      [
+       "2",
+       "35"
+      ],
+      [
+       "1",
+       "36"
+      ],
+      [
+       "0",
+       "36"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse inorder?",
+    "p": [
+     "The new value of a node is the sum of all nodes with greater or equal value. Visiting from the largest down means the running total at the moment of visiting is exactly that sum, so a single pass works."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Reverse inorder traversal with a running sum converts a BST into a greater-sum tree in one pass."
+ },
+ "1041": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x, y",
+       "Position; starts at the origin",
+       ""
+      ],
+      [
+       "dx, dy = 0, 1",
+       "Direction vector; facing north",
+       ""
+      ],
+      [
+       "dx, dy = -dy, dx",
+       "Turn left 90\u00b0: (0,1) \u2192 (\u22121,0) \u2192 (0,\u22121) \u2192 (1,0)",
+       "Rotating a direction vector"
+      ],
+      [
+       "dx, dy = dy, -dx",
+       "Turn right 90\u00b0",
+       ""
+      ],
+      [
+       "(x, y) == (0, 0) or (dx, dy) != (0, 1)",
+       "After one pass the robot is bounded if it is back home, or if it faces a different direction (then repeating the instructions makes a loop)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"GGLLGG\"`:"
+    ],
+    "table": {
+     "head": [
+      "instruction",
+      "position",
+      "direction"
+     ],
+     "rows": [
+      [
+       "G",
+       "(0,1)",
+       "(0,1)"
+      ],
+      [
+       "G",
+       "(0,2)",
+       "(0,1)"
+      ],
+      [
+       "L",
+       "(0,2)",
+       "(-1,0)"
+      ],
+      [
+       "L",
+       "(0,2)",
+       "(0,-1)"
+      ],
+      [
+       "G",
+       "(0,1)",
+       "(0,-1)"
+      ],
+      [
+       "G",
+       "(0,0)",
+       "(0,-1)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Back at the origin after one pass (facing south), so bounded: True."
+    ]
+   },
+   {
+    "h": "Why check the direction after one pass?",
+    "p": [
+     "If the robot ends facing north and away from the origin, every repetition moves it farther in the same direction: unbounded. If it faces any other direction, repeating the instructions at most four times rotates the displacement back to a loop. So one pass is enough to decide."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate once: bounded iff the robot returns to the origin or ends up not facing north."
+ },
+ "1044": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pre[i + 1] = (pre[i] * B + ord(c)) % M",
+       "Polynomial rolling hash prefix array: the hash of s[:i+1] under base B modulo a big prime M",
+       "Hashing every substring in O(1) after setup"
+      ],
+      [
+       "pw[L]",
+       "B^L mod M, used to remove the leading characters",
+       ""
+      ],
+      [
+       "(pre[i + L] - pre[i] * pw[L]) % M",
+       "Hash of s[i:i+L] in O(1)",
+       "Rolling-hash substring formula"
+      ],
+      [
+       "h in seen and s[\u2026] == s[\u2026]",
+       "Equal hashes may collide, so confirm with a direct string comparison",
+       "Making a hash-based answer certain"
+      ],
+      [
+       "binary search on L",
+       "If a duplicate of length L exists, one of length L\u22121 does too, so the length is monotone",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"banana\"`: each binary-search step tests one length:"
+    ],
+    "table": {
+     "head": [
+      "length L",
+      "start of a repeated substring",
+      "substring"
+     ],
+     "rows": [
+      [
+       "3",
+       "3",
+       "ana"
+      ],
+      [
+       "4",
+       "none",
+       "\u2013"
+      ]
+     ]
+    },
+    "bullets": [
+     "Longest duplicate substring: `ana`."
+    ]
+   },
+   {
+    "h": "Why binary search on the length plus hashing?",
+    "p": [
+     "Checking all lengths and substrings pairwise would be O(n\u00b3) or worse. The answer length is monotone (duplicates of length L imply duplicates of every shorter length), so about log n lengths are tested, and each test is a linear pass using O(1) rolling hashes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) expected (plus the O(L) confirmation on a hash match).",
+     "Space: O(n) for the hash arrays and dictionary."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the length; for each length a rolling-hash set finds a repeat, verified by direct comparison."
+ },
+ "1047": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st",
+       "List used as a stack; the top is the most recent surviving character",
+       ""
+      ],
+      [
+       "st[-1] == ch",
+       "Peeks at the top; equal means an adjacent duplicate",
+       ""
+      ],
+      [
+       "st.pop()",
+       "Removes the top, which also exposes a new top that may match the next character",
+       "Cascading removals"
+      ],
+      [
+       "''.join(st)",
+       "Builds the final string",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"abbaca\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "action",
+      "stack"
+     ],
+     "rows": [
+      [
+       "a",
+       "push",
+       "a"
+      ],
+      [
+       "b",
+       "push",
+       "ab"
+      ],
+      [
+       "b",
+       "matches top \u2192 pop",
+       "a"
+      ],
+      [
+       "a",
+       "matches top \u2192 pop",
+       ""
+      ],
+      [
+       "c",
+       "push",
+       "c"
+      ],
+      [
+       "a",
+       "push",
+       "ca"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack and not repeated string replacement?",
+    "p": [
+     "Removing a pair can create a new adjacent pair (`abba` \u2192 `aa` \u2192 empty). Repeated `replace` passes can take O(n\u00b2). The stack handles cascades naturally in one pass: after a pop, the next incoming character is compared with the new top."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of survivors: pop on a matching top, otherwise push."
+ },
+ "1053": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "while i >= 0 and arr[i] <= arr[i + 1]: i -= 1",
+       "Scans from the right for the first position where the order drops (arr[i] > arr[i+1]); everything to its right is non-decreasing",
+       "Previous-permutation step 1"
+      ],
+      [
+       "i < 0 \u2192 return arr",
+       "Array is already non-decreasing, i.e. the smallest permutation",
+       ""
+      ],
+      [
+       "while arr[j] >= arr[i]: j -= 1",
+       "From the right, finds the largest value smaller than arr[i]",
+       ""
+      ],
+      [
+       "while arr[j - 1] == arr[j]: j -= 1",
+       "With duplicates, uses the leftmost copy so the result is the largest possible; the swap puts the larger value at a more significant position",
+       "Duplicates"
+      ],
+      [
+       "swap arr[i], arr[j]",
+       "The one allowed swap",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "`[1,9,4,6,7]`:"
+    ],
+    "table": {
+     "head": [
+      "step"
+     ],
+     "rows": [
+      [
+       "first i from the right with arr[i] > arr[i+1]: i = 1 (value 9)"
+      ],
+      [
+       "largest value smaller than 9 on the right: j = 4 (value 7)"
+      ],
+      [
+       "leftmost among equal values: j = 4"
+      ],
+      [
+       "swap \u2192 [1, 7, 4, 6, 9]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Then `[3,1,1,3]` gives: first i from the right with arr[i] > arr[i+1]: i = 0 (value 3); largest value smaller than 3 on the right: j = 2 (value 1); leftmost among equal values: j = 1; swap \u2192 [1, 3, 1, 3]."
+    ]
+   },
+   {
+    "h": "Why the leftmost duplicate?",
+    "p": [
+     "For `[3,1,1,3]` swapping the 3 at the front with the first 1 gives `[1,3,1,3]`, while swapping with the second 1 gives `[1,1,3,3]`, which is smaller. The goal is the LARGEST smaller permutation, so the code picks the first (leftmost) of the equal values, giving `[1,3,1,3]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Previous permutation with one swap: find the rightmost drop, swap with the largest smaller value to its right (leftmost copy)."
+ },
+ "1071": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str1 + str2 != str2 + str1",
+       "If the two strings are built from a common repeating block, concatenation commutes; otherwise no common divisor string exists",
+       "Commutativity test for common periodicity"
+      ],
+      [
+       "gcd(len(str1), len(str2))",
+       "Greatest common divisor of the lengths (from `math`): the longest possible block length",
+       ""
+      ],
+      [
+       "str1[:max_length]",
+       "The block is a prefix of the string",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"ABCABCABC\"` and `\"ABCABC\"`:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "str1 + str2 == str2 + str1",
+       "True"
+      ],
+      [
+       "lengths",
+       "9 and 6"
+      ],
+      [
+       "gcd of lengths",
+       "3"
+      ],
+      [
+       "answer = prefix of that length",
+       "ABC"
+      ]
+     ]
+    },
+    "bullets": [
+     "A failing case: `\"LEET\"` and `\"CODE\"` give different concatenations (`LEETCODE` vs `CODELEET`), so the answer is the empty string."
+    ]
+   },
+   {
+    "h": "Why does the concatenation test work?",
+    "p": [
+     "If both strings are repetitions of a block X, then str1 + str2 and str2 + str1 are both repetitions of X, so they are equal. If they are equal, the two strings commute and share a common period (a known property of words). The block length must divide both lengths, and the largest choice is their gcd."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m) for the concatenations and comparison.",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Strings share a divisor iff s1+s2 == s2+s1; the answer is the prefix whose length is gcd of the two lengths."
+ },
+ "1074": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for top \u2026 for bottom in range(top, m)",
+       "Fixes a band of rows from `top` to `bottom`",
+       "Reducing a 2-D problem to 1-D"
+      ],
+      [
+       "cols[j] += matrix[bottom][j]",
+       "Column sums of the band, updated incrementally as the band grows by one row",
+       ""
+      ],
+      [
+       "Counter({0: 1})",
+       "Counts of prefix sums seen so far in this band; the empty prefix has sum 0 once",
+       "Subarray sum equals target (prefix sums + hash map)"
+      ],
+      [
+       "seen[run - target]",
+       "Number of earlier prefixes that make a subarray with sum target ending here; a Counter returns 0 for missing keys",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,0],[1,1,1],[0,1,0]]`, target 0:"
+    ],
+    "table": {
+     "head": [
+      "rows (top..bottom)",
+      "column sums",
+      "submatrices found",
+      "total"
+     ],
+     "rows": [
+      [
+       "0..0",
+       "[0, 1, 0]",
+       "2",
+       "2"
+      ],
+      [
+       "0..1",
+       "[1, 2, 1]",
+       "0",
+       "2"
+      ],
+      [
+       "0..2",
+       "[1, 3, 1]",
+       "0",
+       "2"
+      ],
+      [
+       "1..1",
+       "[1, 1, 1]",
+       "0",
+       "2"
+      ],
+      [
+       "1..2",
+       "[1, 2, 1]",
+       "0",
+       "2"
+      ],
+      [
+       "2..2",
+       "[0, 1, 0]",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 4."
+    ]
+   },
+   {
+    "h": "Why does a 2-D problem reduce to the 1-D subarray problem?",
+    "p": [
+     "Any submatrix is a band of rows (top to bottom) and a range of columns. Summing the band's rows column-wise turns it into an array, and a range of columns is then a subarray of that array. 'Number of subarrays with sum = target' is solved in linear time with prefix sums and a hash map."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b2 \u00b7 n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Fix a row band, collapse it to column sums, and count target-sum subarrays with a prefix-sum counter."
+ },
+ "1086": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "defaultdict(list)",
+       "Dict that creates an empty list for a new student id",
+       "Grouping values by key"
+      ],
+      [
+       "sorted(v, reverse=True)[:5]",
+       "Sorts scores high to low and keeps the top five",
+       "Top-k of a small list"
+      ],
+      [
+       "sum(\u2026) // 5",
+       "Integer average (floor division)",
+       ""
+      ],
+      [
+       "sorted(scores.items())",
+       "Orders students by id, as the output requires",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The problem's items grouped by student:"
+    ],
+    "table": {
+     "head": [
+      "id",
+      "scores sorted high \u2192 low",
+      "top five",
+      "average (floor)"
+     ],
+     "rows": [
+      [
+       "1",
+       "[100, 92, 91, 87, 65, 60]",
+       "[100, 92, 91, 87, 65]",
+       "87"
+      ],
+      [
+       "2",
+       "[100, 97, 93, 77, 76]",
+       "[100, 97, 93, 77, 76]",
+       "88"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort everything instead of keeping a heap of size 5?",
+    "p": [
+     "For small inputs the sort is simpler and fast enough. A size-5 min-heap wins only when each student has very many scores."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time per student with k scores",
+      "Code"
+     ],
+     "rows": [
+      [
+       "Sort (this code)",
+       "O(k log k)",
+       "one line"
+      ],
+      [
+       "Min-heap of size 5",
+       "O(k log 5)",
+       "push/pop management"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log N) worst case for N items.",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Group scores by student, sort descending, average the top five with integer division."
+ },
+ "1095": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mountain_arr.length() / .get(i)",
+       "The only allowed access; `get` is limited to about 100 calls, so each is precious",
+       "Counting API calls"
+      ],
+      [
+       "first binary search",
+       "Finds the peak by comparing neighbours (rising \u2192 go right, else go left)",
+       "Peak of a mountain"
+      ],
+      [
+       "second binary search on [0, peak]",
+       "The left side is ascending: ordinary lower-bound search for target",
+       ""
+      ],
+      [
+       "third on [peak, n-1]",
+       "The right side is descending, so the comparison is reversed (`> target` means go right)",
+       "Binary search on a descending slice"
+      ],
+      [
+       "return l if get(l) == target else -1",
+       "Confirms the found position holds the target",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5,3,1]`, target 3:"
+    ],
+    "table": {
+     "head": [
+      "phase",
+      "result"
+     ],
+     "rows": [
+      [
+       "peak search",
+       "peak index 4 (value 5)"
+      ],
+      [
+       "left side search",
+       "index 2 holds 3: found"
+      ],
+      [
+       "answer",
+       "2 (smallest index, so the right side is not needed)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total `get` calls used so far: 8."
+    ]
+   },
+   {
+    "h": "Why search the left side first?",
+    "p": [
+     "The problem asks for the smallest index. If the target exists on the ascending side, that index is smaller than any on the descending side, so the right side is searched only if the left fails. The peak itself belongs to the left search (`r = peak`)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) with three binary searches, about 3\u00b7log n `get` calls.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Three binary searches: find the peak, search the ascending side, then the descending side."
+ },
+ "1101": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(logs)",
+       "Orders friendships by timestamp (the first field of each log)",
+       "Process events in time order"
+      ],
+      [
+       "find / parent[ra] = rb",
+       "Union-Find (disjoint set): groups of friends, merged on each friendship",
+       ""
+      ],
+      [
+       "groups = n",
+       "Number of separate friend groups; every union of different groups lowers it by one",
+       ""
+      ],
+      [
+       "groups == 1 \u2192 return t",
+       "The moment everyone is connected",
+       ""
+      ],
+      [
+       "return -1",
+       "Never fully connected",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "6 people, friendship logs sorted by time:"
+    ],
+    "table": {
+     "head": [
+      "time",
+      "pair",
+      "effect",
+      "groups left"
+     ],
+     "rows": [
+      [
+       "20190101",
+       "0-1",
+       "merge",
+       "5"
+      ],
+      [
+       "20190104",
+       "3-4",
+       "merge",
+       "4"
+      ],
+      [
+       "20190107",
+       "2-3",
+       "merge",
+       "3"
+      ],
+      [
+       "20190211",
+       "1-5",
+       "merge",
+       "2"
+      ],
+      [
+       "20190224",
+       "2-4",
+       "already friends",
+       "2"
+      ],
+      [
+       "20190301",
+       "0-3",
+       "merge",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Everyone is connected at 20190301."
+    ]
+   },
+   {
+    "h": "Why count groups instead of checking connectivity each time?",
+    "p": [
+     "Each successful union reduces the group count by exactly one, so n\u22121 successful unions are needed to connect n people. Tracking the count makes the completion check O(1) rather than a full scan."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L log L) for sorting L logs, plus near-constant Union-Find work.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort logs by time and union friends; the first time only one group remains is the answer."
+ },
+ "1110": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "drop = set(to_delete)",
+       "O(1) membership test for deleted values",
+       ""
+      ],
+      [
+       "dfs(node, is_root)",
+       "`is_root` is True when the parent was deleted (or at the real root), so this node starts a new tree",
+       "Passing a flag down a traversal"
+      ],
+      [
+       "if is_root and not deleted: res.append(node)",
+       "A surviving node with no parent in the forest becomes a root",
+       ""
+      ],
+      [
+       "node.left = dfs(node.left, deleted)",
+       "The return value reattaches the child, or becomes None if the child was deleted",
+       "Rewriting links via return values"
+      ],
+      [
+       "return None if deleted else node",
+       "Cuts the deleted node from its parent",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,5,6,7]`, delete 3 and 5:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "action"
+     ],
+     "rows": [
+      [
+       "1",
+       "is a root and survives \u2192 new tree root"
+      ],
+      [
+       "5",
+       "deleted \u2192 its children become roots"
+      ],
+      [
+       "3",
+       "deleted \u2192 its children become roots"
+      ],
+      [
+       "6",
+       "is a root and survives \u2192 new tree root"
+      ],
+      [
+       "7",
+       "is a root and survives \u2192 new tree root"
+      ]
+     ]
+    },
+    "bullets": [
+     "Forest roots: 1(2(4,),), 6, 7 (in `v(left,right)` form)."
+    ]
+   },
+   {
+    "h": "Why pass `deleted` to the children as `is_root`?",
+    "p": [
+     "A node becomes a new root exactly when its parent is deleted. The parent knows whether it is deleted, so it tells each child through the `is_root` argument. That works in one top-down pass with no parent pointers."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Post/pre-order DFS (Depth-First Search): a node whose parent was deleted becomes a root; return None to cut deleted nodes."
+ },
+ "1125": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "idx = {skill: bit}",
+       "Gives each required skill a bit position",
+       "Set of \u2264 16 items as a bitmask"
+      ],
+      [
+       "mask |= 1 << idx[s]",
+       "Builds the person's skill mask by OR-ing bits",
+       ""
+      ],
+      [
+       "dp = {0: []}",
+       "Maps a set of covered skills (mask) to the smallest team found that covers exactly that set; the empty set needs no one",
+       "DP (Dynamic Programming) over subsets, stored sparsely in a dict"
+      ],
+      [
+       "state | mask",
+       "Union of the covered skills and this person's skills",
+       ""
+      ],
+      [
+       "len(dp[nm]) > len(team) + 1",
+       "Keep the smaller team for that skill set",
+       ""
+      ],
+      [
+       "list(dp.items())",
+       "Copy before looping, because `dp` is modified inside the loop",
+       "Avoid mutating a dict while iterating"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Skills `java=bit0, nodejs=bit1, reactjs=bit2`. After each person, the best team found for each reachable skill set (binary masks):"
+    ],
+    "table": {
+     "head": [
+      "person",
+      "person mask",
+      "dp: mask \u2192 team (person indices)"
+     ],
+     "rows": [
+      [
+       "0",
+       "001",
+       "{'000': [], '001': [0]}"
+      ],
+      [
+       "1",
+       "010",
+       "{'000': [], '001': [0], '010': [1], '011': [0, 1]}"
+      ],
+      [
+       "2",
+       "110",
+       "{'000': [], '001': [0], '010': [1], '011': [0, 1], '110': [2], '111': [0, 2]}"
+      ]
+     ]
+    },
+    "bullets": [
+     "Full mask `111` is reached by team `[0, 2]`."
+    ]
+   },
+   {
+    "h": "Why a dict keyed by mask?",
+    "p": [
+     "There are up to 2^16 skill subsets, but only a few are reachable. A dict stores just those, and each person updates the states that exist at that moment. Because the loop uses `list(dp.items())`, a person is added at most once per state in a round."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(P \u00b7 reachable states) \u2264 O(P \u00b7 2^S), P people and S skills.",
+     "Space: O(2^S \u00b7 team size)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP in a dict: for each person, extend every reachable skill set and keep the smallest team per set."
+ },
+ "1137": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a, b, c = 0, 1, 1",
+       "T(0), T(1), T(2): the last three terms",
+       "Rolling window of previous values"
+      ],
+      [
+       "a, b, c = b, c, a + b + c",
+       "Tuple assignment slides the window: new c is the sum of the old three",
+       ""
+      ],
+      [
+       "range(n - 2)",
+       "Number of steps from T(2) to T(n); for n = 1 or 2 the range is empty and `c` = 1 is returned",
+       ""
+      ],
+      [
+       "n == 0 \u2192 0",
+       "T(0) is the one case where the answer is not `c`",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`; each row shows (a, b, c) = (T(k\u22122), T(k\u22121), T(k)):"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "a",
+      "b",
+      "c = T(k)"
+     ],
+     "rows": [
+      [
+       "2",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "T(4) = 4."
+    ]
+   },
+   {
+    "h": "Why not recursion?",
+    "p": [
+     "The plain recursive definition recomputes the same terms and takes exponential time. Rolling three variables computes each term once with constant space."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Rolling three variables: each new term is the sum of the previous three."
+ },
+ "1143": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Length of the longest common subsequence of a[:i] and b[:j]",
+       "Two-string prefix DP (Dynamic Programming)"
+      ],
+      [
+       "a[i-1] == b[j-1]: dp[i-1][j-1] + 1",
+       "Matching last characters extend the best answer of the shorter prefixes",
+       ""
+      ],
+      [
+       "max(dp[i-1][j], dp[i][j-1])",
+       "Otherwise drop the last character of one string or the other",
+       ""
+      ],
+      [
+       "row/column 0",
+       "Empty prefix gives 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = \"abcde\"`, `b = \"ace\"`; rows are prefixes of `a`, columns are prefixes of `b`:"
+    ],
+    "table": {
+     "head": [
+      "a prefix",
+      "''",
+      "a",
+      "ac",
+      "ace"
+     ],
+     "rows": [
+      [
+       "''",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "a",
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "ab",
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "abc",
+       "0",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "abcd",
+       "0",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "abcde",
+       "0",
+       "1",
+       "2",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Bottom-right = 3 (the subsequence `ace`)."
+    ]
+   },
+   {
+    "h": "Why the diagonal on a match and `max` otherwise?",
+    "p": [
+     "If the last characters match, using them together is never worse than skipping either. If they differ, at least one of them is not in the common subsequence, so the answer is the better of dropping one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n); a rolling pair of rows reduces it to O(min(m, n))."
+    ]
+   }
+  ],
+  "takeaway": "LCS (Longest Common Subsequence) is prefix DP: diagonal + 1 on a match, otherwise the better of up or left."
+ },
+ "1146": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.hist[index]",
+       "For each index, a list of (snapshot id, value) pairs, in increasing snapshot id order; it starts with (-1, 0) meaning 'value 0 before any snapshot'",
+       "Storing only changes, not full copies"
+      ],
+      [
+       "h[-1][0] == self.sid",
+       "A second `set` in the same snapshot period overwrites the last entry instead of adding one",
+       ""
+      ],
+      [
+       "snap()",
+       "Just increments the id: O(1), nothing is copied",
+       "Copy-on-write idea"
+      ],
+      [
+       "bisect_right(h, (snap_id, inf)) - 1",
+       "Binary search for the last entry whose snapshot id \u2264 snap_id (the `inf` keeps all entries with that id to the left)",
+       "Latest value at or before a time"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`SnapshotArray(3)`; history of index 0 shown on the right:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "hist[0]"
+     ],
+     "rows": [
+      [
+       "set(0, 5)",
+       "\u2013",
+       "[(-1, 0), (0, 5)]"
+      ],
+      [
+       "snap()",
+       "0",
+       "[(-1, 0), (0, 5)]"
+      ],
+      [
+       "set(0, 6)",
+       "\u2013",
+       "[(-1, 0), (0, 5), (1, 6)]"
+      ],
+      [
+       "get(0, 0)",
+       "5",
+       "[(-1, 0), (0, 5), (1, 6)]"
+      ],
+      [
+       "snap()",
+       "1",
+       "[(-1, 0), (0, 5), (1, 6)]"
+      ],
+      [
+       "get(0, 1)",
+       "6",
+       "[(-1, 0), (0, 5), (1, 6)]"
+      ]
+     ]
+    },
+    "bullets": [
+     "`get(0, 0)` returns 5: the value set before snapshot 0 was taken. The later `set(0, 6)` belongs to snapshot 1."
+    ]
+   },
+   {
+    "h": "Why not copy the array on every snap?",
+    "p": [
+     "That costs O(n) time and memory per snapshot. Storing only changed indices makes `set` O(1) amortized, `snap` O(1), and `get` O(log s) for s changes at that index."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "`set` O(1), `snap` O(1), `get` O(log s).",
+     "Space: O(n + total number of sets)."
+    ]
+   }
+  ],
+  "takeaway": "Per-index change history of (snapshot id, value) with binary search; snap just bumps a counter."
+ }
+}

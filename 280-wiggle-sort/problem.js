@@ -1,0 +1,34 @@
+window.PROBLEM = {
+ "id": "280",
+ "title": "Wiggle Sort",
+ "level": "Medium",
+ "topic": "Sorting",
+ "question": "Reorder nums so that nums[0] ≤ nums[1] ≥ nums[2] ≤ nums[3] … (any valid order; this solution does a single swap pass). Example: [3,5,2,1,6,4] → [3,5,1,6,2,4].",
+ "why": "[3,5,2,1,6,4] → [3,5,1,6,2,4] satisfies nums[0] ≤ nums[1] ≥ nums[2] ≤ nums[3] ≥ …",
+ "idea": "For every index i ≥ 1: if i is odd we need nums[i−1] ≤ nums[i], if i is even we need nums[i−1] ≥ nums[i]. When the pair is out of order swap them; swapping never breaks the earlier pairs.",
+ "input": "nums = [3,5,2,1,6,4]",
+ "output": "[3, 5, 1, 6, 2, 4]",
+ "notes": [],
+ "best": "For every index i ≥ 1: if i is odd we need nums[i−1] ≤ nums[i], if i is even we need nums[i−1] ≥ nums[i]. When the pair is out of order swap them; swapping never breaks the earlier pairs.",
+ "variants": [
+  {
+   "name": "One pass: fix each neighbouring pair",
+   "code": "class Solution:\n    def wiggleSort(self, nums):\n        for i in range(1, len(nums)):\n            if (i % 2 == 1 and nums[i] < nums[i - 1]) or (i % 2 == 0 and nums[i] > nums[i - 1]):\n                nums[i], nums[i - 1] = nums[i - 1], nums[i]\n        return nums",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "For every index i ≥ 1: if i is odd we need nums[i−1] ≤ nums[i], if i is even we need nums[i−1] ≥ nums[i]. When the pair is out of order swap them; swapping never breaks the earlier pairs.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Fix pairs by position parity",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def wiggleSort(self, nums):\n        for i in range(len(nums) - 1):\n            a, b = nums[i], nums[i + 1]\n            if i % 2 == 0 and a > b:\n                nums[i], nums[i + 1] = b, a\n            elif i % 2 == 1 and a < b:\n                nums[i], nums[i + 1] = b, a\n        return nums",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "For each neighbouring pair enforce ≤ at even positions and ≥ at odd positions.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

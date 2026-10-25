@@ -1,0 +1,34 @@
+window.PROBLEM = {
+ "id": "298",
+ "title": "Binary Tree Longest Consecutive Sequence",
+ "level": "Medium",
+ "topic": "Binary Tree",
+ "question": "Return the length of the longest path in a binary tree in which every value is exactly one more than its parent's, going downwards (path need not start at the root). Example: [1,null,3,2,4,null,null,null,5] → 3. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)",
+ "why": "[1,null,3,2,4,null,null,null,5]: 3 → 4 → 5 is a run of 3.",
+ "idea": "Walk down from the root passing the run length ending at the parent. A child extends the run when its value is the parent's value + 1, otherwise a new run of length 1 starts. Track the maximum over all nodes.",
+ "input": "root = [1,null,3,2,4,null,null,null,5]",
+ "output": "3",
+ "notes": [],
+ "best": "Walk down from the root passing the run length ending at the parent. A child extends the run when its value is the parent's value + 1, otherwise a new run of length 1 starts. Track the maximum over all nodes.",
+ "variants": [
+  {
+   "name": "DFS carrying the current run length",
+   "code": "class Solution:\n    def longestConsecutive(self, root):\n        best = 0\n        def dfs(node, parent_val, run):\n            nonlocal best\n            if not node:\n                return\n            run = run + 1 if node.val == parent_val + 1 else 1\n            best = max(best, run)\n            dfs(node.left, node.val, run)\n            dfs(node.right, node.val, run)\n        dfs(root, float('-inf'), 0)\n        return best",
+   "time": "O(n)",
+   "space": "O(h)",
+   "explain": "Walk down from the root passing the run length ending at the parent. A child extends the run when its value is the parent's value + 1, otherwise a new run of length 1 starts. Track the maximum over all nodes.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "BFS with run lengths",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def longestConsecutive(self, root):\n        if not root:\n            return 0\n        best = 1\n        q = deque([(root, 1)])\n        while q:\n            node, run = q.popleft()\n            best = max(best, run)\n            for child in (node.left, node.right):\n                if child:\n                    q.append((child, run + 1 if child.val == node.val + 1 else 1))\n        return best",
+   "time": "O(n)",
+   "space": "O(w)",
+   "explain": "Carry the run length in the queue instead of recursion.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};
