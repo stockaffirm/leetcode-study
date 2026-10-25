@@ -1,0 +1,1722 @@
+{
+ "263": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if n <= 0: return False`",
+       "Ugly numbers are positive; 0 would loop forever (`0 % 2 == 0`) and negatives are excluded",
+       "Guard before dividing"
+      ],
+      [
+       "`for p in (2, 3, 5)`",
+       "The only allowed prime factors",
+       "Check a small fixed set of primes"
+      ],
+      [
+       "`while n % p == 0: n //= p`",
+       "Strip every factor of `p` (a loop, since p may divide many times)",
+       "Dividing out prime factors"
+      ],
+      [
+       "`n == 1`",
+       "If anything other than 2, 3, 5 divided n, a bigger factor remains",
+       "The leftover tells you whether another prime exists"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 30 = 2·3·5` strips down to 1 (ugly). `n = 14 = 2·7` leaves 7 (not ugly)."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Divide by p",
+      "n after"
+     ],
+     "rows": [
+      [
+       "30",
+       "2",
+       "15"
+      ],
+      [
+       "",
+       "3",
+       "5"
+      ],
+      [
+       "",
+       "5",
+       "1"
+      ],
+      [
+       "14",
+       "2",
+       "7"
+      ],
+      [
+       "",
+       "end",
+       "leftover 7 ≠ 1 → False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `while` and not `if`?",
+    "p": [
+     "`8 = 2·2·2` needs three divisions by 2. With `if` you would divide once and be left with 4, wrongly rejecting it."
+    ]
+   },
+   {
+    "h": "Why a leftover of 1 is the right test",
+    "p": [
+     "After removing every 2, 3 and 5, the remaining value is a product of the other primes. It is 1 exactly when there were none, so equality with 1 decides it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n), each division at least halves n.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Strip out all factors of 2, 3 and 5 with while-loops; the number is ugly iff what remains is 1 (and n was positive)."
+ },
+ "266": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Map from character to its count",
+       "Frequency counting"
+      ],
+      [
+       "`.values()`",
+       "The counts only",
+       "We don't care which character, only how many"
+      ],
+      [
+       "`c % 2`",
+       "1 for an odd count, 0 for even",
+       "Parity test"
+      ],
+      [
+       "`sum(…) <= 1`",
+       "How many characters have an odd count: at most one is allowed",
+       "Palindrome rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"carerac\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "count",
+      "odd?"
+     ],
+     "rows": [
+      [
+       "a",
+       "2",
+       "0"
+      ],
+      [
+       "c",
+       "2",
+       "0"
+      ],
+      [
+       "e",
+       "1",
+       "1"
+      ],
+      [
+       "r",
+       "2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is 'at most one odd count' the right rule?",
+    "p": [
+     "A palindrome pairs each character with its mirror. Characters with even counts pair up fully. A single character with an odd count can sit in the middle (odd length). Two odd counts would leave two unpaired characters; zero odd counts needs even length, which is automatically consistent."
+    ],
+    "table": {
+     "head": [
+      "String",
+      "Odd counts",
+      "Can be a palindrome?"
+     ],
+     "rows": [
+      [
+       "`aab`",
+       "1 (b)",
+       "yes: `aba`"
+      ],
+      [
+       "`abc`",
+       "3",
+       "no"
+      ],
+      [
+       "`aabb`",
+       "0",
+       "yes: `abba`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no need to build the palindrome?",
+    "p": [
+     "The question is only existence. Counting parity avoids generating permutations (factorial) entirely."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k), k distinct characters (O(1) for a fixed alphabet)."
+    ]
+   }
+  ],
+  "takeaway": "Palindrome permutation = at most one character with an odd frequency."
+ },
+ "269": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g = {c: set() …}`",
+       "Directed graph: each character that appears, with the set of characters that must come after it",
+       "Adjacency list; a set removes duplicate edges"
+      ],
+      [
+       "`indeg`",
+       "Number of unmet predecessors for each character",
+       "Kahn's topological sort"
+      ],
+      [
+       "`zip(words, words[1:])`",
+       "Consecutive word pairs",
+       "Order information only comes from neighbours in a sorted list"
+      ],
+      [
+       "`for x, y in zip(a, b): if x != y: … break`",
+       "The first differing letter gives one rule `x < y`; later letters say nothing",
+       "Only the first difference matters"
+      ],
+      [
+       "`for … else`",
+       "The `else` runs only when the loop did NOT `break`, meaning one word is a prefix of the other",
+       "Detecting the prefix case without a flag"
+      ],
+      [
+       "`len(a) > len(b): return ''`",
+       "`abc` before `ab` is impossible",
+       "Invalid input"
+      ],
+      [
+       "`deque` of zero in-degree letters",
+       "Characters with no remaining predecessors can come next",
+       "BFS queue for Kahn's algorithm"
+      ],
+      [
+       "`len(out) == len(g)`",
+       "If some letters never reached in-degree 0 there is a cycle",
+       "Cycle detection"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edges extracted from the words",
+    "p": [
+     "Comparing neighbouring words gives these rules:"
+    ],
+    "table": {
+     "head": [
+      "Word pair",
+      "Rule"
+     ],
+     "rows": [
+      [
+       "wrt, wrf",
+       "t → f"
+      ],
+      [
+       "wrf, er",
+       "w → e"
+      ],
+      [
+       "er, ett",
+       "r → t"
+      ],
+      [
+       "ett, rftt",
+       "e → r"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through Kahn's algorithm",
+    "p": [
+     "Start with letters that nothing must precede (`w`, `e` have in-degree 0 after edges `t→f`, `w→e`, `r→t`, `e→r`).. the queue evolves like this:"
+    ],
+    "table": {
+     "head": [
+      "Taken",
+      "Newly free",
+      "Queue after",
+      "Output so far"
+     ],
+     "rows": [
+      [
+       "w",
+       "['e']",
+       "['e']",
+       "w"
+      ],
+      [
+       "e",
+       "['r']",
+       "['r']",
+       "we"
+      ],
+      [
+       "r",
+       "['t']",
+       "['t']",
+       "wer"
+      ],
+      [
+       "t",
+       "['f']",
+       "['f']",
+       "wert"
+      ],
+      [
+       "f",
+       "-",
+       "[]",
+       "wertf"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the `for … else` prefix check matters",
+    "p": "Letters with no predecessor go first. Each time a letter is taken, its successors lose one unmet predecessor and join the queue when they reach zero.",
+    "table": {
+     "head": [
+      "words",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`['abc','ab']`",
+       "`''` (invalid)"
+      ],
+      [
+       "`['ab','abc']`",
+       "any order (valid, no info)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(C), where C is the total number of characters in the words (building edges plus the sort).",
+     "Space: O(U + E) for the letters and edges."
+    ]
+   }
+  ],
+  "takeaway": "Alien dictionary = build a precedence graph from the first differing letters of adjacent words, then topologically sort it (Kahn); a cycle or prefix violation means no order."
+ },
+ "272": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`inorder(node)`",
+       "In-order traversal visits values in ascending order",
+       "BST: sorted order for free"
+      ],
+      [
+       "`win` (a deque)",
+       "A sliding window of the k consecutive in-order values closest to the target so far",
+       "Fixed-size window with O(1) removal from the front"
+      ],
+      [
+       "`len(win) < k`",
+       "Window not full yet: take the value",
+       "Warm-up phase"
+      ],
+      [
+       "`abs(node.val - target) < abs(win[0] - target)`",
+       "Is the new value closer than the oldest (smallest) one in the window? Then slide",
+       "The smallest value in the window is the furthest below the target"
+      ],
+      [
+       "`else: return`",
+       "Not closer: every later value is larger and therefore even farther, so stop without visiting the right subtree",
+       "Early termination exploiting sorted order"
+      ],
+      [
+       "`list(win)`",
+       "Convert to a list for the answer",
+       "—"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[4,2,5,1,3]`, `target = 3.71`, `k = 2`. In-order values: 1, 2, 3, 4, 5."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Decision",
+      "Window after"
+     ],
+     "rows": [
+      [
+       "1",
+       "window not full → append",
+       "[1]"
+      ],
+      [
+       "2",
+       "window not full → append",
+       "[1, 2]"
+      ],
+      [
+       "3",
+       "closer than oldest (1) → slide",
+       "[2, 3]"
+      ],
+      [
+       "4",
+       "closer than oldest (2) → slide",
+       "[3, 4]"
+      ],
+      [
+       "5",
+       "not closer than oldest → stop (skip right subtree)",
+       "[3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we stop at the first value that is not closer?",
+    "p": [
+     "The window holds consecutive in-order values, so `win[0]` is the smallest. Once a new value (larger than everything before) is not closer than `win[0]`, it must lie above the target and be farther from it than `win[0]`; all later values are larger still, so none can improve the window."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Collect all, sort by distance",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "Max-heap of size k over all nodes",
+       "O(n log k)",
+       "O(k)"
+      ],
+      [
+       "In-order sliding window with early stop (this code)",
+       "O(h + k) typical, O(n) worst",
+       "O(h + k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) worst case; O(h + k) when the early exit triggers.",
+     "Space: O(h) recursion + O(k) window."
+    ]
+   }
+  ],
+  "takeaway": "k closest values in a BST: in-order traversal keeps a sliding window of k values and stops once new values stop beating the oldest."
+ },
+ "275": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`citations` sorted ascending",
+       "`citations[mid]` has `n - mid` papers with at least that many citations (itself and everything to its right)",
+       "Turn a sorted array into a counting statement"
+      ],
+      [
+       "`citations[mid] >= n - mid`",
+       "Predicate: this position already satisfies the h-index condition for h = `n - mid`",
+       "A monotone true/false: false…false true…true"
+      ],
+      [
+       "`hi = mid` / `lo = mid + 1`",
+       "Find the first index where the predicate is true",
+       "Lower-bound binary search"
+      ],
+      [
+       "`return n - lo`",
+       "Papers from `lo` onward qualify; if none qualify `lo = n` and the answer is 0",
+       "Converting the index back to a count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`citations = [0,1,3,5,6]`, `n = 5`. The predicate compares the value with the number of papers from that index to the end."
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi)",
+      "mid",
+      "citations[mid]",
+      "n - mid",
+      "decision"
+     ],
+     "rows": [
+      [
+       "[0, 5)",
+       "2",
+       "3",
+       "3",
+       "≥ → hi = mid"
+      ],
+      [
+       "[0, 2)",
+       "1",
+       "1",
+       "4",
+       "< → lo = mid + 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the predicate monotone?",
+    "p": [
+     "As `mid` increases, `citations[mid]` grows (sorted) and `n - mid` shrinks, so once `citations[mid] ≥ n - mid` is true it stays true. That is exactly what binary search requires."
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "rows": [
+      [
+       "citations[i]",
+       "0",
+       "1",
+       "3",
+       "5",
+       "6"
+      ],
+      [
+       "n - i",
+       "5",
+       "4",
+       "3",
+       "2",
+       "1"
+      ],
+      [
+       "true?",
+       "no",
+       "no",
+       "yes",
+       "yes",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why it beats the unsorted version",
+    "p": [
+     "Problem 274 sorts or counts in O(n). Here the input is already sorted, so O(log n) is possible; the answer `n - lo` is the largest h for which h papers have at least h citations."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "H-index on a sorted array = binary search for the first index where `citations[i] >= n - i`; answer `n - index`."
+ },
+ "278": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`isBadVersion(mid)`",
+       "Given API: costs one call; false for good versions, true for bad ones, and stays true afterwards",
+       "A monotone predicate: all False then all True"
+      ],
+      [
+       "`lo, hi = 1, n`",
+       "Search range of version numbers; the answer is guaranteed to be inside",
+       "Finding the boundary"
+      ],
+      [
+       "`if isBadVersion(mid): hi = mid`",
+       "`mid` could be the first bad one, so keep it",
+       "Don't exclude a possible answer"
+      ],
+      [
+       "`else: lo = mid + 1`",
+       "`mid` is good, so the answer is to the right",
+       "Safe to discard"
+      ],
+      [
+       "`while lo < hi`, `return lo`",
+       "Ends when one candidate remains",
+       "Lower-bound loop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, first bad version is 4 (versions 4 and 5 are bad)."
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "isBadVersion(mid)",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[1, 5]",
+       "3",
+       "False",
+       "lo = mid + 1"
+      ],
+      [
+       "[4, 5]",
+       "4",
+       "True",
+       "hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `hi = mid` and not `mid - 1`?",
+    "p": [
+     "If `mid` is bad it might be the FIRST bad version; setting `hi = mid - 1` would throw it away. Keeping it in range and ending with `lo == hi` finds the boundary. Version `mid` being good is the only time we can exclude it."
+    ],
+    "table": {
+     "head": [
+      "`isBadVersion(mid)`",
+      "Meaning",
+      "Update"
+     ],
+     "rows": [
+      [
+       "True",
+       "answer ≤ mid",
+       "`hi = mid`"
+      ],
+      [
+       "False",
+       "answer > mid",
+       "`lo = mid + 1`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not `(lo + hi) // 2` overflow?",
+    "p": [
+     "In Python integers do not overflow. In Java/C++ write `lo + (hi - lo) / 2`, because `lo + hi` can exceed 2³¹ when `n` is near the limit; this is the classic follow-up."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) calls to `isBadVersion` (minimising API calls is the point).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Find the first True in a monotone False…True sequence: binary search with `hi = mid` on True and `lo = mid + 1` on False."
+ },
+ "281": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`deque((v, 0) for v in (v1, v2) if v)`",
+       "A queue of `(list, next_index)` pairs, one per non-empty list",
+       "Round robin over several sources"
+      ],
+      [
+       "`if v`",
+       "Skips empty lists up front, so the queue never holds a finished list",
+       "Avoids an IndexError in `next`"
+      ],
+      [
+       "`popleft()`",
+       "Take the list whose turn it is",
+       "FIFO gives the rotation"
+      ],
+      [
+       "`if i + 1 < len(v): append((v, i + 1))`",
+       "If the list has more items, put it back at the END with its index advanced",
+       "Re-queue to take turns"
+      ],
+      [
+       "`bool(self.q)`",
+       "`hasNext` is true while any list still has items",
+       "Empty queue = all finished"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`v1 = [1,2]`, `v2 = [3,4,5,6]`. Each `next()` pops the front pair, re-queues it if it has more, and returns the element."
+    ],
+    "table": {
+     "head": [
+      "List",
+      "Index",
+      "Returned",
+      "Queue after"
+     ],
+     "rows": [
+      [
+       "v1",
+       "0",
+       "1",
+       "[('v2', 0), ('v1', 1)]"
+      ],
+      [
+       "v2",
+       "0",
+       "3",
+       "[('v1', 1), ('v2', 1)]"
+      ],
+      [
+       "v1",
+       "1",
+       "2",
+       "[('v2', 1)]"
+      ],
+      [
+       "v2",
+       "1",
+       "4",
+       "[('v2', 2)]"
+      ],
+      [
+       "v2",
+       "2",
+       "5",
+       "[('v2', 3)]"
+      ],
+      [
+       "v2",
+       "3",
+       "6",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a queue of pairs and not two index variables?",
+    "p": [
+     "With two lists a toggle flag works, but the toggle logic grows messy once one list runs out. The queue naturally drops finished lists and generalises to k lists (the usual follow-up) without changing a line."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "k lists?",
+      "Exhausted list handling"
+     ],
+     "rows": [
+      [
+       "Two indices + toggle",
+       "needs rewrite",
+       "if/else for each case"
+      ],
+      [
+       "Queue of (list, index) (this code)",
+       "works as is",
+       "dropped automatically"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per `next` / `hasNext`.",
+     "Space: O(k) for k lists (the queue holds one entry per unfinished list)."
+    ]
+   }
+  ],
+  "takeaway": "Zigzag/round-robin iteration over k lists: keep a queue of (list, index); pop one, re-append it if it has more."
+ },
+ "284": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.nxt`",
+       "The element that the NEXT call to `next()` will return, already fetched from the underlying iterator",
+       "Look-ahead buffer of size one"
+      ],
+      [
+       "`self.has`",
+       "Whether `self.nxt` holds a real element",
+       "Replaces the underlying `hasNext()`, which has already moved past the buffered element"
+      ],
+      [
+       "`iterator.next() if self.has else None`",
+       "Pull one element ahead, or `None` at the end",
+       "Prefetching safely"
+      ],
+      [
+       "`next()`",
+       "Returns the buffered value, then refills the buffer",
+       "Return old, prefetch new"
+      ],
+      [
+       "`peek()`",
+       "Returns the buffer without touching the iterator",
+       "This is why it is O(1) and repeatable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Underlying iterator over `[1,2,3]`. The columns show the buffer after each call."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Buffer `nxt`",
+      "`has`"
+     ],
+     "rows": [
+      [
+       "init",
+       "-",
+       "1",
+       "True"
+      ],
+      [
+       "next()",
+       "1",
+       "2",
+       "True"
+      ],
+      [
+       "peek()",
+       "2",
+       "2",
+       "True"
+      ],
+      [
+       "next()",
+       "2",
+       "3",
+       "True"
+      ],
+      [
+       "next()",
+       "3",
+       "None",
+       "False"
+      ],
+      [
+       "hasNext()",
+       "False",
+       "None",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefetch instead of calling `iterator.next()` inside `peek`?",
+    "p": [
+     "A basic iterator can't undo `next()`. If `peek` consumed an element, a later `next()` would skip it. Keeping the element in `self.nxt` means it is consumed from the underlying iterator exactly once, but can be read many times."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "peek twice, then next",
+      "Problem"
+     ],
+     "rows": [
+      [
+       "`peek` calls `it.next()`",
+       "returns elements 1, 2, then 3",
+       "consumes data on every peek"
+      ],
+      [
+       "buffered `nxt` (this code)",
+       "returns 1, 1, then 1",
+       "none"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call.",
+     "Space: O(1), one buffered element."
+    ]
+   }
+  ],
+  "takeaway": "Peeking iterator: always keep one element prefetched; `peek` reads the buffer, `next` returns it and refills."
+ },
+ "287": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums[x]` as 'next pointer'",
+       "Treat each index as a node with an edge to `nums[index]`; values are in 1..n so every edge stays inside the array",
+       "Turning an array into a linked list with a cycle"
+      ],
+      [
+       "`slow = nums[slow]`",
+       "Move one step",
+       "Tortoise"
+      ],
+      [
+       "`fast = nums[nums[fast]]`",
+       "Move two steps",
+       "Hare"
+      ],
+      [
+       "first loop",
+       "The two meet somewhere inside the cycle",
+       "Cycle detection (Floyd)"
+      ],
+      [
+       "`slow = nums[0]`, then both one step at a time",
+       "The meeting point of the second phase is the cycle's entrance, which is the duplicate",
+       "Finding the cycle start (Floyd phase 2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,4,2,2]`: the pointer path is 1 → 3 → 2 → 4 → 2 → 4… The duplicate 2 is where two different indices (3 and 4) lead into the same node."
+    ],
+    "table": {
+     "head": [
+      "Phase",
+      "slow",
+      "fast"
+     ],
+     "rows": [
+      [
+       "start",
+       "1",
+       "1"
+      ],
+      [
+       "phase 1",
+       "3",
+       "2"
+      ],
+      [
+       "phase 1",
+       "2",
+       "2"
+      ],
+      [
+       "reset slow",
+       "1",
+       "2"
+      ],
+      [
+       "phase 2",
+       "3",
+       "4"
+      ],
+      [
+       "phase 2",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the cycle entrance the duplicate?",
+    "p": [
+     "The array has n+1 entries with values in 1..n, so by pigeonhole two indices share a value; that node has two incoming edges, which can only happen at the entrance of the cycle (other cycle nodes have one incoming edge from the cycle and none from outside). Floyd's phase 2 returns to this node: the distance from the start to the entrance equals the distance from the meeting point to the entrance (mod cycle length)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space",
+      "Mutates input?"
+     ],
+     "rows": [
+      [
+       "Hash set",
+       "O(n)",
+       "O(n)",
+       "no"
+      ],
+      [
+       "Sort",
+       "O(n log n)",
+       "O(1)",
+       "yes"
+      ],
+      [
+       "Marking visited by negating",
+       "O(n)",
+       "O(1)",
+       "yes"
+      ],
+      [
+       "Floyd (this code)",
+       "O(n)",
+       "O(1)",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The start index detail",
+    "p": [
+     "Starting both pointers at `nums[0]` instead of index 0 is equivalent: index 0 is never in the cycle (no value equals 0), so it acts as the 'tail' that leads into the cycle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1), the input is read-only."
+    ]
+   }
+  ],
+  "takeaway": "Find the duplicate by treating the array as a linked list with a cycle; Floyd's tortoise and hare finds the cycle entrance in O(n) time and O(1) space."
+ },
+ "290": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`s.split()`",
+       "Splits on any whitespace into a list of words",
+       "Word-level tokenising"
+      ],
+      [
+       "`len(w) != len(pattern)`",
+       "Different counts can never match",
+       "Early exit; also guards `zip`, which would silently truncate"
+      ],
+      [
+       "`m1`",
+       "Letter → word map",
+       "One direction of the bijection"
+      ],
+      [
+       "`m2`",
+       "Word → letter map",
+       "The other direction: two letters must not map to the same word"
+      ],
+      [
+       "`dict.setdefault(k, v)`",
+       "Returns the existing value for `k`, or stores `v` and returns it",
+       "Insert-if-absent and read in one call"
+      ],
+      [
+       "`!= x`, `!= p`",
+       "If the stored mapping disagrees with the current pair, the pattern fails",
+       "Consistency check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pattern = \"abba\"`, `s = \"dog cat cat dog\"`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Word",
+      "m1.setdefault returns",
+      "m2.setdefault returns",
+      "Result"
+     ],
+     "rows": [
+      [
+       "a",
+       "dog",
+       "p→w: dog",
+       "w→p: a",
+       "ok"
+      ],
+      [
+       "b",
+       "cat",
+       "p→w: cat",
+       "w→p: b",
+       "ok"
+      ],
+      [
+       "b",
+       "cat",
+       "p→w: cat",
+       "w→p: b",
+       "ok"
+      ],
+      [
+       "a",
+       "dog",
+       "p→w: dog",
+       "w→p: a",
+       "ok"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two maps?",
+    "p": [
+     "A one-way map accepts `pattern = \"ab\"`, `s = \"dog dog\"`: a→dog, b→dog, both consistent. But different letters must map to different words (a bijection), which only the reverse map `m2` can check."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "One map",
+      "Two maps"
+     ],
+     "rows": [
+      [
+       "`abba`, `dog cat cat dog`",
+       "True",
+       "True"
+      ],
+      [
+       "`ab`, `dog dog`",
+       "True (wrong)",
+       "False (correct)"
+      ],
+      [
+       "`aaaa`, `dog cat cat dog`",
+       "False",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative",
+    "p": [
+     "Compare first-occurrence index patterns: `[pattern.index(p) for p in pattern] == [w.index(x) for x in w]`. Same idea, but `index` is O(n) each, giving O(n²)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for n words.",
+     "Space: O(n) for the two maps."
+    ]
+   }
+  ],
+  "takeaway": "Word pattern is a bijection check: keep letter→word and word→letter maps and make sure both stay consistent."
+ },
+ "296": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rows`, `cols`",
+       "Row and column of every 1 (house), collected separately",
+       "Manhattan distance splits into independent row and column parts"
+      ],
+      [
+       "`rows` is already sorted",
+       "Collected in row-major order, so the row indexes are non-decreasing",
+       "No sort needed for rows, but `cols` must be sorted"
+      ],
+      [
+       "`cols.sort()`",
+       "Order the column coordinates",
+       "Median needs sorted data"
+      ],
+      [
+       "`rows[len // 2]`, `cols[len // 2]`",
+       "The median of each coordinate",
+       "The median minimises the sum of absolute differences"
+      ],
+      [
+       "`sum(abs(x - r) for x in rows) + …`",
+       "Total Manhattan distance to the meeting point",
+       "Row distance + column distance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Houses at rows [0, 0, 2] and columns [0, 4, 2]. Sorted columns: [0, 2, 4]. The medians are row 0 and column 2."
+    ],
+    "table": {
+     "head": [
+      "Dimension",
+      "Sorted coordinates",
+      "Median",
+      "Sum of |x − median|"
+     ],
+     "rows": [
+      [
+       "rows",
+       "[0, 0, 2]",
+       "0",
+       "2"
+      ],
+      [
+       "columns",
+       "[0, 2, 4]",
+       "2",
+       "4"
+      ],
+      [
+       "total",
+       "",
+       "",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the median?",
+    "p": [
+     "For points on a line, moving the meeting point one step past the median brings it closer to fewer points than it moves away from, so the total distance grows. The median balances the two sides. Manhattan distance is |dx| + |dy|, so rows and columns can be optimised independently."
+    ],
+    "table": {
+     "head": [
+      "Meeting point",
+      "Total distance for columns [0,2,4]"
+     ],
+     "rows": [
+      [
+       "median 2",
+       "2 + 0 + 2 = 4"
+      ],
+      [
+       "mean 2",
+       "same here"
+      ],
+      [
+       "0",
+       "0 + 2 + 4 = 6"
+      ],
+      [
+       "4",
+       "4 + 2 + 0 = 6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not the mean?",
+    "p": [
+     "The mean minimises squared distance, not absolute distance. A far outlier drags the mean but not the median: columns `[0, 0, 100]` have median 0 (total 100) but mean 33 (total 133 + ...)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n + h log h) where h is the number of houses (the sort of columns).",
+     "Space: O(h)."
+    ],
+    "p": "The mean minimises squared distance, not absolute distance. For columns `[0, 0, 100]` the median 0 gives total 100, but meeting at the mean (33) gives 33 + 33 + 67 = 133."
+   }
+  ],
+  "takeaway": "Best meeting point under Manhattan distance: the median of the row coordinates and the median of the column coordinates, independently."
+ },
+ "305": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent` dict",
+       "Union-Find (disjoint set) forest: each land cell points to a representative; a root points to itself",
+       "Connectivity that changes by adding items"
+      ],
+      [
+       "`find(x)` with `parent[x] = parent[parent[x]]`",
+       "Follow parents to the root, halving the path as you go (path compression)",
+       "Keeps `find` nearly O(1) amortised"
+      ],
+      [
+       "`(r, c) in parent`",
+       "Cell is already land: a repeated addition changes nothing",
+       "Duplicate positions"
+      ],
+      [
+       "`count += 1`",
+       "Assume the new cell is its own island",
+       "Start of each addition"
+      ],
+      [
+       "`if a != b: parent[a] = b; count -= 1`",
+       "Union with each land neighbour; every successful merge reduces the island count by one",
+       "Counting components under merges"
+      ],
+      [
+       "dict keys are tuples",
+       "A sparse map avoids allocating an m×n array of parents",
+       "Few land cells in a huge grid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3×3 grid, additions `(0,0), (0,1), (1,2), (2,1)`."
+    ],
+    "table": {
+     "head": [
+      "Added",
+      "Effect",
+      "Merged with neighbours",
+      "Islands"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "new island +1",
+       "-",
+       "1"
+      ],
+      [
+       "(0,1)",
+       "new island +1",
+       "[(0, 0)]",
+       "1"
+      ],
+      [
+       "(1,2)",
+       "new island +1",
+       "-",
+       "2"
+      ],
+      [
+       "(2,1)",
+       "new island +1",
+       "-",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Union-Find and not DFS after every addition?",
+    "p": [
+     "Re-running a flood-fill after each of k additions costs O(k·m·n). Union-Find handles each addition in nearly O(1): it only checks the four neighbours."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DFS/BFS recount after every addition",
+       "O(k · m · n)"
+      ],
+      [
+       "Union-Find (this code)",
+       "O(k · α(m·n)) ≈ O(k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not shrink when merging?",
+    "p": [
+     "Union-Find only supports merging, which matches this problem exactly: land is only added, never removed. The \"Number of Islands II\" structure would not work if cells could turn back into water."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · α) per addition ≈ O(k) total, for k positions.",
+     "Space: O(k) for the parent dict."
+    ]
+   }
+  ],
+  "takeaway": "Online connectivity with additions: Union-Find; each new land cell counts +1 and each successful union with a neighbour counts -1."
+ },
+ "311": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`m, kk, n`",
+       "Dimensions: A is m×kk, B is kk×n",
+       "Matrix shapes"
+      ],
+      [
+       "loop order `i, k, j`",
+       "For each non-zero `A[i][k]`, add its contribution to a whole row of the result",
+       "Reordering the classic i-j-k loops so zeros can be skipped early"
+      ],
+      [
+       "`if mat1[i][k] == 0: continue`",
+       "Skips the entire inner loop for a zero entry",
+       "Sparse inputs: this saves most of the work"
+      ],
+      [
+       "`if mat2[k][j]:`",
+       "Skips zero entries of B too",
+       "Avoids multiplying by zero"
+      ],
+      [
+       "`res[i][j] += …`",
+       "Accumulates partial products",
+       "Matrix multiplication definition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`A = [[1,0,0],[-1,0,3]]`, `B = [[7,0,0],[0,0,0],[0,0,1]]`. Only products where both entries are non-zero are computed."
+    ],
+    "table": {
+     "head": [
+      "From A",
+      "From B",
+      "Update",
+      "Value after"
+     ],
+     "rows": [
+      [
+       "A[0][0]=1",
+       "B[0][0]=7",
+       "res[0][0] += 7",
+       "7"
+      ],
+      [
+       "A[1][0]=-1",
+       "B[0][0]=7",
+       "res[1][0] += -7",
+       "-7"
+      ],
+      [
+       "A[1][2]=3",
+       "B[2][2]=1",
+       "res[1][2] += 3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the loop order matter?",
+    "p": [
+     "The textbook order `i, j, k` computes each result cell with a dot product and multiplies every pair, zero or not: m·kk·n multiplications. With `i, k, j` the zero check on `A[i][k]` lets you skip a whole length-n inner loop at once. The result is the same, only the work changes."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Multiplications"
+     ],
+     "rows": [
+      [
+       "Dense triple loop",
+       "m · kk · n"
+      ],
+      [
+       "Skip zero `A[i][k]` (this code)",
+       "(non-zeros of A) × n at most"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(nnz(A) · n) in the worst case, instead of O(m·kk·n).",
+     "Space: O(m·n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Sparse matrix multiply: loop i, k, j and skip zero entries so only non-zero products are computed."
+ },
+ "314": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cols = defaultdict(list)`",
+       "Column index → list of values; missing columns start as empty lists",
+       "Grouping by a key without `if key not in`"
+      ],
+      [
+       "`deque([(root, 0)])`",
+       "BFS queue of (node, column) pairs; root is column 0",
+       "Carrying extra state with each node"
+      ],
+      [
+       "`c - 1` for left, `c + 1` for right",
+       "Column offset relative to the root",
+       "Vertical position of a node"
+      ],
+      [
+       "BFS (not DFS)",
+       "Visits level by level, so within a column the values come top to bottom",
+       "Required vertical order within a column"
+      ],
+      [
+       "`sorted(cols)`",
+       "Sort the column keys (smallest = leftmost)",
+       "Output left to right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,9,20,null,null,15,7]`. BFS order is 3, 9, 20, 15, 7; the dict after each visit:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Column",
+      "cols so far"
+     ],
+     "rows": [
+      [
+       "3",
+       "0",
+       "{0: [3]}"
+      ],
+      [
+       "9",
+       "-1",
+       "{-1: [9], 0: [3]}"
+      ],
+      [
+       "20",
+       "1",
+       "{-1: [9], 0: [3], 1: [20]}"
+      ],
+      [
+       "15",
+       "0",
+       "{-1: [9], 0: [3, 15], 1: [20]}"
+      ],
+      [
+       "7",
+       "2",
+       "{-1: [9], 0: [3, 15], 1: [20], 2: [7]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS instead of DFS?",
+    "p": [
+     "A DFS may reach a deeper node in a column before a shallower one that sits in the same column on another branch, giving the wrong top-to-bottom order. BFS processes shallower nodes first, so each column list is ordered by depth (and left to right within the same depth)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Column order top→bottom correct?",
+      "Extra"
+     ],
+     "rows": [
+      [
+       "BFS with (node, col) (this code)",
+       "yes",
+       "sort only the keys"
+      ],
+      [
+       "DFS",
+       "needs row tracking and sorting by (col, row)",
+       "more code"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort the keys rather than track min/max column?",
+    "p": [
+     "Sorting k column keys costs O(k log k), while tracking `min_col`/`max_col` and iterating the range avoids the sort and gives O(n). Both are acceptable; mention the O(n) variant as the follow-up."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log k) where k is the number of columns (O(n) overall with min/max tracking).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Vertical order = BFS with (node, column) pairs and a dict from column to values; sort the column keys at the end."
+ }
+}
