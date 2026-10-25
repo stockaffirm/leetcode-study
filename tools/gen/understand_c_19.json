@@ -1,0 +1,1680 @@
+{
+ "2234": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(min(x, target) for x in flowers)`",
+       "Cap each garden at `target` (more flowers add nothing) and sort ascending",
+       "The top `k` gardens are the ones closest to complete"
+      ],
+      [
+       "`pre`",
+       "Prefix sums of the sorted capped counts",
+       "Cost of raising a range of gardens in O(1)"
+      ],
+      [
+       "`k`",
+       "Number of gardens made FULL: the `k` largest ones",
+       "The cheapest gardens to complete are the ones already largest"
+      ],
+      [
+       "`cost = k * target - (pre[n] - pre[n - k])`",
+       "Flowers needed to bring the top `k` gardens up to `target`",
+       "Target total minus current total"
+      ],
+      [
+       "`rem = newFlowers - cost`",
+       "Flowers left to raise the minimum of the other gardens",
+       "Spend the rest on the partial part"
+      ],
+      [
+       "inner binary search on `mid`",
+       "The largest minimum `mid < target` the remaining `n − k` gardens can all reach with `rem` flowers: `mid * cnt - pre[cnt] <= rem`, where `cnt` gardens are below `mid`",
+       "Maximise the minimum with a budget"
+      ],
+      [
+       "`k * full + lo * partial`",
+       "Total beauty for this `k`",
+       "Combine both parts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`flowers = [1,3,1,1]`, `newFlowers = 7`, `target = 6`, `full = 12`, `partial = 1`. Sorted capped: `[1, 1, 1, 3]`. For each number of complete gardens `k`:"
+    ],
+    "table": {
+     "head": [
+      "k (full gardens)",
+      "Cost to complete",
+      "Flowers left",
+      "Best minimum of the rest",
+      "Beauty"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "7",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "3",
+       "4",
+       "2",
+       "14"
+      ],
+      [
+       "2",
+       "8",
+       "-",
+       "-",
+       "over budget"
+      ],
+      [
+       "3",
+       "13",
+       "-",
+       "-",
+       "over budget"
+      ],
+      [
+       "4",
+       "18",
+       "-",
+       "-",
+       "over budget"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why complete the LARGEST gardens?",
+    "p": [
+     "Completing a garden costs `target − current`, which is smallest for the biggest gardens. And the minimum of the remaining gardens (the partial score) is raised by having the LOWEST gardens as the remaining ones. So completed gardens are always a suffix of the sorted order; trying every suffix length `k` and optimising the rest by binary search finds the best split."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all subsets",
+       "exponential"
+      ],
+      [
+       "suffix `k` + binary search for the minimum (this code)",
+       "O(n log target)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log target).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum beauty of gardens: sort and cap, complete the k largest gardens, and binary search the highest minimum the rest can reach with the leftover flowers."
+ },
+ "2237": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`diff` of size `n + 1`",
+       "Difference array: `+1` where a lamp's range starts, `−1` just after it ends",
+       "Range add in O(1)"
+      ],
+      [
+       "`max(0, pos - rng)`, `min(n - 1, pos + rng)`",
+       "Clamp each lamp's range to the street `[0, n − 1]`",
+       "Lights near the edges extend past the street"
+      ],
+      [
+       "`+ 1` on the end index",
+       "The −1 goes one past the (inclusive) end; the extra slot of size `n + 1` absorbs it",
+       "Half-open end convention"
+      ],
+      [
+       "running `bright`",
+       "Prefix sum of `diff` = number of lamps covering position `i`",
+       "Prefix sum"
+      ],
+      [
+       "`bright >= requirement[i]`",
+       "This position meets its requirement",
+       "Count satisfied positions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, lights `(0,1)`, `(2,1)`, `(3,2)`:"
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "diff[i]",
+      "Brightness",
+      "Requirement",
+      "Met?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "0",
+       "True"
+      ],
+      [
+       "1",
+       "2",
+       "3",
+       "2",
+       "True"
+      ],
+      [
+       "2",
+       "-1",
+       "2",
+       "1",
+       "True"
+      ],
+      [
+       "3",
+       "0",
+       "2",
+       "4",
+       "False"
+      ],
+      [
+       "4",
+       "-1",
+       "1",
+       "1",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why clamp the range?",
+    "p": [
+     "A lamp at position 0 with range 1 covers −1..1, but there is no position −1; without `max(0, …)` the update would write to a negative index (Python would silently wrap to the end of the list). Similarly the upper end is clamped to `n − 1` so the `+ 1` stays within the array."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "for each lamp, add to every covered position",
+       "O(n · range)"
+      ],
+      [
+       "difference array (this code)",
+       "O(n + lamps)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + lights).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Street brightness requirements: difference array with clamped ranges, then a prefix sum compared against each requirement."
+ },
+ "2243": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`while len(s) > k`",
+       "Keep reducing until the string has at most `k` characters",
+       "Repeat a transformation until a condition is met"
+      ],
+      [
+       "`range(0, len(s), k)`",
+       "Start indices of consecutive groups of size `k` (the last one may be shorter)",
+       "Chunking with a step"
+      ],
+      [
+       "`s[i:i + k]`",
+       "One group (slices past the end are safe)",
+       "Slicing"
+      ],
+      [
+       "`sum(int(c) for c in group)`",
+       "Digit sum of the group",
+       "Digit sum"
+      ],
+      [
+       "`''.join(str(...) …)`",
+       "Concatenate the group sums into the next string",
+       "Rebuild the string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"11111222223\"`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "Round string",
+      "Groups",
+      "Group sums",
+      "Next string"
+     ],
+     "rows": [
+      [
+       "11111222223",
+       "['111', '112', '222', '23']",
+       "[3, 4, 6, 5]",
+       "3465"
+      ],
+      [
+       "3465",
+       "['346', '5']",
+       "[13, 5]",
+       "135"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does it terminate?",
+    "p": "Each group of `k` digits is replaced by the decimal form of its digit sum. That sum is at most `9k`, which never has more digits than the group (for example `99` becomes `18`, still two digits, while a group of three digits has a sum below 28). So the string never grows, and it shrinks quickly once `k` is 3 or more, until its length is at most `k`."
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) per round, with the length shrinking geometrically, so O(n) overall.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Digit sum of a string: repeatedly split into groups of k, replace each group by its digit sum, until the length is at most k."
+ },
+ "2246": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`children`",
+       "Children lists from the parent array",
+       "Tree from a parent array"
+      ],
+      [
+       "`dfs(u)`",
+       "Length of the longest downward path starting at `u` where adjacent letters differ",
+       "Return a one-sided path length; the bent path through `u` is computed locally"
+      ],
+      [
+       "`s[v] != s[u]`",
+       "Only extend through children with a different letter",
+       "Path constraint"
+      ],
+      [
+       "`top1`, `top2`",
+       "The two longest valid child paths",
+       "The best path THROUGH `u` joins the two longest branches"
+      ],
+      [
+       "`best = max(best, top1 + top2 + 1)`",
+       "Longest path bending at `u`: two branches plus `u` itself",
+       "Diameter-style update (like Binary Tree Diameter)"
+      ],
+      [
+       "`return top1 + 1`",
+       "A path going up to the parent can use only ONE branch",
+       "One-sided return value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`parent = [-1,0,0,1,1,2]`, `s = \"abacbe\"` (post-order):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Letter",
+      "top1",
+      "top2",
+      "Path through node",
+      "Returned"
+     ],
+     "rows": [
+      [
+       "3",
+       "c",
+       "0",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "b",
+       "0",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "b",
+       "1",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "5",
+       "e",
+       "0",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "a",
+       "1",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "0",
+       "a",
+       "2",
+       "0",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two different quantities?",
+    "p": [
+     "The best path through `u` may use two child branches, but a path continuing upward can use only one. So we record `top1 + top2 + 1` in the global best and return only `top1 + 1`. This is the same pattern as Binary Tree Maximum Path Sum and Diameter of a Binary Tree."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Used for"
+     ],
+     "rows": [
+      [
+       "`top1 + top2 + 1`",
+       "candidate for the global answer"
+      ],
+      [
+       "`top1 + 1`",
+       "value passed to the parent"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion plus the children map."
+    ]
+   }
+  ],
+  "takeaway": "Longest path with different adjacent characters: tree DP keeping the two best child branches; update the global best with their sum and return only the best one."
+ },
+ "2258": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "multi-source BFS → `fire[i][j]`",
+       "The minute the fire reaches each cell (walls `2` block it); fire starts from all `1` cells at once",
+       "Spread simulation as a precomputed arrival-time grid"
+      ],
+      [
+       "`ok(wait)`",
+       "Can the person, leaving after waiting `wait` minutes, reach the safehouse?",
+       "Feasibility check for binary search"
+      ],
+      [
+       "`fire[0][0] <= wait`",
+       "The fire reaches the start before or when we leave",
+       "Immediate failure"
+      ],
+      [
+       "`t = wait + d + 1`; `t < fire[a][b]`",
+       "Arrive at an intermediate cell STRICTLY before the fire (otherwise we'd burn)",
+       "Intermediate cells need a strict margin"
+      ],
+      [
+       "destination: `t <= fire[a][b]`",
+       "At the safehouse we may arrive at the same minute the fire does",
+       "Special rule for the last cell"
+      ],
+      [
+       "`if not ok(0): return -1`; `if ok(m * n): return 10 ** 9`",
+       "No path even without waiting; or we can wait forever (fire never blocks us)",
+       "The two special answers"
+      ],
+      [
+       "binary search for the largest feasible `wait`",
+       "Feasibility is monotone: if waiting `w` works, waiting less also works",
+       "Maximise the wait"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Fire arrival times",
+    "p": [
+     "Minute at which fire reaches each cell (`∞` = never, `2` walls are also `∞`):"
+    ],
+    "table": {
+     "head": [
+      "Row"
+     ],
+     "rows": [
+      [
+       "6 ∞ 4 3 2 1 2"
+      ],
+      [
+       "5 4 3 ∞ ∞ 0 1"
+      ],
+      [
+       "6 ∞ 2 1 0 ∞ 2"
+      ],
+      [
+       "7 8 ∞ ∞ ∞ 14 ∞"
+      ],
+      [
+       "8 9 10 11 12 13 14"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Binary search",
+    "p": [
+     "Feasibility of waiting `mid` minutes before leaving:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "Feasible?",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[0, 35]",
+       "18",
+       "False",
+       "hi = mid − 1"
+      ],
+      [
+       "[0, 17]",
+       "9",
+       "False",
+       "hi = mid − 1"
+      ],
+      [
+       "[0, 8]",
+       "4",
+       "False",
+       "hi = mid − 1"
+      ],
+      [
+       "[0, 3]",
+       "2",
+       "True",
+       "lo = mid"
+      ],
+      [
+       "[2, 3]",
+       "3",
+       "True",
+       "lo = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the extra slack at the safehouse?",
+    "p": [
+     "Reaching any cell at the same minute the fire does means the person burns there. But at the safehouse the problem allows arrival at the same minute. Fire spreads along neighbours, so the cells adjacent to the safehouse need the stricter check `t < fire`."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Arrival rule"
+     ],
+     "rows": [
+      [
+       "intermediate cell",
+       "`t < fire`"
+      ],
+      [
+       "safehouse",
+       "`t <= fire`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n · log(m·n)).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Escape the spreading fire: BFS the fire's arrival times once, then binary search the longest wait for which a BFS of the person's path stays strictly ahead of the fire."
+ },
+ "2261": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "outer `i`, inner `j`",
+       "Enumerate every subarray `nums[i..j]` by extending the right end",
+       "O(n²) subarrays"
+      ],
+      [
+       "`cnt`",
+       "Number of elements divisible by `p` in the current subarray (updated incrementally)",
+       "Incremental count"
+      ],
+      [
+       "`if cnt > k: break`",
+       "Once the limit is exceeded, every longer subarray from this start is also invalid",
+       "Prune"
+      ],
+      [
+       "`tuple(nums[i:j + 1])`",
+       "An immutable copy of the subarray; tuples are hashable, lists are not",
+       "Put sequences in a set"
+      ],
+      [
+       "`seen`",
+       "Distinct subarrays by CONTENT, not by position",
+       "Deduplicate"
+      ],
+      [
+       "`len(seen)`",
+       "Number of distinct valid subarrays",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,3,2,2]`, `k = 2`, `p = 2`: the distinct valid subarrays in the order they are first seen:"
+    ],
+    "table": {
+     "head": [
+      "#",
+      "Subarray"
+     ],
+     "rows": [
+      [
+       "1",
+       "[2]"
+      ],
+      [
+       "2",
+       "[2, 3]"
+      ],
+      [
+       "3",
+       "[2, 3, 3]"
+      ],
+      [
+       "4",
+       "[2, 3, 3, 2]"
+      ],
+      [
+       "5",
+       "[3]"
+      ],
+      [
+       "6",
+       "[3, 3]"
+      ],
+      [
+       "7",
+       "[3, 3, 2]"
+      ],
+      [
+       "8",
+       "[3, 3, 2, 2]"
+      ],
+      [
+       "9",
+       "[3, 2]"
+      ],
+      [
+       "10",
+       "[3, 2, 2]"
+      ],
+      [
+       "11",
+       "[2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set of tuples?",
+    "p": [
+     "Two subarrays at different positions with the same values count once. Hashing the tuple compares by value. The cost of building each tuple is O(length), which makes this O(n³) in the worst case, acceptable for n ≤ 200."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "set of tuples (this code)",
+       "O(n³)"
+      ],
+      [
+       "rolling hash / trie",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³) worst case.",
+     "Space: O(n³) worst case for the stored tuples."
+    ]
+   }
+  ],
+  "takeaway": "Distinct subarrays with at most k elements divisible by p: enumerate subarrays with a running count and store tuples in a set."
+ },
+ "2270": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total`",
+       "Sum of the whole array",
+       "Right part = total − left part"
+      ],
+      [
+       "`left`",
+       "Prefix sum up to index `i`",
+       "Running prefix sum"
+      ],
+      [
+       "`range(len(nums) - 1)`",
+       "A split must leave at least one element on the right, so `i` stops one before the end",
+       "Valid split positions"
+      ],
+      [
+       "`left >= total - left`",
+       "The left part's sum is at least the right part's",
+       "The 'valid split' condition"
+      ],
+      [
+       "`ways += 1`",
+       "Count valid splits",
+       "Counter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [10,4,-8,7]`, total 13:"
+    ],
+    "table": {
+     "head": [
+      "Split after i",
+      "Left sum",
+      "Right sum",
+      "Valid?",
+      "Ways"
+     ],
+     "rows": [
+      [
+       "0",
+       "10",
+       "3",
+       "True",
+       "1"
+      ],
+      [
+       "1",
+       "14",
+       "-1",
+       "True",
+       "2"
+      ],
+      [
+       "2",
+       "6",
+       "7",
+       "False",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not recompute the right sum each time?",
+    "p": [
+     "`sum(nums[i+1:])` would cost O(n) per split. Because left + right = total, the right sum is `total − left` in O(1)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "recompute both sums",
+       "O(n²)"
+      ],
+      [
+       "prefix sum + total (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Valid array splits: running prefix sum against total − prefix."
+ },
+ "2273": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(w)`",
+       "The letters of a word in order; two words are anagrams iff their sorted letters are equal",
+       "Canonical form for anagrams"
+      ],
+      [
+       "`res[-1]`",
+       "The LAST kept word",
+       "Compare with the previous KEPT word, since removed words disappear from the sequence"
+      ],
+      [
+       "`not res or sorted(res[-1]) != sorted(w)`",
+       "Keep the word if nothing has been kept yet or it is not an anagram of the last kept word",
+       "Remove a word that is an anagram of its (current) left neighbour"
+      ],
+      [
+       "`res.append(w)`",
+       "Keep it",
+       "Build the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"abba\",\"baba\",\"bbaa\",\"cd\",\"cd\"]`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Sorted letters",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "abba",
+       "aabb",
+       "kept"
+      ],
+      [
+       "baba",
+       "aabb",
+       "anagram of last kept 'abba' → removed"
+      ],
+      [
+       "bbaa",
+       "aabb",
+       "anagram of last kept 'abba' → removed"
+      ],
+      [
+       "cd",
+       "cd",
+       "kept"
+      ],
+      [
+       "cd",
+       "cd",
+       "anagram of last kept 'cd' → removed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare with the last KEPT word, not the previous word?",
+    "p": [
+     "After removing `baba`, the next word `bbaa` becomes adjacent to `abba`. Comparing with `res[-1]` (the last kept word) reproduces exactly that, and chains of anagrams collapse to the first word. The order of removals doesn't change the final result."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "sort each word, compare with last kept (this code)",
+       "O(n · L log L)"
+      ],
+      [
+       "count-based keys instead of sorting",
+       "O(n · L)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · L log L) for n words of length L.",
+     "Space: O(n · L)."
+    ]
+   }
+  ],
+  "takeaway": "Remove adjacent anagrams: keep a word unless its sorted letters equal those of the last kept word."
+ },
+ "2276": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.L`, `self.R`",
+       "Starts and ends of the stored DISJOINT intervals, in sorted order",
+       "Keep a sorted list of non-overlapping intervals"
+      ],
+      [
+       "`bisect_left(self.R, left)`",
+       "Index of the first stored interval whose END is `≥ left`: the first one that could overlap or touch the new interval",
+       "Binary search by end"
+      ],
+      [
+       "`while j < len(self.L) and self.L[j] <= right`",
+       "Every stored interval starting at or before the new end overlaps it",
+       "Collect all overlapping intervals"
+      ],
+      [
+       "`left = min(...)`, `right = max(...)`",
+       "Merge them into one bigger interval",
+       "Union of overlapping intervals"
+      ],
+      [
+       "`self.total -= …`",
+       "Subtract the integers of each absorbed interval, then add the merged interval's size once",
+       "Maintain the count of covered integers incrementally"
+      ],
+      [
+       "`self.L[i:j] = [left]`",
+       "Replace the absorbed range by the single merged interval (slice assignment)",
+       "Splice into the list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`add(2,3)`, `add(7,10)`, `count()`, `add(5,8)`, `count()`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Intervals",
+      "Covered integers"
+     ],
+     "rows": [
+      [
+       "add(2, 3)",
+       "-",
+       "[(2, 3)]",
+       "2"
+      ],
+      [
+       "add(7, 10)",
+       "-",
+       "[(2, 3), (7, 10)]",
+       "6"
+      ],
+      [
+       "count()",
+       "6",
+       "[(2, 3), (7, 10)]",
+       "6"
+      ],
+      [
+       "add(5, 8)",
+       "-",
+       "[(2, 3), (5, 10)]",
+       "8"
+      ],
+      [
+       "count()",
+       "8",
+       "[(2, 3), (5, 10)]",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep intervals disjoint?",
+    "p": [
+     "Disjoint, sorted intervals make `count()` a stored number and each `add` a binary search plus the merge of the intervals it touches. Each interval is absorbed at most once, so amortised cost is O(log n) per add."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "add",
+      "count"
+     ],
+     "rows": [
+      [
+       "sorted disjoint intervals (this code)",
+       "O(log n) amortised + list splice",
+       "O(1)"
+      ],
+      [
+       "segment tree with lazy propagation",
+       "O(log R)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) amortised for the search (list slicing is O(n) in the worst case).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count integers in intervals: keep disjoint sorted intervals, merge the ones a new add overlaps, and maintain the covered total incrementally."
+ },
+ "2282": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "scan each row from the RIGHT",
+       "We count people to the right that are visible, so keep the people seen so far on a stack",
+       "Right-looking monotonic stack"
+      ],
+      [
+       "`st`",
+       "Heights that can still be seen from positions to the left; strictly decreasing from bottom to top",
+       "Visible 'skyline' from the current position"
+      ],
+      [
+       "`while st and st[-1] < h: st.pop(); ans += 1`",
+       "Each shorter person is visible (nobody between blocks them), and they are hidden from everyone further left by `h`",
+       "Count and remove the people that `h` hides"
+      ],
+      [
+       "`if st: ans += 1`",
+       "The next taller (or equal) person is also visible, and is the last one visible",
+       "One blocker"
+      ],
+      [
+       "`if not st or st[-1] != h: st.append(h)`",
+       "Do not push equal heights twice: a person cannot see past an equal-height person, so duplicates are redundant",
+       "Dedup equal heights"
+      ],
+      [
+       "repeat for columns (looking DOWN)",
+       "Visibility is checked in both directions: right along the row and down along the column",
+       "Two independent scans"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Row `[3,1,4,2,5]`, scanning from the right (only the row pass is shown):"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "height",
+      "Shorter people popped",
+      "Extra blocker",
+      "People seen",
+      "Stack (after)"
+     ],
+     "rows": [
+      [
+       "4",
+       "5",
+       "0",
+       "0",
+       "0",
+       "[5]"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "1",
+       "1",
+       "[5, 2]"
+      ],
+      [
+       "2",
+       "4",
+       "1",
+       "1",
+       "2",
+       "[5, 4]"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "1",
+       "1",
+       "[5, 4, 1]"
+      ],
+      [
+       "0",
+       "3",
+       "1",
+       "1",
+       "2",
+       "[5, 4, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The counts for the row are `[2,1,2,1,0]`: the person of height 3 sees the 1 and the 4 (and then is blocked); the person of height 5 at the end sees nobody."
+    ]
+   },
+   {
+    "h": "Why must equal heights be skipped?",
+    "p": [
+     "A person of height 4 can see a person of height 4 to the right (the problem says the person between must be shorter than both) but not beyond them. Pushing duplicates would let a later person count the farther equal-height person as visible. Keeping only one copy preserves the strict ordering."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan right/down from each cell",
+       "O(m n (m + n))"
+      ],
+      [
+       "monotonic stack per row and column (this code)",
+       "O(m n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) for the answer, O(max(m, n)) for the stack."
+    ]
+   }
+  ],
+  "takeaway": "People visible in a grid: a monotonic stack scanned from the right (rows) and from the bottom (columns); popped shorter people plus one blocker are counted."
+ },
+ "2291": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gain = f - p`",
+       "Profit of buying one share at `p` and selling at `f`",
+       "Value of the item"
+      ],
+      [
+       "`if gain <= 0: continue`",
+       "Never buy an unprofitable stock",
+       "Skip items with non-positive value"
+      ],
+      [
+       "`dp[b]`",
+       "Best profit with a budget of at most `b`",
+       "0/1 knapsack: price = weight, gain = value"
+      ],
+      [
+       "`for b in range(budget, p - 1, -1)`",
+       "Loop budgets from high to low so each stock is used at most once",
+       "Reverse iteration for 0/1 knapsack"
+      ],
+      [
+       "`dp[b - p] + gain`",
+       "Buy this stock: spend `p`, add the gain",
+       "Take option"
+      ],
+      [
+       "`dp[budget]`",
+       "Best profit overall (the array is monotone, so `dp[budget]` is the max)",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`present = [5,4,6,2,3]`, `future = [8,5,4,3,5]`, budget 10 (`dp[0..10]`):"
+    ],
+    "table": {
+     "head": [
+      "Stock",
+      "dp after"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "stock 5→8: gain 3",
+       "[0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3]"
+      ],
+      [
+       "stock 4→5: gain 1",
+       "[0, 0, 0, 0, 1, 3, 3, 3, 3, 4, 4]"
+      ],
+      [
+       "stock 6→4: gain -2",
+       "skip (not profitable)"
+      ],
+      [
+       "stock 2→3: gain 1",
+       "[0, 0, 1, 1, 1, 3, 3, 4, 4, 4, 4]"
+      ],
+      [
+       "stock 3→5: gain 2",
+       "[0, 0, 1, 2, 2, 3, 3, 4, 5, 5, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate the budget downward?",
+    "p": [
+     "Going downward guarantees `dp[b - p]` is still the value BEFORE this stock was considered, so the stock is used at most once. Iterating upward would let `dp[b - p]` include the same stock again (unbounded knapsack)."
+    ],
+    "table": {
+     "head": [
+      "Direction",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "budget descending (this code)",
+       "each stock once (0/1 knapsack)"
+      ],
+      [
+       "budget ascending",
+       "each stock any number of times (unbounded knapsack)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · budget).",
+     "Space: O(budget)."
+    ]
+   }
+  ],
+  "takeaway": "Stock trading with a budget: 0/1 knapsack over profitable stocks, iterating the budget from high to low."
+ },
+ "2300": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`potions.sort()`",
+       "Ascending potion strengths",
+       "Binary search needs sorted data"
+      ],
+      [
+       "`(success + s - 1) // s`",
+       "Integer ceiling of `success / s`: the smallest potion strength that makes `s * potion >= success`",
+       "Ceiling division without floats"
+      ],
+      [
+       "`bisect_left(potions, need)`",
+       "Index of the first potion `≥ need`",
+       "Binary search"
+      ],
+      [
+       "`m - bisect_left(...)`",
+       "Number of potions from that index to the end: all strong enough",
+       "Count of a suffix"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`potions = [1,2,3,4,5]`, `success = 7`:"
+    ],
+    "table": {
+     "head": [
+      "Spell",
+      "Needed potion strength",
+      "First index",
+      "Successful pairs"
+     ],
+     "rows": [
+      [
+       "5",
+       "ceil(7/5) = 2",
+       "1",
+       "4"
+      ],
+      [
+       "1",
+       "ceil(7/1) = 7",
+       "5",
+       "0"
+      ],
+      [
+       "3",
+       "ceil(7/3) = 3",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a ceiling and not `success / s`?",
+    "p": [
+     "Potion strengths are integers. For a spell of 3, a potion of 2 gives 6 (< 7) and a potion of 3 gives 9 (≥ 7), so the threshold is `ceil(7/3) = 3`. Floor division would give 2 and wrongly count potion 2."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "every spell × every potion",
+       "O(n · m)"
+      ],
+      [
+       "sort + binary search per spell (this code)",
+       "O((n + m) log m)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) log m).",
+     "Space: O(1) besides the sort and output."
+    ]
+   }
+  ],
+  "takeaway": "Successful pairs: sort potions; for each spell compute the minimum needed strength with ceiling division and binary search the count."
+ },
+ "2303": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prev`",
+       "Upper bound of the previous bracket (the amount already taxed)",
+       "Marginal tax: each bracket covers the slice above the previous bound"
+      ],
+      [
+       "`if income <= prev: break`",
+       "The income is fully taxed already",
+       "Stop early"
+      ],
+      [
+       "`min(income, upper) - prev`",
+       "How much income falls inside this bracket",
+       "Slice size"
+      ],
+      [
+       "`taxable * pct / 100`",
+       "Tax for the slice",
+       "Percentage"
+      ],
+      [
+       "`prev = upper`",
+       "Move to the next slice",
+       "Advance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Brackets `[[3,50],[7,10],[12,25]]`, income 10:"
+    ],
+    "table": {
+     "head": [
+      "Bracket",
+      "Slice of income",
+      "Tax",
+      "Total"
+     ],
+     "rows": [
+      [
+       "up to 3 at 50%",
+       "min(10, 3) − 0 = 3",
+       "1.5",
+       "1.5"
+      ],
+      [
+       "up to 7 at 10%",
+       "min(10, 7) − 3 = 4",
+       "0.4",
+       "1.9"
+      ],
+      [
+       "up to 12 at 25%",
+       "min(10, 12) − 7 = 3",
+       "0.75",
+       "2.65"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `min(income, upper)`?",
+    "p": [
+     "If income lies inside the bracket, only the part up to `income` is taxed at that rate; otherwise the whole bracket width is. `min` picks whichever applies, and the loop stops after the bracket that contains the income."
+    ],
+    "table": {
+     "head": [
+      "Income",
+      "Bracket 2 slice"
+     ],
+     "rows": [
+      [
+       "10",
+       "min(10, 7) − 3 = 4"
+      ],
+      [
+       "5",
+       "min(5, 7) − 3 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(number of brackets).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Marginal tax: for each bracket tax the slice between the previous bound and min(income, upper)."
+ },
+ "2318": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "state `(a, b)`",
+       "The last two rolls: a roll must differ from both of the previous two and be coprime with the previous one",
+       "The constraint looks back two rolls, so the state is the last two"
+      ],
+      [
+       "`gcd(a, b) == 1`",
+       "Adjacent rolls must be coprime",
+       "Number theory condition"
+      ],
+      [
+       "`x != a and x != b and gcd(x, b) == 1`",
+       "The next roll `x` must differ from the last two rolls and be coprime with the last one",
+       "Transition rule"
+      ],
+      [
+       "`nxt[(b, x)] += c`",
+       "The new state drops `a` and keeps `(b, x)`",
+       "Slide the state window"
+      ],
+      [
+       "`dp` initial: all valid pairs with count 1",
+       "Sequences of length 2",
+       "Base"
+      ],
+      [
+       "`n == 1: return 6`",
+       "Any single roll works",
+       "Special case"
+      ],
+      [
+       "`% MOD`",
+       "Large counts",
+       "Problem requirement"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`: number of valid state pairs and the total number of sequences for each length."
+    ],
+    "table": {
+     "head": [
+      "Length",
+      "Distinct states",
+      "Total sequences"
+     ],
+     "rows": [
+      [
+       "2",
+       "22",
+       "22"
+      ],
+      [
+       "3",
+       "22",
+       "66"
+      ],
+      [
+       "4",
+       "22",
+       "184"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dictionary of states?",
+    "p": [
+     "There are only 6×6 = 36 possible pairs (fewer valid ones), so the DP table is tiny, and each step costs about 36 × 6 operations. The dictionary keeps only the valid pairs, which avoids testing the rules for impossible states."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "enumerate all sequences",
+       "6ⁿ"
+      ],
+      [
+       "DP over the last two rolls (this code)",
+       "O(n · 36 · 6)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · 216).",
+     "Space: O(36)."
+    ]
+   }
+  ],
+  "takeaway": "Distinct roll sequences: DP over the last two rolls; the next roll must differ from both and be coprime with the previous one."
+ }
+}
