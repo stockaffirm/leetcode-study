@@ -1,0 +1,1983 @@
+{
+ "378": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo, hi = matrix[0][0], matrix[-1][-1]",
+       "Search over VALUES between the smallest and largest entry, not over indices",
+       "Binary search on the answer's value range"
+      ],
+      [
+       "count(v)",
+       "How many entries are \u2264 v, found by a staircase walk from the bottom-left corner in O(n)",
+       ""
+      ],
+      [
+       "total += r + 1; c += 1",
+       "In column c everything at or above row r is \u2264 v (columns are sorted), so add r+1 entries and move right",
+       ""
+      ],
+      [
+       "else r -= 1",
+       "matrix[r][c] > v, so the cell and everything below it in this column are too large; move up",
+       ""
+      ],
+      [
+       "count(mid) >= k: hi = mid",
+       "mid could be the answer, so keep it",
+       "Find the first value with count \u2265 k"
+      ],
+      [
+       "return lo",
+       "The smallest value v with count(v) \u2265 k, which is guaranteed to be an entry of the matrix",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,5,9],[10,11,13],[12,13,15]]`, `k = 8`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "count(mid)",
+      "decision"
+     ],
+     "rows": [
+      [
+       "1",
+       "15",
+       "8",
+       "2",
+       "count < k \u2192 lo = mid+1"
+      ],
+      [
+       "9",
+       "15",
+       "12",
+       "6",
+       "count < k \u2192 lo = mid+1"
+      ],
+      [
+       "13",
+       "15",
+       "14",
+       "8",
+       "count \u2265 k \u2192 hi = mid"
+      ],
+      [
+       "13",
+       "14",
+       "13",
+       "8",
+       "count \u2265 k \u2192 hi = mid"
+      ]
+     ]
+    },
+    "bullets": [
+     "Returns `13`, the 8th smallest."
+    ]
+   },
+   {
+    "h": "Why is the final `lo` guaranteed to be in the matrix?",
+    "p": [
+     "`lo` ends as the smallest v with count(v) \u2265 k. If v were not an entry, count(v\u22121) would equal count(v) (nothing equals v), contradicting minimality. So v is an entry, and it is exactly the k-th smallest."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 log(max \u2212 min)): each count is O(n) and the range is halved each time.",
+     "Space: O(1). A heap approach is O(k log n) and uses O(n) space."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the value range; count(v) is a staircase walk that counts entries \u2264 v in O(n)."
+ },
+ "381": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.a",
+       "Array of all values (with duplicates); `random.choice(self.a)` is uniform and O(1)",
+       "O(1) random access needs an array"
+      ],
+      [
+       "self.pos[val]",
+       "Set of indices in `a` where val occurs; `defaultdict(set)` creates an empty set on first use",
+       "O(1) lookup, add and remove of any index"
+      ],
+      [
+       "set.pop() / add() / discard()",
+       "Remove an arbitrary index / add / remove if present (no error if absent)",
+       ""
+      ],
+      [
+       "self.a[i] = last \u2026 self.a.pop()",
+       "Swap-with-last trick: overwrite the removed slot with the last element, then pop the end",
+       "O(1) deletion from an unordered array"
+      ],
+      [
+       "random.choice(self.a)",
+       "Uniform pick; duplicates raise a value's probability proportionally",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`insert 1, 1, 2`, then `remove 1`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "a",
+      "pos (value \u2192 indices)"
+     ],
+     "rows": [
+      [
+       "insert(1)",
+       "True",
+       "[1]",
+       "{1: [0]}"
+      ],
+      [
+       "insert(1)",
+       "False",
+       "[1, 1]",
+       "{1: [0, 1]}"
+      ],
+      [
+       "insert(2)",
+       "True",
+       "[1, 1, 2]",
+       "{1: [0, 1], 2: [2]}"
+      ],
+      [
+       "remove(1)",
+       "True",
+       "[2, 1]",
+       "{1: [1], 2: [0]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `discard`, and why the order of the two set updates?",
+    "p": [
+     "If the removed slot is itself the last slot (`i == len(a) \u2212 1`), then `last` is the value being removed. The code adds `i` and then discards the same index, leaving the set correct. Doing `discard` before `add` would re-add an index that no longer exists."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) average for insert, remove and getRandom.",
+     "Space: O(n) for the array and the index sets."
+    ]
+   }
+  ],
+  "takeaway": "Array + value\u2192index-set map: delete by swapping with the last element so every operation is O(1)."
+ },
+ "384": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.orig = nums[:]",
+       "Private copy of the original for `reset`; `[:]` makes a shallow copy so later swaps do not touch it",
+       ""
+      ],
+      [
+       "return self.a[:]",
+       "Returns a copy so callers cannot mutate internal state",
+       ""
+      ],
+      [
+       "for i in range(len(a) - 1, 0, -1)",
+       "Fisher\u2013Yates: fix positions from the end backwards",
+       ""
+      ],
+      [
+       "random.randint(0, i)",
+       "Inclusive on both ends: picks any index from 0 to i, including i itself (no change)",
+       "Uniform pick among the still-unfixed positions"
+      ],
+      [
+       "swap a[i], a[j]",
+       "Places the chosen element in its final position i",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3]` with a sample random sequence (seeded so it is reproducible; any choices are possible):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j range",
+      "j chosen",
+      "array after swap"
+     ],
+     "rows": [
+      [
+       "2",
+       "0..2",
+       "0",
+       "[3, 2, 1]"
+      ],
+      [
+       "1",
+       "0..1",
+       "0",
+       "[2, 3, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this uniform?",
+    "p": [
+     "At step i there are i + 1 candidates for position i, each chosen with probability 1/(i+1). Multiplying across steps gives 1/(n\u00b7(n\u22121)\u00b7\u2026\u00b72) = 1/n! for every permutation, so all n! = 6 orderings of 3 elements have equal probability. Picking j from `0..n\u22121` at every step would give n^n equally likely paths, which cannot divide evenly into n! outcomes, so it is biased."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "`shuffle`: O(n). `reset`: O(n).",
+     "Space: O(n) for the stored original and working copy."
+    ]
+   }
+  ],
+  "takeaway": "Fisher\u2013Yates: walk backwards and swap each position with a random earlier-or-same index."
+ },
+ "387": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s)",
+       "Dict subclass mapping each character to how many times it appears, built in one pass",
+       "Frequency counting"
+      ],
+      [
+       "enumerate(s)",
+       "Scans again in original order, giving index and character",
+       ""
+      ],
+      [
+       "cnt[ch] == 1",
+       "The first character in string order with count 1 is the answer",
+       ""
+      ],
+      [
+       "return -1",
+       "No unique character",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"leetcode\"`: the counts are `{'l': 1, 'e': 3, 't': 1, 'c': 1, 'o': 1, 'd': 1}`. The second pass:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "ch",
+      "count",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "l",
+       "1",
+       "count is 1 \u2192 return 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two passes?",
+    "p": [
+     "Counts are only final after the whole string has been read: `e` appears at index 1 but occurs three times in total. The second pass walks the string in its original order, so the first character whose final count is 1 is the answer. (Iterating over the `Counter` itself also follows insertion order in Python 3.7+, but the second pass over `s` makes the intent clearer.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), two passes.",
+     "Space: O(1) for lowercase letters (at most 26 keys), O(k) for k distinct characters in general."
+    ]
+   }
+  ],
+  "takeaway": "Count first, then scan in order for the first character whose count is 1."
+ },
+ "393": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "byte >> 7 == 0",
+       "Shifts the top bit down; zero means the byte looks like `0xxxxxxx`, a 1-byte character",
+       "Testing the leading bits of a byte"
+      ],
+      [
+       "byte >> 5 == 0b110",
+       "Top three bits are `110`: lead byte of a 2-byte character",
+       ""
+      ],
+      [
+       "byte >> 4 == 0b1110, byte >> 3 == 0b11110",
+       "Lead bytes of 3- and 4-byte characters",
+       ""
+      ],
+      [
+       "need",
+       "How many continuation bytes (`10xxxxxx`) are still expected",
+       "State carried across the loop"
+      ],
+      [
+       "byte >> 6 != 0b10",
+       "A continuation byte must start with `10`",
+       ""
+      ],
+      [
+       "return need == 0",
+       "No character may be left unfinished at the end",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[197, 130, 1]`:"
+    ],
+    "table": {
+     "head": [
+      "byte",
+      "binary",
+      "meaning",
+      "need after"
+     ],
+     "rows": [
+      [
+       "197",
+       "11000101",
+       "110 \u2192 lead of a 2-byte char",
+       "1"
+      ],
+      [
+       "130",
+       "10000010",
+       "10 \u2192 continuation byte",
+       "0"
+      ],
+      [
+       "1",
+       "00000001",
+       "starts 0 \u2192 1-byte char",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: True."
+    ]
+   },
+   {
+    "h": "Why is the last check needed?",
+    "p": [
+     "A lead byte with missing continuation bytes at the end of the data, e.g. `[197]` alone, passes every in-loop check. Only `need == 0` at the end rejects it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A tiny state machine: the lead byte sets how many `10xxxxxx` continuation bytes must follow, verified with right shifts."
+ },
+ "399": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g = defaultdict(dict)",
+       "Weighted graph: g[a][b] = value of a / b. Nested dicts give O(1) edge lookup",
+       ""
+      ],
+      [
+       "g[a][b] = v; g[b][a] = 1 / v",
+       "Each equation adds both directions: a/b = v implies b/a = 1/v",
+       "Undirected edges with reciprocal weights"
+      ],
+      [
+       "dfs(x, y, seen)",
+       "Finds any path x \u2192 y and multiplies the weights along it",
+       "A product of ratios along a path equals x / y"
+      ],
+      [
+       "x not in g or y not in g",
+       "Unknown variable \u2192 \u22121.0",
+       ""
+      ],
+      [
+       "x == y \u2192 1.0",
+       "Any known variable divided by itself",
+       "Checked after the membership test so unknown x/x returns \u22121"
+      ],
+      [
+       "seen",
+       "Visited set stops cycles",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a/b = 2`, `b/c = 3`. The first two rows are the query `a / c` (the DFS goes a \u2192 b \u2192 c, and the ratios multiply on the way back); the last two rows are `c / a`:"
+    ],
+    "table": {
+     "head": [
+      "edge",
+      "weight",
+      "rest of path",
+      "product"
+     ],
+     "rows": [
+      [
+       "b\u2192c",
+       "3.0",
+       "1.0",
+       "3.0"
+      ],
+      [
+       "a\u2192b",
+       "2.0",
+       "3.0",
+       "6.0"
+      ],
+      [
+       "b\u2192a",
+       "0.5",
+       "1.0",
+       "0.5"
+      ],
+      [
+       "c\u2192b",
+       "0.3333333333333333",
+       "0.5",
+       "0.16666666666666666"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answers: `a/c = 6.0`, `c/a = 0.1667` (path c \u2192 b \u2192 a with weights 1/3 and 1/2)."
+    ]
+   },
+   {
+    "h": "Why check `x not in g` before `x == y`?",
+    "p": [
+     "`x / x` is 1.0 only for a variable that appeared in some equation. For an unknown variable the expected answer is \u22121.0, so membership has to be tested first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(Q \u00b7 (V + E)): one DFS per query.",
+     "Space: O(V + E) for the graph. Union-Find with weights answers queries in near O(1) after setup."
+    ]
+   }
+  ],
+  "takeaway": "Treat equations as a weighted graph with reciprocal edges; a query is the product of weights along any path."
+ },
+ "402": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st",
+       "Stack of kept digits, non-decreasing from bottom to top (monotonic stack)",
+       ""
+      ],
+      [
+       "st[-1] > d",
+       "A bigger digit just before a smaller one should be removed: the earlier position matters more",
+       ""
+      ],
+      [
+       "while k and st and \u2026",
+       "Removes as many bigger previous digits as allowed",
+       ""
+      ],
+      [
+       "if k: st = st[:-k]",
+       "If removals remain (digits already increasing), drop from the end",
+       "Trailing removals"
+      ],
+      [
+       "lstrip('0') or '0'",
+       "Strips leading zeros; the empty result becomes '0'",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = \"1432219\"`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "digit",
+      "popped",
+      "k left",
+      "stack"
+     ],
+     "rows": [
+      [
+       "1",
+       "\u2013",
+       "3",
+       "1"
+      ],
+      [
+       "4",
+       "\u2013",
+       "3",
+       "14"
+      ],
+      [
+       "3",
+       "4",
+       "2",
+       "13"
+      ],
+      [
+       "2",
+       "3",
+       "1",
+       "12"
+      ],
+      [
+       "2",
+       "\u2013",
+       "1",
+       "122"
+      ],
+      [
+       "1",
+       "2",
+       "0",
+       "121"
+      ],
+      [
+       "9",
+       "\u2013",
+       "0",
+       "1219"
+      ]
+     ]
+    },
+    "bullets": [
+     "k is 0, so nothing more is cut: `1219`."
+    ]
+   },
+   {
+    "h": "Why remove a larger digit when a smaller one arrives?",
+    "p": [
+     "Comparing two numbers goes digit by digit from the left, so the leftmost differences matter most. If `st[-1] > d`, deleting `st[-1]` puts a smaller digit in that position and makes the number smaller no matter what follows. The stack therefore only keeps digits that cannot be improved yet."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each digit pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "Leading zeros appear when a `0` becomes the first kept digit (`\"10200\"`, k=1 gives `\"200\"`), hence `lstrip('0')`; and `or '0'` covers the case where everything is removed."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack: pop larger digits when a smaller one arrives, trim leftover removals from the end, strip leading zeros."
+ },
+ "405": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "num &= 0xFFFFFFFF",
+       "Masks to 32 bits: a negative Python int becomes its two's-complement value (e.g. \u22121 \u2192 4294967295)",
+       "Python ints are unbounded, so negatives need an explicit width"
+      ],
+      [
+       "num & 15",
+       "The lowest 4 bits = one hex digit (15 is 0b1111)",
+       ""
+      ],
+      [
+       "num >>= 4",
+       "Drops that hex digit",
+       ""
+      ],
+      [
+       "digits[\u2026]",
+       "Lookup string for 0\u201315 \u2192 '0'\u2013'f'",
+       ""
+      ],
+      [
+       "reversed(res)",
+       "Digits come out least significant first",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`26` (binary 11010):"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "binary",
+      "num & 15",
+      "hex digit"
+     ],
+     "rows": [
+      [
+       "26",
+       "11010",
+       "10",
+       "a"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Reversed digits: `1a`."
+    ]
+   },
+   {
+    "h": "Why mask negatives?",
+    "p": [
+     "Without the mask, `-1 >> 4` stays \u22121 forever in Python and the loop never ends. Masking to 0xFFFFFFFF turns \u22121 into 4294967295 = `ffffffff`, which matches the two's-complement output the problem expects."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1), at most 8 iterations.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hex conversion by peeling 4 bits at a time; mask to 32 bits so negative numbers use two's complement."
+ },
+ "408": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i, j",
+       "Pointers into the word and the abbreviation",
+       "Two-pointer matching of two sequences"
+      ],
+      [
+       "abbr[j].isdigit()",
+       "True for '0'\u2013'9'; starts a number",
+       ""
+      ],
+      [
+       "abbr[j] == '0'",
+       "A number cannot start with 0, so '0' or '01' is invalid",
+       ""
+      ],
+      [
+       "num = num * 10 + int(abbr[j])",
+       "Reads a multi-digit number digit by digit",
+       "Parsing numbers by hand"
+      ],
+      [
+       "i += num",
+       "Skips that many letters of the word",
+       ""
+      ],
+      [
+       "i == len(word) and j == len(abbr)",
+       "Both strings must be fully consumed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"internationalization\"`, `abbr = \"i12iz4n\"`:"
+    ],
+    "table": {
+     "head": [
+      "abbr piece",
+      "action",
+      "i before",
+      "i after"
+     ],
+     "rows": [
+      [
+       "'i'",
+       "must equal word[i]",
+       "0",
+       "1"
+      ],
+      [
+       "abbr[1:3] = '12'",
+       "skip 12 letters",
+       "1",
+       "13"
+      ],
+      [
+       "'i'",
+       "must equal word[i]",
+       "13",
+       "14"
+      ],
+      [
+       "'z'",
+       "must equal word[i]",
+       "14",
+       "15"
+      ],
+      [
+       "abbr[5:6] = '4'",
+       "skip 4 letters",
+       "15",
+       "19"
+      ],
+      [
+       "'n'",
+       "must equal word[i]",
+       "19",
+       "20"
+      ]
+     ]
+    },
+    "bullets": [
+     "Both pointers finish together: True."
+    ]
+   },
+   {
+    "h": "Why check both lengths at the end?",
+    "p": [
+     "The loop ends when either pointer hits its end. If `i` stops early the abbreviation skipped too few letters, and if `j` stops early the word has extra letters; also `i += num` can overshoot `len(word)`, which the `i == len(word)` test rejects. Only both equal means an exact match."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(word) + len(abbr)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Walk the word and abbreviation together: letters must match, numbers jump the word pointer, and both must end together."
+ },
+ "414": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "top = [None, None, None]",
+       "Three slots for the largest, second and third distinct values. `None` marks an empty slot",
+       "Using `None` instead of \u2212inf avoids clashing with real values"
+      ],
+      [
+       "x in top",
+       "Skips duplicates so equal values never take two slots",
+       "Distinct maximum requirement"
+      ],
+      [
+       "top = [x, top[0], top[1]]",
+       "x becomes the max; the old max and second move down (the old third is dropped)",
+       "Insertion into a fixed-size ranking"
+      ],
+      [
+       "top[i] is None or x > top[i]",
+       "Empty slot or larger than the occupant",
+       ""
+      ],
+      [
+       "top[2] if \u2026 else top[0]",
+       "If fewer than 3 distinct values exist, return the maximum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2, 2, 3, 1]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "action",
+      "top"
+     ],
+     "rows": [
+      [
+       "2",
+       "new max: shift all down",
+       "[2, None, None]"
+      ],
+      [
+       "2",
+       "already in top \u2192 skip",
+       "[2, None, None]"
+      ],
+      [
+       "3",
+       "new max: shift all down",
+       "[3, 2, None]"
+      ],
+      [
+       "1",
+       "new third",
+       "[3, 2, 1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "`top[2] = 1` is the third distinct maximum."
+    ]
+   },
+   {
+    "h": "Why `None` and not `float('-inf')`?",
+    "p": [
+     "Input values can themselves be very small (down to \u22122\u00b3\u00b9); a sentinel like \u2212inf would be safe in Python, but `None` makes the empty-slot state explicit and also makes `x in top` safe: a real value never equals `None`. It also lets the final line distinguish 'no third value' from 'third value is a legitimate number'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each element does O(1) work (three-slot checks).",
+     "Space: O(1). Sorting a set is O(n log n), and a heap of size 3 is O(n log 3)."
+    ]
+   }
+  ],
+  "takeaway": "Track the top three distinct values in three slots, skipping duplicates and shifting down on insert."
+ },
+ "417": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "flood(starts)",
+       "DFS from all starting cells, moving to neighbours with height \u2265 current, i.e. UPHILL, the reverse of how water flows",
+       "Multi-source search from the borders"
+      ],
+      [
+       "seen = set(starts); st = list(starts)",
+       "Sources are seeded at once, so all of them are explored in one search",
+       ""
+      ],
+      [
+       "heights[a][b] >= heights[r][c]",
+       "Reverse flow rule: water can run from (a,b) down to (r,c) if (a,b) is at least as high",
+       ""
+      ],
+      [
+       "pac & atl",
+       "Set intersection: cells reachable from both oceans",
+       "Combining two reachability sets"
+      ],
+      [
+       "sorted([list(p) for p in \u2026])",
+       "Converts tuples to lists and orders the output deterministically",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "For the 5\u00d75 grid `[[1, 2, 2, 3, 5], [3, 2, 3, 4, 4], [2, 4, 5, 3, 1], [6, 7, 1, 4, 5], [5, 1, 1, 2, 4]]`, the two floods mark: `P` reaches only the Pacific, `A` only the Atlantic, `B` both:"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "col 0",
+      "col 1",
+      "col 2",
+      "col 3",
+      "col 4"
+     ],
+     "rows": [
+      [
+       "0",
+       "P",
+       "P",
+       "P",
+       "P",
+       "B"
+      ],
+      [
+       "1",
+       "P",
+       "P",
+       "P",
+       "B",
+       "B"
+      ],
+      [
+       "2",
+       "P",
+       "P",
+       "B",
+       "A",
+       "A"
+      ],
+      [
+       "3",
+       "B",
+       "B",
+       "A",
+       "A",
+       "A"
+      ],
+      [
+       "4",
+       "B",
+       "A",
+       "A",
+       "A",
+       "A"
+      ]
+     ]
+    },
+    "bullets": [
+     "Cells marked `B` are the answer: `[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]`."
+    ]
+   },
+   {
+    "h": "Why search from the oceans instead of from every cell?",
+    "p": [
+     "Starting a search from each of the m\u00b7n cells would cost O(m\u00b2n\u00b2) in the worst case. Starting from the border cells and walking uphill finds every cell that can reach that ocean in a single O(mn) sweep per ocean, and the intersection gives the cells that reach both."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n): every cell is visited at most once per flood.",
+     "Space: O(m\u00b7n) for the seen sets and stack."
+    ]
+   }
+  ],
+  "takeaway": "Reverse the problem: flood uphill from each ocean's border and intersect the two reachable sets."
+ },
+ "426": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dfs(node.left); visit; dfs(node.right)",
+       "Inorder traversal; a BST visits its values in sorted order",
+       "Sorted order from a BST"
+      ],
+      [
+       "nonlocal first, last",
+       "Lets the nested function assign the outer variables `first` (smallest node) and `last` (previously visited node)",
+       ""
+      ],
+      [
+       "last.right = node; node.left = last",
+       "Links the previous node and the current node in both directions, reusing the tree's pointers (`left` = prev, `right` = next)",
+       "In-place conversion"
+      ],
+      [
+       "first.left = last; last.right = first",
+       "Closes the list into a circle",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[4,2,5,1,3]`; inorder visits 1, 2, 3, 4, 5:"
+    ],
+    "table": {
+     "head": [
+      "visited",
+      "previous (last)",
+      "links created"
+     ],
+     "rows": [
+      [
+       "1",
+       "none",
+       "first = this node"
+      ],
+      [
+       "2",
+       "1",
+       "1.right = 2, 2.left = 1"
+      ],
+      [
+       "3",
+       "2",
+       "2.right = 3, 3.left = 2"
+      ],
+      [
+       "4",
+       "3",
+       "3.right = 4, 4.left = 3"
+      ],
+      [
+       "5",
+       "4",
+       "4.right = 5, 5.left = 4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Finally `1.left = 5` and `5.right = 1` close the circle; the function returns node 1."
+    ]
+   },
+   {
+    "h": "Why does linking during the traversal work?",
+    "p": [
+     "When a node is visited, every smaller node has already been visited and linked into `last`'s chain, and the node's own `left` subtree is no longer needed because it was already traversed. Overwriting `node.left` therefore does not damage the traversal. `node.right` is overwritten only later, when the next node is visited, after `dfs(node.right)` has run on the original right pointer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion; no new nodes are created."
+    ]
+   }
+  ],
+  "takeaway": "Inorder traversal with a `last` pointer: link each node to the previously visited one, then close the circle."
+ },
+ "432": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "_B (bucket)",
+       "A node holding a count `c` and the SET of keys with exactly that count, linked to neighbours",
+       "Doubly linked list of buckets in increasing count order"
+      ],
+      [
+       "head / tail sentinels",
+       "Dummy ends so insert and remove never need null checks",
+       ""
+      ],
+      [
+       "where = {}",
+       "Dict key \u2192 the bucket currently holding it, for O(1) access",
+       "Combining a hash map with a linked list"
+      ],
+      [
+       "_insert_after / _remove",
+       "O(1) splice operations on the list",
+       ""
+      ],
+      [
+       "inc(key)",
+       "Moves the key from bucket c to bucket c + 1 (reusing the next bucket if it has that count, else creating it), and deletes the old bucket if it became empty",
+       ""
+      ],
+      [
+       "getMaxKey / getMinKey",
+       "Any key from the bucket nearest the tail / head",
+       "Empty buckets never exist, so the ends are always valid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`inc hello` \u00d72, `max`, `min`, `inc leet`, `max`, `min`. The list is shown from smallest count to largest as `count:keys`:"
+    ],
+    "table": {
+     "head": [
+      "operation",
+      "bucket list",
+      "returns"
+     ],
+     "rows": [
+      [
+       "inc(hello)",
+       "1:['hello']",
+       "\u2013"
+      ],
+      [
+       "inc(hello)",
+       "2:['hello']",
+       "\u2013"
+      ],
+      [
+       "max",
+       "2:['hello']",
+       "hello"
+      ],
+      [
+       "min",
+       "2:['hello']",
+       "hello"
+      ],
+      [
+       "inc(leet)",
+       "1:['leet'] \u21c4 2:['hello']",
+       "\u2013"
+      ],
+      [
+       "max",
+       "1:['leet'] \u21c4 2:['hello']",
+       "hello"
+      ],
+      [
+       "min",
+       "1:['leet'] \u21c4 2:['hello']",
+       "leet"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a linked list of buckets and not a heap or a sorted dict?",
+    "p": [
+     "A count only ever changes by \u00b11, so a key moves to an adjacent bucket. That locality is what makes every operation O(1)."
+    ],
+    "table": {
+     "head": [
+      "Structure",
+      "inc/dec",
+      "max/min"
+     ],
+     "rows": [
+      [
+       "Heap",
+       "O(log n)",
+       "O(1) peek but stale entries on updates"
+      ],
+      [
+       "Sorted container",
+       "O(log n)",
+       "O(1) or O(log n)"
+      ],
+      [
+       "Bucket list (this code)",
+       "O(1): count changes by exactly 1, so the destination bucket is always the neighbour",
+       "O(1): ends of the list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) for all operations.",
+     "Space: O(n) for the keys and buckets."
+    ]
+   }
+  ],
+  "takeaway": "All O(1): dict key\u2192bucket plus a doubly linked list of count buckets, since counts change by exactly one."
+ },
+ "435": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "intervals.sort(key=lambda x: x[1])",
+       "Sorts by END time (in place); `key` supplies the sort value",
+       "Interval scheduling: earliest finish first"
+      ],
+      [
+       "end = float('-inf')",
+       "End of the last kept interval; nothing kept yet",
+       ""
+      ],
+      [
+       "s >= end",
+       "Starts at or after the last kept end: no overlap (touching is allowed)",
+       ""
+      ],
+      [
+       "removed += 1",
+       "Overlaps the kept interval, so drop the current one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,3],[3,4],[1,3]]` sorted by end: `[[1, 2], [2, 3], [1, 3], [3, 4]]`:"
+    ],
+    "table": {
+     "head": [
+      "interval",
+      "decision",
+      "end",
+      "removed"
+     ],
+     "rows": [
+      [
+       "[1,2]",
+       "start \u2265 end \u2192 keep, end = 2",
+       "2",
+       "0"
+      ],
+      [
+       "[2,3]",
+       "start \u2265 end \u2192 keep, end = 3",
+       "3",
+       "0"
+      ],
+      [
+       "[1,3]",
+       "start < end \u2192 remove",
+       "3",
+       "1"
+      ],
+      [
+       "[3,4]",
+       "start \u2265 end \u2192 keep, end = 4",
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort by end and not by start?",
+    "p": [
+     "Keeping the interval that finishes earliest leaves the most room for later ones, which is the classic greedy for maximum non-overlapping intervals. Sorting by start could keep a long early interval that blocks many short ones, e.g. `[1,100]` before `[2,3],[4,5]`. Minimum removals equals total minus maximum kept."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(1) extra (the sort is in place)."
+    ]
+   }
+  ],
+  "takeaway": "Interval scheduling greedy: sort by end time, keep every interval that starts at or after the last kept end."
+ },
+ "438": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "need = Counter(p)",
+       "Required letter counts",
+       "Anagram = same multiset of letters"
+      ],
+      [
+       "win = Counter()",
+       "Counts of the current window; missing keys read as 0 so `win[ch] += 1` works directly",
+       ""
+      ],
+      [
+       "win[old] -= 1; del if 0",
+       "Slides the window: removes the letter leaving on the left. Deleting zero counts matters because Counter equality compares keys too",
+       ""
+      ],
+      [
+       "win == need",
+       "Compares the two Counters in O(distinct letters)",
+       ""
+      ],
+      [
+       "i - len(p) + 1",
+       "Start index of the window ending at i",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"cbaebabacd\"`, `p = \"abc\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "added",
+      "dropped",
+      "window",
+      "match?"
+     ],
+     "rows": [
+      [
+       "0",
+       "c",
+       "\u2013",
+       "c",
+       "\u2013"
+      ],
+      [
+       "1",
+       "b",
+       "\u2013",
+       "cb",
+       "\u2013"
+      ],
+      [
+       "2",
+       "a",
+       "\u2013",
+       "cba",
+       "match \u2192 start 0"
+      ],
+      [
+       "3",
+       "e",
+       "drop 'c'",
+       "bae",
+       "\u2013"
+      ],
+      [
+       "4",
+       "b",
+       "drop 'b'",
+       "aeb",
+       "\u2013"
+      ],
+      [
+       "5",
+       "a",
+       "drop 'a'",
+       "eba",
+       "\u2013"
+      ],
+      [
+       "6",
+       "b",
+       "drop 'e'",
+       "bab",
+       "\u2013"
+      ],
+      [
+       "7",
+       "a",
+       "drop 'b'",
+       "aba",
+       "\u2013"
+      ],
+      [
+       "8",
+       "c",
+       "drop 'a'",
+       "bac",
+       "match \u2192 start 6"
+      ],
+      [
+       "9",
+       "d",
+       "drop 'b'",
+       "acd",
+       "\u2013"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `[0, 6]`."
+    ]
+   },
+   {
+    "h": "Why delete keys whose count reaches 0?",
+    "p": [
+     "In recent Python versions `Counter({'a': 0}) == Counter()` is True (zero counts are ignored in equality), but relying on that is fragile and older code treats the keys as different. Deleting the zero entry keeps `win == need` an exact comparison under all versions, and it keeps the dict small."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 A), where A \u2264 26 is the cost of comparing counters (O(n) in the usual analysis).",
+     "Space: O(A)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size sliding window of len(p): add the new letter, drop the old one, compare Counters."
+ },
+ "441": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mid * (mid + 1) // 2",
+       "Coins needed for mid complete rows (triangular number)",
+       ""
+      ],
+      [
+       "mid = (lo + hi + 1) // 2",
+       "Upper middle, so that `lo = mid` always makes progress",
+       "Needed when the update keeps mid on the lower side"
+      ],
+      [
+       "lo = mid  /  hi = mid - 1",
+       "Keep mid if it fits (could be the answer), else exclude it",
+       "Binary search for the last value that satisfies a condition"
+      ],
+      [
+       "return lo",
+       "The largest number of complete rows",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "coins for mid rows",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "3",
+       "6",
+       "> n: hi = mid-1"
+      ],
+      [
+       "0",
+       "2",
+       "1",
+       "1",
+       "\u2264 n: lo = mid"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "3",
+       "\u2264 n: lo = mid"
+      ]
+     ]
+    },
+    "bullets": [
+     "Returns `2`: 3 rows would need 6 coins."
+    ]
+   },
+   {
+    "h": "Why `(lo + hi + 1) // 2`?",
+    "p": [
+     "With `lo = mid`, a lower middle `(lo + hi) // 2` can equal `lo` when `hi = lo + 1`, so `lo = mid` changes nothing and the loop runs forever. Rounding up makes `mid > lo`, so each iteration shrinks the range."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1).",
+     "A closed form also exists: `floor((sqrt(8n + 1) \u2212 1) / 2)`."
+    ]
+   }
+  ],
+  "takeaway": "Binary search for the largest k with k(k+1)/2 \u2264 n; use the upper middle when the update is lo = mid."
+ },
+ "450": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "root.left = self.deleteNode(root.left, key)",
+       "Recursion returns the new root of the subtree, and the parent re-attaches it",
+       "Deleting inside a recursive structure by returning the replacement"
+      ],
+      [
+       "if not root.left: return root.right",
+       "Zero or one child: replace the node by its only child",
+       ""
+      ],
+      [
+       "succ = root.right; while succ.left",
+       "In-order successor: the smallest node in the right subtree",
+       ""
+      ],
+      [
+       "root.val = succ.val",
+       "Copies the successor's value into this node",
+       ""
+      ],
+      [
+       "root.right = self.deleteNode(root.right, succ.val)",
+       "Deletes the original successor node, which has no left child, so it falls into the easy case",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[5,3,6,2,4,null,7]` (`5(3(2,4),6(,7))` in `v(left,right)` form), delete 3:"
+    ],
+    "table": {
+     "head": [
+      "step"
+     ],
+     "rows": [
+      [
+       "5: key < 5 \u2192 go left"
+      ],
+      [
+       "3: found, two children \u2192 copy successor 4, delete 4 from right"
+      ],
+      [
+       "4: found, no left child \u2192 return right"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `5(4(2,),6(,7))`. Node 3 now holds 4 and the old 4 was removed."
+    ]
+   },
+   {
+    "h": "Why replace with the successor?",
+    "p": [
+     "The in-order successor is the smallest value larger than the deleted node: larger than everything in its left subtree and no larger than anything else in its right subtree, so the BST order holds with no restructuring. The in-order predecessor (largest in the left subtree) works equally well."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h): one search plus one walk down.",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "BST deletion: 0 or 1 child \u2192 splice out; 2 children \u2192 copy the in-order successor's value and delete that node instead."
+ },
+ "453": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(nums)",
+       "Total of all elements",
+       ""
+      ],
+      [
+       "min(nums)",
+       "Smallest element",
+       ""
+      ],
+      [
+       "len(nums) * min(nums)",
+       "The total the array would have if every element equalled the minimum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3]`: the answer is `sum \u2212 n\u00b7min = 6 \u2212 3\u00b71 = 3` moves. One sequence: `[1,2,3] \u2192 [2,3,3] \u2192 [3,4,3] \u2192 [4,4,4]`."
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "sum",
+       "6"
+      ],
+      [
+       "n \u00d7 min",
+       "3"
+      ],
+      [
+       "answer",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the formula work?",
+    "p": [
+     "Adding 1 to n\u22121 elements is the same, relatively, as subtracting 1 from one element. So each move can lower the gap of exactly one element toward the others. The elements end up equal when every element has come down to the minimum, which costs `nums[i] \u2212 min` moves for element i. Summing gives `sum \u2212 n\u00b7min`. The minimum never needs to be lowered."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Increment n\u22121 elements \u2261 decrement one element, so the answer is sum \u2212 n\u00b7min."
+ },
+ "456": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "reversed(nums)",
+       "Scans right to left, so x plays the role of the '1' (smallest, leftmost)",
+       ""
+      ],
+      [
+       "st",
+       "Monotonic stack of candidate '3's: decreasing from bottom to top",
+       ""
+      ],
+      [
+       "third",
+       "The best '2' found so far: the largest value that was popped because a bigger value (the '3') came before it",
+       ""
+      ],
+      [
+       "x < third \u2192 True",
+       "x is a '1' smaller than the '2', and a '3' bigger than the '2' exists to its right \u2192 132 found",
+       ""
+      ],
+      [
+       "while st and st[-1] < x: third = st.pop()",
+       "x is larger than the stack top; the popped value becomes the '2' and x the '3'",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,1,4,2]` scanned from the right:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "event",
+      "stack",
+      "third"
+     ],
+     "rows": [
+      [
+       "2",
+       "\u2013",
+       "[2]",
+       "-inf"
+      ],
+      [
+       "4",
+       "popped [2]",
+       "[4]",
+       "2"
+      ],
+      [
+       "1",
+       "x < third \u2192 pattern found",
+       "[4]",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Pattern: 1 (index 1), 4 (index 2), 2 (index 3)."
+    ]
+   },
+   {
+    "h": "Why scan from the right?",
+    "p": [
+     "Going right to left, when a value is popped by a larger one, the larger one is the '3' and the popped one is the '2'. Both are to the right of any future x. We only need to know the biggest valid '2', because any x below it makes a '1'. Scanning left to right would need to guess '1' candidates first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): each value is pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "132 pattern: scan from the right with a decreasing stack; the last value popped is the best '2', and any smaller x completes the pattern."
+ },
+ "465": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bal[a] -= c; bal[b] += c",
+       "Net balance per person: negative = owes money, positive = is owed",
+       "Reduce a transaction graph to net balances"
+      ],
+      [
+       "debts = [v for v in bal.values() if v]",
+       "Keeps only people who are not already settled",
+       ""
+      ],
+      [
+       "go(i)",
+       "Settles person i by transferring their whole balance to some later person, then recurses on i + 1",
+       "Backtracking over who settles with whom"
+      ],
+      [
+       "debts[j] * debts[i] < 0",
+       "Only pair a debtor with a creditor (opposite signs)",
+       ""
+      ],
+      [
+       "seen",
+       "Tries each distinct balance value only once at this level",
+       "Pruning equivalent choices"
+      ],
+      [
+       "debts[j] += debts[i] \u2026 -= debts[i]",
+       "Apply the transfer, recurse, then undo it",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,10],[2,0,5]]`: person 0 pays person 1 ten, person 2 pays person 0 five. Net balances: person 0 owes 5 (\u22125), person 1 is owed 10, person 2 owes 5 (\u22125), so `debts = [-5, 10, -5]`."
+    ],
+    "table": {
+     "head": [
+      "call",
+      "debts[i]",
+      "partner chosen",
+      "debts after the transfer",
+      "transfers so far"
+     ],
+     "rows": [
+      [
+       "go(0)",
+       "-5",
+       "index 1",
+       "[-5, 5, -5]",
+       "1"
+      ],
+      [
+       "go(1)",
+       "5",
+       "index 2",
+       "[-5, 5, 0]",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Two transfers settle everything (person 0 \u2192 1 and person 2 \u2192 1), so the answer is `2`."
+    ]
+   },
+   {
+    "h": "Why can one person settle with a single transfer in the search?",
+    "p": [
+     "Person i is fixed to settle completely, by sending or receiving their whole balance in exactly one transaction with some later person. That one transfer may leave the other person with a new balance, but person i is finished and is skipped from then on. The search chooses who that partner is, and the minimum over all partner choices is the answer. Skipping repeated balance values (`seen`) avoids exploring equivalent partners twice."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential in the number of non-zero balances, about O((n\u22121)!) in the worst case; fine for the problem's small n (\u2264 12 transactions).",
+     "Space: O(n) recursion plus the balances."
+    ]
+   }
+  ],
+  "takeaway": "Reduce to net balances, then backtrack: settle one person at a time with a person of opposite sign, undoing each trial."
+ }
+}
