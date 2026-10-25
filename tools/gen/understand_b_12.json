@@ -1,0 +1,2022 @@
+{
+ "964": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`divmod(target, x)`",
+       "Quotient and remainder in one call",
+       "Peels off one base-x digit `cur` per loop (least significant first)"
+      ],
+      [
+       "`k`",
+       "Position of the digit: it stands for `cur × x^k`",
+       "Cost of writing x^k is k operators (k−1 `*` and one `+`); x^0 is `x/x` costing 2"
+      ],
+      [
+       "`pos`",
+       "Fewest operators to build the digits processed so far exactly (no overshoot)",
+       "State A of the digit DP"
+      ],
+      [
+       "`neg`",
+       "Fewest operators to build them as 'next power minus remainder' (overshoot by one unit at this position)",
+       "State B: a carry to the next digit"
+      ],
+      [
+       "`min(cur*k + pos, (cur+1)*k + neg)`",
+       "New `pos`: use `cur` copies of x^k on top of exact lower digits, or `cur+1` copies and absorb the overshoot",
+       "Carry bookkeeping"
+      ],
+      [
+       "`min(pos, k + neg) - 1`",
+       "Final: finish exactly, or take one more x^k and subtract the overshoot; remove one `+` for the first term",
+       "The first term needs no leading operator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`x = 3`, `target = 19` has base-3 digits 2, 0, 1 (19 = 2·9 + 0·3 + 1), read least significant first by the loop. Result 5 (`3*3+3*3+3/3`):"
+    ],
+    "table": {
+     "head": [
+      "Digit position k",
+      "Weight",
+      "Digit",
+      "pos",
+      "neg",
+      "Remaining target"
+     ],
+     "rows": [
+      [
+       "0",
+       "x^0",
+       "1",
+       "2",
+       "4",
+       "6"
+      ],
+      [
+       "1",
+       "x^1",
+       "0",
+       "2",
+       "5",
+       "2"
+      ],
+      [
+       "2",
+       "x^2",
+       "2",
+       "6",
+       "4",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a digit DP?",
+    "p": [
+     "Any expression is a signed sum of powers of x. A digit of the base-x representation can be built by adding that power cur times, or by overshooting with cur+1 copies and subtracting the missing part at the lower digits (the 'neg' route). Each position needs only two states, so the DP is O(log target). The code agrees with an independent shortest-path search over signed sums of powers for every x from 2 to 5 and target from 1 to 59: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log_x target).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Digit DP in base x: for each digit track the cost with and without a borrow, where x^k costs k operators and x^0 costs 2."
+ },
+ "973": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x * x + y * y`",
+       "Squared distance to the origin",
+       "Comparing squares gives the same order as comparing distances, with no `sqrt`"
+      ],
+      [
+       "`-(x * x + y * y)`",
+       "Negated key",
+       "`heapq` is a min-heap; negating makes the FARTHEST point sit at the root"
+      ],
+      [
+       "`heappush(heap, (key, x, y))`",
+       "Tuple stores the point with its key",
+       "Tuples compare by the first element first"
+      ],
+      [
+       "`if len(heap) > k: heappop(heap)`",
+       "Drop the farthest once there are more than k",
+       "The heap always keeps the k closest seen so far"
+      ],
+      [
+       "`[[x, y] for _, x, y in heap]`",
+       "Extract the points",
+       "Order doesn't matter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "points `[[1,3],[-2,2],[3,3],[0,1]]`, `k = 2` (heap shown as (squared distance, x, y)):"
+    ],
+    "table": {
+     "head": [
+      "Point",
+      "Squared distance",
+      "Event",
+      "Heap after"
+     ],
+     "rows": [
+      [
+       "(1, 3)",
+       "10",
+       "—",
+       "[(10, 1, 3)]"
+      ],
+      [
+       "(-2, 2)",
+       "8",
+       "—",
+       "[(8, -2, 2), (10, 1, 3)]"
+      ],
+      [
+       "(3, 3)",
+       "18",
+       "pop farthest (3, 3) (dist² 18)",
+       "[(8, -2, 2), (10, 1, 3)]"
+      ],
+      [
+       "(0, 1)",
+       "1",
+       "pop farthest (1, 3) (dist² 10)",
+       "[(1, 0, 1), (8, -2, 2)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a max-heap of size k and not sorting everything?",
+    "p": [
+     "When k is much smaller than n, a heap that holds only the k best candidates is cheaper than sorting. The root is always the worst of the current best k, so it is the one to evict."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Sort all points",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "Max-heap of size k (this code)",
+       "O(n log k)",
+       "O(k)"
+      ],
+      [
+       "Quickselect",
+       "O(n) average",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Top-k smallest with a max-heap of size k: push each point, evict the farthest when the heap exceeds k."
+ },
+ "979": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`excess(node)`",
+       "Coins the subtree rooted here has left over (negative = needs coins)",
+       "Post-order: children first"
+      ],
+      [
+       "`+ node.val - 1`",
+       "This node's own coins minus the one it must keep",
+       "Local surplus or deficit"
+      ],
+      [
+       "`moves += abs(e)`",
+       "Every coin of the excess crosses the edge to the parent (or the parent sends −e coins down)",
+       "Each unit of flow on an edge costs one move"
+      ],
+      [
+       "`return e`",
+       "Pass the net flow upward",
+       "Parent adds it to its own balance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,0,0]`: total moves = 2 (the root sends one coin to each child). Subtrees finish in this order:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Excess of its subtree",
+      "Moves for the edge above",
+      "Total moves"
+     ],
+     "rows": [
+      [
+       "0",
+       "-1",
+       "1",
+       "1"
+      ],
+      [
+       "0",
+       "-1",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "0",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another: `[0,3,0]` → 3",
+    "p": [
+     "The left child holds 3 coins and keeps 1; its 2 spare coins cross the edge to the root, one of which the root passes to the right child, so flow on the left edge is 2 and on the right edge is 1."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Excess of its subtree",
+      "Moves for the edge above",
+      "Total moves"
+     ],
+     "rows": [
+      [
+       "3",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "0",
+       "-1",
+       "1",
+       "3"
+      ],
+      [
+       "0",
+       "0",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the sum of |excess| equal the minimum moves?",
+    "p": [
+     "Each edge must carry the net imbalance of the subtree below it: if the subtree has e extra coins, at least |e| coins must cross that edge, and moving them straight there is enough. Flows on different edges are independent, so the total is the sum over all edges."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Count the net coin flow across every edge: for each subtree, |coins − nodes| moves must cross the edge above it."
+ },
+ "994": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque()` of rotten cells",
+       "BFS (Breadth-First Search) frontier",
+       "All rotten oranges start together: multi-source BFS"
+      ],
+      [
+       "`fresh`",
+       "Count of fresh oranges left",
+       "Lets us stop early and detect unreachable oranges"
+      ],
+      [
+       "`for _ in range(len(q))`",
+       "Process exactly one minute's worth of oranges",
+       "`len(q)` is evaluated once, so newly rotten ones wait for the next minute"
+      ],
+      [
+       "`grid[nr][nc] = 2`",
+       "Mark rotten when queued",
+       "Doubles as the visited marker"
+      ],
+      [
+       "`minutes if fresh == 0 else -1`",
+       "If any fresh orange remains it was unreachable",
+       "e.g. enclosed by empty cells"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[2,1,1],[1,1,0],[0,1,1]]` → 4 minutes:"
+    ],
+    "table": {
+     "head": [
+      "Time",
+      "Change",
+      "Fresh left",
+      "Minutes"
+     ],
+     "rows": [
+      [
+       "start",
+       "[(0, 0)]",
+       "6",
+       "0"
+      ],
+      [
+       "minute 1",
+       "newly rotten [(1, 0), (0, 1)]",
+       "4",
+       "1"
+      ],
+      [
+       "minute 2",
+       "newly rotten [(1, 1), (0, 2)]",
+       "2",
+       "2"
+      ],
+      [
+       "minute 3",
+       "newly rotten [(2, 1)]",
+       "1",
+       "3"
+      ],
+      [
+       "minute 4",
+       "newly rotten [(2, 2)]",
+       "0",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS levels = minutes?",
+    "p": [
+     "Rot spreads one step per minute to all neighbours simultaneously. A BFS from all rotten oranges at once explores exactly one distance layer per minute, so the number of layers needed to reach the last fresh orange is the answer. Running BFS separately from each orange would be slower and would not give simultaneous spreading."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Multi-source BFS (Breadth-First Search) with a level loop: one level = one minute; leftover fresh oranges mean −1."
+ },
+ "1021": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`depth`",
+       "Number of currently open brackets",
+       "Nesting level"
+      ],
+      [
+       "`if depth > 0` before `depth += 1` on `(`",
+       "The bracket is not the outermost opener",
+       "Level 0 → 1 is the primitive piece's first bracket"
+      ],
+      [
+       "`depth -= 1` then `if depth > 0` on `)`",
+       "After closing, still inside a piece",
+       "Closing back to level 0 is the outermost closer"
+      ],
+      [
+       "`''.join(res)`",
+       "Join the kept characters",
+       "Single pass output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`(()())(())` → `()()()`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "depth after",
+      "Decision",
+      "Result so far"
+     ],
+     "rows": [
+      [
+       "(",
+       "1",
+       "outermost → dropped",
+       ""
+      ],
+      [
+       "(",
+       "2",
+       "kept",
+       "("
+      ],
+      [
+       ")",
+       "1",
+       "kept",
+       "()"
+      ],
+      [
+       "(",
+       "2",
+       "kept",
+       "()("
+      ],
+      [
+       ")",
+       "1",
+       "kept",
+       "()()"
+      ],
+      [
+       ")",
+       "0",
+       "outermost → dropped",
+       "()()"
+      ],
+      [
+       "(",
+       "1",
+       "outermost → dropped",
+       "()()"
+      ],
+      [
+       "(",
+       "2",
+       "kept",
+       "()()("
+      ],
+      [
+       ")",
+       "1",
+       "kept",
+       "()()()"
+      ],
+      [
+       ")",
+       "0",
+       "outermost → dropped",
+       "()()()"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check depth before incrementing and after decrementing?",
+    "p": [
+     "Both checks ask 'is this bracket at the outermost level?' An opening bracket is outermost if it starts at depth 0; a closing bracket is outermost if it returns to depth 0. Dropping exactly those removes the outer pair of every primitive piece, and primitive pieces are exactly the stretches between consecutive returns to depth 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Depth counter: skip the bracket that moves depth 0 → 1 and the one that moves 1 → 0."
+ },
+ "1033": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted((a, b, c))`",
+       "The three positions in order",
+       "Name them x < y < z"
+      ],
+      [
+       "`z - x - 2`",
+       "Number of empty cells between the stones' outer positions",
+       "Maximum moves: advance one cell at a time into the gap"
+      ],
+      [
+       "`high == 0`",
+       "Already consecutive",
+       "No moves needed"
+      ],
+      [
+       "`y - x <= 2 or z - y <= 2`",
+       "Some pair is already adjacent or has one cell between them",
+       "Then one move finishes (put the third stone next to them)"
+      ],
+      [
+       "else `2`",
+       "Both gaps are bigger than 2",
+       "Two moves: bring one stone near the middle one, then the other"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "a, b, c",
+      "Sorted gaps (y−x, z−y)",
+      "[min, max]"
+     ],
+     "rows": [
+      [
+       "1, 2, 5",
+       "1, 3",
+       "[1, 2]"
+      ],
+      [
+       "4, 3, 2",
+       "1, 1",
+       "[0, 0]"
+      ],
+      [
+       "3, 5, 1",
+       "2, 2",
+       "[1, 2]"
+      ],
+      [
+       "1, 3, 9",
+       "2, 6",
+       "[1, 6]"
+      ],
+      [
+       "1, 4, 9",
+       "3, 5",
+       "[2, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these formulas?",
+    "p": [
+     "Maximum: each move shrinks the span `z − x` by at least 1, and the game stops when the span is 2, so at most `z − x − 2` moves; moving the outer stone just inside the range (one cell at a time) achieves it. Minimum is 0, 1 or 2 by the case analysis. As a check, the closed formula equals an exhaustive game search for every starting triple with positions in 1 to 11: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Case analysis on the sorted gaps: max moves = span − 2; min moves is 0, 1 (a gap of at most 2) or 2."
+ },
+ "1039": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Minimum score to triangulate the polygon formed by corners i, i+1, …, j",
+       "Interval DP (Dynamic Programming); the edge i–j is the 'base'"
+      ],
+      [
+       "`for length in range(2, n)`",
+       "Intervals with at least 3 corners, shortest first",
+       "`dp[i][k]` and `dp[k][j]` are shorter, so they are ready"
+      ],
+      [
+       "`for k in range(i + 1, j)`",
+       "The third corner of the triangle that sits on edge i–j",
+       "Every triangulation has exactly one such triangle"
+      ],
+      [
+       "`values[i] * values[k] * values[j]`",
+       "Score of that triangle",
+       "Plus the two sub-polygons on each side"
+      ],
+      [
+       "`dp[0][n-1]`",
+       "Whole polygon",
+       "Edge 0–(n−1) is a polygon side, so it needs a triangle on it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,7,4,5]` → 144:"
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Options (k, score)",
+      "dp"
+     ],
+     "rows": [
+      [
+       "0..2",
+       "[('k=1', 84)]",
+       "84"
+      ],
+      [
+       "1..3",
+       "[('k=2', 140)]",
+       "140"
+      ],
+      [
+       "0..3",
+       "[('k=1', 245), ('k=2', 144)]",
+       "144"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pick the triangle on the base edge?",
+    "p": [
+     "In any triangulation of the polygon i..j, the edge (i, j) belongs to exactly one triangle with a third corner k. That triangle splits the rest into polygons i..k and k..j, which are independent subproblems. Trying every k covers all triangulations without repeating any."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Interval DP: choose the third corner k of the triangle on edge (i, j); the two sides are independent sub-polygons."
+ },
+ "1048": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(words, key=len)`",
+       "Words from shortest to longest",
+       "A predecessor is exactly one letter shorter, so it is already processed"
+      ],
+      [
+       "`dp[w]`",
+       "Longest chain ending at word w",
+       "Dict keyed by word"
+      ],
+      [
+       "`w[:i] + w[i+1:]`",
+       "w with letter i deleted",
+       "Generate every possible predecessor instead of testing every shorter word"
+      ],
+      [
+       "`prev in dp`",
+       "Is that predecessor one of the words?",
+       "O(1) hash lookup"
+      ],
+      [
+       "`dp[prev] + 1`",
+       "Extend its chain",
+       "DP transition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['a','b','ba','bca','bda','bdca']` → 4 (a → ba → bda → bdca):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Predecessors found (chain length)",
+      "dp"
+     ],
+     "rows": [
+      [
+       "a",
+       "none",
+       "1"
+      ],
+      [
+       "b",
+       "none",
+       "1"
+      ],
+      [
+       "ba",
+       "a(1), b(1)",
+       "2"
+      ],
+      [
+       "bca",
+       "ba(2)",
+       "3"
+      ],
+      [
+       "bda",
+       "ba(2)",
+       "3"
+      ],
+      [
+       "bdca",
+       "bca(3), bda(3)",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why delete letters instead of inserting?",
+    "p": [
+     "Inserting one of 26 letters at each of L+1 positions makes up to 26·(L+1) candidates. Deleting one of L letters makes only L candidates, and each is looked up in the dict. Sorting by length guarantees shorter words already have their dp values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·L²): n words, L deletions each, each building and hashing an L-character string (plus O(n log n) for sorting).",
+     "Space: O(n·L)."
+    ]
+   }
+  ],
+  "takeaway": "DP over words sorted by length: for each word try deleting each letter and extend the chain of that predecessor."
+ },
+ "1051": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(heights)`",
+       "A sorted copy",
+       "The correct line-up; the original list stays unchanged"
+      ],
+      [
+       "`zip(heights, sorted(heights))`",
+       "Pairs the actual and expected height at each position",
+       "Compare position by position"
+      ],
+      [
+       "`sum(a != b for …)`",
+       "Counts mismatches",
+       "`True` adds as 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,4,2,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Actual",
+      "Expected",
+      "Mismatch?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "no"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "no"
+      ],
+      [
+       "2",
+       "4",
+       "1",
+       "yes"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "no"
+      ],
+      [
+       "4",
+       "1",
+       "3",
+       "yes"
+      ],
+      [
+       "5",
+       "3",
+       "4",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does comparing with the sorted list count the right students?",
+    "p": [
+     "The sorted array is the only non-decreasing arrangement, so the expected height at each position is fixed. Every position whose actual height differs from it is a student out of place. Ties between equal heights don't create mismatches because equal values are interchangeable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted copy (a counting sort can make it O(n + range))."
+    ]
+   }
+  ],
+  "takeaway": "Sort a copy and count the positions where the original differs."
+ },
+ "1057": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abs(wx - bx) + abs(wy - by)`",
+       "Manhattan distance",
+       "Grid distance with only horizontal/vertical moves"
+      ],
+      [
+       "`sorted((d, i, j) …)`",
+       "All worker–bike pairs sorted by distance, then worker index, then bike index",
+       "Tuple order encodes the problem's tie-break rules exactly"
+      ],
+      [
+       "`ans[i] == -1 and j not in used`",
+       "Worker still free and bike still free",
+       "Skip pairs that are no longer available"
+      ],
+      [
+       "`used` set",
+       "Bikes already taken",
+       "O(1) check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "workers `[[0,0],[2,1]]`, bikes `[[1,2],[3,3]]` → `[1, 0]`. Pairs in sorted order (distance, worker, bike):"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Decision",
+      "ans"
+     ],
+     "rows": [
+      [
+       "(2, w1, b0)",
+       "assign",
+       "[-1, 0]"
+      ],
+      [
+       "(3, w0, b0)",
+       "skip (worker or bike taken)",
+       "[-1, 0]"
+      ],
+      [
+       "(3, w1, b1)",
+       "skip (worker or bike taken)",
+       "[-1, 0]"
+      ],
+      [
+       "(6, w0, b1)",
+       "assign",
+       "[1, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the sorted scan equal the repeated 'pick the smallest' rule?",
+    "p": [
+     "The rule says: among all unassigned pairs pick the smallest (distance, worker, bike). A sorted list visits pairs in exactly that order, and skipping already-used workers or bikes is the same as 'among unassigned pairs'. So one pass reproduces the repeated selection."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(W·B log(W·B)) for sorting all pairs.",
+     "Space: O(W·B) for the pair list."
+    ]
+   }
+  ],
+  "takeaway": "Greedy by sorted (distance, worker, bike) tuples; skip pairs whose worker or bike is already used."
+ },
+ "1060": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums[mid] - nums[0] - mid`",
+       "How many numbers are missing before index mid",
+       "With no gaps, `nums[mid] = nums[0] + mid`; the excess is the count of missing numbers"
+      ],
+      [
+       "`< k`",
+       "Fewer than k missing numbers up to mid",
+       "The k-th missing number lies to the right"
+      ],
+      [
+       "`lo, hi = 0, len(nums)`",
+       "Search range, `hi` exclusive",
+       "Finds the first index where missing ≥ k (possibly `len(nums)`)"
+      ],
+      [
+       "`nums[0] + lo - 1 + k`",
+       "The answer from the first index with ≥ k missing",
+       "Count k missing numbers starting from the last array element before `lo`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,7,9,10]`, `k = 1` → 5:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "nums[mid]",
+      "missing before mid",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "2",
+       "9",
+       "3",
+       "missing ≥ k → hi = mid"
+      ],
+      [
+       "0",
+       "2",
+       "1",
+       "7",
+       "2",
+       "missing ≥ k → hi = mid"
+      ],
+      [
+       "0",
+       "1",
+       "0",
+       "4",
+       "0",
+       "missing < k → lo = mid+1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another query: `k = 3`",
+    "p": [
+     "Result 8 (missing numbers are 5, 6, 8, 11, …)."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "nums[mid]",
+      "missing before mid",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "2",
+       "9",
+       "3",
+       "missing ≥ k → hi = mid"
+      ],
+      [
+       "0",
+       "2",
+       "1",
+       "7",
+       "2",
+       "missing < k → lo = mid+1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the formula use `lo - 1`?",
+    "p": [
+     "After the search `lo` is the first index where the missing count is at least k, so the k-th missing number is beyond `nums[lo-1]`. There are `missing(lo-1) = nums[lo-1] - nums[0] - (lo-1)` missing before it, and the answer is `nums[lo-1] + (k - missing(lo-1))`, which simplifies to `nums[0] + lo - 1 + k`. For `k = 3` the search ends at `lo = 2`: `nums[1] = 7` has 2 missing numbers before it (5 and 6), so the 3rd missing number is 7 + (3 − 2) = 8."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on 'missing count before index mid', then compute the answer arithmetically from the boundary."
+ },
+ "1087": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s.index('}', i)`",
+       "Position of the next closing brace",
+       "Find the end of the option group"
+      ],
+      [
+       "`s[i+1:j].split(',')`",
+       "Options inside the braces",
+       "`'a,b'` → `['a','b']`"
+      ],
+      [
+       "`sorted(…)`",
+       "Sort each group's options",
+       "So the product comes out in alphabetical order"
+      ],
+      [
+       "`[s[i]]`",
+       "A plain letter as a one-option group",
+       "Treat letters and brace groups uniformly"
+      ],
+      [
+       "`product(*groups)`",
+       "Cartesian product of the groups, from `itertools`",
+       "All combinations of one choice per group; the last group varies fastest"
+      ],
+      [
+       "`''.join(p)`",
+       "Join one combination into a word",
+       "Each tuple becomes a string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`{a,b}c{d,e}f` is parsed into groups `[['a', 'b'], ['c'], ['d', 'e'], ['f']]`, and the product gives `['acdf', 'acef', 'bcdf', 'bcef']`:"
+    ],
+    "table": {
+     "head": [
+      "Parsing step",
+      "Group added"
+     ],
+     "rows": [
+      [
+       "`{a,b}`",
+       "['a', 'b']"
+      ],
+      [
+       "`c`",
+       "['c']"
+      ],
+      [
+       "`{d,e}`",
+       "['d', 'e']"
+      ],
+      [
+       "`f`",
+       "['f']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sorting groups is enough for sorted output",
+    "p": [
+     "`itertools.product` yields tuples in lexicographic order with respect to the input groups. If every group is sorted, the joined words are in alphabetical order whenever all options are single letters (as here). No final sort is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(number of results × length) to generate; parsing is O(n).",
+     "Space: O(number of results × length) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Parse the pattern into option groups, then take the Cartesian product (itertools.product) of the sorted groups."
+ },
+ "1108": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`address.replace('.', '[.]')`",
+       "Returns a new string with every occurrence of the first argument replaced",
+       "Strings are immutable in Python, so replace returns a copy"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Input",
+      "Output"
+     ],
+     "rows": [
+      [
+       "1.1.1.1",
+       "1[.]1[.]1[.]1"
+      ],
+      [
+       "255.100.50.0",
+       "255[.]100[.]50[.]0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not a manual loop?",
+    "p": [
+     "A loop that builds a list of characters and joins them does the same job in more code. `str.replace` scans once, handles all occurrences (unlike `.replace(old, new, 1)`) and needs no special case for the first or last dot."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the new string."
+    ]
+   }
+  ],
+  "takeaway": "str.replace substitutes every occurrence in one pass, returning a new string."
+ },
+ "1117": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`threading.Semaphore(2)` for hydrogen",
+       "Counter allowing at most 2 hydrogen threads past `acquire()` at once",
+       "Limits each molecule to two H"
+      ],
+      [
+       "`threading.Semaphore(1)` for oxygen",
+       "Allows only 1 oxygen thread in",
+       "Limits each molecule to one O"
+      ],
+      [
+       "`threading.Barrier(3)`",
+       "`wait()` blocks until 3 threads have called it, then releases all three together",
+       "Gathers exactly 2 H + 1 O before any of them outputs"
+      ],
+      [
+       "`release()` after outputting",
+       "Hands the permit back",
+       "Lets the next molecule's atoms proceed"
+      ],
+      [
+       "`releaseHydrogen()` / `releaseOxygen()`",
+       "The callbacks that print the letter",
+       "Called only after the barrier opens"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "What a run looks like",
+    "p": [
+     "Running 8 hydrogen and 4 oxygen threads started in random order produced these outputs (each 3-letter group is one molecule; 'valid' means every group has exactly 2 H and 1 O):"
+    ],
+    "table": {
+     "head": [
+      "Run",
+      "Output",
+      "Valid?"
+     ],
+     "rows": [
+      [
+       "0",
+       "HOHHOHHOHHHO",
+       "True"
+      ],
+      [
+       "1",
+       "HOHHHOHOHHHO",
+       "True"
+      ],
+      [
+       "2",
+       "HHOOHHHHOHOH",
+       "True"
+      ],
+      [
+       "3",
+       "OHHOHHOHHHHO",
+       "True"
+      ],
+      [
+       "4",
+       "HHOHOHHHOHHO",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is a barrier not enough alone, and why are semaphores not enough alone?",
+    "bullets": [
+     "Barrier alone: three hydrogens could meet at the barrier and leave together, producing HHH.",
+     "Semaphores alone: they cap how many H/O are admitted but do not make them print together, so letters of different molecules could interleave.",
+     "Together: the semaphores admit at most 2 H and 1 O, so the 3 threads waiting at the barrier are always 2 H + 1 O; the barrier then releases them as one molecule, and the permits are returned only after printing so the next molecule cannot start early."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) thread operations for n molecules (each atom acquires, waits once and releases).",
+     "Space: O(1) shared state."
+    ]
+   }
+  ],
+  "takeaway": "Combine counting semaphores (limit 2 H and 1 O) with a barrier of 3 so exactly one molecule forms at a time."
+ },
+ "1123": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dfs(node)` returns `(depth, node)`",
+       "Depth of the deepest leaf below, and the LCA (Lowest Common Ancestor) of the deepest leaves of this subtree",
+       "Two results from one traversal"
+      ],
+      [
+       "`if not node: return (0, None)`",
+       "Empty subtree",
+       "Depth 0, no answer"
+      ],
+      [
+       "`ld > rd`",
+       "Deepest leaves are all in the left subtree",
+       "The LCA is whatever the left side found"
+      ],
+      [
+       "`ld == rd`",
+       "Deepest leaves on both sides (or a leaf)",
+       "The current node is their LCA"
+      ],
+      [
+       "`dfs(root)[1]`",
+       "Take the node from the pair",
+       "The depth is not needed at the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,5,1,6,2,0,8,null,null,7,4]` → node 2. Nodes in post-order, with the answer node each returns:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Left depth",
+      "Right depth",
+      "Depth returned",
+      "Answer node returned"
+     ],
+     "rows": [
+      [
+       "6",
+       "0",
+       "0",
+       "1",
+       "6"
+      ],
+      [
+       "7",
+       "0",
+       "0",
+       "1",
+       "7"
+      ],
+      [
+       "4",
+       "0",
+       "0",
+       "1",
+       "4"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "5",
+       "1",
+       "2",
+       "3",
+       "2"
+      ],
+      [
+       "0",
+       "0",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "8",
+       "0",
+       "0",
+       "1",
+       "8"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "2",
+       "4",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does equal depth make the node the LCA?",
+    "p": [
+     "If both children's subtrees reach the same maximum depth, the deepest leaves of this subtree lie on both sides, so the lowest node containing all of them is the current node. If one side is deeper, all deepest leaves are on that side and the answer was already found inside it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Return (depth, LCA) from each subtree: equal child depths make the current node the LCA of the deepest leaves."
+ },
+ "1138": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`divmod(ord(ch) - 97, 5)`",
+       "Row and column of a letter (the board is 5 wide)",
+       "`ord('a') = 97`; letters are laid out in rows of five"
+      ],
+      [
+       "`'L' * (c - nc)`",
+       "Repeat a character",
+       "Build a run of identical moves"
+      ],
+      [
+       "order: left, up, down, right",
+       "Move left and up first, down and right last",
+       "Keeps the path on the board (see below)"
+      ],
+      [
+       "`'!'`",
+       "Select the letter",
+       "Appended after every move sequence"
+      ],
+      [
+       "`r, c = nr, nc`",
+       "Update the current position",
+       "Next letter starts here"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'leet'` → `DDR!UURRR!!DDD!`:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Move",
+      "Output piece"
+     ],
+     "rows": [
+      [
+       "l",
+       "(0,0) → (2,1)",
+       "DDR!"
+      ],
+      [
+       "e",
+       "(2,1) → (0,4)",
+       "UURRR!"
+      ],
+      [
+       "e",
+       "(0,4) → (0,4)",
+       "!"
+      ],
+      [
+       "t",
+       "(0,4) → (3,4)",
+       "DDD!"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why left and up before down and right?",
+    "p": [
+     "The only awkward cell is `z`, alone in row 5 (column 0). To go TO z you must be in column 0 first and then move down, so the left move must come before the down move. To go FROM z you must move up before moving right, since row 5 has no cells to the right of z. The order L, U, D, R satisfies both. Checking every path of the form a→b→a for all letter pairs by simulation, none leaves the board: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for a target of n letters (each move string is at most 9 characters).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Convert letters to (row, col) with divmod and always emit L and U before D and R so the lone z row is entered and left safely."
+ },
+ "1150": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`bisect_left(nums, t)`",
+       "First index where `t` can be inserted: the start of the run of `t`",
+       "Binary search, O(log n)"
+      ],
+      [
+       "`bisect_right(nums, t)`",
+       "Index just after the run of `t`",
+       "End of the run"
+      ],
+      [
+       "`right - left`",
+       "Number of occurrences of `t`",
+       "Length of the run"
+      ],
+      [
+       "`> n // 2`",
+       "More than half",
+       "Majority definition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,4,5,5,5,5,5,6,6]`, `target = 5`: `bisect_left` = 2, `bisect_right` = 7, count = 5 > 4, so True."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "n",
+       "9"
+      ],
+      [
+       "bisect_left",
+       "2"
+      ],
+      [
+       "bisect_right",
+       "7"
+      ],
+      [
+       "count",
+       "5"
+      ],
+      [
+       "n // 2",
+       "4"
+      ],
+      [
+       "majority?",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two binary searches instead of a Counter?",
+    "p": [
+     "Because the array is sorted, equal values are contiguous and their count is just the distance between two boundary indexes. The sorted order is what makes O(log n) possible."
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Counter",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Two bisects (this code)",
+       "O(log n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "In a sorted array the count of a value is bisect_right − bisect_left; compare it with n // 2."
+ },
+ "1162": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque(… if grid[i][j])`",
+       "All land cells as BFS (Breadth-First Search) sources",
+       "Distance to the nearest land = BFS layer from all lands at once"
+      ],
+      [
+       "`len(q) in (0, n * n)`",
+       "No land or no water",
+       "Answer is −1; `in` with a tuple tests both"
+      ],
+      [
+       "`dist += 1` per layer",
+       "Layer counter",
+       "`dist` starts at −1 so the land layer itself is layer 0 and the final empty-layer pass doesn't overcount"
+      ],
+      [
+       "`grid[a][b] = 1`",
+       "Mark water as visited by turning it into land",
+       "In-place visited marker"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,0,1],[0,0,0],[1,0,1]]` → 2. In pass d the queue holds cells at distance d from land; the water cells they reach are at distance d+1:"
+    ],
+    "table": {
+     "head": [
+      "Pass (dist)",
+      "Water cells newly reached"
+     ],
+     "rows": [
+      [
+       "0",
+       "[(1, 0), (0, 1), (1, 2), (2, 1)]"
+      ],
+      [
+       "1",
+       "[(1, 1)]"
+      ],
+      [
+       "2",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the final value of `dist` equal the answer?",
+    "p": [
+     "`dist` starts at −1 and increases at the start of each pass. Pass 0 expands the land cells themselves, pass 1 the cells at distance 1, and so on. The last pass (here pass 2) expands the farthest water cells and finds nothing new, so `dist` equals the distance of the farthest water cell from land: the cell (1,1) is 2 steps away."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Multi-source BFS (Breadth-First Search) from every land cell: the number of layers needed to cover all water is the answer."
+ },
+ "1168": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(c, 0, i + 1)`",
+       "Edge from a virtual node 0 to house i+1 with cost = well cost",
+       "Building a well becomes 'connect this house to the water source'"
+      ],
+      [
+       "`edges.sort()`",
+       "Sort all edges by cost (first tuple element)",
+       "Kruskal's minimum spanning tree: consider the cheapest edges first"
+      ],
+      [
+       "`parent = list(range(n + 1))`",
+       "Union-Find over nodes 0…n",
+       "Each node starts as its own group"
+      ],
+      [
+       "`find(x)` with path halving",
+       "Root of x's group, flattening the tree on the way",
+       "`parent[x] = parent[parent[x]]`"
+      ],
+      [
+       "`ra != rb` → union and add cost",
+       "The edge joins two separate groups",
+       "Skip edges that would form a cycle"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, wells `[1,2,2]`, pipes `[[1,2,1],[2,3,1]]` → 3 (well at house 1, then pipes 1–2 and 2–3):"
+    ],
+    "table": {
+     "head": [
+      "Edge (a, b)",
+      "Decision",
+      "Total cost"
+     ],
+     "rows": [
+      [
+       "(0, 1) cost 1",
+       "joins two groups → take",
+       "1"
+      ],
+      [
+       "(1, 2) cost 1",
+       "joins two groups → take",
+       "2"
+      ],
+      [
+       "(2, 3) cost 1",
+       "joins two groups → take",
+       "3"
+      ],
+      [
+       "(0, 2) cost 2",
+       "already connected → skip",
+       "3"
+      ],
+      [
+       "(0, 3) cost 2",
+       "already connected → skip",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why add a virtual node 0?",
+    "p": [
+     "Without it, houses can get water from a well or a pipe, two different kinds of choices. Adding node 0 as a 'water source' and treating each well as a pipe from node 0 to its house makes every house need to be connected to node 0 in a graph, which is exactly a minimum spanning tree over n+1 nodes. A well is then just an edge to node 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E log E) for sorting, with E = n + number of pipes.",
+     "Space: O(n + E)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum spanning tree (Kruskal with Union-Find) after modelling each well as an edge to a virtual source node 0."
+ },
+ "1171": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dummy = ListNode(0, head)`",
+       "Placeholder before the head",
+       "The whole prefix may be deleted, so a node with prefix sum 0 must exist"
+      ],
+      [
+       "`last[s] = cur`",
+       "For each prefix sum, remember the LAST node that has it",
+       "A later node with the same prefix sum means everything in between sums to 0"
+      ],
+      [
+       "second pass `cur.next = last[s].next`",
+       "Skip from the current node straight to just after the last node with the same prefix",
+       "Cuts the zero-sum stretch out in one pointer change"
+      ],
+      [
+       "`s += cur.val`",
+       "Running prefix sum",
+       "Two nodes with equal prefix sums enclose a zero-sum run"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→−3→3→1` → 3→1. First pass (prefix sum after each node, starting at the dummy):"
+    ],
+    "table": {
+     "head": [
+      "Node value",
+      "Prefix sum",
+      "last map update"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "last[0] = node 0"
+      ],
+      [
+       "1",
+       "1",
+       "last[1] = node 1"
+      ],
+      [
+       "2",
+       "3",
+       "last[3] = node 2"
+      ],
+      [
+       "-3",
+       "0",
+       "last[0] = node -3"
+      ],
+      [
+       "3",
+       "3",
+       "last[3] = node 3"
+      ],
+      [
+       "1",
+       "4",
+       "last[4] = node 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Second pass",
+    "p": [
+     "At the dummy (prefix 0), `last[0]` is the node with value −3 (prefix 0 again), so the dummy jumps over 1, 2, −3. The resulting list is `3→1`."
+    ],
+    "table": {
+     "head": [
+      "Node value",
+      "Prefix sum",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "next jumps to node after last[0] (3)"
+      ],
+      [
+       "3",
+       "3",
+       "next jumps to node after last[3] (1)"
+      ],
+      [
+       "1",
+       "4",
+       "next jumps to node after last[4] (None)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the LAST node with each prefix sum?",
+    "p": [
+     "If the same prefix sum occurs at nodes p < q, the nodes strictly between them sum to 0. Jumping to the last such node removes the longest zero-sum stretch at once, including any zero-sum sublists inside it, so no repeated deletions are needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the dict."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums with last-occurrence jumping: equal prefix sums enclose a zero-sum run, so link to the node after the last equal one."
+ }
+}

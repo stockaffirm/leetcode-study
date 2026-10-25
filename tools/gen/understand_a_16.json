@@ -1,0 +1,1742 @@
+{
+ "1779": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a == x or b == y",
+       "A point is valid only if it shares the x or the y coordinate",
+       ""
+      ],
+      [
+       "abs(a - x) + abs(b - y)",
+       "Manhattan distance (sum of coordinate gaps)",
+       ""
+      ],
+      [
+       "d < best",
+       "Strict `<` keeps the smallest index when distances tie, as required",
+       "Tie-breaking by scan order"
+      ],
+      [
+       "best, idx = inf, -1",
+       "-1 is returned if no valid point exists",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "You are at (3, 4):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "point",
+      "distance",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "(1,2)",
+       "\u2013",
+       "not valid (shares neither x nor y)"
+      ],
+      [
+       "1",
+       "(3,1)",
+       "3",
+       "new best"
+      ],
+      [
+       "2",
+       "(2,4)",
+       "1",
+       "new best"
+      ],
+      [
+       "3",
+       "(2,3)",
+       "\u2013",
+       "not valid (shares neither x nor y)"
+      ],
+      [
+       "4",
+       "(4,4)",
+       "1",
+       "not better"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: index 2."
+    ]
+   },
+   {
+    "h": "Why a single pass with strict <?",
+    "p": [
+     "Points are scanned in index order, so the first point reaching a given distance has the smallest index. Later points at the same distance must not replace it, which is why the comparison is strict."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Scan once, filter by shared coordinate, keep the first minimum Manhattan distance."
+ },
+ "1797": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.exp = {}",
+       "Dict from token id to its expiry time",
+       "Hash map for O(1) lookup by key"
+      ],
+      [
+       "currentTime + self.ttl",
+       "A token generated or renewed now expires ttl later",
+       ""
+      ],
+      [
+       "tokenId in self.exp and self.exp[tokenId] > currentTime",
+       "Renew only unexpired tokens (an expired token cannot be renewed; expiry at exactly currentTime counts as expired)",
+       "Strict comparison at the boundary"
+      ],
+      [
+       "sum(1 for e in \u2026values() if e > currentTime)",
+       "Counts tokens whose expiry is still in the future",
+       "Counting with a generator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`timeToLive = 5`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "expiry times"
+     ],
+     "rows": [
+      [
+       "renew('aaa', 1)",
+       "\u2013",
+       "{}"
+      ],
+      [
+       "generate('aaa', 2)",
+       "\u2013",
+       "{'aaa': 7}"
+      ],
+      [
+       "count(6,)",
+       "1",
+       "{'aaa': 7}"
+      ],
+      [
+       "generate('bbb', 7)",
+       "\u2013",
+       "{'aaa': 7, 'bbb': 12}"
+      ],
+      [
+       "renew('aaa', 8)",
+       "\u2013",
+       "{'aaa': 7, 'bbb': 12}"
+      ],
+      [
+       "renew('bbb', 10)",
+       "\u2013",
+       "{'aaa': 7, 'bbb': 15}"
+      ],
+      [
+       "count(15,)",
+       "0",
+       "{'aaa': 7, 'bbb': 15}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not delete expired tokens?",
+    "p": [
+     "Time only moves forward, so a token stays expired once expired, and `renew` ignores it. Leaving it in the dict is correct; cleaning it up would only save memory. Counting scans all stored tokens: O(n). A heap or an ordered dict would make the count cheaper."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "`generate`, `renew`: O(1). `countUnexpiredTokens`: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Dict of token \u2192 expiry time; renew only if still unexpired, and count expiries strictly in the future."
+ },
+ "1818": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total",
+       "Sum of |nums1[i] \u2212 nums2[i]| before any change",
+       ""
+      ],
+      [
+       "srt = sorted(nums1)",
+       "Sorted copy of nums1 for binary search: the replacement may be ANY element of nums1",
+       ""
+      ],
+      [
+       "bisect_left(srt, b)",
+       "Insertion position of b in the sorted list; the closest values to b are at i and i \u2212 1",
+       "Nearest value lookup"
+      ],
+      [
+       "old - new",
+       "How much replacing this position's value reduces its difference",
+       ""
+      ],
+      [
+       "(total - best) % (10 ** 9 + 7)",
+       "Apply the single best replacement, then reduce modulo as required",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,7,5]`, `nums2 = [2,3,5]`, sorted nums1 = `[1,5,7]`:"
+    ],
+    "table": {
+     "head": [
+      "(a, b)",
+      "|a \u2212 b|",
+      "insertion index of b",
+      "best new difference",
+      "gain",
+      "best gain so far"
+     ],
+     "rows": [
+      [
+       "(1,2)",
+       "1",
+       "1",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "(7,3)",
+       "4",
+       "1",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "(5,5)",
+       "0",
+       "1",
+       "0",
+       "0",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total 5, best gain 2: answer 3."
+    ]
+   },
+   {
+    "h": "Why only one replacement and why binary search?",
+    "p": [
+     "Exactly one replacement is allowed at most, so the answer is the total minus the single largest reduction. For a position with target b, the best replacement is the value in nums1 nearest to b, found by binary search in the sorted copy rather than by scanning all n values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Total difference minus the best single improvement; the best replacement value is the nearest to nums2[i], found by bisect."
+ },
+ "1824": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp = [1, 0, 1]",
+       "Minimum side jumps to be in lane 1, 2, 3 at the current point; the frog starts in lane 2 (cost 0) and reaching lane 1 or 3 costs one jump",
+       "DP (Dynamic Programming) with three states"
+      ],
+      [
+       "dp[o - 1] = INF",
+       "An obstacle blocks that lane at this point",
+       ""
+      ],
+      [
+       "m = min(dp)",
+       "Cheapest lane before jumping sideways",
+       ""
+      ],
+      [
+       "dp[l] = min(dp[l], m + 1)",
+       "You can jump from the cheapest open lane into any other free lane at this point for one extra jump",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`obstacles = [0,1,2,3,0]` (the value is the blocked lane at that point, 0 for none):"
+    ],
+    "table": {
+     "head": [
+      "point",
+      "obstacle lane",
+      "dp = jumps to be in lanes 1, 2, 3"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "[1, 0, 1]"
+      ],
+      [
+       "1",
+       "1",
+       "[inf, 0, 1]"
+      ],
+      [
+       "2",
+       "2",
+       "[2, inf, 1]"
+      ],
+      [
+       "3",
+       "3",
+       "[2, 3, inf]"
+      ],
+      [
+       "4",
+       "0",
+       "[2, 3, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: min(dp) = 2."
+    ]
+   },
+   {
+    "h": "Why can sideways jumps be treated as a single step?",
+    "p": [
+     "At the same point the frog may jump between any two lanes without obstacles for a cost of one (it can jump directly between the lanes 1 and 3 as well), so the new cost of a free lane is at most (cheapest other lane) + 1. One pass of `min(dp[l], m + 1)` suffices."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Three-lane DP: block the obstacle lane, then every free lane costs at most (cheapest lane) + 1."
+ },
+ "1827": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "prev",
+       "The value of the previous element after any increments",
+       ""
+      ],
+      [
+       "x <= prev",
+       "x must exceed prev: not strictly increasing",
+       ""
+      ],
+      [
+       "ops += prev + 1 - x",
+       "Increments needed to lift x to prev + 1, the smallest valid value",
+       "Greedy: smallest valid"
+      ],
+      [
+       "prev += 1",
+       "x is now prev + 1, so the new prev is the old one plus 1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,1]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "action",
+      "operations so far",
+      "prev"
+     ],
+     "rows": [
+      [
+       "1",
+       "raise 1 to 2",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "raise 1 to 3",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why raise only to prev + 1?",
+    "p": [
+     "Anything bigger wastes operations and also makes later elements harder to satisfy. The smallest valid value costs the fewest increments now and imposes the smallest requirement on the next element."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: lift each element to previous + 1 when it is not already larger."
+ },
+ "1839": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "groupby(word)",
+       "From `itertools`: yields (character, group) for each run of equal consecutive characters",
+       "Run-length encoding"
+      ],
+      [
+       "len(list(g))",
+       "Length of the run (the group is an iterator and must be consumed)",
+       ""
+      ],
+      [
+       "runs[i:i+5]",
+       "A window of five consecutive runs",
+       ""
+      ],
+      [
+       "''.join(c for c, _ in window) == 'aeiou'",
+       "The five runs spell a, e, i, o, u in order: a beautiful substring made of whole runs",
+       ""
+      ],
+      [
+       "sum(l for _, l in window)",
+       "Total length of the window",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aeiaaioaaaaeiiiiouuuooaauuaeiu\"`: windows of five runs that spell `aeiou`:"
+    ],
+    "table": {
+     "head": [
+      "start run",
+      "runs (char, length)",
+      "length"
+     ],
+     "rows": [
+      [
+       "6",
+       "[('a', 4), ('e', 1), ('i', 4), ('o', 1), ('u', 3)]",
+       "13"
+      ]
+     ]
+    },
+    "bullets": [
+     "Best: 13."
+    ]
+   },
+   {
+    "h": "Why windows of runs?",
+    "p": [
+     "A beautiful substring must contain all five vowels in nondecreasing order, so it consists of exactly five runs a, e, i, o, u in this order (no run can repeat or be skipped). Working on runs makes each window a constant-size check."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the runs."
+    ]
+   }
+  ],
+  "takeaway": "Compress into runs with groupby and look for five consecutive runs spelling a-e-i-o-u."
+ },
+ "1854": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "diff[b - 1950] += 1",
+       "Difference array: +1 in the birth year (the person starts counting)",
+       "Range updates with a difference array"
+      ],
+      [
+       "diff[d - 1950] -= 1",
+       "\u22121 in the death year: a person is alive in [birth, death), so they leave the count at the death year",
+       "Half-open intervals"
+      ],
+      [
+       "cur += diff[i]",
+       "Prefix sum of the differences = the population in that year",
+       ""
+      ],
+      [
+       "cur > best",
+       "Strict `>` returns the earliest year on ties",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1993,1999],[2000,2010]]`; only years where the difference changes are shown:"
+    ],
+    "table": {
+     "head": [
+      "year",
+      "difference",
+      "population",
+      "max so far",
+      "best year"
+     ],
+     "rows": [
+      [
+       "1993",
+       "1",
+       "1",
+       "1",
+       "1993"
+      ],
+      [
+       "1999",
+       "-1",
+       "0",
+       "1",
+       "1993"
+      ],
+      [
+       "2000",
+       "1",
+       "1",
+       "1",
+       "1993"
+      ],
+      [
+       "2010",
+       "-1",
+       "0",
+       "1",
+       "1993"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 1993."
+    ]
+   },
+   {
+    "h": "Why a difference array?",
+    "p": [
+     "Adding 1 to every year in each lifespan would cost O(years) per person. Marking only the endpoints and taking a prefix sum applies all lifespans in a single O(years) pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 100).",
+     "Space: O(100), a fixed-size array."
+    ]
+   }
+  ],
+  "takeaway": "Difference array over years (+1 at birth, \u22121 at death) then a prefix sum for the population."
+ },
+ "1857": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "indeg / q",
+       "Kahn's algorithm: a queue of nodes whose prerequisites are done (topological order)",
+       "Processing a DAG (Directed Acyclic Graph) in dependency order"
+      ],
+      [
+       "dp[u][c]",
+       "Maximum number of nodes of colour c on any path ending at u",
+       "DP (Dynamic Programming) along a topological order"
+      ],
+      [
+       "dp[v][c] = max(dp[v][c], dp[u][c])",
+       "Pass u's counts forward to v, keeping the best over all incoming paths",
+       ""
+      ],
+      [
+       "dp[u][color of u] += 1",
+       "u itself adds one to its own colour",
+       ""
+      ],
+      [
+       "seen == n else -1",
+       "If not every node was processed, the graph has a cycle and the answer is unbounded",
+       "Cycle detection"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`colors = \"abaca\"`, edges `0\u21921, 0\u21922, 2\u21923, 3\u21924`:"
+    ],
+    "table": {
+     "head": [
+      "node processed",
+      "its colour",
+      "colour counts on best paths ending here",
+      "best answer so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "{'a': 1}",
+       "1"
+      ],
+      [
+       "1",
+       "b",
+       "{'a': 1, 'b': 1}",
+       "1"
+      ],
+      [
+       "2",
+       "a",
+       "{'a': 2}",
+       "2"
+      ],
+      [
+       "3",
+       "c",
+       "{'a': 2, 'c': 1}",
+       "2"
+      ],
+      [
+       "4",
+       "a",
+       "{'a': 3, 'c': 1}",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3 (the path 0\u21922\u21923\u21924 has three `a`s)."
+    ]
+   },
+   {
+    "h": "Why a topological order?",
+    "p": [
+     "The best counts at a node depend on all of its predecessors. Kahn's order guarantees every predecessor is finished before the node is processed, so each dp row is final when used."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26 \u00b7 (n + E)).",
+     "Space: O(26 \u00b7 n)."
+    ]
+   }
+  ],
+  "takeaway": "Topological DP: dp[node][colour] = best count on a path ending there; a cycle means -1."
+ },
+ "1860": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "t",
+       "Bytes leaked this second (1, 2, 3, \u2026)",
+       ""
+      ],
+      [
+       "max(memory1, memory2) >= t",
+       "The program survives while the stick with more free memory can still take t bytes",
+       ""
+      ],
+      [
+       "memory1 >= memory2 \u2192 memory1 -= t",
+       "Leak into the stick with more free memory; ties go to stick 1",
+       "Tie-breaking rule from the statement"
+      ],
+      [
+       "return [t, memory1, memory2]",
+       "The crash second and both remaining amounts",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`memory1 = 2`, `memory2 = 2`:"
+    ],
+    "table": {
+     "head": [
+      "second t",
+      "leaked into",
+      "memory1",
+      "memory2"
+     ],
+     "rows": [
+      [
+       "1",
+       "stick 1",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "stick 2",
+       "1",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Crash at second 3: result `[3, 1, 0]`."
+    ]
+   },
+   {
+    "h": "Why a plain simulation is fast enough",
+    "p": [
+     "The total leaked after t seconds is t(t+1)/2, which grows quadratically, so the loop runs at most about \u221a(2\u00b7(memory1 + memory2)) times, around 2\u00b710\u2074 for the largest inputs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(\u221a(m1 + m2)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate: leak t bytes into the stick with more memory (stick 1 on ties) until neither has room."
+ },
+ "1863": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "acc |= x",
+       "Bitwise OR of all numbers: a bit is set if any number has it",
+       "Combining the bits that appear anywhere"
+      ],
+      [
+       "acc << (len(nums) - 1)",
+       "Multiplies by 2^(n\u22121)",
+       "Shift left as multiplication by a power of two"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,1,6]` = `101, 001, 110`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "value"
+     ],
+     "rows": [
+      [
+       "OR of all numbers",
+       "111 = 7"
+      ],
+      [
+       "shift left by n \u2212 1 = 2",
+       "28"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 28 = the sum of the XOR of all 8 subsets."
+    ]
+   },
+   {
+    "h": "Why is the answer OR \u00d7 2^(n\u22121)?",
+    "p": [
+     "Look at one bit position. If no number has that bit, it contributes 0. If at least one has it, exactly half of all 2^n subsets contain an odd number of numbers with that bit, so the bit is set in the XOR of 2^(n\u22121) subsets and contributes (bit value) \u00d7 2^(n\u22121). Summing over bits gives OR \u00d7 2^(n\u22121)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Each bit that appears in any number is set in exactly half the subsets' XOR: answer = (OR of all) << (n \u2212 1)."
+ },
+ "1878": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sums = set()",
+       "Collects distinct sums, since the answer needs distinct values",
+       "Set to remove duplicates"
+      ],
+      [
+       "sums.add(grid[i][j])",
+       "A rhombus of size 0 is a single cell",
+       ""
+      ],
+      [
+       "while i - k >= 0 and i + k < m and \u2026",
+       "Grows the rhombus (a diamond with centre (i, j) and 'radius' k) while all four corners stay inside the grid",
+       ""
+      ],
+      [
+       "four additions per t",
+       "Walks the four edges of the diamond; each edge contributes k cells starting at a different corner, so every border cell is counted once",
+       "Walking a diamond border"
+      ],
+      [
+       "sorted(sums, reverse=True)[:3]",
+       "The three largest distinct sums",
+       "Top three"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "For the 5\u00d75 grid, rhombuses centred at the middle cell (2, 2):"
+    ],
+    "table": {
+     "head": [
+      "centre",
+      "radius k",
+      "border sum"
+     ],
+     "rows": [
+      [
+       "centre (2,2)",
+       "1",
+       "79"
+      ],
+      [
+       "centre (2,2)",
+       "2",
+       "51"
+      ]
+     ]
+    },
+    "bullets": [
+     "All rhombus sums plus every single cell are collected; the three largest distinct values are `[228, 216, 211]`."
+    ]
+   },
+   {
+    "h": "Why only the border?",
+    "p": [
+     "The problem sums the border cells of each rhombus, not its interior. Walking the four sides with a loop of k steps per side adds each border cell exactly once (each side starts at its own corner and stops before the next corner)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m \u00b7 n \u00b7 min(m, n)\u00b2): each cell tries up to min(m, n)/2 sizes, each costing O(k).",
+     "Space: O(number of distinct sums)."
+    ]
+   }
+  ],
+  "takeaway": "Enumerate every centre and radius, sum the four edges of the diamond, and keep the three largest distinct sums."
+ },
+ "1920": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums[nums[i]]",
+       "Looks up the value at position i, then uses it as an index (a double lookup)",
+       ""
+      ],
+      [
+       "[\u2026 for i in range(len(nums))]",
+       "List comprehension building the result",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,2,1,5,3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "nums[nums[i]]"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "5",
+       "4"
+      ],
+      [
+       "4",
+       "3",
+       "5"
+      ],
+      [
+       "5",
+       "4",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[0, 1, 2, 4, 5, 3]`."
+    ]
+   },
+   {
+    "h": "Why a new list?",
+    "p": [
+     "Overwriting nums in place would change values that later positions still need to read. Building a fresh list is safe. An O(1)-space version stores two values in each cell as `a + n\u00b7b` and decodes afterwards."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Double indexing nums[nums[i]] into a new list; in-place needs the encode-two-values trick."
+ },
+ "1926": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque([(row, col, dist)])",
+       "BFS (Breadth-First Search) queue with the distance carried along",
+       ""
+      ],
+      [
+       "maze[...][...] = '+'",
+       "Marks a cell as visited by turning it into a wall (modifies the input)",
+       "In-place visited marking"
+      ],
+      [
+       "nr in (0, m-1) or nc in (0, n-1)",
+       "The cell is on the border, i.e. an exit (the entrance itself is already walled so it is not counted)",
+       ""
+      ],
+      [
+       "return d + 1",
+       "BFS reaches the nearest exit first, so the first border cell found is the shortest path",
+       "Shortest path in an unweighted grid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A 4\u00d74 maze (`.` open, `+` wall), entrance at (1, 0). Cells entered by BFS in order with their distance:"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "steps from entrance"
+     ],
+     "rows": []
+    },
+    "bullets": [
+     "The nearest exit is found at distance 1."
+    ]
+   },
+   {
+    "h": "Why mark the entrance as a wall at the start?",
+    "p": [
+     "The entrance is on the border and open, so without marking it, the search would count it as an exit at distance 0 or revisit it. Turning it into '+' makes it a wall for all later steps."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n) for the queue."
+    ]
+   }
+  ],
+  "takeaway": "BFS from the entrance; the first open border cell reached is the nearest exit."
+ },
+ "1929": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums + nums",
+       "List concatenation creates a new list with both copies in order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "expression",
+      "result"
+     ],
+     "rows": [
+      [
+       "nums",
+       "[1, 2, 1]"
+      ],
+      [
+       "nums + nums",
+       "[1, 2, 1, 1, 2, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "`+` versus `+=`",
+    "p": [
+     "`nums + nums` builds a new list and leaves the original unchanged. `nums += nums` would extend the original in place (still correct here, but it mutates the caller's list). The problem asks for a new array, so `+` is the safe choice."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Concatenate the list with itself using + to get a new array."
+ },
+ "1944": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(n - 1, -1, -1)",
+       "Scans from the back of the queue to the front, since people look to the right",
+       ""
+      ],
+      [
+       "st (monotonic stack)",
+       "Heights to the right that could still be seen by someone further left, decreasing from bottom to top",
+       "Monotonic stack"
+      ],
+      [
+       "while st and st[-1] < heights[i]: pop; ans += 1",
+       "Each shorter person is visible to i, and is then hidden by i for everyone further left",
+       ""
+      ],
+      [
+       "if st: ans[i] += 1",
+       "The first person who is at least as tall blocks the view beyond them but is still visible",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[10,6,8,5,11,9]` scanned right to left:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "height",
+      "people popped (shorter)",
+      "visible count",
+      "stack (bottom \u2192 top)"
+     ],
+     "rows": [
+      [
+       "5",
+       "9",
+       "0",
+       "0",
+       "[9]"
+      ],
+      [
+       "4",
+       "11",
+       "1",
+       "1",
+       "[11]"
+      ],
+      [
+       "3",
+       "5",
+       "0",
+       "1",
+       "[11, 5]"
+      ],
+      [
+       "2",
+       "8",
+       "1",
+       "2",
+       "[11, 8]"
+      ],
+      [
+       "1",
+       "6",
+       "0",
+       "1",
+       "[11, 8, 6]"
+      ],
+      [
+       "0",
+       "10",
+       "2",
+       "3",
+       "[11, 10]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[3, 1, 2, 1, 1, 0]`."
+    ]
+   },
+   {
+    "h": "Why can popped people be discarded?",
+    "p": [
+     "If person i is taller than a person to the right, then for anyone standing left of i, that shorter person is hidden behind i. They will never be visible to anyone further left, so they can leave the stack."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each height is pushed and popped once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack scanning right to left: count the shorter people popped, plus one for the first taller one."
+ },
+ "1947": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "score[i][j]",
+       "Compatibility of student i and mentor j: the number of answers they have in common (`sum` over equal pairs)",
+       "Precomputing pairwise values"
+      ],
+      [
+       "permutations(range(m))",
+       "From `itertools`: every way to assign mentors to students (m! of them)",
+       "Brute force over assignments for small m"
+      ],
+      [
+       "sum(score[i][p[i]] for i \u2026)",
+       "Total score of one assignment, p[i] = mentor of student i",
+       ""
+      ],
+      [
+       "max(\u2026)",
+       "Best assignment",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Score matrix (rows = students, columns = mentors):"
+    ],
+    "table": {
+     "head": [
+      "student",
+      "mentor 0",
+      "mentor 1",
+      "mentor 2"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "All 6 assignments (mentor index per student \u2192 total): (0, 1, 2) \u2192 4; (0, 2, 1) \u2192 6; (1, 0, 2) \u2192 2; (1, 2, 0) \u2192 2; (2, 0, 1) \u2192 8; (2, 1, 0) \u2192 6. Best 8."
+    ]
+   },
+   {
+    "h": "Why is brute force acceptable?",
+    "p": [
+     "The constraint is m \u2264 8, so m! \u2264 40,320 assignments, each scored in O(m) with the precomputed table. A bitmask DP (Dynamic Programming) would be O(2^m \u00b7 m) but is unnecessary here."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m! \u00b7 m + m\u00b2 \u00b7 n).",
+     "Space: O(m\u00b2)."
+    ]
+   }
+  ],
+  "takeaway": "Precompute pair scores, then try every permutation of mentors (m \u2264 8)."
+ },
+ "1962": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "h = [-p for p in piles]; heapify(h)",
+       "Python's heap is a min-heap, so storing negatives makes the largest pile come out first (max-heap trick)",
+       "Priority queue with the largest item first"
+      ],
+      [
+       "x = -heappop(h)",
+       "The current largest pile",
+       ""
+      ],
+      [
+       "x - x // 2",
+       "Pile after removing floor(x / 2) stones",
+       ""
+      ],
+      [
+       "heappush(h, -(\u2026))",
+       "Puts the smaller pile back",
+       ""
+      ],
+      [
+       "-sum(h)",
+       "Negates the sum of negatives back to the total",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`piles = [5,4,9]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "operation",
+      "piles",
+      "total stones"
+     ],
+     "rows": [
+      [
+       "start",
+       "[9, 5, 4]",
+       "18"
+      ],
+      [
+       "remove floor(9/2) = 4 from 9",
+       "[5, 5, 4]",
+       "14"
+      ],
+      [
+       "remove floor(5/2) = 2 from 5",
+       "[5, 4, 3]",
+       "12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why always take from the largest pile?",
+    "p": [
+     "The number of stones removed from a pile is floor(x/2), which grows with x. Taking from the largest pile removes the most stones this step. The largest pile after halving may still be the largest, which the heap handles."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Max-heap (negated min-heap): repeatedly halve the largest pile k times."
+ },
+ "1968": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(nums)",
+       "Ascending order",
+       ""
+      ],
+      [
+       "half = (len(nums) + 1) // 2",
+       "Size of the lower half (the middle element, if any, belongs to it)",
+       ""
+      ],
+      [
+       "nums[i], nums[i + half]",
+       "Alternates a small value from the lower half with a large value from the upper half",
+       "Zigzag interleaving"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5]`, half = 3:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "append nums[i]",
+      "append nums[i + half] (if any)",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "4",
+       "[1, 4]"
+      ],
+      [
+       "1",
+       "2",
+       "5",
+       "[1, 4, 2, 5]"
+      ],
+      [
+       "2",
+       "3",
+       "\u2013",
+       "[1, 4, 2, 5, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result `[1, 4, 2, 5, 3]`: every interior element differs from its neighbours' average (True)."
+    ]
+   },
+   {
+    "h": "Why does the interleaving work?",
+    "p": [
+     "The result alternates small, large, small, large. An interior small value is smaller than both neighbours (large values), so it cannot equal their average, and an interior large value is larger than both neighbours, same argument. Distinct values in the sorted halves guarantee the strict inequality."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then interleave the lower and upper halves so every element is a strict peak or valley."
+ },
+ "2007": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "len(changed) % 2",
+       "An odd length can't be an array plus its doubles",
+       "Quick rejection"
+      ],
+      [
+       "Counter(changed)",
+       "Occurrences of every value",
+       ""
+      ],
+      [
+       "for x in sorted(cnt)",
+       "Smallest value first: it can't be the double of anything still unused, so it must be an original",
+       "Greedy from the smallest"
+      ],
+      [
+       "x == 0 special case",
+       "0's double is 0, so zeros pair with each other and need an even count",
+       ""
+      ],
+      [
+       "cnt[2*x] < cnt[x] \u2192 []",
+       "Not enough doubles to pair with all copies of x",
+       ""
+      ],
+      [
+       "cnt[2*x] -= cnt[x]",
+       "Uses up the doubles",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,4,2,6,8]`, values in ascending order:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "copies of x",
+      "its double",
+      "copies of the double available"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "6",
+       "1"
+      ],
+      [
+       "4",
+       "1",
+       "8",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Original array: `[1, 3, 4]`."
+    ]
+   },
+   {
+    "h": "Why the smallest first?",
+    "p": [
+     "The smallest remaining value can only be an original (its half would be smaller and was already removed or doesn't exist). Pairing it with its double forces the choice, and the rest follows by repetition."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy from the smallest: each value is an original, so remove its doubles; zeros need an even count."
+ },
+ "2016": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo",
+       "Smallest value seen so far (to the left)",
+       "Running minimum"
+      ],
+      [
+       "x > lo: best = max(best, x - lo)",
+       "A larger later value gives a valid increasing pair (i < j and nums[i] < nums[j])",
+       ""
+      ],
+      [
+       "else: lo = x",
+       "x \u2264 lo: x is the new minimum, no pair is formed",
+       ""
+      ],
+      [
+       "best = -1",
+       "The answer when no increasing pair exists",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[7,1,5,4]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "action",
+      "lo",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "new minimum",
+       "1",
+       "-1"
+      ],
+      [
+       "5",
+       "x > lo: candidate 4",
+       "1",
+       "4"
+      ],
+      [
+       "4",
+       "x > lo: candidate 3",
+       "1",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 4 (5 \u2212 1)."
+    ]
+   },
+   {
+    "h": "Why is a running minimum enough?",
+    "p": [
+     "For each j, the best i < j is the smallest earlier value. Keeping that minimum as we scan gives the best partner in O(1). Equal values do not count, as the problem needs a strictly smaller earlier element."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Running minimum: best difference = max(x \u2212 minimum so far) over later x larger than it."
+ }
+}

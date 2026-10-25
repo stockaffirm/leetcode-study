@@ -90,8 +90,8 @@ class Solution:
         vids = defaultdict(list)
         for c, i, v in zip(creators, ids, views):
             vids[c].append((-v, i))
-        total = {c: -sum(v for v, _ in lst) for c, lst in vids.items()}
-        top = min(total.values())
+        total = {c: -sum(v for v, _ in lst) for c, lst in vids.items()}  # views
+        top = max(total.values())
         return sorted([c, min(vids[c])[1]] for c in vids if total[c] == top)
 `)});
 alt(2523,{name:"Trial division",tag:"Brute force",time:"O((R-L)·√R)",space:"O(1)",explain:"Test each number for primality directly.",code:C(`
