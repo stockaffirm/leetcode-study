@@ -3,6 +3,16 @@
 const ORDER = window.ORDER;
 const P = window.PROBLEM, $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function stmtHtml(t){
+  const f = x => esc(x).replace(/`([^`]+)`/g, "<code>$1</code>"), L = t.split("\n"), o = []; let i = 0;
+  while(i < L.length){ const l = L[i];
+    if(l.startsWith("```")){ const c = []; i++; while(i < L.length && !L[i].startsWith("```")) c.push(L[i++]); i++; o.push(`<pre class="code stc">${esc(c.join("\n"))}</pre>`); continue; }
+    if(/^\* /.test(l)){ const u = []; while(i < L.length && /^\* /.test(L[i])) u.push(`<li>${f(L[i++].slice(2))}</li>`); o.push(`<ul>${u.join("")}</ul>`); continue; }
+    if(/^(Example \d+:|Constraints:|Follow[- ]up:?)$/.test(l.trim())){ o.push(`<h4 class="sth">${esc(l.trim())}</h4>`); i++; continue; }
+    if(l.trim()){ const p = [l]; i++; while(i < L.length && L[i].trim() && !L[i].startsWith("```") && !/^\* /.test(L[i])) p.push(L[i++]); o.push(`<p>${f(p.join(" "))}</p>`); continue; }
+    i++; }
+  return `<div class="stmt">${o.join("")}</div>`;
+}
 let vi = 0, idx = 0, timer = null, speed = 1, mode = "guided", tidx = 0, ex = 1;
 
 function hl(line){
@@ -17,7 +27,7 @@ $("#app").innerHTML = `
 <h1>${P.id}. ${esc(P.title)}</h1>
 <p class="sub"><span class="tag ${P.level}">${P.level}</span><span class="tag">${esc(P.topic)}</span></p>
 <section class="sec"><h2><b>1</b>Question</h2>
-  <p class="q">${esc(P.question)}</p>
+  ${P.statement?stmtHtml(P.statement):`<p class="q">${esc(P.question)}</p>`}
   <p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>
   <div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div>
   ${P.why?`<p class="why"><b>Why?</b> ${esc(P.why)}</p>`:""}${P.idea?`<p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>`:""}${P.ex2?`<p class="why edge"><b>Edge / failure case</b> <code>${esc(P.ex2.input)}</code> → <code>${esc(P.ex2.output)}</code><br>${esc(P.ex2.why)}</p>`:""}
