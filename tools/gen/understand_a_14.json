@@ -1,0 +1,1963 @@
+{
+ "1395": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for j in range(n)",
+       "Treats each soldier j as the MIDDLE of a team",
+       "Fix the middle element of a triple"
+      ],
+      [
+       "ls, lg",
+       "Left smaller / left greater: soldiers before j with smaller / larger ratings (`lg = j - ls` since ratings are distinct)",
+       ""
+      ],
+      [
+       "rs, rg",
+       "Right smaller / right greater",
+       ""
+      ],
+      [
+       "ls * rg",
+       "Increasing teams: a smaller one on the left and a larger one on the right",
+       "Counting by multiplication"
+      ],
+      [
+       "lg * rs",
+       "Decreasing teams: larger on the left and smaller on the right",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,5,3,4,1]`: contribution of each middle soldier:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "rating",
+      "left smaller",
+      "left greater",
+      "right smaller",
+      "right greater",
+      "teams",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "0",
+       "0",
+       "1",
+       "3",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "5",
+       "1",
+       "0",
+       "3",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "3",
+       "1",
+       "1",
+       "1",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "4",
+       "2",
+       "1",
+       "1",
+       "0",
+       "1",
+       "3"
+      ],
+      [
+       "4",
+       "1",
+       "0",
+       "4",
+       "0",
+       "0",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why fix the middle?",
+    "p": [
+     "A team is a triple i < j < k that is increasing or decreasing. With j fixed, the choices for i and k are independent, so the count is a product. The O(n\u00b3) triple loop becomes an O(n\u00b2) count."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(1). A Fenwick tree (binary indexed tree) lowers it to O(n log n)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle soldier and multiply (smaller-left \u00d7 greater-right) + (greater-left \u00d7 smaller-right)."
+ },
+ "1410": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str.replace(old, new)",
+       "Replaces every non-overlapping occurrence in one pass over the string, left to right",
+       "Simple substitutions"
+      ],
+      [
+       "tuple of (entity, char) pairs",
+       "Data-driven list of replacements, applied in order",
+       ""
+      ],
+      [
+       "`&amp;` last",
+       "Order matters: replacing `&amp;` first could create new `&gt;`-like text that later replacements would wrongly decode",
+       "Ordering dependent replacements"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The text after each replacement step (unchanged steps show the same text):"
+    ],
+    "table": {
+     "head": [
+      "entity",
+      "replaced by",
+      "text"
+     ],
+     "rows": [
+      [
+       "&quot;",
+       "\"",
+       "&amp; is an HTML entity but &ambassador; is not."
+      ],
+      [
+       "&apos;",
+       "'",
+       "&amp; is an HTML entity but &ambassador; is not."
+      ],
+      [
+       "&gt;",
+       ">",
+       "&amp; is an HTML entity but &ambassador; is not."
+      ],
+      [
+       "&lt;",
+       "<",
+       "&amp; is an HTML entity but &ambassador; is not."
+      ],
+      [
+       "&frasl;",
+       "/",
+       "&amp; is an HTML entity but &ambassador; is not."
+      ],
+      [
+       "&amp;",
+       "&",
+       "& is an HTML entity but &ambassador; is not."
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must `&amp;` be last?",
+    "p": [
+     "`&amp;gt;` stands for the literal text `&gt;`. If `&amp;` is replaced first it produces `&gt;`, which a later step then turns into `>`. Replacing `&amp;` last avoids the double decoding."
+    ],
+    "table": {
+     "head": [
+      "Order",
+      "Result for the input `&amp;gt;`"
+     ],
+     "rows": [
+      [
+       "`&amp;` first, then `&gt;`",
+       ">  (wrong: decoded twice)"
+      ],
+      [
+       "`&gt;` first, then `&amp;` (this code)",
+       "&gt;  (correct: the text means a literal &gt;)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) per entity, so O(n \u00b7 number of entities).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sequential str.replace calls, with &amp; last so decoded text is not decoded again."
+ },
+ "1413": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "run += x",
+       "Running (prefix) sum of the numbers",
+       "Prefix sums"
+      ],
+      [
+       "lowest = min(lowest, run)",
+       "The lowest the running sum ever reaches; it starts at 0, so the answer works when the sum never dips",
+       ""
+      ],
+      [
+       "1 - lowest",
+       "Start value s needs s + lowest \u2265 1, so s = 1 \u2212 lowest",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-3,2,-3,4,2]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "running sum",
+      "lowest so far"
+     ],
+     "rows": [
+      [
+       "-3",
+       "-3",
+       "-3"
+      ],
+      [
+       "2",
+       "-1",
+       "-3"
+      ],
+      [
+       "-3",
+       "-4",
+       "-4"
+      ],
+      [
+       "4",
+       "0",
+       "-4"
+      ],
+      [
+       "2",
+       "2",
+       "-4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Start value = 1 \u2212 (-4) = 5."
+    ]
+   },
+   {
+    "h": "Why only the minimum prefix matters",
+    "p": [
+     "Every step sum is `start + run`. The tightest requirement is the smallest `run`, so if the start value keeps that one at least 1, all others are automatically fine."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Answer = 1 \u2212 (minimum prefix sum, floored at 0)."
+ },
+ "1419": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "stage = {c: i for i, c in enumerate('croak')}",
+       "Letter \u2192 its position in the word",
+       ""
+      ],
+      [
+       "cnt[i]",
+       "Frogs currently at stage i (last said letter i of 'croak')",
+       "Counting items in each phase of a pipeline"
+      ],
+      [
+       "i == 0: active += 1",
+       "A 'c' starts a new croak; either a free frog or a new frog",
+       ""
+      ],
+      [
+       "cnt[i-1] == 0 \u2192 -1",
+       "A letter appears with no frog ready for it: invalid string",
+       ""
+      ],
+      [
+       "i == 4: active -= 1",
+       "'k' finishes a croak and frees the frog for reuse",
+       ""
+      ],
+      [
+       "best = max(best, active)",
+       "The most frogs croaking at the same time is the minimum number of frogs needed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"crcoakroak\"` (counts are for stages c, r, o, a, k):"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "frogs per stage",
+      "active",
+      "max active"
+     ],
+     "rows": [
+      [
+       "c",
+       "[1, 0, 0, 0, 0]",
+       "1",
+       "1"
+      ],
+      [
+       "r",
+       "[0, 1, 0, 0, 0]",
+       "1",
+       "1"
+      ],
+      [
+       "c",
+       "[1, 1, 0, 0, 0]",
+       "2",
+       "2"
+      ],
+      [
+       "o",
+       "[1, 0, 1, 0, 0]",
+       "2",
+       "2"
+      ],
+      [
+       "a",
+       "[1, 0, 0, 1, 0]",
+       "2",
+       "2"
+      ],
+      [
+       "k",
+       "[1, 0, 0, 0, 0]",
+       "1",
+       "2"
+      ],
+      [
+       "r",
+       "[0, 1, 0, 0, 0]",
+       "1",
+       "2"
+      ],
+      [
+       "o",
+       "[0, 0, 1, 0, 0]",
+       "1",
+       "2"
+      ],
+      [
+       "a",
+       "[0, 0, 0, 1, 0]",
+       "1",
+       "2"
+      ],
+      [
+       "k",
+       "[0, 0, 0, 0, 0]",
+       "0",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2, and it ends with active = 0 (all croaks complete)."
+    ]
+   },
+   {
+    "h": "Why is the maximum of active frogs the answer?",
+    "p": [
+     "Each frog can do one croak at a time but can start another after finishing. So the number of frogs needed equals the largest number of overlapping unfinished croaks."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count frogs at each stage of 'croak'; the peak number of unfinished croaks is the answer."
+ },
+ "1428": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "binaryMatrix.dimensions()",
+       "API call returning (rows, cols); rows are sorted (0s then 1s) but we may only read cells through `get`",
+       "Using a restricted API"
+      ],
+      [
+       "r, c = 0, cols - 1",
+       "Start at the top-right corner",
+       "Staircase search"
+      ],
+      [
+       "get(r, c) == 1: ans = c; c -= 1",
+       "A 1 here means this column qualifies; look for a more-left column",
+       ""
+      ],
+      [
+       "else r += 1",
+       "A 0 means everything to its left in this row is 0 too (rows are sorted), so this row cannot improve the answer; go to the next row",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0],[0,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "value",
+      "action"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "0",
+       "0: move down"
+      ],
+      [
+       "(1,1)",
+       "1",
+       "found a 1: ans = c, move left"
+      ],
+      [
+       "(1,0)",
+       "0",
+       "0: move down"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 1 using 3 `get` calls."
+    ]
+   },
+   {
+    "h": "Why is this better than a binary search per row?",
+    "p": [
+     "Binary search per row costs O(rows \u00b7 log cols) calls. The staircase walk costs at most rows + cols calls because each call moves either left or down, which matters when `get` calls are limited."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(rows + cols).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Staircase from the top-right: move left on a 1, down on a 0."
+ },
+ "1431": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "max(candies)",
+       "Current greatest number of candies",
+       "Compute the reference value once, not per kid"
+      ],
+      [
+       "candies[i] + extraCandies >= maxCandies",
+       "After receiving all extras, does kid i reach the maximum (ties count)?",
+       ""
+      ],
+      [
+       "result.append(bool)",
+       "Collects True/False for each kid in order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,5,1,3]`, extra = 3, maximum 5:"
+    ],
+    "table": {
+     "head": [
+      "kid",
+      "candies",
+      "with extra",
+      ">= 5?"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "5",
+       "True"
+      ],
+      [
+       "1",
+       "3",
+       "6",
+       "True"
+      ],
+      [
+       "2",
+       "5",
+       "8",
+       "True"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "False"
+      ],
+      [
+       "4",
+       "3",
+       "6",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compute the maximum first?",
+    "p": [
+     "The comparison target does not depend on the kid: the extras go to one kid only, so the maximum among the others never exceeds the original maximum. Computing it once avoids an O(n\u00b2) rescan."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "One pass for the maximum, one to test candies + extra >= max."
+ },
+ "1434": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "likers[h]",
+       "Hat \u2192 people who like it (hats are numbered 1\u201340, people at most 10)",
+       "Iterate over the larger side"
+      ],
+      [
+       "dp[mask]",
+       "Number of ways to assign the hats considered so far so that exactly the people in `mask` have hats",
+       "Bitmask DP (Dynamic Programming)"
+      ],
+      [
+       "for hat in 1..40; for mask descending",
+       "Each hat is given to at most one person; descending masks avoid using the same hat twice in a round",
+       ""
+      ],
+      [
+       "dp[mask | 1 << p] += dp[mask]",
+       "Give this hat to person p, who has none yet",
+       ""
+      ],
+      [
+       "dp[-1]",
+       "All people have hats",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`hats = [[3,4],[4,5],[5]]`: ways per set of people with hats after each hat (mask bit p = person p):"
+    ],
+    "table": {
+     "head": [
+      "hat",
+      "people who like it",
+      "dp (mask \u2192 ways)"
+     ],
+     "rows": [
+      [
+       "3",
+       "[0]",
+       "{'000': 1, '001': 1}"
+      ],
+      [
+       "4",
+       "[0, 1]",
+       "{'000': 1, '001': 2, '010': 1, '011': 1}"
+      ],
+      [
+       "5",
+       "[1, 2]",
+       "{'000': 1, '001': 2, '010': 2, '011': 3, '100': 1, '101': 2, '110': 1, '111': 1}"
+      ]
+     ]
+    },
+    "bullets": [
+     "Full mask `111` has 1 way."
+    ]
+   },
+   {
+    "h": "Why iterate over hats instead of people?",
+    "p": [
+     "There are at most 10 people, so masks have 2^10 states, while hats go up to 40. Looping over hats and choosing at most one person per hat keeps the state small (2^10 \u00d7 40 transitions of at most 10 people)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(40 \u00b7 2^n \u00b7 n).",
+     "Space: O(2^n)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP over hats: dp[mask of people already hatted], each hat goes to at most one person who likes it."
+ },
+ "1443": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g = defaultdict(list)",
+       "Adjacency list of the undirected tree",
+       ""
+      ],
+      [
+       "dfs(u, p)",
+       "DFS (Depth-First Search) returning the time spent inside u's subtree, with the parent `p` excluded so we do not walk back",
+       "Tree traversal without a visited set"
+      ],
+      [
+       "sub or hasApple[v]",
+       "Go into the child v only if its subtree has apples (sub > 0) or v itself has one",
+       "Pruning useless branches"
+      ],
+      [
+       "t += sub + 2",
+       "Walking down and back along the edge to v costs 2, plus the time inside",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 7-node tree from the problem; apples at nodes 2, 4, 5. Subtree times in the order the calls finish:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "time spent in its subtree"
+     ],
+     "rows": [
+      [
+       "4",
+       "0"
+      ],
+      [
+       "5",
+       "0"
+      ],
+      [
+       "1",
+       "4"
+      ],
+      [
+       "3",
+       "0"
+      ],
+      [
+       "6",
+       "0"
+      ],
+      [
+       "2",
+       "0"
+      ],
+      [
+       "0",
+       "8"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 8 (4 edges to visit, each walked twice)."
+    ]
+   },
+   {
+    "h": "Why count every needed edge twice?",
+    "p": [
+     "We must return to the root, so every edge on a path to an apple is walked down and back: 2 per edge. Edges leading only to apple-free subtrees are skipped."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) (recursion depth plus the adjacency list)."
+    ]
+   }
+  ],
+  "takeaway": "Tree DFS that adds 2 per edge only where the subtree contains an apple."
+ },
+ "1446": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(s, s[1:])",
+       "Adjacent character pairs (a, b)",
+       ""
+      ],
+      [
+       "run = run + 1 if a == b else 1",
+       "Extends or resets the current streak",
+       "Run length counting"
+      ],
+      [
+       "best = max(best, run)",
+       "Longest streak so far; starts at 1 because any non-empty string has a run of 1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"leetcode\"`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "run",
+      "best"
+     ],
+     "rows": [
+      [
+       "le",
+       "1",
+       "1"
+      ],
+      [
+       "ee",
+       "2",
+       "2"
+      ],
+      [
+       "et",
+       "1",
+       "2"
+      ],
+      [
+       "tc",
+       "1",
+       "2"
+      ],
+      [
+       "co",
+       "1",
+       "2"
+      ],
+      [
+       "od",
+       "1",
+       "2"
+      ],
+      [
+       "de",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why start both at 1?",
+    "p": [
+     "A single character is already a run of length one. Starting at 0 would return 0 for strings of length 1 and mishandle the first streak."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "One pass with a streak counter that resets when the character changes."
+ },
+ "1470": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums[i], nums[i + n]",
+       "The i-th element of the first half and of the second half",
+       ""
+      ],
+      [
+       "res += [\u2026]",
+       "Extends the list with both elements in order",
+       "Interleaving two halves"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,5,1,3,4,7]`, n = 3:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x_i",
+      "y_i",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "3",
+       "[2, 3]"
+      ],
+      [
+       "1",
+       "5",
+       "4",
+       "[2, 3, 5, 4]"
+      ],
+      [
+       "2",
+       "1",
+       "7",
+       "[2, 3, 5, 4, 1, 7]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `i + n`?",
+    "p": [
+     "The array is `[x1..xn, y1..yn]`, so y_i sits exactly n positions after x_i. Each loop step outputs the pair x_i, y_i."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Interleave the first half with the second by pairing index i with i + n."
+ },
+ "1473": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "f(i, prev, t)",
+       "Minimum cost to paint houses i.. given the previous house's colour `prev` and `t` neighbourhoods formed so far",
+       "DP (Dynamic Programming) state: position, last colour, groups"
+      ],
+      [
+       "t + (c != prev)",
+       "A new neighbourhood starts exactly when the colour differs from the previous house (`prev = 0` at the start, so house 0 always starts one)",
+       ""
+      ],
+      [
+       "t > target \u2192 INF",
+       "Too many neighbourhoods: prune",
+       ""
+      ],
+      [
+       "houses[i] and houses[i] != c: continue",
+       "A house that is already painted can only keep its colour",
+       ""
+      ],
+      [
+       "extra = 0 if houses[i] else cost[i][c-1]",
+       "Painting is free for pre-painted houses",
+       ""
+      ],
+      [
+       "@lru_cache(None)",
+       "Memoizes results per state",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Five unpainted houses, 2 colours, target 3 neighbourhoods, costs `[[1, 10], [10, 1], [10, 1], [1, 10], [5, 1]]`. The optimal colouring found by the search:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "minimum total cost",
+       "9"
+      ]
+     ]
+    },
+    "bullets": [
+     "One optimal plan paints colours 1, 2, 2, 1, 1: groups [1] [2 2] [1 1] (3 neighbourhoods), cost 1 + 1 + 1 + 1 + 5 = 9."
+    ]
+   },
+   {
+    "h": "Why is `prev` in the state?",
+    "p": [
+     "Whether the next house starts a new neighbourhood depends only on whether its colour equals the previous house's colour. The DP therefore needs the last colour, not the entire history."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m \u00b7 n \u00b7 target \u00b7 n): states m\u00b7n\u00b7target, n colour choices each.",
+     "Space: O(m \u00b7 n \u00b7 target)."
+    ]
+   }
+  ],
+  "takeaway": "Memoized DP over (house, previous colour, neighbourhoods so far); a colour change opens a new neighbourhood."
+ },
+ "1482": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "m * k > len(bloomDay) \u2192 -1",
+       "Not enough flowers in total: impossible",
+       "Early feasibility check"
+      ],
+      [
+       "can(day)",
+       "Scans left to right counting runs of `k` adjacent flowers that have bloomed by `day`; each full run is one bouquet",
+       "Greedy check inside a binary search"
+      ],
+      [
+       "run = 0 when a flower is not ready",
+       "Bouquets need ADJACENT flowers, so one unbloomed flower breaks the run",
+       ""
+      ],
+      [
+       "lo, hi = min, max",
+       "The answer is one of the bloom days, so search between the earliest and latest",
+       ""
+      ],
+      [
+       "can(mid): hi = mid",
+       "Enough bouquets by mid: try an earlier day",
+       "Smallest feasible value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`bloomDay = [1,10,3,10,2]`, `m = 3`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "can make 3 bouquets?"
+     ],
+     "rows": [
+      [
+       "1",
+       "10",
+       "5",
+       "True"
+      ],
+      [
+       "1",
+       "5",
+       "3",
+       "True"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: day 3."
+    ]
+   },
+   {
+    "h": "Why binary search on the day?",
+    "p": [
+     "Waiting longer never reduces the number of bouquets, so feasibility is monotone in the day. The answer is the first day where `can` becomes true."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 log(max \u2212 min)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the day, with a one-pass greedy that counts runs of k bloomed flowers."
+ },
+ "1488": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "full = {lake: day}",
+       "Day of the last rain on each lake (that lake is full now)",
+       ""
+      ],
+      [
+       "dry",
+       "Sorted list of day indices where no rain falls and a lake can be dried",
+       ""
+      ],
+      [
+       "bisect_right(dry, full[lake])",
+       "Index of the first dry day AFTER the lake's previous rain: the earliest day we could have dried it",
+       "Finding the first element greater than a value in a sorted list"
+      ],
+      [
+       "ans[dry.pop(j)] = lake",
+       "Uses that dry day to dry this lake, removing it from the free dry days",
+       "Assign the earliest feasible resource"
+      ],
+      [
+       "return []",
+       "No dry day exists between the two rains: a flood is unavoidable",
+       ""
+      ],
+      [
+       "ans = [1] * n",
+       "Unused dry days dry some lake harmlessly (1 is a valid filler)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,0,0,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "day",
+      "event",
+      "note",
+      "ans so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "rain on lake 1",
+       "first rain",
+       "[-1, 1, 1, 1, 1, 1]"
+      ],
+      [
+       "1",
+       "rain on lake 2",
+       "first rain",
+       "[-1, -1, 1, 1, 1, 1]"
+      ],
+      [
+       "2",
+       "dry day",
+       "dry days available: [2]",
+       "\u2013"
+      ],
+      [
+       "3",
+       "dry day",
+       "dry days available: [2, 3]",
+       "\u2013"
+      ],
+      [
+       "4",
+       "rain on lake 2",
+       "lake 2 is full since day 1: dry it on day 2",
+       "[-1, -1, 2, 1, -1, 1]"
+      ],
+      [
+       "5",
+       "rain on lake 1",
+       "lake 1 is full since day 0: dry it on day 3",
+       "[-1, -1, 2, 1, -1, -1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result `[-1, -1, 2, 1, -1, -1]`: day 2 dries lake 2, day 3 dries lake 1."
+    ]
+   },
+   {
+    "h": "Why the first dry day after the earlier rain, and why decide late?",
+    "p": [
+     "Drying is only useful between two rains on the same lake. Decisions are made when the second rain arrives (when the need is known), and the earliest dry day after the first rain is chosen so later dry days stay available for other lakes whose windows start later."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n): `bisect_right` is O(log n) and `dry.pop(j)` is O(n) in the worst case, so O(n\u00b2) worst case.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Remember each full lake's last rain; when it rains again, dry it on the earliest dry day after that rain (binary search)."
+ },
+ "1494": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pre[b-1] |= 1 << (a-1)",
+       "Bitmask of each course's prerequisites",
+       "Dependency as a mask"
+      ],
+      [
+       "dp[mask]",
+       "Minimum semesters to finish exactly the courses in mask",
+       "Bitmask DP (Dynamic Programming)"
+      ],
+      [
+       "pre[i] & mask == pre[i]",
+       "All prerequisites of i are inside mask: course i is available",
+       ""
+      ],
+      [
+       "sub = (sub - 1) & avail",
+       "Standard trick to enumerate every non-empty subset of `avail` (in descending order)",
+       "Subset enumeration"
+      ],
+      [
+       "bin(sub).count('1') <= k",
+       "At most k courses per semester",
+       "Counting set bits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, prerequisites `2\u21921, 3\u21921, 1\u21924`, `k = 2` (bit i\u22121 is course i). Minimum semesters to reach each reachable set of finished courses:"
+    ],
+    "table": {
+     "head": [
+      "finished courses (bits 4..1)",
+      "min semesters"
+     ],
+     "rows": [
+      [
+       "0000",
+       "0"
+      ],
+      [
+       "0010",
+       "1"
+      ],
+      [
+       "0100",
+       "1"
+      ],
+      [
+       "0110",
+       "1"
+      ],
+      [
+       "0111",
+       "2"
+      ],
+      [
+       "1111",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "All four courses finished (`1111`): 3 semesters."
+    ]
+   },
+   {
+    "h": "Why enumerate subsets of the available courses?",
+    "p": [
+     "Taking fewer than k available courses can matter: finishing a specific course early may unlock others. The DP therefore tries every subset of size at most k of the courses available now, and `(sub - 1) & avail` visits them all in O(2^|avail|)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(3^n) over all (mask, subset-of-complement) pairs, fine for n \u2264 15.",
+     "Space: O(2^n)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP: from each finished set, try every subset of at most k available courses as the next semester."
+ },
+ "1515": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total(x, y)",
+       "Sum of Euclidean distances from (x, y) to all positions; this function is convex (bowl-shaped)",
+       "Geometric median"
+      ],
+      [
+       "ternary search on x, inner ternary search on y",
+       "Each ternary search cuts the interval to two thirds per step by comparing two interior points; the outer search uses the best y for each x",
+       "Minimizing a convex function"
+      ],
+      [
+       "best_y(x)",
+       "For a fixed x, the minimum total distance over y",
+       "Nested ternary search"
+      ],
+      [
+       "60 iterations",
+       "(2/3)^60 shrinks the range of 100 far below 1e-5, enough for the required precision",
+       ""
+      ],
+      [
+       "round(\u2026, 5)",
+       "Answer to 5 decimal places",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Four points around (1, 1). First outer iterations (x range, then the best total distance found for each probe x):"
+    ],
+    "table": {
+     "head": [
+      "iteration",
+      "x range",
+      "best_y(m1)",
+      "best_y(m2)",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0.000, 100.000]",
+       "129.3643",
+       "262.6819",
+       "keep left (hi = m2)"
+      ],
+      [
+       "1",
+       "[0.000, 66.667]",
+       "84.936",
+       "173.8008",
+       "keep left (hi = m2)"
+      ],
+      [
+       "2",
+       "[0.000, 44.444]",
+       "55.3316",
+       "114.5534",
+       "keep left (hi = m2)"
+      ],
+      [
+       "3",
+       "[0.000, 29.630]",
+       "35.6185",
+       "75.0656",
+       "keep left (hi = m2)"
+      ],
+      [
+       "4",
+       "[0.000, 19.753]",
+       "22.5151",
+       "48.7569",
+       "keep left (hi = m2)"
+      ],
+      [
+       "5",
+       "[0.000, 13.169]",
+       "13.8472",
+       "31.2446",
+       "keep left (hi = m2)"
+      ]
+     ]
+    },
+    "bullets": [
+     "After 60 iterations the minimum total distance is `4.0`, at the centre (1, 1)."
+    ]
+   },
+   {
+    "h": "Why is ternary search valid?",
+    "p": [
+     "The sum of distances is convex, and the minimum over y of a convex function in (x, y) is again convex in x. A convex function has no local minimum other than the global one, so if f(m1) < f(m2) the minimum cannot lie to the right of m2, and vice versa."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(60 \u00b7 60 \u00b7 n): outer and inner iterations times n points.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Nested ternary search on a convex sum of distances (geometric median)."
+ },
+ "1518": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total",
+       "Bottles drunk so far, starting with all the full ones",
+       ""
+      ],
+      [
+       "empty",
+       "Empty bottles in hand",
+       ""
+      ],
+      [
+       "empty // numExchange",
+       "Full bottles obtained by exchanging as many sets as possible",
+       "Integer division"
+      ],
+      [
+       "empty % numExchange + new",
+       "Leftover empties plus the empties of the newly drunk bottles",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`numBottles = 9`, `numExchange = 3`:"
+    ],
+    "table": {
+     "head": [
+      "total drunk",
+      "empties in hand",
+      "step"
+     ],
+     "rows": [
+      [
+       "9",
+       "9",
+       "start"
+      ],
+      [
+       "12",
+       "3",
+       "exchange for 3 full"
+      ],
+      [
+       "13",
+       "1",
+       "exchange for 1 full"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a loop and not one formula?",
+    "p": [
+     "Each exchange produces new empties that can be exchanged again, so the process repeats until fewer than numExchange empties remain. (A closed form exists: `n + (n - 1) // (e - 1)` = 13 here.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) loop iterations.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate exchanges: new = empty // k, then empty = empty % k + new, until fewer than k empties."
+ },
+ "1530": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dfs(node) \u2192 list",
+       "A list `out` where out[d] = number of leaves at distance d below this node (index 0 unused)",
+       "Distance histograms returned up the tree"
+      ],
+      [
+       "leaf: out[1] = 1",
+       "A leaf is at distance 1 from its parent (distances are measured from the node that receives the list)",
+       ""
+      ],
+      [
+       "L[i] * R[j] when i + j <= distance",
+       "Leaf pairs split across the left and right subtrees, joined at this node: distance i + j",
+       "Counting pairs through the LCA (Lowest Common Ancestor)"
+      ],
+      [
+       "out[i + 1] = L[i] + R[i]",
+       "Passing leaves up one edge increases each distance by 1; leaves already at distance `distance` are dropped",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,null,4]`, `distance = 3`; internal nodes in post-order (L and R are the histograms from the children):"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "L",
+      "R",
+      "good pairs here",
+      "returned histogram"
+     ],
+     "rows": [
+      [
+       "2",
+       "[0, 0, 0, 0]",
+       "[0, 1, 0, 0]",
+       "0",
+       "[0, 0, 1, 0]"
+      ],
+      [
+       "1",
+       "[0, 0, 1, 0]",
+       "[0, 1, 0, 0]",
+       "1",
+       "[0, 0, 1, 1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total good pairs: 1."
+    ]
+   },
+   {
+    "h": "Why count pairs at the lowest common ancestor?",
+    "p": [
+     "The shortest path between two leaves goes up to their lowest common ancestor and down. Counting pairs only at that ancestor counts each pair exactly once, using the stored distances from each side."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 distance\u00b2).",
+     "Space: O(distance) per recursion level, O(h \u00b7 distance) in total."
+    ]
+   }
+  ],
+  "takeaway": "Return a per-distance histogram of leaves from each subtree; join left and right histograms at the common ancestor."
+ },
+ "1539": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "arr[mid] - (mid + 1)",
+       "How many positive numbers are missing before arr[mid]: the value minus how many numbers 1..arr[mid] would fill",
+       "Counting gaps with arithmetic"
+      ],
+      [
+       "< k: lo = mid + 1",
+       "Fewer than k missing so far, so the k-th missing number is further right",
+       ""
+      ],
+      [
+       "else hi = mid",
+       "At least k missing already, so the answer lies before arr[mid]",
+       ""
+      ],
+      [
+       "return lo + k",
+       "lo elements of arr precede the answer; the answer is k plus that count",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,4,7,11]`, k = 5:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "arr[mid]",
+      "missing before it",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "2",
+       "4",
+       "1",
+       "miss < k: lo = mid+1"
+      ],
+      [
+       "3",
+       "5",
+       "4",
+       "11",
+       "6",
+       "miss \u2265 k: hi = mid"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "7",
+       "3",
+       "miss < k: lo = mid+1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: lo + k = 4 + 5 = 9."
+    ]
+   },
+   {
+    "h": "Why `lo + k`?",
+    "p": [
+     "If `lo` array elements are smaller than the answer, then among the numbers up to the answer, `lo` are present and the rest are missing. The k-th missing number is therefore k + lo."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on 'missing count before arr[mid]'; the answer is lo + k."
+ },
+ "1545": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mid = 1 << (n - 1)",
+       "Index of the middle bit of S_n: S_n = S_{n\u22121} + '1' + reverse(invert(S_{n\u22121}))",
+       "Recursive string definition"
+      ],
+      [
+       "k == mid \u2192 '1'",
+       "The middle bit is always 1",
+       ""
+      ],
+      [
+       "k < mid \u2192 recurse on n \u2212 1",
+       "The first half is S_{n\u22121}",
+       ""
+      ],
+      [
+       "2 * mid - k",
+       "The mirrored position in the first half (the second half is reversed)",
+       ""
+      ],
+      [
+       "invert the answer",
+       "The second half is the inverted bits",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, `k = 11`:"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "k",
+      "step"
+     ],
+     "rows": [
+      [
+       "4",
+       "11",
+       "k > 8: mirror position 5 in S3, then invert"
+      ],
+      [
+       "3",
+       "5",
+       "k > 4: mirror position 3 in S2, then invert"
+      ],
+      [
+       "2",
+       "3",
+       "k > 2: mirror position 1 in S1, then invert"
+      ],
+      [
+       "1",
+       "1",
+       "base: '0'"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `1`."
+    ]
+   },
+   {
+    "h": "Why not build the string?",
+    "p": [
+     "S_n has 2^n \u2212 1 characters, which is exponential. The recursive definition lets us find bit k by following one branch per level, in O(n) time."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Follow the recursive definition: first half is S_{n\u22121}, middle is 1, second half is its reversed inversion."
+ },
+ "1554": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "key = w[:i] + '*' + w[i+1:]",
+       "A wildcard pattern: the word with position i masked",
+       "Replace one character with a wildcard"
+      ],
+      [
+       "key in seen",
+       "Another word already produced the same pattern: the two words differ only at position i (or are equal, but words are distinct)",
+       ""
+      ],
+      [
+       "seen.add(key)",
+       "Records the pattern",
+       "Hashing instead of comparing pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"abcd\",\"acbd\",\"aacd\"]`: patterns produced word by word (rows up to the first match):"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "masked position",
+      "pattern",
+      "result"
+     ],
+     "rows": [
+      [
+       "abcd",
+       "0",
+       "*bcd",
+       "new"
+      ],
+      [
+       "abcd",
+       "1",
+       "a*cd",
+       "new"
+      ],
+      [
+       "abcd",
+       "2",
+       "ab*d",
+       "new"
+      ],
+      [
+       "abcd",
+       "3",
+       "abc*",
+       "new"
+      ],
+      [
+       "acbd",
+       "0",
+       "*cbd",
+       "new"
+      ],
+      [
+       "acbd",
+       "1",
+       "a*bd",
+       "new"
+      ],
+      [
+       "acbd",
+       "2",
+       "ac*d",
+       "new"
+      ],
+      [
+       "acbd",
+       "3",
+       "acb*",
+       "new"
+      ],
+      [
+       "aacd",
+       "0",
+       "*acd",
+       "new"
+      ],
+      [
+       "aacd",
+       "1",
+       "a*cd",
+       "seen before!"
+      ]
+     ]
+    },
+    "bullets": [
+     "`aacd` and an earlier word share the pattern `a*cd`, so the answer is True."
+    ]
+   },
+   {
+    "h": "Why is this faster than comparing every pair?",
+    "p": [
+     "Comparing all pairs of n words of length L costs O(n\u00b2 \u00b7 L). Each word generates L patterns and a hash set detects collisions, for O(n \u00b7 L\u00b2) time (building each pattern costs O(L))."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 L\u00b2).",
+     "Space: O(n \u00b7 L\u00b2) for the patterns."
+    ]
+   }
+  ],
+  "takeaway": "Mask each position with '*' and look for a pattern seen before; hashing replaces pairwise comparison."
+ }
+}
