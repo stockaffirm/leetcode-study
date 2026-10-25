@@ -1,0 +1,2939 @@
+{
+ "395": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`len(s) < k`",
+       "A string shorter than `k` can't have a letter repeated `k` times",
+       "Base case"
+      ],
+      [
+       "`Counter(s)`",
+       "Letter frequencies in the current string",
+       "Find the letters that cannot be in ANY valid substring"
+      ],
+      [
+       "`c < k`",
+       "This letter appears fewer than `k` times in all of `s`, so no valid substring of `s` can contain it",
+       "Such a letter is a separator"
+      ],
+      [
+       "`s.split(ch)`",
+       "Cut the string at every occurrence of the bad letter",
+       "Divide and conquer around impossible characters"
+      ],
+      [
+       "`max(self.longestSubstring(part, k) for part in …)`",
+       "The answer lies entirely within one piece",
+       "Recurse on each piece and take the best"
+      ],
+      [
+       "`return len(s)`",
+       "Every letter appears at least `k` times: the whole string is valid",
+       "Success case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"ababbc\"`, `k = 2`: `c` appears once, so it splits the string:"
+    ],
+    "table": {
+     "head": [
+      "String",
+      "Reason",
+      "Next"
+     ],
+     "rows": [
+      [
+       "ababbc",
+       "'c' appears 1 < 2",
+       "['ababb', '']"
+      ],
+      [
+       "ababb",
+       "every letter appears ≥ k times",
+       "answer 5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is splitting on a rare letter safe?",
+    "p": [
+     "If a letter appears fewer than `k` times in the whole string, it appears fewer than `k` times in every substring, so no valid substring contains it. Valid substrings can therefore only live between occurrences of that letter."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Check every substring",
+       "O(n²) or O(n³)"
+      ],
+      [
+       "Divide and conquer on rare letters (this code)",
+       "O(26 · n) worst case"
+      ],
+      [
+       "Sliding window for each target number of distinct letters",
+       "O(26 · n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the recursion depth bounded?",
+    "p": [
+     "Each split removes at least one letter type from consideration, and there are at most 26 distinct lowercase letters, so recursion depth is at most 26 and every level does O(n) work in total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26 · n).",
+     "Space: O(n) for the pieces (depth ≤ 26)."
+    ]
+   }
+  ],
+  "takeaway": "Longest substring with every letter at least k times: split on any letter whose total count is below k and recurse on the pieces."
+ },
+ "440": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "The current prefix; numbers are ordered like words in a dictionary, so the sequence is a pre-order walk of a 10-ary trie (1, 10, 100, …, 11, …, 2, …)",
+       "Lexicographic order of numbers = trie order"
+      ],
+      [
+       "`k -= 1`",
+       "`cur = 1` is the first number, so we need to move `k − 1` more steps",
+       "Zero-indexed steps"
+      ],
+      [
+       "`count`",
+       "Number of valid numbers (≤ n) in the subtree under `cur`: levels `[a, b)` = `[cur, cur+1)`, `[10cur, 10cur+10)`, …",
+       "Counting a trie subtree without walking it"
+      ],
+      [
+       "`min(n + 1, b) - a`",
+       "How many numbers of this length fall in the range and do not exceed `n`",
+       "The last level is cut at `n`"
+      ],
+      [
+       "`count <= k: cur += 1; k -= count`",
+       "The target is NOT in this subtree: skip all `count` numbers, move to the next sibling",
+       "Jump over a whole subtree"
+      ],
+      [
+       "`else: cur *= 10; k -= 1`",
+       "The target IS in the subtree: step down to the first child (consuming one step for `cur` itself)",
+       "Descend"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 13`, `k = 2`: the lexicographic order is 1, 10, 11, 12, 13, 2, 3, …, 9. The second number is 10."
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "Numbers under cur",
+      "k left",
+      "Action"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "1",
+       "answer is inside: go to the first child (cur × 10), k −= 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another query",
+    "p": [
+     "`n = 13`, `k = 5` (the fifth number is 13):"
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "Numbers under cur",
+      "k left",
+      "Action"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "4",
+       "answer is inside: go to the first child (cur × 10), k −= 1"
+      ],
+      [
+       "10",
+       "1",
+       "3",
+       "skip the whole subtree: cur += 1"
+      ],
+      [
+       "11",
+       "1",
+       "2",
+       "skip the whole subtree: cur += 1"
+      ],
+      [
+       "12",
+       "1",
+       "1",
+       "skip the whole subtree: cur += 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count instead of walking k steps?",
+    "p": [
+     "`k` can be up to n ≈ 10⁹. Walking the order one number at a time would take that many steps. Counting the size of a subtree takes O(log n) and lets us skip it in one step, so the whole search is O(log² n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "generate and sort strings",
+       "O(n log n)"
+      ],
+      [
+       "walk the trie order",
+       "O(k)"
+      ],
+      [
+       "count subtrees and skip (this code)",
+       "O(log² n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log² n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "K-th lexicographic number: treat numbers as a 10-ary trie, count how many numbers lie under a prefix, and skip a whole subtree or descend into it."
+ },
+ "473": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total % 4`, `side = total // 4`",
+       "All four sides must have equal length",
+       "Feasibility and target"
+      ],
+      [
+       "`sorted(matchsticks, reverse=True)`",
+       "Place long sticks first: they have the fewest legal positions, so failures show up early",
+       "Most-constrained-first heuristic"
+      ],
+      [
+       "`sides`",
+       "Current length of each of the four sides",
+       "Bucket sums"
+      ],
+      [
+       "`sides[s] in seen`",
+       "Skip a side whose current length equals one already tried for this stick: it is symmetric, so the result would be identical",
+       "Symmetry pruning (the same trick as Partition to K Equal Subsets)"
+      ],
+      [
+       "`sides[s] + sticks[i] > side`",
+       "The stick doesn't fit",
+       "Prune overflow"
+      ],
+      [
+       "`sides[s] -= sticks[i]`",
+       "Undo and try the next side",
+       "Backtracking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2,2,2]`: total 8, side length 2. Sticks sorted `[2, 2, 2, 1, 1]`. The search placements:"
+    ],
+    "table": {
+     "head": [
+      "Stick",
+      "Action",
+      "Side lengths"
+     ],
+     "rows": [
+      [
+       "stick 2",
+       "side 0",
+       "[2, 0, 0, 0]"
+      ],
+      [
+       "stick 2",
+       "side 1",
+       "[2, 2, 0, 0]"
+      ],
+      [
+       "stick 2",
+       "side 2",
+       "[2, 2, 2, 0]"
+      ],
+      [
+       "stick 1",
+       "side 3",
+       "[2, 2, 2, 1]"
+      ],
+      [
+       "stick 1",
+       "side 3",
+       "[2, 2, 2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The sides become `[2, 2, 2, 2]`, e.g. `2`, `2`, `2` and `1 + 1`, so a square is possible."
+    ]
+   },
+   {
+    "h": "Why the `seen` set?",
+    "p": [
+     "When two sides currently have the same length they are interchangeable for the rest of the search. Trying the same stick on both would only repeat the same subtree. The set ensures each distinct side-length is tried once per stick."
+    ],
+    "table": {
+     "head": [
+      "Search",
+      "Branching per stick"
+     ],
+     "rows": [
+      [
+       "all four sides",
+       "4"
+      ],
+      [
+       "distinct side lengths only",
+       "≤ number of distinct lengths"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(4ⁿ) worst case, much less with pruning (n ≤ 15).",
+     "Space: O(n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Matchsticks to square: backtrack placing long sticks first into four side buckets, skipping buckets with duplicate lengths and any that overflow."
+ },
+ "581": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(nums)`",
+       "What the array looks like when fully sorted",
+       "Compare against the target arrangement"
+      ],
+      [
+       "`zip(nums, sorted(nums))`",
+       "Pairs the actual and the sorted value at each index",
+       "Index-by-index comparison"
+      ],
+      [
+       "`diff`",
+       "Indices where they differ",
+       "Positions that must be inside the subarray to sort"
+      ],
+      [
+       "`diff[-1] - diff[0] + 1`",
+       "The span from the first to the last wrong position",
+       "Everything between must be sorted too, so the subarray is that span"
+      ],
+      [
+       "`if diff else 0`",
+       "No differences: already sorted",
+       "Edge case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,6,4,8,10,9,15]`:"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "nums",
+      "sorted",
+      "Different?"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "2",
+       "False"
+      ],
+      [
+       "1",
+       "6",
+       "4",
+       "True"
+      ],
+      [
+       "2",
+       "4",
+       "6",
+       "True"
+      ],
+      [
+       "3",
+       "8",
+       "8",
+       "False"
+      ],
+      [
+       "4",
+       "10",
+       "9",
+       "True"
+      ],
+      [
+       "5",
+       "9",
+       "10",
+       "True"
+      ],
+      [
+       "6",
+       "15",
+       "15",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The first difference is at index 1 and the last at 5, so the subarray `nums[1..5]` of length 5 must be sorted."
+    ]
+   },
+   {
+    "h": "Why is the span, not just the differing indices, the answer?",
+    "p": [
+     "Sorting only the differing positions might leave out elements between them that are in place. But the subarray must be CONTIGUOUS, and sorting a contiguous block from the first to the last differing index leaves everything outside it already in its sorted place. That span is also the smallest possible."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "sort and compare (this code)",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "scan with running max/min",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Shortest unsorted subarray: compare with the sorted copy; the span between the first and last mismatch is the answer."
+ },
+ "593": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`combinations(pts, 2)`",
+       "All 6 unordered pairs of the 4 points (`itertools.combinations`)",
+       "Pairwise distances"
+      ],
+      [
+       "squared distance `(dx)² + (dy)²`",
+       "Compare squared distances to avoid square roots and floating point",
+       "Integer-exact geometry"
+      ],
+      [
+       "`sorted(...)`",
+       "Order the six squared distances",
+       "A square has 4 equal sides and 2 equal diagonals"
+      ],
+      [
+       "`d[0] > 0`",
+       "The smallest distance is positive: no two points coincide",
+       "Reject degenerate cases"
+      ],
+      [
+       "`d[0] == d[1] == d[2] == d[3]`",
+       "Four equal shortest distances: the sides",
+       "Equal sides"
+      ],
+      [
+       "`d[4] == d[5] and d[4] == 2 * d[0]`",
+       "Two equal longest distances (diagonals), equal to twice a side squared (Pythagoras)",
+       "Right angles"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Points `(0,0), (1,1), (1,0), (0,1)`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Squared distance"
+     ],
+     "rows": [
+      [
+       "[0, 0] – [1, 1]",
+       "2"
+      ],
+      [
+       "[0, 0] – [1, 0]",
+       "1"
+      ],
+      [
+       "[0, 0] – [0, 1]",
+       "1"
+      ],
+      [
+       "[1, 1] – [1, 0]",
+       "1"
+      ],
+      [
+       "[1, 1] – [0, 1]",
+       "1"
+      ],
+      [
+       "[1, 0] – [0, 1]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Sorted: `[1, 1, 1, 1, 2, 2]`: four sides of squared length 1, two diagonals of squared length 2 = 2·1. It is a square."
+    ]
+   },
+   {
+    "h": "Why is the diagonal check needed?",
+    "p": [
+     "Four equal sides alone also describe a rhombus. In a rhombus the two diagonals have different lengths, so requiring the two longest distances to be equal, and equal to twice a side squared, forces right angles."
+    ],
+    "table": {
+     "head": [
+      "Shape",
+      "Sides",
+      "Diagonals",
+      "Square?"
+     ],
+     "rows": [
+      [
+       "square",
+       "4 equal",
+       "2 equal, d² = 2s²",
+       "yes"
+      ],
+      [
+       "rhombus",
+       "4 equal",
+       "unequal",
+       "no"
+      ],
+      [
+       "rectangle",
+       "2+2 equal",
+       "2 equal",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) (6 distances and a sort of 6 numbers).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Valid square: sort the 6 pairwise squared distances; 4 equal small ones (sides) and 2 equal large ones (diagonals = twice a side)."
+ },
+ "887": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[e]`",
+       "The maximum number of floors we can fully resolve with `e` eggs and the current number of `moves`",
+       "Flip the DP: instead of 'moves for n floors', compute 'floors for m moves'"
+      ],
+      [
+       "`dp[e] + dp[e-1] + 1`",
+       "Drop an egg: if it breaks, `dp[e-1]` floors below remain with one fewer egg; if it survives, `dp[e]` floors above remain with the same eggs; plus the floor tested",
+       "The classic recurrence"
+      ],
+      [
+       "`for e in range(k, 0, -1)`",
+       "Update eggs from high to low so `dp[e-1]` is still the PREVIOUS move's value",
+       "In-place 1D DP; reverse order protects the old values"
+      ],
+      [
+       "`while dp[k] < n`",
+       "Increase the number of moves until `k` eggs can cover `n` floors",
+       "Smallest m with f(m, k) ≥ n"
+      ],
+      [
+       "`return moves`",
+       "The first move count that covers all floors",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 2` eggs, `n = 6` floors. After each move the table shows how many floors each egg count can cover:"
+    ],
+    "table": {
+     "head": [
+      "Moves",
+      "dp[0..2] (floors covered)"
+     ],
+     "rows": [
+      [
+       "1",
+       "[0, 1, 1]"
+      ],
+      [
+       "2",
+       "[0, 2, 3]"
+      ],
+      [
+       "3",
+       "[0, 3, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "After 3 moves two eggs cover 6 floors, so the answer is 3. With one egg it takes `n` moves (5 for 5 floors), and with 3 eggs and 14 floors it takes 4."
+    ]
+   },
+   {
+    "h": "Why flip the DP?",
+    "p": [
+     "The direct DP `f(k, n)` tries every first floor, costing O(k · n²) (or O(k · n log n) with binary search). Counting how many floors a number of moves can cover gives a recurrence with no search at all, and the number of moves is at most `n` (and usually tiny, about log n for many eggs)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP over floors, try every drop",
+       "O(k n²)"
+      ],
+      [
+       "binary search on the first floor",
+       "O(k n log n)"
+      ],
+      [
+       "floors-per-move DP (this code)",
+       "O(k · answer)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · m), m = answer ≤ n.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Super egg drop: instead of minimising moves for n floors, count how many floors m moves and k eggs can cover with dp[e] += dp[e-1] + 1, until it reaches n."
+ },
+ "902": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sum(d ** i for i in range(1, L))`",
+       "All numbers with FEWER digits than `n`: `d` choices per digit, for lengths 1 to L−1",
+       "Free choices for shorter lengths"
+      ],
+      [
+       "loop over the digits of `n`",
+       "Count numbers with the SAME length that are smaller than `n`, by the first position where they differ",
+       "Digit-by-digit tight bound"
+      ],
+      [
+       "`smaller = sum(x < ch for x in digits)`",
+       "How many allowed digits are smaller than the current digit of `n`",
+       "If we pick a smaller digit here, all later positions are free"
+      ],
+      [
+       "`smaller * d ** (L - i - 1)`",
+       "Smaller digit here, any digits afterwards",
+       "Free suffix"
+      ],
+      [
+       "`if ch not in digits: return res`",
+       "We can't keep matching `n`'s prefix, so no more same-prefix numbers exist",
+       "Stop when the tight path breaks"
+      ],
+      [
+       "`return res + 1`",
+       "All digits of `n` were available: `n` itself counts",
+       "Include the bound itself"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`digits = [1,3,5,7]`, `n = 100`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Computation",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "numbers shorter than n",
+       "Σ 4^i for i = 1..2",
+       "20"
+      ],
+      [
+       "position 0 (digit '1')",
+       "0 smaller digits × 4^2 = 0",
+       "20"
+      ],
+      [
+       "position 1 (digit '0')",
+       "0 smaller digits × 4^1 = 0",
+       "20"
+      ],
+      [
+       "stop",
+       "'0' not in digits",
+       "20"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this digit DP linear in the number of digits?",
+    "p": [
+     "Instead of enumerating numbers up to n, the code counts them in groups: all shorter lengths together, then for each prefix position the numbers that diverge from `n` there. That is `len(str(n))` steps, each O(d)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Enumerate all numbers ≤ n",
+       "O(n)"
+      ],
+      [
+       "Digit counting (this code)",
+       "O(log n · d)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L · d) for L digits.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Numbers at most N from a digit set: count shorter lengths by powers of d, then walk n's digits counting smaller choices with a free suffix."
+ },
+ "962": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first loop: `x < nums[st[-1]]`",
+       "Push only indices of new strict minimums: the candidates for the LEFT end of a ramp (a left end with a larger value than an earlier one is never better)",
+       "Monotonic decreasing stack of left candidates"
+      ],
+      [
+       "second loop from the right",
+       "Try each `j` as the right end, starting from the far right so the widest ramps are found first",
+       "Scan right to left"
+      ],
+      [
+       "`while st and nums[st[-1]] <= nums[j]`",
+       "The top candidate `i` forms a ramp with `j`; width is `j - i`",
+       "Check candidates against `j`"
+      ],
+      [
+       "`st.pop()`",
+       "Once `i` has a ramp ending at `j`, a later (smaller) `j` can only give a narrower ramp for `i`, so `i` is done",
+       "Each index is popped at most once"
+      ],
+      [
+       "`best = max(best, j - i)`",
+       "Track the widest ramp",
+       "Maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [6,0,8,2,1,5]`. Left candidates (strictly decreasing prefix minima): indices [0, 1]. Scanning `j` from the right:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "nums[j]",
+      "Action",
+      "Width",
+      "best"
+     ],
+     "rows": [
+      [
+       "5",
+       "5",
+       "pop index 1 (value 0)",
+       "4",
+       "4"
+      ],
+      [
+       "2",
+       "8",
+       "pop index 0 (value 6)",
+       "2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan from the right and pop?",
+    "p": [
+     "For a fixed left candidate `i`, the best right end is the LARGEST `j` with `nums[j] >= nums[i]`. Going from the right, the first `j` that works for `i` is that largest one; after popping `i`, further `j` values are smaller, so they can't beat it."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs",
+       "O(n²)"
+      ],
+      [
+       "sort indices by value",
+       "O(n log n)"
+      ],
+      [
+       "monotonic stack (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum width ramp: a stack of strictly decreasing left candidates, then match them against right ends scanning from the right."
+ },
+ "1151": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`w = sum(data)`",
+       "Total number of ones: the length of the window that will hold them all",
+       "The final block of ones has length `w`"
+      ],
+      [
+       "`data[:w].count(0)`",
+       "Zeros inside the first window of length `w`",
+       "Each zero in the window needs to be swapped with a one outside"
+      ],
+      [
+       "`zeros += (data[i] == 0) - (data[i - w] == 0)`",
+       "Slide the window: add the new element's zero, remove the old element's zero (booleans act as 0/1)",
+       "O(1) window update"
+      ],
+      [
+       "`best = min(best, zeros)`",
+       "Fewest zeros in any window of length `w`",
+       "Minimum swaps"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`data = [1,0,1,0,1]`, three ones, so windows of length 3:"
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Zeros",
+      "best"
+     ],
+     "rows": [
+      [
+       "[0,2]",
+       "1",
+       "1"
+      ],
+      [
+       "[1,3]",
+       "2",
+       "1"
+      ],
+      [
+       "[2,4]",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do swaps equal the zeros in the window?",
+    "p": [
+     "If we choose a window of length `w` as the final home of all ones, every zero inside it must trade places with a one outside (there are exactly as many ones outside as zeros inside). One swap fixes one zero, so the number of swaps is the number of zeros in the window. We pick the window with the fewest."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every window and count",
+       "O(n · w)"
+      ],
+      [
+       "sliding window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Group all ones with minimum swaps: the best window of length (number of ones) is the one with the fewest zeros."
+ },
+ "2021": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`events[pos - rng] += 1`",
+       "A street lamp starts lighting at `pos − range`",
+       "Sweep line: +1 at the start of an interval"
+      ],
+      [
+       "`events[pos + rng + 1] -= 1`",
+       "It stops after `pos + range` (inclusive end), so the −1 sits one past the end",
+       "Half-open end"
+      ],
+      [
+       "`defaultdict(int)`",
+       "Sparse positions only",
+       "Coordinates can be huge (up to 10⁸)"
+      ],
+      [
+       "`for p in sorted(events)`",
+       "Process event positions in order",
+       "Sweep"
+      ],
+      [
+       "`cur += events[p]`",
+       "Number of lamps covering position `p`",
+       "Running sum"
+      ],
+      [
+       "`cur > best` (strict)",
+       "The first position with the maximum brightness wins ties, as the problem wants the SMALLEST position",
+       "Strict comparison keeps the earliest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Lights `[-3,2]` (covers −5..−1), `[1,2]` (−1..3), `[3,3]` (0..6):"
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Δ",
+      "Brightness",
+      "Best",
+      "Answer position"
+     ],
+     "rows": [
+      [
+       "-5",
+       "1",
+       "1",
+       "1",
+       "-5"
+      ],
+      [
+       "-1",
+       "1",
+       "2",
+       "2",
+       "-1"
+      ],
+      [
+       "0",
+       "0",
+       "2",
+       "2",
+       "-1"
+      ],
+      [
+       "4",
+       "-1",
+       "1",
+       "2",
+       "-1"
+      ],
+      [
+       "7",
+       "-1",
+       "0",
+       "2",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the event positions?",
+    "p": [
+     "Brightness changes only where a lamp's range starts or ends. Between two consecutive event positions it is constant, so the first position of the best stretch is always an event position, and checking only those is enough."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "test every coordinate",
+       "O(range of coordinates)"
+      ],
+      [
+       "sweep over event positions (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting the event positions.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Brightest position: sweep line over the starts (+1) and one-past-ends (−1) of each lamp's range; the first position with the highest running count wins."
+ },
+ "2039": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "BFS from server 0 → `dist`",
+       "Number of hops from the master server to each data server",
+       "Shortest path in an unweighted graph"
+      ],
+      [
+       "`rt = 2 * dist[i]`",
+       "Round-trip time: message goes out and the reply comes back",
+       "Each hop takes 1 second"
+      ],
+      [
+       "`(rt - 1) // patience * patience`",
+       "Time of the LAST resend before the first reply arrives: resends happen at `patience, 2·patience, …` while `t < rt`",
+       "Count resends strictly before the reply"
+      ],
+      [
+       "`rt + that + 1`",
+       "The last message (sent at the last resend time) takes another `rt` to be answered; the network is idle the second AFTER the final reply, hence `+ 1`",
+       "Final reply arrival plus one"
+      ],
+      [
+       "`max(last, …)`",
+       "The network is idle when the slowest server is done",
+       "Take the maximum over all servers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges `0-1`, `1-2`, patience `[0,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Server",
+      "dist",
+      "Round trip",
+      "Patience",
+      "Last resend time",
+      "Idle after"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "2",
+       "2",
+       "0",
+       "3"
+      ],
+      [
+       "2",
+       "2",
+       "4",
+       "1",
+       "3",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `(rt - 1) // patience * patience`?",
+    "p": [
+     "Resends are sent at times `patience, 2·patience, …` as long as the reply has not arrived, i.e. at times strictly less than `rt`. The largest such multiple is `((rt − 1) // patience) · patience`. If `rt ≤ patience` there is no resend and this expression is 0."
+    ],
+    "table": {
+     "head": [
+      "rt",
+      "patience",
+      "Last resend"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "0 (reply arrives at 2, before resend at 2? resend needs t < rt)"
+      ],
+      [
+       "4",
+       "1",
+       "3"
+      ],
+      [
+       "4",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ],
+    "table": {
+     "head": [
+      "rt",
+      "patience",
+      "Last resend time"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "0 (no resend: the reply arrives at 2, and a resend needs t < rt)"
+      ],
+      [
+       "4",
+       "1",
+       "3"
+      ],
+      [
+       "4",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   }
+  ],
+  "takeaway": "Network idle time: BFS for hop distances, then per server compute when its last resend's reply returns; the answer is the maximum plus one."
+ },
+ "2078": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`j`: scan from the right while `colors[j] == colors[0]`",
+       "The rightmost house whose colour differs from the FIRST house",
+       "Pair the first house with the farthest house of a different colour"
+      ],
+      [
+       "`i`: scan from the left while `colors[i] == colors[-1]`",
+       "The leftmost house whose colour differs from the LAST house",
+       "Pair the last house with the farthest house of a different colour"
+      ],
+      [
+       "`max(j, n - 1 - i)`",
+       "Distance from house 0 to `j` is `j`; distance from `i` to the last house is `n − 1 − i`",
+       "The optimum uses an end house"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`colors = [1,1,1,6,1,1,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Candidate",
+      "Index",
+      "Distance"
+     ],
+     "rows": [
+      [
+       "first house with the rightmost colour ≠ colors[0]",
+       "3",
+       "3"
+      ],
+      [
+       "last house with the leftmost colour ≠ colors[-1]",
+       "3",
+       "3"
+      ],
+      [
+       "answer",
+       "",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do only the ends matter?",
+    "p": "Take an optimal pair `(a, b)` with `a < b` and different colours. If `colors[0]` differs from `colors[b]`, then pairing house 0 with `b` is at least as far. Otherwise `colors[0] == colors[b]`, so `colors[a]` differs from `colors[b]`... and house `n − 1` can replace `b` if its colour differs from `colors[a]`, or it matches `colors[a]`, in which case house 0 differs from house `n − 1`, an even longer pair. Either way an optimal pair includes house 0 or house n − 1.",
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs",
+       "O(n²)"
+      ],
+      [
+       "scan from both ends (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Furthest houses with different colours: one of them can be taken to be an end house; scan inward from both ends for the first colour change."
+ },
+ "2081": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pal_in_base(x)`",
+       "Convert `x` to base `k` by repeated `% k` and `// k`, then check the digit list reads the same backwards",
+       "Palindrome check in another base"
+      ],
+      [
+       "`length`, `half = (length + 1) // 2`",
+       "Generate decimal palindromes of each length from their FIRST HALF `h`",
+       "Palindromes are determined by half the digits, so there are only ~10^(half) of them"
+      ],
+      [
+       "`range(10 ** (half - 1), 10 ** half)`",
+       "All halves with exactly `half` digits, in increasing order, which gives increasing palindromes",
+       "Enumerate in sorted order"
+      ],
+      [
+       "`s + s[::-1][length % 2:]`",
+       "Mirror the half: for odd lengths drop the repeated middle digit",
+       "Build the palindrome"
+      ],
+      [
+       "`found`",
+       "The first `n` numbers that are palindromes in both bases, in increasing order",
+       "Stop when `n` are found"
+      ],
+      [
+       "`sum(found)`",
+       "Answer",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 2`, `n = 5`: the first five numbers that are palindromes in base 10 and base 2 are [1, 3, 5, 7, 9], sum 25."
+    ],
+    "table": {
+     "head": [
+      "Decimal",
+      "Base 2",
+      "Palindrome in base 2?"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "True"
+      ],
+      [
+       "3",
+       "11",
+       "True"
+      ],
+      [
+       "5",
+       "101",
+       "True"
+      ],
+      [
+       "7",
+       "111",
+       "True"
+      ],
+      [
+       "9",
+       "1001",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another base",
+    "p": [
+     "For `k = 3`, the first seven are [1, 2, 4, 8, 121, 151, 212] (sum 499)."
+    ],
+    "table": {
+     "head": [
+      "Decimal",
+      "Base 3"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "11"
+      ],
+      [
+       "8",
+       "22"
+      ],
+      [
+       "121",
+       "11111"
+      ],
+      [
+       "151",
+       "12121"
+      ],
+      [
+       "212",
+       "21212"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why generate palindromes instead of scanning numbers?",
+    "p": [
+     "Scanning every integer and testing both bases wastes almost all work, since decimal palindromes are rare: there are about 10^(L/2) of length L. Generating them from halves visits only palindromes, in increasing order, and the base-`k` test is the only filter."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Candidates for 10 digits"
+     ],
+     "rows": [
+      [
+       "scan all integers",
+       "10¹⁰"
+      ],
+      [
+       "generate from halves (this code)",
+       "about 10⁵"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: roughly O(P · log) for P decimal palindromes generated until n matches are found.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "k-mirror numbers: generate decimal palindromes in increasing order from their halves and keep those that are also palindromes in base k."
+ },
+ "2087": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`step_r`, `step_c`",
+       "Direction of travel (+1 or −1) in each axis",
+       "Walking toward the target"
+      ],
+      [
+       "`range(r1 + step_r, r2 + step_r, step_r)`",
+       "The rows ENTERED on the way (the start row is excluded, the home row included)",
+       "Cost is paid for the cell moved INTO"
+      ],
+      [
+       "`rowCosts[r]`, `colCosts[c]`",
+       "Cost of entering row `r` (a vertical move) or column `c` (a horizontal move)",
+       "Costs depend only on the row/column entered"
+      ],
+      [
+       "`if r1 != r2 else []`",
+       "No vertical moves when the rows are equal (the `-1` step with equal bounds would otherwise give a weird range)",
+       "Guard"
+      ],
+      [
+       "no search at all",
+       "Every monotone path has the same cost, since the set of rows and columns entered is fixed",
+       "Answer is a sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Start (1,0), home (2,3): one row move down and three column moves right."
+    ],
+    "table": {
+     "head": [
+      "Move",
+      "Cost",
+      "Total"
+     ],
+     "rows": [
+      [
+       "enter row 2",
+       "3",
+       "3"
+      ],
+      [
+       "enter column 1",
+       "2",
+       "5"
+      ],
+      [
+       "enter column 2",
+       "6",
+       "11"
+      ],
+      [
+       "enter column 3",
+       "7",
+       "18"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is every path equally expensive?",
+    "p": [
+     "A shortest path moves only toward the target. It must enter each row between start and home once, and each column once, in some interleaving. The cost of a move depends only on the row or column entered, so the total is the same for every ordering, and detours only add cost since costs are non-negative."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Dijkstra on the grid",
+       "O(m n log mn)"
+      ],
+      [
+       "Direct sum (this code)",
+       "O(|Δrow| + |Δcol|)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(|Δrow| + |Δcol|).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Robot homecoming: costs depend only on the row or column entered, so every direct path costs the same; sum those costs."
+ },
+ "2093": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "state `(city, k)`",
+       "The city and how many discounts have been used so far",
+       "Shortest path with a resource limit: add the resource to the state"
+      ],
+      [
+       "`dist`: `{(u, k): cost}`",
+       "Best cost to reach each state",
+       "Dijkstra's distances"
+      ],
+      [
+       "`(k, d + t)` and `(k + 1, d + t // 2)`",
+       "Pay the full toll, or use a discount to pay half (integer division)",
+       "Two choices per edge"
+      ],
+      [
+       "`nk <= discounts`",
+       "Never exceed the allowed number of discounts",
+       "Resource constraint"
+      ],
+      [
+       "`heappop` + `if d > dist.get(...)`",
+       "Standard Dijkstra with lazy deletion",
+       "Heap of states"
+      ],
+      [
+       "`if u == n - 1: return d`",
+       "The first time ANY state of the destination is popped is the minimum cost",
+       "States with fewer discounts used are not better by definition, but the cheapest popped first"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5 cities, one discount. States popped in order of cost and the states they improve:"
+    ],
+    "table": {
+     "head": [
+      "State popped",
+      "Cost",
+      "Improved states"
+     ],
+     "rows": [
+      [
+       "city 0, 0 discounts used",
+       "0",
+       "['city 1, k=0: 4', 'city 1, k=1: 2']"
+      ],
+      [
+       "city 1, 1 discounts used",
+       "2",
+       "['city 0, k=1: 6', 'city 2, k=1: 5', 'city 4, k=1: 13']"
+      ],
+      [
+       "city 1, 0 discounts used",
+       "4",
+       "['city 2, k=0: 7', 'city 4, k=0: 15', 'city 4, k=1: 9']"
+      ],
+      [
+       "city 2, 1 discounts used",
+       "5",
+       "['city 3, k=1: 8']"
+      ],
+      [
+       "city 0, 1 discounts used",
+       "6",
+       "-"
+      ],
+      [
+       "city 2, 0 discounts used",
+       "7",
+       "['city 3, k=0: 10']"
+      ],
+      [
+       "city 3, 1 discounts used",
+       "8",
+       "-"
+      ],
+      [
+       "city 4, 1 discounts used",
+       "9",
+       "destination reached"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "The route 0→1→4 costs 4 + 11 = 15 at full price. With the single discount on the 11-toll road it costs 4 + 5 = 9. The longer chain 0→1→2→3→4 has tolls 4 + 3 + 3 + 2 = 12, or 10 at best with the discount on the 4-toll, so the minimum is 9."
+   },
+   {
+    "h": "Why add the discount count to the state?",
+    "p": [
+     "With a limit on discounts, the best route to a city depends on how many discounts are left. A plain Dijkstra keyed by city would discard a more expensive route that saved a discount. Making `(city, used)` the node keeps both."
+    ],
+    "table": {
+     "head": [
+      "Graph nodes",
+      "Count"
+     ],
+     "rows": [
+      [
+       "cities",
+       "n"
+      ],
+      [
+       "(city, discounts used)",
+       "n · (discounts + 1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n · d + E · d) log(n · d)) for d discounts.",
+     "Space: O(n · d)."
+    ]
+   }
+  ],
+  "takeaway": "Cost with discounts: Dijkstra over (city, discounts used) states, where each edge is paid in full or at half price."
+ },
+ "2096": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`path(node, target, acc)`",
+       "DFS that returns True if `target` is in the subtree and appends the turns ('L'/'R') on the way BACK up, so the list is in reverse (leaf-to-root) order",
+       "Record a root-to-node path"
+      ],
+      [
+       "`a.reverse()`, `b.reverse()`",
+       "Put the paths in root-to-node order",
+       "Fix the order"
+      ],
+      [
+       "common prefix loop",
+       "The shared prefix of the two paths leads to the lowest common ancestor",
+       "LCA via path prefixes"
+      ],
+      [
+       "`'U' * (len(a) - i)`",
+       "From the start, go up once per step after the common prefix",
+       "Climb to the LCA"
+      ],
+      [
+       "`''.join(b[i:])`",
+       "From the LCA, follow the destination's remaining turns",
+       "Descend to the destination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[5,1,2,3,null,6,4]`, start 3, destination 6:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "path root→start",
+       "LL"
+      ],
+      [
+       "path root→dest",
+       "RL"
+      ],
+      [
+       "common prefix length",
+       "0"
+      ],
+      [
+       "`U` × (len(start path) − prefix)",
+       "UU"
+      ],
+      [
+       "remaining dest turns",
+       "RL"
+      ],
+      [
+       "answer",
+       "UURL"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the common-prefix steps cancel?",
+    "p": [
+     "Both paths begin at the root and follow the same turns until they split at the lowest common ancestor. Walking from the start up to the LCA undoes the start's own turns after the split, and walking down follows the destination's turns after the split; the shared prefix never has to be walked."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "find LCA, then two DFS",
+       "O(n)"
+      ],
+      [
+       "two root paths + common prefix (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) for the paths and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Directions between two tree nodes: compute both root paths, strip their common prefix, then go up once per remaining start step and down by the destination's remaining turns."
+ },
+ "2099": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(range(len(nums)), key=lambda i: -nums[i])`",
+       "Indices ordered by value, largest first (sorting indices, not values, so positions are kept)",
+       "Argsort"
+      ],
+      [
+       "`[:k]`",
+       "The indices of the k largest values",
+       "Top-k"
+      ],
+      [
+       "`sorted(idx)`",
+       "Put those indices back into original order",
+       "A subsequence must preserve the array's order"
+      ],
+      [
+       "`[nums[i] for i in …]`",
+       "Read the values in that order",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,3,3]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "indices by value descending",
+       "[2, 3, 0, 1]"
+      ],
+      [
+       "top 2 indices",
+       "[2, 3]"
+      ],
+      [
+       "in original order",
+       "[2, 3]"
+      ],
+      [
+       "values",
+       "[3, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the k largest values give the largest sum?",
+    "p": [
+     "The sum of any k elements is at most the sum of the k largest elements, and any set of k positions can be read in array order as a subsequence. So choosing the top-k and restoring their order is both optimal and a valid subsequence."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "argsort (this code)",
+       "O(n log n)"
+      ],
+      [
+       "heap of size k",
+       "O(n log k)"
+      ],
+      [
+       "quickselect",
+       "O(n) average"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Subsequence with the largest sum: take the indices of the k largest values and read them back in original order."
+ },
+ "2141": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`hi = sum(batteries) // n`",
+       "Upper bound: total energy shared by `n` computers",
+       "Even sharing is the best conceivable"
+      ],
+      [
+       "`min(b, mid)`",
+       "A battery can supply at most `mid` minutes toward a target of `mid` minutes (it cannot power two computers at the same time, and we only need `mid` from each computer)",
+       "Cap each battery's useful contribution"
+      ],
+      [
+       "`sum(...) >= n * mid`",
+       "Enough usable energy to run `n` computers for `mid` minutes",
+       "Feasibility test"
+      ],
+      [
+       "`mid = (lo + hi + 1) // 2` and `lo = mid`",
+       "Search for the LAST feasible value; upper midpoint prevents an infinite loop",
+       "Maximum feasible answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`, `batteries = [3,3,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Range",
+      "mid",
+      "Usable energy",
+      "Needed",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "[0, 4]",
+       "2",
+       "min(3,2) + min(3,2) + min(3,2) = 6",
+       "2×2 = 4",
+       "feasible → lo = mid"
+      ],
+      [
+       "[2, 4]",
+       "3",
+       "min(3,3) + min(3,3) + min(3,3) = 9",
+       "2×3 = 6",
+       "feasible → lo = mid"
+      ],
+      [
+       "[3, 4]",
+       "4",
+       "min(3,4) + min(3,4) + min(3,4) = 9",
+       "2×4 = 8",
+       "feasible → lo = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we ignore the swapping schedule?",
+    "p": [
+     "Batteries can be swapped at any integer minute, and swapping is free. So the question is only whether the total usable energy can be divided so that each of the `n` computers gets `mid` minutes, with no battery used by two computers at once. Capping each battery at `mid` guarantees that, and the condition `sum ≥ n·mid` is then sufficient."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate swaps",
+       "exponential"
+      ],
+      [
+       "binary search on time with the capped-sum test (this code)",
+       "O(m log(sum/n))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log(sum / n)) for m batteries.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum run time of n computers: binary search the time; feasible if the sum of min(battery, time) is at least n × time."
+ },
+ "2150": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → frequency; missing values read as 0 without a `KeyError`",
+       "Frequency lookups including absent keys"
+      ],
+      [
+       "`cnt[x] == 1`",
+       "`x` appears exactly once",
+       "Lonely: no duplicates"
+      ],
+      [
+       "`cnt[x - 1] == 0 and cnt[x + 1] == 0`",
+       "Neither neighbour value appears anywhere in the array",
+       "Lonely: no adjacent values"
+      ],
+      [
+       "iterate `nums` (not the Counter)",
+       "Keeps the original order, though any order is accepted",
+       "Output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [10,6,5,8]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "count[x]",
+      "count[x−1]",
+      "count[x+1]",
+      "Lonely?"
+     ],
+     "rows": [
+      [
+       "10",
+       "1",
+       "0",
+       "0",
+       "True"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "0",
+       "False"
+      ],
+      [
+       "5",
+       "1",
+       "0",
+       "1",
+       "False"
+      ],
+      [
+       "8",
+       "1",
+       "0",
+       "0",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A caution with Counter",
+    "p": [
+     "Reading `cnt[x - 1]` on a Counter returns 0 WITHOUT inserting the key (unlike `defaultdict`, which would add the key and could grow the dictionary during iteration). That makes the lookups side-effect free."
+    ],
+    "table": {
+     "head": [
+      "Container",
+      "Missing key read",
+      "Inserts the key?"
+     ],
+     "rows": [
+      [
+       "Counter",
+       "0",
+       "no"
+      ],
+      [
+       "defaultdict(int)",
+       "0",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Lonely numbers: a Counter lets us check 'appears once and neither neighbour value exists' with three O(1) lookups."
+ },
+ "2183": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gcd(x, k)`",
+       "Only the part of `x` that shares factors with `k` matters for divisibility of a product by `k`",
+       "Reduce each number to its gcd with `k`"
+      ],
+      [
+       "`cnt`",
+       "How many earlier numbers have each gcd value; the number of distinct gcds is at most the number of divisors of `k` (≤ 128 for k ≤ 10⁵)",
+       "Group by a small set of classes"
+      ],
+      [
+       "`g * g2 % k == 0`",
+       "`x · y` is divisible by `k` exactly when `gcd(x,k) · gcd(y,k)` is",
+       "The pair test works on the gcds"
+      ],
+      [
+       "`res += c`",
+       "All earlier numbers with gcd `g2` form a valid pair with `x`",
+       "Add the group size"
+      ],
+      [
+       "`cnt[g] += 1` after the loop",
+       "A number does not pair with itself",
+       "Update after counting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "gcd(x, 2)",
+      "Counts so far",
+      "New pairs",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "{1: 1}",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "{1: 1, 2: 1}",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "{1: 2, 2: 1}",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "2",
+       "{1: 2, 2: 2}",
+       "3",
+       "5"
+      ],
+      [
+       "5",
+       "1",
+       "{1: 3, 2: 2}",
+       "2",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the gcd enough?",
+    "p": [
+     "`x · y` is divisible by `k` iff every prime power in `k` divides the product. The prime factors of `x` outside `k` never help, so only `gcd(x, k)` matters: `k | x·y` ⇔ `k | gcd(x,k)·gcd(y,k)`. That compresses 10⁵ numbers into at most ~128 classes."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs",
+       "O(n²)"
+      ],
+      [
+       "group by gcd (this code)",
+       "O(n · D), D = divisors of k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · D) with D ≤ 128.",
+     "Space: O(D)."
+    ]
+   }
+  ],
+  "takeaway": "Pairs with product divisible by k: replace each number by gcd(x, k), then count pairs of gcd classes whose product is divisible by k."
+ },
+ "2189": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cost = 3 * k - 1`",
+       "A row (level) of `k` triangles (cards leaning in pairs) uses `2k` slanted cards plus `k − 1` flat cards between them: `3k − 1` cards",
+       "Cost of a level"
+      ],
+      [
+       "`go(left, limit)`",
+       "Number of ways to build with `left` cards remaining when the next level must have FEWER triangles than `limit`",
+       "Levels strictly decrease from bottom to top"
+      ],
+      [
+       "`range(1, limit)`",
+       "Next level has between 1 and `limit − 1` triangles",
+       "Strictly decreasing sizes"
+      ],
+      [
+       "`if cost > left: break`",
+       "Costs increase with `k`, so no larger `k` fits either",
+       "Early break (monotone costs)"
+      ],
+      [
+       "`left == 0: return 1`",
+       "Used exactly all cards: one valid house",
+       "Base case"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Memoise on `(left, limit)`",
+       "Overlapping subproblems"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 16`: the valid houses use exactly 16 cards with strictly decreasing numbers of triangles per level."
+    ],
+    "table": {
+     "head": [
+      "Triangles per level (bottom → top)",
+      "Card costs (3k − 1)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "(5, 1)",
+       "14 + 2",
+       "16"
+      ],
+      [
+       "(4, 2)",
+       "11 + 5",
+       "16"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why strictly decreasing levels?",
+    "p": [
+     "Each level sits on top of the one below and needs the level below to have strictly more triangles to support it (the flat cards rest between the triangles beneath). That is why `limit` is passed down as the previous `k`, and the next level uses `range(1, limit)`."
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Ways"
+     ],
+     "rows": [
+      [
+       "2",
+       "1"
+      ],
+      [
+       "4",
+       "0"
+      ],
+      [
+       "16",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · √n) states (the number of triangles per level is at most about √n), each trying up to √n levels.",
+     "Space: O(n · √n)."
+    ]
+   }
+  ],
+  "takeaway": "House of cards: memoised recursion on (cards left, previous level size); a level of k triangles costs 3k − 1 and levels strictly shrink going up."
+ },
+ "2192": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`indeg`",
+       "In-degree of each node",
+       "Kahn's topological sort"
+      ],
+      [
+       "`anc[v]` (a set)",
+       "All ancestors of `v` found so far; a set removes duplicates when several paths lead to the same ancestor",
+       "Union without double counting"
+      ],
+      [
+       "`anc[v] |= anc[u]`",
+       "Inherit everything that `u` has as an ancestor",
+       "Propagate along the edge"
+      ],
+      [
+       "`anc[v].add(u)`",
+       "`u` itself is an ancestor of `v`",
+       "Direct parent"
+      ],
+      [
+       "process in topological order",
+       "When `u` is dequeued, `anc[u]` is final because all its parents were processed first",
+       "Correct order for propagation"
+      ],
+      [
+       "`sorted(s)`",
+       "The answer wants each list in increasing order",
+       "Output format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Topological (processing) order: [0, 1, 2, 3, 4, 5, 7, 6]. Ancestor sets after the run:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Ancestors"
+     ],
+     "rows": [
+      [
+       "0",
+       "[]"
+      ],
+      [
+       "1",
+       "[]"
+      ],
+      [
+       "2",
+       "[]"
+      ],
+      [
+       "3",
+       "[0, 1]"
+      ],
+      [
+       "4",
+       "[0, 2]"
+      ],
+      [
+       "5",
+       "[0, 1, 3]"
+      ],
+      [
+       "6",
+       "[0, 1, 2, 3, 4]"
+      ],
+      [
+       "7",
+       "[0, 1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why topological order?",
+    "p": [
+     "The ancestors of `v` are the parents plus all their ancestors. If parents are always finished before children, a single union per edge gives every ancestor. A DFS from each node would repeat work over shared descendants."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DFS/BFS from every node (reverse graph)",
+       "O(n · (n + E))"
+      ],
+      [
+       "Topological propagation (this code)",
+       "O(n · (n + E)) worst case for the unions, simple code"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · (n + E)) worst case for the set unions.",
+     "Space: O(n²) for all ancestor sets."
+    ]
+   }
+  ],
+  "takeaway": "All ancestors in a DAG: process nodes in topological order and merge each parent's ancestor set (plus the parent) into its children."
+ },
+ "2204": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`deg`",
+       "Degree of each node",
+       "Peeling leaves"
+      ],
+      [
+       "queue of degree-1 nodes",
+       "Nodes that cannot be on a cycle (a leaf has only one edge)",
+       "Topological-sort style trimming of trees hanging off the cycle"
+      ],
+      [
+       "`peeled[u] = True`; `deg[v] -= 1`; `if deg[v] == 1: q.append(v)`",
+       "Remove the leaf, which may turn its neighbour into a new leaf",
+       "Repeat until only the cycle remains"
+      ],
+      [
+       "`dist[i] = 0` for non-peeled nodes",
+       "The nodes left are exactly the cycle nodes",
+       "Multi-source start"
+      ],
+      [
+       "second BFS",
+       "Distance from each tree node to the nearest cycle node",
+       "Multi-source BFS from the cycle"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "7 nodes; the cycle is `1-2-4-3`. Peeling order of tree nodes: [0, 6, 5]."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Peeled (not on cycle)?",
+      "Distance to cycle"
+     ],
+     "rows": [
+      [
+       "0",
+       "True",
+       "1"
+      ],
+      [
+       "1",
+       "False",
+       "0"
+      ],
+      [
+       "2",
+       "False",
+       "0"
+      ],
+      [
+       "3",
+       "False",
+       "0"
+      ],
+      [
+       "4",
+       "False",
+       "0"
+      ],
+      [
+       "5",
+       "True",
+       "1"
+      ],
+      [
+       "6",
+       "True",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why peel leaves?",
+    "p": [
+     "The graph has exactly one cycle (n nodes, n edges, connected). Repeatedly deleting degree-1 nodes removes every tree branch and leaves only the cycle, because nodes on a cycle always keep degree ≥ 2. That finds the cycle without DFS back-edge tracking."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DFS cycle detection + BFS",
+       "O(n)"
+      ],
+      [
+       "Leaf peeling + BFS (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Distance to the cycle: peel degree-1 nodes until only the cycle remains, then multi-source BFS from the cycle nodes."
+ },
+ "2210": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prev`",
+       "The last value that DIFFERS from the current one (not just `nums[i-1]`), so plateaus count as one point",
+       "Compress equal neighbours"
+      ],
+      [
+       "`nums[i] == nums[i + 1]: continue`",
+       "Within a plateau, skip until its last element, then compare with the next different value",
+       "A plateau is judged once, at its end"
+      ],
+      [
+       "hill: `> prev` and `> next`; valley: `< prev` and `< next`",
+       "Strictly above (or below) both different neighbours",
+       "Definition"
+      ],
+      [
+       "`prev = nums[i]` only after a decision",
+       "Update the left neighbour only when moving past a distinct value",
+       "Keep `prev` the nearest different value on the left"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,4,1,1,6,5]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "Decision",
+      "Count"
+     ],
+     "rows": [
+      [
+       "1",
+       "4",
+       "prev=2, next=1 → hill/valley",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "equals next: skip (keeps prev)",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "prev=4, next=6 → hill/valley",
+       "2"
+      ],
+      [
+       "4",
+       "6",
+       "prev=1, next=5 → hill/valley",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track `prev` separately from `nums[i-1]`?",
+    "p": [
+     "For `[1,3,3,2]` the index with the first `3` has `nums[i-1] = 1` and `nums[i+1] = 3` (a plateau), while the second `3` has `nums[i-1] = 3`, which would hide the left neighbour `1`. Keeping `prev` as the last DIFFERENT value lets the plateau act as one hill."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Hills/valleys"
+     ],
+     "rows": [
+      [
+       "`[2,4,1,1,6,5]`",
+       "3"
+      ],
+      [
+       "`[6,6,5,5,4,1]`",
+       "0"
+      ],
+      [
+       "`[1,3,3,2]`",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count hills and valleys: compare each element with the nearest different values on both sides, treating plateaus as a single point."
+ },
+ "2231": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`list(map(int, str(num)))`",
+       "The digits of `num` as integers",
+       "Digit manipulation"
+      ],
+      [
+       "`odd`, `even`",
+       "The odd digits and the even digits, each sorted in DESCENDING order",
+       "Swaps are allowed only between digits of the same parity, so each class can be arranged freely"
+      ],
+      [
+       "`oi`, `ei`",
+       "Pointers into the sorted lists",
+       "Fill each position from its own parity class"
+      ],
+      [
+       "`res = res * 10 + digit`",
+       "Build the number digit by digit",
+       "Digit appending"
+      ],
+      [
+       "keep the original parity pattern",
+       "Position `i` must hold an odd digit iff the original digit there was odd",
+       "Parity of each position is fixed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 1234`: odd digits sorted descending `[3, 1]`, even digits `[4, 2]`."
+    ],
+    "table": {
+     "head": [
+      "Original digit",
+      "Class",
+      "Placed digit",
+      "Number so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "odd",
+       "3",
+       "3"
+      ],
+      [
+       "2",
+       "even",
+       "4",
+       "34"
+      ],
+      [
+       "3",
+       "odd",
+       "1",
+       "341"
+      ],
+      [
+       "4",
+       "even",
+       "2",
+       "3412"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is greedy per class optimal?",
+    "p": [
+     "Within a parity class any arrangement is reachable by swaps, and positions of the two classes don't interact. The largest number puts the biggest digit of each class at the leftmost position of that class. Making an earlier position larger always beats anything later, so sorting each class descending is optimal."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "bubble-sort swaps with parity check",
+       "O(d²)"
+      ],
+      [
+       "sort each class (this code)",
+       "O(d log d)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d log d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Largest number after parity-preserving swaps: sort odd digits and even digits separately in descending order and refill the original parity pattern."
+ }
+}
