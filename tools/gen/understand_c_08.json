@@ -2391,7 +2391,7 @@
    {
     "h": "Time and space",
     "bullets": [
-     "Time: O(len(a) · (len(b)/len(a)) ) = O(len(a) + len(b)) per substring search with an efficient algorithm; Python's `in` is O(n·m) worst case.",
+     "Time: O(len(a) + len(b)) with an efficient substring search; Python's `in` is fast in practice but O(n·m) in the worst case.",
      "Space: O(len(a) + len(b)) for the repeated string."
     ]
    }

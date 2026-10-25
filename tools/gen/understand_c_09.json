@@ -1,0 +1,2406 @@
+{
+ "689": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`w[i]`",
+       "Sum of the window `nums[i..i+k-1]`, built with a sliding window: add the new element, drop the old one",
+       "Fixed-size window sums in O(1) each"
+      ],
+      [
+       "`left[i]`",
+       "Index of the best window starting at or before `i` (first one on ties)",
+       "Prefix argmax"
+      ],
+      [
+       "`right[i]`",
+       "Index of the best window starting at or after `i`; `>=` makes ties favour the EARLIER start",
+       "Suffix argmax"
+      ],
+      [
+       "middle window `j` in `range(k, m - k)`",
+       "The middle window must leave `k` positions on each side so the three don't overlap",
+       "Enumerating the middle piece"
+      ],
+      [
+       "`left[j - k]`, `right[j + k]`",
+       "Best window entirely to the left / right of the middle",
+       "Combine prefix and suffix answers"
+      ],
+      [
+       "`total > top`",
+       "Strictly greater keeps the lexicographically smallest tuple on ties",
+       "The problem asks for the lexicographically smallest indices"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1, 2, 1, 2, 6, 7, 5, 1]`, `k = 2`. Window sums `w = [3, 3, 3, 8, 13, 12, 6]`; best-left `[0, 0, 0, 3, 4, 4, 4]`; best-right `[4, 4, 4, 4, 4, 5, 6]`. Trying each possible middle window:"
+    ],
+    "table": {
+     "head": [
+      "middle j",
+      "left i",
+      "right l",
+      "w[i]+w[j]+w[l]",
+      "total"
+     ],
+     "rows": [
+      [
+       "2",
+       "0",
+       "4",
+       "3+3+13",
+       "19"
+      ],
+      [
+       "3",
+       "0",
+       "5",
+       "3+8+12",
+       "23"
+      ],
+      [
+       "4",
+       "0",
+       "6",
+       "3+13+6",
+       "22"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why fix the middle window?",
+    "p": [
+     "With the middle fixed, the left and right windows are independent choices from disjoint ranges, so each is just a precomputed best. Trying all middles is O(n). Brute force over all triples is O(n³)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All triples of windows",
+       "O(n³)"
+      ],
+      [
+       "Fix middle + prefix/suffix best (this code)",
+       "O(n)"
+      ],
+      [
+       "DP with 3 states",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do ties differ in the two passes?",
+    "p": [
+     "`left` uses `>` so it keeps the earliest best window; `right` uses `>=` while scanning from the right so it also ends up with the earliest. Both then give the lexicographically smallest indices among equal sums."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for `w`, `left`, `right`."
+    ]
+   }
+  ],
+  "takeaway": "Three non-overlapping windows: precompute window sums, best-left and best-right, then try every middle window."
+ },
+ "692": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(words)`",
+       "Word → frequency",
+       "Counting"
+      ],
+      [
+       "`sorted(cnt, key=…)`",
+       "Sorts the dict's KEYS (the distinct words) with a key function",
+       "Custom ordering without writing a comparator"
+      ],
+      [
+       "`key=lambda w: (-cnt[w], w)`",
+       "Tuple key: frequency descending (negated), then alphabetical ascending",
+       "Multi-criteria sort: the tuple breaks ties left to right"
+      ],
+      [
+       "`[:k]`",
+       "The first `k` of the sorted list",
+       "Top-k from a full sort"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"i\",\"love\",\"leetcode\",\"i\",\"love\",\"coding\"]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Count",
+      "Sort key"
+     ],
+     "rows": [
+      [
+       "i",
+       "2",
+       "(-2, 'i')"
+      ],
+      [
+       "love",
+       "2",
+       "(-2, 'love')"
+      ],
+      [
+       "coding",
+       "1",
+       "(-1, 'coding')"
+      ],
+      [
+       "leetcode",
+       "1",
+       "(-1, 'leetcode')"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why negate the count?",
+    "p": [
+     "`sorted` is ascending. Negating turns 'larger count first' into 'smaller key first'. The second element, the word itself, sorts alphabetically in the normal ascending direction, which is exactly the tie-break the problem wants."
+    ],
+    "table": {
+     "head": [
+      "Key",
+      "Order of `i`, `love`, `coding`, `leetcode`"
+     ],
+     "rows": [
+      [
+       "`cnt[w]`",
+       "wrong: ascending by count"
+      ],
+      [
+       "`(-cnt[w], w)` (this code)",
+       "i, love, coding, leetcode"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative",
+    "p": [
+     "A heap of size k gives O(n log k): `heapq.nsmallest(k, cnt, key=…)` with the same key. The full sort is O(n log n) and is simpler; mention the heap when the interviewer asks to do better than sorting."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m log m) for m distinct words.",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Top-k frequent words: sort the distinct words with the key `(-count, word)` and slice."
+ },
+ "695": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dfs(r, c)`",
+       "Returns the size of the island containing (r, c), and sinks it as it goes",
+       "Flood fill that also measures"
+      ],
+      [
+       "out-of-bounds or `grid[r][c] != 1`",
+       "Returns 0: water or already-visited cell",
+       "Base case before indexing"
+      ],
+      [
+       "`grid[r][c] = 0`",
+       "Mark visited by sinking",
+       "In-place visited marker"
+      ],
+      [
+       "`1 + dfs(down) + dfs(up) + dfs(right) + dfs(left)`",
+       "This cell plus everything connected",
+       "Component size"
+      ],
+      [
+       "`max((dfs(i, j) for …), default=0)`",
+       "Largest island; `default=0` for an empty grid, and a generator avoids building a list",
+       "`max` with `default` for possibly-empty input"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,0],[1,1,0],[0,0,1]]`: the scan starts a DFS at each cell, but only land cells return a positive size."
+    ],
+    "table": {
+     "head": [
+      "First land cell found at",
+      "Island area"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "3"
+      ],
+      [
+       "(2,2)",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does sinking make the generator safe?",
+    "p": [
+     "After the island at (0,1) is sunk, the later cells (1,0) and (1,1) return 0 immediately, so each island is counted once, from its first cell in scan order. Without sinking, one island would be measured many times and counted repeatedly."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Extra space",
+      "Mutates grid"
+     ],
+     "rows": [
+      [
+       "Sink in place (this code)",
+       "O(1) besides recursion",
+       "yes"
+      ],
+      [
+       "`visited` set",
+       "O(m·n)",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) worst-case recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Max area of island: DFS flood fill that sinks cells and returns the component size; take the maximum."
+ },
+ "698": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total % k`, `target = total // k`",
+       "Each subset must sum to exactly `total / k`",
+       "Feasibility check and goal"
+      ],
+      [
+       "`sorted(nums, reverse=True)`",
+       "Place the big numbers first: they have the fewest placements, so dead ends appear early",
+       "Backtracking heuristic: most constrained first"
+      ],
+      [
+       "`nums[0] > target`",
+       "A number bigger than the target can't go anywhere",
+       "Early exit"
+      ],
+      [
+       "`buckets`",
+       "Current sum of each of the `k` subsets being filled",
+       "Assign each number to a bucket"
+      ],
+      [
+       "`buckets[j] not in seen`",
+       "Skip buckets with the same current sum: they are interchangeable, so trying one is enough",
+       "Symmetry pruning"
+      ],
+      [
+       "`buckets[j] -= nums[i]`",
+       "Undo the placement when the recursion fails",
+       "Backtracking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,3,5,2,1]`, `k = 4`: total 20, target 5, sorted `[5, 4, 3, 3, 2, 2, 1]`. The first steps of the search (assign, then undo on failure):"
+    ],
+    "table": {
+     "head": [
+      "Number",
+      "Action",
+      "Buckets"
+     ],
+     "rows": [
+      [
+       "5",
+       "bucket 0",
+       "[5, 0, 0, 0]"
+      ],
+      [
+       "4",
+       "bucket 1",
+       "[5, 4, 0, 0]"
+      ],
+      [
+       "3",
+       "bucket 2",
+       "[5, 4, 3, 0]"
+      ],
+      [
+       "3",
+       "bucket 3",
+       "[5, 4, 3, 3]"
+      ],
+      [
+       "2",
+       "bucket 2",
+       "[5, 4, 5, 3]"
+      ],
+      [
+       "2",
+       "bucket 3",
+       "[5, 4, 5, 5]"
+      ],
+      [
+       "1",
+       "bucket 1",
+       "[5, 5, 5, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the `seen` set matters",
+    "p": [
+     "Two empty buckets (both sum 0) lead to identical futures, so trying the second is wasted work. Skipping buckets with an already-tried sum cuts the search by a factor of up to k! on symmetric states."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Search"
+     ],
+     "rows": [
+      [
+       "no symmetry pruning",
+       "tries every bucket for every number: up to k^n"
+      ],
+      [
+       "with `seen` (this code)",
+       "tries one bucket per distinct sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort descending?",
+    "p": [
+     "Large numbers constrain the buckets most. Placing them first fills buckets quickly and detects impossible cases near the top of the recursion tree instead of deep in it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k^n) worst case, far less with pruning (the problem is NP-hard); a bitmask DP over subsets gives O(n · 2^n).",
+     "Space: O(n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Partition into k equal subsets: backtrack placing big numbers first into buckets, skipping buckets with equal sums and any overflow."
+ },
+ "701": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`node = TreeNode(val)`",
+       "The new leaf, created up front",
+       "Build once, attach once"
+      ],
+      [
+       "`if not root: return node`",
+       "Inserting into an empty tree makes the new node the root",
+       "Empty-tree case"
+      ],
+      [
+       "`while True` with `cur`",
+       "Walk down from the root like a BST search",
+       "Iterative insertion, O(1) space"
+      ],
+      [
+       "`val < cur.val` → left, else right",
+       "BST ordering decides the direction (equal values go right; the problem guarantees no duplicates)",
+       "Following the BST invariant"
+      ],
+      [
+       "`if cur.left … else: cur.left = node; break`",
+       "Stop at the first empty child slot and attach there",
+       "New values are always inserted as leaves"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[4,2,7,1,3]`, insert 5:"
+    ],
+    "table": {
+     "head": [
+      "At node",
+      "Comparison",
+      "Action"
+     ],
+     "rows": [
+      [
+       "4",
+       "5 > 4",
+       "go right"
+      ],
+      [
+       "7",
+       "5 < 7",
+       "left is empty → attach here"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can the new node always be a leaf?",
+    "p": [
+     "Searching for `val` ends at an empty child, and an empty child position is exactly where `val` would be found if it existed. Attaching there keeps every ancestor's ordering valid, and no existing node needs restructuring (unlike an AVL or red-black tree, which rebalances)."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Space"
+     ],
+     "rows": [
+      [
+       "iterative (this code)",
+       "O(1)"
+      ],
+      [
+       "recursive `root.left = insert(root.left, val)`",
+       "O(h) stack"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h): O(log n) balanced, O(n) for a skewed tree.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "BST insert: search for the value, and attach a new leaf at the first empty child slot you hit."
+ },
+ "704": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 0, len(nums) - 1`",
+       "Closed range `[lo, hi]` of candidate indices",
+       "Exact-match search; both ends are still possible answers"
+      ],
+      [
+       "`while lo <= hi`",
+       "Continue while the range is non-empty",
+       "With a closed range, `lo == hi` is a valid one-element range"
+      ],
+      [
+       "`mid = (lo + hi) // 2`",
+       "Midpoint rounded down",
+       "Java/C++: `lo + (hi - lo) / 2` avoids overflow"
+      ],
+      [
+       "`lo = mid + 1` / `hi = mid - 1`",
+       "`mid` was tested, so exclude it",
+       "Guarantees the range shrinks every iteration"
+      ],
+      [
+       "`return -1`",
+       "Range emptied without a match",
+       "Not found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-1,0,3,5,9,12]`, target 9:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "nums[mid]",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "[0, 5]",
+       "2",
+       "3",
+       "< target → lo = mid + 1"
+      ],
+      [
+       "[3, 5]",
+       "4",
+       "9",
+       "found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `lo <= hi` and `mid ± 1`?",
+    "p": [
+     "With a closed range and exact matching, each step tests `mid` and discards it. The loop must run when `lo == hi` (one candidate left), hence `<=`. Mixing styles (for example `hi = mid` with `lo <= hi`) can loop forever on a one-element range."
+    ],
+    "table": {
+     "head": [
+      "Style",
+      "Loop",
+      "Updates",
+      "Use for"
+     ],
+     "rows": [
+      [
+       "closed `[lo, hi]`",
+       "`lo <= hi`",
+       "`mid ± 1`",
+       "exact match (this code)"
+      ],
+      [
+       "half-open `[lo, hi)`",
+       "`lo < hi`",
+       "`hi = mid`, `lo = mid + 1`",
+       "first position satisfying a condition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Plain binary search: closed range, `lo <= hi`, and move past `mid` on every miss."
+ },
+ "707": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.head = ListNode(0)`",
+       "A dummy head: the real first node is `head.next`",
+       "Removes the 'insert/delete at index 0' special case"
+      ],
+      [
+       "`self.size`",
+       "Number of real nodes",
+       "Index validation without walking the list"
+      ],
+      [
+       "`prev = head; for _ in range(index): prev = prev.next`",
+       "Walk to the node BEFORE the target position",
+       "Inserting or deleting needs the predecessor"
+      ],
+      [
+       "`prev.next = ListNode(val, prev.next)`",
+       "Insert: the new node points at the old successor, then `prev` points to it, in one line",
+       "Linking order matters"
+      ],
+      [
+       "`prev.next = prev.next.next`",
+       "Delete by skipping the node",
+       "Unlinking"
+      ],
+      [
+       "`addAtHead`/`addAtTail` call `addAtIndex`",
+       "Reuse one implementation",
+       "Fewer places for bugs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`addAtHead(1)`, `addAtTail(3)`, `addAtIndex(1, 2)`, `get(1)`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "List",
+      "size"
+     ],
+     "rows": [
+      [
+       "addAtHead(1,)",
+       "-",
+       "[1]",
+       "1"
+      ],
+      [
+       "addAtTail(3,)",
+       "-",
+       "[1, 3]",
+       "2"
+      ],
+      [
+       "addAtIndex(1, 2)",
+       "-",
+       "[1, 2, 3]",
+       "3"
+      ],
+      [
+       "get(1,)",
+       "2",
+       "[1, 2, 3]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dummy head and a size field?",
+    "p": [
+     "The dummy makes index 0 behave like any other position: the predecessor always exists. The size makes bounds checks O(1) (`index > size` rejects an insert past the tail, and `index >= size` rejects a get/delete of a non-existing node)."
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Valid index range"
+     ],
+     "rows": [
+      [
+       "get / deleteAtIndex",
+       "0 ≤ index < size"
+      ],
+      [
+       "addAtIndex",
+       "0 ≤ index ≤ size (size means append)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Tradeoff",
+    "p": [
+     "`addAtTail` walks the whole list: O(n). Keeping a `tail` pointer makes it O(1) but adds bookkeeping when deleting the last node; a doubly linked list speeds up deletion by index from the back."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(index) for get, add and delete at an index; O(n) for addAtTail here.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Singly linked list design: dummy head for uniform edge cases, a size counter for validation, and a walk to the predecessor for every edit."
+ },
+ "710": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.k = n - len(blacklist)`",
+       "The number of allowed values: pick uniformly from `[0, k)`",
+       "Shrink the sampling range to exactly the count of valid values"
+      ],
+      [
+       "`free`",
+       "A generator of allowed numbers in `[k, n)` (those not blacklisted)",
+       "Spare slots to receive remapped values"
+      ],
+      [
+       "`self.map`",
+       "Each blacklisted number below `k` → an allowed number from the upper part",
+       "Remap bad picks to good ones"
+      ],
+      [
+       "`random.randrange(self.k)`",
+       "Uniform pick over `0..k-1` in O(1)",
+       "Sampling"
+      ],
+      [
+       "`self.map.get(r, r)`",
+       "If `r` is blacklisted return its replacement, otherwise `r` itself",
+       "Dictionary default"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 7`, blacklist `[2,3,5]`: allowed values are 0, 1, 4, 6, so `k = 4`. Blacklisted numbers below 4 are 2 and 3; allowed numbers in `[4, 7)` are 4 and 6, giving the map {2: 4, 3: 6}."
+    ],
+    "table": {
+     "head": [
+      "Random r in [0, 4)",
+      "Returned",
+      "Case"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "kept"
+      ],
+      [
+       "1",
+       "1",
+       "kept"
+      ],
+      [
+       "2",
+       "4",
+       "remapped"
+      ],
+      [
+       "3",
+       "6",
+       "remapped"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the result uniform?",
+    "p": [
+     "The four draws 0, 1, 2, 3 map to the four distinct allowed values 0, 1, 4, 6, one each. The mapping is a bijection between `[0, k)` and the allowed set, so each valid number has probability exactly 1/k."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Pick time",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "Retry until not blacklisted",
+       "unbounded expected O(n/k)",
+       "O(b)"
+      ],
+      [
+       "Sort blacklist + binary search",
+       "O(log b)",
+       "O(b)"
+      ],
+      [
+       "Remap dictionary (this code)",
+       "O(1)",
+       "O(b)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only blacklisted numbers below k are mapped?",
+    "p": [
+     "Draws are in `[0, k)`. Numbers at or above `k` are never drawn, so they need no entry. The count of free numbers in `[k, n)` equals the count of blacklisted numbers in `[0, k)`, so the `next(free)` calls never run out."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n - k + b) ≈ O(b) to build; O(1) per pick.",
+     "Space: O(b)."
+    ]
+   }
+  ],
+  "takeaway": "Random pick with a blacklist: sample from `[0, n - |blacklist|)` and remap any blacklisted draw to an allowed number from the top range."
+ },
+ "713": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if k <= 1: return 0`",
+       "Every product of positive integers is ≥ 1, so nothing can be `< k`; also prevents an endless shrink loop",
+       "Guard"
+      ],
+      [
+       "`prod`",
+       "Product of the current window",
+       "Sliding window with a multiplicative condition"
+      ],
+      [
+       "`while prod >= k: prod //= nums[left]; left += 1`",
+       "Shrink from the left until the product is valid again; division is exact because `nums[left]` is a factor of `prod`",
+       "Maintaining a window by removing the oldest element"
+      ],
+      [
+       "`count += right - left + 1`",
+       "Number of valid subarrays ENDING at `right`: one for each start from `left` to `right`",
+       "Counting by right end"
+      ],
+      [
+       "positive numbers",
+       "Growing the window can only increase the product",
+       "Required for the window to be monotone"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[10,5,2,6]`, `k = 100`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "prod after",
+      "window",
+      "shrinks",
+      "New subarrays",
+      "count"
+     ],
+     "rows": [
+      [
+       "0",
+       "10",
+       "10",
+       "[0,0]",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "5",
+       "50",
+       "[0,1]",
+       "0",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "2",
+       "10",
+       "[1,2]",
+       "1",
+       "2",
+       "5"
+      ],
+      [
+       "3",
+       "6",
+       "60",
+       "[1,3]",
+       "0",
+       "3",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `right - left + 1` new subarrays?",
+    "p": [
+     "If the window `[left, right]` has product `< k`, every sub-window that ends at `right` and starts at or after `left` also has product `< k` (fewer positive factors). That is exactly `right - left + 1` of them, and no subarray ending at `right` is counted twice."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All subarrays",
+       "O(n²)"
+      ],
+      [
+       "Sliding window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each pointer moves at most n times.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count subarrays with product < k: sliding window over positives; each right end contributes `right − left + 1` subarrays."
+ },
+ "716": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(x, max so far)` pairs",
+       "Each entry stores its value and the maximum of everything below and including it",
+       "Same trick as Min Stack"
+      ],
+      [
+       "`peekMax`",
+       "Top entry's stored max, O(1)",
+       "Reading the aggregate"
+      ],
+      [
+       "`popMax`: pop into `buf` until `top() == m`",
+       "Dig down to the TOP-MOST maximum, setting aside everything above it",
+       "The max is somewhere in the middle of the stack"
+      ],
+      [
+       "`self.pop()` once",
+       "Remove the maximum itself",
+       "One removal, so duplicates stay"
+      ],
+      [
+       "`for x in reversed(buf): self.push(x)`",
+       "Put the set-aside items back in their original order, recomputing their stored maxima",
+       "`buf` holds them top-first, so reverse"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Pushing `5, 1, 5` then `popMax()` removes the TOP-most 5 (the problem requires the top-most when there are ties). Entries are `(value, max so far)`:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "Stack (bottom → top)"
+     ],
+     "rows": [
+      [
+       "push 5, 1, 5",
+       "-",
+       "[(5, 5), (1, 5), (5, 5)]"
+      ],
+      [
+       "popMax()",
+       "5",
+       "[(5, 5), (1, 5)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A case that digs deeper",
+    "p": [
+     "Pushing `5, 1, 2` and calling `popMax()` pops `2` and `1` into `buf`, removes the `5`, then pushes `1` and `2` back:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "Stack (bottom → top)"
+     ],
+     "rows": [
+      [
+       "push 5, 1, 2",
+       "-",
+       "[(5, 5), (1, 5), (2, 5)]"
+      ],
+      [
+       "popMax()",
+       "5",
+       "[(1, 1), (2, 2)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the stored maxima be recomputed on re-push?",
+    "p": [
+     "The pairs below the removed maximum were correct, but the re-pushed items carried a maximum that included the deleted value. Pushing them again recomputes `max(x, previous max)`, so the invariant holds."
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "push, pop, top, peekMax",
+       "O(1)"
+      ],
+      [
+       "popMax",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "When to choose a different design",
+    "p": [
+     "If `popMax` is frequent, use a doubly linked list plus a sorted structure (a heap with lazy deletion or a balanced tree) to get O(log n) for all operations; this version optimises the common O(1) operations."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) for push/pop/top/peekMax; O(n) for popMax.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Max stack: store (value, running max) per entry; popMax digs down to the top-most max, removes it, and replays the rest."
+ },
+ "719": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Sorted, so the distance between two items is the difference of their positions' values",
+       "Counting pairs by distance"
+      ],
+      [
+       "`lo, hi = 0, nums[-1] - nums[0]`",
+       "Search over the ANSWER (a distance), from 0 to the largest possible",
+       "Binary search on the answer"
+      ],
+      [
+       "`cnt`",
+       "Number of pairs with distance `≤ mid`",
+       "Monotone count: it never decreases as `mid` grows"
+      ],
+      [
+       "`j` pointer",
+       "For each `i`, `j` is the leftmost index with `nums[i] - nums[j] ≤ mid`, so `i - j` pairs end at `i`",
+       "Two pointers that only move forward (sorted data)"
+      ],
+      [
+       "`cnt >= k: hi = mid`",
+       "At least k pairs are within `mid`: the answer is `≤ mid`, keep `mid`",
+       "Smallest distance with count ≥ k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,1]` sorts to `[1,1,3]`, `k = 1`. Pair distances are 0, 2, 2. The smallest is 0:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "Pairs with distance ≤ mid",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "[0, 2]",
+       "1",
+       "1",
+       ">= k → hi = mid"
+      ],
+      [
+       "[0, 1]",
+       "0",
+       "1",
+       ">= k → hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary search the distance rather than the pairs?",
+    "p": [
+     "There are n(n−1)/2 pairs; listing and sorting them costs O(n² log n). Counting pairs within a given distance takes O(n) with two pointers, and the count is monotone, so binary search over the distance range needs only log(max distance) rounds."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All pair distances, sort",
+       "O(n² log n)"
+      ],
+      [
+       "Min-heap of neighbouring pairs, pop k times",
+       "O(n log n + k log n)"
+      ],
+      [
+       "Binary search + two pointers (this code)",
+       "O(n log n + n log D)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the `j` pointer never moves backward",
+    "p": [
+     "If `nums[i] - nums[j] > mid`, then for the next `i` (larger value) the same `j` is also too far left, so `j` can only increase. That makes the count O(n) per probe instead of O(n²)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log(max − min)).",
+     "Space: O(1) besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "k-th smallest pair distance: binary search on the distance, counting pairs within it with two pointers on the sorted array."
+ },
+ "722": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`block`",
+       "Are we inside a `/* … */` comment (can span lines)?",
+       "State machine across lines"
+      ],
+      [
+       "`buf`",
+       "Characters kept so far for the current OUTPUT line; it survives across source lines while a block comment is open",
+       "Lines merge: text before `/*` joins text after `*/`"
+      ],
+      [
+       "`two = line[i:i+2]`",
+       "The next two characters, to detect `/*`, `*/`, `//`",
+       "Two-character tokens"
+      ],
+      [
+       "`i += 1` inside the comment branches, then `i += 1`",
+       "Skip BOTH characters of the token so `/*/` isn't read as open and close",
+       "Consuming a two-character delimiter"
+      ],
+      [
+       "`elif two == '//': break`",
+       "Ignore the rest of the line (but only outside a block)",
+       "Line comment"
+      ],
+      [
+       "`if not block and buf:`",
+       "Emit a line only when no block comment is open and there is content",
+       "Skip empty lines; keep merging while the block continues"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['a/*comment', 'line', 'more_comment*/b']`:"
+    ],
+    "table": {
+     "head": [
+      "Source line #",
+      "Text",
+      "block after",
+      "buf after",
+      "Output"
+     ],
+     "rows": [
+      [
+       "0",
+       "a/*comment",
+       "True",
+       "a",
+       "-"
+      ],
+      [
+       "1",
+       "line",
+       "True",
+       "a",
+       "-"
+      ],
+      [
+       "2",
+       "more_comment*/b",
+       "False",
+       "(empty)",
+       "emit 'ab'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `buf` kept across lines?",
+    "p": [
+     "`a/*comment` + `...*/b` should become one output line `ab`. The text before the comment start and the text after its end belong to the same output line, so the buffer is only flushed when the block is closed."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`a//b` then a new line",
+       "`a`"
+      ],
+      [
+       "`/*x*/` alone",
+       "no output line (buffer empty)"
+      ],
+      [
+       "`a/*b*/c`",
+       "`ac`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `//` not break inside a block?",
+    "p": [
+     "The branch order checks `block` first. While a block comment is open, `//` is just ordinary comment text and is ignored."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters).",
+     "Space: O(total characters) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Remove comments with a small state machine: a `block` flag plus a buffer that carries over lines until the block comment closes."
+ },
+ "731": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.cal`",
+       "Every accepted booking",
+       "Needed to find new overlaps"
+      ],
+      [
+       "`self.over`",
+       "Intervals that are ALREADY double-booked",
+       "A third booking must not touch these"
+      ],
+      [
+       "`startTime < e and s < endTime`",
+       "Overlap test for half-open intervals `[s, e)`; touching ends do not overlap",
+       "Standard interval intersection"
+      ],
+      [
+       "first loop over `over`",
+       "Reject if the new booking overlaps any double-booked region (that would be a triple booking)",
+       "Check before changing any state"
+      ],
+      [
+       "`max(s, startTime), min(e, endTime)`",
+       "The intersection of the new booking with an existing one becomes a double-booked region",
+       "Record the overlap"
+      ],
+      [
+       "`self.cal.append(...)`",
+       "Accept the booking",
+       "Only after the check passed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Book `10-20`, `50-60`, `10-40`, `5-15`:"
+    ],
+    "table": {
+     "head": [
+      "Booking",
+      "Check",
+      "Accepted",
+      "cal",
+      "over"
+     ],
+     "rows": [
+      [
+       "(10,20)",
+       "no triple overlap",
+       "True",
+       "[(10, 20)]",
+       "[]"
+      ],
+      [
+       "(50,60)",
+       "no triple overlap",
+       "True",
+       "[(10, 20), (50, 60)]",
+       "[]"
+      ],
+      [
+       "(10,40)",
+       "no triple overlap",
+       "True",
+       "[(10, 20), (50, 60), (10, 40)]",
+       "[(10, 20)]"
+      ],
+      [
+       "(5,15)",
+       "overlaps double-booked (10, 20)",
+       "False",
+       "[(10, 20), (50, 60), (10, 40)]",
+       "[(10, 20)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check `over` first, and update afterwards?",
+    "p": [
+     "If the first loop rejects the booking, no state may change. Adding intersections to `over` before knowing the booking is valid would leave phantom double-booked regions. Order: validate against `over`, then record new overlaps, then accept."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "book",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Two lists (this code)",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Sweep over a sorted map of +1/−1 events",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Segment tree with lazy updates",
+       "O(log N)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `10-40` accepted but `5-15` rejected?",
+    "p": [
+     "`10-40` overlaps `10-20` once, so the intersection `(10,20)` becomes double-booked and the booking is accepted. `5-15` then overlaps the double-booked `(10,20)` and would make three bookings at 10 to 15, so it is rejected."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) per booking.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Calendar II: keep bookings plus the double-booked intersections; reject any booking that overlaps a double-booked region."
+ },
+ "737": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent` dict",
+       "Union-Find forest over WORDS (strings are the nodes)",
+       "Union-Find over arbitrary keys, not just 0..n-1"
+      ],
+      [
+       "`parent.setdefault(x, x)`",
+       "First time a word is seen, make it its own root",
+       "Lazy initialisation"
+      ],
+      [
+       "`parent[x] = parent[parent[x]]`",
+       "Path halving during `find`",
+       "Flattens the tree"
+      ],
+      [
+       "`parent[find(a)] = find(b)`",
+       "Union: merge the groups of the two similar words",
+       "Similarity is transitive, so groups are connected components"
+      ],
+      [
+       "`a == b or find(a) == find(b)`",
+       "Equal words are similar even if they were never in a pair; otherwise they must share a root",
+       "Per-position check"
+      ],
+      [
+       "`len(sentence1) != len(sentence2)`",
+       "Different lengths can't be similar",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Pairs `great~fine`, `drama~acting`, `skills~talent`:"
+    ],
+    "table": {
+     "head": [
+      "Word 1",
+      "Word 2",
+      "root(word 1)",
+      "root(word 2)",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "great",
+       "fine",
+       "fine",
+       "fine",
+       "same"
+      ],
+      [
+       "acting",
+       "drama",
+       "acting",
+       "acting",
+       "same"
+      ],
+      [
+       "skills",
+       "talent",
+       "talent",
+       "talent",
+       "same"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Union-Find and not a direct pair set?",
+    "p": [
+     "Problem 734 (Similarity I) is non-transitive, so a set of pairs is enough. Here similarity IS transitive: `a~b` and `b~c` means `a~c`. Union-Find groups transitively related words and answers 'same group?' in nearly O(1)."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Transitive?",
+      "Structure"
+     ],
+     "rows": [
+      [
+       "734 Sentence Similarity",
+       "no",
+       "set of pairs"
+      ],
+      [
+       "737 Sentence Similarity II (this code)",
+       "yes",
+       "Union-Find (or DFS on a graph)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((P + n) · α) for P pairs and n words.",
+     "Space: O(P)."
+    ]
+   }
+  ],
+  "takeaway": "Transitive similarity = connected components: Union-Find over words, then compare each position by root."
+ },
+ "740": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pts[v]`",
+       "Total points available for value `v`: `v` times its count",
+       "Collapse duplicates: taking one `v` means deleting all neighbours but you can take every copy of `v`"
+      ],
+      [
+       "`take`",
+       "Best total if we TAKE value `v`",
+       "House Robber style two-state DP"
+      ],
+      [
+       "`skip`",
+       "Best total if we SKIP value `v`",
+       "Second state"
+      ],
+      [
+       "`skip + v`",
+       "Taking `v` is allowed only if we skipped `v - 1`",
+       "Adjacent values conflict"
+      ],
+      [
+       "`max(take, skip)`",
+       "Skipping `v` leaves the best of the previous two states",
+       "Recurrence"
+      ],
+      [
+       "tuple assignment",
+       "Both new values use the OLD `take` and `skip`",
+       "Simultaneous update"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,4,2]` gives points array `[0, 0, 2, 3, 4]` (value → total points):"
+    ],
+    "table": {
+     "head": [
+      "Value v",
+      "pts[v]",
+      "take",
+      "skip",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "2",
+       "3"
+      ],
+      [
+       "4",
+       "4",
+       "6",
+       "3",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this House Robber?",
+    "p": [
+     "Choosing value `v` forbids `v - 1` and `v + 1`, just like robbing a house forbids its neighbours. Once you bucket equal values into one cell of `pts`, the problem is exactly 'pick non-adjacent cells to maximise the sum' (problem 198)."
+    ],
+    "table": {
+     "head": [
+      "Delete and Earn",
+      "House Robber"
+     ],
+     "rows": [
+      [
+       "value",
+       "house index"
+      ],
+      [
+       "`pts[v]` total points",
+       "money in the house"
+      ],
+      [
+       "can't take v−1 and v",
+       "can't rob adjacent houses"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A limitation",
+    "p": [
+     "The array has length `max(nums) + 1`, which is wasteful when values are huge but few. Sorting the distinct values and treating only consecutive ones as conflicting gives O(n log n) time independent of the value range."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + max(nums)).",
+     "Space: O(max(nums))."
+    ]
+   }
+  ],
+  "takeaway": "Delete and Earn reduces to House Robber over a points-per-value array: take = skip + pts[v], skip = max(take, skip)."
+ },
+ "743": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g[u].append((v, w))`",
+       "Adjacency list of directed weighted edges",
+       "Graph with weights"
+      ],
+      [
+       "`pq = [(0, k)]`",
+       "Min-heap of `(distance, node)`, starting at the source",
+       "Dijkstra's algorithm"
+      ],
+      [
+       "`heappop`",
+       "The unfinished node with the smallest tentative distance: its distance is now final (weights are non-negative)",
+       "Greedy finalisation"
+      ],
+      [
+       "`if u in dist: continue`",
+       "Lazy deletion: stale heap entries for already-finalised nodes are skipped",
+       "The heap has no decrease-key, so duplicates are pushed and ignored"
+      ],
+      [
+       "`max(dist.values()) if len(dist) == n`",
+       "The signal reaches every node when the LAST node is finalised; unreachable nodes mean -1",
+       "Answer is the maximum shortest distance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges `2→1 (1)`, `2→3 (1)`, `3→4 (1)`, source 2, `n = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Popped (dist, node)",
+      "Action",
+      "dist"
+     ],
+     "rows": [
+      [
+       "(0, 2)",
+       "finalise node 2 = 0; push [(1, 1), (1, 3)]",
+       "{2: 0}"
+      ],
+      [
+       "(1, 1)",
+       "finalise node 1 = 1; push []",
+       "{2: 0, 1: 1}"
+      ],
+      [
+       "(1, 3)",
+       "finalise node 3 = 1; push [(2, 4)]",
+       "{2: 0, 1: 1, 3: 1}"
+      ],
+      [
+       "(2, 4)",
+       "finalise node 4 = 2; push []",
+       "{2: 0, 1: 1, 3: 1, 4: 2}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer the MAX of the shortest distances?",
+    "p": [
+     "The signal travels along all paths in parallel, so each node receives it at its shortest-path time. Everyone has the signal only when the slowest node does, i.e. the maximum."
+    ],
+    "table": {
+     "head": [
+      "Algorithm",
+      "Time",
+      "Negative edges?"
+     ],
+     "rows": [
+      [
+       "Dijkstra with heap (this code)",
+       "O(E log V)",
+       "no"
+      ],
+      [
+       "Bellman-Ford",
+       "O(V·E)",
+       "yes"
+      ],
+      [
+       "Floyd-Warshall",
+       "O(V³)",
+       "yes (all pairs)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we skip finalised nodes safely?",
+    "p": [
+     "With non-negative weights, the first time a node is popped it has the smallest possible distance. Any later entry for it has a larger or equal distance and can't improve anything."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E log V).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Network delay = Dijkstra from the source; the answer is the largest finalised distance, or -1 if some node is unreachable."
+ },
+ "746": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`b`",
+       "Minimum cost to stand on step `i` (the top is step `len(cost)`)",
+       "DP where each state depends on the previous two"
+      ],
+      [
+       "`a`",
+       "Minimum cost to stand on step `i - 1`",
+       "The second remembered value"
+      ],
+      [
+       "`b + cost[i-1]`",
+       "Come from step `i-1`: pay to leave it",
+       "Taking one step"
+      ],
+      [
+       "`a + cost[i-2]`",
+       "Come from step `i-2`: pay to leave it",
+       "Taking two steps"
+      ],
+      [
+       "start `a = b = 0`",
+       "You may start on step 0 or 1 for free: standing there costs nothing, leaving costs",
+       "The base cases"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`cost = [1,100,1,1,1,100,1]`: after each step, `a` and `b` are the minimum costs to reach the previous step and the current step."
+    ],
+    "table": {
+     "head": [
+      "Step i",
+      "a (reach i-1)",
+      "b (reach i)"
+     ],
+     "rows": [
+      [
+       "start",
+       "0",
+       "0"
+      ],
+      [
+       "step 2",
+       "0",
+       "1"
+      ],
+      [
+       "step 3",
+       "1",
+       "2"
+      ],
+      [
+       "step 4",
+       "2",
+       "2"
+      ],
+      [
+       "step 5",
+       "2",
+       "3"
+      ],
+      [
+       "step 6",
+       "3",
+       "3"
+      ],
+      [
+       "step 7",
+       "3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the 'top' index `len(cost)`?",
+    "p": [
+     "The top is one past the last step. The cost array is the cost of LEAVING each step, so reaching the top from step `n-1` or `n-2` costs `cost[n-1]` or `cost[n-2]`, which is what the final iteration `i = n` computes."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Space"
+     ],
+     "rows": [
+      [
+       "`dp` array of size n+1",
+       "O(n)"
+      ],
+      [
+       "two rolling variables (this code)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Min cost climbing stairs: a two-variable DP where the cost to reach step i is the cheaper of arriving from i−1 or i−2."
+ },
+ "749": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g[i][j]`",
+       "`1` = infected, `0` = healthy, `-1` = contained (walled off, permanently dead)",
+       "Encoding cell states in the grid itself"
+      ],
+      [
+       "BFS from each unseen `1`",
+       "Collects one region: its `cells`, its `front` (set of distinct healthy cells it would infect next), and `perim` (the number of walls needed, counting each region-to-healthy edge)",
+       "A region is a connected component of infected cells"
+      ],
+      [
+       "`front` is a set; `perim` is a counter",
+       "A healthy cell touched from two sides counts once in `front` but needs two walls, so the walls count edges, not cells",
+       "Different quantities for 'threat' and 'cost'"
+      ],
+      [
+       "`k = max(range(len(regions)), key=…len(front))`",
+       "Contain the region that threatens the MOST distinct healthy cells",
+       "The problem's rule: wall the region with the largest threat"
+      ],
+      [
+       "`g[a][b] = -1` for the contained region",
+       "Mark it dead so later BFS rounds ignore it (only `== 1` counts as infected)",
+       "Removing a region from play"
+      ],
+      [
+       "`g[a][b] = 1` for fronts of the other regions",
+       "Everything else spreads simultaneously, after the containment choice",
+       "One simulated day per round"
+      ],
+      [
+       "`if not regions[k][1]: break`",
+       "If the most threatening region threatens nothing, the virus can't spread any more",
+       "Termination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A 4×8 grid: two regions, a vertical pair on the left (column 1) and a 3-cell column on the right (column 7). `#` = contained."
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "Regions (cells, threatened cells, walls)",
+      "Contained",
+      "Walls added",
+      "Grid afterwards"
+     ],
+     "rows": [
+      [
+       "1",
+       "left (2, 5, 5); right (3, 4, 4)",
+       "left",
+       "5",
+       "`. # . . . . 1 1 / . # . . . . 1 1 / . . . . . . 1 1 / . . . . . . . 1`"
+      ],
+      [
+       "2",
+       "one merged region (7, 4, 5)",
+       "it",
+       "5",
+       "`. # . . . . # # / . # . . . . # # / . . . . . . # # / . . . . . . . #`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Total walls 5 + 5 = 10. In round 1 the left region threatens 5 cells, the right 4, so the left is walled; the right then spreads one step. In round 2 the grown right region is the only region and is walled."
+    ]
+   },
+   {
+    "h": "Why count walls with `perim` and threats with `front`?",
+    "p": [
+     "The cost to contain a region is the number of boundaries between infected and healthy cells, and a healthy cell with two infected neighbours needs two walls. The choice of region, however, depends on how many DISTINCT healthy cells are at risk. Using one number for both would pick the wrong region or the wrong cost."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Measures",
+      "Data structure"
+     ],
+     "rows": [
+      [
+       "`front`",
+       "distinct cells at risk",
+       "set"
+      ],
+      [
+       "`perim`",
+       "walls needed",
+       "integer counter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((m·n)²) worst case: up to O(m·n) rounds, each a full BFS pass over O(m·n) cells.",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Contain Virus is a day-by-day simulation: BFS the regions, wall the one threatening the most healthy cells (counting edges as walls), let the rest spread."
+ },
+ "752": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dead = set(deadends)`",
+       "O(1) lookup of forbidden states",
+       "Membership tests in the BFS inner loop"
+      ],
+      [
+       "`'0000' in dead: return -1`",
+       "If the start itself is dead, no move is possible",
+       "Start-state edge case"
+      ],
+      [
+       "`deque(['0000'])`, `seen`",
+       "BFS queue and visited set of 4-digit strings",
+       "Shortest path in an unweighted state graph"
+      ],
+      [
+       "`for _ in range(len(q))` then `steps += 1`",
+       "Process one BFS level (= one wheel turn) at a time",
+       "Counting layers"
+      ],
+      [
+       "`(d + 1) % 10`, `(d - 1) % 10`",
+       "Turn a wheel up or down, wrapping 9→0 and 0→9; Python's `%` keeps the result non-negative",
+       "Circular digits"
+      ],
+      [
+       "`cur[:i] + str(nd) + cur[i + 1:]`",
+       "Build the new state by replacing one character",
+       "Strings are immutable"
+      ],
+      [
+       "`nxt not in seen and nxt not in dead`",
+       "Skip visited and forbidden states",
+       "Never revisit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Target `0202` with the dead ends `0201 0101 0102 1212 2002` is reached after 6 turns. Number of states in each BFS level (a state has 8 neighbours):"
+    ],
+    "table": {
+     "head": [
+      "Turns",
+      "States in the level",
+      "A few of them"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0000"
+      ],
+      [
+       "1",
+       "8",
+       "0001, 0009, 0010, 0090, 0100, 0900"
+      ],
+      [
+       "2",
+       "31",
+       "0002, 0008, 0011, 0019, 0020, 0080"
+      ],
+      [
+       "3",
+       "86",
+       "0003, 0007, 0012, 0018, 0021, 0029"
+      ],
+      [
+       "4",
+       "190",
+       "0004, 0006, 0013, 0017, 0022, 0028"
+      ],
+      [
+       "5",
+       "356",
+       "0005, 0014, 0016, 0023, 0027, 0032"
+      ],
+      [
+       "6",
+       "576",
+       "0015, 0024, 0026, 0033, 0037, 0042"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS?",
+    "p": [
+     "Every turn costs 1, so the fewest turns is the shortest path in an unweighted graph of 10,000 states. BFS reaches each state at its minimum depth, so the first time `target` is dequeued the depth is minimal."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Result"
+     ],
+     "rows": [
+      [
+       "BFS (this code)",
+       "shortest path, ≤ 10,000 states × 8 moves"
+      ],
+      [
+       "DFS",
+       "finds a path but not necessarily the shortest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Optimisation to mention",
+    "p": [
+     "Bidirectional BFS from both `0000` and the target meets in the middle and explores far fewer states (about the square root of the work in a branching-heavy graph)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(10⁴ · 8 · 4) in the worst case: 10,000 states, each with 8 neighbours built from 4-character strings.",
+     "Space: O(10⁴)."
+    ]
+   }
+  ],
+  "takeaway": "Open the lock = BFS over 4-digit states with 8 neighbours each, skipping dead ends; the level at which the target appears is the answer."
+ },
+ "755": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for _ in range(volume)`",
+       "Simulate one water drop at a time",
+       "Direct simulation"
+      ],
+      [
+       "`for step in (-1, 1)`",
+       "Try LEFT first, then RIGHT: the problem's priority order",
+       "Ordered preference"
+      ],
+      [
+       "`i = best = k`",
+       "`i` walks outward; `best` is the lowest reachable spot found so far (starts at the drop position)",
+       "Tracking the best landing place"
+      ],
+      [
+       "`heights[i + step] <= heights[i]`",
+       "Water keeps flowing while the next cell is not higher (equal cells are walked across)",
+       "Flat stretches are traversable"
+      ],
+      [
+       "`heights[i + step] < heights[i]` → `best = i + step`",
+       "Update `best` only on a STRICT drop, so among equal-height spots the one nearest to `k` wins",
+       "Closest to the start among the lowest"
+      ],
+      [
+       "`if best != k: … break`",
+       "If it found somewhere lower on the left, the drop settles there and the right side is not tried",
+       "Left takes priority"
+      ],
+      [
+       "`for … else: heights[k] += 1`",
+       "`else` runs only if the loop did not `break`: neither side has a lower spot, so the drop stays at `k`",
+       "`for/else` instead of a flag"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`heights = [2,1,1,2,1,2,2]`, 4 units dropped at index 3:"
+    ],
+    "table": {
+     "head": [
+      "Drop",
+      "Direction taken",
+      "Lands at",
+      "Heights after"
+     ],
+     "rows": [
+      [
+       "1",
+       "left",
+       "index 2",
+       "[2, 1, 2, 2, 1, 2, 2]"
+      ],
+      [
+       "2",
+       "left",
+       "index 1",
+       "[2, 2, 2, 2, 1, 2, 2]"
+      ],
+      [
+       "3",
+       "right",
+       "index 4",
+       "[2, 2, 2, 2, 2, 2, 2]"
+      ],
+      [
+       "4",
+       "stays",
+       "index 3",
+       "[2, 2, 2, 3, 2, 2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must `best` update only on strict decreases?",
+    "p": [
+     "Take `[2,1,1,2]` with a drop at index 3: the water flows left over two equal cells at height 1. The correct landing spot is the one closest to where the drop started, index 2, not index 1. Because `best` changes only when the next cell is strictly lower, the second equal cell (index 1) does not replace it, and the walk continues past it only if something even lower exists."
+    ],
+    "table": {
+     "head": [
+      "Cells to the left",
+      "Landing index"
+     ],
+     "rows": [
+      [
+       "`[1, 1]` at indices 1, 2",
+       "2 (closest of the equal lowest cells)"
+      ],
+      [
+       "`[0, 1]`",
+       "1 (strictly lower wins)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why stop walking when a higher cell appears?",
+    "p": [
+     "Water can't climb a higher cell, so everything beyond it is unreachable. The `while` condition `<=` ends the walk there."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(volume × n).",
+     "Space: O(1) (the array is modified in place)."
+    ]
+   }
+  ],
+  "takeaway": "Pour water: simulate each drop, scanning left then right for the nearest lowest reachable cell, using strict decreases to prefer the closest spot."
+ }
+}
