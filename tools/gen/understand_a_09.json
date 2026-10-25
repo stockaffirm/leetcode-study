@@ -1,0 +1,1838 @@
+{
+ "720": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(words)",
+       "Alphabetical order: shorter prefixes come before the words that extend them, and ties of equal length are in alphabetical order",
+       "Processing prefixes before extensions"
+      ],
+      [
+       "built = {\"\"}",
+       "Set of words that can be built one letter at a time; the empty string seeds it",
+       "Set membership in O(1) average"
+      ],
+      [
+       "w[:-1] in built",
+       "The word minus its last letter must already be buildable",
+       ""
+      ],
+      [
+       "len(w) > len(best)",
+       "Strict `>` keeps the alphabetically smaller word on ties, because words arrive in alphabetical order",
+       "Tie-breaking via iteration order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]` sorted:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "word minus last letter",
+      "buildable?",
+      "best so far"
+     ],
+     "rows": [
+      [
+       "a",
+       "",
+       "yes",
+       "a"
+      ],
+      [
+       "ap",
+       "a",
+       "yes",
+       "ap"
+      ],
+      [
+       "app",
+       "ap",
+       "yes",
+       "app"
+      ],
+      [
+       "appl",
+       "app",
+       "yes",
+       "appl"
+      ],
+      [
+       "apple",
+       "appl",
+       "yes",
+       "apple"
+      ],
+      [
+       "apply",
+       "appl",
+       "yes",
+       "apple"
+      ],
+      [
+       "banana",
+       "banan",
+       "no",
+       "apple"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the list be sorted?",
+    "p": [
+     "Without sorting, `appl` might be seen before `app` and rejected even though it becomes buildable later. Sorting guarantees every shorter prefix is decided before its extensions. `apple` and `apply` both have length 5; `apple` sorts first, becomes `best`, and the strict `>` stops `apply` from replacing it, so ties resolve to the alphabetically smaller word."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 L + n log n) for n words of length L.",
+     "Space: O(n \u00b7 L)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then keep a set of buildable words; a word is buildable if its prefix without the last letter is."
+ },
+ "723": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "crush = set()",
+       "Cells to remove this round; a set avoids double counting cells that sit in both a row and a column match",
+       "Collect first, remove after"
+      ],
+      [
+       "crush |= {\u2026}",
+       "Set union with the three cells of a match",
+       ""
+      ],
+      [
+       "board[i][j] = 0 for i, j in crush",
+       "Marks all crushed cells at once",
+       "Simultaneous removal"
+      ],
+      [
+       "col = [\u2026 if board[i][j] != 0]",
+       "Column compaction: keeps the surviving candies in order",
+       "Gravity as a filter"
+      ],
+      [
+       "[0] * (m - len(col)) + col",
+       "Pads empties on top so survivors fall to the bottom",
+       ""
+      ],
+      [
+       "while True \u2026 if not crush: return",
+       "Repeat until the board is stable",
+       "Cascading effects"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `[[4, 3, 4, 3], [1, 1, 1, 4], [3, 1, 1, 3], [4, 4, 1, 3]]`:"
+    ],
+    "table": {
+     "head": [
+      "cells crushed",
+      "after crushing (0 = empty)",
+      "after gravity"
+     ],
+     "rows": [
+      [
+       "5",
+       "[[4, 3, 4, 3], [0, 0, 0, 4], [3, 1, 0, 3], [4, 4, 0, 3]]",
+       "[[0, 0, 0, 3], [4, 3, 0, 4], [3, 1, 0, 3], [4, 4, 4, 3]]"
+      ],
+      [
+       "3",
+       "[[0, 0, 0, 3], [4, 3, 0, 4], [3, 1, 0, 3], [0, 0, 0, 3]]",
+       "[[0, 0, 0, 3], [0, 0, 0, 4], [4, 3, 0, 3], [3, 1, 0, 3]]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final stable board: `[[0, 0, 0, 3], [0, 0, 0, 4], [4, 3, 0, 3], [3, 1, 0, 3]]`."
+    ]
+   },
+   {
+    "h": "Why mark first and remove afterwards?",
+    "p": [
+     "All matches in a round happen at the same time. If cells were zeroed as soon as they were found, a later match that shares a cell (an L or T shape) would no longer see its candy and be missed. Collecting into a set first treats the round as one simultaneous event."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((m\u00b7n)\u00b2) worst case, since each round is O(m\u00b7n) and there can be O(m\u00b7n) rounds.",
+     "Space: O(m\u00b7n) for the crush set."
+    ]
+   }
+  ],
+  "takeaway": "Repeat: mark every horizontal/vertical triple at once, zero them, apply gravity per column, until nothing is marked."
+ },
+ "729": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.b",
+       "List of booked (start, end) tuples kept sorted by start",
+       "Sorted structure + binary search"
+      ],
+      [
+       "bisect_left(self.b, (start, end))",
+       "Insertion index found by binary search over tuples (compared lexicographically)",
+       ""
+      ],
+      [
+       "self.b[i-1][1] > startTime",
+       "The previous booking ends after the new one starts: overlap",
+       ""
+      ],
+      [
+       "self.b[i][0] < endTime",
+       "The next booking starts before the new one ends: overlap",
+       ""
+      ],
+      [
+       "self.b.insert(i, \u2026)",
+       "Inserts at position i, O(n) shift",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Bookings `10-20`, `15-25`, `20-30` (end times are exclusive):"
+    ],
+    "table": {
+     "head": [
+      "booking",
+      "insertion index",
+      "accepted?",
+      "calendar"
+     ],
+     "rows": [
+      [
+       "(10,20)",
+       "0",
+       "True",
+       "[(10, 20)]"
+      ],
+      [
+       "(15,25)",
+       "1",
+       "False",
+       "[(10, 20)]"
+      ],
+      [
+       "(20,30)",
+       "1",
+       "True",
+       "[(10, 20), (20, 30)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only two neighbours need checking?",
+    "p": [
+     "The list is sorted and has no overlaps. Any booking that could overlap the new one must be the closest one before or the closest one after the insertion point, because earlier bookings end even earlier and later ones start even later. Note `20-30` is accepted after `10-20` since intervals are half-open (end 20 does not collide with start 20)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) to search, O(n) to insert.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Keep bookings sorted, binary-search the slot, and compare only with the previous and next booking."
+ },
+ "735": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "stack",
+       "Asteroids that survive so far, in order",
+       ""
+      ],
+      [
+       "a < 0 < stack[-1]",
+       "Chained comparison: a collision happens only when the new asteroid moves left and the top moves right",
+       "Detecting a collision"
+      ],
+      [
+       "stack[-1] < -a: pop; continue",
+       "The top is smaller, so it explodes; check the next one",
+       "Repeated collisions"
+      ],
+      [
+       "stack[-1] == -a: pop; break",
+       "Equal sizes: both explode",
+       ""
+      ],
+      [
+       "while \u2026 else: append",
+       "The `else` of a `while` runs when the loop ends WITHOUT `break`; the asteroid survives and is pushed",
+       "Python's while/else"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5, 10, -5, -12]`:"
+    ],
+    "table": {
+     "head": [
+      "asteroid",
+      "event",
+      "stack"
+     ],
+     "rows": [
+      [
+       "5",
+       "pushed",
+       "[5]"
+      ],
+      [
+       "10",
+       "pushed",
+       "[5, 10]"
+      ],
+      [
+       "-5",
+       "destroyed by 10",
+       "[5, 10]"
+      ],
+      [
+       "-12",
+       "destroys 10, destroys 5, pushed",
+       "[-12]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `while \u2026 else` and why a stack?",
+    "p": [
+     "The new asteroid may destroy several in a row, so a loop is needed, and `break` signals that it was destroyed (or both were). If it exits normally, nothing is left to hit and it is pushed. The stack holds the right-moving asteroids that could still collide with future left-movers, and the most recent one collides first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each asteroid is pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of survivors: a left-mover pops smaller right-movers; Python's while/else pushes it only if it was never stopped."
+ },
+ "744": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bisect_right(letters, target)",
+       "Index of the first letter strictly greater than target (binary search); `bisect_left` would stop at an equal letter",
+       "Next strictly greater element in a sorted list"
+      ],
+      [
+       "i % len(letters)",
+       "Wraps around to index 0 when no letter is greater",
+       "Circular lookup"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "letters",
+      "target",
+      "bisect_right",
+      "answer"
+     ],
+     "rows": [
+      [
+       "['c', 'f', 'j']",
+       "a",
+       "0",
+       "c"
+      ],
+      [
+       "['c', 'f', 'j']",
+       "c",
+       "1",
+       "f"
+      ],
+      [
+       "['c', 'f', 'j']",
+       "j",
+       "3",
+       "c"
+      ],
+      [
+       "['c', 'f', 'j']",
+       "k",
+       "3",
+       "c"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `bisect_right` and the modulo?",
+    "p": [
+     "The answer must be strictly greater than the target, so equal letters are skipped; `bisect_right` returns the position just after any equal ones. When the target is the largest letter (or bigger), the index equals `len(letters)`, and the modulo maps it back to 0, which implements the wrap-around rule."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search for the first element greater than the target (bisect_right), wrapping with modulo."
+ },
+ "750": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for i \u2026 for j in range(i+1, m)",
+       "Every pair of rows once",
+       "Pair enumeration"
+      ],
+      [
+       "zip(grid[i], grid[j])",
+       "Pairs up the cells of two rows column by column",
+       ""
+      ],
+      [
+       "a & b",
+       "Bitwise AND: 1 only where both rows have a 1",
+       "Counting shared columns"
+      ],
+      [
+       "c * (c - 1) // 2",
+       "Choose any 2 of the c shared columns: each choice is one rectangle",
+       "Combinations formula C(c, 2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Only row pairs that share at least one column are shown:"
+    ],
+    "table": {
+     "head": [
+      "row pair",
+      "shared columns c",
+      "rectangles C(c,2)",
+      "running total"
+     ],
+     "rows": [
+      [
+       "rows 0,2",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "rows 0,3",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "rows 1,3",
+       "2",
+       "1",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 1."
+    ]
+   },
+   {
+    "h": "Why pairs of rows?",
+    "p": [
+     "Every rectangle has a top row and a bottom row. For a fixed pair, any two columns where both rows hold a 1 form its corners. Counting shared columns c and choosing 2 gives every rectangle for that pair exactly once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b2 \u00b7 n).",
+     "Space: O(1). Iterating over the smaller dimension makes it faster."
+    ]
+   }
+  ],
+  "takeaway": "Fix a pair of rows, count columns where both have a 1, and add C(c, 2)."
+ },
+ "756": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "top = defaultdict(list)",
+       "Maps a bottom pair (e.g. 'BC') to the letters allowed above it",
+       "Rule lookup"
+      ],
+      [
+       "build(row)",
+       "Can a pyramid be completed from this row? A row of length 1 is done",
+       "Recursion over rows"
+      ],
+      [
+       "fill(i, cur)",
+       "Chooses a top letter for each adjacent pair, building the next row left to right (backtracking)",
+       "Generating combinations with early exit"
+      ],
+      [
+       "@lru_cache(None)",
+       "Remembers answers per row string, so the same row reached by different choices is not recomputed",
+       "Memoization (caching results)"
+      ],
+      [
+       "top[row[i:i+2]]",
+       "Unknown pairs give an empty list, so that branch fails immediately",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Bottom `BCD`, allowed `BCC, CDE, CEA, FFF`. The only complete next row built is:"
+    ],
+    "table": {
+     "head": [
+      "row being built from",
+      "next row"
+     ],
+     "rows": [
+      [
+       "BCD",
+       "CE"
+      ],
+      [
+       "CE",
+       "A"
+      ]
+     ]
+    },
+    "bullets": [
+     "`BC \u2192 C`, `CD \u2192 E` gives `CE`; then `CE \u2192 A` gives `A`: the pyramid completes, so the answer is True."
+    ]
+   },
+   {
+    "h": "Why memoize on the row string?",
+    "p": [
+     "Different choices for the top letters can produce the same next row. Caching `build(row)` ensures each distinct row is solved once, which keeps the search from exploding."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential in the worst case (letters^length rows), reduced by caching and pruning.",
+     "Space: O(number of cached rows) plus recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking row by row (choose a top letter per adjacent pair), cached by row string."
+ },
+ "741": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "k",
+       "Step number: both walkers have taken k steps, so walker at row i is at column k \u2212 i",
+       "Moving two walkers in lockstep"
+      ],
+      [
+       "dp[i][j]",
+       "Most cherries collected when walker 1 is in row i and walker 2 in row j after k steps",
+       "State = (i, j) because k fixes the columns"
+      ],
+      [
+       "max(dp[i][j], dp[i-1][j], dp[i][j-1], dp[i-1][j-1])",
+       "Each walker came from the left (same row) or from above (row \u2212 1), giving four combinations",
+       ""
+      ],
+      [
+       "grid[j][k-j] if i != j else 0",
+       "If both walkers stand on the same cell, count its cherry once",
+       ""
+      ],
+      [
+       "-1 cells \u2192 continue",
+       "Thorns are impassable for either walker",
+       ""
+      ],
+      [
+       "max(0, dp[n-1][n-1])",
+       "If the end is unreachable the result stays at \u2212inf, so return 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,-1],[1,0,-1],[1,1,1]]`: the trip down and back is modelled as two walkers going down together. Rows show reachable states and the best count after each step:"
+    ],
+    "table": {
+     "head": [
+      "step k",
+      "meaning",
+      "reachable states (i, j): cherries",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "start",
+       "(0,0)",
+       "0"
+      ],
+      [
+       "1",
+       "best per (row of walker 1, row of walker 2)",
+       "{(0, 0): 1, (0, 1): 2, (1, 0): 2, (1, 1): 1}",
+       "2"
+      ],
+      [
+       "2",
+       "best per (row of walker 1, row of walker 2)",
+       "{(1, 1): 2, (1, 2): 3, (2, 1): 3, (2, 2): 2}",
+       "3"
+      ],
+      [
+       "3",
+       "best per (row of walker 1, row of walker 2)",
+       "{(2, 2): 4}",
+       "4"
+      ],
+      [
+       "4",
+       "best per (row of walker 1, row of walker 2)",
+       "{(2, 2): 5}",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 5."
+    ]
+   },
+   {
+    "h": "Why two walkers going forward instead of one going down and back?",
+    "p": [
+     "The return trip, reversed, is another path from the start to the end. Two simultaneous walkers let the DP (Dynamic Programming) remember the shared cells (to avoid counting a cherry twice) with just their rows, because the step count fixes both columns. A one-way DP cannot know which cherries the first trip already took."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b3): 2n steps times n\u00b2 (i, j) pairs.",
+     "Space: O(n\u00b2) with the rolling `dp` layer."
+    ]
+   }
+  ],
+  "takeaway": "Cherry Pickup: two walkers move in lockstep down the grid, state (row1, row2) per step; same-cell cherries count once."
+ },
+ "759": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(iv for emp in schedule for iv in emp)",
+       "Flattens all employees' intervals into one list and sorts them by start",
+       "Merging many sorted lists by sorting once"
+      ],
+      [
+       "end",
+       "The latest end time among everything merged so far",
+       ""
+      ],
+      [
+       "s > end",
+       "The next interval starts after the busy period ended: a free gap [end, s]",
+       ""
+      ],
+      [
+       "end = max(end, e)",
+       "Extends the busy period",
+       "Merging overlapping intervals"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Three employees; all intervals merged and sorted:"
+    ],
+    "table": {
+     "head": [
+      "interval",
+      "end of busy period",
+      "event",
+      "gaps found"
+     ],
+     "rows": [
+      [
+       "[1, 2]",
+       "2",
+       "start",
+       "[]"
+      ],
+      [
+       "[1,3]",
+       "3",
+       "overlaps, no gap",
+       "[]"
+      ],
+      [
+       "[4,10]",
+       "10",
+       "gap 3\u21924",
+       "[[3, 4]]"
+      ],
+      [
+       "[5,6]",
+       "10",
+       "overlaps, no gap",
+       "[[3, 4]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do gaps only appear between merged blocks?",
+    "p": [
+     "Free time for everyone means no one is working. After sorting by start, if the next interval begins after the latest end seen so far, nobody is busy in between. If it begins earlier, someone is working, so no gap exists."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log N) for N intervals.",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Flatten, sort by start, and report the gaps between the running maximum end and the next start."
+ },
+ "765": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pos = {x: i \u2026}",
+       "Where each person currently sits, so partners are found in O(1)",
+       ""
+      ],
+      [
+       "row[i] ^ 1",
+       "XOR (exclusive or) with 1 flips the lowest bit: 0\u21941, 2\u21943, 4\u21945, which maps a person to their partner",
+       "Pairing consecutive numbers"
+      ],
+      [
+       "row[i+1] != partner",
+       "The seat next to person i is wrong",
+       ""
+      ],
+      [
+       "swap row[i+1] with row[j]",
+       "Brings the partner next to person i; then both entries in `pos` are updated",
+       "Greedy fix, one couple per step"
+      ],
+      [
+       "swaps += 1",
+       "Each wrong pair costs exactly one swap here",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`row = [0, 2, 1, 3]`:"
+    ],
+    "table": {
+     "head": [
+      "seats",
+      "partner of left seat",
+      "action",
+      "row after",
+      "swaps"
+     ],
+     "rows": [
+      [
+       "seats 0,1",
+       "1",
+       "seat 1 should hold 1: swap with position 2",
+       "[0, 1, 2, 3]",
+       "1"
+      ],
+      [
+       "seats 2,3",
+       "3",
+       "already a couple",
+       "[0, 1, 2, 3]",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is fixing the left seat greedily optimal?",
+    "p": [
+     "Each swap can fix at most one couple, and swapping the partner into place always fixes one without breaking anything already fixed. A group of k couples in a cycle needs k \u2212 1 swaps, and the greedy uses exactly that. Equivalent: swaps = couples \u2212 number of cycles in the couple graph."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for `pos`."
+    ]
+   }
+  ],
+  "takeaway": "XOR with 1 finds each partner; greedily swap the partner into the neighbouring seat, updating the position map."
+ },
+ "768": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st",
+       "Stack holding the MAXIMUM of each chunk so far; maxima are non-decreasing",
+       "Monotonic stack"
+      ],
+      [
+       "st[-1] > x",
+       "x is smaller than the previous chunk's maximum, so x must be sorted into that chunk: the chunks merge",
+       ""
+      ],
+      [
+       "m = max(m, st.pop())",
+       "A merged chunk's maximum is the largest of the merged chunks",
+       ""
+      ],
+      [
+       "st.append(m)",
+       "Pushes the (possibly merged) chunk",
+       ""
+      ],
+      [
+       "len(st)",
+       "Number of chunks",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [2,1,3,4,4]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "chunk maxima popped",
+      "new chunk max",
+      "stack"
+     ],
+     "rows": [
+      [
+       "2",
+       "\u2013",
+       "2",
+       "[2]"
+      ],
+      [
+       "1",
+       "[2]",
+       "2",
+       "[2]"
+      ],
+      [
+       "3",
+       "\u2013",
+       "3",
+       "[2, 3]"
+      ],
+      [
+       "4",
+       "\u2013",
+       "4",
+       "[2, 3, 4]"
+      ],
+      [
+       "4",
+       "\u2013",
+       "4",
+       "[2, 3, 4, 4]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Chunks: 4: `[2,1] [3] [4] [4]`."
+    ]
+   },
+   {
+    "h": "Why compare with `st[-1] > x` and not `>=`?",
+    "p": [
+     "Equal values do not force a merge: `[4] [4]` can be sorted separately because the sorted order of two equal numbers is unchanged. A strict `>` leaves equal neighbours as separate chunks, which maximises the count. Using `>=` would merge them and lose chunks."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each element is pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack of chunk maxima: a smaller incoming value merges all chunks with a larger maximum."
+ },
+ "771": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "js = set(jewels)",
+       "Set of jewel types, with O(1) average lookups; case matters ('a' \u2260 'A')",
+       ""
+      ],
+      [
+       "s in js for s in stones",
+       "A generator of booleans, one per stone",
+       "Generator expression"
+      ],
+      [
+       "sum(\u2026)",
+       "True counts as 1 and False as 0, so the sum counts the jewels",
+       "Counting with sum over booleans"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`jewels = \"aA\"`, `stones = \"aAAbbbb\"`:"
+    ],
+    "table": {
+     "head": [
+      "stone",
+      "in jewels?",
+      "running count"
+     ],
+     "rows": [
+      [
+       "a",
+       "True",
+       "1"
+      ],
+      [
+       "A",
+       "True",
+       "2"
+      ],
+      [
+       "A",
+       "True",
+       "3"
+      ],
+      [
+       "b",
+       "False",
+       "3"
+      ],
+      [
+       "b",
+       "False",
+       "3"
+      ],
+      [
+       "b",
+       "False",
+       "3"
+      ],
+      [
+       "b",
+       "False",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why a set rather than checking `s in jewels` on the string?",
+    "p": [
+     "`s in jewels` on a string scans the characters, O(J) each, giving O(J\u00b7S) overall. A set makes each test O(1), so the total is O(J + S). For tiny inputs it does not matter, but the set is the habit to build."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(J + S).",
+     "Space: O(J)."
+    ]
+   }
+  ],
+  "takeaway": "Put the jewels in a set, then count stones that are members (sum over booleans)."
+ },
+ "780": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "work backwards from (tx, ty)",
+       "Forward there are two moves ((x, x+y) or (x+y, y)); backward there is only one, because the larger coordinate must have been produced by adding the smaller",
+       "Reversing a branching process into a deterministic one"
+      ],
+      [
+       "tx %= ty",
+       "Undoes many additions of ty at once (modulo instead of subtracting one at a time)",
+       "Euclid's algorithm style speed-up"
+      ],
+      [
+       "ty == sy",
+       "Cannot reduce ty further; tx can still shrink by multiples of ty, so check (tx \u2212 sx) is a multiple of ty",
+       "Final stretch handled in closed form"
+      ],
+      [
+       "tx == ty \u2192 break",
+       "Equal coordinates have no predecessor",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Start (1,1), target (3,5):"
+    ],
+    "table": {
+     "head": [
+      "tx",
+      "ty",
+      "step"
+     ],
+     "rows": [
+      [
+       "3",
+       "5",
+       "ty > tx: ty %= tx"
+      ],
+      [
+       "3",
+       "2",
+       "tx > ty: tx %= ty"
+      ],
+      [
+       "1",
+       "2",
+       "tx == sx: (2-1) % 1 == 0 ?"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: True (forward path (1,1) \u2192 (1,2) \u2192 (3,2) \u2192 (3,5))."
+    ]
+   },
+   {
+    "h": "Why is modulo valid and not subtraction?",
+    "p": [
+     "If tx is much bigger than ty, the last many moves all added ty to x, so repeated subtraction would be slow (up to 10\u2079 steps). `tx %= ty` jumps straight to the remainder. The special case `ty == sy` prevents the modulo from overshooting below the start: the remainder could skip past sx."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log max(tx, ty)), like the Euclidean algorithm.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse the process (only one predecessor exists) and speed it up with modulo, like Euclid's algorithm."
+ },
+ "792": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "waiting[w[0]].append(iter(w[1:]))",
+       "Parks each word in the bucket of the next letter it needs, holding an iterator over its remaining letters",
+       "Bucketed waiting lists"
+      ],
+      [
+       "iter(...) / next(it, None)",
+       "An iterator remembers its position; `next(it, None)` returns the next letter or None when exhausted",
+       "Stateful cursor per word"
+      ],
+      [
+       "bucket, waiting[ch] = waiting[ch], []",
+       "Takes the current bucket and replaces it with an empty list, so words moved back into the same bucket are not processed twice",
+       ""
+      ],
+      [
+       "count += 1",
+       "Iterator exhausted: the word is a subsequence",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abcde\"`, words `a, bb, acd, ace`:"
+    ],
+    "table": {
+     "head": [
+      "char of s",
+      "words moved",
+      "matched so far"
+     ],
+     "rows": [
+      [
+       "a",
+       "a done, acd waits for 'c', ace waits for 'c'",
+       "1"
+      ],
+      [
+       "b",
+       "bb waits for 'b'",
+       "1"
+      ],
+      [
+       "c",
+       "acd waits for 'd', ace waits for 'e'",
+       "1"
+      ],
+      [
+       "d",
+       "acd done",
+       "2"
+      ],
+      [
+       "e",
+       "ace done",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "`bb` is stuck waiting for a second 'b', so the answer is 3."
+    ]
+   },
+   {
+    "h": "Why is this faster than testing each word separately?",
+    "p": [
+     "Testing every word costs O(len(s)) each, O(len(s) \u00b7 W) in total. Here `s` is scanned once and each word advances at most once per letter of the word, so the total work is O(len(s) + total letters in words)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(s) + sum of word lengths).",
+     "Space: O(number of words) for the waiting buckets."
+    ]
+   }
+  ],
+  "takeaway": "Scan s once; keep words in buckets keyed by the next letter they need and advance a word when its letter arrives."
+ },
+ "795": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bad",
+       "Index of the latest element greater than `right`; no valid subarray may contain it",
+       ""
+      ],
+      [
+       "good",
+       "Index of the latest element \u2265 `left`; a valid subarray needs at least one such element",
+       ""
+      ],
+      [
+       "good - bad",
+       "Number of valid subarrays ending at i: starts between bad + 1 and good",
+       "Counting subarrays by their right end"
+      ],
+      [
+       "ans += \u2026",
+       "Sum over all right ends",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,4,3]`, left = 2, right = 3:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "bad",
+      "good",
+      "good \u2212 bad",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "-1",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "-1",
+       "0",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "4",
+       "2",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "2",
+       "3",
+       "1",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Valid subarrays: `[2]`, `[2,1]`, `[3]`."
+    ]
+   },
+   {
+    "h": "Why `good - bad` and not a count of window sizes?",
+    "p": [
+     "For subarrays ending at i, any start after `bad` avoids too-large elements, and the start must be at or before `good` so the subarray contains an element \u2265 left. The difference is never negative: whenever x > right, x is also \u2265 left, so `bad` and `good` are both set to i and the count is 0 for that end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "For each right end, valid starts lie in (bad, good]; count good \u2212 bad."
+ },
+ "801": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "keep",
+       "Minimum swaps so far if position i is NOT swapped",
+       "Two-state DP (Dynamic Programming)"
+      ],
+      [
+       "swap",
+       "Minimum swaps so far if position i IS swapped (it counts the swap at i)",
+       ""
+      ],
+      [
+       "nums1[i] > nums1[i-1] and nums2[i] > nums2[i-1]",
+       "Both arrays are increasing without crossing: keep\u2192keep, swap\u2192swap",
+       ""
+      ],
+      [
+       "nums1[i] > nums2[i-1] and nums2[i] > nums1[i-1]",
+       "Crossing is increasing: keep\u2192swap and swap\u2192keep",
+       ""
+      ],
+      [
+       "inf",
+       "Impossible transitions; both conditions together can both hold",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,3,5,4]`, `nums2 = [1,2,3,7]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "keep",
+      "swap"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "2",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer `min(keep, swap) = 1`."
+    ]
+   },
+   {
+    "h": "Why can both conditions be true at once?",
+    "p": [
+     "When both hold (e.g. values far apart), keeping or swapping the pair are both consistent with either previous state, so each new state takes the min over both transitions. The code applies the first condition first and then lets the second one improve it with `min`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two-state DP (keep/swap) per index; valid transitions depend on whether neighbours stay increasing straight or crossed."
+ },
+ "825": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(ages)",
+       "Number of people of each age (ages are at most 120, so at most 120 distinct values)",
+       "Grouping by value to avoid person-by-person loops"
+      ],
+      [
+       "b <= 0.5*a + 7 or b > a",
+       "Age a does not send a request to age b in these cases (the problem's rules)",
+       ""
+      ],
+      [
+       "ca * cb",
+       "Every person of age a can send to every person of age b",
+       "Counting pairs between groups"
+      ],
+      [
+       "- (ca if a == b else 0)",
+       "People do not send to themselves, so remove the self-pairs when the ages are equal",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ages = [16, 17, 18]`: valid (sender age, receiver age) pairs:"
+    ],
+    "table": {
+     "head": [
+      "sender a",
+      "receiver b",
+      "requests added",
+      "total"
+     ],
+     "rows": [
+      [
+       "16",
+       "16",
+       "0",
+       "0"
+      ],
+      [
+       "17",
+       "16",
+       "1",
+       "1"
+      ],
+      [
+       "17",
+       "17",
+       "0",
+       "1"
+      ],
+      [
+       "18",
+       "17",
+       "1",
+       "2"
+      ],
+      [
+       "18",
+       "18",
+       "0",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total = 2."
+    ]
+   },
+   {
+    "h": "Why count by age group?",
+    "p": [
+     "Comparing all pairs of people is O(n\u00b2) with n up to 20,000. Ages are bounded, so grouping reduces the work to O(distinct_ages\u00b2) \u2248 O(120\u00b2), independent of n."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + A\u00b2), A = number of distinct ages.",
+     "Space: O(A)."
+    ]
+   }
+  ],
+  "takeaway": "Count people per age and add count[a]\u00b7count[b] for each valid age pair, minus self-pairs."
+ },
+ "843": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "match(a, b)",
+       "Number of positions where the two words have the same letter",
+       ""
+      ],
+      [
+       "Counter(match(w, x) for x in cand)",
+       "For a guess w, groups the remaining candidates by the score they would produce",
+       "Counting how a guess splits the candidates"
+      ],
+      [
+       "max(\u2026values())",
+       "The size of the biggest group: the worst case if w is guessed",
+       "Minimax thinking"
+      ],
+      [
+       "min(cand, key=\u2026)",
+       "Chooses the guess whose worst-case group is smallest",
+       ""
+      ],
+      [
+       "cand = [x for x in cand if match(best, x) == m]",
+       "Keeps only words consistent with the score the master returned",
+       "Filtering by feedback"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Words `acckzz, ccbazz, eiowzz, abcczz`, secret `abcczz` (the master is simulated by `match(guess, secret)`):"
+    ],
+    "table": {
+     "head": [
+      "guess #",
+      "word guessed",
+      "matches reported",
+      "candidates before"
+     ],
+     "rows": [
+      [
+       "1",
+       "acckzz",
+       "4",
+       "4"
+      ],
+      [
+       "2",
+       "abcczz",
+       "6",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why choose the guess that minimises the biggest group?",
+    "p": [
+     "The feedback is a number of matching positions. A guess that splits the candidates into several small groups leaves few words whichever feedback comes back. Picking the minimax guess (smallest worst-case group) makes the candidate list shrink fast enough to finish within 10 guesses."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(10 \u00b7 N\u00b2 \u00b7 L): each round compares every candidate pair, with N words of length L (6).",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Minimax guessing: pick the word whose worst feedback group is smallest, then filter candidates by the returned score."
+ },
+ "846": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "len(hand) % groupSize",
+       "Cards must split evenly into groups; otherwise False immediately",
+       "Cheap early check"
+      ],
+      [
+       "Counter(hand)",
+       "How many cards of each value",
+       ""
+      ],
+      [
+       "for x in sorted(cnt)",
+       "Smallest value first: it can only start a group (nothing smaller is left to extend)",
+       "Greedy from the minimum"
+      ],
+      [
+       "cnt[y] < c \u2192 False",
+       "Not enough cards of value y to continue c groups",
+       ""
+      ],
+      [
+       "cnt[y] -= c",
+       "Uses c cards of each value of the c groups started at x",
+       "Processing all groups starting at x at once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,6,2,3,4,7,8]`, groupSize 3:"
+    ],
+    "table": {
+     "head": [
+      "start value x",
+      "count c",
+      "action"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "remove 1 group(s) [1, 2, 3]"
+      ],
+      [
+       "2",
+       "1",
+       "remove 1 group(s) [2, 3, 4]"
+      ],
+      [
+       "6",
+       "1",
+       "remove 1 group(s) [6, 7, 8]"
+      ]
+     ]
+    },
+    "bullets": [
+     "All counts reach 0, so the answer is True: groups `[1,2,3] [2,3,4] [6,7,8]`."
+    ]
+   },
+   {
+    "h": "Why start from the smallest card?",
+    "p": [
+     "The smallest remaining card can only be the first card of its group (a group is consecutive, and nothing smaller remains). That forces the group `x, x+1, \u2026, x+g\u22121`. Repeating the forced choice either finishes or finds a missing card."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting the distinct values.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy from the smallest card: it must start a group, so remove consecutive runs using counts."
+ },
+ "849": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seats.index(1)",
+       "Index of the first occupied seat",
+       "Finding the first occurrence"
+      ],
+      [
+       "n - 1 - seats[::-1].index(1)",
+       "Index of the last occupied seat (reverse, find the first 1, convert back)",
+       ""
+      ],
+      [
+       "max(first, n - 1 - last)",
+       "Edge gaps: sitting at seat 0 or n\u22121 gives the full gap length",
+       ""
+      ],
+      [
+       "(i - prev) // 2",
+       "Between two people, sitting in the middle gives half the gap (rounded down)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,0,0,1,0,1]`:"
+    ],
+    "table": {
+     "head": [
+      "segment",
+      "best distance there",
+      "formula"
+     ],
+     "rows": [
+      [
+       "left edge",
+       "0",
+       "distance = first index"
+      ],
+      [
+       "right edge",
+       "0",
+       "distance = n\u22121\u2212last"
+      ],
+      [
+       "gap 0..4",
+       "2",
+       "(i \u2212 prev) // 2"
+      ],
+      [
+       "gap 4..6",
+       "1",
+       "(i \u2212 prev) // 2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why do the edges use the whole gap but the middle uses half?",
+    "p": [
+     "At an edge there is only one neighbour, so the distance to it is the full gap. Between two people the closest neighbour is on either side, so the best seat is the middle, which is half the gap, rounded down."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the reversed copy (O(1) with an index scan)."
+    ]
+   }
+  ],
+  "takeaway": "Check the two edge gaps in full and every inner gap in half."
+ }
+}

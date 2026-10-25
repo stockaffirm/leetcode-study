@@ -1,0 +1,2483 @@
+{
+ "1448": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dfs(node, mx)`",
+       "`mx` is the maximum value on the path from the root to this node's PARENT",
+       "Pass path information down as an argument"
+      ],
+      [
+       "`node.val >= mx`",
+       "Good node: no larger value above it on its path (equal counts)",
+       "The definition of 'good'"
+      ],
+      [
+       "`mx = max(mx, node.val)`",
+       "Update the path maximum for the children",
+       "Each branch gets its own `mx` value, so no undo is needed"
+      ],
+      [
+       "`good + dfs(left) + dfs(right)`",
+       "Count this node plus good nodes in both subtrees",
+       "Divide and conquer sum"
+      ],
+      [
+       "`dfs(root, root.val)`",
+       "Start with the root's own value, so the root is always good",
+       "Initial bound"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,1,4,3,null,1,5]` (pre-order):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Max on path above",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "3",
+       "3",
+       "good"
+      ],
+      [
+       "1",
+       "3",
+       "not good"
+      ],
+      [
+       "3",
+       "3",
+       "good"
+      ],
+      [
+       "4",
+       "3",
+       "good"
+      ],
+      [
+       "1",
+       "4",
+       "not good"
+      ],
+      [
+       "5",
+       "4",
+       "good"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pass `mx` instead of using a global?",
+    "p": [
+     "Each root-to-node path has its own maximum. Passing `mx` by value means siblings never see each other's changes, so no `pop`/undo is needed; a global would have to be restored when leaving a branch."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Backtracking?"
+     ],
+     "rows": [
+      [
+       "argument `mx` (this code)",
+       "no"
+      ],
+      [
+       "global running max",
+       "yes: restore on exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Good nodes: DFS carrying the maximum value along the path; a node is good if it is at least that maximum."
+ },
+ "1460": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(target)`",
+       "Elements in order; two arrays have the same multiset iff their sorted forms are equal",
+       "Multiset equality"
+      ],
+      [
+       "`==` on lists",
+       "Compares element by element",
+       "Final comparison"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = [1,2,3,4]`, `arr = [2,4,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Sorted"
+     ],
+     "rows": [
+      [
+       "target",
+       "[1, 2, 3, 4]"
+      ],
+      [
+       "arr",
+       "[1, 2, 3, 4]"
+      ],
+      [
+       "equal?",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the reversals not matter?",
+    "p": [
+     "Reversing a subarray of length 2 is an adjacent swap, and adjacent swaps can produce ANY permutation (like bubble sort). So `arr` can be turned into `target` exactly when they contain the same elements with the same counts. The question collapses to a multiset comparison."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Sort both",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "`Counter(target) == Counter(arr)`",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n) for the sorted copies."
+    ]
+   }
+  ],
+  "takeaway": "Reversals can realise any permutation, so the arrays are convertible exactly when they are anagrams (equal multisets)."
+ },
+ "1466": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`adj[a].append((b, 1))`",
+       "Original road `a → b`: seen from `a` it points AWAY from `a`, cost 1 to reverse if we are walking out from 0",
+       "Store each road with its direction as a cost"
+      ],
+      [
+       "`adj[b].append((a, 0))`",
+       "The same road seen from `b`: walking `b → a` follows its direction, so no cost",
+       "Undirected traversal that remembers direction"
+      ],
+      [
+       "DFS from city 0 with `seen`",
+       "The roads form a tree, so each road is crossed exactly once on the way out from 0",
+       "Walk the tree outward from the target city"
+      ],
+      [
+       "`changes += cost`",
+       "A road crossed in its original direction (away from 0) must be reversed",
+       "Counting edges oriented the wrong way"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 6`, roads `0→1, 1→3, 2→3, 4→0, 4→5`:"
+    ],
+    "table": {
+     "head": [
+      "Traversal step",
+      "Meaning",
+      "Cost",
+      "Reversals so far"
+     ],
+     "rows": [
+      [
+       "0 → 1",
+       "edge points away from 0 → reverse",
+       "1",
+       "1"
+      ],
+      [
+       "0 → 4",
+       "edge already points toward 0",
+       "0",
+       "1"
+      ],
+      [
+       "4 → 5",
+       "edge points away from 0 → reverse",
+       "1",
+       "2"
+      ],
+      [
+       "1 → 3",
+       "edge points away from 0 → reverse",
+       "1",
+       "3"
+      ],
+      [
+       "3 → 2",
+       "edge already points toward 0",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why walk outward from 0?",
+    "p": [
+     "We want every road to lead TO city 0. Walking outward from 0, a road that goes `0 → 1` points the wrong way (away from 0) and must be reversed, while `4 → 0` already points toward 0. Because the network is a tree there is exactly one route from each city to 0, so each road's required direction is fixed."
+    ],
+    "table": {
+     "head": [
+      "Road",
+      "Walk from 0",
+      "Reverse?"
+     ],
+     "rows": [
+      [
+       "`0→1`",
+       "0 to 1 follows the arrow (arrow points away from 0)",
+       "yes"
+      ],
+      [
+       "`1→3`",
+       "1 to 3 follows the arrow (away from 0)",
+       "yes"
+      ],
+      [
+       "`2→3`",
+       "walking 3 to 2 goes against the arrow (arrow points toward 0)",
+       "no"
+      ],
+      [
+       "`4→0`",
+       "walking 0 to 4 goes against the arrow (toward 0)",
+       "no"
+      ],
+      [
+       "`4→5`",
+       "walking 4 to 5 follows the arrow (away from 0)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Reorder routes: treat roads as an undirected tree, walk out from city 0, and count roads whose original direction points away from 0."
+ },
+ "1472": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.pages`",
+       "All pages in the current history branch, oldest first",
+       "A list with a cursor models back/forward"
+      ],
+      [
+       "`self.cur`",
+       "Index of the current page",
+       "Cursor"
+      ],
+      [
+       "`pages[:cur + 1] + [url]`",
+       "Visiting a new page DISCARDS all forward history and appends the new page",
+       "Truncate-then-append (like a real browser)"
+      ],
+      [
+       "`max(0, cur - steps)`",
+       "Clamp: cannot go back before the first page",
+       "Boundary clamp"
+      ],
+      [
+       "`min(len(pages) - 1, cur + steps)`",
+       "Cannot go forward past the last page",
+       "Other clamp"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The standard sequence of calls:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "pages",
+      "cur"
+     ],
+     "rows": [
+      [
+       "BrowserHistory(leetcode.com)",
+       "-",
+       "['leetcode.com']",
+       "0"
+      ],
+      [
+       "visit(google.com)",
+       "-",
+       "['leetcode.com', 'google.com']",
+       "1"
+      ],
+      [
+       "visit(facebook.com)",
+       "-",
+       "['leetcode.com', 'google.com', 'facebook.com']",
+       "2"
+      ],
+      [
+       "visit(youtube.com)",
+       "-",
+       "['leetcode.com', 'google.com', 'facebook.com', 'youtube.com']",
+       "3"
+      ],
+      [
+       "back(1)",
+       "facebook.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'youtube.com']",
+       "2"
+      ],
+      [
+       "back(1)",
+       "google.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'youtube.com']",
+       "1"
+      ],
+      [
+       "forward(1)",
+       "facebook.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'youtube.com']",
+       "2"
+      ],
+      [
+       "visit(linkedin.com)",
+       "-",
+       "['leetcode.com', 'google.com', 'facebook.com', 'linkedin.com']",
+       "3"
+      ],
+      [
+       "forward(2)",
+       "linkedin.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'linkedin.com']",
+       "3"
+      ],
+      [
+       "back(2)",
+       "google.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'linkedin.com']",
+       "1"
+      ],
+      [
+       "back(7)",
+       "leetcode.com",
+       "['leetcode.com', 'google.com', 'facebook.com', 'linkedin.com']",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why slice on `visit`?",
+    "p": [
+     "After `back(1)`, the pages ahead of the cursor are still stored. A `visit` must erase them, otherwise `forward` would reach pages from an abandoned branch. `pages[:cur + 1]` keeps only the pages up to and including the current one."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "visit",
+      "back/forward",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "list + cursor (this code)",
+       "O(n) slice",
+       "O(1)",
+       "O(n)"
+      ],
+      [
+       "two stacks",
+       "O(1)",
+       "O(steps)",
+       "O(n)"
+      ],
+      [
+       "doubly linked list",
+       "O(1)",
+       "O(steps)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `visit` O(n) for the slice (O(1) with a pointer-based design), `back`/`forward` O(1).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Browser history: a list plus a cursor; visiting truncates the forward history, and back/forward clamp the cursor to the list bounds."
+ },
+ "1475": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "Stack of INDICES whose discount has not been found; their prices are in increasing order from bottom to top",
+       "Monotonic stack: 'next smaller or equal element'"
+      ],
+      [
+       "`prices[st[-1]] >= p`",
+       "The current price `p` is the first price to the right that is ≤ the stacked price, so it is that item's discount",
+       "Resolve waiting items"
+      ],
+      [
+       "`res[st.pop()] -= p`",
+       "Apply the discount to the popped item",
+       "Update the answer array at the popped index"
+      ],
+      [
+       "`res = prices[:]`",
+       "Copy of the prices; items never popped have no discount",
+       "Default: no discount"
+      ],
+      [
+       "`while` (not `if`)",
+       "One price can be the discount for several earlier items",
+       "Pop all that qualify"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [8,4,6,2,3]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "price",
+      "Discounts applied",
+      "Stack (prices)",
+      "res"
+     ],
+     "rows": [
+      [
+       "0",
+       "8",
+       "-",
+       "[8]",
+       "[8, 4, 6, 2, 3]"
+      ],
+      [
+       "1",
+       "4",
+       "['price[0]=8 − 4']",
+       "[4]",
+       "[4, 4, 6, 2, 3]"
+      ],
+      [
+       "2",
+       "6",
+       "-",
+       "[4, 6]",
+       "[4, 4, 6, 2, 3]"
+      ],
+      [
+       "3",
+       "2",
+       "['price[2]=6 − 2', 'price[1]=4 − 2']",
+       "[2]",
+       "[4, 2, 4, 2, 3]"
+      ],
+      [
+       "4",
+       "3",
+       "-",
+       "[2, 3]",
+       "[4, 2, 4, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack instead of a nested loop?",
+    "p": [
+     "The naive scan for the first smaller-or-equal price to the right is O(n²). The stack keeps the unresolved prices; each index is pushed once and popped at most once, so the total is O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "For each i scan right",
+       "O(n²)"
+      ],
+      [
+       "Monotonic stack (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Next smaller-or-equal element with a monotonic stack; popped indices receive the current price as their discount."
+ },
+ "1478": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`houses.sort()`",
+       "Mailboxes serve contiguous groups of sorted houses",
+       "Partitioning points on a line"
+      ],
+      [
+       "`cost[i][j]`",
+       "Total distance if ONE mailbox serves houses `i..j`, placed at the median `houses[(i + j) // 2]`",
+       "The median minimises the sum of absolute distances"
+      ],
+      [
+       "`dp[g][j]`",
+       "Minimum total distance using `g` mailboxes for the first `j` houses",
+       "DP over (groups, prefix)"
+      ],
+      [
+       "`dp[g-1][i] + cost[i][j-1]`",
+       "The last mailbox serves houses `i..j-1`; the first `i` houses use `g−1` mailboxes",
+       "Try every split point"
+      ],
+      [
+       "`dp[0][0] = 0`",
+       "Zero houses with zero mailboxes cost nothing",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`houses = [1,4,8,10,20]`, `k = 3`. `cost[i][j]` for a few groups (one mailbox at the median):"
+    ],
+    "table": {
+     "head": [
+      "Group",
+      "Median",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "houses[0..1] = [1, 4]",
+       "1",
+       "3"
+      ],
+      [
+       "houses[1..2] = [4, 8]",
+       "4",
+       "4"
+      ],
+      [
+       "houses[2..3] = [8, 10]",
+       "8",
+       "2"
+      ],
+      [
+       "houses[0..3] = [1, 4, 8, 10]",
+       "4",
+       "13"
+      ],
+      [
+       "houses[4..4] = [20]",
+       "20",
+       "0"
+      ],
+      [
+       "houses[0..2] = [1, 4, 8]",
+       "4",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "DP table",
+    "p": [
+     "`dp[g][j]` (rows g = 1..3, columns j = 1..5 houses):"
+    ],
+    "table": {
+     "head": [
+      "g \\ j",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "3",
+       "7",
+       "13",
+       "25"
+      ],
+      [
+       "2",
+       "∞",
+       "0",
+       "3",
+       "5",
+       "13"
+      ],
+      [
+       "3",
+       "∞",
+       "∞",
+       "0",
+       "2",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`dp[3][5] = 5`: for example mailboxes serve `{1,4}`, `{8,10}` and `{20}` for 3 + 2 + 0 = 5."
+    ]
+   },
+   {
+    "h": "Why is the median the right mailbox spot?",
+    "p": [
+     "For points on a line, the sum of absolute distances is minimised at the median: moving the mailbox past it brings it closer to fewer points than it leaves. Even-sized groups have two medians; either gives the same cost."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try all placements",
+       "exponential"
+      ],
+      [
+       "Precompute costs + DP (this code)",
+       "O(n³ + k·n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³) for the cost table as written (O(n²) with prefix sums) plus O(k·n²) for the DP.",
+     "Space: O(n² + k·n)."
+    ]
+   }
+  ],
+  "takeaway": "Allocate mailboxes: sort the houses, precompute the one-mailbox (median) cost of each interval, then DP over how many mailboxes cover each prefix."
+ },
+ "1481": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(arr).values()`",
+       "How many times each distinct integer appears",
+       "Frequencies of the groups we might eliminate"
+      ],
+      [
+       "`sorted(...)`",
+       "Smallest frequencies first",
+       "Greedy: eliminate the cheapest groups first"
+      ],
+      [
+       "`if k >= c: k -= c; removed += 1`",
+       "If we can afford to delete all copies, do it: one fewer unique integer",
+       "Spend removals only on complete groups"
+      ],
+      [
+       "`else: break`",
+       "Partial removal doesn't reduce the unique count, and larger groups cost even more",
+       "Early stop"
+      ],
+      [
+       "`len(counts) - removed`",
+       "Remaining unique integers",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [5,5,4]`, `k = 1`: frequencies sorted = `[1, 2]` (4 appears once, 5 twice)."
+    ],
+    "table": {
+     "head": [
+      "Frequency",
+      "Decision",
+      "Unique values removed"
+     ],
+     "rows": [
+      [
+       "1",
+       "k ≥ 1 → remove all, k = 0",
+       "1"
+      ],
+      [
+       "2",
+       "k = 0 < 2 → stop",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why remove the smallest groups first?",
+    "p": [
+     "Each removal costs one unit and only a COMPLETE group reduces the number of unique integers. With a budget of k, the maximum number of groups you can fully remove is obtained by taking the cheapest groups first."
+    ],
+    "table": {
+     "head": [
+      "Order",
+      "Groups eliminated with k = 3 on frequencies [1,1,2,3]"
+     ],
+     "rows": [
+      [
+       "smallest first (this code)",
+       "2 (1, 1), with 1 left over"
+      ],
+      [
+       "largest first",
+       "1 (3)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) in the number of distinct values (sorting the counts).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Least unique integers after k removals: sort frequencies ascending and delete whole groups greedily until the budget runs out."
+ },
+ "1493": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zeros`",
+       "Number of zeros in the window",
+       "Sliding window with a budget of one zero"
+      ],
+      [
+       "`while zeros > 1`",
+       "Shrink until at most one zero remains",
+       "The one zero is the element we delete"
+      ],
+      [
+       "`best = max(best, right - left)`",
+       "The window has `right − left + 1` elements; we MUST delete one element, so the answer is that minus 1",
+       "Off-by-one: deleting is mandatory"
+      ],
+      [
+       "a window with no zeros",
+       "We still delete one element (a 1), so the length drops by one",
+       "All-ones arrays return `n − 1`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,1,1,0,1,1,0,1]`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "zeros",
+      "window",
+      "length after deleting one",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1",
+       "[0,0]",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "[0,1]",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "[0,2]",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "[0,3]",
+       "3",
+       "3"
+      ],
+      [
+       "4",
+       "0",
+       "1",
+       "[1,4]",
+       "3",
+       "3"
+      ],
+      [
+       "5",
+       "1",
+       "1",
+       "[1,5]",
+       "4",
+       "4"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "[1,6]",
+       "5",
+       "5"
+      ],
+      [
+       "7",
+       "0",
+       "1",
+       "[5,7]",
+       "2",
+       "5"
+      ],
+      [
+       "8",
+       "1",
+       "1",
+       "[5,8]",
+       "3",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `right - left` and not `right - left + 1`?",
+    "p": [
+     "The window may contain one zero, and that zero is the element we delete. If it contains no zero, we still must delete one element. In both cases the resulting run has `window length − 1` ones."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Window",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "`[1,1,1]`",
+       "whole array",
+       "2 (must delete one)"
+      ],
+      [
+       "`[1,0,1,1]`",
+       "whole array",
+       "3 (delete the 0)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Longest subarray of 1s after deleting one element: window with at most one zero; the answer is window length − 1."
+ },
+ "1502": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(arr)`",
+       "An arithmetic progression is any permutation of an arithmetic sequence, so test the sorted order",
+       "Order doesn't matter, only the multiset"
+      ],
+      [
+       "`d = a[1] - a[0]`",
+       "The common difference of the sorted array",
+       "Candidate step"
+      ],
+      [
+       "`all(a[i+1] - a[i] == d …)`",
+       "Every neighbouring gap equals `d`",
+       "Check the whole sequence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [3,5,1]` sorts to `[1,3,5]`, `d = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Gap",
+      "Equals d?"
+     ],
+     "rows": [
+      [
+       "1, 3",
+       "2",
+       "True"
+      ],
+      [
+       "3, 5",
+       "2",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternatives",
+    "p": [
+     "The O(n) version computes `d = (max − min) / (n − 1)` and verifies that each term `min + i·d` is in a set; mention it as the follow-up."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Sort + check gaps (this code)",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "Min, max, and a set: check each `min + i·d`",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Arithmetic progression check: sort, then every adjacent difference must equal the first one."
+ },
+ "1526": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`res = target[0]`",
+       "The first element needs `target[0]` increments from scratch",
+       "Initial cost"
+      ],
+      [
+       "`zip(target, target[1:])`",
+       "Each adjacent pair `(a, b)`",
+       "Compare neighbours"
+      ],
+      [
+       "`max(0, b - a)`",
+       "Going UP from `a` to `b` needs `b − a` fresh operations (new subarrays starting here); going down is free because earlier operations just stop",
+       "Only rises cost"
+      ],
+      [
+       "sum",
+       "Total new operations = sum of all positive rises, starting from 0",
+       "Mountain climbing metaphor"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = [1,2,3,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Cost",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "start",
+       "1"
+      ],
+      [
+       "1 → 2",
+       "+max(0, 1)",
+       "2"
+      ],
+      [
+       "2 → 3",
+       "+max(0, 1)",
+       "3"
+      ],
+      [
+       "3 → 2",
+       "+max(0, -1)",
+       "3"
+      ],
+      [
+       "2 → 1",
+       "+max(0, -1)",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only upward steps?",
+    "p": [
+     "Each operation adds 1 to a contiguous subarray. Where the target rises, some operations must START; where it falls, operations simply END and cost nothing. The minimum number of operations is therefore the total of the rises (counting the first element as a rise from 0)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Simulate subarray increments",
+       "O(n · max)"
+      ],
+      [
+       "Sum of positive rises (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Min increments on subarrays: the answer is target[0] plus the sum of all upward steps between neighbours."
+ },
+ "1529": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prev = '0'`",
+       "The string starts as all zeros, so the first '1' needs a flip",
+       "Initial state of the string"
+      ],
+      [
+       "`c != prev`",
+       "The target changes value here: a suffix flip starting at this position is needed",
+       "Count the number of changes"
+      ],
+      [
+       "`flips += 1; prev = c`",
+       "Flipping a suffix changes every later bit, so afterwards the 'current' value equals `c`",
+       "Track the value the suffix currently has"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = \"10111\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Decision",
+      "flips"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 ≠ 0 → flip",
+       "1"
+      ],
+      [
+       "0",
+       "0 ≠ 1 → flip",
+       "2"
+      ],
+      [
+       "1",
+       "1 ≠ 0 → flip",
+       "3"
+      ],
+      [
+       "1",
+       "same as previous",
+       "3"
+      ],
+      [
+       "1",
+       "same as previous",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this the number of value changes?",
+    "p": [
+     "A suffix flip toggles all bits from position `i` onward, so it creates a change at `i` and none elsewhere. To realise the target you need exactly one flip per change in the sequence `0, t₀, t₁, …`, in order from left to right. Any other order would not finish with fewer flips."
+    ],
+    "table": {
+     "head": [
+      "Target",
+      "Changes in 0,t…",
+      "Flips"
+     ],
+     "rows": [
+      [
+       "`10111`",
+       "0→1, 1→0, 0→1",
+       "3"
+      ],
+      [
+       "`000`",
+       "none",
+       "0"
+      ],
+      [
+       "`101`",
+       "0→1, 1→0, 0→1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum suffix flips = the number of times the value changes when scanning the target after an implicit leading 0."
+ },
+ "1535": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`champ`",
+       "Current winner of the game, starting with `arr[0]`",
+       "The array is a queue where the loser goes to the back; simulate with a pointer"
+      ],
+      [
+       "`wins`",
+       "Consecutive wins of the champion",
+       "Streak"
+      ],
+      [
+       "`x > champ: champ, wins = x, 1`",
+       "A challenger who beats the champion becomes champion with 1 win (that win counts)",
+       "Challenger wins"
+      ],
+      [
+       "`else: wins += 1`",
+       "The champion beats the challenger",
+       "Champion keeps winning"
+      ],
+      [
+       "`if wins == k: return champ`",
+       "Reached `k` consecutive wins",
+       "Early exit"
+      ],
+      [
+       "`return champ`",
+       "If nobody reached `k` in one pass, the maximum element has become champion and will win forever",
+       "The maximum can't lose"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [2,1,3,5,4,6,7]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Challenger",
+      "What happens",
+      "Champion",
+      "wins"
+     ],
+     "rows": [
+      [
+       "1",
+       "champion 2 beats 1 → wins = 1",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "3 beats champion → champion 3, wins = 1",
+       "3",
+       "1"
+      ],
+      [
+       "5",
+       "5 beats champion → champion 5, wins = 1",
+       "5",
+       "1"
+      ],
+      [
+       "4",
+       "champion 5 beats 4 → wins = 2",
+       "5",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a single pass is enough",
+    "p": [
+     "Moving losers to the back doesn't change who faces the champion next, as challengers just arrive in array order. After one pass, the champion is the maximum of the whole array, which wins every later game, so the answer is decided by then (this also means huge `k` is fine: no simulation of `k` rounds)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Simulate with a deque",
+       "O(n + k)"
+      ],
+      [
+       "One pass with a streak counter (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Array game winner: one pass tracking the champion and its win streak; if no one hits k, the maximum is the eternal winner."
+ },
+ "1541": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`need`",
+       "Number of `)` characters still required to close the open `(`; every `(` needs TWO `)`",
+       "Balance counter in units of `)`"
+      ],
+      [
+       "`need += 2` on `(`",
+       "A new `(` requires two closers",
+       "Each opener adds 2"
+      ],
+      [
+       "`need % 2 == 1` before an opener",
+       "A single `)` has appeared but its partner has not: the previous `)` must be completed first by inserting one `)`",
+       "Odd need means we're in the middle of a `))` pair"
+      ],
+      [
+       "`need -= 1` on `)`",
+       "One closer satisfied",
+       "Each `)` reduces need by 1"
+      ],
+      [
+       "`need < 0`",
+       "A `)` with no open `(`: insert one `(` (which brings its two closers, one used right now, so need becomes 1)",
+       "Unmatched closer"
+      ],
+      [
+       "`return res + need`",
+       "Insertions made so far plus the `)` still needed at the end",
+       "Final balance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"(()))\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Action",
+      "need",
+      "insertions"
+     ],
+     "rows": [
+      [
+       "(",
+       "-",
+       "2",
+       "0"
+      ],
+      [
+       "(",
+       "-",
+       "4",
+       "0"
+      ],
+      [
+       ")",
+       "-",
+       "3",
+       "0"
+      ],
+      [
+       ")",
+       "-",
+       "2",
+       "0"
+      ],
+      [
+       ")",
+       "-",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track `need` in units of `)`?",
+    "p": [
+     "The rule `( ` needs `))` makes the problem a balance with step 2 for openers and step 1 for closers. An odd `need` when a new `(` arrives means the last `)` is lonely and must be paired by an extra `)` first."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Insertions"
+     ],
+     "rows": [
+      [
+       "`(()))`",
+       "1 (the final `)` is alone and needs a partner: need ends at 1)"
+      ],
+      [
+       "`())`",
+       "0"
+      ],
+      [
+       "`)))`",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Insertions needed"
+     ],
+     "rows": [
+      [
+       "`(()))`",
+       "1"
+      ],
+      [
+       "`())`",
+       "0"
+      ],
+      [
+       "`)))`",
+       "3"
+      ],
+      [
+       "`))())(`",
+       "3"
+      ],
+      [
+       "`((((((`",
+       "12"
+      ]
+     ]
+    }
+   }
+  ],
+  "takeaway": "Balance parentheses where '(' needs '))': track the number of ')' still needed, insert when it goes negative or is odd before a new '('."
+ },
+ "1574": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first `while` from the right",
+       "Find `r`, the start of the longest non-decreasing SUFFIX",
+       "Sorted suffix"
+      ],
+      [
+       "`if r == 0: return 0`",
+       "The whole array is already sorted",
+       "Nothing to remove"
+      ],
+      [
+       "`best = r`",
+       "Option: remove everything before the suffix (the prefix `arr[0..r-1]`)",
+       "Keep only the sorted suffix"
+      ],
+      [
+       "loop over `l`, extending the sorted prefix",
+       "For each prefix end `l`, find the smallest `r` such that `arr[l] <= arr[r]`; remove `arr[l+1 .. r-1]`",
+       "Two pointers over a prefix and a suffix"
+      ],
+      [
+       "`while r < n and arr[r] < arr[l]: r += 1`",
+       "Move the suffix start right until it can follow `arr[l]` (`r` never moves back as `l` grows)",
+       "Both pointers only move forward"
+      ],
+      [
+       "`if l > 0 and arr[l] < arr[l - 1]: break`",
+       "The prefix is no longer non-decreasing",
+       "Stop extending the prefix"
+      ],
+      [
+       "`best = min(best, r - l - 1)`",
+       "Elements between `l` and `r` are removed",
+       "Length of the removed middle"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,2,3,10,4,2,3,5]`; the longest sorted suffix is `[2,3,5]` starting at index 5."
+    ],
+    "table": {
+     "head": [
+      "l",
+      "State",
+      "Removal",
+      "best"
+     ],
+     "rows": [
+      [
+       "suffix",
+       "sorted suffix starts at r = 5 ([2, 3, 5])",
+       "remove prefix of length",
+       "5"
+      ],
+      [
+       "0",
+       "keep prefix up to 1; suffix starts at 5",
+       "remove 4",
+       "4"
+      ],
+      [
+       "1",
+       "keep prefix up to 2; suffix starts at 5",
+       "remove 3",
+       "3"
+      ],
+      [
+       "2",
+       "keep prefix up to 3; suffix starts at 6",
+       "remove 3",
+       "3"
+      ],
+      [
+       "3",
+       "keep prefix up to 10; suffix starts at 8",
+       "remove 4",
+       "3"
+      ],
+      [
+       "4",
+       "prefix breaks here",
+       "stop",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can `r` only move forward?",
+    "p": [
+     "As `l` grows, `arr[l]` is at least as large (the prefix is non-decreasing), so the smallest valid `r` for the larger `arr[l]` is at least the earlier one. That monotonicity makes the whole algorithm O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try every prefix and suffix pair",
+       "O(n²)"
+      ],
+      [
+       "Two pointers (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Shortest subarray to remove: keep a sorted prefix and a sorted suffix that can be joined, found with two monotone pointers."
+ },
+ "1580": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`accumulate(warehouse, min)`",
+       "Prefix minimum: the tallest box that can be pushed in from the LEFT up to each room",
+       "Rooms block boxes taller than any earlier room"
+      ],
+      [
+       "`accumulate(reversed(warehouse), min)` then `[::-1]`",
+       "Suffix minimum: the tallest box that can reach each room from the RIGHT",
+       "Same from the other side"
+      ],
+      [
+       "`max(left[i], right[i])`",
+       "A room can be reached from the better entrance",
+       "Effective height of room i"
+      ],
+      [
+       "`sorted(...)`",
+       "Rooms by capacity, smallest first",
+       "Greedy matching boxes to rooms"
+      ],
+      [
+       "`boxes.sort()` and pointer `j`",
+       "Place the smallest remaining box into the next-smallest room that fits it",
+       "Two-pointer matching"
+      ],
+      [
+       "`return j`",
+       "Number of boxes placed",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`warehouse = [3, 4, 1, 2]`: prefix minima `[3, 3, 1, 1]`, suffix minima `[1, 1, 1, 2]`, effective capacities (sorted) `[1, 2, 3, 3]`. Boxes sorted: `[1, 2, 2, 3, 4]`."
+    ],
+    "table": {
+     "head": [
+      "Room capacity",
+      "Next smallest box",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "placed"
+      ],
+      [
+       "2",
+       "2",
+       "placed"
+      ],
+      [
+       "3",
+       "2",
+       "placed"
+      ],
+      [
+       "3",
+       "3",
+       "placed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why match smallest box to smallest fitting room?",
+    "p": [
+     "Every room can hold any box up to its effective height, so this is a pure matching of sorted lists. Giving the smallest boxes to the smallest rooms leaves the larger rooms for the larger boxes, and skipping a room that can't hold even the smallest remaining box never loses anything."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Rooms usable"
+     ],
+     "rows": [
+      [
+       "Warehouse I (one entrance)",
+       "prefix minimum only"
+      ],
+      [
+       "Warehouse II (this problem)",
+       "best of prefix and suffix minimum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + m log m).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Warehouse with two entrances: each room's capacity is the max of its left-prefix-min and right-suffix-min; match sorted boxes to sorted capacities."
+ },
+ "1586": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`inorder(n)` into `self.vals`",
+       "Flatten the BST into a sorted list once",
+       "The iterator needs both directions, which a stack-based one-way iterator cannot do"
+      ],
+      [
+       "`self.i = -1`",
+       "Cursor starts BEFORE the first element",
+       "`next()` increments first, then reads"
+      ],
+      [
+       "`hasNext`: `i + 1 < len`",
+       "Is there an element after the cursor?",
+       "Bounds check"
+      ],
+      [
+       "`hasPrev`: `i > 0`",
+       "Is there an element before the current one? (`i = 0` is the first element, so nothing precedes it)",
+       "Bounds check"
+      ],
+      [
+       "`prev`: `i -= 1`",
+       "Step back and read",
+       "Symmetric to `next`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[7,3,15,null,null,9,20]` → values `[3,7,9,15,20]`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "vals",
+      "cursor i"
+     ],
+     "rows": [
+      [
+       "init",
+       "-",
+       "[3, 7, 9, 15, 20]",
+       "-1"
+      ],
+      [
+       "next()",
+       "3",
+       "[3, 7, 9, 15, 20]",
+       "0"
+      ],
+      [
+       "next()",
+       "7",
+       "[3, 7, 9, 15, 20]",
+       "1"
+      ],
+      [
+       "prev()",
+       "3",
+       "[3, 7, 9, 15, 20]",
+       "0"
+      ],
+      [
+       "next()",
+       "7",
+       "[3, 7, 9, 15, 20]",
+       "1"
+      ],
+      [
+       "hasNext()",
+       "True",
+       "[3, 7, 9, 15, 20]",
+       "1"
+      ],
+      [
+       "hasPrev()",
+       "True",
+       "[3, 7, 9, 15, 20]",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Trade-off",
+    "p": [
+     "Flattening costs O(n) up front and O(n) memory, but gives O(1) `next` and `prev`. A lazy design with two stacks needs more code and still must cache visited values to support `prev`."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "Constructor",
+      "next / prev",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "flatten (this code)",
+       "O(n)",
+       "O(1)",
+       "O(n)"
+      ],
+      [
+       "lazy stack + cached list",
+       "O(h)",
+       "O(1) amortised",
+       "O(visited)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) construction; O(1) per operation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Bidirectional BST iterator: flatten in-order into a list and move an index back and forth."
+ },
+ "1589": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`diff`",
+       "Difference array: `+1` at `l`, `−1` at `r + 1`",
+       "Count how many requests cover each index in O(1) per request"
+      ],
+      [
+       "`accumulate(diff[:n])`",
+       "Prefix sum gives `freq[i]`, the number of requests that include index `i`",
+       "Convert differences into counts"
+      ],
+      [
+       "`freq.sort()` and `nums.sort()`",
+       "Match the most frequent positions with the largest numbers",
+       "Rearrangement inequality: pair the sorted lists in the same order to maximise the sum of products"
+      ],
+      [
+       "`sum(a * b …) % (10**9 + 7)`",
+       "Total of freq × value, modulo 10⁹ + 7",
+       "Modulus for large totals"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5]`, requests `[1,3]` and `[0,1]`. Coverage `freq = [1, 2, 1, 1, 0]`. Sorted: `[0, 1, 1, 1, 2]` and `[1, 2, 3, 4, 5]`."
+    ],
+    "table": {
+     "head": [
+      "Position (sorted freq)",
+      "Frequency",
+      "Number assigned",
+      "Product"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "4"
+      ],
+      [
+       "4",
+       "2",
+       "5",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Total = 19. The positions covered the most (twice) receive the largest numbers."
+    ]
+   },
+   {
+    "h": "Why sort both?",
+    "p": [
+     "Each position contributes `frequency × value`. To maximise the total, the biggest values should sit at the positions with the biggest frequencies (the rearrangement inequality). Sorting both lists and pairing them elementwise realises that arrangement; the actual permutation of `nums` doesn't matter, only the multiset pairing."
+    ],
+    "table": {
+     "head": [
+      "Pairing",
+      "Sum for freq [0,1,1,2,0] and nums [1..5]"
+     ],
+     "rows": [
+      [
+       "sorted with sorted (this code)",
+       "max"
+      ],
+      [
+       "any other",
+       "less than or equal"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Max sum of range queries: count how often each index is requested with a difference array, then pair the sorted frequencies with the sorted numbers."
+ },
+ "1604": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`times[name].append(int(h) * 60 + int(m))`",
+       "Convert `HH:MM` to minutes after midnight, grouped by person",
+       "Turn times into numbers; group with a dict of lists"
+      ],
+      [
+       "`ts.sort()`",
+       "Chronological order; the input is not sorted",
+       "Time-window checks need sorted times"
+      ],
+      [
+       "`ts[i] - ts[i - 2] <= 60`",
+       "Three consecutive swipes `i−2, i−1, i` fit in a 60-minute span iff the first and the third are at most 60 minutes apart",
+       "Sliding window of size 3 on sorted times"
+      ],
+      [
+       "`break`",
+       "One alert per person is enough",
+       "Early exit"
+      ],
+      [
+       "`sorted(alerts)`",
+       "The answer must be alphabetical",
+       "Output order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Swipe times (in minutes) per person:"
+    ],
+    "table": {
+     "head": [
+      "Name",
+      "Sorted minutes",
+      "Check"
+     ],
+     "rows": [
+      [
+       "daniel",
+       "[600, 640, 660]",
+       "660 − 600 = 60 ≤ 60 → alert"
+      ],
+      [
+       "luis",
+       "[540, 660, 780, 900]",
+       "no three swipes within 60 minutes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare `i` with `i − 2` only?",
+    "p": [
+     "With sorted times, the tightest triple ending at `i` uses the two swipes just before it. If those three are not within 60 minutes, no earlier swipe can be closer to `ts[i]`. So a window of size three suffices."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All triples",
+       "O(n³) per person"
+      ],
+      [
+       "Sorted window of 3 (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A subtlety",
+    "p": [
+     "The one-hour rule is inclusive: `10:00` and `11:00` are exactly 60 minutes apart and count as within the hour, which is why the test is `<= 60`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Key-card alerts: group times by person, sort, and look for any swipe within 60 minutes of the swipe two places earlier."
+ },
+ "1610": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`atan2(dy, dx)` then `degrees`",
+       "Direction of each point as seen from `location`, in degrees from −180 to 180",
+       "Angle of a vector"
+      ],
+      [
+       "`same`",
+       "Points exactly at `location` are visible at any angle",
+       "Special-case the point itself"
+      ],
+      [
+       "`angs.sort()`",
+       "Sort the directions around the circle",
+       "Circular sliding window needs sorted angles"
+      ],
+      [
+       "`angs += [a + 360 for a in angs]`",
+       "Duplicate the angles shifted by 360° so a window can wrap past 180° back to −180°",
+       "Unroll a circular array"
+      ],
+      [
+       "`angs[right] - angs[left] > angle + 1e-9`",
+       "The window is wider than the field of view; the epsilon avoids floating-point misses at exactly `angle`",
+       "Tolerance for floating-point comparison"
+      ],
+      [
+       "`best + same`",
+       "Visible points in the best window plus the ones at the location",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Location (1,1), angle 90. The three points are at directions [0.0, 45.0, 45.0]° (the point `(2,1)` is straight right, the other two diagonal). After duplication the sliding window runs over the doubled list:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "angle",
+      "window [left, right]",
+      "Points",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0.0",
+       "[0,0]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "45.0",
+       "[0,1]",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "45.0",
+       "[0,2]",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "360.0",
+       "[3,3]",
+       "1",
+       "3"
+      ],
+      [
+       "4",
+       "405.0",
+       "[3,4]",
+       "2",
+       "3"
+      ],
+      [
+       "5",
+       "405.0",
+       "[3,5]",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why duplicate the angles?",
+    "p": [
+     "The directions form a circle. A field of view may start near 350° and extend past 360° to 10°; a sorted plain list would split those points apart. Appending each angle plus 360 puts the wrapped-around points after the originals, so an ordinary sliding window finds them as a contiguous run."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try a field of view at each point",
+       "O(n²)"
+      ],
+      [
+       "Sort + circular sliding window (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Visible points: convert to angles around the location, sort, double the list with +360 to unroll the circle, and slide a window of width `angle`."
+ },
+ "1631": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`best[r][c]`",
+       "Smallest possible 'maximum step height' needed to reach (r, c)",
+       "Dijkstra's distance, but the 'cost' of a path is its LARGEST edge"
+      ],
+      [
+       "`pq` of `(effort, r, c)`",
+       "Min-heap by effort: always expand the cell reached with the least effort so far",
+       "Dijkstra with a heap"
+      ],
+      [
+       "`max(e, abs(h[a][b] - h[r][c]))`",
+       "The effort of a path is the maximum height difference on it, so extending a path takes the max, not the sum",
+       "Minimax path (bottleneck)"
+      ],
+      [
+       "`if e > best[r][c]: continue`",
+       "Stale heap entry: we already found a better route here",
+       "Lazy deletion"
+      ],
+      [
+       "`if ne < best[a][b]`",
+       "Only push when the new route improves the neighbour",
+       "Relaxation"
+      ],
+      [
+       "`return e` at the target",
+       "The first time the target is popped, its effort is minimal",
+       "Dijkstra's greedy property holds because `max` never decreases along a path"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,2],[3,8,2],[5,3,5]]`; each pop shows the cell and the improved neighbours (neighbour → effort):"
+    ],
+    "table": {
+     "head": [
+      "Popped cell",
+      "Effort",
+      "Neighbours improved"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "['(1,0) → 2', '(0,1) → 1']"
+      ],
+      [
+       "(0,1)",
+       "1",
+       "['(1,1) → 6', '(0,2) → 1']"
+      ],
+      [
+       "(0,2)",
+       "1",
+       "['(1,2) → 1']"
+      ],
+      [
+       "(1,2)",
+       "1",
+       "['(2,2) → 3']"
+      ],
+      [
+       "(1,0)",
+       "2",
+       "['(2,0) → 2', '(1,1) → 5']"
+      ],
+      [
+       "(2,0)",
+       "2",
+       "['(2,1) → 2']"
+      ],
+      [
+       "(2,1)",
+       "2",
+       "['(2,2) → 2']"
+      ],
+      [
+       "(2,2)",
+       "2",
+       "goal reached"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does Dijkstra work with `max`?",
+    "p": [
+     "Dijkstra needs path costs that never decrease as the path grows. The maximum of edge costs satisfies this: adding an edge can only keep or raise the maximum. So the first time a cell is popped, its effort is final."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Dijkstra with a heap (this code)",
+       "O(mn log mn)"
+      ],
+      [
+       "Binary search on effort + BFS",
+       "O(mn log H)"
+      ],
+      [
+       "Union-Find over sorted edges",
+       "O(mn log mn)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n log(m·n)).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Path with minimum effort: Dijkstra where a path's cost is the maximum height difference along it, relaxing with max instead of sum."
+ }
+}
