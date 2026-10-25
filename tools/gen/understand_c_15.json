@@ -1674,9 +1674,9 @@
      ],
      "rows": [
       [
-       "suffix",
-       "sorted suffix starts at r = 5 ([2, 3, 5])",
-       "remove prefix of length",
+       "start",
+       "longest sorted suffix starts at r = 5 ([2, 3, 5])",
+       "remove the first 5 elements",
        "5"
       ],
       [

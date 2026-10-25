@@ -1,0 +1,2183 @@
+{
+ "442": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abs(x) - 1`",
+       "The index that value x 'points to'",
+       "Values are 1…n, so each value maps to a valid index; `abs` because an earlier step may have negated x"
+      ],
+      [
+       "`nums[i] < 0`",
+       "Slot i was already marked",
+       "The value i+1 has been seen before"
+      ],
+      [
+       "`nums[i] = -nums[i]`",
+       "Negate to mark 'seen'",
+       "The sign bit becomes a free visited flag, so no extra set is needed"
+      ],
+      [
+       "`res.append(abs(x))`",
+       "Record the repeated value",
+       "Use `abs` since x itself may be negative"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,7,8,2,3,1]`: result [2, 3]."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "index",
+      "Action",
+      "nums"
+     ],
+     "rows": [
+      [
+       "4",
+       "3",
+       "mark nums[3] negative",
+       "[4, 3, 2, -7, 8, 2, 3, 1]"
+      ],
+      [
+       "3",
+       "2",
+       "mark nums[2] negative",
+       "[4, 3, -2, -7, 8, 2, 3, 1]"
+      ],
+      [
+       "-2",
+       "1",
+       "mark nums[1] negative",
+       "[4, -3, -2, -7, 8, 2, 3, 1]"
+      ],
+      [
+       "-7",
+       "6",
+       "mark nums[6] negative",
+       "[4, -3, -2, -7, 8, 2, -3, 1]"
+      ],
+      [
+       "8",
+       "7",
+       "mark nums[7] negative",
+       "[4, -3, -2, -7, 8, 2, -3, -1]"
+      ],
+      [
+       "2",
+       "1",
+       "already negative → duplicate 2",
+       "[4, -3, -2, -7, 8, 2, -3, -1]"
+      ],
+      [
+       "-3",
+       "2",
+       "already negative → duplicate 3",
+       "[4, -3, -2, -7, 8, 2, -3, -1]"
+      ],
+      [
+       "-1",
+       "0",
+       "mark nums[0] negative",
+       "[-4, -3, -2, -7, 8, 2, -3, -1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the sign trick work?",
+    "p": [
+     "Every value is in 1…n, so the array itself can act as a hash set whose keys are the indexes. Each value appears once or twice, so a slot is marked at most twice: the second marking attempt finds it already negative and reports a duplicate. This gives O(1) extra space; the trade-off is that the input array is modified (it ends up with negative entries)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) extra (besides the output)."
+    ]
+   }
+  ],
+  "takeaway": "Use the array as its own visited set: negate nums[|x|−1] on first sight, and a second visit means x is a duplicate."
+ },
+ "445": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`a.append(l1.val)` loops",
+       "Copy each list's digits into a Python list used as a stack",
+       "Linked lists can only be read front-to-back, but addition starts from the last digit"
+      ],
+      [
+       "`a.pop()` / `b.pop()`",
+       "Take the last (least significant) digit",
+       "Stack order reverses the traversal"
+      ],
+      [
+       "`divmod(s, 10)`",
+       "Returns `(s // 10, s % 10)` in one call",
+       "Carry and digit together"
+      ],
+      [
+       "`ListNode(d, head)`",
+       "New node pointing to the existing result",
+       "Prepending builds the answer with the most significant digit last added, so it ends up first"
+      ],
+      [
+       "`while a or b or carry`",
+       "Continue until all digits and the carry are used",
+       "Handles different lengths and a final carry"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`7→2→4→3` (7243) plus `5→6→4` (564) gives 7807. Each row consumes the next digits from the stacks:"
+    ],
+    "table": {
+     "head": [
+      "digit a",
+      "digit b",
+      "sum s (with carry)",
+      "digit",
+      "carry",
+      "Result list (head first)"
+     ],
+     "rows": [
+      [
+       "3",
+       "4",
+       "7",
+       "7",
+       "0",
+       "7"
+      ],
+      [
+       "4",
+       "6",
+       "10",
+       "0",
+       "1",
+       "0→7"
+      ],
+      [
+       "2",
+       "5",
+       "8",
+       "8",
+       "0",
+       "8→0→7"
+      ],
+      [
+       "7",
+       "—",
+       "7",
+       "7",
+       "0",
+       "7→8→0→7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why stacks, and what is the alternative?",
+    "p": [
+     "Because digits are stored most significant first, we need the end of each list first. Stacks give that in O(1) per pop."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Extra space",
+      "Note"
+     ],
+     "rows": [
+      [
+       "Stacks (this code)",
+       "O(n + m)",
+       "Doesn't modify the input lists"
+      ],
+      [
+       "Reverse both lists, add, reverse again",
+       "O(1)",
+       "Modifies the inputs (or reverses back)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(n + m) for the stacks."
+    ]
+   }
+  ],
+  "takeaway": "Add numbers stored most-significant-first by pushing digits on stacks, popping the least significant first, and prepending result nodes."
+ },
+ "448": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abs(x) - 1`",
+       "Index that value x points to",
+       "Values are 1…n; `abs` because x may already be negated"
+      ],
+      [
+       "`nums[i] = -abs(nums[i])`",
+       "Force slot i to be negative (idempotent)",
+       "Marking twice doesn't flip the sign back, unlike plain `-nums[i]`"
+      ],
+      [
+       "`x > 0`",
+       "Slot never marked",
+       "Value i+1 never appeared"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,7,8,2,3,1]` after marking: `[-4, -3, -2, -7, 8, 2, -3, -1]`. Positions 4 and 5 (0-based) are still positive, so the missing numbers are [5, 6]."
+    ],
+    "table": {
+     "head": [
+      "Index (0-based)",
+      "Value",
+      "Marked (negative)?"
+     ],
+     "rows": [
+      [
+       "0",
+       "-4",
+       "yes"
+      ],
+      [
+       "1",
+       "-3",
+       "yes"
+      ],
+      [
+       "2",
+       "-2",
+       "yes"
+      ],
+      [
+       "3",
+       "-7",
+       "yes"
+      ],
+      [
+       "4",
+       "8",
+       "no → 5 is missing"
+      ],
+      [
+       "5",
+       "2",
+       "no → 6 is missing"
+      ],
+      [
+       "6",
+       "-3",
+       "yes"
+      ],
+      [
+       "7",
+       "-1",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `-abs(nums[i])` here but plain negation in problem 442?",
+    "p": [
+     "Here duplicates are expected and harmless: marking an already-negative slot must keep it negative. With `-nums[i]` the second mark of a duplicate value (2 and 3 both appear twice) would flip the slot back to positive and wrongly report it as missing."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) extra (besides the output); the input is modified."
+    ]
+   }
+  ],
+  "takeaway": "Negate nums[|x|−1] for every x; the indexes that stay positive are the missing values."
+ },
+ "451": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Letter → count",
+       "Frequency table"
+      ],
+      [
+       "`.most_common()`",
+       "List of `(letter, count)` sorted by count, highest first",
+       "Sorting by frequency without writing a `sorted(..., key=...)`; ties keep first-seen order"
+      ],
+      [
+       "`ch * c`",
+       "The letter repeated c times",
+       "Writes a whole group at once"
+      ],
+      [
+       "`''.join(...)`",
+       "Concatenates the groups",
+       "Single pass instead of repeated `+=`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'tree'`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`Counter('tree')`",
+       "{'t': 1, 'r': 1, 'e': 2}"
+      ],
+      [
+       "`.most_common()`",
+       "[('e', 2), ('t', 1), ('r', 1)]"
+      ],
+      [
+       "`ch * c` for each",
+       "['ee', 't', 'r']"
+      ],
+      [
+       "`join`",
+       "'eetr'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why group equal letters together?",
+    "p": [
+     "Writing each letter `c` times in one piece guarantees equal characters stay adjacent, as the problem requires. The order among equal counts is unspecified, so `'eetr'` and `'eert'` are both accepted."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log k) where k is the number of distinct letters (sorting k items); O(n log n) at worst.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count with a Counter, order groups by count with most_common(), and write each letter repeated count times."
+ },
+ "457": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(j + nums[j]) % n`",
+       "Next index with wrap-around",
+       "`%` keeps the index in range; works for negative steps because Python's `%` is non-negative"
+      ],
+      [
+       "`(nums[j] > 0) == forward`",
+       "Same direction as the starting jump",
+       "All jumps in a cycle must be forward or all backward"
+      ],
+      [
+       "`nj == j`",
+       "Jump lands on itself",
+       "A cycle of length 1 is not allowed"
+      ],
+      [
+       "`seen` set",
+       "Indexes visited on this walk",
+       "Revisiting one means a cycle"
+      ],
+      [
+       "`nums[p] = 0` for `p in seen`",
+       "Mark a failed path as dead",
+       "Later starts reaching these indexes stop immediately (`nums[j] != 0` fails), keeping the total work O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,-1,1,2,2]` returns True:"
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "Walk",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "0→2; 2→3; 3→0; 0 already seen → cycle",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A case with no valid cycle: `[-1,2]`",
+    "p": [
+     "Returns False. Start 0 moves backward 0→1 (index −1 mod 2 = 1); there nums[1] = 2 is forward, so the direction changes and the walk ends; both visited indexes are zeroed."
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "Walk",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "0→1 (dead end)",
+       "mark visited as 0"
+      ],
+      [
+       "1",
+       "1→1 self-loop: stop (dead end)",
+       "mark visited as 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why mark dead paths with 0?",
+    "p": [
+     "Without it, every start could re-walk long chains: O(n²). A walk that fails can never become part of a valid cycle (the direction rule or a self-loop broke it), so its indexes can be disabled for all later starts. The cost is that the input is modified."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — each index is walked in at most one failed path.",
+     "Space: O(n) for `seen` in this version (the classic fast/slow pointer version uses O(1))."
+    ]
+   }
+  ],
+  "takeaway": "Follow same-direction jumps from each start; a repeat means a cycle, and failed paths are zeroed so work stays linear."
+ },
+ "460": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.val`",
+       "key → value",
+       "Plain lookup"
+      ],
+      [
+       "`self.freq`",
+       "key → use count",
+       "Which bucket the key is in"
+      ],
+      [
+       "`buckets[f]` (an `OrderedDict` per frequency)",
+       "Keys with frequency f, in order of use (oldest first)",
+       "Ties on frequency break by least recently used: `popitem(last=False)` removes the oldest"
+      ],
+      [
+       "`minf`",
+       "Smallest frequency currently present",
+       "Tells which bucket to evict from in O(1)"
+      ],
+      [
+       "`del buckets[f][key]` then insert into `f+1`",
+       "Move a key up one frequency",
+       "O(1) with an ordered dict; inserting at the end marks it most recent in its new bucket"
+      ],
+      [
+       "`defaultdict(OrderedDict)`",
+       "Creates a bucket on first use",
+       "No manual bucket creation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Capacity 2 (LFU is Least Frequently Used):"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "State afterward"
+     ],
+     "rows": [
+      [
+       "put(1, 1)",
+       "—",
+       "freq {1: 1}, minf 1, buckets {1: [1]}"
+      ],
+      [
+       "put(2, 2)",
+       "—",
+       "freq {1: 1, 2: 1}, minf 1, buckets {1: [1, 2]}"
+      ],
+      [
+       "get(1,)",
+       "1",
+       "freq {1: 2, 2: 1}, minf 1, buckets {1: [2], 2: [1]}"
+      ],
+      [
+       "put(3, 3)",
+       "—",
+       "freq {1: 2, 3: 1}, minf 1, buckets {1: [3], 2: [1]}"
+      ],
+      [
+       "get(2,)",
+       "-1",
+       "freq {1: 2, 3: 1}, minf 1, buckets {1: [3], 2: [1]}"
+      ],
+      [
+       "get(3,)",
+       "3",
+       "freq {1: 2, 3: 2}, minf 2, buckets {2: [1, 3]}"
+      ],
+      [
+       "put(4, 4)",
+       "—",
+       "freq {3: 2, 4: 1}, minf 1, buckets {1: [4], 2: [3]}"
+      ],
+      [
+       "get(1,)",
+       "-1",
+       "freq {3: 2, 4: 1}, minf 1, buckets {1: [4], 2: [3]}"
+      ],
+      [
+       "get(3,)",
+       "3",
+       "freq {3: 3, 4: 1}, minf 1, buckets {1: [4], 3: [3]}"
+      ],
+      [
+       "get(4,)",
+       "4",
+       "freq {3: 3, 4: 2}, minf 2, buckets {2: [4], 3: [3]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `minf` easy to maintain?",
+    "bullets": [
+     "After a new key is inserted, the minimum frequency is 1 (`self.minf = 1`), because a fresh key has frequency 1.",
+     "When a key moves up from frequency f and bucket f becomes empty while f was the minimum, the minimum becomes f+1 (that key itself is now there).",
+     "On eviction the code pops from `buckets[minf]`, then the new key sets `minf = 1` anyway."
+    ]
+   },
+   {
+    "h": "Why an ordered dict per frequency?",
+    "table": {
+     "head": [
+      "Structure",
+      "Find least recent in a bucket",
+      "Move key"
+     ],
+     "rows": [
+      [
+       "List",
+       "O(n) (`pop(0)` shifts every item)",
+       "O(n) (removing a middle key)"
+      ],
+      [
+       "`OrderedDict`",
+       "O(1) `popitem(last=False)`",
+       "O(1) delete + insert"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per `get` and `put`.",
+     "Space: O(capacity)."
+    ]
+   }
+  ],
+  "takeaway": "LFU (Least Frequently Used) cache = frequency buckets of ordered keys plus a min-frequency pointer: evict the oldest key of the lowest bucket."
+ },
+ "463": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`total += 4`",
+       "Each land cell starts with 4 edges",
+       "Counts every side as if the cell were isolated"
+      ],
+      [
+       "`i and grid[i-1][j]`",
+       "There is a row above and that cell is land",
+       "`i` is 0 on the top row, which blocks the negative index `grid[-1]`"
+      ],
+      [
+       "`total -= 2`",
+       "Remove the shared edge from both cells",
+       "One shared edge was counted once for each cell"
+      ],
+      [
+       "only look up and left",
+       "Each neighbouring pair is examined exactly once",
+       "Looking in all four directions would double-count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]`: land cells = 7, adjacent pairs = 6, so 4·7 − 2·6 = 16."
+    ],
+    "table": {
+     "head": [
+      "Land cell",
+      "Adjustment",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "no land above/left",
+       "4"
+      ],
+      [
+       "(1,0)",
+       "no land above/left",
+       "8"
+      ],
+      [
+       "(1,1)",
+       "up is land: −2; left is land: −2",
+       "8"
+      ],
+      [
+       "(1,2)",
+       "left is land: −2",
+       "10"
+      ],
+      [
+       "(2,1)",
+       "up is land: −2",
+       "12"
+      ],
+      [
+       "(3,0)",
+       "no land above/left",
+       "16"
+      ],
+      [
+       "(3,1)",
+       "up is land: −2; left is land: −2",
+       "16"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtract 2 per shared edge?",
+    "p": [
+     "A shared edge is not part of the perimeter for either cell. Each of the two cells counted it as one of its 4 sides, so removing it takes 2 off the total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Perimeter = 4 × land cells − 2 × shared edges; check only up and left so each pair counts once."
+ },
+ "475": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`heaters.sort()`",
+       "Sort the heater positions",
+       "Binary search needs sorted data"
+      ],
+      [
+       "`bisect_left(heaters, h)`",
+       "Index of the first heater at position ≥ h",
+       "The nearest heater is either this one or the one just before"
+      ],
+      [
+       "`heaters[i] - h`",
+       "Distance to the nearest heater on the right",
+       "Only if `i < len(heaters)`"
+      ],
+      [
+       "`h - heaters[i-1]`",
+       "Distance to the nearest heater on the left",
+       "Only if `i > 0`"
+      ],
+      [
+       "`max(res, d)`",
+       "The radius must cover the worst house",
+       "Answer = max over houses of (distance to nearest heater)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Houses `[1,2,3]`, heater `[2]` gives 1:"
+    ],
+    "table": {
+     "head": [
+      "House",
+      "bisect_left",
+      "Candidates",
+      "Nearest d",
+      "res"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "right 2: 1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "0",
+       "right 2: 0",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "left 2: 1",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A one-sided case: houses `[1,5]`, heaters `[2]`",
+    "p": [
+     "House 5 has no heater on its right (`i = len(heaters)`), so only the left distance counts. Result 3."
+    ],
+    "table": {
+     "head": [
+      "House",
+      "bisect_left",
+      "Candidates",
+      "Nearest d",
+      "res"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "right 2: 1",
+       "1",
+       "1"
+      ],
+      [
+       "5",
+       "1",
+       "left 2: 3",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two checks around the insertion point?",
+    "p": [
+     "`bisect_left` splits the sorted heaters into those before h and those at or after it. The closest heater must be the largest one below h or the smallest one at or above h, so checking both neighbours is enough and the search is O(log m) per house."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) log m): sorting heaters plus a binary search per house.",
+     "Space: O(1) extra (sorting happens in place)."
+    ]
+   }
+  ],
+  "takeaway": "For every house find the nearest heater with binary search (check both neighbours of the insertion point); the answer is the largest such distance."
+ },
+ "490": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque([tuple(start)])`",
+       "Queue of stopping positions",
+       "BFS (Breadth-First Search) over positions where the ball can rest, not over every cell"
+      ],
+      [
+       "`seen = {tuple(start)}`",
+       "Stops already queued",
+       "Tuples are hashable; lists are not"
+      ],
+      [
+       "inner `while 0 <= a+dr < m … == 0`",
+       "Roll until the next cell is a wall or the edge",
+       "Simulates one push; each push is one BFS edge"
+      ],
+      [
+       "`[r, c] == destination`",
+       "The ball is at the destination as a stopping point",
+       "The ball must stop there, not just pass through"
+      ],
+      [
+       "`(a, b) not in seen`",
+       "Skip stops already visited",
+       "Prevents infinite loops"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Maze (0 empty, 1 wall) `00100 / 00000 / 00010 / 11011 / 00000`, start (0,4), destination (4,4). The BFS pops these stopping squares:"
+    ],
+    "table": {
+     "head": [
+      "Popped stop",
+      "Action"
+     ],
+     "rows": [
+      [
+       "(0, 4)",
+       "new stops: [(2, 4), (0, 3)]"
+      ],
+      [
+       "(2, 4)",
+       "new stops: none"
+      ],
+      [
+       "(0, 3)",
+       "new stops: [(1, 3)]"
+      ],
+      [
+       "(1, 3)",
+       "new stops: [(1, 4), (1, 0)]"
+      ],
+      [
+       "(1, 4)",
+       "new stops: none"
+      ],
+      [
+       "(1, 0)",
+       "new stops: [(2, 0), (0, 0)]"
+      ],
+      [
+       "(2, 0)",
+       "new stops: [(2, 2)]"
+      ],
+      [
+       "(0, 0)",
+       "new stops: [(0, 1)]"
+      ],
+      [
+       "(2, 2)",
+       "new stops: [(4, 2), (1, 2)]"
+      ],
+      [
+       "(0, 1)",
+       "new stops: [(2, 1)]"
+      ],
+      [
+       "(4, 2)",
+       "new stops: [(4, 4), (4, 0)]"
+      ],
+      [
+       "(1, 2)",
+       "new stops: none"
+      ],
+      [
+       "(2, 1)",
+       "new stops: none"
+      ],
+      [
+       "(4, 4)",
+       "destination → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS over stops, not cells?",
+    "p": [
+     "The ball can't change direction mid-roll, so the only decisions are made at stopping squares. Treating each full roll as one edge keeps the graph small. A square the ball only passes through is not a node, which is why the destination check is done on popped stops."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·(m+n)): at most m·n stops, each rolling up to m or n cells in four directions.",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "BFS on stopping points: each push rolls the ball to a wall; only squares where it stops become graph nodes."
+ },
+ "493": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sort(a)` returns `(sorted list, count)`",
+       "Merge sort that also counts pairs",
+       "Counting rides on the merge sort's structure"
+      ],
+      [
+       "`x > 2 * r[j]`",
+       "The reverse-pair condition",
+       "Checked against the already sorted right half"
+      ],
+      [
+       "`j` pointer never moves back",
+       "As `x` grows (left half is sorted), more of `r` qualifies",
+       "Two-pointer scan: O(len(l) + len(r)) per merge"
+      ],
+      [
+       "`cnt += j`",
+       "`j` elements of `r` pair with this `x`",
+       "All of `r[:j]` satisfy x > 2·r"
+      ],
+      [
+       "`list(merge(l, r))`",
+       "`heapq.merge` of two sorted lists",
+       "Produces the sorted combination for the parent level"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,2,3,1]` has 2 reverse pairs: (3,1) at positions 1 and 4, and (3,1) at positions 3 and 4. Each merge counts pairs where the left element comes from the left half and the right element from the right half (listed from the deepest merge up):"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Left half (sorted)",
+      "Right half (sorted)",
+      "Pairs counted here",
+      "Count so far in this subtree"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1]",
+       "[3]",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "[3]",
+       "[1]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "[2]",
+       "[1, 3]",
+       "0",
+       "1"
+      ],
+      [
+       "0",
+       "[1, 3]",
+       "[1, 2, 3]",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count before merging?",
+    "p": [
+     "The pairs we want have i < j with the left element larger. Splitting at the midpoint, pairs are either entirely inside a half (counted by the recursion) or cross the midpoint. For crossing pairs, order inside each half no longer matters, so sorting the halves lets one pointer sweep count them. The merge afterwards sorts the parent for its own level."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n) for the temporary lists."
+    ]
+   }
+  ],
+  "takeaway": "Merge-sort counting: count cross-half pairs with a monotone pointer before merging."
+ },
+ "496": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`st` (stack)",
+       "Numbers still waiting for a greater element to their right",
+       "Kept in decreasing order from bottom to top: a monotonic stack"
+      ],
+      [
+       "`st[-1] < x`",
+       "The new number is greater than the waiting one",
+       "Then `x` is the next greater element of that one"
+      ],
+      [
+       "`nxt[st.pop()] = x`",
+       "Record the answer in a dict",
+       "Value → its next greater element (values are unique)"
+      ],
+      [
+       "`nxt.get(x, -1)`",
+       "Answer or −1 if none was found",
+       "Numbers left on the stack never found a greater one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums2 = [1,3,4,2]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Resolved (popped → next greater)",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "1",
+       "—",
+       "[1]"
+      ],
+      [
+       "3",
+       "1→3",
+       "[3]"
+      ],
+      [
+       "4",
+       "3→4",
+       "[4]"
+      ],
+      [
+       "2",
+       "—",
+       "[4, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result for nums1 = [4,1,2]",
+    "p": [
+     "Lookups: 4 → −1, 1 → 3, 2 → −1, giving `[-1, 3, -1]`."
+    ]
+   },
+   {
+    "h": "Why a stack and not a nested loop?",
+    "p": [
+     "Each number of nums2 is pushed once and popped at most once. A number leaves the stack the moment a bigger one arrives."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "For each x, scan right in nums2",
+       "O(n·m)"
+      ],
+      [
+       "Monotonic stack once over nums2 (this code)",
+       "O(n + m)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(m) for the stack and dict."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack: pop every smaller waiting number when a bigger one arrives; that number is their next greater element."
+ },
+ "502": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(zip(capital, profits))`",
+       "Projects as (capital needed, profit) sorted by capital",
+       "Cheapest-to-start first, so affordable ones form a prefix"
+      ],
+      [
+       "`projects[i][0] <= w`",
+       "Project is affordable with current capital w",
+       "Move every newly affordable project into the heap"
+      ],
+      [
+       "`heappush(heap, -profit)`",
+       "Max-heap of profits (stored negated)",
+       "`heapq` is a min-heap; negation makes the biggest profit pop first"
+      ],
+      [
+       "`w -= heappop(heap)`",
+       "Take the most profitable project; subtracting a negative adds profit",
+       "Greedy choice each round"
+      ],
+      [
+       "`if not heap: break`",
+       "Nothing affordable",
+       "Stop early, fewer than k projects"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 2`, `w = 0`, profits `[1,2,3]`, capital `[0,1,1]` (sorted projects: (0,1), (1,2), (1,3)):"
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "Newly affordable (capital, profit)",
+      "Pick",
+      "Capital w"
+     ],
+     "rows": [
+      [
+       "1",
+       "[(0, 1)]",
+       "take profit 1",
+       "1"
+      ],
+      [
+       "2",
+       "[(1, 2), (1, 3)]",
+       "take profit 3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy by profit among affordable projects?",
+    "p": [
+     "Capital only grows, so a project that is affordable now stays affordable later. Taking the largest profit now never prevents any future option and gives the most capital for unlocking the next projects. The heap holds all currently affordable profits so the best one is available in O(log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n): sorting plus each project pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with a max-heap: unlock every project you can afford, take the most profitable, repeat up to k times."
+ },
+ "505": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`heap` of `(distance, i, j)`",
+       "Min-heap ordered by distance so far",
+       "Dijkstra (shortest paths with non-negative weights) always expands the closest unsettled stop"
+      ],
+      [
+       "`dist` dict",
+       "Best known distance to each stopping square",
+       "Used to relax and to skip stale heap entries"
+      ],
+      [
+       "`if d > dist[(i, j)]: continue`",
+       "Skip outdated heap entries",
+       "A square can be pushed several times; only the freshest matters"
+      ],
+      [
+       "inner `while … steps += 1`",
+       "Roll until a wall, counting cells",
+       "Edge weight = number of cells rolled, not 1"
+      ],
+      [
+       "`d + steps < dist.get(…, inf)`",
+       "Relaxation",
+       "Update only if the new path is shorter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Same maze as the previous problem (`00100 / 00000 / 00010 / 11011 / 00000`), start (0,4), destination (4,4). Result: 12."
+    ],
+    "table": {
+     "head": [
+      "Popped stop",
+      "d",
+      "Action"
+     ],
+     "rows": [
+      [
+       "(0, 4)",
+       "0",
+       "update (2, 4)=2, (0, 3)=1"
+      ],
+      [
+       "(0, 3)",
+       "1",
+       "update (1, 3)=2"
+      ],
+      [
+       "(1, 3)",
+       "2",
+       "update (1, 4)=3, (1, 0)=5"
+      ],
+      [
+       "(2, 4)",
+       "2",
+       "update nothing"
+      ],
+      [
+       "(1, 4)",
+       "3",
+       "update nothing"
+      ],
+      [
+       "(1, 0)",
+       "5",
+       "update (2, 0)=6, (0, 0)=6"
+      ],
+      [
+       "(0, 0)",
+       "6",
+       "update (0, 1)=7"
+      ],
+      [
+       "(2, 0)",
+       "6",
+       "update (2, 2)=8"
+      ],
+      [
+       "(0, 1)",
+       "7",
+       "update (2, 1)=9"
+      ],
+      [
+       "(2, 2)",
+       "8",
+       "update (4, 2)=10, (1, 2)=9"
+      ],
+      [
+       "(1, 2)",
+       "9",
+       "update nothing"
+      ],
+      [
+       "(2, 1)",
+       "9",
+       "update nothing"
+      ],
+      [
+       "(4, 2)",
+       "10",
+       "update (4, 4)=12, (4, 0)=12"
+      ],
+      [
+       "(4, 0)",
+       "12",
+       "update nothing"
+      ],
+      [
+       "(4, 4)",
+       "12",
+       "destination → return 12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Dijkstra and not BFS (Breadth-First Search)?",
+    "p": [
+     "BFS assumes every move costs the same. Here a push can roll 1 cell or 7, so the move with the fewest pushes isn't necessarily the shortest. Dijkstra pops the stop with the smallest total distance, so the first time the destination is popped, its distance is optimal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·log(m·n)) heap operations (each stop is expanded a few times, plus the rolling cost of up to m+n cells per expansion).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Dijkstra over stopping points: edge weight is the rolled distance, popped in order of smallest total distance."
+ },
+ "523": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`seen = {0: -1}`",
+       "Prefix sum mod k → earliest index; remainder 0 'before the start'",
+       "Lets a prefix that is itself a multiple of k count"
+      ],
+      [
+       "`s = (s + x) % k`",
+       "Running sum kept modulo k",
+       "Two equal remainders mean the numbers between them sum to a multiple of k"
+      ],
+      [
+       "`s in seen`",
+       "This remainder appeared before",
+       "Then the subarray after that index sums to a multiple of k"
+      ],
+      [
+       "`i - seen[s] >= 2`",
+       "Subarray length at least 2",
+       "A single element equal to a multiple of k doesn't count"
+      ],
+      [
+       "`else: seen[s] = i`",
+       "Store only the first index",
+       "Earliest index gives the longest subarray; on a too-short match we keep the old one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[23,2,4,6,7]`, `k = 6`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "prefix mod k",
+      "In seen?",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "23",
+       "5",
+       "new",
+       "store seen[5] = 0"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "new",
+       "store seen[1] = 1"
+      ],
+      [
+       "2",
+       "4",
+       "5",
+       "seen at 0",
+       "length 2 ≥ 2 → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case: `[23,2,6,4,7]`, `k = 13`",
+    "p": [
+     "Result False: no remainder repeats with a gap of at least 2."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "prefix mod k",
+      "In seen?",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "23",
+       "10",
+       "new",
+       "store seen[10] = 0"
+      ],
+      [
+       "1",
+       "2",
+       "12",
+       "new",
+       "store seen[12] = 1"
+      ],
+      [
+       "2",
+       "6",
+       "5",
+       "new",
+       "store seen[5] = 2"
+      ],
+      [
+       "3",
+       "4",
+       "9",
+       "new",
+       "store seen[9] = 3"
+      ],
+      [
+       "4",
+       "7",
+       "3",
+       "new",
+       "store seen[3] = 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does equal remainder mean a multiple of k?",
+    "p": [
+     "If prefix[j] and prefix[i] leave the same remainder when divided by k, their difference, the sum of nums[j+1..i], is divisible by k. The code assumes k ≥ 1 (with k = 0 the `%` would raise `ZeroDivisionError`), which the problem guarantees."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(min(n, k)) for the remainders."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums modulo k with a first-seen map: equal remainders at least two apart mean a multiple-of-k subarray."
+ },
+ "526": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`go(pos, used)`",
+       "Number of ways to fill positions `pos…n` given the set of used numbers",
+       "Position-by-position backtracking"
+      ],
+      [
+       "`used` as an integer bitmask",
+       "Bit v is 1 if number v is already placed",
+       "Compact, hashable state"
+      ],
+      [
+       "`(used >> v) & 1`",
+       "Is bit v set?",
+       "Test membership in the mask"
+      ],
+      [
+       "`used | (1 << v)`",
+       "Mask with bit v set",
+       "Place v without mutating (no undo needed)"
+      ],
+      [
+       "`v % pos == 0 or pos % v == 0`",
+       "The beauty rule",
+       "Check divisibility either way"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Memoise `go` by `(pos, used)`",
+       "Different orders of earlier choices can lead to the same set of used numbers; they share one result. LRU (Least Recently Used) cache with no size limit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "For `n = 3` the numbers allowed at each position by the divisibility rule are listed below. The search finds 3 beautiful arrangements (and 2 for n = 2, matching the problem)."
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Allowed numbers"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 2, 3]"
+      ],
+      [
+       "2",
+       "[1, 2]"
+      ],
+      [
+       "3",
+       "[1, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why memoise on the bitmask?",
+    "p": [
+     "Without the cache the recursion explores every valid prefix. With it, two different prefixes that use the same set of numbers at the same position are computed once. For n = 6 the function body runs 62 times with the cache."
+    ]
+   },
+   {
+    "h": "Why fill by position and test numbers, not the other way round?",
+    "p": [
+     "Filling position by position lets the beauty rule prune early: only a few numbers can sit at position `pos`, so branches die fast."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Bounded by the number of (pos, mask) states, at most n·2ⁿ, each with an O(n) loop; the number of valid prefixes is the practical limit.",
+     "Space: O(2ⁿ) for the cache."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking over positions with a bitmask of used numbers, memoised on (position, mask)."
+ },
+ "529": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`board[r][c] == 'M'`",
+       "Clicked on a mine",
+       "Game over: turn it into `X` and return immediately"
+      ],
+      [
+       "`board[i][j] != 'E'`",
+       "Cell is outside, already revealed, or a mine",
+       "Base case that stops the recursion; revealed cells are never revisited"
+      ],
+      [
+       "`sum(0 <= a < m and 0 <= b < n and board[a][b] == 'M' for …)`",
+       "Counts mines in the 3×3 block (bounds check first)",
+       "Booleans add as 0/1; the cell itself is `E`, so it doesn't count"
+      ],
+      [
+       "`str(mines)`",
+       "Digit cell, no further spreading",
+       "A numbered cell is a frontier"
+      ],
+      [
+       "nested loops over `range(i-1, i+2)`",
+       "Recurse into all 8 neighbours (and itself, which is no longer `E`)",
+       "Flood fill (spread the reveal) from zero-mine cells"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `EEEEE / EEMEE / EEEEE / EEEEE`, click (3,0). The first revealed cells (row, col, adjacent mines; 0 = blank `B`), 18 cells in total:"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Col",
+      "Adjacent mines"
+     ],
+     "rows": [
+      [
+       "3",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Final board",
+    "p": [
+     "`B1E1B / B1M1B / B111B / BBBBB` — the mine stays hidden (`M`), its neighbours show `1`, and everything reachable from zero-mine cells is `B`."
+    ]
+   },
+   {
+    "h": "Why does the order of checks matter?",
+    "p": [
+     "The bounds check must come before `board[i][j]`, otherwise out-of-range indexes would raise or wrap. A numbered cell returns before spreading, so the reveal stops at cells next to a mine."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) cells revealed, each looking at 8 neighbours.",
+     "Space: O(m·n) recursion depth in the worst case."
+    ]
+   }
+  ],
+  "takeaway": "DFS (Depth-First Search) flood fill: reveal a cell, stop at numbered cells, spread to all 8 neighbours from blank cells."
+ },
+ "532": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → count",
+       "Distinct values plus how often each appears"
+      ],
+      [
+       "`x + k in cnt for x in cnt`",
+       "For each distinct x, does x + k exist?",
+       "Each unordered pair {x, x+k} is counted once, from its smaller member"
+      ],
+      [
+       "`k == 0` branch",
+       "Pairs of equal values need two copies",
+       "`x + 0 in cnt` is always true, so the counts must be checked instead"
+      ],
+      [
+       "`sum(boolean generator)`",
+       "Counts the True values",
+       "`True` counts as 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,1,4,1,5]`, `k = 2`: distinct values {1,3,4,5}; pairs found: [(3, 5), (1, 3)] → 2. For `[1,3,1,5,4]`, `k = 0`: values appearing at least twice: [(1, 2)] → 1."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "x + k in cnt?"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes"
+      ],
+      [
+       "3",
+       "yes"
+      ],
+      [
+       "4",
+       "no"
+      ],
+      [
+       "5",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate over distinct values, not the list?",
+    "p": [
+     "Iterating over `cnt` visits each value once, so duplicates such as the two 1s can't produce the same pair twice. Using only `x + k` (not `x − k`) avoids counting each pair from both ends."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count distinct pairs with a Counter: look up x + k for each distinct x, and treat k = 0 separately (needs a count above 1)."
+ },
+ "535": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.urls = {}`",
+       "Code number → original URL",
+       "The only stored state; lookups are O(1)"
+      ],
+      [
+       "`self.n += 1`",
+       "Counter used as the next short code",
+       "Unique codes without collisions"
+      ],
+      [
+       "`'http://tinyurl.com/' + str(self.n)`",
+       "Builds the short URL",
+       "Short code is just the counter in decimal"
+      ],
+      [
+       "`shortUrl.rsplit('/', 1)[1]`",
+       "Text after the last `/`",
+       "Splits from the right once to get the code"
+      ],
+      [
+       "`int(...)`",
+       "Code back to the dict key",
+       "Reverse of `str(self.n)`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Call",
+      "State",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`encode('https://leetcode.com/problems/design-tinyurl')`",
+       "n = 1, urls = {1: that URL}",
+       "http://tinyurl.com/1"
+      ],
+      [
+       "`encode('https://example.com/a')`",
+       "n = 2, urls = {1:…, 2:…}",
+       "http://tinyurl.com/2"
+      ],
+      [
+       "`decode('http://tinyurl.com/1')`",
+       "key 1",
+       "https://leetcode.com/problems/design-tinyurl"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Trade-offs of counter-based codes",
+    "p": [
+     "The problem only requires `decode(encode(url)) == url`, so the simplest collision-free scheme wins. A production service would use base-62 (letters and digits) codes to keep them short."
+    ],
+    "table": {
+     "head": [
+      "Scheme",
+      "Pro",
+      "Con"
+     ],
+     "rows": [
+      [
+       "Counter (this code)",
+       "No collisions, O(1), tiny",
+       "Codes are guessable/sequential; the same URL gets a new code each time"
+      ],
+      [
+       "Random string",
+       "Not guessable",
+       "Needs collision handling"
+      ],
+      [
+       "Hash of the URL",
+       "Same URL → same code",
+       "Collisions possible; must handle them"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call (O(length of URL) to store).",
+     "Space: O(number of URLs)."
+    ]
+   }
+  ],
+  "takeaway": "A URL shortener needs a unique key per URL: a counter plus a dict is the simplest collision-free design."
+ },
+ "541": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`list(s)`",
+       "Mutable list of characters",
+       "Strings are immutable; slices can be assigned on a list"
+      ],
+      [
+       "`range(0, len(a), 2 * k)`",
+       "Start index of each 2k block",
+       "Step by the block size"
+      ],
+      [
+       "`a[i:i+k][::-1]`",
+       "Reversed copy of the first k characters of the block",
+       "`[::-1]` reverses; slices past the end are clipped, so a short final block is handled automatically"
+      ],
+      [
+       "`a[i:i+k] = …`",
+       "Slice assignment",
+       "Replaces those positions with the reversed copy"
+      ],
+      [
+       "`''.join(a)`",
+       "List back to a string",
+       "Final result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abcdefg'`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Block start i",
+      "Slice",
+      "Before",
+      "Reversed",
+      "String after"
+     ],
+     "rows": [
+      [
+       "0",
+       "a[0:2]",
+       "ab",
+       "ba",
+       "bacdefg"
+      ],
+      [
+       "4",
+       "a[4:6]",
+       "ef",
+       "fe",
+       "bacdfeg"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the short last block work with no special case?",
+    "p": [
+     "At i = 4 the slice `a[4:6]` is `ef`, then at i = 8 the loop ends. If fewer than k characters remained (say only `g` at index 6 with a block start at 6), `a[6:8]` is just `g`: reversing it changes nothing, and slice assignment of equal length is safe. Python slices never raise for out-of-range ends."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the list."
+    ]
+   }
+  ],
+  "takeaway": "Reverse the first k of every 2k block with slice assignment; Python's clipped slices handle the short tail."
+ },
+ "547": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`seen = set()`",
+       "Cities already assigned to a province",
+       "O(1) membership test"
+      ],
+      [
+       "`dfs(i)`",
+       "Visit city i and everything connected to it",
+       "DFS (Depth-First Search) flood fill over the adjacency matrix"
+      ],
+      [
+       "`isConnected[i][j] and j not in seen`",
+       "A direct link to an unvisited city",
+       "Follow the edge; the matrix row lists the neighbours of i"
+      ],
+      [
+       "`for i in range(n): if i not in seen`",
+       "Start a search from each unvisited city",
+       "Each start discovers one whole province"
+      ],
+      [
+       "`count += 1`",
+       "One province per start",
+       "Number of connected components"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1,0],[1,1,0],[0,0,1]]` has 2 provinces:"
+    ],
+    "table": {
+     "head": [
+      "City / start",
+      "Depth",
+      "Unvisited neighbours found"
+     ],
+     "rows": [
+      [
+       "start 0",
+       "—",
+       "new province"
+      ],
+      [
+       "0",
+       "0",
+       "[1]"
+      ],
+      [
+       "1",
+       "1",
+       "[]"
+      ],
+      [
+       "start 2",
+       "—",
+       "new province"
+      ],
+      [
+       "2",
+       "0",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is a `seen` set enough and no recursion order matters?",
+    "p": [
+     "A province is a connected component. Once a DFS from city i has marked every city reachable from i, none of them can start another count. So the number of times the outer loop finds an unvisited city equals the number of components."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²): every row of the matrix is scanned once.",
+     "Space: O(n) for `seen` and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Count connected components: loop over cities and start a DFS (Depth-First Search) from each one that is not yet visited."
+ }
+}
