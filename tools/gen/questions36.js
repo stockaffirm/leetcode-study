@@ -1,0 +1,23 @@
+// Salesforce (1/3): precise, layman-readable statements
+module.exports={
+2380:"A binary string changes every second: ALL occurrences of '01' become '10' at the same moment. Return how many seconds until no '01' is left. Example: '0110101' → 4.",
+3488:"nums is a circular array (the last element is next to the first). For each query index, return the smallest circular distance to another index holding the same value, or −1 if there is none. Example: [1,3,1,4,1,3,2], queries [0,3,5] → [2,−1,3].",
+3398:"You have a binary string and may flip at most numOps characters. Return the smallest possible length of the longest block of identical characters. Example: '000001', numOps=1 → 2.",
+3399:"You have a binary string (up to 100 000 long) and may flip at most numOps characters. Return the smallest possible length of the longest block of identical characters. Example: '000001', numOps=1 → 2.",
+3035:"You have a list of words. In one operation you may swap any character of any word with any character of any word (even inside the same word), as often as you like. Return the maximum number of words that can be made palindromes. Example: ['abbb','ba','aa'] → 3.",
+2957:"A word is fine when no two neighbouring characters are 'almost equal' (the same, or next to each other in the alphabet). In one operation you may change any character to any lowercase letter. Return the minimum operations to make the word fine. Example: 'aaaaa' → 2.",
+3607:"Stations 1…c are linked by cables; stations connected (directly or not) form one power grid, and all start online. Query [1, x]: station x needs a check; if x is online it resolves it, otherwise the smallest-numbered online station in x's grid does (or −1 if none). Query [2, x]: station x goes offline. Return the answers to all type-1 queries. Example: c=5, line 1-2-3-4-5, queries [[1,3],[2,1],[1,1],[2,2],[1,2]] → [3,2,3].",
+1221:"A string of 'L' and 'R' is balanced when it has the same number of each. Split the given balanced string into as many balanced pieces as possible and return how many. Example: 'RLRRLLRLRL' → 4.",
+3540:"There are n houses on a circle. Going from house i to the next one clockwise costs forward[i]; going from i to the previous one costs backward[i]. You start at house 0 and must visit the houses in queries in the given order (each is the next stop). Return the minimum total travel time. Example: forward [1,4,4], backward [4,1,2], queries [1,2,0,2] → 12.",
+2563:"Count the pairs of indices i < j whose sum nums[i] + nums[j] lies between lower and upper (inclusive). Example: [0,1,7,4,4,5], lower 3, upper 6 → 6.",
+3193:"Count permutations of 0 … n−1 such that, for each requirement [end, cnt], the first end+1 elements contain exactly cnt inversions (pairs i<j with perm[i] > perm[j]). Return the count modulo 1 000 000 007. Example: n=3, requirements [[2,2],[0,0]] → 2.",
+740:"Taking a number from nums earns you its value points and deletes every copy of value−1 and value+1. Return the maximum points you can earn. Example: [3,4,2] → 6.",
+1309:"Letters a–i are written as digits '1'–'9'; letters j–z are written as '10#'–'26#'. Decode the given string. Example: '10#11#12' → 'jkab'.",
+2068:"Two words are almost equivalent if, for every letter a–z, the number of times it appears in the two words differs by at most 3. Return true or false. Example: 'aaaa' and 'bccb' → false.",
+2866:"maxHeights[i] is the maximum height of tower i. Choose heights with 1 ≤ height[i] ≤ maxHeights[i] so that the heights form a mountain (non-decreasing up to a peak, then non-increasing). Return the maximum possible sum of heights (array up to 100 000 long). Example: [5,3,4,1,1] → 13.",
+2865:"maxHeights[i] is the maximum height of tower i. Choose heights with 1 ≤ height[i] ≤ maxHeights[i] so that the heights form a mountain (non-decreasing up to a peak, then non-increasing). Return the maximum possible sum of heights (array up to 1000 long). Example: [5,3,4,1,1] → 13.",
+1150:"nums is sorted. A majority element is a value that appears MORE than n / 2 times. Return true if target is the majority element. Example: [2,4,5,5,5,5,5,6,6], target 5 → true.",
+1051:"Students must stand in non-decreasing height order. Return how many students are NOT standing where they would be in the correctly ordered line. Example: [1,1,4,2,1,3] → 3.",
+2946:"Even-indexed rows of the matrix are shifted LEFT by k places (cyclically) and odd-indexed rows RIGHT by k. Return true if the resulting matrix equals the original. Example: [[1,2,3],[4,5,6],[7,8,9]], k=4 → false.",
+2992:"A permutation of 1 … n (1-indexed positions) is self-divisible if gcd(value at position i, i) = 1 for every position i. Return how many such permutations exist. Example: n = 3 → 3.",
+};

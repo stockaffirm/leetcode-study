@@ -1,0 +1,43 @@
+# Salesforce (3/3)
+S = lambda call: "Solution()." + call
+UNORD = set()
+D = {
+1245: S("treeDiameter([[0,1],[0,2]])"),
+2434: S("robotWithString('bac')"),
+1552: S("maxDistance([1,2,3,4,7],3)"),
+1710: S("maximumUnits([[1,3],[2,2],[3,1]],4)"),
+2231: S("largestInteger(1234)"),
+2515: S("closestTarget(['hello','i','am','leetcode','hello'],'hello',1)"),
+1481: S("findLeastNumOfUniqueInts([5,5,4],1)"),
+768: S("maxChunksToSorted([2,1,3,4,4])"),
+2345: S("visibleMountains([[2,2],[6,3],[5,4]])"),
+630: S("scheduleCourse([[100,200],[200,1300],[1000,1250],[2000,3200]])"),
+3170: S("clearStars('aaba*')"),
+1839: S("longestBeautifulSubstring('aeiaaioaaaaeiiiiouuuooaauuaeiu')"),
+3366: S("minArraySum([2,8,3,19,3],3,1,1)"),
+2534: S("timeTaken([0,1,1,2,4],[0,1,0,0,1])"),
+2035: S("minimumDifference([3,9,7,3])"),
+2918: S("minSum([3,2,0,1,0],[6,5,0])"),
+2204: S("distanceToCycle(7,[[1,2],[2,4],[4,3],[3,1],[0,1],[5,2],[6,5]])"),
+2718: S("matrixSumQueries(3,[[0,0,1],[1,2,2],[0,2,3],[1,0,4]])"),
+}
+D2 = {
+1245: (S("treeDiameter([[0,1],[1,2],[2,3],[1,4],[4,5]])"), "Longest path 0-1-4-5 or 3-2-1-4-5: 4 edges.", "branching tree"),
+2434: (S("robotWithString('bdda')"), "Output 'addb'.", "keep b for later"),
+1552: (S("maxDistance([5,4,3,2,1,1000000000],2)"), "First and last basket.", "huge gap"),
+1710: (S("maximumUnits([[5,10],[2,5],[4,7],[3,9]],10)"), "Take 5x10, 3x9, 2x7.", "truck fills mid-way"),
+2231: (S("largestInteger(65875)"), "Odd: 7,5,5 even: 6,8 → 87655.", "five digits"),
+2515: (S("closestTarget(['a','b','leetcode'],'leetcode',0)"), "Going left wraps around: one step.", "wrap-around"),
+1481: (S("findLeastNumOfUniqueInts([4,3,1,1,3,3,2],3)"), "Remove 4, 2 and one 1.", "partial group"),
+768: (S("maxChunksToSorted([5,4,3,2,1])"), "The whole array is one chunk.", "reverse order"),
+2345: (S("visibleMountains([[1,3],[1,3]])"), "Identical mountains hide each other.", "duplicates"),
+630: (S("scheduleCourse([[3,2],[4,3]])"), "Both are too long for their deadlines.", "nothing fits"),
+3170: (S("clearStars('a*b*')"), "Everything is deleted.", "all removed"),
+1839: (S("longestBeautifulSubstring('a')"), "No beautiful substring.", "too short"),
+3366: (S("minArraySum([2,4,3],3,2,1)"), "Halve 2 and 4 and subtract 3 from one of them: total 3.", "second sample"),
+2534: (S("timeTaken([0,0,0],[1,0,1])"), "Exit person 0 goes first; the door was just used to exit, so exit person 2 follows, then the enter.", "idle door"),
+2035: (S("minimumDifference([-36,36])"), "Groups of one: |-36-36| = 72.", "negative numbers"),
+2918: (S("minSum([2,0,2,0],[1,4])"), "nums2 has no zeros and is smaller.", "impossible"),
+2204: (S("distanceToCycle(9,[[0,1],[1,2],[0,2],[2,6],[6,7],[6,8],[0,3],[3,4],[3,5]])"), "Triangle 0-1-2 with branches.", "two branches"),
+2718: (S("matrixSumQueries(3,[[0,0,4],[0,1,2],[1,0,1],[0,2,3],[1,2,1]])"), "Total 17.", "mixed order"),
+}

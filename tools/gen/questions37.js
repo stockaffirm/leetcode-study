@@ -1,0 +1,23 @@
+// Salesforce (2/3): precise, layman-readable statements
+module.exports={
+3125:"Given n, find the largest number x ≤ n such that n & (n−1) & (n−2) & … & x equals 0 (bitwise AND of every number from x up to n). Example: n=7 → 3.",
+3171:"Return the minimum value of |k − (bitwise OR of a subarray)| over all non-empty subarrays of nums. Example: [1,2,4,5], k=3 → 0 (the subarray [1,2] has OR 3).",
+3135:"You can add or remove a character at either END of a string. Return the minimum number of such operations to turn initial into target. Example: initial 'abcde', target 'cdef' → 3.",
+3197:"Binary grid. Place three non-overlapping rectangles (sides parallel to the grid, non-zero area) so that every 1 lies inside one of them, minimising the total area. Return that minimum. Example: [[1,0,1],[1,1,1]] → 5.",
+3195:"Binary grid with at least one 1. Return the smallest area of a rectangle (sides parallel to the grid) that contains every 1. Example: [[0,1,0],[1,0,1]] → 6.",
+3200:"You have red and blue balls and build a triangle: row 1 has 1 ball, row 2 has 2, row 3 has 3 … All balls in a row share a colour and neighbouring rows differ. Return the maximum possible height. Example: red=2, blue=4 → 3.",
+1659:"An m×n grid; place at most introvertsCount introverts and extrovertsCount extroverts, one per cell (cells may stay empty). An introvert starts at 120 happiness and loses 30 for each neighbour (up, down, left, right); an extrovert starts at 40 and gains 20 per neighbour. Return the maximum total happiness. Example: m=2, n=3, 1 introvert, 2 extroverts → 240.",
+1701:"customers[i] = [arrival, cookTime]. One chef cooks the orders in order, one at a time, starting each as soon as the customer has arrived and the chef is free. A customer waits from arrival until their food is ready. Return the average waiting time. Example: [[1,2],[2,5],[4,3]] → 5.0.",
+3313:"A tree has n nodes 0…n−1. Mark node i at time 0; every second all unmarked neighbours of marked nodes become marked. For every i return the last node to get marked (any one if several). Example: path 0-1-2-3 → [3,3,0,0].",
+3634:"An array is balanced if its maximum is at most k times its minimum. Return the minimum number of elements to remove so nums becomes balanced (a single element is balanced). Example: [2,1,5], k=2 → 1.",
+2488:"nums is a permutation of 1…n. The median of a subarray is its middle element after sorting (the LEFT middle when the length is even). Count the subarrays whose median is k. Example: [3,2,1,4,5], k=4 → 3.",
+532:"Return the number of UNIQUE pairs of values (a, b) in nums whose absolute difference is exactly k. Example: [3,1,4,1,5], k=2 → 2.",
+3295:"A message (list of words) is spam if at least two of its words appear exactly in the bannedWords list. Return true if it is spam. Example: message ['hello','world','leetcode'], banned ['world','hello'] → true.",
+3893:"Employee i works from startTime[i] to endTime[i]. Two employees can interact if their intervals share at least one point. A team is valid if some member can interact with every other member. Return the maximum team size. Example: starts [1,2,3], ends [4,5,6] → 3.",
+233:"Return how many times the digit 1 appears in all the numbers from 0 to n. Example: n=13 → 6 (1, 10, 11, 12, 13).",
+2451:"All words have the same length. Turn each word into the list of differences between consecutive letters (a=0 … z=25). All but one word give the same list; return the word that differs. Example: ['adc','wzy','abc'] → 'abc'.",
+1219:"A grid holds gold amounts (0 = empty). Start from any cell with gold, walk up/down/left/right, collect the gold of each cell you enter, never step on an empty cell or the same cell twice. Return the maximum gold you can collect. Example: [[0,6,0],[5,8,7],[0,9,0]] → 24.",
+664:"A printer prints a run of one repeated character per turn and may start and end anywhere, overwriting what is there. Return the minimum number of turns to print the string s. Example: 'aba' → 2.",
+2366:"In one operation replace a number by two positive integers that add up to it. Return the minimum operations to make nums non-decreasing. Example: [3,9,3] → 2.",
+255:"Given the preorder traversal of a binary tree with distinct values, return true if it could be the preorder of a binary SEARCH tree. Example: [5,2,1,3,6] → true.",
+};
