@@ -1,0 +1,2434 @@
+{
+ "761": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`bal`",
+       "Running balance: +1 for `1`, −1 for `0`",
+       "A special string is a balanced-parentheses string (1 = open, 0 = close, every prefix has at least as many 1s as 0s)"
+      ],
+      [
+       "`if bal == 0`",
+       "A primitive special substring just ended (`start..i`)",
+       "Splitting a balanced string into its top-level blocks"
+      ],
+      [
+       "`'1' + recurse(s[start+1:i]) + '0'`",
+       "Keep the outer pair, and make the INSIDE as large as possible recursively",
+       "Each block is `1 (special string) 0`"
+      ],
+      [
+       "`sorted(parts, reverse=True)`",
+       "Order the blocks so the largest string comes first",
+       "Swapping adjacent special blocks is the allowed move; sorting descending gives the lexicographically largest"
+      ],
+      [
+       "`''.join(...)`",
+       "Concatenate the blocks",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"11011000\"` is a single block `1 … 0` whose inside is `101100`; the recursion works on that inside, which splits into the blocks `10` and `1100`. Rows are calls as they finish (inner first):"
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Blocks found",
+      "Result after sorting"
+     ],
+     "rows": [
+      [
+       "10",
+       "['10']",
+       "10"
+      ],
+      [
+       "101100",
+       "['10', '1100']",
+       "110010"
+      ],
+      [
+       "11011000",
+       "['11100100']",
+       "11100100"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort the blocks in descending order?",
+    "p": [
+     "The allowed operation swaps two consecutive special substrings, so any ordering of the top-level blocks is reachable. The largest concatenation puts the lexicographically largest block first. Each block is made as large as possible independently (by recursing inside), and block order does not affect the insides."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Choice"
+     ],
+     "rows": [
+      [
+       "inside each block",
+       "recurse to make it largest"
+      ],
+      [
+       "order of blocks",
+       "sort descending"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the string comparison right?",
+    "p": [
+     "Top-level blocks are primitive (the balance first returns to 0 only at their end), so no block is a proper prefix of another. That makes plain descending string order agree with the best concatenation order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) worst case (nested slicing and sorting at each level).",
+     "Space: O(n) recursion depth and strings."
+    ]
+   }
+  ],
+  "takeaway": "Special binary string = balanced parentheses: split into top-level blocks, recursively maximise each block's inside, then sort the blocks in descending order."
+ },
+ "764": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`banned`",
+       "Set of mine coordinates for O(1) lookup",
+       "Sparse blockers"
+      ],
+      [
+       "`dp[i][j]`",
+       "Largest plus order centred at (i, j): the MINIMUM of the four arm lengths",
+       "A plus is limited by its shortest arm"
+      ],
+      [
+       "`cnt` run lengths",
+       "Consecutive non-mine cells ending at (i, j) in one direction (resets to 0 at a mine)",
+       "Directional run-length scan"
+      ],
+      [
+       "four passes (left, right, down, up)",
+       "Each pass takes `min` with the run length in that direction",
+       "Compute all four arms with O(1) extra memory by merging into one table"
+      ],
+      [
+       "`dp = [[n] * n …]`",
+       "Start at the maximum possible, then shrink",
+       "Min-accumulator initialisation"
+      ],
+      [
+       "`max(max(row) for row in dp)`",
+       "The best order over all centres",
+       "Final aggregation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, one mine at (4, 2). After the four scans, `dp` is the order of the largest plus at each cell:"
+    ],
+    "table": {
+     "head": [
+      "Row"
+     ],
+     "rows": [
+      [
+       "1 1 1 1 1"
+      ],
+      [
+       "1 2 2 2 1"
+      ],
+      [
+       "1 2 2 2 1"
+      ],
+      [
+       "1 2 1 2 1"
+      ],
+      [
+       "1 1 0 1 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "The maximum value in the table is 2; the cell (2, 2) has value 2 because the mine at (4, 2) cuts its downward arm to 2 cells (the centre and one more)."
+   },
+   {
+    "h": "Why take the minimum of four directions?",
+    "p": [
+     "A plus of order k needs k cells including the centre in each of the four directions. The arm lengths are independent run lengths, and the plus is only as big as its shortest arm."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "For each centre, extend while valid",
+       "O(n³)"
+      ],
+      [
+       "Four directional scans + min (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² + |mines|).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Largest plus sign: for each cell, take the minimum run length in the four directions with four linear scans."
+ },
+ "767": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(-c, ch)` tuples",
+       "Max-heap by count using negative counts (Python's `heapq` is a min-heap)",
+       "Always take the most frequent letters first"
+      ],
+      [
+       "pop TWO each round",
+       "Place the two most frequent different letters side by side, so no two equal letters are adjacent",
+       "Pairing the top two guarantees they differ"
+      ],
+      [
+       "`if c1 + 1: heappush(heap, (c1 + 1, a))`",
+       "Re-insert a letter if it still has copies left (`c1` is negative, so `+ 1` uses one up)",
+       "Decrementing a negative count"
+      ],
+      [
+       "`if heap:` after the loop",
+       "At most one letter is left in the heap",
+       "The loop stops with 0 or 1 entries"
+      ],
+      [
+       "`c < -1: return ''`",
+       "If that last letter still has 2 or more copies they would have to be adjacent: impossible",
+       "Failure detection"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aab\"`: counts a=2, b=1."
+    ],
+    "table": {
+     "head": [
+      "Pair taken",
+      "Output so far",
+      "Heap after"
+     ],
+     "rows": [
+      [
+       "a(2), b(1)",
+       "ab",
+       "[(-1, 'a')]"
+      ],
+      [
+       "last: a(1)",
+       "aba",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is taking the two most frequent letters correct?",
+    "p": [
+     "The dominant letter is the one most likely to be forced next to itself. By spending it every round alongside another letter, its remaining count is kept as small as possible relative to the rest. If any letter has more than `ceil(n/2)` copies there is no arrangement, and the final check catches exactly that case."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`aab`",
+       "`aba`"
+      ],
+      [
+       "`aaab`",
+       "`''` (3 a's cannot be separated by one b)"
+      ],
+      [
+       "`aabb`",
+       "a valid string such as `abab`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log k) for k distinct letters (k ≤ 26 makes it O(n)).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Reorganize string: greedy with a max-heap, always placing the two most frequent letters together; fail if one letter is left over twice."
+ },
+ "770": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "tokenizer loop",
+       "Splits the text into numbers, variable names and the operators `( ) + - *`, ignoring spaces",
+       "Hand-written lexer"
+      ],
+      [
+       "`env = dict(zip(evalvars, evalints))`",
+       "Variables with known values are replaced by constants",
+       "Partial evaluation"
+      ],
+      [
+       "polynomial = `Counter` from monomial → coefficient",
+       "A monomial is a sorted tuple of variable names, e.g. `('a','b')` for `a*b`; the constant term is `()`",
+       "Sparse polynomial representation"
+      ],
+      [
+       "`add(a, b, sign)`",
+       "Add or subtract coefficient by coefficient, then drop zeros",
+       "Collecting like terms"
+      ],
+      [
+       "`mul(a, b)`",
+       "Multiply every term of `a` by every term of `b`, merging variable tuples with `sorted(k1 + k2)`",
+       "Distributing; sorting makes `a*b` and `b*a` the same key"
+      ],
+      [
+       "`expr` → `term` → `factor`",
+       "Recursive-descent grammar: `*` binds tighter than `+`/`-`, and parentheses restart `expr`",
+       "Operator precedence without a stack of operators"
+      ],
+      [
+       "`sorted(poly, key=lambda m: (-len(m), m))`",
+       "Output order required by the problem: higher degree first, then alphabetical",
+       "Custom ordering of the result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"e + 8 - a + 5\"` with `e = 1` tokenises to `['e', '+', '8', '-', 'a', '+', '5']`. `e` becomes the constant 1, and each `+`/`-` merges the next term into the running polynomial (monomial key `()` = constant):"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Polynomial after"
+     ],
+     "rows": [
+      [
+       "+ {(): 8}",
+       "{(): 9}"
+      ],
+      [
+       "- {('a',): 1}",
+       "{(): 9, ('a',): -1}"
+      ],
+      [
+       "+ {(): 5}",
+       "{(): 14, ('a',): -1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The final polynomial is `{(): 14, ('a',): -1}`, which prints as `['-1*a', '14']`: degree 1 before degree 0. Zero coefficients are removed, so a term like `a - a` vanishes."
+    ]
+   },
+   {
+    "h": "Why a grammar with three functions?",
+    "p": [
+     "Each level handles one precedence tier. `factor` reads an atom or a bracketed expression, `term` chains factors with `*`, and `expr` chains terms with `+`/`-`. Because `term` is called inside `expr`, multiplication always happens before addition."
+    ],
+    "table": {
+     "head": [
+      "Input (no variables known)",
+      "Output"
+     ],
+     "rows": [
+      [
+       "`a * b + b * a`",
+       "['2*a*b']"
+      ],
+      [
+       "`(a + b) * (a - b)`",
+       "['1*a*a', '-1*b*b']"
+      ],
+      [
+       "`(e + 8) * (e - 8)` with e = 1",
+       "['-63']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: depends on the polynomial size; multiplying two polynomials of p and q terms costs O(p · q) monomial combinations.",
+     "Space: O(number of terms)."
+    ]
+   }
+  ],
+  "takeaway": "Basic Calculator IV: tokenise, then recursive descent (`expr`/`term`/`factor`) over sparse polynomials stored as Counters keyed by sorted variable tuples."
+ },
+ "773": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`''.join(str(x) for row in board for x in row)`",
+       "Flatten the 2×3 board into a 6-character string, which is hashable and cheap to store in a set",
+       "Encoding a state as a string"
+      ],
+      [
+       "`goal = '123450'`",
+       "The solved board, row by row",
+       "Target state"
+      ],
+      [
+       "`nbrs`",
+       "Precomputed indices a `0` at position `z` can swap with (grid adjacency for 2×3 flattened)",
+       "Avoids recomputing row/column arithmetic"
+      ],
+      [
+       "swap `t[z], t[j]`",
+       "Slide a tile into the blank",
+       "Generating the next state"
+      ],
+      [
+       "`seen` set + `deque`",
+       "BFS with visited states",
+       "Shortest sequence of moves in an unweighted state graph"
+      ],
+      [
+       "`return -1`",
+       "Half of all arrangements are unsolvable; BFS exhausts the 360 reachable states and gives up",
+       "Unreachable goal"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Start `412503`. BFS finds the goal at depth 5; one shortest path is:"
+    ],
+    "table": {
+     "head": [
+      "Move #",
+      "Board (row 1 | row 2)"
+     ],
+     "rows": [
+      [
+       "0",
+       "412 | 503"
+      ],
+      [
+       "1",
+       "412 | 053"
+      ],
+      [
+       "2",
+       "012 | 453"
+      ],
+      [
+       "3",
+       "102 | 453"
+      ],
+      [
+       "4",
+       "120 | 453"
+      ],
+      [
+       "5",
+       "123 | 450"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS?",
+    "p": [
+     "Each move costs one step, so the minimum number of moves is the shortest path in the state graph. BFS visits states in order of distance, and the first time it dequeues the goal is the minimum depth."
+    ],
+    "table": {
+     "head": [
+      "Fact",
+      "Number"
+     ],
+     "rows": [
+      [
+       "states of the 2×3 puzzle",
+       "6! = 720"
+      ],
+      [
+       "reachable from any solvable start",
+       "360 (half are unsolvable)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(6! · 4) at most, which is constant for this board size.",
+     "Space: O(6!) for the visited set."
+    ]
+   }
+  ],
+  "takeaway": "Sliding puzzle = BFS over board states encoded as strings, with the blank's neighbours precomputed."
+ },
+ "779": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`k - 1`",
+       "Convert the 1-based position to a 0-based index",
+       "Zero-index before bit tricks"
+      ],
+      [
+       "`bin(k - 1).count('1')`",
+       "Number of 1 bits in the index (popcount)",
+       "The symbol at index i of the Thue–Morse sequence"
+      ],
+      [
+       "`% 2`",
+       "Parity of that count is the symbol (0 or 1)",
+       "The sequence flips whenever a bit adds a 1"
+      ],
+      [
+       "`n` is unused",
+       "The answer for position `k` does not depend on the row `n`, because every row is a prefix of the next",
+       "Rows of the grammar are nested"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Symbols for positions 1..8 (the first 8 symbols are the same in every row that has at least 8 characters):"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "binary of k-1",
+      "number of 1s",
+      "symbol"
+     ],
+     "rows": [
+      [
+       "1",
+       "000",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "001",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "010",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "011",
+       "2",
+       "0"
+      ],
+      [
+       "5",
+       "100",
+       "1",
+       "1"
+      ],
+      [
+       "6",
+       "101",
+       "2",
+       "0"
+      ],
+      [
+       "7",
+       "110",
+       "2",
+       "0"
+      ],
+      [
+       "8",
+       "111",
+       "3",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the parity of 1 bits give the symbol?",
+    "p": [
+     "Row n+1 is row n followed by its complement. So the second half is the first half flipped: position `k` in the second half equals position `k - 2^m` flipped. Subtracting the highest power of two removes the leading 1 bit and flips the answer once, which is exactly counting 1 bits mod 2."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Build the whole row",
+       "O(2^n)"
+      ],
+      [
+       "Recurse: `k` in the second half → flip answer for the mirrored position",
+       "O(n)"
+      ],
+      [
+       "Popcount parity (this code)",
+       "O(log k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The check",
+    "p": [
+     "`n = 2, k = 2`: `k - 1 = 1`, one 1-bit, parity 1, so the answer is 1, matching row 2 = `01`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log k).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "K-th symbol in the grammar is the Thue–Morse sequence: the parity of the number of 1 bits in k−1."
+ },
+ "785": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`color`",
+       "Node → 0 or 1; a missing key means unvisited, so it doubles as the visited set",
+       "Two-colouring"
+      ],
+      [
+       "`for s in range(len(graph))`",
+       "Start a BFS from every unvisited node: the graph may be disconnected",
+       "Components must be checked independently"
+      ],
+      [
+       "`1 - color[u]`",
+       "Flip 0↔1 for the neighbour",
+       "Alternate colours"
+      ],
+      [
+       "`elif color[v] == color[u]: return False`",
+       "An edge between two same-coloured nodes means an odd cycle",
+       "Bipartite ⇔ no odd cycle"
+      ],
+      [
+       "`deque`",
+       "FIFO queue for BFS",
+       "Level by level colouring"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3],[0,2],[0,1,3],[0,2]]` contains a triangle `0-1-2`, an odd cycle."
+    ],
+    "table": {
+     "head": [
+      "From u",
+      "Neighbour v",
+      "Colour",
+      "Conflict?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "color 1",
+       "-"
+      ],
+      [
+       "0",
+       "2",
+       "color 1",
+       "-"
+      ],
+      [
+       "0",
+       "3",
+       "color 1",
+       "-"
+      ],
+      [
+       "1",
+       "2",
+       "already 1",
+       "same as u → NOT bipartite"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does an odd cycle break it?",
+    "p": [
+     "Colours must alternate along every edge. Walking around a cycle of odd length you would have to alternate an odd number of times and return to the start with the opposite colour. So any odd cycle makes two-colouring impossible, and a conflicting edge is exactly where this shows up."
+    ],
+    "table": {
+     "head": [
+      "Graph",
+      "Bipartite?"
+     ],
+     "rows": [
+      [
+       "path or even cycle",
+       "yes"
+      ],
+      [
+       "triangle (3-cycle)",
+       "no"
+      ],
+      [
+       "tree",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the outer loop?",
+    "p": [
+     "BFS from node 0 only colours node 0's component. A disconnected graph can have a bad component that the first BFS never sees, so every unvisited node starts a new search."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V)."
+    ]
+   }
+  ],
+  "takeaway": "Bipartite check: BFS two-colouring from every unvisited node; an edge joining equal colours is an odd cycle."
+ },
+ "788": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`set(s) & set('347')`",
+       "Digits of the number that are in `{3, 4, 7}`; those digits become invalid when rotated",
+       "Intersection of two sets; non-empty means 'contains at least one'"
+      ],
+      [
+       "`not … & set('347')`",
+       "No invalid digit is present",
+       "Rule 1: every digit must rotate to a valid digit"
+      ],
+      [
+       "`set(s) & set('2569')`",
+       "Contains a digit that CHANGES under rotation (2↔5, 6↔9)",
+       "Rule 2: the rotated number must differ from the original"
+      ],
+      [
+       "digits `0 1 8`",
+       "Rotate to themselves, so they neither help nor hurt",
+       "Fixed points"
+      ],
+      [
+       "`count += 1`",
+       "Count the numbers that satisfy both rules",
+       "Brute force over 1..n"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Invalid digit?",
+      "Changing digit?",
+      "Good?"
+     ],
+     "rows": [
+      [
+       "1",
+       "-",
+       "only 0/1/8",
+       "no"
+      ],
+      [
+       "2",
+       "-",
+       "has 2/5/6/9",
+       "good"
+      ],
+      [
+       "3",
+       "contains 3/4/7",
+       "only 0/1/8",
+       "no"
+      ],
+      [
+       "5",
+       "-",
+       "has 2/5/6/9",
+       "good"
+      ],
+      [
+       "6",
+       "-",
+       "has 2/5/6/9",
+       "good"
+      ],
+      [
+       "8",
+       "-",
+       "only 0/1/8",
+       "no"
+      ],
+      [
+       "9",
+       "-",
+       "has 2/5/6/9",
+       "good"
+      ],
+      [
+       "10",
+       "-",
+       "only 0/1/8",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The good numbers up to 10 are 2, 5, 6, 9, so the count is 4. (`10` rotates to `01`, the same value, so it is not good.)"
+    ]
+   },
+   {
+    "h": "Why two conditions?",
+    "p": [
+     "A number is good if every digit stays valid after rotation AND the result is a different number. A number made only of 0, 1, 8 rotates to itself, so it is valid but not different. Requiring at least one of 2, 5, 6, 9 guarantees a change."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Check each number (this code)",
+       "O(n log n)"
+      ],
+      [
+       "Digit DP",
+       "O(log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · log n), each number's digits are examined.",
+     "Space: O(log n) per number for the set."
+    ]
+   }
+  ],
+  "takeaway": "Rotated digits: a number counts if it has no 3/4/7 and at least one of 2/5/6/9; set intersections express both rules."
+ },
+ "791": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Count how many times each character occurs in `s`",
+       "Frequency map"
+      ],
+      [
+       "`cnt.pop(ch, 0)`",
+       "Remove `ch` from the map and return its count, or 0 if it was absent",
+       "`pop` with a default: read-and-delete in one call, so used characters aren't repeated later"
+      ],
+      [
+       "`ch * count`",
+       "Repeat a character `count` times",
+       "String repetition"
+      ],
+      [
+       "loop over `order`",
+       "Emit characters in the custom order",
+       "The order string defines the sort key"
+      ],
+      [
+       "`cnt.items()` leftovers",
+       "Characters not in `order` can go anywhere: appended at the end",
+       "Unconstrained characters"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`order = \"cba\"`, `s = \"abcd\"`:"
+    ],
+    "table": {
+     "head": [
+      "order char",
+      "Count in s",
+      "Emitted",
+      "Counter after"
+     ],
+     "rows": [
+      [
+       "c",
+       "1",
+       "c",
+       "{'a': 1, 'b': 1, 'd': 1}"
+      ],
+      [
+       "b",
+       "1",
+       "b",
+       "{'a': 1, 'd': 1}"
+      ],
+      [
+       "a",
+       "1",
+       "a",
+       "{'d': 1}"
+      ],
+      [
+       "remaining",
+       "-",
+       "d",
+       "{}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a counting approach rather than `sorted` with a key?",
+    "p": [
+     "`sorted(s, key=order.index)` also works but `index` is O(len(order)) and sorting is O(n log n). Counting runs in O(n + len(order)) since the order string has at most 26 characters."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "`sorted(s, key=…)`",
+       "O(n log n)"
+      ],
+      [
+       "Counter + emit by order (this code)",
+       "O(n + |order|)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + |order|).",
+     "Space: O(n) for the output, O(1) for a fixed alphabet."
+    ]
+   }
+  ],
+  "takeaway": "Custom sort string = counting sort: count `s`, emit characters in `order`, then the rest."
+ },
+ "797": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`go(u, path)`",
+       "DFS from node `u`; `path` is the route from node 0 to `u`",
+       "Enumerating all paths"
+      ],
+      [
+       "`u == n - 1`",
+       "Reached the target: save a COPY (`path[:]`) since `path` keeps changing",
+       "Snapshot at the leaf"
+      ],
+      [
+       "`path.append(v)` … `path.pop()`",
+       "Choose, recurse, undo",
+       "Backtracking on a shared list"
+      ],
+      [
+       "no `visited` set",
+       "The graph is a DAG, so no cycles and every path is simple",
+       "A visited set would wrongly hide valid paths through shared nodes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "DAG `0→1, 0→2, 1→3, 2→3`:"
+    ],
+    "table": {
+     "head": [
+      "Path",
+      "Event"
+     ],
+     "rows": [
+      [
+       "[0, 1]",
+       "step 0→1"
+      ],
+      [
+       "[0, 1, 3]",
+       "step 1→3"
+      ],
+      [
+       "[0, 1, 3]",
+       "reached target → save"
+      ],
+      [
+       "[0, 2]",
+       "step 0→2"
+      ],
+      [
+       "[0, 2, 3]",
+       "step 2→3"
+      ],
+      [
+       "[0, 2, 3]",
+       "reached target → save"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no visited set?",
+    "p": [
+     "In path enumeration, node 3 must be reachable via both 1 and 2. A global visited set would mark 3 after the first path and drop the second. On a DAG there is no way to loop, so skipping the set is both correct and simpler."
+    ],
+    "table": {
+     "head": [
+      "Problem",
+      "Visited set?",
+      "Why"
+     ],
+     "rows": [
+      [
+       "count/find ONE path in a general graph",
+       "yes",
+       "avoid cycles"
+      ],
+      [
+       "all paths in a DAG (this code)",
+       "no",
+       "would lose paths"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ · n) worst case (a DAG can have exponentially many paths), each copied in O(n).",
+     "Space: O(n) recursion plus the output."
+    ]
+   }
+  ],
+  "takeaway": "All paths in a DAG: DFS with backtracking and no visited set; copy the path at the target."
+ },
+ "806": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ord(ch) - ord('a')`",
+       "Index 0..25 of a lowercase letter, to look up its width",
+       "Mapping letters to array positions"
+      ],
+      [
+       "`cur + w > 100`",
+       "The next letter would not fit on the current line",
+       "Greedy line wrapping: fill each line as far as possible"
+      ],
+      [
+       "`lines += 1; cur = 0`",
+       "Start a new line, then add the letter to it below",
+       "Line break"
+      ],
+      [
+       "`return [lines, cur]`",
+       "Number of lines, and the width used on the LAST line",
+       "Result format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a` has width 4, every other letter 10; `s = \"bbbcccdddaaa\"`:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Width",
+      "Event",
+      "Lines",
+      "Current line width"
+     ],
+     "rows": [
+      [
+       "b",
+       "10",
+       "-",
+       "1",
+       "10"
+      ],
+      [
+       "b",
+       "10",
+       "-",
+       "1",
+       "20"
+      ],
+      [
+       "b",
+       "10",
+       "-",
+       "1",
+       "30"
+      ],
+      [
+       "c",
+       "10",
+       "-",
+       "1",
+       "40"
+      ],
+      [
+       "c",
+       "10",
+       "-",
+       "1",
+       "50"
+      ],
+      [
+       "c",
+       "10",
+       "-",
+       "1",
+       "60"
+      ],
+      [
+       "d",
+       "10",
+       "-",
+       "1",
+       "70"
+      ],
+      [
+       "d",
+       "10",
+       "-",
+       "1",
+       "80"
+      ],
+      [
+       "d",
+       "10",
+       "-",
+       "1",
+       "90"
+      ],
+      [
+       "a",
+       "4",
+       "-",
+       "1",
+       "94"
+      ],
+      [
+       "a",
+       "4",
+       "-",
+       "1",
+       "98"
+      ],
+      [
+       "a",
+       "4",
+       "would exceed 100 → new line",
+       "2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does greedy wrapping give the answer?",
+    "p": [
+     "The letters must stay in order and a letter can't be split, so the only decision is where each line ends. Ending a line as late as possible never makes later lines worse: it leaves a suffix of the string that is at most as long."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Greedy (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "An edge case",
+    "p": "The check is `> 100`, not `>= 100`: a line may be filled to exactly 100 pixels. In this example ten letters of width 10 fill the first line exactly, and the next letter starts the second line."
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy text wrapping: add letters until the next one would exceed the line width, then start a new line."
+ },
+ "815": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stop_routes`",
+       "Stop → list of routes that serve it",
+       "Inverted index: from a stop to the buses"
+      ],
+      [
+       "BFS over ROUTES, not stops",
+       "A node is a bus route; one step = boarding another route at a shared stop",
+       "Counting buses, not stops: staying on the same route is free"
+      ],
+      [
+       "`deque((r, 1) for r in stop_routes[source])`",
+       "All routes you can board at the source cost 1 bus",
+       "Initial frontier"
+      ],
+      [
+       "`seen` of routes",
+       "Never board the same route twice",
+       "Visited set on routes"
+      ],
+      [
+       "`target in routes[r]`",
+       "Is the destination on this route? (O(len) on a list; a set per route makes it O(1))",
+       "Goal test"
+      ],
+      [
+       "`for s in routes[r]: for nr in stop_routes[s]`",
+       "From the current route, every stop lets you switch to any other route there",
+       "Neighbours of a route"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`routes = [[1,2,7],[3,6,7]]`, from 1 to 6: route 0 contains stop 1, route 1 contains stop 6, and they share stop 7."
+    ],
+    "table": {
+     "head": [
+      "Route dequeued",
+      "Buses used",
+      "Contains target?",
+      "Routes seen"
+     ],
+     "rows": [
+      [
+       "route 0 [1, 2, 7]",
+       "1",
+       "no",
+       "[0]"
+      ],
+      [
+       "route 1 [3, 6, 7]",
+       "2",
+       "target here",
+       "[0, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS on routes instead of stops?",
+    "p": [
+     "The cost is the number of buses, not stops. Modelling stops as nodes would charge for every stop; modelling routes as nodes makes one BFS level equal to one more bus. Each route is expanded once, which is also what keeps this efficient for long routes."
+    ],
+    "table": {
+     "head": [
+      "Graph nodes",
+      "Edge cost",
+      "Fits the question?"
+     ],
+     "rows": [
+      [
+       "stops",
+       "1 per stop",
+       "no: counts stops"
+      ],
+      [
+       "routes (this code)",
+       "1 per transfer",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total stops across routes), each stop's route list is scanned when its route is expanded (plus the `in routes[r]` tests).",
+     "Space: O(total stops)."
+    ]
+   }
+  ],
+  "takeaway": "Bus routes: BFS where nodes are routes and an edge means 'share a stop'; the BFS depth is the number of buses."
+ },
+ "821": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prev = -n` (left pass)",
+       "Pretend a `c` exists far to the left, so an unseen `c` gives a distance larger than any real one (≥ n + i)",
+       "A large sentinel instead of `inf`"
+      ],
+      [
+       "`ans[i] = i - prev`",
+       "Distance to the nearest `c` at or before `i`",
+       "Left-to-right scan"
+      ],
+      [
+       "`prev = 2 * n` (right pass)",
+       "Far-right sentinel, so an unseen `c` gives a distance larger than n",
+       "Mirror of the left sentinel"
+      ],
+      [
+       "`min(ans[i], prev - i)`",
+       "Take the closer of the nearest `c` on the left and on the right",
+       "Combine both directions"
+      ],
+      [
+       "two passes",
+       "The nearest `c` is either to the left or to the right of `i`",
+       "Two linear scans instead of a quadratic search"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"loveleetcode\"`, `c = 'e'`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+     ],
+     "rows": [
+      [
+       "char",
+       "l",
+       "o",
+       "v",
+       "e",
+       "l",
+       "e",
+       "e",
+       "t",
+       "c",
+       "o",
+       "d",
+       "e"
+      ],
+      [
+       "left pass",
+       "12",
+       "13",
+       "14",
+       "0",
+       "1",
+       "0",
+       "0",
+       "1",
+       "2",
+       "3",
+       "4",
+       "0"
+      ],
+      [
+       "after right pass",
+       "3",
+       "2",
+       "1",
+       "0",
+       "1",
+       "0",
+       "0",
+       "1",
+       "2",
+       "2",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sentinels of −n and 2n?",
+    "p": [
+     "With `prev = -n`, a position before the first `c` gets `i + n ≥ n`, bigger than any true distance (at most n − 1), so the right pass's smaller value wins. Likewise `2n` is too far to be chosen when there is no `c` on the right."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "For each i scan outward",
+       "O(n²)",
+       "O(1)"
+      ],
+      [
+       "Two passes (this code)",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Multi-source BFS from all `c`",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the answer."
+    ]
+   }
+  ],
+  "takeaway": "Nearest-character distance: one left-to-right and one right-to-left pass, taking the minimum."
+ },
+ "824": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sentence.split()`",
+       "Words separated by whitespace",
+       "Tokenising"
+      ],
+      [
+       "`enumerate(…, 1)`",
+       "Index starting at 1, which is also the number of trailing `a`s",
+       "Counting from 1 instead of 0"
+      ],
+      [
+       "`w[0] not in \"aeiouAEIOU\"`",
+       "Does the word start with a consonant? (vowels in both cases)",
+       "Case-insensitive vowel test with a string of both cases"
+      ],
+      [
+       "`w[1:] + w[0]`",
+       "Move the first letter to the end",
+       "Rotating a word by one"
+      ],
+      [
+       "`w + \"ma\" + \"a\" * i`",
+       "Append `ma` plus `i` copies of `a`",
+       "Positional suffix"
+      ],
+      [
+       "`\" \".join(out)`",
+       "Rebuild the sentence",
+       "Joining with single spaces"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"I speak Goat Latin\"`:"
+    ],
+    "table": {
+     "head": [
+      "Word #",
+      "Word",
+      "Rule",
+      "Result"
+     ],
+     "rows": [
+      [
+       "1",
+       "I",
+       "vowel start: keep",
+       "Imaa"
+      ],
+      [
+       "2",
+       "speak",
+       "consonant start: move to end",
+       "peaksmaaa"
+      ],
+      [
+       "3",
+       "Goat",
+       "consonant start: move to end",
+       "oatGmaaaa"
+      ],
+      [
+       "4",
+       "Latin",
+       "consonant start: move to end",
+       "atinLmaaaaa"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A detail",
+    "p": [
+     "The vowel test uses the ORIGINAL first letter and both cases: `I` is a vowel, so it is kept, while `Goat` starts with a consonant `G` and moves it to the end (`oatG`). Writing only lowercase vowels would treat `I` as a consonant."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) in the worst case because the suffix `a * i` grows with the word index (output size is quadratic in the number of words).",
+     "Space: O(output)."
+    ]
+   }
+  ],
+  "takeaway": "Goat Latin: enumerate words from 1, rotate the first consonant to the end, and append `ma` plus i letters `a`."
+ },
+ "827": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dfs(r, c, lab)`",
+       "Flood-fill an island, overwriting its cells with a unique label (≥ 2) and returning its size",
+       "Labelling connected components"
+      ],
+      [
+       "`label = 2`, `size = {}`",
+       "Labels start at 2 so they cannot be confused with the original `0` and `1`; `size` maps label → area",
+       "Component IDs"
+      ],
+      [
+       "`seen = {grid[a][b] for … if … > 1}`",
+       "The DISTINCT island labels among a zero's four neighbours (a set, so one island touching twice counts once)",
+       "Avoid double-counting an island adjacent on two sides"
+      ],
+      [
+       "`1 + sum(size[l] for l in seen)`",
+       "Flip this zero: itself plus all adjacent islands",
+       "Merge neighbours"
+      ],
+      [
+       "`max(size.values(), default=0)`",
+       "The answer if there is no zero to flip (all land) or as a baseline; `default` handles an all-water grid",
+       "Initial best"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,0],[0,1]]` has two islands, labels 2 and 3, each of size 1: sizes `{2: 1, 3: 1}`. Each water cell is tried:"
+    ],
+    "table": {
+     "head": [
+      "Zero at",
+      "Adjacent island labels",
+      "Size if flipped",
+      "Total"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "[2, 3]",
+       "1 + [1, 1]",
+       "3"
+      ],
+      [
+       "(1,0)",
+       "[2, 3]",
+       "1 + [1, 1]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why label first and then try each zero?",
+    "p": [
+     "Flipping each zero and re-running a flood fill costs O((n²)²). Labelling islands once (O(n²)) lets every zero be evaluated by looking up at most four neighbour labels, so the whole pass is O(n²)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Flip each 0, recompute island size",
+       "O(n⁴)"
+      ],
+      [
+       "Label islands, then combine neighbours (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set of labels?",
+    "p": [
+     "A single island can touch a water cell on two or three sides. Summing the neighbours' sizes directly would count that island twice. The set removes the duplicates."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²) for recursion and the size map."
+    ]
+   }
+  ],
+  "takeaway": "Making a large island: label all islands with sizes first; for each 0, add 1 plus the sizes of the distinct adjacent labels."
+ },
+ "839": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent`, `find`",
+       "Union-Find: groups of strings, with path halving",
+       "Counting connected components in a similarity graph"
+      ],
+      [
+       "`diff = [i … if a[i] != b[i]]`",
+       "Positions where the two strings differ",
+       "Comparing equal-length strings"
+      ],
+      [
+       "`len(diff) in (0, 2)`",
+       "Zero differences = identical; exactly two = one swap fixes it (valid because all strings are anagrams of each other)",
+       "Similarity test"
+      ],
+      [
+       "`parent[find(i)] = find(j)`",
+       "Union the two groups",
+       "Connecting similar strings"
+      ],
+      [
+       "`len({find(i) for i in range(n)})`",
+       "Number of distinct roots = number of groups",
+       "Component count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"tars\",\"rats\",\"arts\",\"star\"]`: all pairs are compared."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Differing positions",
+      "Result"
+     ],
+     "rows": [
+      [
+       "tars / rats",
+       "2",
+       "similar → union"
+      ],
+      [
+       "tars / arts",
+       "3",
+       "no"
+      ],
+      [
+       "tars / star",
+       "4",
+       "no"
+      ],
+      [
+       "rats / arts",
+       "2",
+       "similar → union"
+      ],
+      [
+       "rats / star",
+       "4",
+       "no"
+      ],
+      [
+       "arts / star",
+       "4",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `len(diff) == 2` is enough",
+    "p": [
+     "The problem says all strings are anagrams of each other. With exactly two differing positions, the two characters must be each other's counterpart, so swapping them makes the strings equal. Without the anagram guarantee you'd also check `a[i] == b[j]` and `a[j] == b[i]`."
+    ],
+    "table": {
+     "head": [
+      "Differences",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "0",
+       "identical"
+      ],
+      [
+       "2",
+       "one swap apart (given anagrams)"
+      ],
+      [
+       "3 or more",
+       "not similar"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why union-find and not just 'similar to the first'?",
+    "p": [
+     "Similarity isn't transitive but groups are formed through chains: `tars~rats` and `rats~arts` put `tars` and `arts` in one group even though they are not similar to each other."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² · L) for n strings of length L.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Similar string groups: compare all pairs (two differing positions = one swap) and union them; count the roots."
+ },
+ "845": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`base = i - 1`",
+       "Left end of a candidate mountain (the element just before the climb)",
+       "Mark where an ascent starts"
+      ],
+      [
+       "first inner `while … arr[i] > arr[i-1]`",
+       "Climb: advance while strictly increasing",
+       "Walk up to the peak"
+      ],
+      [
+       "`if i < n and arr[i] < arr[i-1]`",
+       "A descent must follow the peak, otherwise it's just an upward slope",
+       "Both sides are required"
+      ],
+      [
+       "second inner `while … arr[i] < arr[i-1]`",
+       "Walk down while strictly decreasing",
+       "Walk down the other side"
+      ],
+      [
+       "`res = max(res, i - base)`",
+       "Length of the mountain from `base` to the last descending element",
+       "Track the longest"
+      ],
+      [
+       "`else: i += 1`",
+       "Flat or descending start: not a climb, move on",
+       "Skip non-ascending steps"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,4,7,3,2,5]`: the mountain `1,4,7,3,2` has length 5."
+    ],
+    "table": {
+     "head": [
+      "base idx",
+      "peak value",
+      "Shape found",
+      "Length",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "7",
+       "up to idx 3, down to idx 5",
+       "5",
+       "5"
+      ],
+      [
+       "5",
+       "5",
+       "no descent after peak",
+       "-",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `i` never moved backwards?",
+    "p": [
+     "After a mountain's descent ends at index `i - 1`, the next mountain can only start at or after that point (a valley is the first element of the next climb). Setting `base = i - 1` on the next iteration naturally reuses the valley, so the whole scan is one pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Expand from each peak",
+       "O(n)",
+       "O(1)"
+      ],
+      [
+       "Up/down arrays",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Single two-phase scan (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edge cases",
+    "bullets": [
+     "Strictness: equal neighbours break the climb or the descent, so `[2,2,2]` has no mountain.",
+     "A mountain needs at least 3 elements, guaranteed because it needs one step up and one step down."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Longest mountain: scan once; from each ascent, climb, then descend, and measure from the base to the end of the descent."
+ },
+ "851": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`above[b].append(a)`",
+       "For each person, who is directly richer (edge `a → b` means `a` is richer than `b`)",
+       "Build the graph in the direction we need to search: toward richer people"
+      ],
+      [
+       "`ans[x]`",
+       "Quietest person among everyone at least as rich as `x`; `-1` = not computed yet",
+       "Memo table that doubles as visited marker"
+      ],
+      [
+       "`ans[x] = x`",
+       "Start with `x` himself (he is 'at least as rich as' himself)",
+       "Base answer"
+      ],
+      [
+       "`dfs(y)` for each richer `y`",
+       "Their answer already covers everybody richer than them (transitivity)",
+       "Reuse results instead of walking the whole ancestry"
+      ],
+      [
+       "`quiet[cand] < quiet[ans[x]]`",
+       "Keep the quieter candidate",
+       "Min by a key"
+      ],
+      [
+       "`quiet` values are distinct",
+       "Ties can't occur, so the answer is unique",
+       "Problem guarantee"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Result for each person `x`: the quietest person at least as rich as `x`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Directly richer",
+      "quiet[x]",
+      "answer",
+      "quiet[answer]"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]",
+       "3",
+       "5",
+       "1"
+      ],
+      [
+       "1",
+       "[2, 3]",
+       "2",
+       "5",
+       "1"
+      ],
+      [
+       "2",
+       "[]",
+       "5",
+       "2",
+       "5"
+      ],
+      [
+       "3",
+       "[4, 5, 6]",
+       "4",
+       "5",
+       "1"
+      ],
+      [
+       "4",
+       "[]",
+       "6",
+       "4",
+       "6"
+      ],
+      [
+       "5",
+       "[]",
+       "1",
+       "5",
+       "1"
+      ],
+      [
+       "6",
+       "[]",
+       "7",
+       "6",
+       "7"
+      ],
+      [
+       "7",
+       "[3]",
+       "0",
+       "7",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why memoised DFS?",
+    "p": [
+     "'At least as rich as x' includes everybody richer than anyone richer than x. Walking the whole chain for each x repeats work; because the answer for `y` already summarises all of `y`'s richer people, one DFS call per person suffices. The graph has no cycles (the data is consistent), so the recursion terminates."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Search all ancestors per person",
+       "O(n · (n + E))"
+      ],
+      [
+       "DFS + memo (this code)",
+       "O(n + E)"
+      ],
+      [
+       "Topological order DP",
+       "O(n + E)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + E).",
+     "Space: O(n + E)."
+    ]
+   }
+  ],
+  "takeaway": "Loud and rich: memoised DFS over 'richer than' edges; each person's answer is the quietest among themselves and their richer neighbours' answers."
+ },
+ "857": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`w / q` ratio, sorted ascending",
+       "Wage per unit of quality that a worker needs at minimum; in a group everyone is paid by the HIGHEST ratio among them",
+       "The captain (highest ratio) sets the pay rate"
+      ],
+      [
+       "`heappush(heap, -q)`",
+       "Max-heap of qualities (negated) among the current candidates",
+       "We want to drop the largest quality when over size"
+      ],
+      [
+       "`qsum`",
+       "Total quality of the workers in the heap",
+       "Group cost = ratio × total quality"
+      ],
+      [
+       "`qsum += heappop(heap)`",
+       "Pop the LARGEST quality (stored negated), subtracting it from the sum",
+       "Keep the k smallest qualities"
+      ],
+      [
+       "`w / q * qsum`",
+       "With the current worker as the captain: rate `w/q` times the sum of the k chosen qualities",
+       "Cost of the best group at this ratio"
+      ],
+      [
+       "`float('inf')`",
+       "No group yet",
+       "Min search"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`quality = [10,20,5]`, `wage = [70,50,30]`, `k = 2`. Sorted by ratio: 2.5, 6, 7."
+    ],
+    "table": {
+     "head": [
+      "Worker (captain)",
+      "Ratio",
+      "qsum",
+      "Qualities in heap",
+      "Cost if captain",
+      "best"
+     ],
+     "rows": [
+      [
+       "wage 50, q 20",
+       "2.5",
+       "20",
+       "[20]",
+       "-",
+       "∞"
+      ],
+      [
+       "wage 30, q 5",
+       "6.0",
+       "25",
+       "[5, 20]",
+       "150.0",
+       "150.0"
+      ],
+      [
+       "wage 70, q 10",
+       "7.0",
+       "15",
+       "[5, 10]",
+       "105.0",
+       "105.0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort by ratio and drop the largest quality?",
+    "p": [
+     "If the current worker has the highest ratio so far, every group of already-seen workers is feasible at this rate (each is paid ratio × quality, and that is at least their minimum wage). For a fixed rate the cost is rate × sum of qualities, so choose the k smallest qualities: drop the largest whenever the heap exceeds k."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "sort by wage/quality",
+       "the current worker sets the group's rate"
+      ],
+      [
+       "keep k smallest qualities",
+       "cost = rate × total quality"
+      ],
+      [
+       "try every worker as the highest-ratio captain",
+       "one of them is the optimal group"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort and heap.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Hire K workers: sort by wage/quality ratio, keep the k smallest qualities in a max-heap, and cost each prefix as ratio × quality sum."
+ },
+ "860": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`five`, `ten`",
+       "Number of $5 and $10 bills in hand (a $20 is never used as change)",
+       "Track only denominations that can be change"
+      ],
+      [
+       "`b == 10`: need a $5",
+       "Change for a $10 is exactly one $5",
+       "Forced change"
+      ],
+      [
+       "`b == 20`: prefer `ten and five`",
+       "Change is $15: use one $10 + one $5 if possible",
+       "Greedy: spend the larger bill first"
+      ],
+      [
+       "else `five >= 3`",
+       "Otherwise three $5 bills",
+       "Fallback"
+      ],
+      [
+       "`return False`",
+       "Cannot make change",
+       "Failure"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,5,5,10,20]`:"
+    ],
+    "table": {
+     "head": [
+      "Bill",
+      "Action",
+      "$5s",
+      "$10s"
+     ],
+     "rows": [
+      [
+       "5",
+       "keep $5",
+       "1",
+       "0"
+      ],
+      [
+       "5",
+       "keep $5",
+       "2",
+       "0"
+      ],
+      [
+       "5",
+       "keep $5",
+       "3",
+       "0"
+      ],
+      [
+       "10",
+       "give $5 change",
+       "2",
+       "1"
+      ],
+      [
+       "20",
+       "give $10 + $5",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefer the $10 for a $20?",
+    "p": [
+     "$5 bills are useful for every future customer ($10s need a $5, $20s need $5s), while a $10 is useful only for $20s. Using the $10 first preserves the more flexible $5s; using three $5s when a $10 is available could cause a failure later."
+    ],
+    "table": {
+     "head": [
+      "Sequence",
+      "Prefer $10 first",
+      "Prefer three $5"
+     ],
+     "rows": [
+      [
+       "`5,5,5,5,10,20,20`",
+       "succeeds",
+       "fails: runs out of $5 for the second $20"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Lemonade change: count $5 and $10 bills and give the largest change denomination first, because $5s are the scarce, flexible resource."
+ }
+}
