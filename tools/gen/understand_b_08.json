@@ -1,0 +1,2004 @@
+{
+ "556": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`list(str(n))`",
+       "Digits as characters",
+       "Characters compare like digits ('0' < … < '9'), and they can be swapped in a list"
+      ],
+      [
+       "`d[i] >= d[i+1]` scan",
+       "Find the rightmost position where the digits rise",
+       "Everything to its right is non-increasing (already the largest arrangement)"
+      ],
+      [
+       "`d[j] <= d[i]` scan",
+       "Rightmost digit strictly greater than `d[i]`",
+       "The smallest possible increase at position i"
+      ],
+      [
+       "`d[i+1:] = reversed(d[i+1:])`",
+       "Reverse the tail",
+       "The tail is non-increasing; reversing makes it the smallest arrangement"
+      ],
+      [
+       "`val < 2 ** 31`",
+       "Range check after building the number",
+       "The answer must fit in a 32-bit signed integer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 12443322` gives 13222344:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Digits"
+     ],
+     "rows": [
+      [
+       "digits",
+       "12443322"
+      ],
+      [
+       "i = 1 (d[i]=2 < d[i+1]=4)",
+       "12443322"
+      ],
+      [
+       "j = 5 (rightmost > 2), swap",
+       "13443222"
+      ],
+      [
+       "reverse the tail",
+       "13222344"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edge cases checked by running the code",
+    "table": {
+     "head": [
+      "n",
+      "Result",
+      "Why"
+     ],
+     "rows": [
+      [
+       "21",
+       "-1",
+       "digits non-increasing: no bigger arrangement"
+      ],
+      [
+       "1999999999",
+       "-1",
+       "next arrangement 9199999999 exceeds 2³¹ − 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this the same as next permutation?",
+    "p": [
+     "The smallest number bigger than n using the same digits is exactly the next permutation of its digits (see Next Permutation). The only extra step is the 32-bit check."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d), where d is the number of digits.",
+     "Space: O(d) for the digit list."
+    ]
+   }
+  ],
+  "takeaway": "Next permutation of the digits, then reject results above the 32-bit limit."
+ },
+ "565": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`seen = [False] * len(nums)`",
+       "Which indexes were already part of a walked cycle",
+       "A boolean array is faster than a set for 0…n−1 indexes"
+      ],
+      [
+       "`while not seen[i]`",
+       "Follow `i → nums[i]` until returning to a visited index",
+       "In a permutation every walk ends by closing a cycle"
+      ],
+      [
+       "`i = nums[i]`",
+       "Jump to the next index",
+       "The value is the next index"
+      ],
+      [
+       "`best = max(best, length)`",
+       "Longest cycle so far",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,4,0,3,1,6,2]`:"
+    ],
+    "table": {
+     "head": [
+      "Start",
+      "Indexes walked",
+      "Length",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0→5→6→2",
+       "4",
+       "4"
+      ],
+      [
+       "1",
+       "1→4",
+       "2",
+       "4"
+      ],
+      [
+       "2",
+       "already visited",
+       "0",
+       "4"
+      ],
+      [
+       "3",
+       "3",
+       "1",
+       "4"
+      ],
+      [
+       "4",
+       "already visited",
+       "0",
+       "4"
+      ],
+      [
+       "5",
+       "already visited",
+       "0",
+       "4"
+      ],
+      [
+       "6",
+       "already visited",
+       "0",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it O(n) and not O(n²)?",
+    "p": [
+     "Every index belongs to exactly one cycle, and `seen` marks the whole cycle on its first visit. Later starts inside an already-walked cycle do no work (the `while` fails immediately and `length` is 0), so each index is walked once overall."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for `seen` (an in-place variant marks `nums` itself for O(1) space)."
+    ]
+   }
+  ],
+  "takeaway": "A permutation splits into disjoint cycles: walk each cycle once, mark it visited, and track the longest."
+ },
+ "622": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.a = [0] * k`",
+       "Fixed-size storage array",
+       "Capacity never changes"
+      ],
+      [
+       "`self.head`",
+       "Index of the front item",
+       "Dequeue just advances it; no shifting"
+      ],
+      [
+       "`self.size`",
+       "Number of items",
+       "Distinguishes empty from full (head alone can't)"
+      ],
+      [
+       "`(head + size) % len(a)`",
+       "Slot just after the last item, wrapping around",
+       "The `%` is what makes the array circular"
+      ],
+      [
+       "`(head + size - 1) % len(a)`",
+       "Slot of the last item",
+       "`Rear()`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Capacity 3:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "Array",
+      "head",
+      "size"
+     ],
+     "rows": [
+      [
+       "enQueue(1)",
+       "True",
+       "[1, 0, 0]",
+       "0",
+       "1"
+      ],
+      [
+       "enQueue(2)",
+       "True",
+       "[1, 2, 0]",
+       "0",
+       "2"
+      ],
+      [
+       "enQueue(3)",
+       "True",
+       "[1, 2, 3]",
+       "0",
+       "3"
+      ],
+      [
+       "enQueue(4)",
+       "False",
+       "[1, 2, 3]",
+       "0",
+       "3"
+      ],
+      [
+       "Rear()",
+       "3",
+       "[1, 2, 3]",
+       "0",
+       "3"
+      ],
+      [
+       "deQueue()",
+       "True",
+       "[1, 2, 3]",
+       "1",
+       "2"
+      ],
+      [
+       "enQueue(4)",
+       "True",
+       "[4, 2, 3]",
+       "1",
+       "3"
+      ],
+      [
+       "Rear()",
+       "4",
+       "[4, 2, 3]",
+       "1",
+       "3"
+      ],
+      [
+       "Front()",
+       "2",
+       "[4, 2, 3]",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep `size` instead of a tail pointer?",
+    "p": [
+     "With only `head` and `tail`, an empty and a full queue both have `head == tail`, so you need an extra slot or flag. Storing `size` makes both states unambiguous and the tail index is derived: `(head + size) % cap`. Note that after the dequeue the freed slot 0 is reused by the next `enQueue(4)`, which is the 'circular' part."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per operation.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Circular buffer: a fixed array, a head index and a size; use modulo arithmetic for wrap-around."
+ },
+ "628": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(nums)`",
+       "Sorted copy",
+       "Largest values at the end, smallest (most negative) at the start"
+      ],
+      [
+       "`nums[-1] * nums[-2] * nums[-3]`",
+       "Product of the three largest",
+       "Best when the top three are positive (or all numbers are negative)"
+      ],
+      [
+       "`nums[0] * nums[1] * nums[-1]`",
+       "Two smallest (maybe both negative) times the largest",
+       "Two negatives multiply to a positive"
+      ],
+      [
+       "`max(...)`",
+       "Take the better candidate",
+       "Only these two shapes can be the maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-10,-10,5,2]` sorted is `[-10, -10, 2, 5]`:"
+    ],
+    "table": {
+     "head": [
+      "Candidate",
+      "Calculation",
+      "Value"
+     ],
+     "rows": [
+      [
+       "three largest",
+       "5 × 2 × -10",
+       "-100"
+      ],
+      [
+       "two smallest × largest",
+       "-10 × -10 × 5",
+       "500"
+      ],
+      [
+       "max",
+       "—",
+       "500"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only two candidates?",
+    "p": [
+     "The maximum product of three numbers either has 0 or 2 negative factors (an odd count would make it negative, which is only best if every number is negative, and then the three largest, closest to zero, win). With 2 negatives the best are the two most negative numbers; the third factor is then the biggest number. With no negatives, take the three biggest."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort (O(n) is possible by tracking the top 3 and bottom 2).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Maximum product of three: compare (three largest) with (two smallest × largest) because two negatives make a positive."
+ },
+ "631": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ord(column) - 64`",
+       "Letter 'A' → 1, 'B' → 2, …",
+       "Column letters to integers"
+      ],
+      [
+       "`(int(s[1:]), ord(s[0]) - 64)`",
+       "Cell name 'B2' → (row 2, column 2)",
+       "Parse a cell reference"
+      ],
+      [
+       "`self.val`",
+       "Plain numbers typed into cells",
+       "Missing cells default to 0 via `.get(key, 0)`"
+      ],
+      [
+       "`self.formula`",
+       "Cell → list of cells it sums",
+       "A list (not a set) so a cell listed twice counts twice"
+      ],
+      [
+       "`self.formula.pop(key, None)`",
+       "Remove any formula when `set` overwrites a cell",
+       "`None` default avoids an error if there was none"
+      ],
+      [
+       "`_value(key)` recursion",
+       "Value = sum of the values of its source cells",
+       "Formulas can refer to other formulas"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3×C sheet (A–C): "
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Effect"
+     ],
+     "rows": [
+      [
+       "set(1,'A',2)",
+       "—",
+       "A1 = 2"
+      ],
+      [
+       "sum(3,'C',['A1','A1:B2'])",
+       "4",
+       "C3 formula = cells [(1, 1), (1, 1), (1, 2), (2, 1), (2, 2)]"
+      ],
+      [
+       "set(2,'B',2)",
+       "—",
+       "B2 = 2"
+      ],
+      [
+       "get(3,'C')",
+       "6",
+       "formula re-evaluated lazily"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compute on read (lazy) instead of storing the sum?",
+    "p": [
+     "If values were stored at `sum` time, every later `set` would have to find and refresh all dependent cells (and dependants of dependants). Evaluating on `get` always sees current inputs, at the price of repeating work: `get(3,'C')` returned 6 after B2 changed with no bookkeeping. The cost depends on the depth/size of the formula graph and can be large for long dependency chains."
+    ]
+   },
+   {
+    "h": "Why a list of cells with duplicates?",
+    "p": [
+     "The sum `['A1', 'A1:B2']` includes A1 twice (once alone, once inside the range). The problem counts it twice, so the expansion keeps both entries: here A1 + (A1 + B1 + A2 + B2) = 2 + 2 + 0 + 0 + 0 = 4 first, then 6 after B2 = 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `set` O(1); `get`/`sum` cost grows with the total size of the formula tree below the cell (no caching).",
+     "Space: O(cells) for the dicts and formula lists."
+    ]
+   }
+  ],
+  "takeaway": "Spreadsheet design: store constants and formulas separately, and evaluate formulas recursively on read."
+ },
+ "637": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque([root])`",
+       "BFS (Breadth-First Search) queue seeded with the root",
+       "`popleft` is O(1)"
+      ],
+      [
+       "`n = len(q)`",
+       "Number of nodes on this level, fixed before the loop",
+       "Separates levels and is the divisor of the average"
+      ],
+      [
+       "`total += node.val`",
+       "Sum of the level",
+       "Accumulated as nodes are popped"
+      ],
+      [
+       "`total / n`",
+       "True division gives a float",
+       "`/` not `//` since the average is fractional"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,9,20,null,null,15,7]`:"
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Values",
+      "Sum",
+      "Count",
+      "Average"
+     ],
+     "rows": [
+      [
+       "0",
+       "[3]",
+       "3",
+       "1",
+       "3.0"
+      ],
+      [
+       "1",
+       "[9, 20]",
+       "29",
+       "2",
+       "14.5"
+      ],
+      [
+       "2",
+       "[15, 7]",
+       "22",
+       "2",
+       "11.0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why process a whole level in an inner loop?",
+    "p": [
+     "`range(n)` with `n = len(q)` consumes exactly the current level; children appended during the loop belong to the next one. Otherwise a single queue would mix levels and the sums couldn't be separated."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w), the maximum width of the tree."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS (Breadth-First Search): freeze the queue length per level, sum the values, divide by the count."
+ },
+ "643": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sum(nums[:k])`",
+       "Sum of the first window",
+       "Starting window computed directly"
+      ],
+      [
+       "`window += nums[i] - nums[i - k]`",
+       "Add the entering number, subtract the leaving one",
+       "Slide in O(1) instead of re-summing k numbers"
+      ],
+      [
+       "`max(best, window)`",
+       "Largest window sum",
+       "Compare sums, not averages"
+      ],
+      [
+       "`best / k`",
+       "Convert the largest sum to an average at the end",
+       "Dividing once avoids repeated floating-point work"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,12,-5,-6,50,3]`, `k = 4`; answer 12.75:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Window",
+      "Sum",
+      "Best sum"
+     ],
+     "rows": [
+      [
+       "nums[0:4]",
+       "[1, 12, -5, -6]",
+       "2",
+       "2"
+      ],
+      [
+       "add 50, drop 1",
+       "[12, -5, -6, 50]",
+       "51",
+       "51"
+      ],
+      [
+       "add 3, drop 12",
+       "[-5, -6, 50, 3]",
+       "42",
+       "51"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare sums instead of averages?",
+    "p": [
+     "All windows have the same length k, so the largest sum is the largest average. This keeps the loop in integers and divides once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size sliding window: slide by adding the new element and subtracting the old, and compare sums."
+ },
+ "646": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(pairs, key=lambda p: p[1])`",
+       "Sort by the second value (end)",
+       "Finishing early leaves the most room for later pairs"
+      ],
+      [
+       "`end`",
+       "End of the last pair in the chain",
+       "Compare each candidate's start with it"
+      ],
+      [
+       "`a > end`",
+       "Strictly greater, because `b < c` is required",
+       "A pair starting exactly at `end` cannot follow"
+      ],
+      [
+       "`count`",
+       "Pairs taken",
+       "The chain length"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[7,8],[4,5],[2,3]]` sorted by end is `[1,2],[2,3],[4,5],[7,8]`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Test",
+      "Decision",
+      "end",
+      "count"
+     ],
+     "rows": [
+      [
+       "[1,2]",
+       "1 > −∞? True",
+       "take",
+       "2",
+       "1"
+      ],
+      [
+       "[2,3]",
+       "2 > 2? False",
+       "skip",
+       "2",
+       "1"
+      ],
+      [
+       "[4,5]",
+       "4 > 2? True",
+       "take",
+       "5",
+       "2"
+      ],
+      [
+       "[7,8]",
+       "7 > 5? True",
+       "take",
+       "8",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort by end, not by start?",
+    "p": [
+     "This is the classic interval-scheduling greedy: always pick the pair that ends first among those that fit. Any longer chain can be rearranged to start with it without losing length, since finishing earlier never blocks a later pair. Sorting by start could take a long early pair that blocks several short ones."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) besides the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Interval scheduling greedy: sort by end and take every pair that starts after the last chosen end."
+ },
+ "649": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque(i for i, c in … if c == 'R')`",
+       "Queue of indexes of each party's senators",
+       "Index = position in voting order"
+      ],
+      [
+       "`R.popleft(), D.popleft()`",
+       "The next senator of each party",
+       "Compare their positions to see who acts first"
+      ],
+      [
+       "`r < d`",
+       "R votes before D",
+       "The earlier senator bans the later one of the other party"
+      ],
+      [
+       "`R.append(r + n)`",
+       "Winner goes back to the end of the queue for the next round",
+       "Adding n places it after everyone in the next round while keeping the relative order"
+      ],
+      [
+       "`'Radiant' if R else 'Dire'`",
+       "Whichever queue is non-empty",
+       "The other party has been eliminated"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'RDD'` gives Dire (and `'RD'` gives Radiant):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "R queue",
+      "D queue",
+      "What happens"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0]",
+       "[1, 2]",
+       ""
+      ],
+      [
+       "compare r=0, d=1",
+       "[3]",
+       "[2]",
+       "R0 acts first, bans D1; R re-queued as 3"
+      ],
+      [
+       "compare r=3, d=2",
+       "[]",
+       "[5]",
+       "D2 acts first, bans R3; D re-queued as 5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why ban the next opponent and why `+ n`?",
+    "bullets": [
+     "Greedy: the best ban is the nearest opposing senator that has not acted yet, because he would otherwise ban one of your party sooner. Comparing the front of each queue does exactly that.",
+     "Both queues together always contain each surviving senator once; the winner of the comparison survives and acts again in the next round.",
+     "Adding `n` to the survivor's index puts them behind every senator of the current round, preserving round order without an extra data structure."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): each comparison removes one senator, and there are at most n comparisons.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy simulation with two queues of indexes: the earlier senator bans the opponent and rejoins the next round with index + n."
+ },
+ "652": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`'%s,%d,%s' % (left, val, right)`",
+       "String of left text, value, right text",
+       "A string that uniquely identifies the subtree's shape and values"
+      ],
+      [
+       "`'#'` for an empty child",
+       "Marker for None",
+       "Without it, different shapes could give the same text"
+      ],
+      [
+       "`seen = defaultdict(int)`",
+       "Serialisation → how many times it occurred",
+       "Counting starts at 0 for new keys"
+      ],
+      [
+       "`seen[s] == 2`",
+       "Exactly the second time",
+       "Add the node once per duplicate group, not on the 3rd, 4th occurrence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,null,2,4,null,null,4]`. Serialisations are built bottom-up (post-order); duplicates found: [4, 2] (the subtrees `4` and `2,4`)."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Serialisation",
+      "Times seen",
+      "Action"
+     ],
+     "rows": [
+      [
+       "4",
+       "#,4,#",
+       "1",
+       "—"
+      ],
+      [
+       "2",
+       "#,4,#,2,#",
+       "1",
+       "—"
+      ],
+      [
+       "4",
+       "#,4,#",
+       "2",
+       "duplicate → add node"
+      ],
+      [
+       "2",
+       "#,4,#,2,#",
+       "2",
+       "duplicate → add node"
+      ],
+      [
+       "4",
+       "#,4,#",
+       "3",
+       "—"
+      ],
+      [
+       "3",
+       "#,4,#,2,#,3,#,4,#",
+       "1",
+       "—"
+      ],
+      [
+       "1",
+       "#,4,#,2,#,1,#,4,#,2,#,3,#,4,#",
+       "1",
+       "—"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the second occurrence trigger the add?",
+    "p": [
+     "Using `== 2` (rather than `>= 2`) reports each duplicated subtree one time even if it appears three or more times, which matches 'one root per group'."
+    ]
+   },
+   {
+    "h": "Why O(n²)?",
+    "p": [
+     "Each node's string includes its whole subtree, so strings can be long (up to O(n) characters on a skewed tree), and building and hashing them costs O(n) per node. Assigning each distinct serialisation a small integer id removes this and gives O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) in the worst case.",
+     "Space: O(n²) for the stored strings."
+    ]
+   }
+  ],
+  "takeaway": "Serialise each subtree bottom-up and count the strings in a dict; add a node when its serialisation is seen the second time."
+ },
+ "658": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 0, len(arr) - k`",
+       "Candidates for the window's start index",
+       "A window of k elements can start at 0 … n−k"
+      ],
+      [
+       "`x - arr[mid] > arr[mid + k] - x`",
+       "Left end `arr[mid]` is farther from x than the element just outside on the right",
+       "Then the window starting at mid is worse than one starting at mid+1"
+      ],
+      [
+       "`lo = mid + 1` / `hi = mid`",
+       "Move right / keep mid as a candidate",
+       "Binary search for the best start"
+      ],
+      [
+       "`arr[lo:lo + k]`",
+       "Slice of k elements",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,2,3,4,5]`, `k = 4`, `x = 3` gives [1, 2, 3, 4]:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "Compare",
+      "Move"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "x−arr[mid]=2 ≤ arr[mid+k]−x=2",
+       "hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Other queries (same array)",
+    "p": [
+     "`x = 6` gives [2, 3, 4, 5]; and `[1..8]`, `k = 3`, `x = 5` gives [4, 5, 6]."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "Compare",
+      "Move"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "x−arr[mid]=5 > arr[mid+k]−x=-1",
+       "lo = mid+1"
+      ],
+      [
+       "0",
+       "5",
+       "2",
+       "x−arr[mid]=2 > arr[mid+k]−x=1",
+       "lo = mid+1"
+      ],
+      [
+       "3",
+       "5",
+       "4",
+       "x−arr[mid]=0 ≤ arr[mid+k]−x=3",
+       "hi = mid"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "x−arr[mid]=1 ≤ arr[mid+k]−x=2",
+       "hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare the two outer elements, and why is the tie handled by `else`?",
+    "p": [
+     "The best window has its two boundary elements balanced around x. Comparing the distance of `arr[mid]` (about to drop out) with `arr[mid+k]` (about to join) tells which window start is better. On a tie the problem prefers the smaller number, so we keep the left window: `hi = mid`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log(n − k)) to find the start, plus O(k) for the slice.",
+     "Space: O(1) beyond the slice."
+    ]
+   }
+  ],
+  "takeaway": "Binary search for the window's start: compare how far the leftmost and the next element to the right are from x."
+ },
+ "661": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`max(0, i - 1)`, `min(m, i + 2)`",
+       "Row range of the 3×3 block clipped to the image",
+       "`range(a, b)` excludes b, so `i + 2` covers row i+1"
+      ],
+      [
+       "nested comprehension",
+       "Collects every existing neighbour value",
+       "Border cells simply get fewer values"
+      ],
+      [
+       "`sum(vals) // len(vals)`",
+       "Integer average (rounded down)",
+       "Count varies by position: 4 (corner), 6 (edge), 9 (middle)"
+      ],
+      [
+       "separate `res`",
+       "Output image",
+       "Each average must use the original values, not already smoothed ones"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1,1],[1,0,1],[1,1,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Cells in block",
+      "Sum",
+      "Average (rounded down)"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "4",
+       "3",
+       "3 // 4 = 0"
+      ],
+      [
+       "(0,1)",
+       "6",
+       "5",
+       "5 // 6 = 0"
+      ],
+      [
+       "(0,2)",
+       "4",
+       "3",
+       "3 // 4 = 0"
+      ],
+      [
+       "(1,0)",
+       "6",
+       "5",
+       "5 // 6 = 0"
+      ],
+      [
+       "(1,1)",
+       "9",
+       "8",
+       "8 // 9 = 0"
+      ],
+      [
+       "(1,2)",
+       "6",
+       "5",
+       "5 // 6 = 0"
+      ],
+      [
+       "(2,0)",
+       "4",
+       "3",
+       "3 // 4 = 0"
+      ],
+      [
+       "(2,1)",
+       "6",
+       "5",
+       "5 // 6 = 0"
+      ],
+      [
+       "(2,2)",
+       "4",
+       "3",
+       "3 // 4 = 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why write into a new image?",
+    "p": [
+     "If you overwrote `img` in place, later cells would average already-smoothed neighbours. A new `res` keeps every calculation based on the original image. (An in-place version packs both old and new values into one integer.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(9·m·n) = O(m·n).",
+     "Space: O(m·n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Average each 3×3 neighbourhood with clipped bounds; write to a new grid so every cell uses original values."
+ },
+ "664": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`groupby(s)`",
+       "Groups consecutive equal characters",
+       "`'aaabbb'` becomes the groups a, b; repeated neighbours cost no extra turn"
+      ],
+      [
+       "`''.join(c for c, _ in groupby(s))`",
+       "String with consecutive duplicates removed",
+       "Shrinks the problem (the key `_` is the iterator over each group, ignored)"
+      ],
+      [
+       "`dp[i][j]`",
+       "Fewest turns to print `s[i..j]`",
+       "Interval DP (Dynamic Programming)"
+      ],
+      [
+       "`dp[i+1][j] + 1`",
+       "Print `s[i]` alone, then the rest",
+       "Upper bound for every interval"
+      ],
+      [
+       "`s[k] == s[i]` → `mid + dp[k][j]`",
+       "Print `s[i]` and `s[k]` in the same turn",
+       "The turn that prints `s[i]` can stretch to cover `s[k]`; the stretch costs nothing, the part between is printed over it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abca'` (already without consecutive repeats): `dp[i][j]` for interval i..j (blank cells are below the diagonal):"
+    ],
+    "table": {
+     "head": [
+      "i \\ j",
+      0,
+      1,
+      2,
+      3
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "2",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "",
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "",
+       "",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "",
+       "",
+       "",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Reading the table",
+    "p": [
+     "`dp[0][3] = 3`: print `a` over the whole span first (1 turn), then `b` and `c` inside: `abca` needs 3 turns instead of 4 because the two `a`s share one turn. For `'aaabaaa'` the groups collapse to `aba` and the answer is 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³): n² intervals, each trying up to n split points.",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Interval DP: the first character can share a turn with any later equal character, splitting the interval around it."
+ },
+ "670": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`last = {int(c): i for i, c in enumerate(s)}`",
+       "Digit → LAST index where it occurs",
+       "Dict comprehension: later entries overwrite earlier ones, so the last position wins"
+      ],
+      [
+       "`for d in range(9, int(c), -1)`",
+       "Digits from 9 down to just above c",
+       "Try the biggest replacement first"
+      ],
+      [
+       "`last.get(d, -1) > i`",
+       "That bigger digit exists to the right",
+       "`.get` with −1 avoids `KeyError` and fails the test"
+      ],
+      [
+       "`s[i], s[last[d]] = …`",
+       "Swap",
+       "One swap, then return immediately"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`2736`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Digits"
+     ],
+     "rows": [
+      [
+       "last positions",
+       "{2: 0, 7: 1, 3: 2, 6: 3}"
+      ],
+      [
+       "i=0 (digit 2), look for bigger d=7: last at 1 > 0",
+       "7236"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Other inputs run through the code",
+    "table": {
+     "head": [
+      "num",
+      "Result",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "9973",
+       "9973",
+       "digits already non-increasing: no swap helps"
+      ],
+      [
+       "1993",
+       "9913",
+       "swap the first 1 with the LAST 9 (index 2), not the first 9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the leftmost position, the biggest digit, and its last occurrence?",
+    "bullets": [
+     "The leftmost position where a bigger digit exists later has the greatest place value to improve.",
+     "Take the biggest such digit to raise that position as much as possible.",
+     "If it occurs several times, use the last one: the smaller digit moves to the farthest right, where it costs the least (for 1993 that gives 9913, not 9193)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) (at most 10 values of d tried per position).",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy swap: from the left, find the first digit that has a larger digit later and swap it with that larger digit's last occurrence."
+ },
+ "673": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`length[i]`",
+       "Length of the longest increasing subsequence ending at i",
+       "Standard LIS (Longest Increasing Subsequence) DP"
+      ],
+      [
+       "`count[i]`",
+       "How many such longest subsequences end at i",
+       "The extra dimension for this problem"
+      ],
+      [
+       "`length[j] + 1 > length[i]`",
+       "Found a longer chain ending at i",
+       "Replace the length and inherit `count[j]`"
+      ],
+      [
+       "`length[j] + 1 == length[i]`",
+       "Another chain of the same best length",
+       "Add the number of ways: `count[i] += count[j]`"
+      ],
+      [
+       "`sum(c for l, c in zip(length, count) if l == best)`",
+       "Add the counts over all end points of the longest chains",
+       "The answer counts different final elements"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,5,4,7]`; the longest length is 4:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "length[i]",
+      "count[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "5",
+       "3",
+       "1"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "1"
+      ],
+      [
+       "4",
+       "7",
+       "4",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `7` has count 2",
+    "p": [
+     "Two chains of length 3 end before 7: `1,3,5` (ends at 5) and `1,3,4` (ends at 4). Each extends by 7, so `count[4] = count[2] + count[3] = 1 + 1 = 2`. These are the two answers `1,3,5,7` and `1,3,4,7`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "LIS (Longest Increasing Subsequence) DP carrying a second array: the number of ways to reach each best length."
+ },
+ "679": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`go(nums)`",
+       "Can this list of numbers reach 24?",
+       "Recursion that shrinks the list by one number per step"
+      ],
+      [
+       "`for i … for j … if i == j: continue`",
+       "Every ordered pair of different positions",
+       "Ordered, so `a − b`, `b − a`, `a ÷ b` and `b ÷ a` are all tried"
+      ],
+      [
+       "`rest = [nums[k] … if k != i and k != j]`",
+       "The numbers not used in this step",
+       "Replaced by one new number `r`"
+      ],
+      [
+       "`results = [a+b, a-b, a*b]` plus `a/b`",
+       "Possible results of combining a and b",
+       "Division only when `b` is not (nearly) 0"
+      ],
+      [
+       "`abs(nums[0] - 24) < 1e-6`",
+       "Compare with a tolerance",
+       "Division creates floats such as 23.999999999999996; exact `== 24` would miss them"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,1,8,7]` is True (the code finds a way; this is the first successful chain of combinations it reached, step by step):"
+    ],
+    "table": {
+     "head": [
+      "Combination step"
+     ],
+     "rows": [
+      [
+       "4×1 = 4 → remaining [8.0, 7.0, 4.0]"
+      ],
+      [
+       "7−4 = 3 → remaining [8.0, 3.0]"
+      ],
+      [
+       "8×3 = 24 → remaining [24.0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case",
+    "p": [
+     "`[1,2,1,2]` returns False: every sequence of combinations is tried and none ends within 1e-6 of 24."
+    ]
+   },
+   {
+    "h": "Why brute force is fine",
+    "p": [
+     "With 4 cards there are 12 ordered pairs × 4 operations at the first level, 6 × 4 at the second, 2 × 4 at the last: a few thousand states at most. Parentheses are implicit: combining two numbers into a new number at each step covers every bracket arrangement."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1): a fixed number of cards gives a bounded search (about 12·4 · 6·4 · 2·4 combinations).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Search by combining any two numbers with each operation until one remains; compare with 24 using a tolerance because of float division."
+ },
+ "682": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`st.pop()`",
+       "Removes the last score",
+       "`C` cancels the previous valid score"
+      ],
+      [
+       "`2 * st[-1]`",
+       "Double of the top",
+       "`D`"
+      ],
+      [
+       "`st[-1] + st[-2]`",
+       "Top two scores",
+       "`+`"
+      ],
+      [
+       "`int(op)`",
+       "Text to integer (also handles negatives like '-2')",
+       "Any other token is a score"
+      ],
+      [
+       "`sum(st)`",
+       "Total of the remaining scores",
+       "Cancelled scores were popped"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['5','2','C','D','+']` totals 30:"
+    ],
+    "table": {
+     "head": [
+      "op",
+      "Meaning",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "5",
+       "new score",
+       "[5]"
+      ],
+      [
+       "2",
+       "new score",
+       "[5, 2]"
+      ],
+      [
+       "C",
+       "remove previous score",
+       "[5]"
+      ],
+      [
+       "D",
+       "double previous",
+       "[5, 10]"
+      ],
+      [
+       "+",
+       "sum of previous two",
+       "[5, 10, 15]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack?",
+    "p": [
+     "Every operation refers to the most recent valid scores, and `C` removes the most recent one, so the next operation sees the one before it. That is last-in-first-out behaviour."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Use a stack of valid scores: C pops, D and + read the top one or two, a number pushes."
+ },
+ "688": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`moves`",
+       "The 8 knight moves as (row, column) offsets",
+       "Loop over offsets instead of eight copies of the code"
+      ],
+      [
+       "`dp[r][c]`",
+       "Probability the knight is on (r, c) after the moves made so far",
+       "Probability mass spreads move by move"
+      ],
+      [
+       "`new = [[0.0] * n …]`",
+       "A fresh grid for the next move",
+       "All cells of a move must be computed from the previous move's grid"
+      ],
+      [
+       "`dp[r][c] / 8`",
+       "Each of the 8 moves has probability 1/8",
+       "Mass sent to every target square, including off-board ones (those are lost)"
+      ],
+      [
+       "`sum(map(sum, dp))`",
+       "Total probability remaining on the board",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `k = 2`, start (0,0); each grid shows probabilities per cell (rows separated by `/`). The final total is 0.0625:"
+    ],
+    "table": {
+     "head": [
+      "After moves",
+      "Probability grid"
+     ],
+     "rows": [
+      [
+       "0",
+       "1 0 0 / 0 0 0 / 0 0 0"
+      ],
+      [
+       "1",
+       "0 0 0 / 0 0 0.125 / 0 0.125 0"
+      ],
+      [
+       "2",
+       "0.03125 0 0.015625 / 0 0 0 / 0.015625 0 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Reading the table",
+    "p": [
+     "From the corner (0,0) only two of the eight moves stay on the 3×3 board, to (1,2) and (2,1), so after one move the knight is on the board with probability 2/8 = 0.25. Each of those two squares again has exactly two moves that stay on the board, so the remaining probability is 0.25 · 2/8 = 0.0625."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k·n²·8).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Probability DP: spread each cell's probability to its on-board knight targets one move at a time; whatever leaves the board is dropped."
+ },
+ "694": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`grid[r][c] = 0`",
+       "Sink the visited land cell",
+       "Uses the grid as the visited marker"
+      ],
+      [
+       "`shape.append((r - r0, c - c0))`",
+       "Cell position relative to the island's first (top-left-most) cell",
+       "Translation-invariant signature: moving the island doesn't change it"
+      ],
+      [
+       "`tuple(shape)`",
+       "List to hashable tuple",
+       "Lists can't go in a set; tuples can"
+      ],
+      [
+       "`shapes = set()`",
+       "Distinct signatures",
+       "`len(shapes)` is the answer"
+      ],
+      [
+       "fixed order of `(dr, dc)`",
+       "Every DFS (Depth-First Search) visits neighbours in the same order",
+       "Equal shapes then produce identical sequences of offsets"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Grid `11011 / 10000 / 00001 / 11011`: each row is one island found, its offsets in visit order, and whether the shape is new. Distinct shapes: 3."
+    ],
+    "table": {
+     "head": [
+      "Start (r, c)",
+      "Offsets in DFS order",
+      "Shape"
+     ],
+     "rows": [
+      [
+       "(0, 0)",
+       "[(0, 0), (1, 0), (0, 1)]",
+       "new shape"
+      ],
+      [
+       "(0, 3)",
+       "[(0, 0), (0, 1)]",
+       "new shape"
+      ],
+      [
+       "(2, 4)",
+       "[(0, 0), (1, 0), (1, -1)]",
+       "new shape"
+      ],
+      [
+       "(3, 0)",
+       "[(0, 0), (0, 1)]",
+       "same as an earlier island"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why relative offsets instead of absolute coordinates?",
+    "p": [
+     "Two islands count as the same shape if one can be translated onto the other. Absolute coordinates would make every island unique; subtracting the starting cell turns each island into a position-independent signature. No rotation or reflection is allowed, so no extra normalisation is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) for shapes and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Canonical shape signature: record each island's cells relative to its start in a fixed DFS (Depth-First Search) order and count distinct signatures."
+ },
+ "697": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`first.setdefault(x, i)`",
+       "Stores the first index of x if not yet present",
+       "Keeps the earliest position"
+      ],
+      [
+       "`cnt[x] += 1`",
+       "Occurrence count (a `Counter` returns 0 for missing keys)",
+       "Tracks the degree candidate"
+      ],
+      [
+       "`i - first[x] + 1`",
+       "Length of the span from x's first to current occurrence",
+       "Shortest subarray containing all copies of x so far"
+      ],
+      [
+       "`cnt[x] > deg or (cnt[x] == deg and length < best)`",
+       "Higher degree wins; on a tie the shorter span wins",
+       "Single pass, no second loop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,3,1]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "count of x",
+      "span",
+      "Action",
+      "deg",
+      "best length"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1",
+       "update",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "1",
+       "—",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "2",
+       "update",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "1",
+       "1",
+       "—",
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "2",
+       "5",
+       "—",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the span from the first occurrence work?",
+    "p": [
+     "A subarray with the same degree must contain every copy of some most frequent value, so its minimum length is (last − first + 1) for that value. Computing the span at each occurrence and keeping the smallest among values with the top count finds it in one pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Track first index and count per value: the answer is the shortest first-to-last span among the most frequent values."
+ }
+}

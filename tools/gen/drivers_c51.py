@@ -22,6 +22,6 @@ D2 = {
 4069: (S("maxProfit([1,2,3,4],0,[0,1,2,3])"), "Buy-sell pairs are limited by the fees.", "fees"),
 1632: (S("matrixRankTransform([[7,7],[7,7]])"), "All equal → all rank 1.", "all equal"),
 2958: (S("maxSubarrayLength([5,5,5,5,5,5,5],4)"), "At most four 5s.", "one value"),
-1155: (S("numRollsToTarget(30,30,500)"), "Large DP.", "large"),
+1155: (S("numRollsToTarget(2,5,10)"), "5 + 5 is the only way.", "one way"),
 935: (S("knightDialer(3131)"), "Large n.", "large n"),
 }
