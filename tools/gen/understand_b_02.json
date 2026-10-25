@@ -665,7 +665,7 @@
    {
     "h": "Why a `while` loop for the left edge?",
     "p": [
-     "After one new character, the window can often shrink by several positions while still covering `t` (at `r = 12` it shrinks from `l = 8` to `l = 10`, improving the best to `BANC`). An `if` would skip all but one shrink and miss the minimum."
+     "After one new character, the window can often shrink by several positions while still covering `t` (at `r = 12` it shrinks from `l = 6` to `l = 10`, first finding `EBANC` and then the better `BANC`). An `if` would skip all but one shrink and miss the minimum."
     ]
    },
    {
@@ -1003,7 +1003,7 @@
    {
     "h": "Why `>=` when popping?",
     "p": [
-     "Equal heights are popped too, so the remaining bar extends the width to the left. Equal bars on the stack would give correct final answers anyway, but popping them keeps strictly increasing heights and avoids duplicate work."
+     "Equal heights are popped too. That is safe: the bar at `j` that replaces them has the same height and is pushed with the same left boundary, so it will report the full-width rectangle later. The stack therefore stays strictly increasing."
     ]
    },
    {
@@ -1247,5 +1247,1038 @@
    }
   ],
   "takeaway": "Decode-ways DP: ways(i) = ways(i−1) if the digit is nonzero, plus ways(i−2) if the last two digits form 10–26."
+ },
+ "94": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`stack = []`",
+       "Nodes whose left subtree is being explored",
+       "The explicit version of the recursion call stack"
+      ],
+      [
+       "`while cur: stack.append(cur); cur = cur.left`",
+       "Dive as far left as possible, remembering the path",
+       "In-order visits the leftmost node first"
+      ],
+      [
+       "`cur = stack.pop()`",
+       "Most recent unfinished node",
+       "Its left subtree is done, so it is next in order"
+      ],
+      [
+       "`res.append(cur.val)`",
+       "Visit the node",
+       "The 'node' step between left and right"
+      ],
+      [
+       "`cur = cur.right`",
+       "Switch to the right subtree",
+       "Repeat the dive on it; if `None`, the next pop returns to a parent"
+      ],
+      [
+       "`while cur or stack`",
+       "Continue while there is a current node or pending ancestors",
+       "Either condition alone would stop too early"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,null,2,3]`: root 1 has only a right child 2, and 2 has a left child 3. Each row is one pop:"
+    ],
+    "table": {
+     "head": [
+      "Pop #",
+      "Visited",
+      "Stack after pop",
+      "res",
+      "cur (right child)"
+     ],
+     "rows": [
+      [
+       "1",
+       "pop 1",
+       "[]",
+       "[1]",
+       "2"
+      ],
+      [
+       "2",
+       "pop 3",
+       "[2]",
+       "[1, 3]",
+       "None"
+      ],
+      [
+       "3",
+       "pop 2",
+       "[]",
+       "[1, 3, 2]",
+       "None"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two nested loops and a stack?",
+    "p": [
+     "The inner `while cur` dives left; the pop happens only when there is no left child left. After visiting, moving to `cur.right` and diving again reproduces left → node → right."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "How it remembers ancestors",
+      "Risk"
+     ],
+     "rows": [
+      [
+       "Recursion",
+       "call stack",
+       "Deep trees (a long chain) can hit Python's recursion limit"
+      ],
+      [
+       "This loop + `stack`",
+       "a list on the heap",
+       "No recursion limit; same O(h) memory"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — every node is pushed once and popped once.",
+     "Space: O(h) — the stack holds at most one root-to-leaf path (h = height; n for a chain)."
+    ]
+   }
+  ],
+  "takeaway": "In-order with an explicit stack: go left as far as possible, pop to visit, then step to the right child and repeat."
+ },
+ "97": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`len(s1) + len(s2) != len(s3)`",
+       "Length check first",
+       "If lengths don't add up, no weaving can work"
+      ],
+      [
+       "`[[False] * (len(s2)+1) for _ in range(len(s1)+1)]`",
+       "(len1+1)×(len2+1) boolean table, one fresh list per row",
+       "`dp[i][j]`: can `s3[:i+j]` be built from `s1[:i]` and `s2[:j]`?"
+      ],
+      [
+       "`s3[i+j-1]`",
+       "Last character of the prefix of length `i+j`",
+       "Using i letters of s1 and j of s2 means exactly i+j letters of s3 are consumed"
+      ],
+      [
+       "`if i and dp[i-1][j] …`",
+       "Take the last letter from `s1`",
+       "`i` is falsy at 0, which blocks `i-1 = -1` wraparound"
+      ],
+      [
+       "`if j and dp[i][j-1] …`",
+       "Take the last letter from `s2`",
+       "Second way to arrive at the same cell; either one makes it True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s1 = 'ab'`, `s2 = 'cd'`, `s3 = 'acbd'`. Rows are the number of `s1` letters used (i), columns the number of `s2` letters used (j). The answer is the bottom-right cell: True."
+    ],
+    "table": {
+     "head": [
+      "i \\ j",
+      "0",
+      "1 (c)",
+      "2 (cd)"
+     ],
+     "rows": [
+      [
+       "0 ('')",
+       "T",
+       "F",
+       "F"
+      ],
+      [
+       "1 (a)",
+       "T",
+       "T",
+       "F"
+      ],
+      [
+       "2 (ab)",
+       "F",
+       "T",
+       "T"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why DP and not a greedy match?",
+    "p": [
+     "When `s1[i]` and `s2[j]` are the same letter as `s3[k]`, you can't know which to consume. Taking the wrong one can fail later: with `s1='ab'`, `s2='ac'`, `s3='acab'` a greedy 'prefer `s1`' rule takes `s1`'s `a` first and then gets stuck at `c`, yet the answer is true (use `s2` first). The table keeps both options: cell (i, j) is True if either predecessor is True and matches."
+    ]
+   },
+   {
+    "h": "Why two independent `if`s?",
+    "p": [
+     "They don't use `elif` because both paths may be valid; each can set the cell True. Neither sets it False, because the cell started False."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·m) — one O(1) check per cell.",
+     "Space: O(n·m) for the table (O(min(n, m)) with a rolling row)."
+    ]
+   }
+  ],
+  "takeaway": "Interleaving DP: dp[i][j] is True if s3's first i+j letters can come from s1's first i and s2's first j; arrive from the left or from above."
+ },
+ "100": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`not p and not q`",
+       "Both subtrees are empty",
+       "Two empty trees are the same; this is the base case that ends every successful branch"
+      ],
+      [
+       "`not p or not q`",
+       "Exactly one is empty (the both-empty case was already handled)",
+       "Different shapes ⇒ different trees"
+      ],
+      [
+       "`p.val != q.val`",
+       "Values at matching positions differ",
+       "Compared only after both nodes are known to exist"
+      ],
+      [
+       "`A and B`",
+       "Short-circuit: B is skipped when A is False",
+       "Stop at the first mismatch; the right subtrees are not even visited"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`p = [1,2]` and `q = [1,null,2]`: the same values but the 2 is on different sides. Calls in order (p node, q node), result False. The `and` short-circuits, so the right subtrees are never compared:"
+    ],
+    "table": {
+     "head": [
+      "p",
+      "q",
+      "Outcome"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "match → compare children"
+      ],
+      [
+       "2",
+       "None",
+       "one None or values differ → False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the order of the checks matters",
+    "p": [
+     "The first `if` handles both-None, so by the second line at least one node exists; `not p or not q` then means exactly one exists, and only after that is `.val` safe to read."
+    ],
+    "table": {
+     "head": [
+      "Check order",
+      "What goes wrong if swapped"
+     ],
+     "rows": [
+      [
+       "Compare `p.val != q.val` first",
+       "Crashes with `AttributeError` when one side is `None`"
+      ],
+      [
+       "Check 'exactly one None' before 'both None'",
+       "The both-None base case (valid, identical) would be reported as a mismatch"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — at most each node of the smaller tree is visited once.",
+     "Space: O(h) recursion depth (O(n) for a degenerate chain)."
+    ]
+   }
+  ],
+  "takeaway": "Simultaneous recursion on two trees: both empty ⇒ equal, one empty or values differ ⇒ not equal, otherwise both children must match."
+ },
+ "103": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque([root] if root else [])`",
+       "Queue with the root (or empty for an empty tree)",
+       "BFS queue; `popleft` is O(1), unlike `list.pop(0)`"
+      ],
+      [
+       "`for _ in range(len(q))`",
+       "Processes exactly the nodes that are in the queue right now",
+       "`len(q)` is read once, so nodes added during the loop belong to the next level"
+      ],
+      [
+       "`q.popleft()` / `q.append(child)`",
+       "Take from the front, add children at the back",
+       "FIFO order gives level-by-level traversal"
+      ],
+      [
+       "`level[::-1]`",
+       "Reversed copy of the level",
+       "Zigzag: flip every other level after collecting it"
+      ],
+      [
+       "`ltr = not ltr`",
+       "Toggles the direction flag",
+       "Alternate between two states"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,9,20,null,null,15,7]`. The queue always fills left to right; only the finished list is flipped:"
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Direction",
+      "Collected (queue order)",
+      "Appended to res"
+     ],
+     "rows": [
+      [
+       "0",
+       "left→right",
+       "[3]",
+       "[3]"
+      ],
+      [
+       "1",
+       "right→left",
+       "[9, 20]",
+       "[20, 9]"
+      ],
+      [
+       "2",
+       "left→right",
+       "[15, 7]",
+       "[15, 7]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse the finished level instead of changing the traversal?",
+    "table": {
+     "head": [
+      "Option",
+      "Cost",
+      "Comment"
+     ],
+     "rows": [
+      [
+       "Collect left→right, then `level[::-1]`",
+       "O(w) extra per odd level",
+       "Simple; BFS logic is unchanged"
+      ],
+      [
+       "Alternate traversal direction of the queue",
+       "—",
+       "Children's order would depend on the level's direction and need two stacks or a deque at both ends; more complex"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `len(q)` inside `range`?",
+    "p": [
+     "The queue grows as children are added during the loop. `range(len(q))` evaluates the length once before the loop starts, freezing the level size. Using `while q` inside would mix levels."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — each node enqueued and dequeued once, plus reversing levels (total O(n)).",
+     "Space: O(w) — the queue holds at most one level's width, plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS with a direction flag: reverse every second level after collecting it."
+ },
+ "106": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`pos = {v: i for i, v in enumerate(inorder)}`",
+       "Dict from value to its index in inorder",
+       "O(1) lookup of the root's position instead of a linear search (values are distinct)"
+      ],
+      [
+       "`postorder.pop()`",
+       "Removes and returns the last element",
+       "Postorder ends with the root of the current subtree"
+      ],
+      [
+       "`build(lo, hi)`",
+       "Builds the subtree whose inorder values sit in `inorder[lo..hi]`",
+       "The inorder range tells you which nodes belong to this subtree"
+      ],
+      [
+       "`lo > hi`",
+       "Empty range",
+       "Base case: no nodes ⇒ `None`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`inorder = [9,3,15,20,7]`, `postorder = [9,15,7,20,3]`. Each call pops the next value from the end of postorder:"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "inorder range",
+      "Popped root",
+      "Its index in inorder",
+      "Splits into"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0,4]",
+       "3",
+       "1",
+       "left part inorder[0:1], right part inorder[2:5]"
+      ],
+      [
+       "1",
+       "[2,4]",
+       "20",
+       "3",
+       "left part inorder[2:3], right part inorder[4:5]"
+      ],
+      [
+       "2",
+       "[4,4]",
+       "7",
+       "4",
+       "left part inorder[4:4], right part inorder[5:5]"
+      ],
+      [
+       "3",
+       "[5,4]",
+       "—",
+       "—",
+       "empty → None"
+      ],
+      [
+       "3",
+       "[4,3]",
+       "—",
+       "—",
+       "empty → None"
+      ],
+      [
+       "2",
+       "[2,2]",
+       "15",
+       "2",
+       "left part inorder[2:2], right part inorder[3:3]"
+      ],
+      [
+       "3",
+       "[3,2]",
+       "—",
+       "—",
+       "empty → None"
+      ],
+      [
+       "3",
+       "[2,1]",
+       "—",
+       "—",
+       "empty → None"
+      ],
+      [
+       "1",
+       "[0,0]",
+       "9",
+       "0",
+       "left part inorder[0:0], right part inorder[1:1]"
+      ],
+      [
+       "2",
+       "[1,0]",
+       "—",
+       "—",
+       "empty → None"
+      ],
+      [
+       "2",
+       "[0,-1]",
+       "—",
+       "—",
+       "empty → None"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why build the right subtree before the left?",
+    "p": [
+     "Postorder is left, right, root. Popping from the end therefore yields the root, then the right subtree's nodes (in reverse), then the left's. If you built left first you would pop right-subtree values by mistake. Here the pops are 3, 20, 7, 15, 9, giving root 3, right child 20 (with its own children 15 and 7), and left child 9."
+    ]
+   },
+   {
+    "h": "Why a dict instead of `inorder.index(v)`?",
+    "table": {
+     "head": [
+      "Lookup",
+      "Cost per node",
+      "Total"
+     ],
+     "rows": [
+      [
+       "`inorder.index(v)`",
+       "O(n)",
+       "O(n²)"
+      ],
+      [
+       "`pos[v]`",
+       "O(1)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — each node is created once with O(1) work.",
+     "Space: O(n) for the dict plus O(h) recursion.",
+     "Note: the code consumes `postorder` (pops it), so the caller's list is emptied."
+    ]
+   }
+  ],
+  "takeaway": "Postorder gives the root from the end; inorder splits left from right. Use a value→index map and build right before left."
+ },
+ "109": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`slow = slow.next`, `fast = fast.next.next`",
+       "Tortoise and hare: `fast` moves twice as fast",
+       "When `fast` reaches the end, `slow` is at the middle in one pass"
+      ],
+      [
+       "`while fast and fast.next`",
+       "Stops when `fast` is at the last node or past it",
+       "Guards both odd and even lengths"
+      ],
+      [
+       "`prev`",
+       "The node just before `slow`",
+       "Needed to cut the list so the left half ends before the middle"
+      ],
+      [
+       "`prev.next = None`",
+       "Detaches the left half",
+       "Recursion on `head` then sees only the left half"
+      ],
+      [
+       "`TreeNode(slow.val)`",
+       "The middle becomes the root",
+       "Middle of a sorted sequence ⇒ balanced split"
+      ],
+      [
+       "`if not head.next: return TreeNode(head.val)`",
+       "One-node base case",
+       "With one node `prev` would still be `None` and `prev.next = None` would crash"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "List `[-10,-3,0,5,9]`. Each call finds the middle, cuts, and recurses on both sides:"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "List given",
+      "prev",
+      "Middle (root)",
+      "Split"
+     ],
+     "rows": [
+      [
+       "0",
+       "[-10, -3, 0, 5, 9]",
+       "-3",
+       "0",
+       "left=[-10, -3], right=[5, 9]"
+      ],
+      [
+       "1",
+       "[-10, -3]",
+       "-10",
+       "-3",
+       "left=[-10], right=[]"
+      ],
+      [
+       "2",
+       "[-10]",
+       "—",
+       "-10",
+       "single node → leaf"
+      ],
+      [
+       "2",
+       "empty",
+       "—",
+       "—",
+       "None"
+      ],
+      [
+       "1",
+       "[5, 9]",
+       "5",
+       "9",
+       "left=[5], right=[]"
+      ],
+      [
+       "2",
+       "[5]",
+       "—",
+       "5",
+       "single node → leaf"
+      ],
+      [
+       "2",
+       "empty",
+       "—",
+       "—",
+       "None"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it O(n log n) and not O(n)?",
+    "p": [
+     "Each call scans its whole sublist to find the middle. The recursion has about log n levels, and at each level the sublists together contain n nodes. So the total scanning is n per level × log n levels. The alternative (copy to an array, or do an in-order simulation) reaches O(n) time at the cost of O(n) extra memory or a more intricate algorithm."
+    ]
+   },
+   {
+    "h": "Which middle is chosen for even lengths?",
+    "p": [
+     "With 2 nodes `[a, b]`, `fast` jumps past the end after one move, so `slow` = `b` (the upper middle). `b` becomes the root with `a` as its left child. Either middle gives a valid height-balanced tree."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(log n) recursion depth for the balanced result (no extra copy of the data)."
+    ]
+   }
+  ],
+  "takeaway": "Fast/slow pointers find the middle of a linked list; recursively make the middle the root of each half to build a balanced BST."
+ },
+ "112": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`not root`",
+       "Empty tree/child",
+       "An empty tree has no path, so `False`"
+      ],
+      [
+       "`not root.left and not root.right`",
+       "Leaf test: no children",
+       "The problem requires the path to end at a leaf"
+      ],
+      [
+       "`target - root.val`",
+       "Remaining sum needed below this node",
+       "Carry a shrinking target instead of an accumulated sum"
+      ],
+      [
+       "`A or B`",
+       "Short-circuit: B is skipped when A is True",
+       "Stop searching as soon as one valid path is found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[5,4,8,11,null,13,4,7,2]`, target 22. The calls in order (depth, node, remaining target). The search stops at the first True, so the right subtrees are never visited:"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Node",
+      "Target left",
+      "Outcome"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "22",
+       "not a leaf → try children with target − val = 17"
+      ],
+      [
+       "1",
+       "4",
+       "17",
+       "not a leaf → try children with target − val = 13"
+      ],
+      [
+       "2",
+       "11",
+       "13",
+       "not a leaf → try children with target − val = 2"
+      ],
+      [
+       "3",
+       "7",
+       "2",
+       "leaf: 7 == 2 → False"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "leaf: 2 == 2 → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the leaf test come before comparing values?",
+    "p": [
+     "`[1,2]` with target 1: the root's value matches the target, but the root has a child, so 1 is not a root-to-leaf path. Without the leaf check, the code would return `True` wrongly. Here, the root is not a leaf, so the search continues to its child 2 with target 0: leaf `2 != 0`, giving False."
+    ]
+   },
+   {
+    "h": "Why subtract instead of summing up?",
+    "p": [
+     "Passing `target - root.val` down means every call has only two pieces of state (node, remaining) and the check at the leaf is a simple equality, with no accumulator to undo on return."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — every node visited at most once.",
+     "Space: O(h) recursion depth (O(n) for a chain)."
+    ]
+   }
+  ],
+  "takeaway": "Root-to-leaf path sum by recursion: subtract the node from the target on the way down and test equality at a leaf."
+ },
+ "115": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp = [1] + [0] * len(t)`",
+       "`dp[j]` = ways to form `t[:j]` from the part of `s` read so far; `dp[0] = 1` for the empty string",
+       "Counting DP: the empty target can be formed exactly one way"
+      ],
+      [
+       "`for ch in s`",
+       "Reads `s` one character at a time",
+       "Each character may extend matches already counted"
+      ],
+      [
+       "`range(len(t), 0, -1)`",
+       "Visits `j` from high to low",
+       "Updates must not reuse the same character twice (see below)"
+      ],
+      [
+       "`dp[j] += dp[j-1]`",
+       "If `ch == t[j-1]`, every way to form `t[:j-1]` can now be extended by this character",
+       "Adds new matches without discarding the old ones"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'rabbbit'`, `t = 'rabbit'` (answer 3). After each character of `s`, `dp[0..6]` counts the ways to form each prefix of `t`:"
+    ],
+    "table": {
+     "head": [
+      "Char of s",
+      "Updated cells",
+      "dp = [prefix lengths 0..6]"
+     ],
+     "rows": [
+      [
+       "start",
+       "—",
+       "[1, 0, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "'r'",
+       "dp[1]",
+       "[1, 1, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "'a'",
+       "dp[2]",
+       "[1, 1, 1, 0, 0, 0, 0]"
+      ],
+      [
+       "'b'",
+       "dp[3], dp[4]",
+       "[1, 1, 1, 1, 0, 0, 0]"
+      ],
+      [
+       "'b'",
+       "dp[3], dp[4]",
+       "[1, 1, 1, 2, 1, 0, 0]"
+      ],
+      [
+       "'b'",
+       "dp[3], dp[4]",
+       "[1, 1, 1, 3, 3, 0, 0]"
+      ],
+      [
+       "'i'",
+       "dp[5]",
+       "[1, 1, 1, 3, 3, 3, 0]"
+      ],
+      [
+       "'t'",
+       "dp[6]",
+       "[1, 1, 1, 3, 3, 3, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate `j` backwards?",
+    "p": [
+     "`dp[j] += dp[j-1]` reads the old value of `dp[j-1]` from before this character. Going from high `j` to low guarantees `dp[j-1]` has not yet been changed for this `ch`. Going upward would let one character be counted twice in the same subsequence: running that wrong order on this input gives 6 instead of 3."
+    ]
+   },
+   {
+    "h": "Why only one dimension?",
+    "p": [
+     "The 2-D version `dp[i][j]` uses row `i-1` only (`dp[i][j] = dp[i-1][j] + dp[i-1][j-1]` when characters match). Updating in place right-to-left folds the two rows into one array, taking space from O(|s|·|t|) down to O(|t|)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(|s|·|t|).",
+     "Space: O(|t|)."
+    ]
+   }
+  ],
+  "takeaway": "Subsequence-counting DP: for each character, dp[j] += dp[j−1] when it matches t[j−1], iterating j downward so a character is used once."
+ },
+ "118": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`rows = [[1]]`",
+       "Starts with the first row",
+       "Row 1 has no row above it"
+      ],
+      [
+       "`prev = rows[-1]`",
+       "The row built last",
+       "Each row depends only on the previous one"
+      ],
+      [
+       "`zip(prev, prev[1:])`",
+       "Pairs each element with its right neighbour",
+       "Yields the two numbers above each inner position"
+      ],
+      [
+       "`[a + b for a, b in …]`",
+       "List comprehension of pair sums",
+       "Builds the inner values in one expression"
+      ],
+      [
+       "`[1] + … + [1]`",
+       "Adds the two edge 1s",
+       "Concatenates lists into the full row"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`numRows = 5`. Each new row is `[1]`, the pair sums of the previous row, `[1]`:"
+    ],
+    "table": {
+     "head": [
+      "New row",
+      "prev",
+      "zip(prev, prev[1:])",
+      "Result"
+     ],
+     "rows": [
+      [
+       "row 1",
+       "—",
+       "—",
+       "[1]"
+      ],
+      [
+       "row 2",
+       "[1]",
+       "[]",
+       "[1, 1]"
+      ],
+      [
+       "row 3",
+       "[1, 1]",
+       "[(1, 1)]",
+       "[1, 2, 1]"
+      ],
+      [
+       "row 4",
+       "[1, 2, 1]",
+       "[(1, 2), (2, 1)]",
+       "[1, 3, 3, 1]"
+      ],
+      [
+       "row 5",
+       "[1, 3, 3, 1]",
+       "[(1, 3), (3, 3), (3, 1)]",
+       "[1, 4, 6, 4, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `zip(prev, prev[1:])`?",
+    "p": [
+     "Pairing the list with itself shifted by one gives every adjacent pair exactly once, and `zip` stops at the shorter list, so there is no index error. For `prev = [1,2,1]` the pairs are `(1,2)` and `(2,1)`, making sums 3 and 3 in the next row `[1,3,3,1]`."
+    ]
+   },
+   {
+    "h": "Edge case",
+    "p": [
+     "`numRows = 1` runs the loop zero times and returns `[[1]]`. Rows are always new lists, so changing one later does not affect another."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) — row k has k items, so about n²/2 additions.",
+     "Space: O(n²) for the output itself."
+    ]
+   }
+  ],
+  "takeaway": "Build each row from the previous one by adding adjacent pairs (zip with a shifted copy) and wrapping with 1s."
  }
 }

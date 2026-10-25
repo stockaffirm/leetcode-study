@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>System Design Prep · CodeAffirm</title><link rel="stylesheet" href="../assets/style.css">
+<style>
+.sdw{max-width:920px;margin:0 auto;padding:18px 16px 60px}.sdw h1{margin:0 0 4px}.sdw .lead{color:var(--mute);margin:0 0 16px}
+.card{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:16px 18px;margin:12px 0}.card h2,.card h3{margin:0 0 8px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}.btn{padding:10px 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 15px -apple-system,BlinkMacSystemFont,sans-serif;cursor:pointer}.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff}.btn.sm{padding:5px 11px;font-size:13px}.btn.bad{color:#c0392b}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.top a{color:var(--accent);text-decoration:none}.who{font-size:13px;color:var(--mute)}
+.trk{margin:18px 0 6px;font-size:18px}.row{display:grid;grid-template-columns:minmax(0,1fr) 62px 62px;gap:8px;align-items:center;padding:9px 6px;border-top:1px solid var(--line)}.row a{color:var(--ink);text-decoration:none;font-weight:600}.row a:hover{color:var(--accent)}.row .dh{font-size:11px;color:var(--mute);text-align:center}
+.ckb{width:28px;height:28px;border-radius:8px;border:2px solid var(--mute);background:transparent;justify-self:center;cursor:pointer;color:#fff;font-size:16px;line-height:1}.ckb[aria-checked=true]{background:var(--ok);border-color:var(--ok)}
+.msg{padding:10px 12px;border-radius:10px;background:var(--accent-soft)}.err{background:#fde8e6;color:#8a1c12}
+.areq{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}.areq small{color:var(--mute)}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;background:var(--line);font-size:12px;font-weight:600;margin-left:6px}.pill.approved{background:var(--ok);color:#fff}
+.ub{margin-bottom:10px}.ub h3 b{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border-radius:50%;background:var(--line);font-size:13px}
+.ub code,.utake code{font-family:ui-monospace,Menlo,monospace;font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--line)}
+.utw{overflow-x:auto;margin:8px 0}.ut{border-collapse:collapse;width:100%;font-size:14px}.ut th,.ut td{text-align:left;padding:7px 10px;border:1px solid var(--line);vertical-align:top}.ut th{background:var(--line)}
+.ucode{margin:8px 0;padding:10px 12px;overflow-x:auto}.utake{border-left:4px solid var(--line)}.mine{border-left:4px solid var(--accent)}
+.pn{border-radius:12px;padding:14px 16px;border:1px solid var(--line)}.pn h3{margin:0 0 6px;font-size:18px}.pn p{margin:6px 0}.pn ul{margin:6px 0;padding-left:20px}.pn li{margin:4px 0}
+</style></head>
+<body><div class="sdw" id="app"><p class="lead">Loading…</p></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function(){
+  const SB_URL = "https://mxdljkwconnaanpgvigz.supabase.co", SB_KEY = "sb_publishable_o6BVx6t3iKn1VP4hkrVWQQ_xjofy47K";
+  const $ = s => document.querySelector(s), app = $("#app");
+  const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const fmt = t => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>");
+  const sb = (window.SD_CLIENT || (() => window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } })))();
+  let S = { user: null, access: null, admin: false, items: [], prog: {}, reqs: [], err: "" };
+
+  const home = () => location.origin + location.pathname;
+  const signIn = provider => sb.auth.signInWithOAuth({ provider, options: { redirectTo: home() } });
+  const signOut = async () => { await sb.auth.signOut(); S = { user: null, access: null, admin: false, items: [], prog: {}, reqs: [], err: "" }; render(); };
+
+  async function load(){
+    const { data: { session } } = await sb.auth.getSession();
+    S.user = session ? session.user : null; S.err = "";
+    if(!S.user) return render();
+    const a = await sb.from("sd_access").select("status").eq("user_id", S.user.id).maybeSingle();
+    S.access = a.data ? a.data.status : null;
+    const ad = await sb.rpc("sd_is_admin"); S.admin = ad.data === true;
+    if(S.admin || S.access === "approved"){
+      const c = await sb.from("sd_content").select("slug,track,ord,title").order("track").order("ord");
+      if(c.error) S.err = c.error.message; else S.items = c.data;
+      const p = await sb.from("sd_progress").select("slug,read_at,said_at"); S.prog = {}; (p.data || []).forEach(r => S.prog[r.slug] = r);
+    }
+    if(S.admin){ const r = await sb.from("sd_access").select("*").order("requested_at", { ascending: false }); S.reqs = r.data || []; }
+    render();
+  }
+  async function requestAccess(){
+    const r = await sb.from("sd_access").insert({ user_id: S.user.id }); if(r.error) S.err = r.error.message; await load();
+  }
+  async function decide(id, status){ const r = await sb.from("sd_access").update({ status }).eq("user_id", id); if(r.error) S.err = r.error.message; await load(); }
+  async function mark(slug, key){
+    const cur = S.prog[slug] || {}, on = !cur[key], row = { user_id: S.user.id, slug, read_at: cur.read_at || null, said_at: cur.said_at || null };
+    row[key] = on ? new Date().toISOString() : null;
+    const r = await sb.from("sd_progress").upsert(row); if(!r.error){ S.prog[slug] = row; renderList(); }
+  }
+
+  const head = () => `<div class="top"><a href="../">← CodeAffirm (LeetCode)</a><span class="who">${S.user ? esc(S.user.email || "") + ' · <a href="#" id="so">Sign out</a>' : ""}</span></div><h1>System Design Prep</h1>`;
+  function gate(){
+    if(!S.user) return `<p class="lead">Private notes for senior and Principal-level interviews. Access is by approval.</p>
+      <div class="card"><h2>Sign in</h2><p>Sign in, then request access. You are let in once it is approved.</p>
+      <div class="btns"><button class="btn pri" data-p="google">Continue with Google</button><button class="btn" data-p="github">Continue with GitHub</button></div></div>`;
+    if(S.access === "denied") return `<div class="card"><h2>Access not granted</h2><p>This request was not approved.</p></div>`;
+    if(S.access === "pending") return `<div class="card"><h2>Waiting for approval</h2><p class="msg">Your request is in. You will see the notes here as soon as it is approved. Check back later.</p></div>`;
+    return `<div class="card"><h2>Request access</h2><p>You are signed in as <b>${esc(S.user.email)}</b>. Ask for access and wait for approval.</p><div class="btns"><button class="btn pri" id="req">Request access</button></div></div>`;
+  }
+  function adminPanel(){
+    const pend = S.reqs.filter(r => r.status === "pending").length;
+    return `<div class="card"><h2>Access requests <span class="pill">${pend} pending</span></h2>${S.reqs.filter(r => r.email !== S.user.email).map(r => `<div class="areq"><div><b>${esc(r.name || r.email)}</b> <small>${esc(r.email)} · ${new Date(r.requested_at).toLocaleDateString()}</small><span class="pill ${esc(r.status)}">${esc(r.status)}</span></div><div>${r.status !== "approved" ? `<button class="btn sm pri" data-d="approved" data-u="${esc(r.user_id)}">Approve</button>` : ""}${r.status !== "denied" ? ` <button class="btn sm bad" data-d="denied" data-u="${esc(r.user_id)}">${r.status === "approved" ? "Revoke" : "Deny"}</button>` : ""}</div></div>`).join("") || "<p>No requests yet.</p>"}</div>`;
+  }
+  function renderList(){
+    const box = $("#list"); if(!box) return;
+    const tracks = [...new Set(S.items.map(i => i.track))];
+    box.innerHTML = tracks.map(t => { const its = S.items.filter(i => i.track === t), rd = its.filter(i => (S.prog[i.slug] || {}).read_at).length, sd = its.filter(i => (S.prog[i.slug] || {}).said_at).length;
+      return `<h2 class="trk">${esc(t)} <span class="pill">${its.length} total</span><span class="pill">${rd} read</span><span class="pill">${sd} said aloud</span></h2><div class="card" style="padding:4px 12px"><div class="row"><span></span><span class="dh">Read</span><span class="dh">Said aloud</span></div>${its.map(i => { const p = S.prog[i.slug] || {};
+        return `<div class="row"><a href="#${esc(i.slug)}">${esc(i.title)}</a><button class="ckb" role="checkbox" aria-checked="${!!p.read_at}" data-m="read_at" data-s="${esc(i.slug)}">${p.read_at ? "✓" : ""}</button><button class="ckb" role="checkbox" aria-checked="${!!p.said_at}" data-m="said_at" data-s="${esc(i.slug)}">${p.said_at ? "✓" : ""}</button></div>`; }).join("")}</div>`; }).join("") || "<p>No notes yet.</p>";
+    box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => mark(b.dataset.s, b.dataset.m));
+  }
+  const table = t => `<div class="utw"><table class="ut"><thead><tr>${t.head.map(h => `<th>${fmt(h)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  async function renderItem(slug){
+    app.innerHTML = head() + `<p class="lead">Loading…</p>`; wire();
+    const r = await sb.from("sd_content").select("*").eq("slug", slug).maybeSingle();
+    if(!r.data){ app.innerHTML = head() + `<div class="card"><p>Not found.</p><a href="#">← All topics</a></div>`; return wire(); }
+    const b = r.data.body;
+    app.innerHTML = head() + `<p><a href="#">← All topics</a></p><h2>${esc(r.data.title)}</h2>` + (b.blocks || []).map((k, i) => `<div class="pn ub${k.mine ? " mine" : ""}"><h3><b>${i + 1}</b>${fmt(k.h)}</h3>${(k.p || []).map(x => `<p>${fmt(x)}</p>`).join("")}${k.code ? `<pre class="code ucode">${esc(k.code)}</pre>` : ""}${k.table ? table(k.table) : ""}${k.bullets ? `<ul>${k.bullets.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>` : ""}</div>`).join("") + (b.takeaway ? `<div class="pn utake"><b>Interview takeaway</b> ${fmt(b.takeaway)}</div>` : "");
+    wire();
+  }
+  function wire(){
+    const so = $("#so"); if(so) so.onclick = e => { e.preventDefault(); signOut(); };
+    app.querySelectorAll("[data-p]").forEach(b => b.onclick = () => signIn(b.dataset.p));
+    const rq = $("#req"); if(rq) rq.onclick = requestAccess;
+    app.querySelectorAll("[data-d]").forEach(b => b.onclick = () => decide(b.dataset.u, b.dataset.d));
+  }
+  function render(){
+    const slug = decodeURIComponent(location.hash.slice(1));
+    if(slug && S.user && (S.admin || S.access === "approved")) return renderItem(slug);
+    app.innerHTML = head() + (S.err ? `<p class="msg err">${esc(S.err)}</p>` : "") + ((S.admin || S.access === "approved") ? `<p class="lead">Interview notes for senior and Principal-level system design. Mark Read once you have studied it, Said aloud once you can explain it without notes.</p><div id="list"></div>` + (S.admin ? adminPanel() : "") : gate());
+    renderList(); wire();
+  }
+  window.addEventListener("hashchange", render);
+  sb.auth.onAuthStateChange((ev) => { if(ev === "SIGNED_IN" || ev === "SIGNED_OUT" || ev === "INITIAL_SESSION") load(); });
+})();
+</script></body></html>
