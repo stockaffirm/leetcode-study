@@ -871,7 +871,7 @@
    {
     "h": "Why a dummy node?",
     "p": [
-     "If `n` equals the list length, the node to remove is the head. Without a dummy, `slow` would have to be 'before the head', which does not exist. With it, `[1]` and `n = 1` work: start: fast 0, slow 0 dummy → 1; advance fast 1 times: fast fast at 1, slow slow at 0; unlink: fast fast at 1 (last), slow slow at 0 slow.next = slow.next.next removes 1 → result [] (`dummy.next` is `None`)."
+     "If `n` equals the list length, the node to remove is the head. Without a dummy, `slow` would have to be 'before the head', which does not exist. With it, `[1]` and `n = 1` work: `fast` advances to node 1 (already the last node), the `while` loop never runs, `slow` is still the dummy, and `slow.next = slow.next.next` unlinks the head, leaving `dummy.next` as `None` (an empty list)."
     ]
    },
    {
