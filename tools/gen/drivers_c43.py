@@ -17,7 +17,7 @@ D2 = {
 3508: ("r = Router(2)\nRESULT = [r.addPacket(7,4,90), r.forwardPacket(), r.forwardPacket()]", "Forward returns the only packet, then an empty list.", "forward from empty"),
 2081: (S("kMirror(3,7)"), "The seven smallest sum to 499.", "base 3"),
 2067: (S("equalCountSubstrings('abcd',2)"), "No letter appears twice.", "none"),
-3047: (S("largestSquareArea([[1,1],[2,2],[1,2]],[[3,3],[4,4],[3,4]])"), "Overlaps give a 2×2 square.", "bigger square"),
+3047: (S("largestSquareArea([[1,1],[2,2],[1,2]],[[3,3],[4,4],[3,4]])"), "The overlap is 2 wide but only 1 tall, so the square has side 1.", "bigger square"),
 1784: (S("checkOnesSegment('110')"), "One segment.", "single segment"),
 3648: (S("minSensors(2,2,2)"), "One sensor covers all.", "big k"),
 2016: (S("maximumDifference([9,4,3,2])"), "Strictly decreasing.", "no pair"),

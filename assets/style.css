@@ -188,3 +188,5 @@ h1{font-size:28px}
 .about{margin:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--card)}.about>summary{cursor:pointer;padding:9px 12px;font-weight:700;font-size:14px}.about>summary small{font-weight:500;color:var(--mute);margin-left:6px}
 .about p,.about ol,.about pre{margin:6px 12px}.about ol{padding-left:22px}.about li{margin:3px 0}.about pre{font-size:13px;line-height:1.45}
 @media (max-width:560px){.about>summary small{display:block;margin:2px 0 0}.about{margin:8px 6px}}
+
+.sdnav{margin:8px 0}.sdnav a{display:inline-block;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:700;text-decoration:none}.sdnav small{font-weight:500;color:var(--mute)}
