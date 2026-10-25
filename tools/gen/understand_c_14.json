@@ -1,0 +1,2208 @@
+{
+ "935": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`moves`",
+       "For each key, the keys a knight can jump to (a fixed graph on the 10 keys)",
+       "Precomputed adjacency for a small graph"
+      ],
+      [
+       "`ways[d]`",
+       "Number of different numbers of the current length that END on key `d`",
+       "DP over positions"
+      ],
+      [
+       "`ways = [1] * 10`",
+       "A number of length 1 is a single key, so one way to end on each key",
+       "Base case"
+      ],
+      [
+       "`new[t] += ways[d]` for each move `d → t`",
+       "Every sequence ending at `d` can extend to `t`",
+       "Push-style transition"
+      ],
+      [
+       "`% MOD`",
+       "Counts grow exponentially; keep them modulo 10⁹ + 7",
+       "Counting problems with a modulus"
+      ],
+      [
+       "key 5 has no moves",
+       "`moves[5] = ()`: it can only start a number of length 1",
+       "A dead end"
+      ],
+      [
+       "`sum(ways) % MOD`",
+       "Total over all ending keys",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ways[d]` for keys 0..9 after each length:"
+    ],
+    "table": {
+     "head": [
+      "Length",
+      "ways[0..9]",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 1, 1, 1, 1, 1, 1, 1, 1, 1]",
+       "10"
+      ],
+      [
+       "2",
+       "[2, 2, 2, 2, 3, 0, 3, 2, 2, 2]",
+       "20"
+      ],
+      [
+       "3",
+       "[6, 5, 4, 5, 6, 0, 6, 5, 4, 5]",
+       "46"
+      ],
+      [
+       "4",
+       "[12, 10, 10, 10, 16, 0, 16, 10, 10, 10]",
+       "104"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we forget the earlier digits?",
+    "p": [
+     "Which key you can press next depends only on the key you are on, not on how you got there (a Markov property). So the state is just the current key, and the DP keeps 10 numbers per step instead of listing numbers."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Enumerate every number",
+       "O(3^n)"
+      ],
+      [
+       "DP over (length, ending key) (this code)",
+       "O(10 · 3 · n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) (each step does about 20 additions).",
+     "Space: O(1) (ten counters, two of them in use at a time)."
+    ]
+   }
+  ],
+  "takeaway": "Knight dialer: DP on the ending key; each step pushes counts along the fixed knight-move graph, modulo 10⁹ + 7."
+ },
+ "1298": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stat = status[:]`",
+       "A copy of the open/closed status; keys will flip entries to 1",
+       "Do not mutate the input"
+      ],
+      [
+       "`pending`",
+       "Boxes we physically have but may not be able to open yet",
+       "A set of 'held but locked' boxes"
+      ],
+      [
+       "`if stat[b]`",
+       "An OPEN box in hand can be processed now",
+       "Open boxes first"
+      ],
+      [
+       "`for k in keys[b]: stat[k] = 1`",
+       "Finding a key unlocks that box, wherever it is (including boxes already in `pending`)",
+       "Keys unlock boxes, possibly ones we hold already"
+      ],
+      [
+       "`pending.update(containedBoxes[b])`",
+       "Boxes found inside become held boxes",
+       "Nested boxes"
+      ],
+      [
+       "`while progress`",
+       "Keep scanning until a full pass opens nothing",
+       "Fixed-point iteration: a later key may unlock an earlier skipped box"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`status = [1,0,1,0]`, `candies = [7,5,4,100]`, box 2 holds a key to box 1, box 0 holds boxes 1 and 2, box 1 holds box 3. Start with box 0:"
+    ],
+    "table": {
+     "head": [
+      "Pass",
+      "Boxes opened",
+      "Total candies",
+      "Still held",
+      "status"
+     ],
+     "rows": [
+      [
+       "1",
+       "[0]",
+       "7",
+       "[1, 2]",
+       "[1, 0, 1, 0]"
+      ],
+      [
+       "2",
+       "[2]",
+       "11",
+       "[1]",
+       "[1, 1, 1, 0]"
+      ],
+      [
+       "3",
+       "[1]",
+       "16",
+       "[3]",
+       "[1, 1, 1, 0]"
+      ],
+      [
+       "4",
+       "none",
+       "16",
+       "[3]",
+       "[1, 1, 1, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why repeat the scan?",
+    "p": [
+     "Opening one box can reveal a key for a box we skipped earlier in the same pass. Repeating until no progress guarantees every reachable box is eventually opened. In this example box 1 is skipped in pass 1's order if its key is found later; the loop picks it up on the next pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Repeat scans until stable (this code)",
+       "O(n²) worst case"
+      ],
+      [
+       "BFS with a queue plus a `waiting for key` set",
+       "O(n + keys + contained)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why box 3 is never opened",
+    "p": [
+     "Box 3 holds 100 candies but is locked, and no box contains its key, so it is held but never opened; the answer is 7 + 4 + 5 = 16."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) worst case with repeated passes (a BFS version is O(n)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Candies from boxes: keep a set of held boxes and open any that are unlocked, repeating until no key or box changes anything."
+ },
+ "1307": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`weight[ch]`",
+       "The coefficient of letter `ch` in the equation 'sum of words − result = 0': a letter in the units place of an addend adds 1, in the tens place adds 10; letters of the result count negative",
+       "Turn a column-by-column puzzle into ONE linear equation"
+      ],
+      [
+       "`reversed(w)` with `10 ** i`",
+       "Position from the right gives the place value",
+       "Place values"
+      ],
+      [
+       "`leading`",
+       "Letters that start a multi-digit word cannot be 0",
+       "Leading-zero rule (a single-letter word may be 0)"
+      ],
+      [
+       "`used[d]`",
+       "Each digit is assigned to at most one letter",
+       "Distinct digits"
+      ],
+      [
+       "`go(k, total)`",
+       "Assign a digit to letter `k` and add `weight × digit` to the running total; success when all letters are placed and `total == 0`",
+       "Backtracking over assignments"
+      ],
+      [
+       "`d == 0 and ch in leading`",
+       "Skip a zero for a leading letter",
+       "Pruning"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`AB + BA = CC` gives weights {'B': 11, 'A': 11, 'C': -11} (A: 10 + 1, B: 1 + 10, C: −11) and no zero allowed for ['A', 'B', 'C']. One solution found by the search:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Weight",
+      "Digit"
+     ],
+     "rows": [
+      [
+       "B",
+       "11",
+       "1"
+      ],
+      [
+       "A",
+       "11",
+       "2"
+      ],
+      [
+       "C",
+       "-11",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Check",
+    "p": [
+     "With A, B and C as above: 21 + 12 = 33, i.e. 21 + 12 = 33."
+    ]
+   },
+   {
+    "h": "Why collapse the columns into weights?",
+    "p": [
+     "The standard approach carries per column and handles carries, which is intricate. Summing `place value × letter` over all words, minus the result, produces one equation whose total must be 0 for a valid assignment, so no carry bookkeeping is needed."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Complexity"
+     ],
+     "rows": [
+      [
+       "Brute force over 10!/(10−L)! assignments",
+       "≈ 3.6M for L = 7 letters, 1.8M for 10"
+      ],
+      [
+       "Weights + backtracking (this code)",
+       "same worst case, with early pruning of leading zeros"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: up to O(10!) for 10 distinct letters.",
+     "Space: O(letters)."
+    ]
+   }
+  ],
+  "takeaway": "Verbal arithmetic: turn the sum into one linear equation with place-value weights, then backtrack digits for the letters (no leading zeros)."
+ },
+ "1319": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`len(connections) < n - 1`",
+       "Connecting `n` computers needs at least `n − 1` cables in total",
+       "Quick impossibility check"
+      ],
+      [
+       "Union-Find",
+       "Counts connected components and detects redundant cables",
+       "Components under merges"
+      ],
+      [
+       "`comps -= 1` on a successful union",
+       "Each useful cable merges two components",
+       "Component count"
+      ],
+      [
+       "redundant cable (`ra == rb`)",
+       "A cable inside one component is a spare that can be moved",
+       "Spare cables = connections − (n − comps)"
+      ],
+      [
+       "`return comps - 1`",
+       "To join `comps` components you need `comps − 1` cables, and the redundancy check guarantees enough spares",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, cables `0-1, 0-2, 1-2`: the third cable is redundant, and computer 3 is isolated."
+    ],
+    "table": {
+     "head": [
+      "Cable",
+      "Effect",
+      "Components"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "joins two components",
+       "3"
+      ],
+      [
+       "(0,2)",
+       "joins two components",
+       "2"
+      ],
+      [
+       "(1,2)",
+       "redundant (same component)",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Components: `{0,1,2}` and `{3}`, so 2 components need 1 cable, and the redundant cable `1-2` provides it. Answer 1."
+    ]
+   },
+   {
+    "h": "Why is the first check enough?",
+    "p": [
+     "If there are at least `n − 1` cables, the number of redundant cables is `connections − (n − comps)`, which is at least `comps − 1`. So whenever the check passes, the spares always cover the cables needed."
+    ],
+    "table": {
+     "head": [
+      "connections",
+      "n",
+      "comps",
+      "redundant",
+      "needed"
+     ],
+     "rows": [
+      [
+       "3",
+       "4",
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "4",
+       "2",
+       "0",
+       "1 (check fails first)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + E) α).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Make network connected: Union-Find component count; answer is components − 1, or −1 if there are fewer than n − 1 cables."
+ },
+ "1328": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n == 1: return ''`",
+       "A single character can't be changed without staying a palindrome (and it cannot be broken)",
+       "Edge case"
+      ],
+      [
+       "`range(n // 2)`",
+       "Only the FIRST half: the second half mirrors it, and the middle character of an odd length can change without breaking the palindrome",
+       "Palindrome symmetry"
+      ],
+      [
+       "`palindrome[i] != 'a'` → replace with `'a'`",
+       "The smallest letter in the earliest possible position gives the lexicographically smallest result",
+       "Greedy: smallest change at the leftmost spot"
+      ],
+      [
+       "fallback `palindrome[:-1] + 'b'`",
+       "The first half is all `a`: change the last character to `b` (the smallest change that breaks it)",
+       "All-`a` first half"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "Palindrome",
+      "Result",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "abccba",
+       "'aaccba'",
+       "first non-'a' in the first half at index 1 → change to 'a'"
+      ],
+      [
+       "a",
+       "''",
+       "single character: no way"
+      ],
+      [
+       "aa",
+       "'ab'",
+       "first half is all 'a' → change the last character to 'b'"
+      ],
+      [
+       "aba",
+       "'abb'",
+       "first half is all 'a' → change the last character to 'b'"
+      ],
+      [
+       "aaa",
+       "'aab'",
+       "first half is all 'a' → change the last character to 'b'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why skip the middle of an odd-length string?",
+    "p": [
+     "Changing the centre of `aba` to anything still leaves a palindrome (`aca`), so it can't break the symmetry. That's why the loop stops at `n // 2`: in `aaa` the middle `a` is never the one changed. The change must happen where a mirror partner exists."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Wrong (touches the middle)",
+      "Right"
+     ],
+     "rows": [
+      [
+       "`aba`",
+       "`aca` (still a palindrome)",
+       "`abb`"
+      ],
+      [
+       "`aaa`",
+       "`aba` (still a palindrome)",
+       "`aab`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the new string."
+    ]
+   }
+  ],
+  "takeaway": "Break a palindrome: change the first non-'a' in the first half to 'a'; if the half is all 'a', change the last character to 'b'."
+ },
+ "1331": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`set(arr)`",
+       "Distinct values, so equal numbers receive the SAME rank",
+       "Dense ranking"
+      ],
+      [
+       "`sorted(...)`",
+       "Distinct values in ascending order",
+       "Order by value"
+      ],
+      [
+       "`{v: i + 1 for i, v in enumerate(...)}`",
+       "Dictionary comprehension: value → 1-based rank",
+       "Lookup table"
+      ],
+      [
+       "`[rank[x] for x in arr]`",
+       "Replace each element by its rank, preserving the original order",
+       "Map over the original array"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [40, 10, 20, 30]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "distinct values sorted",
+       "[10, 20, 30, 40]"
+      ],
+      [
+       "rank map",
+       "{10: 1, 20: 2, 30: 3, 40: 4}"
+      ],
+      [
+       "result",
+       "[4, 1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort the set, not the array?",
+    "p": [
+     "With duplicates, sorting the array and enumerating would give each copy a different rank. Using the set first makes equal values share one rank and keeps ranks consecutive (`[100, 100, 20]` becomes `[2, 2, 1]`, not `[3, 2, 1]`)."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Dense rank (this code)",
+      "Position in sorted array"
+     ],
+     "rows": [
+      [
+       "`[100,100,20]`",
+       "`[2,2,1]`",
+       "`[2,3,1]` (not wanted)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Rank transform: sort the distinct values, map each to its 1-based position, and translate the array."
+ },
+ "1334": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`d[i][j]`",
+       "Shortest known distance from `i` to `j`; `INF` means no known path; `d[i][i] = 0`",
+       "All-pairs shortest paths"
+      ],
+      [
+       "`d[u][v] = d[v][u] = w`",
+       "Undirected edge: set both directions",
+       "Undirected graph"
+      ],
+      [
+       "triple loop `k, i, j`",
+       "Floyd–Warshall: allow `k` as an intermediate stop, and improve `i → j` if going through `k` is shorter. `k` MUST be the outermost loop",
+       "Dense small graphs (n ≤ 100)"
+      ],
+      [
+       "`c = sum(1 for j … d[i][j] <= threshold)`",
+       "Number of cities reachable within the threshold",
+       "Neighbour count per city"
+      ],
+      [
+       "`if c <= best`",
+       "`<=` so ties go to the LARGER index (later cities overwrite)",
+       "Tie-break rule of the problem"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "After Floyd–Warshall on edges `0-1 (3)`, `1-2 (1)`, `1-3 (4)`, `2-3 (1)`, threshold 4:"
+    ],
+    "table": {
+     "head": [
+      "City",
+      "Distances to 0..3",
+      "Reachable within 4",
+      "Count",
+      "Best city so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0, 3, 4, 5]",
+       "[1, 2]",
+       "2",
+       "0"
+      ],
+      [
+       "1",
+       "[3, 0, 1, 2]",
+       "[0, 2, 3]",
+       "3",
+       "0"
+      ],
+      [
+       "2",
+       "[4, 1, 0, 1]",
+       "[0, 1, 3]",
+       "3",
+       "0"
+      ],
+      [
+       "3",
+       "[5, 2, 1, 0]",
+       "[1, 2]",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must `k` be the outer loop?",
+    "p": [
+     "After the round for `k`, `d[i][j]` is the shortest path using only intermediates `0..k`. The recurrence reads `d[i][k]` and `d[k][j]`, which must already be correct for intermediates `0..k−1`. Putting `k` inside breaks that order and can miss paths."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Dijkstra from every city",
+       "O(n · E log n)"
+      ],
+      [
+       "Floyd–Warshall (this code)",
+       "O(n³)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest number of reachable neighbours: Floyd–Warshall all-pairs distances, then count cities within the threshold; ties go to the larger index."
+ },
+ "1343": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`need = k * threshold`",
+       "Average ≥ threshold is the same as sum ≥ `k × threshold`; comparing integers avoids floating-point division",
+       "Avoid division in comparisons"
+      ],
+      [
+       "`s = sum(arr[:k])`",
+       "Sum of the first window",
+       "Initial window"
+      ],
+      [
+       "`s += arr[i] - arr[i - k]`",
+       "Slide by one: add the new element, drop the one that left",
+       "Fixed-size sliding window in O(1)"
+      ],
+      [
+       "`count`",
+       "Windows whose sum reaches `need`",
+       "Counter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [2,2,2,2,5,5,5,8]`, `k = 3`, `threshold = 4`, so `need = 12`:"
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Sum",
+      "≥ 12?",
+      "count"
+     ],
+     "rows": [
+      [
+       "[0,2]",
+       "6",
+       "False",
+       "0"
+      ],
+      [
+       "[1,3]",
+       "6",
+       "False",
+       "0"
+      ],
+      [
+       "[2,4]",
+       "9",
+       "False",
+       "0"
+      ],
+      [
+       "[3,5]",
+       "12",
+       "True",
+       "1"
+      ],
+      [
+       "[4,6]",
+       "15",
+       "True",
+       "2"
+      ],
+      [
+       "[5,7]",
+       "18",
+       "True",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a sliding window and not `sum(arr[i:i+k])`?",
+    "p": [
+     "Re-summing each window costs O(k), giving O(n·k). Sliding updates the sum with one addition and one subtraction."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Re-sum every window",
+       "O(n · k)"
+      ],
+      [
+       "Sliding sum (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size sliding window with a running sum; compare the sum against k × threshold to avoid division."
+ },
+ "1349": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`good`",
+       "Bitmask of usable seats in the row (`.` = 1)",
+       "Rows as bitmasks (n ≤ 8 columns)"
+      ],
+      [
+       "`mask & ~good`",
+       "Nonzero if the mask uses a broken seat",
+       "Mask validity vs available seats"
+      ],
+      [
+       "`mask & (mask >> 1)`",
+       "Nonzero if two students sit side by side in this row",
+       "Adjacent-bit check"
+      ],
+      [
+       "`mask & (prev << 1)` and `mask & (prev >> 1)`",
+       "Nonzero if a student can see the answers of someone to the upper-left or upper-right",
+       "Diagonal conflicts with the previous row"
+      ],
+      [
+       "`dp`: mask → best count so far",
+       "Best number of students in rows up to here whose LAST row uses `mask`",
+       "Row-by-row DP with the previous row as state"
+      ],
+      [
+       "`max(dp.values())`",
+       "Best over all last-row masks",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The exam room has broken seats `#`. Bits shown left to right (column 0 first). After each row:"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Usable seats",
+      "Valid masks kept",
+      "Best total so far",
+      "A best mask"
+     ],
+     "rows": [
+      [
+       "1",
+       "010010",
+       "4",
+       "2",
+       "010010"
+      ],
+      [
+       "2",
+       "100001",
+       "4",
+       "2",
+       "000000"
+      ],
+      [
+       "3",
+       "010010",
+       "4",
+       "4",
+       "010010"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the previous row enough state?",
+    "p": [
+     "A student only cares about the row directly in front (the upper-left and upper-right seats), and about neighbours in their own row. Rows further up can't be seen. So the state is the mask of the previous row, which gives at most 2ⁿ states per row."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try all seatings",
+       "O(2^(m·n))"
+      ],
+      [
+       "Row DP with masks (this code)",
+       "O(m · 4ⁿ)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m · 4ⁿ) (pairs of previous and current masks).",
+     "Space: O(2ⁿ)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum students: bitmask DP row by row, where a mask is valid if it fits the usable seats, has no adjacent bits, and has no diagonal conflict with the previous row's mask."
+ },
+ "1352": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.pre`",
+       "Prefix products since the last zero: `pre[i]` is the product of the first `i` numbers after that zero",
+       "Prefix products make range products a division"
+      ],
+      [
+       "`pre = [1]` on `num == 0`",
+       "A zero wipes out every product that includes it, so restart the prefix",
+       "Reset instead of storing the zero"
+      ],
+      [
+       "`k >= len(self.pre)`",
+       "The window of the last `k` numbers reaches back to (or before) the last zero: product 0",
+       "Detect a zero in the window by length"
+      ],
+      [
+       "`pre[-1] // pre[-1 - k]`",
+       "Product of the last `k` numbers = total prefix ÷ prefix before them",
+       "Exact division since the numbers are non-zero"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`add(3), add(0), add(2), add(5), add(4)` then three queries:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "pre"
+     ],
+     "rows": [
+      [
+       "add(3)",
+       "-",
+       "[1, 3]"
+      ],
+      [
+       "add(0)",
+       "-",
+       "[1]"
+      ],
+      [
+       "add(2)",
+       "-",
+       "[1, 2]"
+      ],
+      [
+       "add(5)",
+       "-",
+       "[1, 2, 10]"
+      ],
+      [
+       "add(4)",
+       "-",
+       "[1, 2, 10, 40]"
+      ],
+      [
+       "getProduct(2)",
+       "20",
+       "[1, 2, 10, 40]"
+      ],
+      [
+       "getProduct(3)",
+       "40",
+       "[1, 2, 10, 40]"
+      ],
+      [
+       "getProduct(4)",
+       "0",
+       "[1, 2, 10, 40]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the division exact?",
+    "p": [
+     "`pre[-1]` is `pre[-1-k]` times the product of the last `k` numbers (all non-zero after the reset), so the integer division returns exactly that product with no rounding."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "add",
+      "getProduct"
+     ],
+     "rows": [
+      [
+       "store numbers, multiply last k",
+       "O(1)",
+       "O(k)"
+      ],
+      [
+       "prefix products (this code)",
+       "O(1)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not just keep a zero in the list?",
+    "p": [
+     "A zero in the prefix product would turn every later prefix into 0 and make division impossible. Resetting the list makes the zero a boundary: queries reaching past it return 0 by the length check."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per operation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Product of the last k numbers: prefix products, reset on zero, and answer with one division (or 0 if k reaches the last zero)."
+ },
+ "1358": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`last = [-1, -1, -1]`",
+       "Index of the most recent `a`, `b` and `c` seen (−1 = not seen yet)",
+       "Track last positions of a small alphabet"
+      ],
+      [
+       "`\"abc\".index(ch)`",
+       "Maps a character to 0, 1 or 2",
+       "Alphabet index for a fixed small set"
+      ],
+      [
+       "`min(last)`",
+       "Starting index of the SHORTEST suffix ending here that contains all three letters",
+       "The window start is limited by the oldest of the three last-seen positions"
+      ],
+      [
+       "`min(last) + 1`",
+       "Number of valid start positions `0 .. min(last)` for substrings ending at `i`",
+       "Any earlier start still contains all three"
+      ],
+      [
+       "`res += …`",
+       "Sum over all ending positions",
+       "Counting by right end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abcabc\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "last [a, b, c]",
+      "min(last)",
+      "New substrings",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "[0, -1, -1]",
+       "-1",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "b",
+       "[0, 1, -1]",
+       "-1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "c",
+       "[0, 1, 2]",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "a",
+       "[3, 1, 2]",
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "4",
+       "b",
+       "[3, 4, 2]",
+       "2",
+       "3",
+       "6"
+      ],
+      [
+       "5",
+       "c",
+       "[3, 4, 5]",
+       "3",
+       "4",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `min(last) + 1`?",
+    "p": [
+     "A substring ending at `i` contains all three letters exactly when its start is at or before the oldest of the last occurrences. Starts `0 … min(last)` all work, which is `min(last) + 1` choices. If any letter hasn't appeared, `min(last)` is −1 and the count is 0."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Check every substring",
+       "O(n²) with counters"
+      ],
+      [
+       "Sliding window counting by right end",
+       "O(n)"
+      ],
+      [
+       "Last-seen positions (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Substrings containing a, b and c: for each end index, the number of valid starts is min(last seen of a, b, c) + 1."
+ },
+ "1361": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`indeg`",
+       "Number of parents each node has (counting both child arrays)",
+       "In-degree of a directed graph"
+      ],
+      [
+       "`roots = [i … indeg[i] == 0]`",
+       "A tree has exactly ONE node with no parent",
+       "Unique root requirement"
+      ],
+      [
+       "`any(d > 1 for d in indeg)`",
+       "A node with two parents is not a tree",
+       "In-degree ≤ 1"
+      ],
+      [
+       "BFS from the root with `seen`",
+       "Walk the whole structure; revisiting a node means a cycle or a shared child",
+       "Cycle detection while traversing"
+      ],
+      [
+       "`len(seen) == n`",
+       "Every node was reached, so the structure is connected",
+       "Connectedness"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "In-degrees: node 0 → 0, node 1 → 1, node 2 → 1, node 3 → 1 for the first example, so the only root is node 0."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Valid tree?",
+      "In-degrees",
+      "Roots"
+     ],
+     "rows": [
+      [
+       "n=4, left [1,-1,3,-1], right [2,-1,-1,-1]",
+       "True",
+       "[0, 1, 1, 1]",
+       "[0]"
+      ],
+      [
+       "n=4, left [1,-1,3,-1], right [2,3,-1,-1]",
+       "False",
+       "[0, 1, 1, 2]",
+       "[0]"
+      ],
+      [
+       "n=2, left [1,0], right [-1,-1]",
+       "False",
+       "[1, 1]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these three checks together?",
+    "p": [
+     "A binary tree on n nodes has n − 1 edges, one root, and every other node has exactly one parent, and all nodes are reachable from the root. In-degree and root count handle shape, and the BFS rules out cycles that would otherwise hide (like `0 ↔ 1` where both have in-degree 1 and no root appears)."
+    ],
+    "table": {
+     "head": [
+      "Condition",
+      "Rules out"
+     ],
+     "rows": [
+      [
+       "exactly one root",
+       "forests, cycles with no entry"
+      ],
+      [
+       "in-degree ≤ 1",
+       "shared children (DAG joins)"
+      ],
+      [
+       "all nodes seen",
+       "unreachable components"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Validate binary tree nodes: one node with in-degree 0, nobody with in-degree above 1, and a traversal from the root that reaches all n nodes without revisits."
+ },
+ "1379": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`original is target`",
+       "Identity comparison: is this the very same NODE object? (not `==` on values, which could match a different node with the same value)",
+       "The problem allows duplicate values"
+      ],
+      [
+       "walk `original` and `cloned` in lockstep",
+       "`original.left` and `cloned.left` always correspond",
+       "Parallel traversal of two identical shapes"
+      ],
+      [
+       "`return cloned`",
+       "Return the clone's counterpart of the found node",
+       "Return from the second tree"
+      ],
+      [
+       "`left or right`",
+       "`or` returns the first non-`None` result and skips the right search if the left succeeded",
+       "Short-circuit search"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[7,4,3,null,null,6,19]`, target = the node `3` (right child of the root). The search goes left first, then right:"
+    ],
+    "table": {
+     "head": [
+      "Original node",
+      "Action"
+     ],
+     "rows": [
+      [
+       "7",
+       "not target, search left then right"
+      ],
+      [
+       "4",
+       "not target, search left then right"
+      ],
+      [
+       "3",
+       "o is target → return clone node"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare identity and not values?",
+    "p": [
+     "If two nodes share a value (the follow-up says values may repeat), `original.val == target.val` would return the wrong clone. Comparing object identity pinpoints exactly the target, and walking both trees in lockstep gives the matching position in the clone."
+    ],
+    "table": {
+     "head": [
+      "Test",
+      "Duplicate values"
+     ],
+     "rows": [
+      [
+       "`original.val == target.val`",
+       "wrong: matches the first node with that value"
+      ],
+      [
+       "`original is target` (this code)",
+       "correct"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Find the clone of a node: traverse both trees in lockstep and compare node identity (`is`) in the original."
+ },
+ "1382": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`inorder(n)` into `vals`",
+       "In-order traversal of a BST gives the values in sorted order",
+       "Flatten a BST into a sorted array"
+      ],
+      [
+       "`build(l, r)`",
+       "Build a balanced BST from the sorted slice `vals[l..r]`",
+       "Sorted array → balanced BST"
+      ],
+      [
+       "`mid = (l + r + 1) // 2`",
+       "The (upper) middle element becomes the root; its left and right halves differ in size by at most 1",
+       "Pick the middle so both subtrees are balanced"
+      ],
+      [
+       "`TreeNode(vals[mid], build(l, mid - 1), build(mid + 1, r))`",
+       "Root with recursively built left and right subtrees",
+       "Divide and conquer"
+      ],
+      [
+       "`l > r: return None`",
+       "Empty slice: empty subtree",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,null,2,null,3,null,4]` (a chain) flattens to `[1, 2, 3, 4]`. Building from the middle:"
+    ],
+    "table": {
+     "head": [
+      "Slice",
+      "mid index",
+      "Root value"
+     ],
+     "rows": [
+      [
+       "[0, 3]",
+       "2",
+       "3"
+      ],
+      [
+       "[0, 1]",
+       "1",
+       "2"
+      ],
+      [
+       "[0, 0]",
+       "0",
+       "1"
+      ],
+      [
+       "[3, 3]",
+       "3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The balanced tree has height 3 instead of 4: root 3, left subtree `2 → 1`, right child 4."
+    ]
+   },
+   {
+    "h": "Why rebuild instead of rotating?",
+    "p": [
+     "Rotations (AVL/red-black) need balance factors and case analysis. Because a BST's in-order is a sorted array, picking the middle recursively is simple and gives a perfectly balanced tree in O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Flatten + rebuild (this code)",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "DSW algorithm (rotations)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the value list (plus O(log n) recursion for the new tree)."
+    ]
+   }
+  ],
+  "takeaway": "Balance a BST: in-order flatten to a sorted array, then rebuild by recursively choosing the middle as root."
+ },
+ "1385": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(arr2)`",
+       "Sorted so the closest values to `a` are adjacent in the array",
+       "Nearest-neighbour search"
+      ],
+      [
+       "`bisect_left(arr2, a)`",
+       "Index of the first element `≥ a`: the candidate just above `a`",
+       "Binary search for the insertion point"
+      ],
+      [
+       "`arr2[i]` and `arr2[i - 1]`",
+       "The nearest element above (or equal) and the nearest below",
+       "The closest value is one of these two"
+      ],
+      [
+       "`all(abs(a - b) > d for b in near)`",
+       "Both neighbours are farther than `d`, so nothing in `arr2` is within `d`",
+       "Only the nearest ones need checking"
+      ],
+      [
+       "`count += 1`",
+       "`a` counts if it has no close partner",
+       "Distance value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr1 = [4,5,8]`, `arr2 = [10, 9, 1, 8]` sorted to `[1, 8, 9, 10]`, `d = 2`:"
+    ],
+    "table": {
+     "head": [
+      "a",
+      "Insertion index",
+      "Nearest candidates",
+      "Distances",
+      "Result"
+     ],
+     "rows": [
+      [
+       "4",
+       "1",
+       "[8, 1]",
+       "[4, 3]",
+       "counted"
+      ],
+      [
+       "5",
+       "1",
+       "[8, 1]",
+       "[3, 4]",
+       "counted"
+      ],
+      [
+       "8",
+       "1",
+       "[8, 1]",
+       "[0, 7]",
+       "within d"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only two neighbours?",
+    "p": [
+     "In a sorted array, any element farther than the nearest below or the nearest above is even farther from `a`. So if both nearest values are more than `d` away, every value is."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Compare every pair",
+       "O(m · n)"
+      ],
+      [
+       "Sort arr2 + binary search (this code)",
+       "O((m + n) log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((m + n) log n).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Distance value of two arrays: sort one, binary search each element's nearest neighbours, and count those farther than d."
+ },
+ "1394": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(arr)`",
+       "Value → frequency",
+       "Counting"
+      ],
+      [
+       "`x == c`",
+       "A lucky integer equals its own frequency",
+       "Filter on key and value"
+      ],
+      [
+       "`max(generator, default=-1)`",
+       "Largest lucky value, or −1 if none exist; `default` avoids a `ValueError` on an empty generator",
+       "`max` over a possibly-empty sequence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [2,2,3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Frequency",
+      "Lucky?"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "True"
+      ],
+      [
+       "3",
+       "1",
+       "False"
+      ],
+      [
+       "4",
+       "1",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `default=-1` and not an if-check?",
+    "p": [
+     "`max()` of an empty sequence raises an error. The `default` keyword folds the 'no lucky number' case into the same expression and returns the required −1."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`[2,2,3,4]`",
+       "2"
+      ],
+      [
+       "`[1,2,2,3,3,3]`",
+       "3"
+      ],
+      [
+       "`[5]`",
+       "−1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k), the number of distinct values."
+    ]
+   }
+  ],
+  "takeaway": "Lucky integer: count frequencies and take the largest value equal to its own count, with `default=-1`."
+ },
+ "1400": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(s).values()`",
+       "Character frequencies",
+       "Parity analysis"
+      ],
+      [
+       "`odd = sum(c % 2 …)`",
+       "How many characters have an odd count",
+       "Each palindrome can contain at most ONE odd-count character in its middle"
+      ],
+      [
+       "`odd <= k`",
+       "We need at least `odd` palindromes, one to hold each odd-count character",
+       "Lower bound on k"
+      ],
+      [
+       "`k <= len(s)`",
+       "We can't make more palindromes than characters, since each one needs at least one character",
+       "Upper bound on k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"annabelle\"`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Character",
+      "Count",
+      "Odd?"
+     ],
+     "rows": [
+      [
+       "a",
+       "2",
+       "0"
+      ],
+      [
+       "b",
+       "1",
+       "1"
+      ],
+      [
+       "e",
+       "2",
+       "0"
+      ],
+      [
+       "l",
+       "2",
+       "0"
+      ],
+      [
+       "n",
+       "2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "Odd counts: 1 (`b` and `l`). The condition `1 ≤ 2 ≤ 9` holds, so it is possible: the two palindromes each take one of the odd-count letters (`b` and `l`) as their centre and share out the remaining pairs."
+   },
+   {
+    "h": "Why is the condition sufficient?",
+    "p": [
+     "Start with `odd` palindromes, each with one odd character in the middle and the pairs of the other letters distributed around. Extra palindromes can be created by splitting off characters (a pair can become two single-letter palindromes), up to `len(s)` palindromes of one letter each."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Possible?"
+     ],
+     "rows": [
+      [
+       "k < number of odd counts",
+       "no: some palindrome would get 2 odd letters"
+      ],
+      [
+       "k > len(s)",
+       "no: not enough characters"
+      ],
+      [
+       "otherwise",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) for a fixed alphabet."
+    ]
+   }
+  ],
+  "takeaway": "Construct k palindromes: possible iff the number of odd-count letters ≤ k ≤ len(s)."
+ },
+ "1424": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`diags[i + j]`",
+       "Cells on the same anti-diagonal share the same `i + j`",
+       "Anti-diagonals are identified by the sum of coordinates"
+      ],
+      [
+       "`for i in range(len(nums) - 1, -1, -1)`",
+       "Process rows from BOTTOM to TOP, so within a diagonal values are appended bottom-left to top-right",
+       "The required output order is bottom-left to top-right"
+      ],
+      [
+       "`enumerate(nums[i])`",
+       "Row cells with their column index; rows may have different lengths (jagged)",
+       "Jagged arrays"
+      ],
+      [
+       "`while d in diags`",
+       "Read diagonals 0, 1, 2, … until one is missing",
+       "The diagonals are contiguous from 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3×3 matrix; the diagonals are keyed by `i + j`:"
+    ],
+    "table": {
+     "head": [
+      "d = i + j",
+      "Values (bottom to top)"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]"
+      ],
+      [
+       "1",
+       "[4, 2]"
+      ],
+      [
+       "2",
+       "[7, 5, 3]"
+      ],
+      [
+       "3",
+       "[8, 6]"
+      ],
+      [
+       "4",
+       "[9]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not walk the diagonals directly?",
+    "p": [
+     "The matrix is jagged: rows have different lengths, so a direct walk would need bounds checks and could be O(rows × max length) with many empty probes. Grouping by `i + j` touches only existing cells, so the total work is the number of elements."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Probe every (i, j) in the bounding box",
+       "O(rows × max width)"
+      ],
+      [
+       "Group by i + j (this code)",
+       "O(number of elements)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N) for N elements.",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Diagonal traverse II: group cells by i + j while scanning rows bottom-up, then read the groups in order."
+ },
+ "1427": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`a if d == 0 else -a`",
+       "A left shift by `a` counts +a, a right shift counts −a",
+       "Combine all shifts into one signed amount"
+      ],
+      [
+       "`sum(...) % len(s)`",
+       "Net left-shift amount, reduced modulo the length (Python's `%` makes it non-negative even for a net right shift)",
+       "Rotations repeat every `len(s)` steps"
+      ],
+      [
+       "`s[net:] + s[:net]`",
+       "A left rotation by `net`",
+       "Slicing rotation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abc\"`, shifts `[0,1]` (left 1) and `[1,2]` (right 2):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "signed shifts",
+       "+1, −2"
+      ],
+      [
+       "net",
+       "−1"
+      ],
+      [
+       "net mod 3",
+       "2"
+      ],
+      [
+       "`s[2:] + s[:2]`",
+       "`c` + `ab` = `cab`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can all the shifts be merged?",
+    "p": [
+     "Each shift is a rotation, and rotations compose by adding their amounts (left positive, right negative). Applying them one by one costs O(n) each; summing first costs O(1) per shift and one O(n) rotation at the end."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Apply each shift to the string",
+       "O(shifts × n)"
+      ],
+      [
+       "Sum then rotate once (this code)",
+       "O(shifts + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(shifts + n).",
+     "Space: O(n) for the new string."
+    ]
+   }
+  ],
+  "takeaway": "String shifts: add up the signed shift amounts, reduce modulo the length, and rotate once."
+ },
+ "1439": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "The `k` smallest sums achievable using the rows processed so far",
+       "Keep only the best k"
+      ],
+      [
+       "`a + b for a in cur for b in row`",
+       "Add every kept sum to every element of the next row",
+       "Extend each partial sum by one choice from the new row"
+      ],
+      [
+       "`sorted(...)[:k]`",
+       "Keep only the `k` smallest of the new sums",
+       "Pruning: the k-th smallest overall never uses a partial sum outside the best k"
+      ],
+      [
+       "`cur[k - 1]`",
+       "The k-th smallest sum",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`mat = [[1,3,11],[2,4,6]]`, `k = 5`:"
+    ],
+    "table": {
+     "head": [
+      "Next row",
+      "All sums (sorted)",
+      "Kept (smallest 5)"
+     ],
+     "rows": [
+      [
+       "[1, 3, 11]",
+       "[1, 3, 11]",
+       "[1, 3, 11]"
+      ],
+      [
+       "[2, 4, 6]",
+       "[3, 5, 5, 7, 7, 9, 13, 15, 17]",
+       "[3, 5, 5, 7, 7]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is keeping only k sums per step safe?",
+    "p": [
+     "Suppose a partial sum is not among the k smallest after some rows. Then at least k other partial sums are no larger, and each can be extended by the same choices in later rows, giving at least k complete sums that are no larger. So the discarded partial sum cannot be among the k smallest complete sums."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All combinations",
+       "O(nᵐ)"
+      ],
+      [
+       "Prune to k each row (this code)",
+       "O(m · k · n log(k n))"
+      ],
+      [
+       "Heap merging of two rows",
+       "O(m · k log k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m · k·n · log(k·n)) for m rows of n columns.",
+     "Space: O(k·n)."
+    ]
+   }
+  ],
+  "takeaway": "Kth smallest sum across rows: fold row by row, keeping only the k smallest partial sums after each row."
+ }
+}
