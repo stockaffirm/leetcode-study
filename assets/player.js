@@ -18,6 +18,7 @@ $("#app").innerHTML = `
 <p class="sub"><span class="tag ${P.level}">${P.level}</span><span class="tag">${esc(P.topic)}</span></p>
 <section class="sec"><h2><b>1</b>Question</h2>
   <p class="q">${esc(P.question)}</p>
+  <p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>
   <div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div>
   ${P.why?`<p class="why"><b>Why?</b> ${esc(P.why)}</p>`:""}${P.idea?`<p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>`:""}${P.ex2?`<p class="why edge"><b>Edge / failure case</b> <code>${esc(P.ex2.input)}</code> → <code>${esc(P.ex2.output)}</code><br>${esc(P.ex2.why)}</p>`:""}
 </section>
@@ -309,3 +310,8 @@ renderTabs(); renderStatic(); if(!V().frames.length && V().trace) setMode("trace
     if(a === "clear" && (!ta.value || confirm("Clear everything you typed for this problem?"))){ ta.value = ""; put(""); ta.focus(); }
     if(a === "copy"){ const b = e.target; const done = () => { b.textContent = "Copied ✓"; setTimeout(() => b.textContent = "Copy", 1400); }; if(navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); document.execCommand("copy"); done(); }); else { ta.select(); document.execCommand("copy"); done(); } } });
 })();
+
+/* Link to the exact LeetCode page: slugs (the URL names) are loaded separately. */
+(function(){ const Q = window.PROBLEM; if(!Q) return; const t = document.createElement("script"); t.src = "../assets/lcslugs.js";
+  t.onload = () => { const sl = window.LCSLUG && window.LCSLUG[Q.id], a = document.getElementById("lclink"); if(sl && a) a.href = "https://leetcode.com/problems/" + sl + "/"; };
+  document.head.appendChild(t); })();
