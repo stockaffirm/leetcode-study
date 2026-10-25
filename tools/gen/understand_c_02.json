@@ -1,0 +1,2428 @@
+{
+ "62": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`row = [1] * n`",
+       "One DP row: `row[j]` = number of paths to column `j` in the current grid row. The first grid row is all 1s (only one way: go right)",
+       "Compressing a 2D DP table to a single row"
+      ],
+      [
+       "`row[j] += row[j - 1]`",
+       "New `row[j]` = paths from above (the old `row[j]`) + paths from the left (`row[j-1]`, already updated this round)",
+       "Left-to-right in-place update when each cell depends on its top and left"
+      ],
+      [
+       "`range(1, m)`, `range(1, n)`",
+       "Skips the first row (initialised) and first column (always 1)",
+       "Boundary cells have a single path"
+      ],
+      [
+       "`row[-1]`",
+       "Bottom-right cell = the answer",
+       "Last element of the last row"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 3, n = 3` grid. Each grid row turns the previous row into the next by adding the cell to the left."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "row"
+     ],
+     "rows": [
+      [
+       "init (row 1)",
+       "[1, 1, 1]"
+      ],
+      [
+       "after row 2",
+       "[1, 2, 3]"
+      ],
+      [
+       "after row 3",
+       "[1, 3, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can one row replace the whole table?",
+    "p": [
+     "Cell (i, j) needs only (i-1, j), which is the old value of `row[j]`, and (i, j-1), which is `row[j-1]` just updated. Nothing older is ever read, so a full m×n table wastes space."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Space"
+     ],
+     "rows": [
+      [
+       "2D table `dp[i][j]`",
+       "O(m·n)"
+      ],
+      [
+       "Single row (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A closed form check",
+    "p": [
+     "Any path is m-1 downs and n-1 rights in some order, so the answer is C(m+n-2, m-1). For 3×3 that is C(4, 2) = 6, matching the DP. The DP generalises to obstacles (problem 63); the formula does not."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(n) (O(min(m, n)) if you swap so n is the smaller side)."
+    ]
+   }
+  ],
+  "takeaway": "Grid path counting is a DP where each cell is top + left; roll the table into one row updated left to right."
+ },
+ "65": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`digit`",
+       "Has any digit appeared (in the mantissa or after e)?",
+       "A number needs at least one digit; `.` and `+` alone are invalid"
+      ],
+      [
+       "`dot`",
+       "Has a decimal point been seen?",
+       "At most one dot, and none after `e`"
+      ],
+      [
+       "`exp`",
+       "Has `e`/`E` been seen?",
+       "At most one exponent marker"
+      ],
+      [
+       "`digit_after_e`",
+       "Starts True, set False at `e`, set True again by a later digit",
+       "Rejects `\"1e\"` and `\"1e+\"` while ignoring the flag when there is no `e`"
+      ],
+      [
+       "`s[i-1] not in 'eE'`",
+       "A sign is legal only at index 0 or right after `e`",
+       "Signs in the middle (`\"1+2\"`) are invalid"
+      ],
+      [
+       "`ch.isdigit()`",
+       "True for digits (note: also true for some Unicode digits, fine for LeetCode's ASCII input)",
+       "Character-class tests"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"-9.5e+3\"`, flags after each character."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "meaning",
+      "digit",
+      "dot",
+      "exp",
+      "digit_after_e"
+     ],
+     "rows": [
+      [
+       "0",
+       "-",
+       "sign at start",
+       "False",
+       "False",
+       "False",
+       "True"
+      ],
+      [
+       "1",
+       "9",
+       "digit seen",
+       "True",
+       "False",
+       "False",
+       "True"
+      ],
+      [
+       "2",
+       ".",
+       "first dot",
+       "True",
+       "True",
+       "False",
+       "True"
+      ],
+      [
+       "3",
+       "5",
+       "digit seen",
+       "True",
+       "True",
+       "False",
+       "True"
+      ],
+      [
+       "4",
+       "e",
+       "exponent starts, needs digits after",
+       "True",
+       "True",
+       "True",
+       "False"
+      ],
+      [
+       "5",
+       "+",
+       "sign right after e",
+       "True",
+       "True",
+       "True",
+       "False"
+      ],
+      [
+       "6",
+       "3",
+       "digit seen (after e)",
+       "True",
+       "True",
+       "True",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track flags instead of a regex?",
+    "p": [
+     "A single pass with four booleans is a hand-built state machine: easy to reason about and O(1) space. Each rule maps to one flag: one dot, one `e`, sign positions, digits required. Regexes work too but are harder to debug in an interview."
+    ],
+    "table": {
+     "head": [
+      "Input",
+      "Result",
+      "Why"
+     ],
+     "rows": [
+      [
+       "`\"-9.5e+3\"`",
+       "True",
+       "valid"
+      ],
+      [
+       "`\"1e\"`",
+       "False",
+       "`e` with no digits after it"
+      ],
+      [
+       "`\"e3\"`",
+       "False",
+       "`e` before any digit"
+      ],
+      [
+       "`\".\"`",
+       "False",
+       "no digit at all"
+      ],
+      [
+       "`\"1.e2\"`",
+       "True",
+       "`1.` then exponent is valid"
+      ],
+      [
+       "`\"1e5.5\"`",
+       "False",
+       "dot after exponent"
+      ],
+      [
+       "`\"+-1\"`",
+       "False",
+       "second sign"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the `e` branch check `not digit`?",
+    "p": [
+     "`\"e3\"` has a digit only after the `e`, but the mantissa (the part before `e`) must contain a digit. Without that check the string would pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hand-rolled state machine: a few flags (digit, dot, exp, digit-after-e) and local rules for signs; one pass, no regex."
+ },
+ "68": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`length`",
+       "Total letters of the words in `line` (no spaces)",
+       "Separating word length from space count makes the padding arithmetic easy"
+      ],
+      [
+       "`length + len(w) + len(line)`",
+       "Letters + the new word + the minimum one space between each pair (`len(line)` spaces if `w` is added)",
+       "Does the next word still fit?"
+      ],
+      [
+       "`gaps = len(line) - 1 or 1`",
+       "Number of gaps; a one-word line has 0 gaps, so `or 1` falls back to 1 (all padding goes after the word)",
+       "Avoiding division/modulo by zero"
+      ],
+      [
+       "`line[i % gaps] += ' '`",
+       "Hands out the extra spaces round-robin starting at the leftmost gap, which is exactly the 'left gets more' rule",
+       "Distributing a remainder evenly"
+      ],
+      [
+       "`' '.join(line).ljust(maxWidth)`",
+       "Last line: single spaces, then pad the right with spaces",
+       "`str.ljust` pads a string to a width"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`maxWidth = 16`. The check is made before adding each word; on overflow the current line is justified and flushed."
+    ],
+    "table": {
+     "head": [
+      "Next word",
+      "length + len(w) + len(line)",
+      "Decision",
+      "Flushed line"
+     ],
+     "rows": [
+      [
+       "'This'",
+       "4 ≤ 16",
+       "fits",
+       "-"
+      ],
+      [
+       "'is'",
+       "7 ≤ 16",
+       "fits",
+       "-"
+      ],
+      [
+       "'an'",
+       "10 ≤ 16",
+       "fits",
+       "-"
+      ],
+      [
+       "'example'",
+       "18 > 16",
+       "flush: 8 spaces over 2 gap(s)",
+       "'This    is    an'"
+      ],
+      [
+       "'of'",
+       "10 ≤ 16",
+       "fits",
+       "-"
+      ],
+      [
+       "'text'",
+       "15 ≤ 16",
+       "fits",
+       "-"
+      ],
+      [
+       "'justification.'",
+       "30 > 16",
+       "flush: 3 spaces over 2 gap(s)",
+       "'example  of text'"
+      ],
+      [
+       "end",
+       "-",
+       "last line: join with 1 space, pad right",
+       "'justification.  '"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why spread spaces with `i % gaps` instead of dividing?",
+    "p": [
+     "The line needs `maxWidth - length` spaces over `gaps` gaps. Adding one space at a time to gap `i % gaps` gives each gap `extra // gaps` spaces and the first `extra % gaps` gaps one more. This is the same split as `divmod`, with no separate remainder code."
+    ],
+    "table": {
+     "head": [
+      "Line",
+      "spaces",
+      "gaps",
+      "result gap sizes"
+     ],
+     "rows": [
+      [
+       "This is an",
+       "16-8=8",
+       "2",
+       "4, 4"
+      ],
+      [
+       "example of text",
+       "16-13=3",
+       "2",
+       "2, 1 (left gets the extra)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Two special cases",
+    "bullets": [
+     "A line with a single word has `gaps = 1`, so every pad space is appended to the right of the word (left-justified).",
+     "The final line is never fully justified; it uses single spaces and `ljust` to pad the end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters), each word is placed once and each space added once.",
+     "Space: O(maxWidth) for the current line (plus the output)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy line packing: add words while letters + minimum spaces fit, then distribute the leftover spaces round-robin from the left; special-case the last line."
+ },
+ "71": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`path.split('/')`",
+       "Cuts the string at every `/`. Repeated slashes give empty strings `''`; a leading `/` gives a leading `''`",
+       "Tokenising delimited text. Note `split('/')` keeps empties, unlike `split()` with no argument"
+      ],
+      [
+       "`stack`",
+       "List of directory names currently on the path",
+       "Navigation with undo is stack behaviour"
+      ],
+      [
+       "`part == '..'` → `stack.pop()`",
+       "Go up one level, but only if there is one (root's parent is root)",
+       "Guard the pop with `if stack`"
+      ],
+      [
+       "`part and part != '.'`",
+       "Real names only: skip empty strings and the current-directory `.`",
+       "Filtering tokens in one condition"
+      ],
+      [
+       "`'/' + '/'.join(stack)`",
+       "Rebuilds the canonical path; an empty stack gives just `/`",
+       "`str.join` with a separator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"/a/./b/../../c/\"` splits into `['', 'a', '.', 'b', '..', '..', 'c', '']`."
+    ],
+    "table": {
+     "head": [
+      "Token",
+      "Action",
+      "Path so far"
+     ],
+     "rows": [
+      [
+       "''",
+       "skip (empty or '.')",
+       "/"
+      ],
+      [
+       "'a'",
+       "push",
+       "/a"
+      ],
+      [
+       "'.'",
+       "skip (empty or '.')",
+       "/a"
+      ],
+      [
+       "'b'",
+       "push",
+       "/a/b"
+      ],
+      [
+       "'..'",
+       "pop",
+       "/a"
+      ],
+      [
+       "'..'",
+       "pop",
+       "/"
+      ],
+      [
+       "'c'",
+       "push",
+       "/c"
+      ],
+      [
+       "''",
+       "skip (empty or '.')",
+       "/c"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the `if stack` guard on `..`?",
+    "p": [
+     "At the root, `/..` stays `/`. Calling `pop()` on an empty list would raise `IndexError`, so the guard both prevents the crash and implements the rule."
+    ]
+   },
+   {
+    "h": "Why a stack and not a string edit?",
+    "p": [
+     "Each `..` must remove the most recent real directory, which is the last pushed item. A stack gives O(1) push and pop; cutting back a string with `rfind('/')` would work but needs more edge-case care (double slashes, trailing slash)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one split and one join.",
+     "Space: O(n) for the token list and the stack."
+    ]
+   }
+  ],
+  "takeaway": "Path normalisation is stack processing of `split('/')` tokens: push names, pop on `..`, ignore empty and `.`."
+ },
+ "74": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 0, m * n - 1`",
+       "Binary-search range over the flattened matrix as if it were one sorted list of m·n items",
+       "Rows are sorted and each row starts after the previous ends, so row-major order is globally sorted"
+      ],
+      [
+       "`mid // n`",
+       "Row index of flat position `mid`",
+       "Converting a flat index to 2D"
+      ],
+      [
+       "`mid % n`",
+       "Column index of flat position `mid`",
+       "Same; `divmod(mid, n)` does both at once"
+      ],
+      [
+       "`while lo <= hi`",
+       "Closed range `[lo, hi]`; both ends are still candidates",
+       "Exact-match binary search (use `lo < hi` for lower-bound style)"
+      ],
+      [
+       "`lo = mid + 1` / `hi = mid - 1`",
+       "Discard `mid` since it was already compared",
+       "With a closed range both bounds move past `mid`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = 3` in a 3×4 matrix, flat indices 0..11."
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "(row, col)",
+      "value",
+      "decision"
+     ],
+     "rows": [
+      [
+       "[0, 11]",
+       "5",
+       "(1, 1)",
+       "11",
+       "too big → hi = mid - 1"
+      ],
+      [
+       "[0, 4]",
+       "2",
+       "(0, 2)",
+       "5",
+       "too big → hi = mid - 1"
+      ],
+      [
+       "[0, 1]",
+       "0",
+       "(0, 0)",
+       "1",
+       "too small → lo = mid + 1"
+      ],
+      [
+       "[1, 1]",
+       "1",
+       "(0, 1)",
+       "3",
+       "found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not search row then column?",
+    "p": [
+     "Two binary searches (find the row, then search in it) also work and give O(log m + log n). Mapping to one flat index gives O(log(m·n)), the same cost with less code, and no row-finding edge cases. The trick only works because the matrix is sorted globally, not just per row; for the 'rows and columns sorted separately' version (problem 240) you need a staircase walk."
+    ],
+    "table": {
+     "head": [
+      "Matrix property",
+      "Technique",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Rows sorted and each row's first > previous row's last (this problem)",
+       "Binary search on flat index",
+       "O(log mn)"
+      ],
+      [
+       "Rows and columns sorted independently",
+       "Staircase from a corner",
+       "O(m + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log(m·n)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A fully sorted 2D matrix is a sorted 1D array in disguise: binary search the flat index and recover (row, col) with `//` and `%`."
+ },
+ "77": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`go(start, path)`",
+       "Recursive helper: `start` is the smallest number we may still pick; `path` is the current partial combination",
+       "Backtracking over a sorted pool where order does not matter"
+      ],
+      [
+       "`range(start, n + 1)`",
+       "Only candidates at or after `start`, so each set is generated in increasing order and never twice",
+       "Combinations, not permutations: avoid [2,1] after [1,2]"
+      ],
+      [
+       "`go(x + 1, path)`",
+       "Next pick must be larger than `x` (no reuse)",
+       "Each element is used at most once"
+      ],
+      [
+       "`path.append(x)` … `path.pop()`",
+       "Choose, recurse, undo",
+       "Reusing one list for the whole search"
+      ],
+      [
+       "`res.append(path[:])`",
+       "Saves a copy at the leaf; without `[:]` every entry would point to the same final empty list",
+       "Snapshotting mutable state"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4, k = 2`: the recursion tree picks one number, then a larger one. Each `choose` row is one recursive step."
+    ],
+    "table": {
+     "head": [
+      "Path before",
+      "Pick",
+      "Action"
+     ],
+     "rows": [
+      [
+       "[]",
+       "x=1",
+       "choose 1, next start 2"
+      ],
+      [
+       "[1]",
+       "x=2",
+       "choose 2, next start 3"
+      ],
+      [
+       "[1]",
+       "x=3",
+       "choose 3, next start 4"
+      ],
+      [
+       "[1]",
+       "x=4",
+       "choose 4, next start 5"
+      ],
+      [
+       "[]",
+       "x=2",
+       "choose 2, next start 3"
+      ],
+      [
+       "[2]",
+       "x=3",
+       "choose 3, next start 4"
+      ],
+      [
+       "…",
+       "…",
+       "(continues the same way with 2 and 3 as the first pick)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The emitted combinations, in order: `[1, 2]`, `[1, 3]`, `[1, 4]`, `[2, 3]`, `[2, 4]`, `[3, 4]`. That is C(4,2) = 6 of them."
+    ]
+   },
+   {
+    "h": "Why not generate permutations and filter?",
+    "p": [
+     "That would visit n!/(n-k)! ordered tuples then dedupe. Forcing increasing order with `start` visits only the C(n, k) real answers, so no work is wasted."
+    ]
+   },
+   {
+    "h": "A useful prune",
+    "p": [
+     "If fewer than `k - len(path)` numbers remain from `start`, the branch cannot finish. The code above doesn't prune, but you could stop the loop at `n - (k - len(path)) + 1`; mention it as an optimisation."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · C(n, k)), each combination is copied once.",
+     "Space: O(k) recursion depth, plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Combinations = backtracking with an increasing `start` index so each subset appears once; copy the path when it reaches length k."
+ },
+ "80": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`k`",
+       "Length of the kept prefix and the next write position",
+       "Slow pointer of the slow/fast in-place filter"
+      ],
+      [
+       "`for x in nums`",
+       "Fast pointer: reads each original element",
+       "Safe because writes at `k` never get ahead of the reader"
+      ],
+      [
+       "`k < 2`",
+       "The first two elements are always allowed",
+       "No earlier element to compare against"
+      ],
+      [
+       "`x != nums[k - 2]`",
+       "If `x` equals the element two places back in the kept array, then keeping it would make three equal values in a row (sorted order)",
+       "Generalises to 'at most m copies': compare with `nums[k - m]`"
+      ],
+      [
+       "`nums[k] = x; k += 1`",
+       "Keep `x`",
+       "Overwrite in place, O(1) extra space"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,1,2,2,3]` (at most two of each value)."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "check",
+      "action",
+      "k",
+      "kept prefix"
+     ],
+     "rows": [
+      [
+       "1",
+       "k < 2",
+       "write at 0",
+       "1",
+       "[1]"
+      ],
+      [
+       "1",
+       "k < 2",
+       "write at 1",
+       "2",
+       "[1, 1]"
+      ],
+      [
+       "1",
+       "1 == nums[0]=1",
+       "skip",
+       "2",
+       "[1, 1]"
+      ],
+      [
+       "2",
+       "2 != nums[0]=1",
+       "write at 2",
+       "3",
+       "[1, 1, 2]"
+      ],
+      [
+       "2",
+       "2 != nums[1]=1",
+       "write at 3",
+       "4",
+       "[1, 1, 2, 2]"
+      ],
+      [
+       "3",
+       "3 != nums[2]=2",
+       "write at 4",
+       "5",
+       "[1, 1, 2, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare with `nums[k-2]` and not `nums[i-2]`?",
+    "p": [
+     "The input is being overwritten while we read it, so `nums[i-2]` may no longer be the original value. `nums[k-2]` is always inside the already-built result, where everything is final and sorted, so it is the right reference."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1), in place; elements past index `k` are leftovers."
+    ]
+   }
+  ],
+  "takeaway": "Slow/fast in-place filter on sorted data: keep x unless it equals the element two slots back in the kept prefix."
+ },
+ "83": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur = head`",
+       "A moving pointer; `head` is kept so we can return it",
+       "Never advance the head itself if you need to return it"
+      ],
+      [
+       "`while cur and cur.next`",
+       "Both the current and next node must exist before comparing",
+       "Comparing neighbours in a linked list"
+      ],
+      [
+       "`cur.next = cur.next.next`",
+       "Unlinks the duplicate by pointing past it; `cur` stays put",
+       "Deleting a node in a singly linked list"
+      ],
+      [
+       "`else: cur = cur.next`",
+       "Advance only when no deletion happened",
+       "The next node may also be a duplicate; check again"
+      ],
+      [
+       "`return head`",
+       "The head never changes: the first of a run of equal values is always kept",
+       "No dummy node needed here, unlike problem 82"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→1→2→3→3`. After each step the list is shown; `cur` stays in place when a duplicate is removed."
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "Comparison",
+      "Action",
+      "List after"
+     ],
+     "rows": [
+      [
+       "cur=1",
+       "next equal",
+       "unlink next",
+       "[1, 2, 3, 3]"
+      ],
+      [
+       "cur=1",
+       "next differs",
+       "advance cur",
+       "[1, 2, 3, 3]"
+      ],
+      [
+       "cur=2",
+       "next differs",
+       "advance cur",
+       "[1, 2, 3, 3]"
+      ],
+      [
+       "cur=3",
+       "next equal",
+       "unlink next",
+       "[1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why doesn't `cur` advance after a deletion?",
+    "p": [
+     "After unlinking, `cur.next` is a brand new node that might also equal `cur.val` (as in `1→1→1`). Advancing immediately would leave the third 1 in the list. Only move when the next value differs."
+    ]
+   },
+   {
+    "h": "Why is no dummy node needed?",
+    "p": [
+     "In this problem we keep one copy of each value, so the first node can never be deleted. In 'Remove Duplicates II' (all copies of a repeated value removed) the head may go, which is when a dummy becomes necessary."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each pointer step or unlink is O(1) and the total is at most n.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sorted linked list dedupe: compare each node with its next and unlink equals; advance only when they differ."
+ },
+ "86": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`small = s = ListNode()`",
+       "Dummy head of the 'less than x' list; `s` is its tail",
+       "Two output lists built front to back"
+      ],
+      [
+       "`big = b = ListNode()`",
+       "Dummy head of the 'greater or equal' list; `b` is its tail",
+       "Stable partition: both lists keep the original order"
+      ],
+      [
+       "`s.next = head; s = s.next`",
+       "Appends the existing node (no new node is allocated)",
+       "Relinking nodes instead of copying values keeps O(1) extra space"
+      ],
+      [
+       "`b.next = None`",
+       "Cuts the tail of the big list",
+       "Without it the last big node may still point into the small list and create a cycle"
+      ],
+      [
+       "`s.next = big.next`",
+       "Connects the small list to the first real node of the big list",
+       "Final concatenation"
+      ],
+      [
+       "`return small.next`",
+       "Skips the dummy",
+       "Standard dummy-head return"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→4→3→2→5→2`, `x = 3`. Each node goes to exactly one of the two lists, keeping relative order."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Goes to",
+      "small list",
+      "big list"
+     ],
+     "rows": [
+      [
+       "1",
+       "small",
+       "[1]",
+       "[]"
+      ],
+      [
+       "4",
+       "big",
+       "[1]",
+       "[4]"
+      ],
+      [
+       "3",
+       "big",
+       "[1]",
+       "[4, 3]"
+      ],
+      [
+       "2",
+       "small",
+       "[1, 2]",
+       "[4, 3]"
+      ],
+      [
+       "5",
+       "big",
+       "[1, 2]",
+       "[4, 3, 5]"
+      ],
+      [
+       "2",
+       "small",
+       "[1, 2, 2]",
+       "[4, 3, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `b.next = None` essential?",
+    "p": [
+     "Nodes are reused, so the last node placed in `big` still points to whatever followed it originally. Here that is `5`, whose `.next` is the final `2`, a node that now sits in the small list. Without cutting it, the joined list would run `4→3→5→2` and then continue `2→4`, a cycle. Setting `b.next = None` guarantees a proper end."
+    ]
+   },
+   {
+    "h": "Why two dummy heads rather than one?",
+    "p": [
+     "With one list you would have to splice nodes around, handling the head specially. Two independent builders make every node a simple append, then one pointer join finishes the job. It also keeps the partition stable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1) extra; only pointers are changed."
+    ]
+   }
+  ],
+  "takeaway": "Partition a linked list with two dummy-head builders, then splice them together; terminate the tail to avoid cycles."
+ },
+ "89": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`1 << n`",
+       "2ⁿ: the number of codes",
+       "Shift left is a quick power of two"
+      ],
+      [
+       "`i >> 1`",
+       "`i` with the lowest bit dropped (integer divide by 2)",
+       "Aligning each bit with its higher neighbour"
+      ],
+      [
+       "`i ^ (i >> 1)`",
+       "Gray code of i: each bit is XORed with the bit above it",
+       "Converting binary to reflected Gray code"
+      ],
+      [
+       "list comprehension",
+       "Builds all 2ⁿ codes directly in index order",
+       "No recursion or reflection needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`: i runs 0..3."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "binary i",
+      "i >> 1",
+      "i ^ (i>>1)",
+      "decimal"
+     ],
+     "rows": [
+      [
+       "0",
+       "00",
+       "00",
+       "00",
+       "0"
+      ],
+      [
+       "1",
+       "01",
+       "00",
+       "01",
+       "1"
+      ],
+      [
+       "2",
+       "10",
+       "01",
+       "11",
+       "3"
+      ],
+      [
+       "3",
+       "11",
+       "01",
+       "10",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do consecutive codes differ by one bit?",
+    "p": [
+     "Going from i to i+1 turns `t` trailing 1s of i into 0s and flips the 0 above them to 1, so `i ^ (i+1)` is `2^(t+1) - 1`. XORing that value with its own right shift leaves exactly one set bit, `2^t`. So the Gray codes of i and i+1 differ in a single bit. For n = 3 the sequence is `000`, `001`, `011`, `010`, `110`, `111`, `101`, `100`; each neighbour differs in one bit, and the last differs from the first in one bit too (cyclic)."
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Idea",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Formula `i ^ (i >> 1)` (this code)",
+       "closed form per index",
+       "O(2ⁿ)"
+      ],
+      [
+       "Reflect and prefix",
+       "take the (n-1) sequence, append its reverse with a leading 1",
+       "O(2ⁿ)"
+      ],
+      [
+       "Backtracking",
+       "flip one bit at a time, avoiding repeats",
+       "O(2ⁿ)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ), one constant-time formula per code.",
+     "Space: O(2ⁿ) for the output; O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Gray code has a closed form: `i ^ (i >> 1)`; the sequence reflects and flips one bit at a time."
+ },
+ "92": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dummy = ListNode(0, head)`",
+       "Sentinel before the head, so reversing from position 1 needs no special case",
+       "Any edit that may change the head"
+      ],
+      [
+       "`for _ in range(left - 1): prev = prev.next`",
+       "Walks `prev` to the node just before position `left`",
+       "Reaching a position in a singly linked list takes a walk"
+      ],
+      [
+       "`cur = prev.next`",
+       "`cur` is the first node of the segment; it stays put and ends as the segment's last node",
+       "Head-insertion reversal keeps one anchor node"
+      ],
+      [
+       "`nxt = cur.next`",
+       "The node about to be moved to the front",
+       "Save before rewiring"
+      ],
+      [
+       "`cur.next = nxt.next`",
+       "Unlink `nxt` from its place",
+       "Remove from the middle"
+      ],
+      [
+       "`nxt.next = prev.next; prev.next = nxt`",
+       "Insert `nxt` right after `prev`, ahead of everything already moved",
+       "Head insertion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→3→4→5`, `left=2, right=4`. `prev` is node 1 and `cur` is node 2. Each step pulls the node after `cur` to the front of the segment, so the segment grows reversed behind `prev`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Action",
+      "List"
+     ],
+     "rows": [
+      [
+       "1",
+       "move 3 to the front of the segment",
+       "[1, 3, 2, 4, 5]"
+      ],
+      [
+       "2",
+       "move 4 to the front of the segment",
+       "[1, 4, 3, 2, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why move nodes to the front instead of the classic three-pointer reverse?",
+    "p": [
+     "The classic reverse flips arrows one by one and then has to reconnect both ends of the segment (4 pointers to patch). Head insertion works inside the list, keeping the connection to the left part through `prev` and to the right part through `cur`, which automatically ends up pointing at the node after the segment. One pass, no cleanup."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Passes",
+      "Reconnect step"
+     ],
+     "rows": [
+      [
+       "Three-pointer reverse + stitch",
+       "1",
+       "needs saved before/after pointers"
+      ],
+      [
+       "Head insertion (this code)",
+       "1",
+       "none: `prev` and `cur` already bracket the segment"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(right), at most one walk to `left` plus `right - left` moves.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse a linked-list sublist in one pass by repeatedly moving the node after `cur` to just after `prev` (head insertion)."
+ },
+ "95": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`build(lo, hi)`",
+       "Returns **all** BST shapes using exactly the values lo..hi",
+       "Recursion that returns a list of results instead of one value"
+      ],
+      [
+       "`if lo > hi: return [None]`",
+       "The empty range has exactly one shape: no node. Returning `[None]` (not `[]`) keeps the product loops running",
+       "A list with one 'empty' item, so `for l in …` still executes once"
+      ],
+      [
+       "`for i in range(lo, hi + 1)`",
+       "Try each value as the root",
+       "Every value in a BST range can be the root"
+      ],
+      [
+       "`for l in build(lo, i-1) for r in build(i+1, hi)`",
+       "Cartesian product of every left shape with every right shape",
+       "Combining independent sub-choices"
+      ],
+      [
+       "`TreeNode(i, l, r)`",
+       "Builds a new root over a chosen left and right subtree",
+       "Subtrees are shared between trees, which is safe if nobody mutates them"
+      ],
+      [
+       "`return build(1, n) if n else []`",
+       "`n = 0` has no trees (not one empty tree)",
+       "LeetCode expects `[]` for n = 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`: choose each value as root. Values smaller than the root go left, larger go right, and the number of trees for the root is (left shapes) × (right shapes)."
+    ],
+    "table": {
+     "head": [
+      "Root",
+      "Left values",
+      "# left shapes",
+      "Right values",
+      "# right shapes",
+      "Trees with this root"
+     ],
+     "rows": [
+      [
+       "1",
+       "empty",
+       "1",
+       "[2..3]",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "[1..1]",
+       "1",
+       "[3..3]",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "[1..2]",
+       "2",
+       "empty",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "2 + 1 + 2 = 5 trees, the third Catalan number. Counting alone is problem 96; here we have to materialise every tree."
+    ]
+   },
+   {
+    "h": "Why is it safe to share subtrees between results?",
+    "p": [
+     "`build(2, 3)` is computed once per root choice and its trees may be reused as the right child in several outputs. Because nobody mutates them afterwards, sharing is harmless and saves memory. If a caller needed independent copies it would have to deep copy."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time and space: O(Cₙ · n) up to constants, where Cₙ is the nth Catalan number (~4ⁿ / n^1.5); the answer itself has Cₙ trees.",
+     "Recursion depth is O(n)."
+    ]
+   }
+  ],
+  "takeaway": "When you must generate all structures, recurse on ranges and take the Cartesian product of left and right results; `[None]` represents the empty subtree."
+ },
+ "98": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo=float('-inf'), hi=float('inf')`",
+       "Default arguments: the open interval every value in this subtree must lie in",
+       "Passing constraints down a recursion; infinity avoids special-casing the root"
+      ],
+      [
+       "`if not root: return True`",
+       "An empty subtree is valid",
+       "Base case of tree recursion"
+      ],
+      [
+       "`lo < root.val < hi`",
+       "Strict bounds: BST rules here forbid duplicates",
+       "Chained comparison, one expression"
+      ],
+      [
+       "`isValidBST(root.left, lo, root.val)`",
+       "Left subtree must be below the current value: tighten `hi`",
+       "Going left tightens the upper bound"
+      ],
+      [
+       "`isValidBST(root.right, root.val, hi)`",
+       "Right subtree must be above the current value: tighten `lo`",
+       "Going right tightens the lower bound"
+      ],
+      [
+       "`and`",
+       "Short-circuits: stops at the first violation",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `5` with left `1` and right `6`; `6` has children `3` and `7`. Each row is one visited node with its allowed interval."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Allowed (lo, hi)",
+      "Result"
+     ],
+     "rows": [
+      [
+       "5",
+       "(-∞, ∞)",
+       "ok"
+      ],
+      [
+       "1",
+       "(-∞, 5)",
+       "ok"
+      ],
+      [
+       "6",
+       "(5, ∞)",
+       "ok"
+      ],
+      [
+       "3",
+       "(5, 6)",
+       "3 not in range → False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pass bounds instead of comparing a node only with its children?",
+    "p": [
+     "Checking just `left < node < right` accepts the tree above: `3` is smaller than its parent `6`, which looks fine locally. But 3 sits in the right subtree of 5, so it must be greater than 5. Only the interval inherited from all ancestors catches that."
+    ],
+    "table": {
+     "head": [
+      "Check",
+      "Tree [5,1,6,null,null,3,7]"
+     ],
+     "rows": [
+      [
+       "Parent vs. immediate children only",
+       "looks valid (wrong)"
+      ],
+      [
+       "Interval inherited from every ancestor",
+       "3 ∉ (5, 6) → invalid (correct)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative: in-order traversal",
+    "p": [
+     "A valid BST visits values in strictly increasing order, so you could do an in-order walk and check each value exceeds the previous one. Same O(n) time; the bounds version needs no extra variable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node visited once.",
+     "Space: O(h) recursion depth, h = tree height (O(n) worst case for a skewed tree)."
+    ]
+   }
+  ],
+  "takeaway": "Validate a BST by passing the allowed (lo, hi) interval down the recursion; local parent/child checks are not enough."
+ },
+ "101": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`mirror(a, b)`",
+       "Are the subtrees rooted at `a` and `b` mirror images of each other?",
+       "Comparing two trees in lockstep (a helper with two arguments)"
+      ],
+      [
+       "`not a and not b`",
+       "Both empty: symmetric",
+       "Base case that ends a branch with success"
+      ],
+      [
+       "`not a or not b`",
+       "Exactly one empty (the other isn't, since the first test failed): not symmetric",
+       "Shape mismatch"
+      ],
+      [
+       "`a.val != b.val`",
+       "Values differ: not symmetric",
+       "Value mismatch"
+      ],
+      [
+       "`mirror(a.left, b.right)`",
+       "Outer pair: left of one side with right of the other",
+       "Mirroring swaps the direction"
+      ],
+      [
+       "`mirror(a.right, b.left)`",
+       "Inner pair",
+       "Both pairs must match, joined with `and`"
+      ],
+      [
+       "`mirror(root.left, root.right)`",
+       "Start by comparing the two children (not `root` with itself)",
+       "The root has no counterpart"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,3,4,4,3]`: the left child `2` is compared with the right child `2`, then outer `3`/`3`, then inner `4`/`4`, and so on."
+    ],
+    "table": {
+     "head": [
+      "a.val",
+      "b.val",
+      "Result"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "equal → compare outer pair, then inner pair"
+      ],
+      [
+       "3",
+       "3",
+       "equal → compare outer pair, then inner pair"
+      ],
+      [
+       "None",
+       "None",
+       "True (both empty)"
+      ],
+      [
+       "None",
+       "None",
+       "True (both empty)"
+      ],
+      [
+       "4",
+       "4",
+       "equal → compare outer pair, then inner pair"
+      ],
+      [
+       "None",
+       "None",
+       "True (both empty)"
+      ],
+      [
+       "None",
+       "None",
+       "True (both empty)"
+      ],
+      [
+       "…",
+       "…",
+       "-1 more calls, all True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the pairing outer-with-outer, inner-with-inner?",
+    "p": [
+     "Reflect the tree through a vertical line: the left child of the left side lands where the right child of the right side is. If you compared `a.left` with `b.left` you would be testing that the two subtrees are identical (problem 100), not mirrored."
+    ],
+    "table": {
+     "head": [
+      "Pair compared",
+      "Question answered"
+     ],
+     "rows": [
+      [
+       "`a.left` vs `b.left`, `a.right` vs `b.right`",
+       "same tree?"
+      ],
+      [
+       "`a.left` vs `b.right`, `a.right` vs `b.left` (this code)",
+       "mirror image?"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is visited once (as part of exactly one pair).",
+     "Space: O(h) recursion depth; O(n) for a skewed tree."
+    ]
+   }
+  ],
+  "takeaway": "Symmetry is two-tree recursion with crossed children: compare (a.left, b.right) and (a.right, b.left)."
+ },
+ "104": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if not root: return 0`",
+       "An empty tree has depth 0",
+       "Base case: depth counts nodes, so `None` contributes 0, a leaf contributes 1"
+      ],
+      [
+       "`self.maxDepth(root.left)`",
+       "Depth of the left subtree",
+       "Trust the recursion for the smaller problem"
+      ],
+      [
+       "`max(left, right)`",
+       "The deeper of the two subtrees decides the depth",
+       "Depth is the longest path, not the sum"
+      ],
+      [
+       "`1 + …`",
+       "Count the current node",
+       "Each level adds one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3, 9, 20, null, null, 15, 7]`. Values are computed bottom-up (children finish before their parent), so rows appear in post-order."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Left depth",
+      "Right depth",
+      "Depth = 1 + max"
+     ],
+     "rows": [
+      [
+       "9",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "15",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "7",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "20",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why recursion rather than a loop?",
+    "p": [
+     "A tree's depth is naturally defined from its children's depths, so the function is a one-line translation of the definition. The iterative alternative is level-order BFS counting levels (O(n) time, O(w) space for the widest level)."
+    ]
+   },
+   {
+    "h": "Edge cases",
+    "bullets": [
+     "Empty tree: returns 0.",
+     "Skewed tree of n nodes: depth n, recursion depth n (Python's default limit is about 1000, so use BFS or raise the limit for very deep inputs)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is visited once.",
+     "Space: O(h) call stack."
+    ]
+   }
+  ],
+  "takeaway": "Tree height is post-order recursion: depth = 1 + max(depth(left), depth(right)), with 0 for an empty tree."
+ },
+ "107": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`deque([root] if root else [])`",
+       "Queue seeded with the root; an empty tree gives an empty queue so the loop never runs",
+       "Guarding `None` input"
+      ],
+      [
+       "`for _ in range(len(q))`",
+       "Freezes the level size before the loop; `len(q)` is evaluated once, so nodes appended during the loop wait for the next round",
+       "Processing a BFS one level at a time"
+      ],
+      [
+       "`q.popleft()` / `q.append()`",
+       "O(1) dequeue from the front and enqueue at the back",
+       "FIFO order; `list.pop(0)` would be O(n)"
+      ],
+      [
+       "`level`",
+       "Values of the current level, left to right",
+       "Collecting one row"
+      ],
+      [
+       "`res[::-1]`",
+       "A reversed copy of the list of levels (bottom level first)",
+       "Reversing once at the end beats inserting at the front each time"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3, 9, 20, null, null, 15, 7]`. The snapshot shows the queue after each level has been processed (it already holds the next level)."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Nodes in level",
+      "Values",
+      "Queue after",
+      "res so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "[3]",
+       "[9, 20]",
+       "[[3]]"
+      ],
+      [
+       "2",
+       "2",
+       "[9, 20]",
+       "[15, 7]",
+       "[[3], [9, 20]]"
+      ],
+      [
+       "3",
+       "2",
+       "[15, 7]",
+       "[]",
+       "[[3], [9, 20], [15, 7]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why snapshot `len(q)` before the inner loop?",
+    "p": [
+     "While we pop the current level we append its children to the same queue. If the loop condition were `while q` there would be no way to tell where one level ends. The `range(len(q))` fixes the count at the start of the level."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "len(q) at start",
+      "Pops",
+      "Pushed (children)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse at the end?",
+    "p": [
+     "`res.insert(0, level)` costs O(levels) per insertion; one reverse costs O(levels) total. Or append normally and slice with `[::-1]` as the code does."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is enqueued and dequeued once.",
+     "Space: O(w) for the queue, where w is the widest level (up to n/2), plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS with a level-size snapshot, then reverse the list of levels for bottom-up order."
+ },
+ "110": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`height(n)`",
+       "Returns the node's height, or `-1` as a flag meaning 'this subtree is already unbalanced'",
+       "Folding a boolean check into a numeric return so one pass does both jobs"
+      ],
+      [
+       "`if not n: return 0`",
+       "Empty subtree: height 0",
+       "Base case"
+      ],
+      [
+       "`if l < 0: return -1`",
+       "Propagate failure immediately without visiting the right side",
+       "Early exit upwards"
+      ],
+      [
+       "`abs(l - r) > 1`",
+       "The balance rule at this node",
+       "Heights of children differ by at most one"
+      ],
+      [
+       "`1 + max(l, r)`",
+       "Normal height",
+       "Same as Maximum Depth"
+      ],
+      [
+       "`height(root) >= 0`",
+       "Any non-negative value means balanced",
+       "Decoding the sentinel"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Balanced tree `[3,9,20,null,null,15,7]` (nodes finish in post-order):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Child heights",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "9",
+       "left=0, right=0",
+       "1"
+      ],
+      [
+       "15",
+       "left=0, right=0",
+       "1"
+      ],
+      [
+       "7",
+       "left=0, right=0",
+       "1"
+      ],
+      [
+       "20",
+       "left=1, right=1",
+       "2"
+      ],
+      [
+       "3",
+       "left=1, right=2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "An unbalanced example",
+    "p": [
+     "Chain `1 → 2 → 3` going left (`[1,2,null,3]`): node 2 has left height 1 and right height 0 (fine), but node 1 has left height 2 and right height 0, a difference of 2."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Child heights",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "3",
+       "left=0, right=0",
+       "1"
+      ],
+      [
+       "2",
+       "left=1, right=0",
+       "2"
+      ],
+      [
+       "1",
+       "left=2, right=0",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not call a separate `height` at each node?",
+    "p": [
+     "The textbook solution computes `height(left)` and `height(right)` then recurses into `isBalanced` for both children, recomputing heights over and over: O(n²) on a skewed tree. Returning -1 as a sentinel lets one bottom-up pass do both jobs in O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "isBalanced calls height at every node (top-down)",
+       "O(n²) worst case"
+      ],
+      [
+       "Height returns -1 when unbalanced (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node visited once, and it stops early when a violation is found.",
+     "Space: O(h) recursion stack."
+    ]
+   }
+  ],
+  "takeaway": "Bottom-up recursion that returns the height or a -1 sentinel for 'unbalanced' does the balance check in one O(n) pass."
+ },
+ "113": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`path`",
+       "The values from the root to the current node, shared across the whole recursion",
+       "Backtracking on a tree: one list, push on entry, pop on exit"
+      ],
+      [
+       "`left -= node.val`",
+       "Remaining sum needed; passed as an argument so each branch gets its own value",
+       "Cheaper than recomputing `sum(path)` at every leaf"
+      ],
+      [
+       "`not node.left and not node.right`",
+       "A leaf: paths must end at leaves, so an internal node with `left == 0` doesn't count",
+       "Root-to-leaf definition"
+      ],
+      [
+       "`res.append(path[:])`",
+       "Saves a copy; `path` keeps changing",
+       "Snapshotting a mutable list"
+      ],
+      [
+       "`path.pop()`",
+       "Undo on the way back up",
+       "Restoring state for the sibling branch"
+      ],
+      [
+       "`if not node: return`",
+       "Handles missing children (reached via `dfs(node.left)` on a single-child node)",
+       "Simplifies the code by calling both children unconditionally"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Target 22. Every root-to-leaf path is visited in DFS order; only those whose remaining sum is 0 are saved."
+    ],
+    "table": {
+     "head": [
+      "Leaf path",
+      "Sum",
+      "left at leaf",
+      "Saved?"
+     ],
+     "rows": [
+      [
+       "5 → 4 → 11 → 7",
+       "27",
+       "-5",
+       "no"
+      ],
+      [
+       "5 → 4 → 11 → 2",
+       "22",
+       "0",
+       "yes"
+      ],
+      [
+       "5 → 8 → 13",
+       "26",
+       "-4",
+       "no"
+      ],
+      [
+       "5 → 8 → 4 → 5",
+       "22",
+       "0",
+       "yes"
+      ],
+      [
+       "5 → 8 → 4 → 1",
+       "18",
+       "4",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `path.pop()` after both recursive calls?",
+    "p": [
+     "`path` is one list shared by every call. When we finish a node's subtree we must remove its value so the next sibling starts with the correct path. Skipping the pop would leave stale values and produce paths that are too long."
+    ]
+   },
+   {
+    "h": "Why check for a leaf and not just `left == 0`?",
+    "p": [
+     "Node `4→11` has remaining sum 22-5-4-11 = 2, not 0, but in other trees an internal node can hit exactly 0 while a child continues (for example, with a node value 0 below it). The problem demands root-to-leaf, so we only accept at leaves."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) worst case: O(n) nodes and each saved path is copied, costing O(n) (balanced tree: O(n log n) to copy the matching paths).",
+     "Space: O(h) recursion and path, plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Root-to-leaf path search is DFS backtracking: push value, recurse, snapshot at a leaf with remaining sum 0, pop."
+ },
+ "116": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`leftmost`",
+       "First node of the current level; used to step down a level",
+       "Perfect binary tree: the leftmost node of each level is reachable by `.left`"
+      ],
+      [
+       "`while leftmost and leftmost.left`",
+       "Stop when the current level is the leaves (no children to connect)",
+       "Loop over levels without a queue"
+      ],
+      [
+       "`node = leftmost; node = node.next`",
+       "Walks across a level using the `next` pointers made in the previous round",
+       "The already-built level acts as the linked list we iterate"
+      ],
+      [
+       "`node.left.next = node.right`",
+       "Connects the two children of the same parent",
+       "Siblings"
+      ],
+      [
+       "`node.right.next = node.next.left`",
+       "Connects across parents: right child of this node to left child of the next node",
+       "Cousins; only if a next node exists"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Perfect tree `[1,2,3,4,5,6,7]`. After each level is processed, the next level's `next` chain is complete."
+    ],
+    "table": {
+     "head": [
+      "Level processed",
+      "Pointers set",
+      "Resulting chain"
+     ],
+     "rows": [
+      [
+       "1 (node 1)",
+       "1.left.next = 1.right",
+       "2→3→∅"
+      ],
+      [
+       "2 (nodes 2, 3)",
+       "2.left→2.right; 2.right→3.left; 3.left→3.right",
+       "4→5→6→7→∅"
+      ],
+      [
+       "3 (leaves)",
+       "skipped: `leftmost.left` is None",
+       "unchanged"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why O(1) space when BFS needs O(n)?",
+    "p": [
+     "BFS uses a queue to remember the level. Here the level above is already linked by `next`, so we can walk it like a list while wiring the level below. Only `leftmost` and `node` are stored."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Space"
+     ],
+     "rows": [
+      [
+       "BFS with a queue",
+       "O(n)"
+      ],
+      [
+       "Use the next pointers just built (this code)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this code needs a perfect tree",
+    "p": [
+     "`node.left` and `node.right` are assumed to exist for every non-leaf, and the leftmost chain always reaches the leaves. For arbitrary trees (problem 117) children can be missing, so you must search for the next available child instead."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is visited once.",
+     "Space: O(1) extra (iterative, no queue or recursion)."
+    ]
+   }
+  ],
+  "takeaway": "Level-by-level linking that uses the previous level's `next` chain as the queue gives O(1) space on a perfect binary tree."
+ },
+ "122": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prices[i] - prices[i - 1]`",
+       "Change between consecutive days",
+       "Reducing a multi-transaction problem to day-to-day deltas"
+      ],
+      [
+       "`if … > 0: profit += …`",
+       "Collect every upward step, ignore every drop",
+       "Unlimited transactions: you can always sell and re-buy the same day"
+      ],
+      [
+       "`range(1, len(prices))`",
+       "Starts at day 1 so each day has a previous day",
+       "Pairwise neighbours"
+      ],
+      [
+       "`profit`",
+       "Running total of all positive deltas",
+       "Accumulator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [7,1,5,3,6,4]`: positive steps are 1→5 (+4) and 3→6 (+3)."
+    ],
+    "table": {
+     "head": [
+      "Day i",
+      "Move",
+      "Delta",
+      "Action",
+      "Profit"
+     ],
+     "rows": [
+      [
+       "1",
+       "7 → 1",
+       "-6",
+       "skip",
+       "0"
+      ],
+      [
+       "2",
+       "1 → 5",
+       "4",
+       "add",
+       "4"
+      ],
+      [
+       "3",
+       "5 → 3",
+       "-2",
+       "skip",
+       "4"
+      ],
+      [
+       "4",
+       "3 → 6",
+       "3",
+       "add",
+       "7"
+      ],
+      [
+       "5",
+       "6 → 4",
+       "-2",
+       "skip",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is adding every positive step optimal?",
+    "p": [
+     "Any profit from buying on day a and selling on day b equals the sum of the daily deltas between a and b. Taking only the positive deltas drops every negative one, which is the most any set of non-overlapping trades could keep. And since we can sell and re-buy on the same day, there is no cost to splitting a rising run into one-day trades: 1→3→6 gives the same as buying at 1 and selling at 6."
+    ],
+    "table": {
+     "head": [
+      "Trade plan",
+      "Profit on 1,3,6"
+     ],
+     "rows": [
+      [
+       "Buy 1, sell 6",
+       "5"
+      ],
+      [
+       "Buy 1 sell 3, buy 3 sell 6",
+       "2 + 3 = 5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Contrast with the one-transaction version",
+    "p": [
+     "Problem 121 allows a single trade, so you must track the minimum price so far; here the number of trades is unlimited, so local gains add up."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "With unlimited transactions, profit is the sum of all positive day-to-day price differences: a greedy one-pass solution."
+ }
+}

@@ -552,5 +552,700 @@
    }
   ],
   "takeaway": "Record which rows and columns to clear, then clear in a second pass — never mutate while scanning for zeros."
+ },
+ "76": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(t)`",
+       "Dict of letter → how many are required",
+       "Counting frequencies; missing keys read as 0"
+      ],
+      [
+       "`missing = len(t)`",
+       "How many required letters (with repeats) are still uncovered",
+       "One integer replaces re-checking every letter's count each step"
+      ],
+      [
+       "`need[ch] -= 1`",
+       "Count may go negative for letters we have extra of or don't need",
+       "Negative = surplus in the window, positive = still needed"
+      ],
+      [
+       "`enumerate(s)`",
+       "Index `r` of the window's right edge and the new character",
+       "Expand the window one character at a time"
+      ],
+      [
+       "`best = (0, float('inf'))`",
+       "Start/end of the best window; infinity means 'none yet'",
+       "Compare lengths with `r - l < best[1] - best[0]` without a special first case"
+      ],
+      [
+       "`s[best[0]:best[1]+1]`",
+       "Slice of the answer",
+       "End index is inclusive, so +1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'ADOBECODEBANC'`, `t = 'ABC'`. The window `[l, r]` expands with `r`; while it covers all of `t`, it shrinks from the left. Selected steps (the rest only expand):"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "char",
+      "State",
+      "Left edge",
+      "Event"
+     ],
+     "rows": [
+      [
+       "0",
+       "A",
+       "after: missing=2",
+       "l=0",
+       "—"
+      ],
+      [
+       "3",
+       "B",
+       "after: missing=1",
+       "l=0",
+       "—"
+      ],
+      [
+       "5",
+       "C",
+       "after: missing=1",
+       "l=1",
+       "best = [0,5] 'ADOBEC'"
+      ],
+      [
+       "9",
+       "B",
+       "after: missing=1",
+       "l=1",
+       "—"
+      ],
+      [
+       "10",
+       "A",
+       "after: missing=1",
+       "l=6",
+       "—"
+      ],
+      [
+       "12",
+       "C",
+       "after: missing=1",
+       "l=10",
+       "best = [8,12] 'EBANC'; best = [9,12] 'BANC'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `missing` only drop when `need[ch] > 0`?",
+    "p": [
+     "Counts below 0 mean we already have enough of that letter (or it is not in `t` at all, such as `D`, `O`, `E`). Only a letter still needed (> 0) moves us closer to covering `t`. In the shrink loop the mirror test `need[s[l]] > 0` after adding back detects that removing this letter made the window incomplete again, so the loop stops."
+    ]
+   },
+   {
+    "h": "Why a `while` loop for the left edge?",
+    "p": [
+     "After one new character, the window can often shrink by several positions while still covering `t` (at `r = 12` it shrinks from `l = 8` to `l = 10`, improving the best to `BANC`). An `if` would skip all but one shrink and miss the minimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m) — each pointer only moves forward; each character is added once and removed at most once.",
+     "Space: O(k) for the counter, where k is the number of distinct characters.",
+     "If no window ever covers `t`, `best` keeps `inf` and the code returns `''`."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with a need-count: expand right until the window is valid, then shrink left as far as it stays valid, tracking the shortest."
+ },
+ "79": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dfs(r, c, i)`",
+       "Can `word[i:]` be spelled starting at cell (r, c)?",
+       "Depth-first search with the progress index as a parameter"
+      ],
+      [
+       "`0 <= r < m and 0 <= c < n`",
+       "Chained comparison bounds check",
+       "Keep neighbours inside the grid"
+      ],
+      [
+       "`tmp, board[r][c] = board[r][c], '#'`",
+       "Saves the letter and overwrites the cell with a marker",
+       "Marks the cell visited in place, with no separate `visited` set"
+      ],
+      [
+       "`any(dfs(...) for dr, dc in (...))`",
+       "Tries the four directions lazily; stops at the first True",
+       "Short-circuit search over neighbours"
+      ],
+      [
+       "`board[r][c] = tmp`",
+       "Restores the cell",
+       "Backtracking: other paths may use this cell"
+      ],
+      [
+       "`any(dfs(r, c, 0) for r … for c …)`",
+       "Tries every cell as a start",
+       "The word can begin anywhere"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `ABCE / SFCS / ADEE`, word `ABCCED`. The successful path (row, column, letter) found by running the code, using 14 calls to `dfs` in total:"
+    ],
+    "table": {
+     "head": [
+      "Letter index i",
+      "Cell (r, c)",
+      "Letter"
+     ],
+     "rows": [
+      [
+       "0",
+       "(0,0)",
+       "A"
+      ],
+      [
+       "1",
+       "(0,1)",
+       "B"
+      ],
+      [
+       "2",
+       "(0,2)",
+       "C"
+      ],
+      [
+       "3",
+       "(1,2)",
+       "C"
+      ],
+      [
+       "4",
+       "(2,2)",
+       "E"
+      ],
+      [
+       "5",
+       "(2,1)",
+       "D"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why mark the cell with '#' and restore it?",
+    "p": [
+     "The marker makes the cell fail the `board[r][c] != word[i]` test, so the same cell can't be used twice in one path. Restoring afterwards lets a different path through the same cell succeed."
+    ],
+    "table": {
+     "head": [
+      "Option",
+      "Cost",
+      "Risk"
+     ],
+     "rows": [
+      [
+       "Mutate with '#' and restore",
+       "O(1) per cell, no extra memory",
+       "Must restore on every exit path (the code restores before returning)"
+      ],
+      [
+       "Separate `visited` set",
+       "O(L) extra memory",
+       "Must also add/remove carefully"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check `i == len(word)` before the bounds test?",
+    "p": [
+     "Reaching `i == len(word)` means all letters were matched; the position (r, c) is one step past the last letter and may be off the board, so the success test must come first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·3^L) — from each start cell the search branches into at most 3 new directions (never back where it came from), up to the word length L.",
+     "Space: O(L) for the recursion stack."
+    ]
+   }
+  ],
+  "takeaway": "Grid DFS with in-place visited marking: choose a cell, explore four directions, restore it on the way back."
+ },
+ "82": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dummy = prev = ListNode(0, head)`",
+       "A fake head before the real one; `prev` is the last node kept",
+       "The head itself may be deleted, so you need a stable node in front"
+      ],
+      [
+       "`cur.next and cur.val == cur.next.val`",
+       "Next node exists and has the same value",
+       "Duplicate check; the first test avoids `None.val`"
+      ],
+      [
+       "inner `while … cur = cur.next`",
+       "Moves `cur` to the last node of the duplicate run",
+       "Skip every copy, including the first"
+      ],
+      [
+       "`prev.next = cur.next`",
+       "Unlinks the entire run",
+       "Splice out nodes by repointing one link"
+      ],
+      [
+       "`else: prev = prev.next`",
+       "Advances the kept-tail pointer",
+       "Only when the current node survives"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→3→3→4→4→5`. Each row is one outer-loop pass; the last column shows the list reachable from `dummy`:"
+    ],
+    "table": {
+     "head": [
+      "Pass",
+      "Decision",
+      "List after the pass"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 is unique → prev moves to 1",
+       "1→2→3→3→4→4→5"
+      ],
+      [
+       "2",
+       "2 is unique → prev moves to 2",
+       "1→2→3→3→4→4→5"
+      ],
+      [
+       "3",
+       "skip all 3s → prev.next = 4",
+       "1→2→4→4→5"
+      ],
+      [
+       "4",
+       "skip all 4s → prev.next = 5",
+       "1→2→5"
+      ],
+      [
+       "5",
+       "5 is unique → prev moves to 5",
+       "1→2→5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `prev` move only in the `else` branch?",
+    "p": [
+     "`prev` must always point at the last node known to stay in the answer. After removing a duplicate run we don't yet know whether the next node is unique (it might start another run), so `prev` stays put and `prev.next` is re-pointed instead. The `cur = cur.next` at the bottom of the loop then moves on to the first node after the run."
+    ]
+   },
+   {
+    "h": "Why a dummy node?",
+    "p": [
+     "For `1→1→2`, the head `1` must be removed. With `prev = dummy`, the same `prev.next = cur.next` code removes it and `dummy.next` becomes the new head `2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — each node is visited a constant number of times.",
+     "Space: O(1) — pointers only."
+    ]
+   }
+  ],
+  "takeaway": "Dummy head plus a `prev` pointer that trails the last kept node lets you delete whole runs of duplicates in one pass."
+ },
+ "85": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`h = [0] * (n + 1)`",
+       "Column heights; the extra last slot stays 0",
+       "Height 0 at the end acts as a sentinel that flushes the stack"
+      ],
+      [
+       "`h[j] + 1 if row[j] == '1' else 0`",
+       "Grow the bar of consecutive 1s, or reset at a 0",
+       "Turns each row into a histogram"
+      ],
+      [
+       "`st = [-1]`",
+       "Stack of column indexes, with −1 as a floor marker",
+       "Avoids an 'is the stack empty?' check; width is `j - st[-1] - 1`"
+      ],
+      [
+       "`while st[-1] != -1 and h[st[-1]] >= h[j]`",
+       "Pop bars that are not shorter than the new bar",
+       "Monotonic stack: heights on the stack always increase"
+      ],
+      [
+       "`height * (j - st[-1] - 1)`",
+       "Area of the rectangle with the popped bar as its height",
+       "The new top `st[-1]` is the first shorter bar on the left; `j` is the first shorter on the right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Matrix `10100 / 10111 / 11111 / 10010`. After each row we have a histogram `h`; the monotonic stack finds the largest rectangle under it. Areas computed at pops:"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Cells",
+      "Heights h",
+      "Popped rectangles (this row)",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "10100",
+       "[1, 0, 1, 0, 0]",
+       "h=1×w=1=1; h=1×w=1=1; h=0×w=3=0; h=0×w=4=0; h=0×w=5=0",
+       "1"
+      ],
+      [
+       "1",
+       "10111",
+       "[2, 0, 2, 1, 1]",
+       "h=2×w=1=2; h=2×w=1=2; h=1×w=2=2; h=1×w=3=3; h=0×w=5=0",
+       "3"
+      ],
+      [
+       "2",
+       "11111",
+       "[3, 1, 3, 2, 2]",
+       "h=3×w=1=3; h=3×w=1=3; h=2×w=2=4; h=2×w=3=6; h=1×w=5=5",
+       "6"
+      ],
+      [
+       "3",
+       "10010",
+       "[4, 0, 0, 3, 0]",
+       "h=4×w=1=4; h=0×w=2=0; h=3×w=1=3; h=0×w=4=0; h=0×w=5=0",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this reduce to 'largest rectangle in a histogram'?",
+    "p": [
+     "A rectangle of 1s in the grid has its bottom edge on some row. Seen from that row, each column's consecutive 1s above form a bar, and the rectangle is a set of adjacent bars cut at the shortest one. Doing the histogram problem once per row covers every possible bottom edge."
+    ]
+   },
+   {
+    "h": "Why `>=` when popping?",
+    "p": [
+     "Equal heights are popped too, so the remaining bar extends the width to the left. Equal bars on the stack would give correct final answers anyway, but popping them keeps strictly increasing heights and avoids duplicate work."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — per row, each of n+1 indexes is pushed and popped at most once.",
+     "Space: O(n) for `h` and the stack."
+    ]
+   }
+  ],
+  "takeaway": "Row-by-row histogram heights plus a monotonic stack: the largest rectangle of 1s is the best histogram rectangle over all bottom rows."
+ },
+ "88": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`i, j, k = m-1, n-1, m+n-1`",
+       "Read pointers at the last real element of each list; write pointer at the last slot",
+       "Fill the merged list from the biggest end"
+      ],
+      [
+       "`while j >= 0`",
+       "Loop until `nums2` is fully placed",
+       "Leftover `nums1` items are already in their final places"
+      ],
+      [
+       "`i >= 0 and nums1[i] > nums2[j]`",
+       "Is the next `nums1` item the larger one? (`i >= 0` guards an exhausted `nums1`)",
+       "Pick the larger of the two candidates for slot k"
+      ],
+      [
+       "`nums1[k] = …; k -= 1`",
+       "Writes the larger item at the back, then moves left",
+       "In-place merge without a second array"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,3,0,0,0]`, `m = 3`, `nums2 = [2,5,6]`, `n = 3`. Each row writes one slot `k`:"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "Decision",
+      "nums1 after"
+     ],
+     "rows": [
+      [
+       "5",
+       "nums1[2]=3 ≤ nums2[2]=6 → take nums2[2]=6",
+       "[1, 2, 3, 0, 0, 6]"
+      ],
+      [
+       "4",
+       "nums1[2]=3 ≤ nums2[1]=5 → take nums2[1]=5",
+       "[1, 2, 3, 0, 5, 6]"
+      ],
+      [
+       "3",
+       "nums1[2]=3 > nums2[0]=2 → take nums1",
+       "[1, 2, 3, 3, 5, 6]"
+      ],
+      [
+       "2",
+       "nums1[1]=2 ≤ nums2[0]=2 → take nums2[0]=2",
+       "[1, 2, 2, 3, 5, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why merge from the back?",
+    "table": {
+     "head": [
+      "Direction",
+      "Problem"
+     ],
+     "rows": [
+      [
+       "Front to back",
+       "Writing into `nums1[0]` would overwrite numbers not yet read; you'd need to shift or copy"
+      ],
+      [
+       "Back to front",
+       "The free slots are at the end, so writes never overwrite unread data: `k` is always at or ahead of `i`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the loop stop when `j < 0`?",
+    "p": [
+     "If `nums2` is used up, the remaining `nums1[0..i]` are already sorted and already in position, so nothing more is needed. If `nums1` runs out first (`i < 0`), the `else` branch copies the rest of `nums2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n) — each slot written once.",
+     "Space: O(1) — in place."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers from the back: with free space at the end of the first array, fill from the largest end so you never overwrite unread values."
+ },
+ "91": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`prev, cur = 1, 1`",
+       "Ways to decode the string before the previous char / up to the previous char",
+       "Rolling DP with an empty prefix counted as 1 way"
+      ],
+      [
+       "`s[0] == '0'`",
+       "Leading zero can't be decoded",
+       "Fast failure; a lone `'0'` has no letter"
+      ],
+      [
+       "`s[i] != '0'`",
+       "Current digit alone is a letter (1–9)",
+       "Adds the ways of the prefix ending at `i-1` (`cur`)"
+      ],
+      [
+       "`int(s[i-1:i+1])`",
+       "The last two digits as a number",
+       "Slice of length 2, then convert"
+      ],
+      [
+       "`10 <= … <= 26`",
+       "Valid two-letter code",
+       "`10` is the lower bound so `'06'` (=6) doesn't count as a two-digit letter"
+      ],
+      [
+       "`prev, cur = cur, nxt`",
+       "Slide the window",
+       "O(1) space"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = '226'` (answer 3: BZ, VF, BBF):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Contributions",
+      "prev",
+      "cur"
+     ],
+     "rows": [
+      [
+       "start",
+       "—",
+       "1",
+       "1"
+      ],
+      [
+       "i=1",
+       "s[1]='2'≠'0' → +cur(1); 22 in 10..26 → +prev(1)",
+       "1",
+       "2"
+      ],
+      [
+       "i=2",
+       "s[2]='6'≠'0' → +cur(2); 26 in 10..26 → +prev(1)",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Zeros: `s = '100'`",
+    "p": [
+     "A `0` can only be decoded as the tail of `10` or `20`. Running the code on `'100'` gives:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Contributions",
+      "prev",
+      "cur"
+     ],
+     "rows": [
+      [
+       "start",
+       "—",
+       "1",
+       "1"
+      ],
+      [
+       "i=1",
+       "10 in 10..26 → +prev(1)",
+       "1",
+       "1"
+      ],
+      [
+       "i=2",
+       "no valid decoding",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two separate `if`s and not `elif`?",
+    "p": [
+     "Both options can hold at once (`'226'` at the last digit: `6` alone and `26` together), and the ways add. At a `0` the first option is off and only the pair `10`/`20` works; at `'30'` neither works, so `nxt` is 0 and the whole string becomes 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Decode-ways DP: ways(i) = ways(i−1) if the digit is nonzero, plus ways(i−2) if the last two digits form 10–26."
  }
 }
