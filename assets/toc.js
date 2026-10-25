@@ -57,3 +57,6 @@
     x.addEventListener("toggle", () => { if(x.open){ vis = vis || window.mountTopicVis(box, sc); if(!calm) vis.play(); } else if(vis) vis.stop(); });
   });
 })();
+
+/* Signed-in visitors do not need the "approval needed" hint on the System Design link. */
+(function(){ try { if(localStorage.getItem("sb-mxdljkwconnaanpgvigz-auth-token")){ const s = document.querySelector(".sdnav small"); if(s) s.remove(); } } catch(e){} })();

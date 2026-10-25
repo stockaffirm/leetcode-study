@@ -1,0 +1,2108 @@
+{
+ "700": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`while root and root.val != val`",
+       "Keep walking until the value is found or the tree runs out",
+       "Two stop conditions: `None` (not found) or a match"
+      ],
+      [
+       "`val < root.val`",
+       "Compare the target with the current node",
+       "BST (Binary Search Tree) rule: smaller values are on the left"
+      ],
+      [
+       "`root.left if … else root.right`",
+       "Choose one child",
+       "Discards half of the remaining tree"
+      ],
+      [
+       "`return root`",
+       "The matching node, or `None` if the loop ended by falling off",
+       "One return handles both outcomes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[4,2,7,1,3]`, `val = 2`: found node 2 (with children 1 and 3). For `val = 5` the path is [(4, 'go right'), (7, 'go left')] and the walk ends at `None`."
+    ],
+    "table": {
+     "head": [
+      "Current node",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "4",
+       "go left"
+      ],
+      [
+       "2",
+       "match → return that node"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a loop rather than recursion?",
+    "p": [
+     "The search never needs to come back up, so a loop does the same work with O(1) space instead of O(h) stack frames."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h), h = height of the tree (O(log n) if balanced, O(n) if it is a chain).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "BST search: compare, then discard the left or right subtree, iteratively."
+ },
+ "703": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`heapify(self.h)`",
+       "Rearrange a list into a min-heap in O(n)",
+       "Faster than pushing items one by one"
+      ],
+      [
+       "`heappush` / `heappop`",
+       "Insert / remove the smallest item in O(log n)",
+       "Priority-queue operations"
+      ],
+      [
+       "`len(self.h) > self.k` → pop",
+       "Keep only the k largest numbers",
+       "The smallest of the k largest is the k-th largest"
+      ],
+      [
+       "`self.h[0]`",
+       "The heap minimum (peek)",
+       "With exactly k items it is the k-th largest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 3`, initial `[4,5,8,2]`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Heap contents (sorted view)",
+      "k-th largest = h[0]",
+      "Event"
+     ],
+     "rows": [
+      [
+       "init",
+       "[4, 5, 8]",
+       "4",
+       "—"
+      ],
+      [
+       "add(3)",
+       "[4, 5, 8]",
+       "4",
+       "pop 3"
+      ],
+      [
+       "add(5)",
+       "[5, 5, 8]",
+       "5",
+       "pop 4"
+      ],
+      [
+       "add(10)",
+       "[5, 8, 10]",
+       "5",
+       "pop 5"
+      ],
+      [
+       "add(9)",
+       "[8, 9, 10]",
+       "8",
+       "pop 5"
+      ],
+      [
+       "add(4)",
+       "[8, 9, 10]",
+       "8",
+       "pop 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a min-heap of size k instead of a max-heap of everything?",
+    "p": [
+     "Numbers smaller than the current k-th largest can never matter again, so they are discarded. The root of the min-heap is the threshold."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "add cost",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "Max-heap of all numbers, pop k times",
+       "O(k log n)",
+       "O(n)"
+      ],
+      [
+       "Min-heap of size k (this code)",
+       "O(log k)",
+       "O(k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `add`: O(log k). Constructor: O(n).",
+     "Space: O(k) after the initial trimming."
+    ]
+   }
+  ],
+  "takeaway": "Keep the k largest values in a min-heap: its root is the k-th largest, and each new value either replaces it or is dropped."
+ },
+ "706": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`[[] for _ in range(size)]`",
+       "List of independent empty buckets",
+       "`[[]] * size` would share one list among all buckets"
+      ],
+      [
+       "`key % self.size`",
+       "Hash function: bucket index",
+       "Maps any key to 0 … size−1"
+      ],
+      [
+       "`[key, value]` pairs in a bucket",
+       "Chaining: keys that collide share a bucket",
+       "Handles different keys with the same index"
+      ],
+      [
+       "`pair[1] = value`",
+       "Update an existing key in place",
+       "Pairs are mutable lists, not tuples"
+      ],
+      [
+       "`b.pop(i)`",
+       "Delete from the bucket",
+       "Safe here because we `return` right after"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "7 buckets. Keys 1 and 8 both hash to bucket 1 (8 % 7 = 1), a collision handled by chaining:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Non-empty buckets"
+     ],
+     "rows": [
+      [
+       "put(1,1)",
+       "—",
+       "{1: [[1, 1], [8, 8]]}"
+      ],
+      [
+       "put(2,2)",
+       "—",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "put(8,8)",
+       "—",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "get(1)",
+       "1",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "get(3)",
+       "-1",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "put(2,1)",
+       "—",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "get(2)",
+       "1",
+       "{1: [[1, 1], [8, 8]], 2: []}"
+      ],
+      [
+       "remove(2)",
+       "—",
+       "{1: [[1, 1], [8, 8]]}"
+      ],
+      [
+       "get(2)",
+       "-1",
+       "{1: [[1, 1], [8, 8]]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why chaining and why is the cost O(n / buckets)?",
+    "p": [
+     "Each bucket is searched linearly, so lookup costs the length of the chain. With n keys spread over B buckets the average length is n/B. A fixed `size = 7` degrades to O(n) for large n; real hash maps grow (rehash) when the load factor gets high, and use a larger prime or a power of two."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Average O(n / B) per operation; O(n) worst case when everything collides.",
+     "Space: O(n + B)."
+    ]
+   }
+  ],
+  "takeaway": "A hash map = array of buckets + hash function + collision handling (chaining with lists)."
+ },
+ "718": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Length of the common run that STARTS at `nums1[i]` and `nums2[j]`",
+       "A subarray must be contiguous, so the state is 'run starting here'"
+      ],
+      [
+       "`dp = [[0] * (n+1) for _ in range(m+1)]`",
+       "Extra zero row and column",
+       "`dp[i+1][j+1]` stays in range at the borders"
+      ],
+      [
+       "`range(m - 1, -1, -1)`",
+       "Fill from the end backwards",
+       "`dp[i][j]` needs `dp[i+1][j+1]`, which must already be computed"
+      ],
+      [
+       "`dp[i+1][j+1] + 1`",
+       "Extend the run found one step later",
+       "Equal elements extend the match to the right"
+      ],
+      [
+       "`best = max(best, dp[i][j])`",
+       "Track the maximum anywhere in the table",
+       "The common run can start at any pair"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,2,1]` (rows) and `[3,2,1,4,7]` (columns). Entries `dp[i][j]`; the answer 3 is the largest:"
+    ],
+    "table": {
+     "head": [
+      "i \\ j",
+      "0:3",
+      "1:2",
+      "2:1",
+      "3:4",
+      "4:7"
+     ],
+     "rows": [
+      [
+       "0:1",
+       "0",
+       "0",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "1:2",
+       "0",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "2:3",
+       "3",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "3:2",
+       "0",
+       "2",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "4:1",
+       "0",
+       "0",
+       "1",
+       "0",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a mismatch leave 0 (instead of carrying a value)?",
+    "p": [
+     "For substrings/subarrays the run must be unbroken. If `nums1[i] != nums2[j]` no common run starts at this pair, so the cell stays 0. (Contrast Longest Common Subsequence, where a mismatch carries the better of two neighbours.) In this example the diagonal from cell (2,0) going down-right holds 3, 2, 1 (the run 3,2,1 starting at nums1[2] and nums2[0]), so the answer is 3."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) (a rolling row reduces it to O(n))."
+    ]
+   }
+  ],
+  "takeaway": "Longest common subarray: dp[i][j] = 1 + dp[i+1][j+1] on equal elements, else 0; the answer is the table maximum."
+ },
+ "721": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`parent = {}`",
+       "Union-Find (disjoint set) forest over emails",
+       "Each email points toward its group's representative"
+      ],
+      [
+       "`parent.setdefault(x, x)`",
+       "An unseen email starts as its own root",
+       "Creates nodes lazily"
+      ],
+      [
+       "`parent[x] = parent[parent[x]]`",
+       "Path halving: point x at its grandparent",
+       "Flattens the trees so later `find` calls are fast"
+      ],
+      [
+       "`parent[find(e)] = find(acc[1])`",
+       "Union: attach e's root to the account's first email's root",
+       "All emails of one account end in one group"
+      ],
+      [
+       "`owner[e] = acc[0]`",
+       "Email → name",
+       "The name is needed only at the end"
+      ],
+      [
+       "`groups[find(e)].append(e)`",
+       "Bucket emails by root",
+       "Each bucket is one person"
+      ],
+      [
+       "`[owner[r]] + sorted(es)`",
+       "Name followed by sorted emails",
+       "Required output format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Four accounts; the table shows which emails point to a different parent after each account (only non-root entries):"
+    ],
+    "table": {
+     "head": [
+      "Account",
+      "Non-root links (child → parent)"
+     ],
+     "rows": [
+      [
+       "John ['johnsmith@mail.com', 'john_newyork@mail.com']",
+       "{'john_newyork@mail.com': 'johnsmith@mail.com'}"
+      ],
+      [
+       "John ['johnsmith@mail.com', 'john00@mail.com']",
+       "{'john_newyork@mail.com': 'johnsmith@mail.com', 'john00@mail.com': 'johnsmith@mail.com'}"
+      ],
+      [
+       "Mary ['mary@mail.com']",
+       "{'john_newyork@mail.com': 'johnsmith@mail.com', 'john00@mail.com': 'johnsmith@mail.com'}"
+      ],
+      [
+       "John ['johnnybravo@mail.com']",
+       "{'john_newyork@mail.com': 'johnsmith@mail.com', 'john00@mail.com': 'johnsmith@mail.com'}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Groups: [['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com'], ['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com']]. The two John accounts share `johnsmith@mail.com`, so they merge; the other John (`johnnybravo`) stays separate despite the same name."
+    ]
+   },
+   {
+    "h": "Why union emails and not names?",
+    "p": [
+     "Names are not unique (two different people can be called John). Emails are the real identity, so accounts connect only through shared emails, and each account just links all its emails together."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: About O(n log n) for sorting the emails, plus near-constant-time union/find operations (inverse Ackermann with path compression; here path halving).",
+     "Space: O(n) for `parent`, `owner`, and groups."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find over emails: union all emails of an account, group by root, then sort each group."
+ },
+ "724": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`total = sum(nums)`",
+       "Sum of all numbers",
+       "Lets us get the right side without a second array"
+      ],
+      [
+       "`left`",
+       "Sum of everything before index i",
+       "Running prefix sum, updated after each check"
+      ],
+      [
+       "`total - left - x`",
+       "Sum of everything after index i",
+       "Total minus the left side minus the pivot itself"
+      ],
+      [
+       "`left += x` after the comparison",
+       "Include x only for later indexes",
+       "The pivot is not part of either side"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,7,3,6,5,6]` (total = 28):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "left",
+      "right = total − left − x",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "27",
+       "no"
+      ],
+      [
+       "1",
+       "7",
+       "1",
+       "20",
+       "no"
+      ],
+      [
+       "2",
+       "3",
+       "8",
+       "17",
+       "no"
+      ],
+      [
+       "3",
+       "6",
+       "11",
+       "11",
+       "equal → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why return the first match and why does left start at 0?",
+    "p": [
+     "Scanning left to right returns the leftmost pivot. `left = 0` represents an empty left side, and at the last index `total - left - x` is 0, an empty right side, as the problem allows."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sum without an array: right sum = total − left − current."
+ },
+ "727": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "inner `while k < len(s1) and j < len(s2)`",
+       "Scan forward from i, matching s2's letters in order",
+       "Finds the earliest end of a window that contains s2 as a subsequence"
+      ],
+      [
+       "`if j < len(s2): break`",
+       "s2 could not be completed",
+       "No later start can succeed either"
+      ],
+      [
+       "second `while j >= 0` going backward from the end",
+       "Match s2 from its last letter backwards",
+       "Shrinks the window from the left to the latest start that still works"
+      ],
+      [
+       "`start = k + 1`",
+       "Left edge of the minimal window ending at `end`",
+       "After the backward scan `k` is one before the first matched letter"
+      ],
+      [
+       "`i = start + 1`",
+       "Next search starts just after this window's start",
+       "Skips starts that could only give a longer or equal window"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s1 = 'abcdebdde'`, `s2 = 'bde'` gives `bcde`:"
+    ],
+    "table": {
+     "head": [
+      "Search starts at i",
+      "Forward scan",
+      "Backward shrink",
+      "Window",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "0",
+       "forward match ends at 5",
+       "backward shrink starts at 1",
+       "'bcde'",
+       "new best"
+      ],
+      [
+       "2",
+       "forward match ends at 9",
+       "backward shrink starts at 5",
+       "'bdde'",
+       "not shorter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan backwards after scanning forwards?",
+    "p": [
+     "The forward pass finds an end, but its window may start with useless letters (it began at i, not at the latest possible start). Matching s2 right-to-left from `end` finds the closest start for that end, which is the shortest window ending there. Two passes per candidate beat checking every start separately."
+    ]
+   },
+   {
+    "h": "A subtle point on ties",
+    "p": [
+     "The update uses `end - start < len(best)` (strictly shorter), so among equal lengths the earlier window is kept, as the problem requires."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·m) worst case.",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Minimum window subsequence: match s2 forward to find an end, then backward to find the tightest start; continue after that start."
+ },
+ "730": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Number of different non-empty palindromic subsequences inside `s[i..j]`",
+       "Interval DP (Dynamic Programming)"
+      ],
+      [
+       "`dp[i][i] = 1`",
+       "A single letter",
+       "Base case"
+      ],
+      [
+       "`s[i] != s[j]`",
+       "Ends differ: count those inside `i+1..j` plus `i..j-1`, minus the overlap",
+       "Inclusion–exclusion"
+      ],
+      [
+       "`lo`, `hi` scans",
+       "Nearest copy of `s[i]` inside the interval from each side",
+       "Find duplicates that would be double counted"
+      ],
+      [
+       "`% MOD`",
+       "Keep numbers small",
+       "The count grows exponentially"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'bccb'` has 6 different palindromes (b, c, bb, cc, bcb, bccb). Table by interval length:"
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Substring",
+      "dp",
+      "Rule used"
+     ],
+     "rows": [
+      [
+       "0..1",
+       "bc",
+       "2",
+       "ends differ: inclusion–exclusion"
+      ],
+      [
+       "1..2",
+       "cc",
+       "2",
+       "no equal letter inside: ×2 + 2"
+      ],
+      [
+       "2..3",
+       "cb",
+       "2",
+       "ends differ: inclusion–exclusion"
+      ],
+      [
+       "0..2",
+       "bcc",
+       "3",
+       "ends differ: inclusion–exclusion"
+      ],
+      [
+       "1..3",
+       "ccb",
+       "3",
+       "ends differ: inclusion–exclusion"
+      ],
+      [
+       "0..3",
+       "bccb",
+       "6",
+       "no equal letter inside: ×2 + 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three cases when the ends match?",
+    "bullets": [
+     "Matching ends s[i] = s[j] = x: every palindrome inside (dp[i+1][j-1]) can be used as is, or wrapped with x on both sides: that is the `× 2`.",
+     "Also the palindromes `x` and `xx` themselves are new unless x already appears inside.",
+     "No x inside: add both `x` and `xx` (+2). Exactly one x inside: `x` exists already but `xx` is new (+1). Two or more inside: both exist, and wrapping the palindromes that sit strictly between the first and last inner x duplicates earlier ones, so subtract `dp[lo+1][hi-1]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) states, but the `lo`/`hi` scans walk the inside of the interval, so O(n³) worst case as written.",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Interval DP counting distinct palindromes: when the end letters match, double the inside and fix duplicates using the nearest equal letters inside."
+ },
+ "733": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`old = image[sr][sc]`",
+       "Colour to replace",
+       "Remember it, because the pixel is overwritten"
+      ],
+      [
+       "`if old == color: return image`",
+       "Nothing to change",
+       "Without it, recolouring would never mark pixels as different and the recursion would not end"
+      ],
+      [
+       "`image[r][c] != old`",
+       "Cell has another colour (or is already recoloured)",
+       "Doubles as the visited check, since new colour ≠ old colour"
+      ],
+      [
+       "`dfs` in four directions",
+       "Flood fill",
+       "Spread to connected pixels of the same colour"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1,1],[1,1,0],[1,0,1]]`, start (1,1), colour 2. Pixels recoloured in order: [(1, 1), (0, 1), (0, 2), (0, 0), (1, 0), (2, 0)]. Result: [[2, 2, 2], [2, 2, 0], [2, 0, 1]]."
+    ],
+    "table": {
+     "head": [
+      "Order",
+      "Pixel"
+     ],
+     "rows": [
+      [
+       "1",
+       "(1, 1)"
+      ],
+      [
+       "2",
+       "(0, 1)"
+      ],
+      [
+       "3",
+       "(0, 2)"
+      ],
+      [
+       "4",
+       "(0, 0)"
+      ],
+      [
+       "5",
+       "(1, 0)"
+      ],
+      [
+       "6",
+       "(2, 0)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the early return when the colours are equal?",
+    "p": [
+     "If the new colour equals the old one, recolouring leaves `image[r][c] == old` true forever, so the DFS (Depth-First Search) would revisit the same pixels endlessly and overflow the stack. The guard ends the function immediately."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) recursion depth in the worst case."
+    ]
+   }
+  ],
+  "takeaway": "Flood fill by DFS (Depth-First Search): recolour while the pixel still has the old colour; guard the case old == new."
+ },
+ "736": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`expression.replace('(', ' ( ')…split()`",
+       "Tokenise: pad brackets with spaces, then split",
+       "Makes `(add` into `(` and `add`"
+      ],
+      [
+       "`scopes` (list of dicts)",
+       "One dict per open `let`",
+       "Stack of variable scopes; the innermost is last"
+      ],
+      [
+       "`for sc in reversed(scopes)`",
+       "Look up a variable from the innermost scope outwards",
+       "Inner definitions hide outer ones with the same name"
+      ],
+      [
+       "`t.lstrip('-').isdigit()`",
+       "Is the token an integer (possibly negative)?",
+       "`'-12'.isdigit()` is False, so strip the sign first"
+      ],
+      [
+       "`nonlocal pos`",
+       "Shared cursor into the token list",
+       "Each recursive call consumes tokens and leaves `pos` after them"
+      ],
+      [
+       "`scopes.pop()`",
+       "Leave the `let`",
+       "Its variables disappear, as the problem requires"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`(let x 2 (mult x (let x 3 y 4 (add x y))))` evaluates to 14. Events in order:"
+    ],
+    "table": {
+     "head": [
+      "Event"
+     ],
+     "rows": [
+      [
+       "let: x = 2 (depth 1)"
+      ],
+      [
+       "look up x = 2 (scope depth 1)"
+      ],
+      [
+       "let: x = 3 (depth 2)"
+      ],
+      [
+       "let: y = 4 (depth 2)"
+      ],
+      [
+       "look up x = 3 (scope depth 2)"
+      ],
+      [
+       "look up y = 4 (scope depth 2)"
+      ],
+      [
+       "add(3, 4) = 7"
+      ],
+      [
+       "let ends → value 7, its scope removed"
+      ],
+      [
+       "mult(2, 7) = 14"
+      ],
+      [
+       "let ends → value 14, its scope removed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scopes and recursion?",
+    "p": [
+     "Expressions nest (add inside let inside mult), and each `let` defines names visible only inside it. Recursion handles the nesting; the scope stack handles visibility: the inner `x = 3` hides the outer `x = 2` while the inner `let` runs, and outer `x` is visible again after the `scopes.pop()`. That's why `(mult x …)` uses the outer 2 and the inner `add` uses 3."
+    ]
+   },
+   {
+    "h": "How does the `let` loop know when to stop?",
+    "p": [
+     "Inside a `let`, pairs `name expr` repeat until what follows is the final expression: either a `(` (a compound expression) or a token followed by `)` (a lone variable or number). Then it evaluates that last expression, skips the closing `)`, and drops the scope."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·depth): variable lookup may walk the scope stack.",
+     "Space: O(n) for the tokens and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Recursive descent with a scope stack: let pushes a scope, variables resolve innermost-first, and leaving the let pops it."
+ },
+ "739": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`stack` of indexes",
+       "Days still waiting for a warmer day",
+       "Temperatures at these indexes are non-increasing: a monotonic stack"
+      ],
+      [
+       "`temps[stack[-1]] < t`",
+       "Today is warmer than the waiting day",
+       "Resolve that day"
+      ],
+      [
+       "`ans[j] = i - j`",
+       "Days between",
+       "The wait"
+      ],
+      [
+       "`stack.append(i)`",
+       "Today now waits",
+       "Pushed after popping everything colder"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[73, 74, 75, 71, 69, 72, 76, 73]` → `[1, 1, 4, 2, 1, 1, 0, 0]`:"
+    ],
+    "table": {
+     "head": [
+      "Day i",
+      "Temp",
+      "Resolved",
+      "Stack (day indexes)"
+     ],
+     "rows": [
+      [
+       "0",
+       "73",
+       "—",
+       "[0]"
+      ],
+      [
+       "1",
+       "74",
+       "day 0 waits 1",
+       "[1]"
+      ],
+      [
+       "2",
+       "75",
+       "day 1 waits 1",
+       "[2]"
+      ],
+      [
+       "3",
+       "71",
+       "—",
+       "[2, 3]"
+      ],
+      [
+       "4",
+       "69",
+       "—",
+       "[2, 3, 4]"
+      ],
+      [
+       "5",
+       "72",
+       "day 4 waits 1; day 3 waits 2",
+       "[2, 5]"
+      ],
+      [
+       "6",
+       "76",
+       "day 5 waits 1; day 2 waits 4",
+       "[6]"
+      ],
+      [
+       "7",
+       "73",
+       "—",
+       "[6, 7]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store indexes and not temperatures?",
+    "p": [
+     "The answer is a difference of positions (`i - j`), so the index is needed; the temperature is available as `temps[index]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): each day is pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack of waiting days: pop every colder day when a warmer day arrives and record the gap."
+ },
+ "742": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`graph = defaultdict(list)`",
+       "Adjacency lists node value → neighbour values",
+       "Values are unique, so values can be graph nodes"
+      ],
+      [
+       "`graph[node.val].append(parent.val)` and the reverse",
+       "Add an edge both ways",
+       "Turns the tree into an undirected graph so we can move UP as well as down"
+      ],
+      [
+       "`leaves` set",
+       "Values of nodes with no children",
+       "O(1) check for a target"
+      ],
+      [
+       "`deque([k])` + `seen`",
+       "BFS (Breadth-First Search) from the node with value k",
+       "First leaf reached = nearest leaf"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,null,null,null,5,null,6]` (a chain 1→2→4→5→6 with an extra leaf 3 under 1), `k = 2`. Graph edges: {2: [1, 4], 1: [2, 3], 4: [2, 5], 5: [4, 6], 6: [5], 3: [1]}. Leaves: [3, 6]. Nearest leaf: 3."
+    ],
+    "table": {
+     "head": [
+      "Popped",
+      "Action"
+     ],
+     "rows": [
+      [
+       "2",
+       "enqueue [1, 4]"
+      ],
+      [
+       "1",
+       "enqueue [3]"
+      ],
+      [
+       "4",
+       "enqueue [5]"
+      ],
+      [
+       "3",
+       "leaf → return"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why convert the tree to a graph?",
+    "p": [
+     "A tree node only knows its children, but the nearest leaf may lie above (through the parent). Adding parent links lets BFS expand in every direction at equal cost, so the first leaf popped is at minimum distance. Without it you would need to search the subtree and then each ancestor's other subtree separately."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the graph and queue."
+    ]
+   }
+  ],
+  "takeaway": "Add parent edges to treat the tree as a graph, then BFS (Breadth-First Search) from k until the first leaf."
+ },
+ "745": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`w[i:] + '#' + w[:j]`",
+       "Key made of a suffix, a separator, and a prefix",
+       "Every (suffix, prefix) combination of the word is indexed"
+      ],
+      [
+       "`self.d[key] = idx`",
+       "Store the word's index",
+       "Later words overwrite earlier ones, so the stored value is the LARGEST index"
+      ],
+      [
+       "`range(len(w) + 1)`",
+       "Includes the empty prefix/suffix (`''`)",
+       "Queries with an empty prefix or suffix still work"
+      ],
+      [
+       "`self.d.get(suff + '#' + pref, -1)`",
+       "One lookup per query",
+       "O(L) to hash the key; −1 when missing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = ['apple']` creates (len+1)² = 36 keys, all mapping to 0. Some keys:"
+    ],
+    "table": {
+     "head": [
+      "Query f(pref, suff)",
+      "Key looked up",
+      "In dictionary?",
+      "Result"
+     ],
+     "rows": [
+      [
+       "f('a','e')",
+       "e#a",
+       "True",
+       "0"
+      ],
+      [
+       "f('b','')",
+       "#b",
+       "False",
+       "-1"
+      ],
+      [
+       "f('','')",
+       "#",
+       "True",
+       "0"
+      ],
+      [
+       "f('apple','apple')",
+       "apple#apple",
+       "True",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why put the suffix first, then a separator, then the prefix?",
+    "p": [
+     "The separator keeps pieces from running together (`'ab' + 'c'` vs `'a' + 'bc'`). Combining both parts into one key turns a two-condition search into a single dictionary lookup. The cost moves to construction: each word of length L adds (L+1)² keys of length up to 2L."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Query: O(L) to build and hash the key. Constructor: O(n·L³) (n words, (L+1)² keys, each key up to O(L) characters).",
+     "Space: O(n·L²) keys."
+    ]
+   }
+  ],
+  "takeaway": "Precompute every suffix#prefix combination into a dict so each query is one lookup; later words overwrite earlier ones to keep the max index."
+ },
+ "751": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x * 256 + int(p)`",
+       "Builds the 32-bit number from four bytes",
+       "Base-256 positional value of the dotted address"
+      ],
+      [
+       "`(x >> s) & 255`",
+       "Extract the byte at shift s",
+       "Convert back to dotted form"
+      ],
+      [
+       "`x & -x`",
+       "Lowest set bit of x = the largest power of two that divides x",
+       "The biggest block that can START at x (start must be a multiple of the size)"
+      ],
+      [
+       "`1 << (n.bit_length() - 1)`",
+       "Largest power of two ≤ n",
+       "The biggest block that does not overshoot the count"
+      ],
+      [
+       "`33 - size.bit_length()`",
+       "Prefix length for a block of `size` addresses",
+       "size = 2^k has bit_length k+1, so this is 32 − k"
+      ],
+      [
+       "`x += size; n -= size`",
+       "Advance to the next uncovered address",
+       "Repeat greedily"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ip = 255.0.0.7`, `n = 10`:"
+    ],
+    "table": {
+     "head": [
+      "Start",
+      "Alignment limit (x & −x)",
+      "Count limit",
+      "Block size",
+      "CIDR block",
+      "n left"
+     ],
+     "rows": [
+      [
+       "255.0.0.7",
+       "1",
+       "8",
+       "1",
+       "255.0.0.7/32",
+       "9"
+      ],
+      [
+       "255.0.0.8",
+       "8",
+       "8",
+       "8",
+       "255.0.0.8/29",
+       "1"
+      ],
+      [
+       "255.0.0.16",
+       "16",
+       "1",
+       "1",
+       "255.0.0.16/32",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why take the biggest allowed block each time?",
+    "p": [
+     "A block must start at a multiple of its size, and it may not cover more addresses than remain. The size is therefore `min(alignment limit, largest power of two ≤ n)`. Taking the biggest legal block at each step never forces more blocks later, and gives the minimum count: here ['255.0.0.7/32', '255.0.0.8/29', '255.0.0.16/32']."
+    ]
+   },
+   {
+    "h": "Why the special case `if x else 1 << 32`?",
+    "p": [
+     "For x = 0 every size divides it, so `x & -x` would be 0. The code uses 2³², the largest possible block, as the alignment limit."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) blocks.",
+     "Space: O(log n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Greedy CIDR cover: at each step take the largest power-of-two block that is both aligned to the start and not larger than the remaining count."
+ },
+ "754": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abs(target)`",
+       "Distance only",
+       "Symmetric: reaching −t takes as many moves as t"
+      ],
+      [
+       "`total += k`",
+       "Sum 1 + 2 + … + k",
+       "The farthest point reachable in k moves (all moves in one direction)"
+      ],
+      [
+       "`total < target`",
+       "Cannot reach yet",
+       "Need more moves"
+      ],
+      [
+       "`(total - target) % 2`",
+       "Parity of the overshoot",
+       "Flipping move i changes the position by 2i, so the overshoot must be even"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = 2`: answer 3. The table shows each k; the loop continues while the total is short or the overshoot is odd."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "total",
+      "total − target",
+      "Status"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "-1",
+       "total < target"
+      ],
+      [
+       "2",
+       "3",
+       "1",
+       "odd difference"
+      ],
+      [
+       "3",
+       "6",
+       "4",
+       "even → done"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another run: `target = 5`",
+    "p": [
+     "Answer 5."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "total",
+      "total − target",
+      "Status"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "-4",
+       "total < target"
+      ],
+      [
+       "2",
+       "3",
+       "-2",
+       "total < target"
+      ],
+      [
+       "3",
+       "6",
+       "1",
+       "odd difference"
+      ],
+      [
+       "4",
+       "10",
+       "5",
+       "odd difference"
+      ],
+      [
+       "5",
+       "15",
+       "10",
+       "even → done"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does an even overshoot suffice?",
+    "p": [
+     "Flipping the direction of move i changes the final position by exactly 2i, so any reachable overshoot must be even, which is why odd differences are rejected. When the difference d is even, flipping move d/2 removes exactly d, and that move exists because d/2 is at most k for the first k with the right parity. As a check, the formula agrees with a brute-force Breadth-First Search (BFS) over positions for every target from 1 to 40: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(√target): total grows quadratically, so k ≈ √(2·target).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest k with 1+…+k ≥ target and (sum − target) even: flipping the direction of one move fixes any even overshoot."
+ },
+ "763": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`last = {ch: i for i, ch in enumerate(s)}`",
+       "Last index of each letter",
+       "Later duplicates overwrite earlier ones, leaving the last position"
+      ],
+      [
+       "`end = max(end, last[ch])`",
+       "The piece must extend to cover every letter's last occurrence",
+       "`end` grows as new letters are included"
+      ],
+      [
+       "`i == end`",
+       "All letters seen so far end by here",
+       "Safe place to cut"
+      ],
+      [
+       "`start = i + 1`",
+       "Next piece begins after the cut",
+       "Track the piece start for its length"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ababcbacadefegdehijhklij` → `[9, 7, 8]`. Cuts happen at these positions:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "end",
+      "Event"
+     ],
+     "rows": [
+      [
+       "8",
+       "a",
+       "8",
+       "i == end → cut piece of length 9"
+      ],
+      [
+       "15",
+       "e",
+       "15",
+       "i == end → cut piece of length 7"
+      ],
+      [
+       "23",
+       "j",
+       "23",
+       "i == end → cut piece of length 8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does cutting at `i == end` give the maximum number of pieces?",
+    "p": [
+     "`end` is the smallest index that covers the last occurrence of every letter in the current piece. Cutting any earlier would leave a letter on both sides of the cut. Cutting at the first such position keeps each piece as short as possible, so there are as many pieces as possible."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (at most 26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with last occurrences: extend the piece's end to cover every letter's last index; cut when the scan reaches it."
+ },
+ "766": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(1, len(matrix))`, `range(1, len(matrix[0]))`",
+       "Skip the first row and column",
+       "Those cells have no up-left neighbour"
+      ],
+      [
+       "`matrix[r][c] != matrix[r-1][c-1]`",
+       "Compare with the diagonal predecessor",
+       "Every diagonal is constant exactly when each cell equals its up-left neighbour"
+      ],
+      [
+       "`return False` / `return True`",
+       "Early exit at the first violation",
+       "No need to finish the scan"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3,4],[5,1,2,3],[9,5,1,2]]`: all comparisons succeed, so the answer is True."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Value",
+      "Up-left cell",
+      "Up-left value",
+      "Equal?"
+     ],
+     "rows": [
+      [
+       "(1,1)",
+       "1",
+       "(0,0)",
+       "1",
+       "True"
+      ],
+      [
+       "(1,2)",
+       "2",
+       "(0,1)",
+       "2",
+       "True"
+      ],
+      [
+       "(1,3)",
+       "3",
+       "(0,2)",
+       "3",
+       "True"
+      ],
+      [
+       "(2,1)",
+       "5",
+       "(1,0)",
+       "5",
+       "True"
+      ],
+      [
+       "(2,2)",
+       "1",
+       "(1,1)",
+       "1",
+       "True"
+      ],
+      [
+       "(2,3)",
+       "2",
+       "(1,2)",
+       "2",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case: `[[1,2],[2,2]]`",
+    "p": [
+     "Cell (1,1) = 2 but its up-left (0,0) = 1, so the function returns False at once."
+    ]
+   },
+   {
+    "h": "Why compare only neighbours?",
+    "p": [
+     "Equality is transitive: if each cell equals its predecessor, every cell on the diagonal equals the first one. So m·n adjacent comparisons prove each whole diagonal is constant."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Check each cell against its up-left neighbour; transitivity makes every diagonal constant."
+ },
+ "769": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`hi = max(hi, x)`",
+       "Largest value seen so far",
+       "The sorted position of the largest value in the current chunk"
+      ],
+      [
+       "`hi == i`",
+       "The first i+1 positions hold exactly the values 0…i",
+       "Sorting that prefix alone puts it in its final place, so a chunk can end here"
+      ],
+      [
+       "`chunks += 1`",
+       "Count it",
+       "Maximum number of chunks"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,2,3,4]` → 4 chunks:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "hi",
+      "Cut?",
+      "chunks"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "—",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "hi == i → chunk ends",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "hi == i → chunk ends",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "hi == i → chunk ends",
+       "3"
+      ],
+      [
+       "4",
+       "4",
+       "4",
+       "hi == i → chunk ends",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `hi == i` work for a permutation of 0…n−1?",
+    "p": [
+     "The first i+1 positions contain i+1 distinct values from 0…n−1. If their maximum is i, they must be exactly 0…i, i.e. the right numbers for those positions. So the prefix can be sorted independently, and cutting at every such point gives the most chunks. For `[4,3,2,1,0]` `hi` stays 4 until the last index, giving one chunk."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count prefixes whose maximum equals the index: those prefixes contain exactly 0…i and can be sorted on their own."
+ },
+ "772": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque(s)` and `it.popleft()`",
+       "The expression as a queue of characters",
+       "Recursive calls share the same queue, so each call continues where the previous one stopped"
+      ],
+      [
+       "`num = num * 10 + int(ch)`",
+       "Builds multi-digit numbers",
+       "Digit by digit"
+      ],
+      [
+       "`num = helper(it)`",
+       "On `(`, evaluate the bracket recursively and use its value as `num`",
+       "A parenthesised group acts like a single number"
+      ],
+      [
+       "`op` (the PREVIOUS operator)",
+       "Applied when the next operator or the end arrives",
+       "The number's operator is known only after it is fully read"
+      ],
+      [
+       "`stack.append(stack.pop() * num)`",
+       "`*` and `/` combine with the top immediately",
+       "Higher precedence binds before `+`/`-` are summed"
+      ],
+      [
+       "`int(stack.pop() / num)`",
+       "Division truncating toward zero",
+       "`//` would round toward −∞ for negatives"
+      ],
+      [
+       "`if ch == ')': break`",
+       "Leave this bracket level",
+       "Return control to the caller, which continues after `)`"
+      ],
+      [
+       "`sum(stack)`",
+       "`+`/`-` terms were stored as signed numbers",
+       "Addition is deferred to the end of each level"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`2*(5+5*2)/3+(6/2+8)` = 21. Each row applies an operator; `d` is the recursion depth (bracket nesting):"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Action",
+      "Stack after",
+      "Note"
+     ],
+     "rows": [
+      [
+       "0",
+       "apply '+' with 2",
+       "[2]",
+       "next op '*'"
+      ],
+      [
+       "1",
+       "apply '+' with 5",
+       "[5]",
+       "next op '+'"
+      ],
+      [
+       "1",
+       "apply '+' with 5",
+       "[5, 5]",
+       "next op '*'"
+      ],
+      [
+       "1",
+       "apply '*' with 2",
+       "[5, 10]",
+       "next op ')'"
+      ],
+      [
+       "1",
+       "return sum(stack)",
+       "[5, 10]",
+       "15"
+      ],
+      [
+       "0",
+       "apply '*' with 15",
+       "[30]",
+       "next op '/'"
+      ],
+      [
+       "0",
+       "apply '/' with 3",
+       "[10]",
+       "next op '+'"
+      ],
+      [
+       "1",
+       "apply '+' with 6",
+       "[6]",
+       "next op '/'"
+      ],
+      [
+       "1",
+       "apply '/' with 2",
+       "[3]",
+       "next op '+'"
+      ],
+      [
+       "1",
+       "apply '+' with 8",
+       "[3, 8]",
+       "next op ')'"
+      ],
+      [
+       "1",
+       "return sum(stack)",
+       "[3, 8]",
+       "11"
+      ],
+      [
+       "0",
+       "apply '+' with 11",
+       "[10, 11]",
+       "next op '('"
+      ],
+      [
+       "0",
+       "return sum(stack)",
+       "[10, 11]",
+       "21"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack of terms?",
+    "p": [
+     "`+` and `-` push a term (with its sign); `*` and `/` modify the latest term in place. At the end of a level the sum of the stack is the value, so multiplication and division automatically take precedence without a precedence table."
+    ]
+   },
+   {
+    "h": "Why does `not it` end the level?",
+    "p": [
+     "After the last character there is no closing operator to trigger the final `apply`. The `or not it` condition forces one more evaluation so the last number is processed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): each character is consumed once.",
+     "Space: O(n) for the stacks and recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Calculator with brackets: keep a stack of signed terms, apply `*`/`/` to the top immediately, and recurse for parentheses."
+ },
+ "778": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`pq` of `(time, r, c)`",
+       "Min-heap of frontier cells ordered by the time needed to reach them",
+       "Dijkstra (shortest path with non-negative costs) always expands the cheapest cell next"
+      ],
+      [
+       "`max(t, grid[a][b])`",
+       "Time to reach the neighbour: the highest cell on the path so far",
+       "The cost of a path is its maximum, not the sum"
+      ],
+      [
+       "`seen` set",
+       "Cells already queued",
+       "Marked when pushed; safe here because the first push of a cell already has its best time (see below)"
+      ],
+      [
+       "`heappop`",
+       "The cell that can be reached earliest",
+       "First time the target is popped, its time is the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,2],[1,3]]` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Popped cell",
+      "Time t",
+      "Action"
+     ],
+     "rows": [
+      [
+       "(0, 0)",
+       "0",
+       "push (1,0) at time 1, (0,1) at time 2"
+      ],
+      [
+       "(1, 0)",
+       "1",
+       "push (1,1) at time 3"
+      ],
+      [
+       "(0, 1)",
+       "2",
+       "push nothing"
+      ],
+      [
+       "(1, 1)",
+       "3",
+       "target → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can cells be marked seen when pushed?",
+    "p": [
+     "Costs here are path maxima, which never decrease along a path. Because the heap pops the smallest time first, whichever route first pushes a cell is the cheapest route to it (any later route would have max ≥ the current popped time, and cannot be lower). So no re-relaxation is needed."
+    ]
+   },
+   {
+    "h": "Alternatives",
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Dijkstra with a heap (this code)",
+       "O(n² log n)"
+      ],
+      [
+       "Binary search on time + BFS/DFS check",
+       "O(n² log n)"
+      ],
+      [
+       "Union-Find adding cells by height",
+       "O(n² log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² log n): n² cells, each a heap push and pop.",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Minimax path via Dijkstra: the cost of a route is its tallest cell, so push neighbours with max(t, height) and pop the smallest."
+ }
+}
