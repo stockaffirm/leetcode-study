@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2828","title":"Check if a String Is an Acronym of Words","level":"Easy","topic":"Array / String","question":"Given a list of words and a string s, return True if s is formed by taking the first letter of every word in order. Example: ['alice','bob','charlie'], 'abc' → True.","why":"Is the string formed by the first letters of the words, in order?","idea":"Build the acronym and compare.","input":"['alice','bob','charlie'], 'abc'","output":"True","notes":[],"best":"Build the acronym and compare.","variants":[{"name":"Join the first letters","code":"class Solution:\n    def isAcronym(self, words, s):\n        return ''.join(w[0] for w in words) == s","time":"O(n)","space":"O(n)","explain":"Build the acronym and compare.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","alice"],["s","bob"],["s","charlie"]],0],"s":["s","abc"]}},{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","alice"],["s","bob"],["s","charlie"]],0],"s":["s","abc"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","an"],["s","apple"]],0],"s":["s","a"]}},{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","an"],["s","apple"]],0],"s":["s","a"]},"ret":false}],"trunc":false}},{"name":"Compare letter by letter","tag":"Alternative","code":"class Solution:\n    def isAcronym(self, words, s):\n        if len(words) != len(s): return False\n        return all(w[0] == c for w, c in zip(words, s))","time":"O(n)","space":"O(1)","explain":"Check lengths and then every first letter.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","alice"],["s","bob"],["s","charlie"]],0],"s":["s","abc"]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","alice"],["s","bob"],["s","charlie"]],0],"s":["s","abc"]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","alice"],["s","bob"],["s","charlie"]],0],"s":["s","abc"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","an"],["s","apple"]],0],"s":["s","a"]}},{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","an"],["s","apple"]],0],"s":["s","a"]},"ret":false}],"trunc":false}}],"ex2":{"input":"length mismatch","output":"False","why":"The acronym 'aa' differs from 'a'."}};
+window.PROBLEM = {
+ "id": "2828",
+ "title": "Check if a String Is an Acronym of Words",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Given a list of words and a string s, return True if s is formed by taking the first letter of every word in order. Example: ['alice','bob','charlie'], 'abc' → True.",
+ "why": "Is the string formed by the first letters of the words, in order?",
+ "idea": "Build the acronym and compare.",
+ "input": "['alice','bob','charlie'], 'abc'",
+ "output": "True",
+ "notes": [],
+ "best": "Build the acronym and compare.",
+ "variants": [
+  {
+   "name": "Join the first letters",
+   "code": "class Solution:\n    def isAcronym(self, words, s):\n        return ''.join(w[0] for w in words) == s",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Build the acronym and compare.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Compare letter by letter",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def isAcronym(self, words, s):\n        if len(words) != len(s): return False\n        return all(w[0] == c for w, c in zip(words, s))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Check lengths and then every first letter.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

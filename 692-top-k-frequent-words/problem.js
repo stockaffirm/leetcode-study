@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"692","title":"Top K Frequent Words","level":"Medium","topic":"Hash Map / Set","question":"Given a list of words and a number k, return the k words that appear most often. Put the most frequent first; if two words appear the same number of times, the one that comes first in the alphabet goes first. Example: [i, love, leetcode, i, love, coding], k=2 → 'i' and 'love' each appear twice → ['i','love'].","why":"Return the k most frequent words, most frequent first; words with the same count go in alphabetical order.","idea":"Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.","input":"[i, love, leetcode, i, love, coding], k=2","output":"[\"i\", \"love\"]","notes":[],"best":"Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.","variants":[{"name":"Count + sort by (−count, word)","code":"class Solution:\n    def topKFrequent(self, words, k):\n        cnt = Counter(words)\n        return sorted(cnt, key=lambda w: (-cnt[w], w))[:k]","time":"O(n log n)","space":"O(n)","explain":"Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]]},"ret":["l",[["s","i"],["s","love"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]]},"ret":["l",[["s","c"],["s","a"]],0]}],"trunc":false}},{"name":"Min-heap of (−count, word)","tag":"Alternative","code":"class Solution:\n    def topKFrequent(self, words, k):\n        cnt = Counter(words)\n        heap = [(-c, w) for w, c in cnt.items()]\n        heapify(heap)\n        return [heappop(heap)[1] for _ in range(k)]","time":"O(n + k log n)","space":"O(n)","explain":"Put (−count, word) pairs in a heap; the smallest tuple is the most frequent, alphabetical on ties.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]]}},{"l":5,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]],"heap":["l",[["l",[-2,["s","i"]],1],["l",[-2,["s","love"]],1],["l",[-1,["s","leetcode"]],1],["l",[-1,["s","coding"]],1]],0]}},{"l":6,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]],"heap":["l",[["l",[-2,["s","i"]],1],["l",[-2,["s","love"]],1],["l",[-1,["s","leetcode"]],1],["l",[-1,["s","coding"]],1]],0]}},{"l":6,"d":1,"f":1,"v":{"words":["l",[["s","i"],["s","love"],["s","leetcode"],["s","i"],["s","love"],["s","coding"]],0],"k":2,"cnt":["d",[[["s","i"],2],[["s","love"],2],[["s","leetcode"],1],[["s","coding"],1]]],"heap":["l",[["l",[-1,["s","coding"]],1],["l",[-1,["s","leetcode"]],1]],0]},"ret":["l",[["s","i"],["s","love"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]]}},{"l":5,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]],"heap":["l",[["l",[-1,["s","a"]],1],["l",[-1,["s","b"]],1],["l",[-2,["s","c"]],1]],0]}},{"l":6,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]],"heap":["l",[["l",[-2,["s","c"]],1],["l",[-1,["s","b"]],1],["l",[-1,["s","a"]],1]],0]}},{"l":6,"d":1,"f":1,"v":{"words":["l",[["s","a"],["s","b"],["s","c"],["s","c"]],0],"k":2,"cnt":["d",[[["s","a"],1],[["s","b"],1],[["s","c"],2]]],"heap":["l",[["l",[-1,["s","b"]],1]],0]},"ret":["l",[["s","c"],["s","a"]],0]}],"trunc":false}}],"ex2":{"input":"[a, b, c, c], k=2","output":"['c', 'a']","why":"'c' appears twice; 'a' and 'b' tie at once, and ties are broken alphabetically, so 'a' comes second."}};
+window.PROBLEM = {
+ "id": "692",
+ "title": "Top K Frequent Words",
+ "level": "Medium",
+ "topic": "Hash Map / Set",
+ "question": "Given a list of words and a number k, return the k words that appear most often. Put the most frequent first; if two words appear the same number of times, the one that comes first in the alphabet goes first. Example: [i, love, leetcode, i, love, coding], k=2 → 'i' and 'love' each appear twice → ['i','love'].",
+ "why": "Return the k most frequent words, most frequent first; words with the same count go in alphabetical order.",
+ "idea": "Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.",
+ "input": "[i, love, leetcode, i, love, coding], k=2",
+ "output": "[\"i\", \"love\"]",
+ "notes": [],
+ "best": "Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.",
+ "variants": [
+  {
+   "name": "Count + sort by (−count, word)",
+   "code": "class Solution:\n    def topKFrequent(self, words, k):\n        cnt = Counter(words)\n        return sorted(cnt, key=lambda w: (-cnt[w], w))[:k]",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Count the words, then sort by two keys: highest count first, then alphabetical. Take the first k.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Min-heap of (−count, word)",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def topKFrequent(self, words, k):\n        cnt = Counter(words)\n        heap = [(-c, w) for w, c in cnt.items()]\n        heapify(heap)\n        return [heappop(heap)[1] for _ in range(k)]",
+   "time": "O(n + k log n)",
+   "space": "O(n)",
+   "explain": "Put (−count, word) pairs in a heap; the smallest tuple is the most frequent, alphabetical on ties.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

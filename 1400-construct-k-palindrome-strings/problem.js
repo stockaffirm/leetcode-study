@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1400","title":"Construct K Palindrome Strings","level":"Medium","topic":"Greedy","question":"Can ALL the characters of the string s be used to build exactly k non-empty palindromes? Example: 'annabelle', k=2 → True ('anna' + 'elble'); 'leetcode', k=3 → False.","why":"Can all the letters of a string be used to make exactly k non-empty palindromes?","idea":"Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).","input":"'annabelle', k=2","output":"True","notes":[],"best":"Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).","variants":[{"name":"Count the odd letters","code":"class Solution:\n    def canConstruct(self, s, k):\n        odd = sum(c % 2 for c in Counter(s).values())\n        return odd <= k <= len(s)","time":"O(n)","space":"O(1)","explain":"Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"odd":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"odd":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"odd":6}},{"l":4,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"odd":6},"ret":false}],"trunc":false}},{"name":"XOR bitmask of letter parity","tag":"Alternative","code":"class Solution:\n    def canConstruct(self, s, k):\n        if k > len(s): return False\n        mask = 0\n        for ch in s: mask ^= 1 << (ord(ch) - 97)\n        return bin(mask).count('1') <= k","time":"O(n)","space":"O(1)","explain":"Toggle one bit per letter; the set bits are the odd letters.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":1,"ch":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":8193,"ch":["s","n"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":1,"ch":["s","n"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":0,"ch":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":2,"ch":["s","b"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":18,"ch":["s","e"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":2066,"ch":["s","l"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":18,"ch":["s","l"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":2,"ch":["s","e"]}},{"l":6,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":2,"ch":["s","e"]}},{"l":6,"d":1,"f":1,"v":{"s":["s","annabelle"],"k":2,"mask":2,"ch":["s","e"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":2048,"ch":["s","l"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":2064,"ch":["s","e"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":2048,"ch":["s","e"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":526336,"ch":["s","t"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":526340,"ch":["s","c"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":542724,"ch":["s","o"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":542732,"ch":["s","d"]}},{"l":5,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":542748,"ch":["s","e"]}},{"l":6,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":542748,"ch":["s","e"]}},{"l":6,"d":1,"f":1,"v":{"s":["s","leetcode"],"k":3,"mask":542748,"ch":["s","e"]},"ret":false}],"trunc":false}}],"ex2":{"input":"too few palindromes","output":"False","why":"Odd letters l, t, c, o, d need 5 palindromes: impossible with 3."}};
+window.PROBLEM = {
+ "id": "1400",
+ "title": "Construct K Palindrome Strings",
+ "level": "Medium",
+ "topic": "Greedy",
+ "question": "Can ALL the characters of the string s be used to build exactly k non-empty palindromes? Example: 'annabelle', k=2 → True ('anna' + 'elble'); 'leetcode', k=3 → False.",
+ "why": "Can all the letters of a string be used to make exactly k non-empty palindromes?",
+ "idea": "Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).",
+ "input": "'annabelle', k=2",
+ "output": "True",
+ "notes": [],
+ "best": "Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).",
+ "variants": [
+  {
+   "name": "Count the odd letters",
+   "code": "class Solution:\n    def canConstruct(self, s, k):\n        odd = sum(c % 2 for c in Counter(s).values())\n        return odd <= k <= len(s)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Each odd-count letter must be the centre of a different palindrome, so odd letters ≤ k; and k ≤ the number of letters (each palindrome needs at least one).",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "XOR bitmask of letter parity",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def canConstruct(self, s, k):\n        if k > len(s): return False\n        mask = 0\n        for ch in s: mask ^= 1 << (ord(ch) - 97)\n        return bin(mask).count('1') <= k",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Toggle one bit per letter; the set bits are the odd letters.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

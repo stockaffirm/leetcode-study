@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1427","title":"Perform String Shifts","level":"Easy","topic":"Array / String","question":"shift[i] = [direction, amount]: direction 0 is a left rotation and 1 is a right rotation of the string by that many places. Apply all shifts in order and return the string. Example: 'abc', [[0,1],[1,2]] → 'cab'.","why":"'abc' with [0,1] (left 1) and [1,2] (right 2): net right 1 → 'cab'.","idea":"Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.","input":"s = \"abc\", shift = [[0,1],[1,2]]","output":"\"cab\"","notes":[],"best":"Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.","variants":[{"name":"Add up the net shift","code":"class Solution:\n    def stringShift(self, s, shift):\n        net = sum(a if d == 0 else -a for d, a in shift) % len(s)\n        return s[net:] + s[:net]","time":"O(n + m)","space":"O(n)","explain":"Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"net":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"net":2},"ret":["s","cab"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"net":4}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"net":4},"ret":["s","efgabcd"]}],"trunc":false}},{"name":"Apply every shift","tag":"Brute force","code":"class Solution:\n    def stringShift(self, s, shift):\n        for d, a in shift:\n            a %= len(s)\n            s = s[a:] + s[:a] if d == 0 else s[-a:] + s[:-a] if a else s\n        return s","time":"O(m·n)","space":"O(n)","explain":"Rotate the string once per instruction.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":0,"a":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","abc"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":0,"a":1}},{"l":3,"d":1,"f":1,"v":{"s":["s","bca"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":0,"a":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","bca"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":1,"a":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","bca"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":1,"a":2}},{"l":3,"d":1,"f":1,"v":{"s":["s","cab"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":1,"a":2}},{"l":6,"d":1,"f":1,"v":{"s":["s","cab"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":1,"a":2}},{"l":6,"d":1,"f":1,"v":{"s":["s","cab"],"shift":["l",[["l",[0,1],0],["l",[1,2],0]],0],"d":1,"a":2},"ret":["s","cab"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":3,"d":1,"f":1,"v":{"s":["s","gabcdef"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","gabcdef"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","gabcdef"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":3,"d":1,"f":1,"v":{"s":["s","fgabcde"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","fgabcde"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":0,"a":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","fgabcde"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":0,"a":2}},{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":0,"a":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","abcdefg"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":3}},{"l":3,"d":1,"f":1,"v":{"s":["s","efgabcd"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":3}},{"l":6,"d":1,"f":1,"v":{"s":["s","efgabcd"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":3}},{"l":6,"d":1,"f":1,"v":{"s":["s","efgabcd"],"shift":["l",[["l",[1,1],0],["l",[1,1],0],["l",[0,2],0],["l",[1,3],0]],0],"d":1,"a":3},"ret":["s","efgabcd"]}],"trunc":false}}],"ex2":{"input":"mixed shifts","output":"'efgabcd'","why":"Net right shift of 3."}};
+window.PROBLEM = {
+ "id": "1427",
+ "title": "Perform String Shifts",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "shift[i] = [direction, amount]: direction 0 is a left rotation and 1 is a right rotation of the string by that many places. Apply all shifts in order and return the string. Example: 'abc', [[0,1],[1,2]] → 'cab'.",
+ "why": "'abc' with [0,1] (left 1) and [1,2] (right 2): net right 1 → 'cab'.",
+ "idea": "Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.",
+ "input": "s = \"abc\", shift = [[0,1],[1,2]]",
+ "output": "\"cab\"",
+ "notes": [],
+ "best": "Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.",
+ "variants": [
+  {
+   "name": "Add up the net shift",
+   "code": "class Solution:\n    def stringShift(self, s, shift):\n        net = sum(a if d == 0 else -a for d, a in shift) % len(s)\n        return s[net:] + s[:net]",
+   "time": "O(n + m)",
+   "space": "O(n)",
+   "explain": "Left shifts and right shifts cancel. Sum them into one net amount (left positive), reduce modulo the length, and rotate once.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Apply every shift",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def stringShift(self, s, shift):\n        for d, a in shift:\n            a %= len(s)\n            s = s[a:] + s[:a] if d == 0 else s[-a:] + s[:-a] if a else s\n        return s",
+   "time": "O(m·n)",
+   "space": "O(n)",
+   "explain": "Rotate the string once per instruction.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

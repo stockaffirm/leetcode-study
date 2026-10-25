@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"441","title":"Arranging Coins","level":"Easy","topic":"Binary Search","question":"Coins are put into a staircase: row k needs exactly k coins. Given n coins, return the number of COMPLETE rows. Example: n=5 → 2.","why":"5 coins: rows of 1, 2, 2 → 2 full rows (the 3rd row would need 3).","idea":"k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.","input":"n = 5","output":"2","notes":[],"best":"k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.","variants":[{"name":"Binary search the number of rows","code":"class Solution:\n    def arrangeCoins(self, n):\n        lo, hi = 0, n\n        while lo < hi:\n            mid = (lo + hi + 1) // 2\n            if mid * (mid + 1) // 2 <= n:\n                lo = mid\n            else:\n                hi = mid - 1\n        return lo","time":"O(log n)","space":"O(1)","explain":"k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":5}},{"l":5,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":5}},{"l":6,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":5,"mid":3}},{"l":9,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":5,"mid":3}},{"l":4,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":2,"mid":3}},{"l":5,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":2,"mid":3}},{"l":6,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":2,"mid":1}},{"l":7,"d":1,"f":1,"v":{"n":5,"lo":0,"hi":2,"mid":1}},{"l":4,"d":1,"f":1,"v":{"n":5,"lo":1,"hi":2,"mid":1}},{"l":5,"d":1,"f":1,"v":{"n":5,"lo":1,"hi":2,"mid":1}},{"l":6,"d":1,"f":1,"v":{"n":5,"lo":1,"hi":2,"mid":2}},{"l":7,"d":1,"f":1,"v":{"n":5,"lo":1,"hi":2,"mid":2}},{"l":4,"d":1,"f":1,"v":{"n":5,"lo":2,"hi":2,"mid":2}},{"l":10,"d":1,"f":1,"v":{"n":5,"lo":2,"hi":2,"mid":2}},{"l":10,"d":1,"f":1,"v":{"n":5,"lo":2,"hi":2,"mid":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":8}},{"l":4,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":8}},{"l":5,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":8}},{"l":6,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":8,"mid":4}},{"l":9,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":8,"mid":4}},{"l":4,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":3,"mid":4}},{"l":5,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":3,"mid":4}},{"l":6,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":3,"mid":2}},{"l":7,"d":1,"f":1,"v":{"n":8,"lo":0,"hi":3,"mid":2}},{"l":4,"d":1,"f":1,"v":{"n":8,"lo":2,"hi":3,"mid":2}},{"l":5,"d":1,"f":1,"v":{"n":8,"lo":2,"hi":3,"mid":2}},{"l":6,"d":1,"f":1,"v":{"n":8,"lo":2,"hi":3,"mid":3}},{"l":7,"d":1,"f":1,"v":{"n":8,"lo":2,"hi":3,"mid":3}},{"l":4,"d":1,"f":1,"v":{"n":8,"lo":3,"hi":3,"mid":3}},{"l":10,"d":1,"f":1,"v":{"n":8,"lo":3,"hi":3,"mid":3}},{"l":10,"d":1,"f":1,"v":{"n":8,"lo":3,"hi":3,"mid":3},"ret":3}],"trunc":false}},{"name":"Subtract row by row","tag":"Brute force","code":"class Solution:\n    def arrangeCoins(self, n):\n        k = 0\n        while n >= k + 1:\n            k += 1\n            n -= k\n        return k","time":"O(√n)","space":"O(1)","explain":"Fill row 1, then row 2 … while enough coins remain.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"k":0}},{"l":5,"d":1,"f":1,"v":{"n":5,"k":0}},{"l":6,"d":1,"f":1,"v":{"n":5,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":1}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":1}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":2,"k":2}},{"l":7,"d":1,"f":1,"v":{"n":2,"k":2}},{"l":7,"d":1,"f":1,"v":{"n":2,"k":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":8}},{"l":4,"d":1,"f":1,"v":{"n":8,"k":0}},{"l":5,"d":1,"f":1,"v":{"n":8,"k":0}},{"l":6,"d":1,"f":1,"v":{"n":8,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":7,"k":1}},{"l":5,"d":1,"f":1,"v":{"n":7,"k":1}},{"l":6,"d":1,"f":1,"v":{"n":7,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":5,"k":2}},{"l":5,"d":1,"f":1,"v":{"n":5,"k":2}},{"l":6,"d":1,"f":1,"v":{"n":5,"k":3}},{"l":4,"d":1,"f":1,"v":{"n":2,"k":3}},{"l":7,"d":1,"f":1,"v":{"n":2,"k":3}},{"l":7,"d":1,"f":1,"v":{"n":2,"k":3},"ret":3}],"trunc":false}}],"ex2":{"input":"n = 8","output":"3","why":"Rows 1, 2, 3 use 6 coins; 2 are left."}};
+window.PROBLEM = {
+ "id": "441",
+ "title": "Arranging Coins",
+ "level": "Easy",
+ "topic": "Binary Search",
+ "question": "Coins are put into a staircase: row k needs exactly k coins. Given n coins, return the number of COMPLETE rows. Example: n=5 → 2.",
+ "why": "5 coins: rows of 1, 2, 2 → 2 full rows (the 3rd row would need 3).",
+ "idea": "k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.",
+ "input": "n = 5",
+ "output": "2",
+ "notes": [],
+ "best": "k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.",
+ "variants": [
+  {
+   "name": "Binary search the number of rows",
+   "code": "class Solution:\n    def arrangeCoins(self, n):\n        lo, hi = 0, n\n        while lo < hi:\n            mid = (lo + hi + 1) // 2\n            if mid * (mid + 1) // 2 <= n:\n                lo = mid\n            else:\n                hi = mid - 1\n        return lo",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "k full rows need k(k+1)/2 coins. That grows with k, so binary search the largest k with k(k+1)/2 ≤ n.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Subtract row by row",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def arrangeCoins(self, n):\n        k = 0\n        while n >= k + 1:\n            k += 1\n            n -= k\n        return k",
+   "time": "O(√n)",
+   "space": "O(1)",
+   "explain": "Fill row 1, then row 2 … while enough coins remain.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

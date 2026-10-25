@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"263","title":"Ugly Number","level":"Easy","topic":"Math / Bit Manipulation","question":"An ugly number is a positive whole number whose only prime factors are 2, 3 and 5 (1 counts as ugly). Given n, return true if it is ugly. Example: 6 = 2 × 3 → true; 14 = 2 × 7 → false (7 is another prime factor).","why":"Is the number made only from the prime factors 2, 3 and 5? 6 yes, 14 no.","idea":"Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.","input":"n = 6","output":"True","notes":[],"best":"Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.","variants":[{"name":"Divide out 2, 3 and 5","code":"class Solution:\n    def isUgly(self, n):\n        if n <= 0: return False\n        for p in (2, 3, 5):\n            while n % p == 0: n //= p\n        return n == 1","time":"O(log n)","space":"O(1)","explain":"Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":6}},{"l":4,"d":1,"f":1,"v":{"n":6}},{"l":5,"d":1,"f":1,"v":{"n":6,"p":2}},{"l":5,"d":1,"f":1,"v":{"n":3,"p":2}},{"l":4,"d":1,"f":1,"v":{"n":3,"p":2}},{"l":5,"d":1,"f":1,"v":{"n":3,"p":3}},{"l":5,"d":1,"f":1,"v":{"n":1,"p":3}},{"l":4,"d":1,"f":1,"v":{"n":1,"p":3}},{"l":5,"d":1,"f":1,"v":{"n":1,"p":5}},{"l":4,"d":1,"f":1,"v":{"n":1,"p":5}},{"l":6,"d":1,"f":1,"v":{"n":1,"p":5}},{"l":6,"d":1,"f":1,"v":{"n":1,"p":5},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":14}},{"l":4,"d":1,"f":1,"v":{"n":14}},{"l":5,"d":1,"f":1,"v":{"n":14,"p":2}},{"l":5,"d":1,"f":1,"v":{"n":7,"p":2}},{"l":4,"d":1,"f":1,"v":{"n":7,"p":2}},{"l":5,"d":1,"f":1,"v":{"n":7,"p":3}},{"l":4,"d":1,"f":1,"v":{"n":7,"p":3}},{"l":5,"d":1,"f":1,"v":{"n":7,"p":5}},{"l":4,"d":1,"f":1,"v":{"n":7,"p":5}},{"l":6,"d":1,"f":1,"v":{"n":7,"p":5}},{"l":6,"d":1,"f":1,"v":{"n":7,"p":5},"ret":false}],"trunc":false}},{"name":"Recursion","tag":"Alternative","code":"class Solution:\n    def isUgly(self, n):\n        if n <= 0: return False\n        if n == 1: return True\n        for p in (2, 3, 5):\n            if n % p == 0: return self.isUgly(n // p)\n        return False","time":"O(log n)","space":"O(log n)","explain":"Divide by the first of 2, 3, 5 that divides n and recurse.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":6}},{"l":4,"d":1,"f":1,"v":{"n":6}},{"l":5,"d":1,"f":1,"v":{"n":6}},{"l":6,"d":1,"f":1,"v":{"n":6,"p":2}},{"l":3,"d":2,"f":2,"v":{"n":3}},{"l":4,"d":2,"f":2,"v":{"n":3}},{"l":5,"d":2,"f":2,"v":{"n":3}},{"l":6,"d":2,"f":2,"v":{"n":3,"p":2}},{"l":5,"d":2,"f":2,"v":{"n":3,"p":2}},{"l":6,"d":2,"f":2,"v":{"n":3,"p":3}},{"l":3,"d":3,"f":3,"v":{"n":1}},{"l":4,"d":3,"f":3,"v":{"n":1}},{"l":4,"d":3,"f":3,"v":{"n":1},"ret":true},{"l":6,"d":2,"f":2,"v":{"n":3,"p":3},"ret":true},{"l":6,"d":1,"f":1,"v":{"n":6,"p":2},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":14}},{"l":4,"d":1,"f":1,"v":{"n":14}},{"l":5,"d":1,"f":1,"v":{"n":14}},{"l":6,"d":1,"f":1,"v":{"n":14,"p":2}},{"l":3,"d":2,"f":2,"v":{"n":7}},{"l":4,"d":2,"f":2,"v":{"n":7}},{"l":5,"d":2,"f":2,"v":{"n":7}},{"l":6,"d":2,"f":2,"v":{"n":7,"p":2}},{"l":5,"d":2,"f":2,"v":{"n":7,"p":2}},{"l":6,"d":2,"f":2,"v":{"n":7,"p":3}},{"l":5,"d":2,"f":2,"v":{"n":7,"p":3}},{"l":6,"d":2,"f":2,"v":{"n":7,"p":5}},{"l":5,"d":2,"f":2,"v":{"n":7,"p":5}},{"l":7,"d":2,"f":2,"v":{"n":7,"p":5}},{"l":7,"d":2,"f":2,"v":{"n":7,"p":5},"ret":false},{"l":6,"d":1,"f":1,"v":{"n":14,"p":2},"ret":false}],"trunc":false}}],"ex2":{"input":"n = 14","output":"False","why":"14 = 2 × 7: the factor 7 is not allowed."}};
+window.PROBLEM = {
+ "id": "263",
+ "title": "Ugly Number",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "An ugly number is a positive whole number whose only prime factors are 2, 3 and 5 (1 counts as ugly). Given n, return true if it is ugly. Example: 6 = 2 × 3 → true; 14 = 2 × 7 → false (7 is another prime factor).",
+ "why": "Is the number made only from the prime factors 2, 3 and 5? 6 yes, 14 no.",
+ "idea": "Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.",
+ "input": "n = 6",
+ "output": "True",
+ "notes": [],
+ "best": "Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.",
+ "variants": [
+  {
+   "name": "Divide out 2, 3 and 5",
+   "code": "class Solution:\n    def isUgly(self, n):\n        if n <= 0: return False\n        for p in (2, 3, 5):\n            while n % p == 0: n //= p\n        return n == 1",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "Keep dividing by 2, then 3, then 5 while possible. If you end at 1 the number is 'ugly'.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Recursion",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def isUgly(self, n):\n        if n <= 0: return False\n        if n == 1: return True\n        for p in (2, 3, 5):\n            if n % p == 0: return self.isUgly(n // p)\n        return False",
+   "time": "O(log n)",
+   "space": "O(log n)",
+   "explain": "Divide by the first of 2, 3, 5 that divides n and recurse.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

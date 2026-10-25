@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"277","title":"Find the Celebrity","level":"Medium","topic":"Graph","question":"At a party of n people, labelled 0 to n−1, a celebrity is someone who is known by EVERYONE else but knows NOBODY. You can only ask one kind of question: knows(a, b), which says whether person a knows person b. Find the celebrity, or return -1 if there is none, asking as few questions as you can. Example: 3 people where everybody knows person 1 and person 1 knows nobody → 1.","why":"At a party a celebrity is known by everybody but knows nobody. You can only ask 'does A know B?'. Find the celebrity with as few questions as you can.","idea":"Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.","input":"3 people; everybody knows person 1, who knows nobody","output":"1","notes":[],"best":"Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.","variants":[{"name":"Eliminate candidates, then verify","code":"class Solution:\n    def findCelebrity(self, n):\n        cand = 0\n        for i in range(1, n):\n            if knows(cand, i): cand = i\n        for i in range(n):\n            if i != cand and (knows(cand, i) or not knows(i, cand)): return -1\n        return cand","time":"O(n) questions","space":"O(1)","explain":"Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":3}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":0}},{"l":5,"d":1,"f":1,"v":{"n":3,"cand":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":1,"i":1}},{"l":5,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":1,"i":0}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":1,"i":0}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":1,"i":1}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":1,"i":1}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":8,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2}},{"l":8,"d":1,"f":1,"v":{"n":3,"cand":1,"i":2},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":3}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":0}},{"l":5,"d":1,"f":1,"v":{"n":3,"cand":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":0,"i":1}},{"l":5,"d":1,"f":1,"v":{"n":3,"cand":0,"i":2}},{"l":4,"d":1,"f":1,"v":{"n":3,"cand":2,"i":2}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":2,"i":0}},{"l":6,"d":1,"f":1,"v":{"n":3,"cand":2,"i":0}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":2,"i":1}},{"l":7,"d":1,"f":1,"v":{"n":3,"cand":2,"i":1},"ret":-1}],"trunc":false}},{"name":"Test every person","tag":"Brute force","code":"class Solution:\n    def findCelebrity(self, n):\n        for c in range(n):\n            if all(i == c or (knows(i, c) and not knows(c, i)) for i in range(n)): return c\n        return -1","time":"O(n²)","space":"O(1)","explain":"For each person check that everyone else knows them and they know nobody.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":3}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":0}},{"l":3,"d":1,"f":1,"v":{"n":3,"c":0}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":1}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":1},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":3}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":0}},{"l":3,"d":1,"f":1,"v":{"n":3,"c":0}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":1}},{"l":3,"d":1,"f":1,"v":{"n":3,"c":1}},{"l":4,"d":1,"f":1,"v":{"n":3,"c":2}},{"l":3,"d":1,"f":1,"v":{"n":3,"c":2}},{"l":5,"d":1,"f":1,"v":{"n":3,"c":2}},{"l":5,"d":1,"f":1,"v":{"n":3,"c":2},"ret":-1}],"trunc":false}}],"ex2":{"input":"3 people in a ring of 'knows'","output":"-1","why":"Everyone knows someone, so nobody is known-by-all and knows-nobody: there is no celebrity (-1)."}};
+window.PROBLEM = {
+ "id": "277",
+ "title": "Find the Celebrity",
+ "level": "Medium",
+ "topic": "Graph",
+ "question": "At a party of n people, labelled 0 to n−1, a celebrity is someone who is known by EVERYONE else but knows NOBODY. You can only ask one kind of question: knows(a, b), which says whether person a knows person b. Find the celebrity, or return -1 if there is none, asking as few questions as you can. Example: 3 people where everybody knows person 1 and person 1 knows nobody → 1.",
+ "why": "At a party a celebrity is known by everybody but knows nobody. You can only ask 'does A know B?'. Find the celebrity with as few questions as you can.",
+ "idea": "Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.",
+ "input": "3 people; everybody knows person 1, who knows nobody",
+ "output": "1",
+ "notes": [],
+ "best": "Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.",
+ "variants": [
+  {
+   "name": "Eliminate candidates, then verify",
+   "code": "class Solution:\n    def findCelebrity(self, n):\n        cand = 0\n        for i in range(1, n):\n            if knows(cand, i): cand = i\n        for i in range(n):\n            if i != cand and (knows(cand, i) or not knows(i, cand)): return -1\n        return cand",
+   "time": "O(n) questions",
+   "space": "O(1)",
+   "explain": "Each question removes one person: if the candidate knows i, the candidate cannot be the celebrity (i is the new candidate); otherwise i cannot be. After one pass check the single survivor against everyone.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Test every person",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def findCelebrity(self, n):\n        for c in range(n):\n            if all(i == c or (knows(i, c) and not knows(c, i)) for i in range(n)): return c\n        return -1",
+   "time": "O(n²)",
+   "space": "O(1)",
+   "explain": "For each person check that everyone else knows them and they know nobody.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

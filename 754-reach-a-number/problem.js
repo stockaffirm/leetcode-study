@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"754","title":"Reach a Number","level":"Medium","topic":"Math / Bit Manipulation","question":"You start at 0 and make moves 1, 2, 3 …: on move i you walk i steps left or right. Return the fewest moves to reach target. Example: target 2 → 3.","why":"target 2: 1+2 = 3 overshoots by 1 (odd), 1+2+3 = 6 overshoots by 4 (even) → flip −2: 1−2+3 = 2 → 3 moves.","idea":"On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.","input":"target = 2","output":"3","notes":[],"best":"On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.","variants":[{"name":"Smallest k whose sum covers the target with right parity","code":"class Solution:\n    def reachNumber(self, target):\n        target = abs(target)\n        k = 0\n        total = 0\n        while total < target or (total - target) % 2:\n            k += 1\n            total += k\n        return k","time":"O(√target)","space":"O(1)","explain":"On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"target":2}},{"l":4,"d":1,"f":1,"v":{"target":2}},{"l":5,"d":1,"f":1,"v":{"target":2,"k":0}},{"l":6,"d":1,"f":1,"v":{"target":2,"k":0,"total":0}},{"l":7,"d":1,"f":1,"v":{"target":2,"k":0,"total":0}},{"l":8,"d":1,"f":1,"v":{"target":2,"k":1,"total":0}},{"l":6,"d":1,"f":1,"v":{"target":2,"k":1,"total":1}},{"l":7,"d":1,"f":1,"v":{"target":2,"k":1,"total":1}},{"l":8,"d":1,"f":1,"v":{"target":2,"k":2,"total":1}},{"l":6,"d":1,"f":1,"v":{"target":2,"k":2,"total":3}},{"l":7,"d":1,"f":1,"v":{"target":2,"k":2,"total":3}},{"l":8,"d":1,"f":1,"v":{"target":2,"k":3,"total":3}},{"l":6,"d":1,"f":1,"v":{"target":2,"k":3,"total":6}},{"l":9,"d":1,"f":1,"v":{"target":2,"k":3,"total":6}},{"l":9,"d":1,"f":1,"v":{"target":2,"k":3,"total":6},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"target":3}},{"l":4,"d":1,"f":1,"v":{"target":3}},{"l":5,"d":1,"f":1,"v":{"target":3,"k":0}},{"l":6,"d":1,"f":1,"v":{"target":3,"k":0,"total":0}},{"l":7,"d":1,"f":1,"v":{"target":3,"k":0,"total":0}},{"l":8,"d":1,"f":1,"v":{"target":3,"k":1,"total":0}},{"l":6,"d":1,"f":1,"v":{"target":3,"k":1,"total":1}},{"l":7,"d":1,"f":1,"v":{"target":3,"k":1,"total":1}},{"l":8,"d":1,"f":1,"v":{"target":3,"k":2,"total":1}},{"l":6,"d":1,"f":1,"v":{"target":3,"k":2,"total":3}},{"l":9,"d":1,"f":1,"v":{"target":3,"k":2,"total":3}},{"l":9,"d":1,"f":1,"v":{"target":3,"k":2,"total":3},"ret":2}],"trunc":false}},{"name":"Closed form with square root","tag":"Alternative","code":"class Solution:\n    def reachNumber(self, target):\n        t = abs(target)\n        k = int(((1 + 8 * t) ** 0.5 - 1) / 2)\n        while k * (k + 1) // 2 < t or (k * (k + 1) // 2 - t) % 2:\n            k += 1\n        return k","time":"O(1)","space":"O(1)","explain":"Jump straight to k ≈ (√(1 + 8t) − 1) / 2, then increase k until the parity is right.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"target":2}},{"l":4,"d":1,"f":1,"v":{"target":2,"t":2}},{"l":5,"d":1,"f":1,"v":{"target":2,"t":2,"k":1}},{"l":6,"d":1,"f":1,"v":{"target":2,"t":2,"k":1}},{"l":5,"d":1,"f":1,"v":{"target":2,"t":2,"k":2}},{"l":6,"d":1,"f":1,"v":{"target":2,"t":2,"k":2}},{"l":5,"d":1,"f":1,"v":{"target":2,"t":2,"k":3}},{"l":7,"d":1,"f":1,"v":{"target":2,"t":2,"k":3}},{"l":7,"d":1,"f":1,"v":{"target":2,"t":2,"k":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"target":3}},{"l":4,"d":1,"f":1,"v":{"target":3,"t":3}},{"l":5,"d":1,"f":1,"v":{"target":3,"t":3,"k":2}},{"l":7,"d":1,"f":1,"v":{"target":3,"t":3,"k":2}},{"l":7,"d":1,"f":1,"v":{"target":3,"t":3,"k":2},"ret":2}],"trunc":false}}],"ex2":{"input":"target 3","output":"2","why":"1 + 2."}};
+window.PROBLEM = {
+ "id": "754",
+ "title": "Reach a Number",
+ "level": "Medium",
+ "topic": "Math / Bit Manipulation",
+ "question": "You start at 0 and make moves 1, 2, 3 …: on move i you walk i steps left or right. Return the fewest moves to reach target. Example: target 2 → 3.",
+ "why": "target 2: 1+2 = 3 overshoots by 1 (odd), 1+2+3 = 6 overshoots by 4 (even) → flip −2: 1−2+3 = 2 → 3 moves.",
+ "idea": "On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.",
+ "input": "target = 2",
+ "output": "3",
+ "notes": [],
+ "best": "On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.",
+ "variants": [
+  {
+   "name": "Smallest k whose sum covers the target with right parity",
+   "code": "class Solution:\n    def reachNumber(self, target):\n        target = abs(target)\n        k = 0\n        total = 0\n        while total < target or (total - target) % 2:\n            k += 1\n            total += k\n        return k",
+   "time": "O(√target)",
+   "space": "O(1)",
+   "explain": "On move i you step i left or right. Work with |target|. Take the smallest k with 1+…+k ≥ target. The overshoot (sum − target) can be fixed by flipping a step of size overshoot/2 to the other direction, which needs the overshoot to be even; otherwise keep increasing k until it is.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Closed form with square root",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def reachNumber(self, target):\n        t = abs(target)\n        k = int(((1 + 8 * t) ** 0.5 - 1) / 2)\n        while k * (k + 1) // 2 < t or (k * (k + 1) // 2 - t) % 2:\n            k += 1\n        return k",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Jump straight to k ≈ (√(1 + 8t) − 1) / 2, then increase k until the parity is right.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1394","title":"Find Lucky Integer in an Array","level":"Easy","topic":"Hash Map / Set","question":"A lucky integer has a frequency equal to its value. Return the largest lucky integer of the array, or −1. Example: [2,2,3,4] → 2.","why":"[2,2,3,4]: 2 appears twice, so 2 is lucky (value = frequency). 3 and 4 appear once → the answer is 2.","idea":"Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.","input":"arr = [2,2,3,4]","output":"2","notes":[],"best":"Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.","variants":[{"name":"Count, then compare value with count","code":"class Solution:\n    def findLucky(self, arr):\n        cnt = Counter(arr)\n        return max((x for x, c in cnt.items() if x == c), default=-1)","time":"O(n)","space":"O(n)","explain":"Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"cnt":["d",[[2,2],[3,1],[4,1]]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"cnt":["d",[[2,2],[3,1],[4,1]]]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[5],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[5],0],"cnt":["d",[[5,1]]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[5],0],"cnt":["d",[[5,1]]]},"ret":-1}],"trunc":false}},{"name":"Sort and count the runs","tag":"Alternative","code":"class Solution:\n    def findLucky(self, arr):\n        best = -1\n        for x, g in groupby(sorted(arr)):\n            if x == len(list(g)):\n                best = x\n        return best","time":"O(n log n)","space":"O(1)","explain":"After sorting, equal numbers sit together; compare each run's length with its value, from the largest.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":-1}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":-1,"x":2,"g":["o","<itertools._grouper obj…"]}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":-1,"x":2,"g":["o","<itertools._grouper obj…"]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":2,"g":["o","<itertools._grouper obj…"]}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":3,"g":["o","<itertools._grouper obj…"]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":3,"g":["o","<itertools._grouper obj…"]}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":4,"g":["o","<itertools._grouper obj…"]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":4,"g":["o","<itertools._grouper obj…"]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":4,"g":["o","<itertools._grouper obj…"]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[2,2,3,4],0],"best":2,"x":4,"g":["o","<itertools._grouper obj…"]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[5],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[5],0],"best":-1}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[5],0],"best":-1,"x":5,"g":["o","<itertools._grouper obj…"]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[5],0],"best":-1,"x":5,"g":["o","<itertools._grouper obj…"]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[5],0],"best":-1,"x":5,"g":["o","<itertools._grouper obj…"]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[5],0],"best":-1,"x":5,"g":["o","<itertools._grouper obj…"]},"ret":-1}],"trunc":false}}],"ex2":{"input":"no lucky number","output":"-1","why":"5 appears once: no lucky number."}};
+window.PROBLEM = {
+ "id": "1394",
+ "title": "Find Lucky Integer in an Array",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "A lucky integer has a frequency equal to its value. Return the largest lucky integer of the array, or −1. Example: [2,2,3,4] → 2.",
+ "why": "[2,2,3,4]: 2 appears twice, so 2 is lucky (value = frequency). 3 and 4 appear once → the answer is 2.",
+ "idea": "Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.",
+ "input": "arr = [2,2,3,4]",
+ "output": "2",
+ "notes": [],
+ "best": "Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.",
+ "variants": [
+  {
+   "name": "Count, then compare value with count",
+   "code": "class Solution:\n    def findLucky(self, arr):\n        cnt = Counter(arr)\n        return max((x for x, c in cnt.items() if x == c), default=-1)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Count how often each number appears; a number is lucky if its value equals its count. Return the largest lucky number, or −1.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Sort and count the runs",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def findLucky(self, arr):\n        best = -1\n        for x, g in groupby(sorted(arr)):\n            if x == len(list(g)):\n                best = x\n        return best",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "After sorting, equal numbers sit together; compare each run's length with its value, from the largest.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

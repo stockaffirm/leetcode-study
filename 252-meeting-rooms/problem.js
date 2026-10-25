@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"252","title":"Meeting Rooms","level":"Easy","topic":"Intervals","question":"Given meeting time intervals [start, end), can one person attend all of them? (True if no two meetings overlap; a meeting that starts exactly when another ends is fine.) Example: [[0,30],[5,10],[15,20]] → False.","why":"Can one person attend all the meetings (no two overlap)?","idea":"Sort by start time; any meeting that starts before the previous one ends is an overlap.","input":"[[0,30],[5,10],[15,20]]","output":"False","notes":[],"best":"Sort by start time; any meeting that starts before the previous one ends is an overlap.","variants":[{"name":"Sort and compare neighbours","code":"class Solution:\n    def canAttendMeetings(self, intervals):\n        intervals = sorted(intervals)\n        for i in range(1, len(intervals)):\n            if intervals[i][0] < intervals[i - 1][1]: return False\n        return True","time":"O(n log n)","space":"O(1)","explain":"Sort by start time; any meeting that starts before the previous one ends is an overlap.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0],"i":1},"ret":false}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[2,4],0],["l",[7,10],0]],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[2,4],0],["l",[7,10],0]],0],"i":1}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[2,4],0],["l",[7,10],0]],0],"i":1}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[2,4],0],["l",[7,10],0]],0],"i":1}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[2,4],0],["l",[7,10],0]],0],"i":1},"ret":true}],"trunc":false}},{"name":"Compare every pair","tag":"Brute force","code":"class Solution:\n    def canAttendMeetings(self, intervals):\n        for i in range(len(intervals)):\n            for j in range(i + 1, len(intervals)):\n                if intervals[i][0] < intervals[j][1] and intervals[j][0] < intervals[i][1]: return False\n        return True","time":"O(n²)","space":"O(1)","explain":"Two meetings overlap if each starts before the other ends.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0],"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[0,30],0],["l",[5,10],0],["l",[15,20],0]],0],"i":0,"j":1},"ret":false}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":0,"j":1}},{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":1,"j":1}},{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[7,10],0],["l",[2,4],0]],0],"i":1,"j":1},"ret":true}],"trunc":false}}],"ex2":{"input":"unsorted input","output":"True","why":"The meetings do not overlap once sorted."},"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["sorted(intervals)","Sorts by start time (lists compare element by element), returning a new list","Making overlap checks local"],["intervals[i][0] < intervals[i-1][1]","Next meeting starts before the previous one ends","Adjacent overlap test"],["range(1, len(intervals))","Compares each meeting with its predecessor",""]]}},{"h":"Walk through an example","p":["`[[0,30],[5,10],[15,20]]` is already sorted by start:"],"table":{"head":["pair","test","result"],"rows":[["[0, 30] then [5, 10]","5 < 30 ?","overlap → False"]]}},{"h":"Why do adjacent pairs suffice after sorting?","p":["If any two meetings overlap, then some adjacent pair in start order overlaps too: if meeting A (earlier start) overlaps C, then B, which starts between them, starts before A ends (since C starts before A ends and B starts no later than C), so A and B overlap. Hence checking neighbours is enough."]},{"h":"Time and space","bullets":["Time: O(n log n) for the sort.","Space: O(n) for the sorted copy (O(1) with in-place `.sort()`)."]},{"h":"Subtle point","p":["The test is strict `<`, so back-to-back meetings like `[0,5]` and `[5,8]` are allowed."]}],"takeaway":"Sort by start time and check each meeting against the one before it; touching endpoints are not overlaps."}};
+window.PROBLEM = {
+ "id": "252",
+ "title": "Meeting Rooms",
+ "level": "Easy",
+ "topic": "Intervals",
+ "question": "Given meeting time intervals [start, end), can one person attend all of them? (True if no two meetings overlap; a meeting that starts exactly when another ends is fine.) Example: [[0,30],[5,10],[15,20]] → False.",
+ "why": "Can one person attend all the meetings (no two overlap)?",
+ "idea": "Sort by start time; any meeting that starts before the previous one ends is an overlap.",
+ "input": "[[0,30],[5,10],[15,20]]",
+ "output": "False",
+ "notes": [],
+ "best": "Sort by start time; any meeting that starts before the previous one ends is an overlap.",
+ "variants": [
+  {
+   "name": "Sort and compare neighbours",
+   "code": "class Solution:\n    def canAttendMeetings(self, intervals):\n        intervals = sorted(intervals)\n        for i in range(1, len(intervals)):\n            if intervals[i][0] < intervals[i - 1][1]: return False\n        return True",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "Sort by start time; any meeting that starts before the previous one ends is an overlap.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Compare every pair",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def canAttendMeetings(self, intervals):\n        for i in range(len(intervals)):\n            for j in range(i + 1, len(intervals)):\n                if intervals[i][0] < intervals[j][1] and intervals[j][0] < intervals[i][1]: return False\n        return True",
+   "time": "O(n²)",
+   "space": "O(1)",
+   "explain": "Two meetings overlap if each starts before the other ends.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

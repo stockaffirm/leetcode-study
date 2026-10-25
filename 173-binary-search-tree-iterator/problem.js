@@ -1,1 +1,145 @@
-window.PROBLEM = {"id":"173","title":"Binary Search Tree Iterator","level":"Medium","topic":"Binary Tree - General","question":"A binary search tree (BST) is a tree where, for every node, everything on its left is smaller and everything on its right is larger. Build an iterator over a BST: next() returns the next number in increasing order, hasNext() says whether any are left. It should use little memory (not copy the whole tree). Example: BST [7,3,15,null,null,9,20] → next() gives 3, 7, 9, 15, 20. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)","why":"BST [7,3,15,null,null,9,20] → next() returns 3, 7, 9, 15, 20.","idea":"Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.","input":"BST [7,3,15,∅,∅,9,20]","output":"3, 7, 9, 15, 20","notes":[],"best":"Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.","variants":[{"name":"Stack of the left spine","code":"class BSTIterator:\n    def __init__(self, root):\n        self.st = []; self._push_left(root)\n    def _push_left(self, n):\n        while n: self.st.append(n); n = n.left\n    def next(self):\n        n = self.st.pop(); self._push_left(n.right); return n.val\n    def hasNext(self):\n        return bool(self.st)","time":"O(1) amortised","space":"O(h)","explain":"Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.","frames":[{"title":"Init","description":"Push the left spine: 7, then 3.","codeLines":[3],"facts":{},"rows":[{"name":"stack (top = right)","cells":["7","3"],"hot":[1],"marks":{}}]},{"title":"next()","description":"Pop 3 → return 3 (no right child).","codeLines":[7],"facts":{"returns":3},"rows":[{"name":"stack","cells":["7"],"hot":[0],"marks":{}}]},{"title":"next()","description":"Pop 7 → return 7. Push left spine of 15: 15, then 9.","codeLines":[7],"facts":{"returns":7},"rows":[{"name":"stack","cells":["15","9"],"hot":[1],"marks":{}}]},{"title":"next()","description":"Pop 9 → return 9.","codeLines":[7],"facts":{"returns":9},"rows":[{"name":"stack","cells":["15"],"hot":[0],"marks":{}}]},{"title":"next(), next()","description":"15, then 20.","codeLines":[7],"facts":{},"rows":[{"name":"returns","cells":["15","20"],"hot":[0,1],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[7],[3,15],[null,null,9,20]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[],0],"n":["T",[[7],[3,15],[null,null,9,20]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]]],0],"n":["T",[[3]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]],["T",[[3]]]],0],"n":null}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]],["T",[[3]]]],0],"n":null},"ret":null},{"l":3,"d":1,"f":1,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]],["T",[[3]]]],0],"root":["T",[[7],[3,15],[null,null,9,20]]]},"ret":null},{"l":7,"d":1,"f":3,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]],["T",[[3]]]],0]}},{"l":5,"d":2,"f":4,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]]],0],"n":null}},{"l":5,"d":2,"f":4,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":3,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]]],0],"n":["T",[[3]]]},"ret":3},{"l":7,"d":1,"f":5,"v":{"self.st":["l",[["T",[[7],[3,15],[null,null,9,20]]]],0]}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[],0],"n":["T",[[15],[9,20]]]}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[["T",[[15],[9,20]]]],0],"n":["T",[[9]]]}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0],"n":null}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":5,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0],"n":["T",[[7],[3,15],[null,null,9,20]]]},"ret":7},{"l":9,"d":1,"f":7,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0]}},{"l":9,"d":1,"f":7,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0]},"ret":true},{"l":7,"d":1,"f":8,"v":{"self.st":["l",[["T",[[15],[9,20]]],["T",[[9]]]],0]}},{"l":5,"d":2,"f":9,"v":{"self.st":["l",[["T",[[15],[9,20]]]],0],"n":null}},{"l":5,"d":2,"f":9,"v":{"self.st":["l",[["T",[[15],[9,20]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":8,"v":{"self.st":["l",[["T",[[15],[9,20]]]],0],"n":["T",[[9]]]},"ret":9},{"l":7,"d":1,"f":10,"v":{"self.st":["l",[["T",[[15],[9,20]]]],0]}},{"l":5,"d":2,"f":11,"v":{"self.st":["l",[],0],"n":["T",[[20]]]}},{"l":5,"d":2,"f":11,"v":{"self.st":["l",[["T",[[20]]]],0],"n":null}},{"l":5,"d":2,"f":11,"v":{"self.st":["l",[["T",[[20]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":10,"v":{"self.st":["l",[["T",[[20]]]],0],"n":["T",[[15],[9,20]]]},"ret":15},{"l":7,"d":1,"f":12,"v":{"self.st":["l",[["T",[[20]]]],0]}},{"l":5,"d":2,"f":13,"v":{"self.st":["l",[],0],"n":null}},{"l":5,"d":2,"f":13,"v":{"self.st":["l",[],0],"n":null},"ret":null},{"l":7,"d":1,"f":12,"v":{"self.st":["l",[],0],"n":["T",[[20]]]},"ret":20},{"l":9,"d":1,"f":14,"v":{"self.st":["l",[],0]}},{"l":9,"d":1,"f":14,"v":{"self.st":["l",[],0]},"ret":false}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[2],[1,3]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[],0],"n":["T",[[2],[1,3]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[2],[1,3]]]],0],"n":["T",[[1]]]}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[2],[1,3]]],["T",[[1]]]],0],"n":null}},{"l":5,"d":2,"f":2,"v":{"self.st":["l",[["T",[[2],[1,3]]],["T",[[1]]]],0],"n":null},"ret":null},{"l":3,"d":1,"f":1,"v":{"self.st":["l",[["T",[[2],[1,3]]],["T",[[1]]]],0],"root":["T",[[2],[1,3]]]},"ret":null},{"l":7,"d":1,"f":3,"v":{"self.st":["l",[["T",[[2],[1,3]]],["T",[[1]]]],0]}},{"l":5,"d":2,"f":4,"v":{"self.st":["l",[["T",[[2],[1,3]]]],0],"n":null}},{"l":5,"d":2,"f":4,"v":{"self.st":["l",[["T",[[2],[1,3]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":3,"v":{"self.st":["l",[["T",[[2],[1,3]]]],0],"n":["T",[[1]]]},"ret":1},{"l":7,"d":1,"f":5,"v":{"self.st":["l",[["T",[[2],[1,3]]]],0]}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[],0],"n":["T",[[3]]]}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[["T",[[3]]]],0],"n":null}},{"l":5,"d":2,"f":6,"v":{"self.st":["l",[["T",[[3]]]],0],"n":null},"ret":null},{"l":7,"d":1,"f":5,"v":{"self.st":["l",[["T",[[3]]]],0],"n":["T",[[2],[1,3]]]},"ret":2},{"l":7,"d":1,"f":7,"v":{"self.st":["l",[["T",[[3]]]],0]}},{"l":5,"d":2,"f":8,"v":{"self.st":["l",[],0],"n":null}},{"l":5,"d":2,"f":8,"v":{"self.st":["l",[],0],"n":null},"ret":null},{"l":7,"d":1,"f":7,"v":{"self.st":["l",[],0],"n":["T",[[3]]]},"ret":3},{"l":9,"d":1,"f":9,"v":{"self.st":["l",[],0]}},{"l":9,"d":1,"f":9,"v":{"self.st":["l",[],0]},"ret":false}],"trunc":false}},{"name":"Flatten inorder into a list","tag":"Alternative","code":"class BSTIterator:\n    def __init__(self, root):\n        self.vals = []; self.i = 0\n        def inorder(n):\n            if n: inorder(n.left); self.vals.append(n.val); inorder(n.right)\n        inorder(root)\n    def next(self):\n        self.i += 1; return self.vals[self.i - 1]\n    def hasNext(self): return self.i < len(self.vals)","time":"O(1) per call","space":"O(n)","explain":"Pre-compute the whole inorder sequence; next() just walks it.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[7],[3,15],[null,null,9,20]]]}},{"l":4,"d":1,"f":1,"v":{"self.vals":["l",[],0],"self.i":0,"root":["T",[[7],[3,15],[null,null,9,20]]]}},{"l":6,"d":1,"f":1,"v":{"self.vals":["l",[],0],"self.i":0,"root":["T",[[7],[3,15],[null,null,9,20]]]}},{"l":5,"d":2,"f":2,"v":{"n":["T",[[7],[3,15],[null,null,9,20]]],"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":3,"f":3,"v":{"n":["T",[[3]]],"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":4,"f":4,"v":{"n":null,"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":4,"f":4,"v":{"n":null,"self.vals":["l",[],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":5,"v":{"n":null,"self.vals":["l",[3],0],"self.i":0}},{"l":5,"d":4,"f":5,"v":{"n":null,"self.vals":["l",[3],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":3,"v":{"n":["T",[[3]]],"self.vals":["l",[3],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":6,"v":{"n":["T",[[15],[9,20]]],"self.vals":["l",[3,7],0],"self.i":0}},{"l":5,"d":4,"f":7,"v":{"n":["T",[[9]]],"self.vals":["l",[3,7],0],"self.i":0}},{"l":5,"d":5,"f":8,"v":{"n":null,"self.vals":["l",[3,7],0],"self.i":0}},{"l":5,"d":5,"f":8,"v":{"n":null,"self.vals":["l",[3,7],0],"self.i":0},"ret":null},{"l":5,"d":5,"f":9,"v":{"n":null,"self.vals":["l",[3,7,9],0],"self.i":0}},{"l":5,"d":5,"f":9,"v":{"n":null,"self.vals":["l",[3,7,9],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":7,"v":{"n":["T",[[9]]],"self.vals":["l",[3,7,9],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":10,"v":{"n":["T",[[20]]],"self.vals":["l",[3,7,9,15],0],"self.i":0}},{"l":5,"d":5,"f":11,"v":{"n":null,"self.vals":["l",[3,7,9,15],0],"self.i":0}},{"l":5,"d":5,"f":11,"v":{"n":null,"self.vals":["l",[3,7,9,15],0],"self.i":0},"ret":null},{"l":5,"d":5,"f":12,"v":{"n":null,"self.vals":["l",[3,7,9,15,20],0],"self.i":0}},{"l":5,"d":5,"f":12,"v":{"n":null,"self.vals":["l",[3,7,9,15,20],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":10,"v":{"n":["T",[[20]]],"self.vals":["l",[3,7,9,15,20],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":6,"v":{"n":["T",[[15],[9,20]]],"self.vals":["l",[3,7,9,15,20],0],"self.i":0},"ret":null},{"l":5,"d":2,"f":2,"v":{"n":["T",[[7],[3,15],[null,null,9,20]]],"self.vals":["l",[3,7,9,15,20],0],"self.i":0},"ret":null},{"l":6,"d":1,"f":1,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":0,"root":["T",[[7],[3,15],[null,null,9,20]]]},"ret":null},{"l":8,"d":1,"f":13,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":0}},{"l":8,"d":1,"f":13,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":1},"ret":3},{"l":8,"d":1,"f":14,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":1}},{"l":8,"d":1,"f":14,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":2},"ret":7},{"l":9,"d":1,"f":15,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":2}},{"l":9,"d":1,"f":15,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":2},"ret":true},{"l":8,"d":1,"f":16,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":2}},{"l":8,"d":1,"f":16,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":3},"ret":9},{"l":8,"d":1,"f":17,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":3}},{"l":8,"d":1,"f":17,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":4},"ret":15},{"l":8,"d":1,"f":18,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":4}},{"l":8,"d":1,"f":18,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":5},"ret":20},{"l":9,"d":1,"f":19,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":5}},{"l":9,"d":1,"f":19,"v":{"self.vals":["l",[3,7,9,15,20],0],"self.i":5},"ret":false}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[2],[1,3]]]}},{"l":4,"d":1,"f":1,"v":{"self.vals":["l",[],0],"self.i":0,"root":["T",[[2],[1,3]]]}},{"l":6,"d":1,"f":1,"v":{"self.vals":["l",[],0],"self.i":0,"root":["T",[[2],[1,3]]]}},{"l":5,"d":2,"f":2,"v":{"n":["T",[[2],[1,3]]],"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":3,"f":3,"v":{"n":["T",[[1]]],"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":4,"f":4,"v":{"n":null,"self.vals":["l",[],0],"self.i":0}},{"l":5,"d":4,"f":4,"v":{"n":null,"self.vals":["l",[],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":5,"v":{"n":null,"self.vals":["l",[1],0],"self.i":0}},{"l":5,"d":4,"f":5,"v":{"n":null,"self.vals":["l",[1],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":3,"v":{"n":["T",[[1]]],"self.vals":["l",[1],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":6,"v":{"n":["T",[[3]]],"self.vals":["l",[1,2],0],"self.i":0}},{"l":5,"d":4,"f":7,"v":{"n":null,"self.vals":["l",[1,2],0],"self.i":0}},{"l":5,"d":4,"f":7,"v":{"n":null,"self.vals":["l",[1,2],0],"self.i":0},"ret":null},{"l":5,"d":4,"f":8,"v":{"n":null,"self.vals":["l",[1,2,3],0],"self.i":0}},{"l":5,"d":4,"f":8,"v":{"n":null,"self.vals":["l",[1,2,3],0],"self.i":0},"ret":null},{"l":5,"d":3,"f":6,"v":{"n":["T",[[3]]],"self.vals":["l",[1,2,3],0],"self.i":0},"ret":null},{"l":5,"d":2,"f":2,"v":{"n":["T",[[2],[1,3]]],"self.vals":["l",[1,2,3],0],"self.i":0},"ret":null},{"l":6,"d":1,"f":1,"v":{"self.vals":["l",[1,2,3],0],"self.i":0,"root":["T",[[2],[1,3]]]},"ret":null},{"l":8,"d":1,"f":9,"v":{"self.vals":["l",[1,2,3],0],"self.i":0}},{"l":8,"d":1,"f":9,"v":{"self.vals":["l",[1,2,3],0],"self.i":1},"ret":1},{"l":8,"d":1,"f":10,"v":{"self.vals":["l",[1,2,3],0],"self.i":1}},{"l":8,"d":1,"f":10,"v":{"self.vals":["l",[1,2,3],0],"self.i":2},"ret":2},{"l":8,"d":1,"f":11,"v":{"self.vals":["l",[1,2,3],0],"self.i":2}},{"l":8,"d":1,"f":11,"v":{"self.vals":["l",[1,2,3],0],"self.i":3},"ret":3},{"l":9,"d":1,"f":12,"v":{"self.vals":["l",[1,2,3],0],"self.i":3}},{"l":9,"d":1,"f":12,"v":{"self.vals":["l",[1,2,3],0],"self.i":3},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`self.st`","Stack of ancestors whose left spine we have entered but not yet visited","Iterative in-order traversal state"],["`_push_left(n)`","Pushes `n` and all its left descendants, so the smallest unvisited value ends on top","The next smaller element is always down the left spine"],["`n = self.st.pop()`","The top is the next in-order value","Smallest unvisited node"],["`self._push_left(n.right)`","After visiting a node, queue up its right subtree's left spine","Everything in the right subtree comes next, in order"],["`bool(self.st)`","`hasNext` is true while any node is waiting","Truthiness of a list"]]}},{"h":"Walk through an example","p":["BST `7 / (3, 15 / (9, 20))`. Stack shown bottom → top."],"table":{"head":["Call","Returns","Stack after"],"rows":[["init","-","[7, 3]"],["next()","3","[7]"],["next()","7","[15, 9]"],["next()","9","[15]"],["next()","15","[20]"],["next()","20","[]"]]}},{"h":"Why a stack and not a list of all values?","p":["Flattening the tree into a list on construction is O(n) time and O(n) space up front. The stack stores only the current left spine, at most the tree height h, and does the work lazily."],"table":{"head":["Approach","Constructor","next()","Memory"],"rows":[["Flatten in-order to a list","O(n)","O(1)","O(n)"],["Stack of left spine (this code)","O(h)","O(1) amortised","O(h)"]]}},{"h":"Why is `next()` O(1) amortised and not O(1) worst case?","p":["A single call may push many nodes (a long left spine). But every node is pushed once and popped once over the whole traversal, so n calls cost O(n) in total, which is O(1) per call on average."]},{"h":"Time and space","bullets":["Time: O(1) amortised per `next`/`hasNext`.","Space: O(h), where h is the tree height."]}],"takeaway":"Iterative in-order traversal as an iterator: keep a stack of the left spine; after popping a node, push the left spine of its right child."},"ex2":{"input":"BST [2,1,3]: next ×3, hasNext()","output":"[1, 2, 3, False]","why":"After three next() calls there is nothing left."}};
+window.PROBLEM = {
+ "id": "173",
+ "title": "Binary Search Tree Iterator",
+ "level": "Medium",
+ "topic": "Binary Tree - General",
+ "question": "A binary search tree (BST) is a tree where, for every node, everything on its left is smaller and everything on its right is larger. Build an iterator over a BST: next() returns the next number in increasing order, hasNext() says whether any are left. It should use little memory (not copy the whole tree). Example: BST [7,3,15,null,null,9,20] → next() gives 3, 7, 9, 15, 20. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)",
+ "why": "BST [7,3,15,null,null,9,20] → next() returns 3, 7, 9, 15, 20.",
+ "idea": "Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.",
+ "input": "BST [7,3,15,∅,∅,9,20]",
+ "output": "3, 7, 9, 15, 20",
+ "notes": [],
+ "best": "Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.",
+ "variants": [
+  {
+   "name": "Stack of the left spine",
+   "code": "class BSTIterator:\n    def __init__(self, root):\n        self.st = []; self._push_left(root)\n    def _push_left(self, n):\n        while n: self.st.append(n); n = n.left\n    def next(self):\n        n = self.st.pop(); self._push_left(n.right); return n.val\n    def hasNext(self):\n        return bool(self.st)",
+   "time": "O(1) amortised",
+   "space": "O(h)",
+   "explain": "Keep a stack of the 'left spine'. Pop = next smallest; then push the left spine of its right child.",
+   "frames": [
+    {
+     "title": "Init",
+     "description": "Push the left spine: 7, then 3.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "stack (top = right)",
+       "cells": [
+        "7",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "next()",
+     "description": "Pop 3 → return 3 (no right child).",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "returns": 3
+     },
+     "rows": [
+      {
+       "name": "stack",
+       "cells": [
+        "7"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "next()",
+     "description": "Pop 7 → return 7. Push left spine of 15: 15, then 9.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "returns": 7
+     },
+     "rows": [
+      {
+       "name": "stack",
+       "cells": [
+        "15",
+        "9"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "next()",
+     "description": "Pop 9 → return 9.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "returns": 9
+     },
+     "rows": [
+      {
+       "name": "stack",
+       "cells": [
+        "15"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "next(), next()",
+     "description": "15, then 20.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "returns",
+       "cells": [
+        "15",
+        "20"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Flatten inorder into a list",
+   "tag": "Alternative",
+   "code": "class BSTIterator:\n    def __init__(self, root):\n        self.vals = []; self.i = 0\n        def inorder(n):\n            if n: inorder(n.left); self.vals.append(n.val); inorder(n.right)\n        inorder(root)\n    def next(self):\n        self.i += 1; return self.vals[self.i - 1]\n    def hasNext(self): return self.i < len(self.vals)",
+   "time": "O(1) per call",
+   "space": "O(n)",
+   "explain": "Pre-compute the whole inorder sequence; next() just walks it.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

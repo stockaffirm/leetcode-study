@@ -1,1 +1,177 @@
-window.PROBLEM = {"id":"202","title":"Happy Number","level":"Easy","topic":"Hashmap","question":"Start with a positive number. Replace it with the sum of the squares of its digits, and repeat. If you eventually reach 1 the number is 'happy'; if you instead loop forever in a cycle that never reaches 1, it is not. Return true if n is happy. Example: 19 → 1²+9²=82 → 8²+2²=68 → 6²+8²=100 → 1²+0²+0²=1 → true.","why":"19 → 82 → 68 → 100 → 1 → happy.","idea":"Remember numbers you've seen; seeing one again means a loop.","input":"19","output":"True","notes":[],"best":"Remember numbers you've seen; seeing one again means a loop.","variants":[{"name":"Seen set","code":"class Solution:\n    def isHappy(self, n):\n        seen = set()\n        while n != 1 and n not in seen:\n            seen.add(n)\n            n = sum(int(d) ** 2 for d in str(n))\n        return n == 1","time":"O(log n)","space":"O(log n)","explain":"Remember numbers you've seen; seeing one again means a loop.","frames":[{"title":"Start","description":"n = 19","codeLines":[3],"facts":{},"rows":[{"name":"n","cells":["19"],"hot":[],"marks":{}}]},{"title":"19 →","description":"1² + 9² = 82","codeLines":[6],"facts":{},"rows":[{"name":"path","cells":["19","82"],"hot":[1],"marks":{},"kind":"list"}]},{"title":"82 →","description":"8² + 2² = 68","codeLines":[6],"facts":{},"rows":[{"name":"path","cells":["19","82","68"],"hot":[2],"marks":{},"kind":"list"}]},{"title":"68 →","description":"6² + 8² = 100","codeLines":[6],"facts":{},"rows":[{"name":"path","cells":["19","82","68","100"],"hot":[3],"marks":{},"kind":"list"}]},{"title":"100 →","description":"1² + 0² + 0² = 1","codeLines":[6],"facts":{},"rows":[{"name":"path","cells":["19","82","68","100","1"],"hot":[4],"marks":{},"kind":"list"}]},{"title":"Return","description":"Reached 1 → happy.","codeLines":[7],"facts":{},"rows":[{"name":"answer","cells":["True"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":19}},{"l":4,"d":1,"f":1,"v":{"n":19,"seen":["S",[]]}},{"l":5,"d":1,"f":1,"v":{"n":19,"seen":["S",[]]}},{"l":6,"d":1,"f":1,"v":{"n":19,"seen":["S",[19]]}},{"l":4,"d":1,"f":1,"v":{"n":82,"seen":["S",[19]]}},{"l":5,"d":1,"f":1,"v":{"n":82,"seen":["S",[19]]}},{"l":6,"d":1,"f":1,"v":{"n":82,"seen":["S",[19,82]]}},{"l":4,"d":1,"f":1,"v":{"n":68,"seen":["S",[19,82]]}},{"l":5,"d":1,"f":1,"v":{"n":68,"seen":["S",[19,82]]}},{"l":6,"d":1,"f":1,"v":{"n":68,"seen":["S",[19,68,82]]}},{"l":4,"d":1,"f":1,"v":{"n":100,"seen":["S",[19,68,82]]}},{"l":5,"d":1,"f":1,"v":{"n":100,"seen":["S",[19,68,82]]}},{"l":6,"d":1,"f":1,"v":{"n":100,"seen":["S",[19,68,82,100]]}},{"l":4,"d":1,"f":1,"v":{"n":1,"seen":["S",[19,68,82,100]]}},{"l":7,"d":1,"f":1,"v":{"n":1,"seen":["S",[19,68,82,100]]}},{"l":7,"d":1,"f":1,"v":{"n":1,"seen":["S",[19,68,82,100]]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":2}},{"l":4,"d":1,"f":1,"v":{"n":2,"seen":["S",[]]}},{"l":5,"d":1,"f":1,"v":{"n":2,"seen":["S",[]]}},{"l":6,"d":1,"f":1,"v":{"n":2,"seen":["S",[2]]}},{"l":4,"d":1,"f":1,"v":{"n":4,"seen":["S",[2]]}},{"l":5,"d":1,"f":1,"v":{"n":4,"seen":["S",[2]]}},{"l":6,"d":1,"f":1,"v":{"n":4,"seen":["S",[2,4]]}},{"l":4,"d":1,"f":1,"v":{"n":16,"seen":["S",[2,4]]}},{"l":5,"d":1,"f":1,"v":{"n":16,"seen":["S",[2,4]]}},{"l":6,"d":1,"f":1,"v":{"n":16,"seen":["S",[2,4,16]]}},{"l":4,"d":1,"f":1,"v":{"n":37,"seen":["S",[2,4,16]]}},{"l":5,"d":1,"f":1,"v":{"n":37,"seen":["S",[2,4,16]]}},{"l":6,"d":1,"f":1,"v":{"n":37,"seen":["S",[2,4,16,37]]}},{"l":4,"d":1,"f":1,"v":{"n":58,"seen":["S",[2,4,16,37]]}},{"l":5,"d":1,"f":1,"v":{"n":58,"seen":["S",[2,4,16,37]]}},{"l":6,"d":1,"f":1,"v":{"n":58,"seen":["S",[2,4,16,37,58]]}},{"l":4,"d":1,"f":1,"v":{"n":89,"seen":["S",[2,4,16,37,58]]}},{"l":5,"d":1,"f":1,"v":{"n":89,"seen":["S",[2,4,16,37,58]]}},{"l":6,"d":1,"f":1,"v":{"n":89,"seen":["S",[2,4,16,37,58,89]]}},{"l":4,"d":1,"f":1,"v":{"n":145,"seen":["S",[2,4,16,37,58,89]]}},{"l":5,"d":1,"f":1,"v":{"n":145,"seen":["S",[2,4,16,37,58,89]]}},{"l":6,"d":1,"f":1,"v":{"n":145,"seen":["S",[2,4,16,37,58,89,145]]}},{"l":4,"d":1,"f":1,"v":{"n":42,"seen":["S",[2,4,16,37,58,89,145]]}},{"l":5,"d":1,"f":1,"v":{"n":42,"seen":["S",[2,4,16,37,58,89,145]]}},{"l":6,"d":1,"f":1,"v":{"n":42,"seen":["S",[2,4,16,37,42,58,89,145]]}},{"l":4,"d":1,"f":1,"v":{"n":20,"seen":["S",[2,4,16,37,42,58,89,145]]}},{"l":5,"d":1,"f":1,"v":{"n":20,"seen":["S",[2,4,16,37,42,58,89,145]]}},{"l":6,"d":1,"f":1,"v":{"n":20,"seen":["S",[2,4,16,20,37,42,58,89,145]]}},{"l":4,"d":1,"f":1,"v":{"n":4,"seen":["S",[2,4,16,20,37,42,58,89,145]]}},{"l":7,"d":1,"f":1,"v":{"n":4,"seen":["S",[2,4,16,20,37,42,58,89,145]]}},{"l":7,"d":1,"f":1,"v":{"n":4,"seen":["S",[2,4,16,20,37,42,58,89,145]]},"ret":false}],"trunc":false}},{"name":"Floyd's cycle detection","tag":"Optimal space","code":"class Solution:\n    def isHappy(self, n):\n        def nxt(k): return sum(int(d) ** 2 for d in str(k))\n        slow, fast = n, nxt(n)\n        while fast != 1 and slow != fast:\n            slow = nxt(slow); fast = nxt(nxt(fast))\n        return fast == 1","time":"O(log n)","space":"O(1)","explain":"Treat the digit-square sequence as a linked list and race two pointers.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":19}},{"l":4,"d":1,"f":1,"v":{"n":19}},{"l":3,"d":2,"f":2,"v":{"k":19}},{"l":3,"d":2,"f":2,"v":{"k":19},"ret":82},{"l":5,"d":1,"f":1,"v":{"n":19,"slow":19,"fast":82}},{"l":6,"d":1,"f":1,"v":{"n":19,"slow":19,"fast":82}},{"l":3,"d":2,"f":3,"v":{"k":19}},{"l":3,"d":2,"f":3,"v":{"k":19},"ret":82},{"l":3,"d":2,"f":4,"v":{"k":82}},{"l":3,"d":2,"f":4,"v":{"k":82},"ret":68},{"l":3,"d":2,"f":5,"v":{"k":68}},{"l":3,"d":2,"f":5,"v":{"k":68},"ret":100},{"l":5,"d":1,"f":1,"v":{"n":19,"slow":82,"fast":100}},{"l":6,"d":1,"f":1,"v":{"n":19,"slow":82,"fast":100}},{"l":3,"d":2,"f":6,"v":{"k":82}},{"l":3,"d":2,"f":6,"v":{"k":82},"ret":68},{"l":3,"d":2,"f":7,"v":{"k":100}},{"l":3,"d":2,"f":7,"v":{"k":100},"ret":1},{"l":3,"d":2,"f":8,"v":{"k":1}},{"l":3,"d":2,"f":8,"v":{"k":1},"ret":1},{"l":5,"d":1,"f":1,"v":{"n":19,"slow":68,"fast":1}},{"l":7,"d":1,"f":1,"v":{"n":19,"slow":68,"fast":1}},{"l":7,"d":1,"f":1,"v":{"n":19,"slow":68,"fast":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":2}},{"l":4,"d":1,"f":1,"v":{"n":2}},{"l":3,"d":2,"f":2,"v":{"k":2}},{"l":3,"d":2,"f":2,"v":{"k":2},"ret":4},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":2,"fast":4}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":2,"fast":4}},{"l":3,"d":2,"f":3,"v":{"k":2}},{"l":3,"d":2,"f":3,"v":{"k":2},"ret":4},{"l":3,"d":2,"f":4,"v":{"k":4}},{"l":3,"d":2,"f":4,"v":{"k":4},"ret":16},{"l":3,"d":2,"f":5,"v":{"k":16}},{"l":3,"d":2,"f":5,"v":{"k":16},"ret":37},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":4,"fast":37}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":4,"fast":37}},{"l":3,"d":2,"f":6,"v":{"k":4}},{"l":3,"d":2,"f":6,"v":{"k":4},"ret":16},{"l":3,"d":2,"f":7,"v":{"k":37}},{"l":3,"d":2,"f":7,"v":{"k":37},"ret":58},{"l":3,"d":2,"f":8,"v":{"k":58}},{"l":3,"d":2,"f":8,"v":{"k":58},"ret":89},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":16,"fast":89}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":16,"fast":89}},{"l":3,"d":2,"f":9,"v":{"k":16}},{"l":3,"d":2,"f":9,"v":{"k":16},"ret":37},{"l":3,"d":2,"f":10,"v":{"k":89}},{"l":3,"d":2,"f":10,"v":{"k":89},"ret":145},{"l":3,"d":2,"f":11,"v":{"k":145}},{"l":3,"d":2,"f":11,"v":{"k":145},"ret":42},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":37,"fast":42}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":37,"fast":42}},{"l":3,"d":2,"f":12,"v":{"k":37}},{"l":3,"d":2,"f":12,"v":{"k":37},"ret":58},{"l":3,"d":2,"f":13,"v":{"k":42}},{"l":3,"d":2,"f":13,"v":{"k":42},"ret":20},{"l":3,"d":2,"f":14,"v":{"k":20}},{"l":3,"d":2,"f":14,"v":{"k":20},"ret":4},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":58,"fast":4}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":58,"fast":4}},{"l":3,"d":2,"f":15,"v":{"k":58}},{"l":3,"d":2,"f":15,"v":{"k":58},"ret":89},{"l":3,"d":2,"f":16,"v":{"k":4}},{"l":3,"d":2,"f":16,"v":{"k":4},"ret":16},{"l":3,"d":2,"f":17,"v":{"k":16}},{"l":3,"d":2,"f":17,"v":{"k":16},"ret":37},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":89,"fast":37}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":89,"fast":37}},{"l":3,"d":2,"f":18,"v":{"k":89}},{"l":3,"d":2,"f":18,"v":{"k":89},"ret":145},{"l":3,"d":2,"f":19,"v":{"k":37}},{"l":3,"d":2,"f":19,"v":{"k":37},"ret":58},{"l":3,"d":2,"f":20,"v":{"k":58}},{"l":3,"d":2,"f":20,"v":{"k":58},"ret":89},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":145,"fast":89}},{"l":6,"d":1,"f":1,"v":{"n":2,"slow":145,"fast":89}},{"l":3,"d":2,"f":21,"v":{"k":145}},{"l":3,"d":2,"f":21,"v":{"k":145},"ret":42},{"l":3,"d":2,"f":22,"v":{"k":89}},{"l":3,"d":2,"f":22,"v":{"k":89},"ret":145},{"l":3,"d":2,"f":23,"v":{"k":145}},{"l":3,"d":2,"f":23,"v":{"k":145},"ret":42},{"l":5,"d":1,"f":1,"v":{"n":2,"slow":42,"fast":42}},{"l":7,"d":1,"f":1,"v":{"n":2,"slow":42,"fast":42}},{"l":7,"d":1,"f":1,"v":{"n":2,"slow":42,"fast":42},"ret":false}],"trunc":false}},{"name":"Known cycle at 4","tag":"Alternative","code":"class Solution:\n    def isHappy(self, n):\n        while n != 1 and n != 4:\n            n = sum(int(d) ** 2 for d in str(n))\n        return n == 1","time":"O(log n)","space":"O(1)","explain":"Every unhappy number eventually reaches 4; stop at 1 or 4.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":19}},{"l":4,"d":1,"f":1,"v":{"n":19}},{"l":3,"d":1,"f":1,"v":{"n":82}},{"l":4,"d":1,"f":1,"v":{"n":82}},{"l":3,"d":1,"f":1,"v":{"n":68}},{"l":4,"d":1,"f":1,"v":{"n":68}},{"l":3,"d":1,"f":1,"v":{"n":100}},{"l":4,"d":1,"f":1,"v":{"n":100}},{"l":3,"d":1,"f":1,"v":{"n":1}},{"l":5,"d":1,"f":1,"v":{"n":1}},{"l":5,"d":1,"f":1,"v":{"n":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":2}},{"l":4,"d":1,"f":1,"v":{"n":2}},{"l":3,"d":1,"f":1,"v":{"n":4}},{"l":5,"d":1,"f":1,"v":{"n":4}},{"l":5,"d":1,"f":1,"v":{"n":4},"ret":false}],"trunc":false}}],"ex2":{"input":"2","output":"False","why":"2 → 4 → 16 → 37 → 58 → 89 → 145 → 42 → 20 → 4 loops forever → False."},"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`seen = set()`","Numbers already produced","O(1) membership; a repeat means we are in a cycle that never reaches 1"],["`str(n)`","Digits of n as characters","Easy way to iterate digits"],["`int(d) ** 2`","Square of one digit","`**` is exponentiation"],["`sum(generator)`","Total without building a list","Compact digit-square sum"],["`while n != 1 and n not in seen`","Stop at success or at a repeat","Two exit conditions; `n == 1` after the loop decides the result"]]}},{"h":"Walk through an example","p":["`n = 19` reaches 1 (happy):"],"table":{"head":["n","Digit squares","Next n"],"rows":[["19","1²+9²","82"],["82","8²+2²","68"],["68","6²+8²","100"],["100","1²+0²+0²","1"]]}},{"h":"An unhappy number: `n = 2`","p":["The sequence cycles back to 4, so the loop stops when `n` is already in `seen` and the function returns `False` (final n = 4):"],"table":{"head":["n","Digit squares","Next n"],"rows":[["2","2²","4"],["4","4²","16"],["16","1²+6²","37"],["37","3²+7²","58"],["58","5²+8²","89"],["89","8²+9²","145"],["145","1²+4²+5²","42"],["42","4²+2²","20"],["20","2²+0²","4"]]}},{"h":"Why a seen set (and what is the alternative)?","p":["A number with d digits maps to at most 81·d, so the values stay small and must either reach 1 or enter a cycle; the set catches the cycle."],"table":{"head":["Approach","Space","Idea"],"rows":[["`seen` set (this code)","O(number of distinct values visited)","Detects the first repeated value"],["Floyd slow/fast pointers","O(1)","Same cycle detection as in linked lists"]]}},{"h":"Time and space","bullets":["Time: Roughly O(log n) for the first step (the digits) plus a bounded number of further steps, since values quickly fall to small numbers.","Space: Small: the set holds only the values visited."]}],"takeaway":"Cycle detection on an iterated function: a repeated value (seen set, or Floyd's pointers) means it will never reach 1."}};
+window.PROBLEM = {
+ "id": "202",
+ "title": "Happy Number",
+ "level": "Easy",
+ "topic": "Hashmap",
+ "question": "Start with a positive number. Replace it with the sum of the squares of its digits, and repeat. If you eventually reach 1 the number is 'happy'; if you instead loop forever in a cycle that never reaches 1, it is not. Return true if n is happy. Example: 19 → 1²+9²=82 → 8²+2²=68 → 6²+8²=100 → 1²+0²+0²=1 → true.",
+ "why": "19 → 82 → 68 → 100 → 1 → happy.",
+ "idea": "Remember numbers you've seen; seeing one again means a loop.",
+ "input": "19",
+ "output": "True",
+ "notes": [],
+ "best": "Remember numbers you've seen; seeing one again means a loop.",
+ "variants": [
+  {
+   "name": "Seen set",
+   "code": "class Solution:\n    def isHappy(self, n):\n        seen = set()\n        while n != 1 and n not in seen:\n            seen.add(n)\n            n = sum(int(d) ** 2 for d in str(n))\n        return n == 1",
+   "time": "O(log n)",
+   "space": "O(log n)",
+   "explain": "Remember numbers you've seen; seeing one again means a loop.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "n = 19",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "n",
+       "cells": [
+        "19"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "19 →",
+     "description": "1² + 9² = 82",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "19",
+        "82"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "82 →",
+     "description": "8² + 2² = 68",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "19",
+        "82",
+        "68"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "68 →",
+     "description": "6² + 8² = 100",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "19",
+        "82",
+        "68",
+        "100"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "100 →",
+     "description": "1² + 0² + 0² = 1",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "19",
+        "82",
+        "68",
+        "100",
+        "1"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Reached 1 → happy.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "True"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Floyd's cycle detection",
+   "tag": "Optimal space",
+   "code": "class Solution:\n    def isHappy(self, n):\n        def nxt(k): return sum(int(d) ** 2 for d in str(k))\n        slow, fast = n, nxt(n)\n        while fast != 1 and slow != fast:\n            slow = nxt(slow); fast = nxt(nxt(fast))\n        return fast == 1",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "Treat the digit-square sequence as a linked list and race two pointers.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Known cycle at 4",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def isHappy(self, n):\n        while n != 1 and n != 4:\n            n = sum(int(d) ** 2 for d in str(n))\n        return n == 1",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "Every unhappy number eventually reaches 4; stop at 1 or 4.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

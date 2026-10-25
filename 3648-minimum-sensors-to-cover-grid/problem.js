@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"3648","title":"Minimum Sensors to Cover Grid","level":"Medium","topic":"Math / Bit Manipulation","question":"A sensor on a cell covers all cells within Chebyshev distance k (max of the row and column differences). Return the minimum number of sensors needed to cover an n×m grid. Example: n=5, m=5, k=1 → 4.","why":"5×5 with k=1: each sensor covers a 3×3 block → 2 × 2 = 4 sensors.","idea":"A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.","input":"n = 5, m = 5, k = 1","output":"4","notes":[],"best":"A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.","variants":[{"name":"Tile the grid with (2k+1)×(2k+1) squares","code":"class Solution:\n    def minSensors(self, n, m, k):\n        side = 2 * k + 1\n        return ((n + side - 1) // side) * ((m + side - 1) // side)","time":"O(1)","space":"O(1)","explain":"A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5,"m":5,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":5,"m":5,"k":1,"side":3}},{"l":4,"d":1,"f":1,"v":{"n":5,"m":5,"k":1,"side":3},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":2,"m":2,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":2,"m":2,"k":2,"side":5}},{"l":4,"d":1,"f":1,"v":{"n":2,"m":2,"k":2,"side":5},"ret":1}],"trunc":false}},{"name":"Count by rows and columns","tag":"Alternative","code":"class Solution:\n    def minSensors(self, n, m, k):\n        step = 2 * k + 1\n        return len(range(0, n, step)) * len(range(0, m, step))","time":"O(n + m)","space":"O(1)","explain":"Step through the rows and columns in jumps of 2k + 1 and count the stops.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5,"m":5,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":5,"m":5,"k":1,"step":3}},{"l":4,"d":1,"f":1,"v":{"n":5,"m":5,"k":1,"step":3},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":2,"m":2,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":2,"m":2,"k":2,"step":5}},{"l":4,"d":1,"f":1,"v":{"n":2,"m":2,"k":2,"step":5},"ret":1}],"trunc":false}}],"ex2":{"input":"big k","output":"1","why":"One sensor covers all."}};
+window.PROBLEM = {
+ "id": "3648",
+ "title": "Minimum Sensors to Cover Grid",
+ "level": "Medium",
+ "topic": "Math / Bit Manipulation",
+ "question": "A sensor on a cell covers all cells within Chebyshev distance k (max of the row and column differences). Return the minimum number of sensors needed to cover an n×m grid. Example: n=5, m=5, k=1 → 4.",
+ "why": "5×5 with k=1: each sensor covers a 3×3 block → 2 × 2 = 4 sensors.",
+ "idea": "A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.",
+ "input": "n = 5, m = 5, k = 1",
+ "output": "4",
+ "notes": [],
+ "best": "A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.",
+ "variants": [
+  {
+   "name": "Tile the grid with (2k+1)×(2k+1) squares",
+   "code": "class Solution:\n    def minSensors(self, n, m, k):\n        side = 2 * k + 1\n        return ((n + side - 1) // side) * ((m + side - 1) // side)",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "A sensor covers every cell within Chebyshev distance k: a (2k+1)×(2k+1) square. Tiling the n×m grid with these squares needs ceil(n/(2k+1)) rows and ceil(m/(2k+1)) columns of sensors.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Count by rows and columns",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def minSensors(self, n, m, k):\n        step = 2 * k + 1\n        return len(range(0, n, step)) * len(range(0, m, step))",
+   "time": "O(n + m)",
+   "space": "O(1)",
+   "explain": "Step through the rows and columns in jumps of 2k + 1 and count the stops.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

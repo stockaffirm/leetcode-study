@@ -1,1 +1,282 @@
-window.PROBLEM = {"id":"71","title":"Simplify Path","level":"Medium","topic":"Stack","question":"Given an absolute Unix-style file path as a string, return its simplified form. '.' means the current folder, '..' means go up one folder, and several slashes in a row count as one. The result starts with a single '/', has no trailing '/', and has no '.' or '..' left. Example: '/a/./b/../../c/' → into a, stay, into b, up, up, into c → '/c'.","why":"'/a/./b/../../c/' → into a, stay, into b, up, up, into c → '/c'.","idea":"Split on '/'; push folder names, pop on '..'.","input":"\"/a/./b/../../c/\"","output":"\"/c\"","notes":[],"best":"Split on '/'; push folder names, pop on '..'.","variants":[{"name":"Stack of folders","code":"class Solution:\n    def simplifyPath(self, path):\n        stack = []\n        for part in path.split('/'):\n            if part == '..':\n                if stack: stack.pop()\n            elif part and part != '.': stack.append(part)\n        return '/' + '/'.join(stack)","time":"O(n)","space":"O(n)","explain":"Split on '/'; push folder names, pop on '..'.","frames":[{"title":"Split","description":"Pieces between slashes.","codeLines":[4],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[],"marks":{}}]},{"title":"a","description":"Folder → push.","codeLines":[7],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[0],"marks":{}},{"name":"stack","cells":["a"],"hot":[0],"marks":{}}]},{"title":".","description":"'.' → stay, ignore.","codeLines":[7],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[1],"marks":{}},{"name":"stack","cells":["a"],"hot":[],"marks":{}}]},{"title":"b","description":"Folder → push.","codeLines":[7],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[2],"marks":{}},{"name":"stack","cells":["a","b"],"hot":[1],"marks":{}}]},{"title":"..","description":"'..' → go up (pop).","codeLines":[5],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[3],"marks":{}},{"name":"stack","cells":["a"],"hot":[],"marks":{}}]},{"title":"..","description":"'..' → go up (pop).","codeLines":[5],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[4],"marks":{}},{"name":"stack","cells":["·"],"hot":[],"marks":{}}]},{"title":"c","description":"Folder → push.","codeLines":[7],"facts":{},"rows":[{"name":"parts","cells":["a",".","b","..","..","c"],"hot":[5],"marks":{}},{"name":"stack","cells":["c"],"hot":[0],"marks":{}}]},{"title":"Return","description":"'/' + 'c'","codeLines":[8],"facts":{},"rows":[{"name":"answer","cells":["/","c"],"hot":[],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s",""]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s",""]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s","a"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s","a"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","b"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s","b"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"part":["s","b"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s","c"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"part":["s","c"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s","c"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s",""]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s",""]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s",""]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"part":["s",""]},"ret":["s","/c"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"path":["s","/../"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"part":["s",""]},"ret":["s","/"]}],"trunc":false}},{"name":"Manual parsing (no split)","tag":"Alternative","code":"class Solution:\n    def simplifyPath(self, path):\n        stack = []; i = 0; n = len(path)\n        while i < n:\n            while i < n and path[i] == '/': i += 1\n            j = i\n            while j < n and path[j] != '/': j += 1\n            part = path[i:j]; i = j\n            if part == '..':\n                if stack: stack.pop()\n            elif part and part != '.': stack.append(part)\n        return '/' + '/'.join(stack)","time":"O(n)","space":"O(n)","explain":"Scan the path character by character to cut out each name.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":0,"n":15}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":0,"n":15}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":1,"n":15}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":1,"n":15}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":1,"n":15,"j":1}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":1,"n":15,"j":2}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":1,"n":15,"j":2}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":2,"n":15,"j":2,"part":["s","a"]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":2,"n":15,"j":2,"part":["s","a"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":2,"n":15,"j":2,"part":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":2,"n":15,"j":2,"part":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":3,"n":15,"j":2,"part":["s","a"]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":3,"n":15,"j":2,"part":["s","a"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":3,"n":15,"j":3,"part":["s","a"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":3,"n":15,"j":4,"part":["s","a"]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":3,"n":15,"j":4,"part":["s","a"]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":4,"n":15,"j":4,"part":["s","."]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":4,"n":15,"j":4,"part":["s","."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":4,"n":15,"j":4,"part":["s","."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":4,"n":15,"j":4,"part":["s","."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":5,"n":15,"j":4,"part":["s","."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":5,"n":15,"j":4,"part":["s","."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":5,"n":15,"j":5,"part":["s","."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":5,"n":15,"j":6,"part":["s","."]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":5,"n":15,"j":6,"part":["s","."]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":6,"n":15,"j":6,"part":["s","b"]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":6,"n":15,"j":6,"part":["s","b"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":6,"n":15,"j":6,"part":["s","b"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":6,"n":15,"j":6,"part":["s","b"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":6,"part":["s","b"]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":6,"part":["s","b"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":7,"part":["s","b"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":8,"part":["s","b"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":9,"part":["s","b"]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":7,"n":15,"j":9,"part":["s","b"]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":9,"n":15,"j":9,"part":["s",".."]}},{"l":10,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"],["s","b"]],0],"i":9,"n":15,"j":9,"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":9,"n":15,"j":9,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":9,"n":15,"j":9,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":9,"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":9,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":10,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":11,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":12,"part":["s",".."]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":10,"n":15,"j":12,"part":["s",".."]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":12,"n":15,"j":12,"part":["s",".."]}},{"l":10,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","a"]],0],"i":12,"n":15,"j":12,"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":12,"n":15,"j":12,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":12,"n":15,"j":12,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":13,"n":15,"j":12,"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":13,"n":15,"j":12,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":13,"n":15,"j":13,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":13,"n":15,"j":14,"part":["s",".."]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":13,"n":15,"j":14,"part":["s",".."]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":14,"n":15,"j":14,"part":["s","c"]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[],0],"i":14,"n":15,"j":14,"part":["s","c"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":14,"n":15,"j":14,"part":["s","c"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":14,"n":15,"j":14,"part":["s","c"]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":14,"part":["s","c"]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":14,"part":["s","c"]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s","c"]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s","c"]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s",""]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s",""]}},{"l":12,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s",""]}},{"l":12,"d":1,"f":1,"v":{"path":["s","/a/./b/../../c/"],"stack":["l",[["s","c"]],0],"i":15,"n":15,"j":15,"part":["s",""]},"ret":["s","/c"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"path":["s","/../"]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":0,"n":4}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":0,"n":4}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4}},{"l":6,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4,"j":1}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4,"j":2}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4,"j":3}},{"l":8,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":1,"n":4,"j":3}},{"l":9,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":3,"n":4,"j":3,"part":["s",".."]}},{"l":10,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":3,"n":4,"j":3,"part":["s",".."]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":3,"n":4,"j":3,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":3,"n":4,"j":3,"part":["s",".."]}},{"l":5,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":3,"part":["s",".."]}},{"l":6,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":3,"part":["s",".."]}},{"l":7,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",".."]}},{"l":8,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",".."]}},{"l":9,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",""]}},{"l":11,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",""]}},{"l":4,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",""]}},{"l":12,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",""]}},{"l":12,"d":1,"f":1,"v":{"path":["s","/../"],"stack":["l",[],0],"i":4,"n":4,"j":4,"part":["s",""]},"ret":["s","/"]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`path.split('/')`","Cuts the string at every `/`. Repeated slashes give empty strings `''`; a leading `/` gives a leading `''`","Tokenising delimited text. Note `split('/')` keeps empties, unlike `split()` with no argument"],["`stack`","List of directory names currently on the path","Navigation with undo is stack behaviour"],["`part == '..'` → `stack.pop()`","Go up one level, but only if there is one (root's parent is root)","Guard the pop with `if stack`"],["`part and part != '.'`","Real names only: skip empty strings and the current-directory `.`","Filtering tokens in one condition"],["`'/' + '/'.join(stack)`","Rebuilds the canonical path; an empty stack gives just `/`","`str.join` with a separator"]]}},{"h":"Walk through an example","p":["`\"/a/./b/../../c/\"` splits into `['', 'a', '.', 'b', '..', '..', 'c', '']`."],"table":{"head":["Token","Action","Path so far"],"rows":[["''","skip (empty or '.')","/"],["'a'","push","/a"],["'.'","skip (empty or '.')","/a"],["'b'","push","/a/b"],["'..'","pop","/a"],["'..'","pop","/"],["'c'","push","/c"],["''","skip (empty or '.')","/c"]]}},{"h":"Why the `if stack` guard on `..`?","p":["At the root, `/..` stays `/`. Calling `pop()` on an empty list would raise `IndexError`, so the guard both prevents the crash and implements the rule."]},{"h":"Why a stack and not a string edit?","p":["Each `..` must remove the most recent real directory, which is the last pushed item. A stack gives O(1) push and pop; cutting back a string with `rfind('/')` would work but needs more edge-case care (double slashes, trailing slash)."]},{"h":"Time and space","bullets":["Time: O(n), one split and one join.","Space: O(n) for the token list and the stack."]}],"takeaway":"Path normalisation is stack processing of `split('/')` tokens: push names, pop on `..`, ignore empty and `.`."},"ex2":{"input":"'/../'","output":"'/'","why":"Going up from the root stays at the root → '/'."}};
+window.PROBLEM = {
+ "id": "71",
+ "title": "Simplify Path",
+ "level": "Medium",
+ "topic": "Stack",
+ "question": "Given an absolute Unix-style file path as a string, return its simplified form. '.' means the current folder, '..' means go up one folder, and several slashes in a row count as one. The result starts with a single '/', has no trailing '/', and has no '.' or '..' left. Example: '/a/./b/../../c/' → into a, stay, into b, up, up, into c → '/c'.",
+ "why": "'/a/./b/../../c/' → into a, stay, into b, up, up, into c → '/c'.",
+ "idea": "Split on '/'; push folder names, pop on '..'.",
+ "input": "\"/a/./b/../../c/\"",
+ "output": "\"/c\"",
+ "notes": [],
+ "best": "Split on '/'; push folder names, pop on '..'.",
+ "variants": [
+  {
+   "name": "Stack of folders",
+   "code": "class Solution:\n    def simplifyPath(self, path):\n        stack = []\n        for part in path.split('/'):\n            if part == '..':\n                if stack: stack.pop()\n            elif part and part != '.': stack.append(part)\n        return '/' + '/'.join(stack)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Split on '/'; push folder names, pop on '..'.",
+   "frames": [
+    {
+     "title": "Split",
+     "description": "Pieces between slashes.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "a",
+     "description": "Folder → push.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "a"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": ".",
+     "description": "'.' → stay, ignore.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "a"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "b",
+     "description": "Folder → push.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "a",
+        "b"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "..",
+     "description": "'..' → go up (pop).",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "a"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "..",
+     "description": "'..' → go up (pop).",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "c",
+     "description": "Folder → push.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "parts",
+       "cells": [
+        "a",
+        ".",
+        "b",
+        "..",
+        "..",
+        "c"
+       ],
+       "hot": [
+        5
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "c"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "'/' + 'c'",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "/",
+        "c"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Manual parsing (no split)",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def simplifyPath(self, path):\n        stack = []; i = 0; n = len(path)\n        while i < n:\n            while i < n and path[i] == '/': i += 1\n            j = i\n            while j < n and path[j] != '/': j += 1\n            part = path[i:j]; i = j\n            if part == '..':\n                if stack: stack.pop()\n            elif part and part != '.': stack.append(part)\n        return '/' + '/'.join(stack)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Scan the path character by character to cut out each name.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

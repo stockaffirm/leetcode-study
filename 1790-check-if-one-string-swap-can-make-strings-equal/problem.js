@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1790","title":"Check if One String Swap Can Make Strings Equal","level":"Easy","topic":"Array / String","question":"Two strings of the same length are given. You may do at most one swap of two letters inside ONE of the strings. Return True if the strings can become equal this way (equal already also counts). Example: 'bank' and 'kanb' → True (swap the first and last letters of one of them).","why":"Can you make two strings equal by swapping two letters of ONE of them (at most once)?","idea":"List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).","input":"\"bank\", \"kanb\"","output":"True","notes":[],"best":"List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).","variants":[{"name":"Collect the differing positions","code":"class Solution:\n    def areAlmostEqual(self, s1, s2):\n        diff = [(a, b) for a, b in zip(s1, s2) if a != b]\n        return not diff or (len(diff) == 2 and diff[0] == diff[1][::-1])","time":"O(n)","space":"O(1)","explain":"List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s1":["s","bank"],"s2":["s","kanb"]}},{"l":4,"d":1,"f":1,"v":{"s1":["s","bank"],"s2":["s","kanb"],"diff":["l",[["l",[["s","b"],["s","k"]],1],["l",[["s","k"],["s","b"]],1]],0]}},{"l":4,"d":1,"f":1,"v":{"s1":["s","bank"],"s2":["s","kanb"],"diff":["l",[["l",[["s","b"],["s","k"]],1],["l",[["s","k"],["s","b"]],1]],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s1":["s","abc"],"s2":["s","abc"]}},{"l":4,"d":1,"f":1,"v":{"s1":["s","abc"],"s2":["s","abc"],"diff":["l",[],0]}},{"l":4,"d":1,"f":1,"v":{"s1":["s","abc"],"s2":["s","abc"],"diff":["l",[],0]},"ret":true}],"trunc":false}},{"name":"Counters + number of differences","tag":"Alternative","code":"class Solution:\n    def areAlmostEqual(self, s1, s2):\n        return Counter(s1) == Counter(s2) and sum(a != b for a, b in zip(s1, s2)) in (0, 2)","time":"O(n)","space":"O(26)","explain":"Same letters and at most two positions that differ.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s1":["s","bank"],"s2":["s","kanb"]}},{"l":3,"d":1,"f":1,"v":{"s1":["s","bank"],"s2":["s","kanb"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s1":["s","abc"],"s2":["s","abc"]}},{"l":3,"d":1,"f":1,"v":{"s1":["s","abc"],"s2":["s","abc"]},"ret":true}],"trunc":false}}],"ex2":{"input":"equal strings","output":"True","why":"The strings are already equal, so zero swaps are fine."}};
+window.PROBLEM = {
+ "id": "1790",
+ "title": "Check if One String Swap Can Make Strings Equal",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Two strings of the same length are given. You may do at most one swap of two letters inside ONE of the strings. Return True if the strings can become equal this way (equal already also counts). Example: 'bank' and 'kanb' → True (swap the first and last letters of one of them).",
+ "why": "Can you make two strings equal by swapping two letters of ONE of them (at most once)?",
+ "idea": "List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).",
+ "input": "\"bank\", \"kanb\"",
+ "output": "True",
+ "notes": [],
+ "best": "List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).",
+ "variants": [
+  {
+   "name": "Collect the differing positions",
+   "code": "class Solution:\n    def areAlmostEqual(self, s1, s2):\n        diff = [(a, b) for a, b in zip(s1, s2) if a != b]\n        return not diff or (len(diff) == 2 and diff[0] == diff[1][::-1])",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "List the positions where the strings differ. Either there are none, or there are exactly two and they are mirror images of each other (a, b vs b, a).",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Counters + number of differences",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def areAlmostEqual(self, s1, s2):\n        return Counter(s1) == Counter(s2) and sum(a != b for a, b in zip(s1, s2)) in (0, 2)",
+   "time": "O(n)",
+   "space": "O(26)",
+   "explain": "Same letters and at most two positions that differ.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

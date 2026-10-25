@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2270","title":"Number of Ways to Split Array","level":"Medium","topic":"Prefix Sum","question":"Given a list nums, a split position i (0 ≤ i < n−1) cuts it into a left part nums[0..i] and a right part nums[i+1..], both non-empty. A split is valid if the sum of the left part is at least the sum of the right part. Return the number of valid splits. Example: [10,4,-8,7] → splits after position 0 (10 ≥ 3) and position 1 (14 ≥ −1) are valid; after position 2 (6 ≥ 7) is not → 2.","why":"Cut the list into a non-empty left part and non-empty right part so that the left sum is at least the right sum. How many cuts work?","idea":"Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).","input":"[10, 4, -8, 7]","output":"2","notes":[],"best":"Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).","variants":[{"name":"Running left sum vs the rest","code":"class Solution:\n    def waysToSplitArray(self, nums):\n        total, left, ways = sum(nums), 0, 0\n        for i in range(len(nums) - 1):\n            left += nums[i]\n            if left >= total - left: ways += 1\n        return ways","time":"O(n)","space":"O(1)","explain":"Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":0,"ways":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":0,"ways":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":10,"ways":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":10,"ways":1,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":10,"ways":1,"i":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":14,"ways":1,"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":14,"ways":2,"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":14,"ways":2,"i":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":6,"ways":2,"i":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":6,"ways":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":6,"ways":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"total":13,"left":6,"ways":2,"i":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":0,"ways":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":0,"ways":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":1,"ways":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":1,"ways":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":1,"ways":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"total":3,"left":1,"ways":0,"i":0},"ret":0}],"trunc":false}},{"name":"Prefix sum array","tag":"Alternative","code":"class Solution:\n    def waysToSplitArray(self, nums):\n        pre = list(accumulate(nums))\n        return sum(1 for i in range(len(nums) - 1) if pre[i] >= pre[-1] - pre[i])","time":"O(n)","space":"O(n)","explain":"Build all prefix sums first, then check each cut against the total.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"pre":["l",[10,14,6,13],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[10,4,-8,7],0],"pre":["l",[10,14,6,13],0]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"pre":["l",[1,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2],0],"pre":["l",[1,3],0]},"ret":0}],"trunc":false}}],"ex2":{"input":"[1, 2]","output":"0","why":"The only cut gives left = 1 and right = 2; 1 is not ≥ 2, so there are 0 valid splits."}};
+window.PROBLEM = {
+ "id": "2270",
+ "title": "Number of Ways to Split Array",
+ "level": "Medium",
+ "topic": "Prefix Sum",
+ "question": "Given a list nums, a split position i (0 ≤ i < n−1) cuts it into a left part nums[0..i] and a right part nums[i+1..], both non-empty. A split is valid if the sum of the left part is at least the sum of the right part. Return the number of valid splits. Example: [10,4,-8,7] → splits after position 0 (10 ≥ 3) and position 1 (14 ≥ −1) are valid; after position 2 (6 ≥ 7) is not → 2.",
+ "why": "Cut the list into a non-empty left part and non-empty right part so that the left sum is at least the right sum. How many cuts work?",
+ "idea": "Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).",
+ "input": "[10, 4, -8, 7]",
+ "output": "2",
+ "notes": [],
+ "best": "Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).",
+ "variants": [
+  {
+   "name": "Running left sum vs the rest",
+   "code": "class Solution:\n    def waysToSplitArray(self, nums):\n        total, left, ways = sum(nums), 0, 0\n        for i in range(len(nums) - 1):\n            left += nums[i]\n            if left >= total - left: ways += 1\n        return ways",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Know the total once. Walking left to right, the right sum is total − left sum, so each cut is checked in O(1).",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Prefix sum array",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def waysToSplitArray(self, nums):\n        pre = list(accumulate(nums))\n        return sum(1 for i in range(len(nums) - 1) if pre[i] >= pre[-1] - pre[i])",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Build all prefix sums first, then check each cut against the total.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

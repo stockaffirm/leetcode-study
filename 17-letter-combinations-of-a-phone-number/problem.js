@@ -1,1 +1,691 @@
-window.PROBLEM = {"id":"17","title":"Letter Combinations of a Phone Number","level":"Medium","topic":"Backtracking","question":"Given a string digits containing digits 2–9, return all letter combinations the number could represent on a phone keypad (2 = abc, 3 = def, 4 = ghi, 5 = jkl, 6 = mno, 7 = pqrs, 8 = tuv, 9 = wxyz). Return them in any order; return an empty list if digits is empty. Example: '23' → ad, ae, af, bd, be, bf, cd, ce, cf.","input":"\"23\"","output":"[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]","notes":["Depth = number of digits.","path + ch builds a new string, so no explicit undo is needed."],"best":"Backtracking: one level per digit, one branch per letter.","variants":[{"name":"Backtracking","code":"class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        res = []\n        def go(i, path):\n            if i == len(digits): res.append(path); return\n            for ch in phone[digits[i]]: go(i + 1, path + ch)\n        go(0, '')\n        return res","time":"O(4ⁿ·n)","space":"O(n)","explain":"Choose one letter per digit, recurse, backtrack.","frames":[{"title":"Digits","description":"2 → abc, 3 → def","codeLines":[4],"facts":{},"rows":[{"name":"digits","cells":["2","3"],"hot":[],"marks":{}},{"name":"res","cells":["·"],"hot":[],"marks":{}}]},{"title":"Pick 'a'","description":"Then try d, e, f for digit 3.","codeLines":[8,7],"facts":{},"rows":[{"name":"path","cells":["a"],"hot":[0],"marks":{}},{"name":"res","cells":["ad","ae","af"],"hot":[0,1,2],"marks":{}}],"sub":[{"description":"digit 2 → pick 'a'","codeLines":[8],"facts":{},"rows":[{"name":"path","cells":["a"],"hot":[0],"marks":{}},{"name":"res","cells":["·"],"hot":[],"marks":{}}]},{"description":"digit 3 → pick 'd' → path 'ad' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["a","d"],"hot":[1],"marks":{}},{"name":"res","cells":["ad"],"hot":[0],"marks":{}}]},{"description":"digit 3 → pick 'e' → path 'ae' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["a","e"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae"],"hot":[1],"marks":{}}]},{"description":"digit 3 → pick 'f' → path 'af' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["a","f"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af"],"hot":[2],"marks":{}}]},{"description":"all of d, e, f tried → undo 'a'","codeLines":[8],"facts":{},"rows":[{"name":"res","cells":["ad","ae","af"],"hot":[],"marks":{}}]}]},{"title":"Pick 'b'","description":"Then try d, e, f for digit 3.","codeLines":[8,7],"facts":{},"rows":[{"name":"path","cells":["b"],"hot":[0],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf"],"hot":[3,4,5],"marks":{}}],"sub":[{"description":"digit 2 → pick 'b'","codeLines":[8],"facts":{},"rows":[{"name":"path","cells":["b"],"hot":[0],"marks":{}},{"name":"res","cells":["ad","ae","af"],"hot":[],"marks":{}}]},{"description":"digit 3 → pick 'd' → path 'bd' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["b","d"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd"],"hot":[3],"marks":{}}]},{"description":"digit 3 → pick 'e' → path 'be' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["b","e"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be"],"hot":[4],"marks":{}}]},{"description":"digit 3 → pick 'f' → path 'bf' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["b","f"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf"],"hot":[5],"marks":{}}]},{"description":"all of d, e, f tried → undo 'b'","codeLines":[8],"facts":{},"rows":[{"name":"res","cells":["ad","ae","af","bd","be","bf"],"hot":[],"marks":{}}]}]},{"title":"Pick 'c'","description":"Then try d, e, f for digit 3.","codeLines":[8,7],"facts":{},"rows":[{"name":"path","cells":["c"],"hot":[0],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf","cd","ce","cf"],"hot":[6,7,8],"marks":{}}],"sub":[{"description":"digit 2 → pick 'c'","codeLines":[8],"facts":{},"rows":[{"name":"path","cells":["c"],"hot":[0],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf"],"hot":[],"marks":{}}]},{"description":"digit 3 → pick 'd' → path 'cd' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["c","d"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf","cd"],"hot":[6],"marks":{}}]},{"description":"digit 3 → pick 'e' → path 'ce' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["c","e"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf","cd","ce"],"hot":[7],"marks":{}}]},{"description":"digit 3 → pick 'f' → path 'cf' is complete → save","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["c","f"],"hot":[1],"marks":{}},{"name":"res","cells":["ad","ae","af","bd","be","bf","cd","ce","cf"],"hot":[8],"marks":{}}]},{"description":"all of d, e, f tried → undo 'c'","codeLines":[8],"facts":{},"rows":[{"name":"res","cells":["ad","ae","af","bd","be","bf","cd","ce","cf"],"hot":[],"marks":{}}]}]},{"title":"Return","description":"9 combinations.","codeLines":[10],"facts":{},"rows":[{"name":"res","cells":["ad","ae","af","bd","be","bf","cd","ce","cf"],"hot":[0,1,2,3,4,5,6,7,8],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":4,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":5,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]]}},{"l":6,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":9,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":7,"d":2,"f":2,"v":{"i":0,"path":["s",""],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":8,"d":2,"f":2,"v":{"i":0,"path":["s",""],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":7,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":8,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":7,"d":4,"f":4,"v":{"i":2,"path":["s","ad"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[],0]}},{"l":7,"d":4,"f":4,"v":{"i":2,"path":["s","ad"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"]],0]},"ret":null},{"l":8,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"ch":["s","d"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"]],0]}},{"l":7,"d":4,"f":5,"v":{"i":2,"path":["s","ae"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"]],0]}},{"l":7,"d":4,"f":5,"v":{"i":2,"path":["s","ae"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"]],0]},"ret":null},{"l":8,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"ch":["s","e"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"]],0]}},{"l":7,"d":4,"f":6,"v":{"i":2,"path":["s","af"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"]],0]}},{"l":7,"d":4,"f":6,"v":{"i":2,"path":["s","af"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]},"ret":null},{"l":8,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]}},{"l":8,"d":3,"f":3,"v":{"i":1,"path":["s","a"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]},"ret":null},{"l":8,"d":2,"f":2,"v":{"i":0,"path":["s",""],"ch":["s","a"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]}},{"l":7,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]}},{"l":8,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]}},{"l":7,"d":4,"f":8,"v":{"i":2,"path":["s","bd"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"]],0]}},{"l":7,"d":4,"f":8,"v":{"i":2,"path":["s","bd"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"]],0]},"ret":null},{"l":8,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"ch":["s","d"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"]],0]}},{"l":7,"d":4,"f":9,"v":{"i":2,"path":["s","be"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"]],0]}},{"l":7,"d":4,"f":9,"v":{"i":2,"path":["s","be"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"]],0]},"ret":null},{"l":8,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"ch":["s","e"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"]],0]}},{"l":7,"d":4,"f":10,"v":{"i":2,"path":["s","bf"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"]],0]}},{"l":7,"d":4,"f":10,"v":{"i":2,"path":["s","bf"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]},"ret":null},{"l":8,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]}},{"l":8,"d":3,"f":7,"v":{"i":1,"path":["s","b"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]},"ret":null},{"l":8,"d":2,"f":2,"v":{"i":0,"path":["s",""],"ch":["s","b"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]}},{"l":7,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]}},{"l":8,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]}},{"l":7,"d":4,"f":12,"v":{"i":2,"path":["s","cd"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"]],0]}},{"l":7,"d":4,"f":12,"v":{"i":2,"path":["s","cd"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"]],0]},"ret":null},{"l":8,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"ch":["s","d"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"]],0]}},{"l":7,"d":4,"f":13,"v":{"i":2,"path":["s","ce"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"]],0]}},{"l":7,"d":4,"f":13,"v":{"i":2,"path":["s","ce"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"]],0]},"ret":null},{"l":8,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"ch":["s","e"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"]],0]}},{"l":7,"d":4,"f":14,"v":{"i":2,"path":["s","cf"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"]],0]}},{"l":7,"d":4,"f":14,"v":{"i":2,"path":["s","cf"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]},"ret":null},{"l":8,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}},{"l":8,"d":3,"f":11,"v":{"i":1,"path":["s","c"],"ch":["s","f"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]},"ret":null},{"l":8,"d":2,"f":2,"v":{"i":0,"path":["s",""],"ch":["s","c"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}},{"l":8,"d":2,"f":2,"v":{"i":0,"path":["s",""],"ch":["s","c"],"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]},"ret":null},{"l":10,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}},{"l":10,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]},"ret":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s",""]}},{"l":3,"d":1,"f":1,"v":{"digits":["s",""]},"ret":["l",[],0]}],"trunc":false}},{"name":"Iterative build-up","tag":"Alternative","code":"class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        res = ['']\n        for d in digits:\n            res = [p + c for p in res for c in phone[d]]\n        return res","time":"O(4ⁿ·n)","space":"O(4ⁿ)","explain":"Extend every partial word with each letter of the next digit.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":4,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":5,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]]}},{"l":6,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s",""]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]]}},{"l":7,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s",""]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","2"]}},{"l":6,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s","a"],["s","b"],["s","c"]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","2"]}},{"l":7,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s","a"],["s","b"],["s","c"]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","3"]}},{"l":6,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","3"]}},{"l":8,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","3"]}},{"l":8,"d":1,"f":1,"v":{"digits":["s","23"],"res":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]],"d":["s","3"]},"ret":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s",""]}},{"l":3,"d":1,"f":1,"v":{"digits":["s",""]},"ret":["l",[],0]}],"trunc":false}},{"name":"itertools.product","tag":"Pythonic","code":"class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        return [''.join(t) for t in product(*(phone[d] for d in digits))]","time":"O(4ⁿ·n)","space":"O(4ⁿ)","explain":"The Cartesian product of the letter groups is the answer.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":4,"d":1,"f":1,"v":{"digits":["s","23"]}},{"l":5,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]]}},{"l":5,"d":1,"f":1,"v":{"digits":["s","23"],"phone":["d",[[["s","2"],["s","abc"]],[["s","3"],["s","def"]],[["s","4"],["s","ghi"]],[["s","5"],["s","jkl"]],[["s","6"],["s","mno"]],[["s","7"],["s","pqrs"]],[["s","8"],["s","tuv"]],[["s","9"],["s","wxyz"]]]]},"ret":["l",[["s","ad"],["s","ae"],["s","af"],["s","bd"],["s","be"],["s","bf"],["s","cd"],["s","ce"],["s","cf"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"digits":["s",""]}},{"l":3,"d":1,"f":1,"v":{"digits":["s",""]},"ret":["l",[],0]}],"trunc":false}}],"why":"2 → a, b, c and 3 → d, e, f gives 3 × 3 = 9 words.","idea":"Pick one letter per digit, going deeper one digit at a time (recursion).","understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`phone = {'2':'abc', …}`","Dict from digit character to its letters","A fixed lookup that is clearer than arithmetic on character codes"],["`if not digits: return []`","Empty input has zero combinations, not one empty string","Guarding the base case before the recursion would return `['']`"],["`def go(i, path)`","Inner recursive function: `i` is the digit being decided, `path` the string built so far","Backtracking where state lives in arguments; nested functions can see `res` and `digits`"],["`for ch in phone[digits[i]]`","Tries each letter for the current digit","One loop level per decision point"],["`path + ch`","Builds a new string for the child call","Strings are immutable, so no undo step is needed"],["`res.append(path)`","Collects a finished combination when `i == len(digits)`","Emit at the leaf of the recursion tree"]]}},{"h":"Walk through an example","p":["`digits = \"23\"` (2 → abc, 3 → def). The table lists the recursive calls in the order they happen, depth-first."],"table":{"head":["Call #","i","path","What happens"],"rows":[["1","0","''","choose next letter from 'abc'"],["2","1","'a'","choose next letter from 'def'"],["3","2","'ad'","emit 'ad'"],["4","2","'ae'","emit 'ae'"],["5","2","'af'","emit 'af'"],["6","1","'b'","choose next letter from 'def'"],["7","2","'bd'","emit 'bd'"],["8","2","'be'","emit 'be'"],["9","2","'bf'","emit 'bf'"],["10","1","'c'","choose next letter from 'def'"],["11","2","'cd'","emit 'cd'"],["12","2","'ce'","emit 'ce'"],["13","2","'cf'","emit 'cf'"]]}},{"h":"Why no undo (pop) step?","p":["Classic backtracking appends to a shared list and pops afterwards. Here `path + ch` creates a fresh string for each child, so the parent's `path` is never changed and there is nothing to restore. The cost is copying the string at every call, which is fine because lengths are at most 4."]},{"h":"How big is the output?","p":["Digits `7` and `9` have 4 letters, the others 3, so the result has up to 4^k strings for k digits. Any solution has to produce all of them, so the output size sets the lower bound."]},{"h":"Time and space","bullets":["Time: O(4^n · n), 4^n combinations each costing O(n) to build or copy.","Space: O(n) recursion depth, not counting the output list."]}],"takeaway":"Backtracking over a product of choices: one recursion level per digit, one loop iteration per letter; the answer count is the product of the letter counts."},"ex2":{"input":"''","output":"[]","why":"No digits → no combinations."}};
+window.PROBLEM = {
+ "id": "17",
+ "title": "Letter Combinations of a Phone Number",
+ "level": "Medium",
+ "topic": "Backtracking",
+ "question": "Given a string digits containing digits 2–9, return all letter combinations the number could represent on a phone keypad (2 = abc, 3 = def, 4 = ghi, 5 = jkl, 6 = mno, 7 = pqrs, 8 = tuv, 9 = wxyz). Return them in any order; return an empty list if digits is empty. Example: '23' → ad, ae, af, bd, be, bf, cd, ce, cf.",
+ "input": "\"23\"",
+ "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]",
+ "notes": [
+  "Depth = number of digits.",
+  "path + ch builds a new string, so no explicit undo is needed."
+ ],
+ "best": "Backtracking: one level per digit, one branch per letter.",
+ "variants": [
+  {
+   "name": "Backtracking",
+   "code": "class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        res = []\n        def go(i, path):\n            if i == len(digits): res.append(path); return\n            for ch in phone[digits[i]]: go(i + 1, path + ch)\n        go(0, '')\n        return res",
+   "time": "O(4ⁿ·n)",
+   "space": "O(n)",
+   "explain": "Choose one letter per digit, recurse, backtrack.",
+   "frames": [
+    {
+     "title": "Digits",
+     "description": "2 → abc, 3 → def",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "digits",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Pick 'a'",
+     "description": "Then try d, e, f for digit 3.",
+     "codeLines": [
+      8,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "a"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "ad",
+        "ae",
+        "af"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "digit 2 → pick 'a'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "a"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "·"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'd' → path 'ad' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "a",
+          "d"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'e' → path 'ae' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "a",
+          "e"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'f' → path 'af' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "a",
+          "f"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af"
+         ],
+         "hot": [
+          2
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "all of d, e, f tried → undo 'a'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Pick 'b'",
+     "description": "Then try d, e, f for digit 3.",
+     "codeLines": [
+      8,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "b"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "ad",
+        "ae",
+        "af",
+        "bd",
+        "be",
+        "bf"
+       ],
+       "hot": [
+        3,
+        4,
+        5
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "digit 2 → pick 'b'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "b"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'd' → path 'bd' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "b",
+          "d"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd"
+         ],
+         "hot": [
+          3
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'e' → path 'be' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "b",
+          "e"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be"
+         ],
+         "hot": [
+          4
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'f' → path 'bf' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "b",
+          "f"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf"
+         ],
+         "hot": [
+          5
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "all of d, e, f tried → undo 'b'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Pick 'c'",
+     "description": "Then try d, e, f for digit 3.",
+     "codeLines": [
+      8,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "c"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "ad",
+        "ae",
+        "af",
+        "bd",
+        "be",
+        "bf",
+        "cd",
+        "ce",
+        "cf"
+       ],
+       "hot": [
+        6,
+        7,
+        8
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "digit 2 → pick 'c'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "c"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'd' → path 'cd' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "c",
+          "d"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf",
+          "cd"
+         ],
+         "hot": [
+          6
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'e' → path 'ce' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "c",
+          "e"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf",
+          "cd",
+          "ce"
+         ],
+         "hot": [
+          7
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "digit 3 → pick 'f' → path 'cf' is complete → save",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "c",
+          "f"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf",
+          "cd",
+          "ce",
+          "cf"
+         ],
+         "hot": [
+          8
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "all of d, e, f tried → undo 'c'",
+       "codeLines": [
+        8
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "res",
+         "cells": [
+          "ad",
+          "ae",
+          "af",
+          "bd",
+          "be",
+          "bf",
+          "cd",
+          "ce",
+          "cf"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "9 combinations.",
+     "codeLines": [
+      10
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "res",
+       "cells": [
+        "ad",
+        "ae",
+        "af",
+        "bd",
+        "be",
+        "bf",
+        "cd",
+        "ce",
+        "cf"
+       ],
+       "hot": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Iterative build-up",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        res = ['']\n        for d in digits:\n            res = [p + c for p in res for c in phone[d]]\n        return res",
+   "time": "O(4ⁿ·n)",
+   "space": "O(4ⁿ)",
+   "explain": "Extend every partial word with each letter of the next digit.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "itertools.product",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def letterCombinations(self, digits):\n        if not digits: return []\n        phone = {'2':'abc','3':'def','4':'ghi','5':'jkl','6':'mno','7':'pqrs','8':'tuv','9':'wxyz'}\n        return [''.join(t) for t in product(*(phone[d] for d in digits))]",
+   "time": "O(4ⁿ·n)",
+   "space": "O(4ⁿ)",
+   "explain": "The Cartesian product of the letter groups is the answer.",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "2 → a, b, c and 3 → d, e, f gives 3 × 3 = 9 words.",
+ "idea": "Pick one letter per digit, going deeper one digit at a time (recursion)."
+};

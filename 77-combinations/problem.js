@@ -1,1 +1,552 @@
-window.PROBLEM = {"id":"77","title":"Combinations","level":"Medium","topic":"Backtracking","question":"Given two numbers n and k, return all possible ways to choose k different numbers from 1 to n. Order doesn't matter (so [1,2] and [2,1] count as the same choice). Example: n=4, k=2 → [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]].","why":"n = 4, k = 2 → [1,2],[1,3],[1,4],[2,3],[2,4],[3,4].","idea":"Backtracking: pick numbers in increasing order so you never repeat a set.","input":"n = 4, k = 2","output":"[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]","notes":[],"best":"Backtracking: pick numbers in increasing order so you never repeat a set.","variants":[{"name":"Backtracking","code":"class Solution:\n    def combine(self, n, k):\n        res = []\n        def go(start, path):\n            if len(path) == k: res.append(path[:]); return\n            for x in range(start, n + 1):\n                path.append(x); go(x + 1, path); path.pop()\n        go(1, [])\n        return res","time":"O(C(n,k)·k)","space":"O(k)","explain":"Backtracking: pick numbers in increasing order so you never repeat a set.","frames":[{"title":"Start","description":"Choose 2 numbers from 1–4.","codeLines":[8],"facts":{},"rows":[{"name":"path","cells":["·"],"hot":[],"marks":{}}]},{"title":"Start with 1","description":"Pair 1 with 2, 3, 4.","codeLines":[6],"facts":{},"rows":[{"name":"path","cells":["1"],"hot":[0],"marks":{}},{"name":"found","cells":["[1,2]","[1,3]","[1,4]"],"hot":[0,1,2],"marks":{}}],"sub":[{"description":"choose 1 → path [1]","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["1"],"hot":[0],"marks":{}},{"name":"saved","cells":["…"],"hot":[],"marks":{}}]},{"description":"choose 2 → path [1,2] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["1","2"],"hot":[1],"marks":{}},{"name":"saved","cells":["[1,2]"],"hot":[],"marks":{}}]},{"description":"undo 2 (pop) → path [1], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["1"],"hot":[0],"marks":{}}]},{"description":"choose 3 → path [1,3] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["1","3"],"hot":[1],"marks":{}},{"name":"saved","cells":["[1,3]"],"hot":[],"marks":{}}]},{"description":"undo 3 (pop) → path [1], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["1"],"hot":[0],"marks":{}}]},{"description":"choose 4 → path [1,4] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["1","4"],"hot":[1],"marks":{}},{"name":"saved","cells":["[1,4]"],"hot":[],"marks":{}}]},{"description":"undo 4 (pop) → path [1], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["1"],"hot":[0],"marks":{}}]}]},{"title":"Start with 2","description":"Pair 2 with 3, 4 (not 1 — avoids repeats).","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["2"],"hot":[0],"marks":{}},{"name":"found","cells":["[1,2]","[1,3]","[1,4]","[2,3]","[2,4]"],"hot":[3,4],"marks":{}}],"sub":[{"description":"choose 2 → path [2]","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["2"],"hot":[0],"marks":{}},{"name":"saved","cells":["…"],"hot":[],"marks":{}}]},{"description":"choose 3 → path [2,3] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["2","3"],"hot":[1],"marks":{}},{"name":"saved","cells":["[2,3]"],"hot":[],"marks":{}}]},{"description":"undo 3 (pop) → path [2], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["2"],"hot":[0],"marks":{}}]},{"description":"choose 4 → path [2,4] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["2","4"],"hot":[1],"marks":{}},{"name":"saved","cells":["[2,4]"],"hot":[],"marks":{}}]},{"description":"undo 4 (pop) → path [2], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["2"],"hot":[0],"marks":{}}]}]},{"title":"Start with 3","description":"Pair 3 with 4.","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["3"],"hot":[0],"marks":{}},{"name":"found","cells":["…","[3,4]"],"hot":[1],"marks":{}}],"sub":[{"description":"choose 3 → path [3]","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["3"],"hot":[0],"marks":{}},{"name":"saved","cells":["…"],"hot":[],"marks":{}}]},{"description":"choose 4 → path [3,4] has 2 numbers → save it","codeLines":[5],"facts":{},"rows":[{"name":"path","cells":["3","4"],"hot":[1],"marks":{}},{"name":"saved","cells":["[3,4]"],"hot":[],"marks":{}}]},{"description":"undo 4 (pop) → path [3], try the next number","codeLines":[7],"facts":{},"rows":[{"name":"path","cells":["3"],"hot":[0],"marks":{}}]}]},{"title":"Return","description":"6 combinations.","codeLines":[9],"facts":{},"rows":[{"name":"count","cells":["6"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"res":["l",[],0]}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"res":["l",[],0]}},{"l":5,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"k":2,"n":4,"res":["l",[],0]}},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"k":2,"n":4,"res":["l",[],0]}},{"l":7,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":1,"k":2,"n":4,"res":["l",[],0]}},{"l":5,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"k":2,"n":4,"res":["l",[],0]}},{"l":6,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"k":2,"n":4,"res":["l",[],0]}},{"l":7,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":2,"k":2,"n":4,"res":["l",[],0]}},{"l":5,"d":4,"f":4,"v":{"start":3,"path":["l",[1,2],0],"k":2,"n":4,"res":["l",[],0]}},{"l":5,"d":4,"f":4,"v":{"start":3,"path":["l",[1,2],0],"k":2,"n":4,"res":["l",[["l",[1,2],0]],0]},"ret":null},{"l":6,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":2,"k":2,"n":4,"res":["l",[["l",[1,2],0]],0]}},{"l":7,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0]],0]}},{"l":5,"d":4,"f":5,"v":{"start":4,"path":["l",[1,3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0]],0]}},{"l":5,"d":4,"f":5,"v":{"start":4,"path":["l",[1,3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0]],0]},"ret":null},{"l":6,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0]],0]}},{"l":7,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0]],0]}},{"l":5,"d":4,"f":6,"v":{"start":5,"path":["l",[1,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0]],0]}},{"l":5,"d":4,"f":6,"v":{"start":5,"path":["l",[1,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]},"ret":null},{"l":6,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":6,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":1,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":7,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":2,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":5,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":6,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":7,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":5,"d":4,"f":8,"v":{"start":4,"path":["l",[2,3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0]],0]}},{"l":5,"d":4,"f":8,"v":{"start":4,"path":["l",[2,3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0]],0]},"ret":null},{"l":6,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0]],0]}},{"l":7,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0]],0]}},{"l":5,"d":4,"f":9,"v":{"start":5,"path":["l",[2,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0]],0]}},{"l":5,"d":4,"f":9,"v":{"start":5,"path":["l",[2,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]},"ret":null},{"l":6,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":6,"d":3,"f":7,"v":{"start":3,"path":["l",[2],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":2,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":7,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":5,"d":3,"f":10,"v":{"start":4,"path":["l",[3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":6,"d":3,"f":10,"v":{"start":4,"path":["l",[3],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":7,"d":3,"f":10,"v":{"start":4,"path":["l",[3],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":5,"d":4,"f":11,"v":{"start":5,"path":["l",[3,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0]],0]}},{"l":5,"d":4,"f":11,"v":{"start":5,"path":["l",[3,4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]},"ret":null},{"l":6,"d":3,"f":10,"v":{"start":4,"path":["l",[3],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":6,"d":3,"f":10,"v":{"start":4,"path":["l",[3],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":3,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":7,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":5,"d":3,"f":12,"v":{"start":5,"path":["l",[4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":6,"d":3,"f":12,"v":{"start":5,"path":["l",[4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":6,"d":3,"f":12,"v":{"start":5,"path":["l",[4],0],"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":4,"k":2,"n":4,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]},"ret":null},{"l":9,"d":1,"f":1,"v":{"n":4,"k":2,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}},{"l":9,"d":1,"f":1,"v":{"n":4,"k":2,"res":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]},"ret":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":1,"k":1,"res":["l",[],0]}},{"l":8,"d":1,"f":1,"v":{"n":1,"k":1,"res":["l",[],0]}},{"l":5,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"k":1,"n":1,"res":["l",[],0]}},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"k":1,"n":1,"res":["l",[],0]}},{"l":7,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":1,"k":1,"n":1,"res":["l",[],0]}},{"l":5,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"k":1,"n":1,"res":["l",[],0]}},{"l":5,"d":3,"f":3,"v":{"start":2,"path":["l",[1],0],"k":1,"n":1,"res":["l",[["l",[1],0]],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":1,"k":1,"n":1,"res":["l",[["l",[1],0]],0]}},{"l":6,"d":2,"f":2,"v":{"start":1,"path":["l",[],0],"x":1,"k":1,"n":1,"res":["l",[["l",[1],0]],0]},"ret":null},{"l":9,"d":1,"f":1,"v":{"n":1,"k":1,"res":["l",[["l",[1],0]],0]}},{"l":9,"d":1,"f":1,"v":{"n":1,"k":1,"res":["l",[["l",[1],0]],0]},"ret":["l",[["l",[1],0]],0]}],"trunc":false}},{"name":"itertools.combinations","tag":"Pythonic","code":"class Solution:\n    def combine(self, n, k):\n        return [list(c) for c in combinations(range(1, n + 1), k)]","time":"O(C(n,k)·k)","space":"O(k)","explain":"Let the standard library generate them.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4,"k":2}},{"l":3,"d":1,"f":1,"v":{"n":4,"k":2},"ret":["l",[["l",[1,2],0],["l",[1,3],0],["l",[1,4],0],["l",[2,3],0],["l",[2,4],0],["l",[3,4],0]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1,"k":1}},{"l":3,"d":1,"f":1,"v":{"n":1,"k":1},"ret":["l",[["l",[1],0]],0]}],"trunc":false}},{"name":"Lexicographic iteration","tag":"Alternative","code":"class Solution:\n    def combine(self, n, k):\n        nums = list(range(1, k + 1)) + [n + 1]; output, j = [], 0\n        while j < k:\n            output.append(nums[:k]); j = 0\n            while j < k and nums[j + 1] == nums[j] + 1:\n                nums[j] = j + 1; j += 1\n            nums[j] += 1\n        return output","time":"O(C(n,k)·k)","space":"O(k)","explain":"Step through combinations in order without recursion.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4,"k":2}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[],0],"j":0}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0]],0],"j":0}},{"l":7,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0]],0],"j":1}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0]],0],"j":1}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0]],0],"j":1}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0]],0],"j":1}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0]],0],"j":0}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0]],0],"j":0}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0]],0],"j":0}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":0}},{"l":7,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":1}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,3,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":1}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":1}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0]],0],"j":1}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0]],0],"j":0}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0]],0],"j":0}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0]],0],"j":0}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0]],0],"j":0}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[2,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0]],0],"j":0}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[3,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0]],0],"j":0}},{"l":5,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[3,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[3,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":0}},{"l":7,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[3,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":1}},{"l":7,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,4,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":1}},{"l":6,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":2}},{"l":8,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,5],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":2}},{"l":4,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,6],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":2}},{"l":9,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,6],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":2}},{"l":9,"d":1,"f":1,"v":{"n":4,"k":2,"nums":["l",[1,2,6],0],"output":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0],"j":2},"ret":["l",[["l",[1,2],0],["l",[1,3],0],["l",[2,3],0],["l",[1,4],0],["l",[2,4],0],["l",[3,4],0]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1,"k":1}},{"l":4,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[],0],"j":0}},{"l":5,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[["l",[1],0]],0],"j":0}},{"l":7,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[["l",[1],0]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[["l",[1],0]],0],"j":1}},{"l":8,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,2],0],"output":["l",[["l",[1],0]],0],"j":1}},{"l":4,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,3],0],"output":["l",[["l",[1],0]],0],"j":1}},{"l":9,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,3],0],"output":["l",[["l",[1],0]],0],"j":1}},{"l":9,"d":1,"f":1,"v":{"n":1,"k":1,"nums":["l",[1,3],0],"output":["l",[["l",[1],0]],0],"j":1},"ret":["l",[["l",[1],0]],0]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`go(start, path)`","Recursive helper: `start` is the smallest number we may still pick; `path` is the current partial combination","Backtracking over a sorted pool where order does not matter"],["`range(start, n + 1)`","Only candidates at or after `start`, so each set is generated in increasing order and never twice","Combinations, not permutations: avoid [2,1] after [1,2]"],["`go(x + 1, path)`","Next pick must be larger than `x` (no reuse)","Each element is used at most once"],["`path.append(x)` … `path.pop()`","Choose, recurse, undo","Reusing one list for the whole search"],["`res.append(path[:])`","Saves a copy at the leaf; without `[:]` every entry would point to the same final empty list","Snapshotting mutable state"]]}},{"h":"Walk through an example","p":["`n = 4, k = 2`: the recursion tree picks one number, then a larger one. Each `choose` row is one recursive step."],"table":{"head":["Path before","Pick","Action"],"rows":[["[]","x=1","choose 1, next start 2"],["[1]","x=2","choose 2, next start 3"],["[1]","x=3","choose 3, next start 4"],["[1]","x=4","choose 4, next start 5"],["[]","x=2","choose 2, next start 3"],["[2]","x=3","choose 3, next start 4"],["…","…","(continues the same way with 2 and 3 as the first pick)"]]}},{"h":"Result","p":["The emitted combinations, in order: `[1, 2]`, `[1, 3]`, `[1, 4]`, `[2, 3]`, `[2, 4]`, `[3, 4]`. That is C(4,2) = 6 of them."]},{"h":"Why not generate permutations and filter?","p":["That would visit n!/(n-k)! ordered tuples then dedupe. Forcing increasing order with `start` visits only the C(n, k) real answers, so no work is wasted."]},{"h":"A useful prune","p":["If fewer than `k - len(path)` numbers remain from `start`, the branch cannot finish. The code above doesn't prune, but you could stop the loop at `n - (k - len(path)) + 1`; mention it as an optimisation."]},{"h":"Time and space","bullets":["Time: O(k · C(n, k)), each combination is copied once.","Space: O(k) recursion depth, plus the output."]}],"takeaway":"Combinations = backtracking with an increasing `start` index so each subset appears once; copy the path when it reaches length k."},"ex2":{"input":"1,1","output":"[[1]]","why":"Choose 1 number from 1 → just [1]."}};
+window.PROBLEM = {
+ "id": "77",
+ "title": "Combinations",
+ "level": "Medium",
+ "topic": "Backtracking",
+ "question": "Given two numbers n and k, return all possible ways to choose k different numbers from 1 to n. Order doesn't matter (so [1,2] and [2,1] count as the same choice). Example: n=4, k=2 → [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]].",
+ "why": "n = 4, k = 2 → [1,2],[1,3],[1,4],[2,3],[2,4],[3,4].",
+ "idea": "Backtracking: pick numbers in increasing order so you never repeat a set.",
+ "input": "n = 4, k = 2",
+ "output": "[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]",
+ "notes": [],
+ "best": "Backtracking: pick numbers in increasing order so you never repeat a set.",
+ "variants": [
+  {
+   "name": "Backtracking",
+   "code": "class Solution:\n    def combine(self, n, k):\n        res = []\n        def go(start, path):\n            if len(path) == k: res.append(path[:]); return\n            for x in range(start, n + 1):\n                path.append(x); go(x + 1, path); path.pop()\n        go(1, [])\n        return res",
+   "time": "O(C(n,k)·k)",
+   "space": "O(k)",
+   "explain": "Backtracking: pick numbers in increasing order so you never repeat a set.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Choose 2 numbers from 1–4.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Start with 1",
+     "description": "Pair 1 with 2, 3, 4.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "found",
+       "cells": [
+        "[1,2]",
+        "[1,3]",
+        "[1,4]"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "choose 1 → path [1]",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "…"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 2 → path [1,2] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1",
+          "2"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[1,2]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 2 (pop) → path [1], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 3 → path [1,3] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1",
+          "3"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[1,3]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 3 (pop) → path [1], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 4 → path [1,4] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1",
+          "4"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[1,4]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 4 (pop) → path [1], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "1"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Start with 2",
+     "description": "Pair 2 with 3, 4 (not 1 — avoids repeats).",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "found",
+       "cells": [
+        "[1,2]",
+        "[1,3]",
+        "[1,4]",
+        "[2,3]",
+        "[2,4]"
+       ],
+       "hot": [
+        3,
+        4
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "choose 2 → path [2]",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "2"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "…"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 3 → path [2,3] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "2",
+          "3"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[2,3]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 3 (pop) → path [2], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "2"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 4 → path [2,4] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "2",
+          "4"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[2,4]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 4 (pop) → path [2], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "2"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Start with 3",
+     "description": "Pair 3 with 4.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "path",
+       "cells": [
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "found",
+       "cells": [
+        "…",
+        "[3,4]"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "choose 3 → path [3]",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "3"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "…"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "choose 4 → path [3,4] has 2 numbers → save it",
+       "codeLines": [
+        5
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "3",
+          "4"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        },
+        {
+         "name": "saved",
+         "cells": [
+          "[3,4]"
+         ],
+         "hot": [],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "undo 4 (pop) → path [3], try the next number",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "path",
+         "cells": [
+          "3"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "6 combinations.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "count",
+       "cells": [
+        "6"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "itertools.combinations",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def combine(self, n, k):\n        return [list(c) for c in combinations(range(1, n + 1), k)]",
+   "time": "O(C(n,k)·k)",
+   "space": "O(k)",
+   "explain": "Let the standard library generate them.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Lexicographic iteration",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def combine(self, n, k):\n        nums = list(range(1, k + 1)) + [n + 1]; output, j = [], 0\n        while j < k:\n            output.append(nums[:k]); j = 0\n            while j < k and nums[j + 1] == nums[j] + 1:\n                nums[j] = j + 1; j += 1\n            nums[j] += 1\n        return output",
+   "time": "O(C(n,k)·k)",
+   "space": "O(k)",
+   "explain": "Step through combinations in order without recursion.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

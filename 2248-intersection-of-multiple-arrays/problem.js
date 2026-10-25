@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2248","title":"Intersection of Multiple Arrays","level":"Easy","topic":"Hash Map / Set","question":"Given several lists of distinct positive integers, return the integers that appear in every list, sorted ascending. Example: [[3,1,2,4,5],[1,2,3,4],[3,4,5,6]] → [3,4].","why":"Return the numbers that appear in every list, sorted ascending.","idea":"Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.","input":"[[3,1,2,4,5],[1,2,3,4],[3,4,5,6]]","output":"[3,4]","notes":[],"best":"Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.","variants":[{"name":"Count occurrences across lists","code":"class Solution:\n    def intersection(self, nums):\n        cnt = Counter(x for lst in nums for x in set(lst))\n        return sorted(x for x, c in cnt.items() if c == len(nums))","time":"O(N log N)","space":"O(N)","explain":"Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"cnt":["d",[[1,2],[2,2],[3,3],[4,3],[5,2],[6,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"cnt":["d",[[1,2],[2,2],[3,3],[4,3],[5,2],[6,1]]]},"ret":["l",[3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"cnt":["d",[[1,1],[2,1],[3,1],[4,1],[5,1],[6,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"cnt":["d",[[1,1],[2,1],[3,1],[4,1],[5,1],[6,1]]]},"ret":["l",[],0]}],"trunc":false}},{"name":"Set intersection","tag":"Pythonic","code":"class Solution:\n    def intersection(self, nums):\n        common = set(nums[0])\n        for lst in nums[1:]: common &= set(lst)\n        return sorted(common)","time":"O(N)","space":"O(N)","explain":"Intersect the sets of all lists.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"common":["S",[1,2,3,4,5]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"common":["S",[1,2,3,4]],"lst":["l",[1,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"common":["S",[3,4]],"lst":["l",[3,4,5,6],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"common":["S",[3,4]],"lst":["l",[3,4,5,6],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[["l",[3,1,2,4,5],0],["l",[1,2,3,4],0],["l",[3,4,5,6],0]],0],"common":["S",[3,4]],"lst":["l",[3,4,5,6],0]},"ret":["l",[3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"common":["S",[1,2,3]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"common":["S",[]],"lst":["l",[4,5,6],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"common":["S",[]],"lst":["l",[4,5,6],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[["l",[1,2,3],0],["l",[4,5,6],0]],0],"common":["S",[]],"lst":["l",[4,5,6],0]},"ret":["l",[],0]}],"trunc":false}}],"ex2":{"input":"disjoint lists","output":"[]","why":"No number is in both lists."}};
+window.PROBLEM = {
+ "id": "2248",
+ "title": "Intersection of Multiple Arrays",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "Given several lists of distinct positive integers, return the integers that appear in every list, sorted ascending. Example: [[3,1,2,4,5],[1,2,3,4],[3,4,5,6]] → [3,4].",
+ "why": "Return the numbers that appear in every list, sorted ascending.",
+ "idea": "Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.",
+ "input": "[[3,1,2,4,5],[1,2,3,4],[3,4,5,6]]",
+ "output": "[3,4]",
+ "notes": [],
+ "best": "Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.",
+ "variants": [
+  {
+   "name": "Count occurrences across lists",
+   "code": "class Solution:\n    def intersection(self, nums):\n        cnt = Counter(x for lst in nums for x in set(lst))\n        return sorted(x for x, c in cnt.items() if c == len(nums))",
+   "time": "O(N log N)",
+   "space": "O(N)",
+   "explain": "Count in how many lists each number appears (each list has distinct numbers); keep the numbers whose count equals the number of lists.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Set intersection",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def intersection(self, nums):\n        common = set(nums[0])\n        for lst in nums[1:]: common &= set(lst)\n        return sorted(common)",
+   "time": "O(N)",
+   "space": "O(N)",
+   "explain": "Intersect the sets of all lists.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

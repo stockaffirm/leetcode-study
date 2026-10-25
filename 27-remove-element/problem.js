@@ -1,1 +1,179 @@
-window.PROBLEM = {"id":"27","title":"Remove Element","level":"Easy","topic":"Array / String","question":"You have a list of numbers nums and a number val. Remove every copy of val from the list by changing the list itself (not making a new one): move all the other numbers to the front, in any order you like. Return k, how many numbers are left. Only the first k slots are checked; what sits after them doesn't matter. Example: nums=[3,2,2,3], val=3 → k=2 and the list starts with [2,2].","why":"[3,2,2,3], val = 3 → keep 2,2 → return 2.","idea":"One pointer reads, another writes: copy only the values you want to keep.","input":"nums=[3,2,2,3], val=3","output":"2 → [2,2,_,_]","notes":[],"best":"One pointer reads, another writes: copy only the values you want to keep.","variants":[{"name":"Read / write pointers","code":"class Solution:\n    def removeElement(self, nums, val):\n        k = 0\n        for x in nums:\n            if x != val:\n                nums[k] = x; k += 1\n        return k","time":"O(n)","space":"O(1)","explain":"One pointer reads, another writes: copy only the values you want to keep.","frames":[{"title":"Start","description":"k = next free slot.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["3","2","2","3"],"hot":[],"marks":{"0":"k"}}]},{"title":"x = 3","description":"Equals val → skip.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["3","2","2","3"],"hot":[],"marks":{"0":"k,read"}}]},{"title":"x = 2","description":"Not 3 → keep it at k.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["2","2","2","3"],"hot":[0],"marks":{"1":"k,read"}}]},{"title":"x = 2","description":"Not 3 → keep it at k.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["2","2","2","3"],"hot":[1],"marks":{"2":"k,read"}}]},{"title":"x = 3","description":"Equals val → skip.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["2","2","2","3"],"hot":[],"marks":{"2":"k","3":"read"}}]},{"title":"Return","description":"First k = 2 slots hold the answer.","codeLines":[7],"facts":{},"rows":[{"name":"nums","cells":["2","2"],"hot":[0,1],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"k":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"k":0,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"k":0,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"k":0,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"k":0,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":2,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":2,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":2,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"k":2,"x":3},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":0,"x":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":0,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":1,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":1,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":1,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"k":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,3,2,3,0,4,2],0],"val":2,"k":3,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,3,2,3,0,4,2],0],"val":2,"k":3,"x":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,3,2,3,0,4,2],0],"val":2,"k":3,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,3,0,4,2],0],"val":2,"k":4,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,3,0,4,2],0],"val":2,"k":4,"x":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,3,0,4,2],0],"val":2,"k":4,"x":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,4,0,4,2],0],"val":2,"k":5,"x":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,4,0,4,2],0],"val":2,"k":5,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,4,0,4,2],0],"val":2,"k":5,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,4,0,4,2],0],"val":2,"k":5,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,3,0,4,0,4,2],0],"val":2,"k":5,"x":2},"ret":5}],"trunc":false}},{"name":"Swap with the last element","tag":"Alternative","code":"class Solution:\n    def removeElement(self, nums, val):\n        i, n = 0, len(nums)\n        while i < n:\n            if nums[i] == val:\n                nums[i] = nums[n - 1]; n -= 1\n            else: i += 1\n        return n","time":"O(n)","space":"O(1)","explain":"Overwrite each unwanted value with the current last element.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,2,3],0],"val":3,"i":0,"n":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":0,"n":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":0,"n":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":0,"n":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":1,"n":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":1,"n":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":1,"n":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":2,"n":2}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":2,"n":2}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,2,2,3],0],"val":3,"i":2,"n":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":0,"n":8}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":0,"n":8}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":0,"n":8}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":1,"n":8}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":1,"n":8}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":1,"n":8}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":8}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":8}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":7}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":7}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,2,2,3,0,4,2],0],"val":2,"i":2,"n":7}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":2,"n":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":2,"n":6}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":2,"n":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":3,"n":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":3,"n":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,4,2,3,0,4,2],0],"val":2,"i":3,"n":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":3,"n":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":3,"n":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":3,"n":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":4,"n":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":4,"n":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":4,"n":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":5,"n":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":5,"n":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,1,4,0,3,0,4,2],0],"val":2,"i":5,"n":5},"ret":5}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["for x in nums","Read pointer: visits every element","One pass over the array"],["k","Write pointer: count of kept elements and the next slot to fill","In-place filtering; the 'slow and fast pointer' pattern"],["nums[k] = x","Overwrites the slot at k with a kept value","Compacting an array in place"],["return k","New logical length; the contents beyond k don't matter","The problem only checks the first k elements"]]}},{"h":"Walk through an example","p":["`nums = [3,2,2,3]`, `val = 3`:"],"table":{"head":["x (read)","action","k after","nums after"],"rows":[["3","skip","0","[3, 2, 2, 3]"],["2","keep: write at k","1","[2, 2, 2, 3]"],["2","keep: write at k","2","[2, 2, 2, 3]"],["3","skip","2","[2, 2, 2, 3]"]]}},{"h":"Why is it safe to overwrite while reading?","p":["`k` never gets ahead of the read position (it advances at most once per element read), so an overwrite only ever touches a slot that has already been read."]},{"h":"Time and space","bullets":["Time: O(n) with a single pass.","Space: O(1); no extra array."]},{"h":"Subtle point","p":["The order of the kept elements is preserved. If the number of elements to remove is tiny, swapping with the last element writes less, but this version is simpler and stable."]}],"takeaway":"Read pointer scans, write pointer collects the survivors: the standard in-place filter."},"ex2":{"input":"[0,1,2,2,3,0,4,2], val=2","output":"[5, [0, 0, 1, 3, 4]]","why":"Every 2 is removed; the other 5 numbers stay."}};
+window.PROBLEM = {
+ "id": "27",
+ "title": "Remove Element",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "You have a list of numbers nums and a number val. Remove every copy of val from the list by changing the list itself (not making a new one): move all the other numbers to the front, in any order you like. Return k, how many numbers are left. Only the first k slots are checked; what sits after them doesn't matter. Example: nums=[3,2,2,3], val=3 → k=2 and the list starts with [2,2].",
+ "why": "[3,2,2,3], val = 3 → keep 2,2 → return 2.",
+ "idea": "One pointer reads, another writes: copy only the values you want to keep.",
+ "input": "nums=[3,2,2,3], val=3",
+ "output": "2 → [2,2,_,_]",
+ "notes": [],
+ "best": "One pointer reads, another writes: copy only the values you want to keep.",
+ "variants": [
+  {
+   "name": "Read / write pointers",
+   "code": "class Solution:\n    def removeElement(self, nums, val):\n        k = 0\n        for x in nums:\n            if x != val:\n                nums[k] = x; k += 1\n        return k",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "One pointer reads, another writes: copy only the values you want to keep.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "k = next free slot.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "3",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "k"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 3",
+     "description": "Equals val → skip.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "3",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Not 3 → keep it at k.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "1": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Not 3 → keep it at k.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {
+        "2": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 3",
+     "description": "Equals val → skip.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {
+        "2": "k",
+        "3": "read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "First k = 2 slots hold the answer.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Swap with the last element",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def removeElement(self, nums, val):\n        i, n = 0, len(nums)\n        while i < n:\n            if nums[i] == val:\n                nums[i] = nums[n - 1]; n -= 1\n            else: i += 1\n        return n",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Overwrite each unwanted value with the current last element.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

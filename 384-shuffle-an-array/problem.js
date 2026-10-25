@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"384","title":"Shuffle an Array","level":"Medium","topic":"Design","question":"Design a class built from a list of numbers. reset() returns the list in its original order, and shuffle() returns a random rearrangement in which every possible order is equally likely. Example: [1,2,3]: shuffle() might give [3,1,2]; reset() gives [1,2,3].","why":"Design a class that returns the original array on reset() and a uniformly random shuffle on shuffle().","idea":"Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.","input":"[1,2,3]: shuffle, reset","output":"a permutation, then [1,2,3]","notes":[],"best":"Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.","variants":[{"name":"Fisher–Yates shuffle","code":"class Solution:\n    def __init__(self, nums):\n        self.orig = nums[:]\n        self.a = nums[:]\n    def reset(self):\n        self.a = self.orig[:]\n        return self.a[:]\n    def shuffle(self):\n        for i in range(len(self.a) - 1, 0, -1):\n            j = random.randint(0, i)\n            self.a[i], self.a[j] = self.a[j], self.a[i]\n        return self.a[:]","time":"O(n) per shuffle","space":"O(n)","explain":"Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]},"ret":null},{"l":6,"d":1,"f":2,"v":{}},{"l":7,"d":1,"f":2,"v":{}},{"l":7,"d":1,"f":2,"v":{},"ret":["l",[1,2,3],0]},{"l":9,"d":1,"f":3,"v":{}},{"l":10,"d":1,"f":3,"v":{"i":2}},{"l":11,"d":1,"f":3,"v":{"i":2,"j":0}},{"l":9,"d":1,"f":3,"v":{"i":2,"j":0}},{"l":10,"d":1,"f":3,"v":{"i":1,"j":0}},{"l":11,"d":1,"f":3,"v":{"i":1,"j":0}},{"l":9,"d":1,"f":3,"v":{"i":1,"j":0}},{"l":12,"d":1,"f":3,"v":{"i":1,"j":0}},{"l":12,"d":1,"f":3,"v":{"i":1,"j":0},"ret":["l",[2,3,1],0]},{"l":6,"d":1,"f":4,"v":{}},{"l":7,"d":1,"f":4,"v":{}},{"l":7,"d":1,"f":4,"v":{},"ret":["l",[1,2,3],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[7],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[7],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[7],0]},"ret":null},{"l":9,"d":1,"f":2,"v":{}},{"l":12,"d":1,"f":2,"v":{}},{"l":12,"d":1,"f":2,"v":{},"ret":["l",[7],0]},{"l":6,"d":1,"f":3,"v":{}},{"l":7,"d":1,"f":3,"v":{}},{"l":7,"d":1,"f":3,"v":{},"ret":["l",[7],0]}],"trunc":false}},{"name":"Sort by a random key","tag":"Pythonic","code":"class Solution:\n    def __init__(self, nums):\n        self.orig = nums[:]\n    def reset(self):\n        return self.orig[:]\n    def shuffle(self):\n        return sorted(self.orig, key=lambda _: random.random())","time":"O(n log n)","space":"O(n)","explain":"Give every number a random key and sort by it.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]},"ret":null},{"l":5,"d":1,"f":2,"v":{}},{"l":5,"d":1,"f":2,"v":{},"ret":["l",[1,2,3],0]},{"l":7,"d":1,"f":3,"v":{}},{"l":7,"d":1,"f":3,"v":{},"ret":["l",[1,3,2],0]},{"l":5,"d":1,"f":4,"v":{}},{"l":5,"d":1,"f":4,"v":{},"ret":["l",[1,2,3],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[7],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[7],0]},"ret":null},{"l":7,"d":1,"f":2,"v":{}},{"l":7,"d":1,"f":2,"v":{},"ret":["l",[7],0]},{"l":5,"d":1,"f":3,"v":{}},{"l":5,"d":1,"f":3,"v":{},"ret":["l",[7],0]}],"trunc":false}}],"ex2":{"input":"one number","output":"[[7], [7]]","why":"One number has only one arrangement."}};
+window.PROBLEM = {
+ "id": "384",
+ "title": "Shuffle an Array",
+ "level": "Medium",
+ "topic": "Design",
+ "question": "Design a class built from a list of numbers. reset() returns the list in its original order, and shuffle() returns a random rearrangement in which every possible order is equally likely. Example: [1,2,3]: shuffle() might give [3,1,2]; reset() gives [1,2,3].",
+ "why": "Design a class that returns the original array on reset() and a uniformly random shuffle on shuffle().",
+ "idea": "Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.",
+ "input": "[1,2,3]: shuffle, reset",
+ "output": "a permutation, then [1,2,3]",
+ "notes": [],
+ "best": "Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.",
+ "variants": [
+  {
+   "name": "Fisher–Yates shuffle",
+   "code": "class Solution:\n    def __init__(self, nums):\n        self.orig = nums[:]\n        self.a = nums[:]\n    def reset(self):\n        self.a = self.orig[:]\n        return self.a[:]\n    def shuffle(self):\n        for i in range(len(self.a) - 1, 0, -1):\n            j = random.randint(0, i)\n            self.a[i], self.a[j] = self.a[j], self.a[i]\n        return self.a[:]",
+   "time": "O(n) per shuffle",
+   "space": "O(n)",
+   "explain": "Fisher–Yates: go from the end to the start and swap each position with a random position at or before it. Every permutation is equally likely.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Sort by a random key",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def __init__(self, nums):\n        self.orig = nums[:]\n    def reset(self):\n        return self.orig[:]\n    def shuffle(self):\n        return sorted(self.orig, key=lambda _: random.random())",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Give every number a random key and sort by it.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

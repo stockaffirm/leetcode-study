@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1295","title":"Find Numbers with Even Number of Digits","level":"Easy","topic":"Array / String","question":"Return how many numbers in the array have an even number of digits. Example: [12,345,2,6,7896] → 2.","why":"12 (2 digits) and 7896 (4 digits) have an even number of digits → 2.","idea":"Turn each number into text, take its length and count the even lengths.","input":"nums = [12,345,2,6,7896]","output":"2","notes":[],"best":"Turn each number into text, take its length and count the even lengths.","variants":[{"name":"Count the digits","code":"class Solution:\n    def findNumbers(self, nums):\n        return sum(len(str(x)) % 2 == 0 for x in nums)","time":"O(n)","space":"O(1)","explain":"Turn each number into text, take its length and count the even lengths.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[12,345,2,6,7896],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[12,345,2,6,7896],0]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[555,901,482,1771],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[555,901,482,1771],0]},"ret":1}],"trunc":false}},{"name":"Use the number's size","tag":"Math","code":"class Solution:\n    def findNumbers(self, nums):\n        return sum(int(log10(x)) % 2 == 1 for x in nums)","time":"O(n)","space":"O(1)","explain":"A number has an even digit count when floor(log10(x)) is odd.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[12,345,2,6,7896],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[12,345,2,6,7896],0]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[555,901,482,1771],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[555,901,482,1771],0]},"ret":1}],"trunc":false}}],"ex2":{"input":"mixed lengths","output":"1","why":"Only 1771 has 4 digits."}};
+window.PROBLEM = {
+ "id": "1295",
+ "title": "Find Numbers with Even Number of Digits",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Return how many numbers in the array have an even number of digits. Example: [12,345,2,6,7896] → 2.",
+ "why": "12 (2 digits) and 7896 (4 digits) have an even number of digits → 2.",
+ "idea": "Turn each number into text, take its length and count the even lengths.",
+ "input": "nums = [12,345,2,6,7896]",
+ "output": "2",
+ "notes": [],
+ "best": "Turn each number into text, take its length and count the even lengths.",
+ "variants": [
+  {
+   "name": "Count the digits",
+   "code": "class Solution:\n    def findNumbers(self, nums):\n        return sum(len(str(x)) % 2 == 0 for x in nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Turn each number into text, take its length and count the even lengths.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Use the number's size",
+   "tag": "Math",
+   "code": "class Solution:\n    def findNumbers(self, nums):\n        return sum(int(log10(x)) % 2 == 1 for x in nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "A number has an even digit count when floor(log10(x)) is odd.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

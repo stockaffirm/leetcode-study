@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1877","title":"Minimize Maximum Pair Sum in Array","level":"Medium","topic":"Two Pointers","question":"Split an even-length array into pairs so that the largest pair sum is as small as possible, and return that value. Example: [3,5,2,3] → 7.","why":"[3,5,2,3]: pairs (2,5) and (3,3) → max pair sum 7.","idea":"To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.","input":"nums = [3,5,2,3]","output":"7","notes":[],"best":"To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.","variants":[{"name":"Pair the smallest with the largest","code":"class Solution:\n    def minPairSum(self, nums):\n        nums.sort()\n        return max(nums[i] + nums[-1 - i] for i in range(len(nums) // 2))","time":"O(n log n)","space":"O(1)","explain":"To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0]},"ret":7}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5,4,2,4,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0]},"ret":8}],"trunc":false}},{"name":"Two pointers","tag":"Alternative","code":"class Solution:\n    def minPairSum(self, nums):\n        nums.sort()\n        i, j = 0, len(nums) - 1\n        best = 0\n        while i < j:\n            best = max(best, nums[i] + nums[j])\n            i += 1\n            j -= 1\n        return best","time":"O(n log n)","space":"O(1)","explain":"After sorting, move one pointer from each end and track the largest sum.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":0,"j":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":0,"j":3,"best":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":0,"j":3,"best":0}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":0,"j":3,"best":7}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":1,"j":3,"best":7}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":1,"j":2,"best":7}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":1,"j":2,"best":7}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":1,"j":2,"best":7}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":2,"j":2,"best":7}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":2,"j":1,"best":7}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":2,"j":1,"best":7}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[2,3,3,5],0],"i":2,"j":1,"best":7},"ret":7}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5,4,2,4,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":0,"j":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":0,"j":5,"best":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":0,"j":5,"best":0}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":0,"j":5,"best":8}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":1,"j":5,"best":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":1,"j":4,"best":8}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":1,"j":4,"best":8}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":1,"j":4,"best":8}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":2,"j":4,"best":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":2,"j":3,"best":8}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":2,"j":3,"best":8}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":2,"j":3,"best":8}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":3,"j":3,"best":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":3,"j":2,"best":8}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":3,"j":2,"best":8}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[2,3,4,4,5,6],0],"i":3,"j":2,"best":8},"ret":8}],"trunc":false}}],"ex2":{"input":"six numbers","output":"8","why":"Pairs (2,6), (3,5), (4,4)."}};
+window.PROBLEM = {
+ "id": "1877",
+ "title": "Minimize Maximum Pair Sum in Array",
+ "level": "Medium",
+ "topic": "Two Pointers",
+ "question": "Split an even-length array into pairs so that the largest pair sum is as small as possible, and return that value. Example: [3,5,2,3] → 7.",
+ "why": "[3,5,2,3]: pairs (2,5) and (3,3) → max pair sum 7.",
+ "idea": "To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.",
+ "input": "nums = [3,5,2,3]",
+ "output": "7",
+ "notes": [],
+ "best": "To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.",
+ "variants": [
+  {
+   "name": "Pair the smallest with the largest",
+   "code": "class Solution:\n    def minPairSum(self, nums):\n        nums.sort()\n        return max(nums[i] + nums[-1 - i] for i in range(len(nums) // 2))",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "To keep the biggest pair sum low, pair the smallest number with the largest, the second smallest with the second largest and so on. Return the maximum of those sums.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Two pointers",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def minPairSum(self, nums):\n        nums.sort()\n        i, j = 0, len(nums) - 1\n        best = 0\n        while i < j:\n            best = max(best, nums[i] + nums[j])\n            i += 1\n            j -= 1\n        return best",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "After sorting, move one pointer from each end and track the largest sum.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

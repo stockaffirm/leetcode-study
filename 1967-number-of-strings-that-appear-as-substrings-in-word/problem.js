@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1967","title":"Number of Strings That Appear as Substrings in Word","level":"Easy","topic":"Array / String","question":"Given a list of patterns and a word, return how many of the patterns appear as a substring of the word. Example: ['a','abc','bc','d'], word 'abc' → 3.","why":"How many of the patterns occur inside the word?","idea":"Count patterns p with p in word.","input":"patterns ['a','abc','bc','d'], word 'abc'","output":"3","notes":[],"best":"Count patterns p with p in word.","variants":[{"name":"Substring test","code":"class Solution:\n    def numOfStrings(self, patterns, word):\n        return sum(p in word for p in patterns)","time":"O(p·n)","space":"O(1)","explain":"Count patterns p with p in word.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"]}},{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"]}},{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"]},"ret":2}],"trunc":false}},{"name":"Loop","tag":"Alternative","code":"class Solution:\n    def numOfStrings(self, patterns, word):\n        count = 0\n        for p in patterns:\n            if word.find(p) != -1: count += 1\n        return count","time":"O(p·n)","space":"O(1)","explain":"Count with an explicit loop.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":0}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":0,"p":["s","a"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":1,"p":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":1,"p":["s","abc"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":2,"p":["s","abc"]}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":2,"p":["s","bc"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":3,"p":["s","bc"]}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":3,"p":["s","d"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":3,"p":["s","d"]}},{"l":6,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":3,"p":["s","d"]}},{"l":6,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","abc"],["s","bc"],["s","d"]],0],"word":["s","abc"],"count":3,"p":["s","d"]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":0}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":0,"p":["s","a"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":1,"p":["s","a"]}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":1,"p":["s","b"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":2,"p":["s","b"]}},{"l":5,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":2,"p":["s","c"]}},{"l":4,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":2,"p":["s","c"]}},{"l":6,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":2,"p":["s","c"]}},{"l":6,"d":1,"f":1,"v":{"patterns":["l",[["s","a"],["s","b"],["s","c"]],0],"word":["s","aaaaabbbbb"],"count":2,"p":["s","c"]},"ret":2}],"trunc":false}}],"ex2":{"input":"some missing","output":"2","why":"'a' and 'b' occur, 'c' does not."}};
+window.PROBLEM = {
+ "id": "1967",
+ "title": "Number of Strings That Appear as Substrings in Word",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Given a list of patterns and a word, return how many of the patterns appear as a substring of the word. Example: ['a','abc','bc','d'], word 'abc' → 3.",
+ "why": "How many of the patterns occur inside the word?",
+ "idea": "Count patterns p with p in word.",
+ "input": "patterns ['a','abc','bc','d'], word 'abc'",
+ "output": "3",
+ "notes": [],
+ "best": "Count patterns p with p in word.",
+ "variants": [
+  {
+   "name": "Substring test",
+   "code": "class Solution:\n    def numOfStrings(self, patterns, word):\n        return sum(p in word for p in patterns)",
+   "time": "O(p·n)",
+   "space": "O(1)",
+   "explain": "Count patterns p with p in word.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Loop",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def numOfStrings(self, patterns, word):\n        count = 0\n        for p in patterns:\n            if word.find(p) != -1: count += 1\n        return count",
+   "time": "O(p·n)",
+   "space": "O(1)",
+   "explain": "Count with an explicit loop.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

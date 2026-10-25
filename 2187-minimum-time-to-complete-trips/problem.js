@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2187","title":"Minimum Time to Complete Trips","level":"Medium","topic":"Binary Search","question":"time[i] is how long bus i takes for one trip; buses run independently and start new trips right after finishing one. Return the minimum time by which all buses together have completed at least totalTrips trips. Example: time [1,2,3], totalTrips 5 → 3.","why":"Bus i needs time[i] per trip; buses run independently. Find the smallest time by which the buses have made at least totalTrips trips together.","idea":"In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.","input":"time [1,2,3], totalTrips = 5","output":"3","notes":[],"best":"In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.","variants":[{"name":"Binary search on the time","code":"class Solution:\n    def minimumTime(self, time, totalTrips):\n        lo, hi = 1, min(time) * totalTrips\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if sum(mid // t for t in time) >= totalTrips: hi = mid\n            else: lo = mid + 1\n        return lo","time":"O(n log T)","space":"O(1)","explain":"In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":5}},{"l":5,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":5}},{"l":6,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":5,"mid":3}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":3,"mid":3}},{"l":5,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":3,"mid":3}},{"l":6,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":3,"mid":2}},{"l":7,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":1,"hi":3,"mid":2}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":3,"hi":3,"mid":2}},{"l":8,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":3,"hi":3,"mid":2}},{"l":8,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"lo":3,"hi":3,"mid":2},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1}},{"l":4,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":1,"hi":2}},{"l":5,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":1,"hi":2}},{"l":6,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":1,"hi":2,"mid":1}},{"l":7,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":1,"hi":2,"mid":1}},{"l":4,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":2,"hi":2,"mid":1}},{"l":8,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":2,"hi":2,"mid":1}},{"l":8,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"lo":2,"hi":2,"mid":1},"ret":2}],"trunc":false}},{"name":"Try every time","tag":"Brute force","code":"class Solution:\n    def minimumTime(self, time, totalTrips):\n        t = 1\n        while sum(t // x for x in time) < totalTrips: t += 1\n        return t","time":"O(n·T)","space":"O(1)","explain":"Increase the time by one until enough trips fit.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"t":1}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"t":2}},{"l":4,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"t":3}},{"l":5,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"t":3}},{"l":5,"d":1,"f":1,"v":{"time":["l",[1,2,3],0],"totalTrips":5,"t":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1}},{"l":4,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"t":1}},{"l":4,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"t":2}},{"l":5,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"t":2}},{"l":5,"d":1,"f":1,"v":{"time":["l",[2],0],"totalTrips":1,"t":2},"ret":2}],"trunc":false}}],"ex2":{"input":"one bus","output":"2","why":"One trip of the single bus takes 2."}};
+window.PROBLEM = {
+ "id": "2187",
+ "title": "Minimum Time to Complete Trips",
+ "level": "Medium",
+ "topic": "Binary Search",
+ "question": "time[i] is how long bus i takes for one trip; buses run independently and start new trips right after finishing one. Return the minimum time by which all buses together have completed at least totalTrips trips. Example: time [1,2,3], totalTrips 5 → 3.",
+ "why": "Bus i needs time[i] per trip; buses run independently. Find the smallest time by which the buses have made at least totalTrips trips together.",
+ "idea": "In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.",
+ "input": "time [1,2,3], totalTrips = 5",
+ "output": "3",
+ "notes": [],
+ "best": "In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.",
+ "variants": [
+  {
+   "name": "Binary search on the time",
+   "code": "class Solution:\n    def minimumTime(self, time, totalTrips):\n        lo, hi = 1, min(time) * totalTrips\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if sum(mid // t for t in time) >= totalTrips: hi = mid\n            else: lo = mid + 1\n        return lo",
+   "time": "O(n log T)",
+   "space": "O(1)",
+   "explain": "In time t bus i completes t // time[i] trips. That total grows with t, so binary search the smallest t reaching totalTrips.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Try every time",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def minimumTime(self, time, totalTrips):\n        t = 1\n        while sum(t // x for x in time) < totalTrips: t += 1\n        return t",
+   "time": "O(n·T)",
+   "space": "O(1)",
+   "explain": "Increase the time by one until enough trips fit.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

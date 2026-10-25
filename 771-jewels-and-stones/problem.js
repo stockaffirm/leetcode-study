@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"771","title":"Jewels and Stones","level":"Easy","topic":"Hash Map / Set","question":"jewels lists the stone types that are jewels; stones lists the stones you have (letters are case-sensitive). Return how many of your stones are jewels. Example: jewels 'aA', stones 'aAAbbbb' → 3.","why":"Jewels 'aA': the stones 'aAAbbbb' contain a, A, A → 3 jewels.","idea":"Put the jewel types in a set and count the stones that are in it.","input":"jewels = \"aA\", stones = \"aAAbbbb\"","output":"3","notes":[],"best":"Put the jewel types in a set and count the stones that are in it.","variants":[{"name":"Set lookup","code":"class Solution:\n    def numJewelsInStones(self, jewels, stones):\n        js = set(jewels)\n        return sum(s in js for s in stones)","time":"O(n + m)","space":"O(m)","explain":"Put the jewel types in a set and count the stones that are in it.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"],"js":["S",[["s","A"],["s","a"]]]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"],"js":["S",[["s","A"],["s","a"]]]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"],"js":["S",[["s","z"]]]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"],"js":["S",[["s","z"]]]},"ret":0}],"trunc":false}},{"name":"Count every stone letter","tag":"Alternative","code":"class Solution:\n    def numJewelsInStones(self, jewels, stones):\n        cnt = Counter(stones)\n        return sum(cnt[j] for j in jewels)","time":"O(n + m)","space":"O(n)","explain":"Count the letters of the stones and add the counts of the jewel letters.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"],"cnt":["d",[[["s","a"],1],[["s","A"],2],[["s","b"],4]]]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","aA"],"stones":["s","aAAbbbb"],"cnt":["d",[[["s","a"],1],[["s","A"],2],[["s","b"],4]]]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"],"cnt":["d",[[["s","Z"],2]]]}},{"l":4,"d":1,"f":1,"v":{"jewels":["s","z"],"stones":["s","ZZ"],"cnt":["d",[[["s","Z"],2]]]},"ret":0}],"trunc":false}}],"ex2":{"input":"case matters","output":"0","why":"Upper and lower case are different."}};
+window.PROBLEM = {
+ "id": "771",
+ "title": "Jewels and Stones",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "jewels lists the stone types that are jewels; stones lists the stones you have (letters are case-sensitive). Return how many of your stones are jewels. Example: jewels 'aA', stones 'aAAbbbb' → 3.",
+ "why": "Jewels 'aA': the stones 'aAAbbbb' contain a, A, A → 3 jewels.",
+ "idea": "Put the jewel types in a set and count the stones that are in it.",
+ "input": "jewels = \"aA\", stones = \"aAAbbbb\"",
+ "output": "3",
+ "notes": [],
+ "best": "Put the jewel types in a set and count the stones that are in it.",
+ "variants": [
+  {
+   "name": "Set lookup",
+   "code": "class Solution:\n    def numJewelsInStones(self, jewels, stones):\n        js = set(jewels)\n        return sum(s in js for s in stones)",
+   "time": "O(n + m)",
+   "space": "O(m)",
+   "explain": "Put the jewel types in a set and count the stones that are in it.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Count every stone letter",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def numJewelsInStones(self, jewels, stones):\n        cnt = Counter(stones)\n        return sum(cnt[j] for j in jewels)",
+   "time": "O(n + m)",
+   "space": "O(n)",
+   "explain": "Count the letters of the stones and add the counts of the jewel letters.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};
