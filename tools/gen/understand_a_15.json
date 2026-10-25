@@ -1,0 +1,1747 @@
+{
+ "1557": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "{v for u, v in edges}",
+       "Set comprehension: every node that is the target of some edge (has an incoming edge)",
+       "Set of nodes with in-degree \u2265 1"
+      ],
+      [
+       "[i for i in range(n) if i not in has_in]",
+       "Nodes with no incoming edge",
+       "Sources of a DAG (Directed Acyclic Graph)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 6`, edges `0\u21921, 0\u21922, 2\u21925, 3\u21924, 4\u21922`:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "has an incoming edge?",
+      "in the answer?"
+     ],
+     "rows": [
+      [
+       "0",
+       "False",
+       "True"
+      ],
+      [
+       "1",
+       "True",
+       "False"
+      ],
+      [
+       "2",
+       "True",
+       "False"
+      ],
+      [
+       "3",
+       "False",
+       "True"
+      ],
+      [
+       "4",
+       "True",
+       "False"
+      ],
+      [
+       "5",
+       "True",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `[0, 3]`."
+    ]
+   },
+   {
+    "h": "Why exactly the zero-in-degree nodes?",
+    "p": [
+     "A node with no incoming edge cannot be reached from any other node, so it must be in the set. Every other node has a predecessor, and following predecessors backwards in an acyclic graph must end at a node with no incoming edge, so the sources reach everything."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + E).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "In a DAG, the nodes with no incoming edge are the smallest set that reaches everything."
+ },
+ "1584": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted((dist, i, j) for i < j)",
+       "Every pair of points as an edge with Manhattan distance, sorted by weight",
+       "Kruskal's algorithm needs the edges sorted"
+      ],
+      [
+       "find(x) with path halving",
+       "Union-Find (disjoint set): the group root of x",
+       ""
+      ],
+      [
+       "ri != rj",
+       "Edge joins two different components: safe to take",
+       "Cycle avoidance"
+      ],
+      [
+       "used == n - 1: break",
+       "A spanning tree has n \u2212 1 edges; stop early",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5 points. Edges accepted in sorted order (rejected edges, which would close cycles, are skipped):"
+    ],
+    "table": {
+     "head": [
+      "points",
+      "distance",
+      "action",
+      "total cost"
+     ],
+     "rows": [
+      [
+       "1\u20133",
+       "3",
+       "add to tree",
+       "3"
+      ],
+      [
+       "0\u20131",
+       "4",
+       "add to tree",
+       "7"
+      ],
+      [
+       "3\u20134",
+       "4",
+       "add to tree",
+       "11"
+      ],
+      [
+       "1\u20132",
+       "9",
+       "add to tree",
+       "20"
+      ]
+     ]
+    },
+    "bullets": [
+     "Minimum cost: 20."
+    ]
+   },
+   {
+    "h": "Why does sorted greedy give the cheapest connection?",
+    "p": [
+     "Kruskal's algorithm repeatedly adds the cheapest edge that does not create a cycle. By the cut property, the cheapest edge crossing any split of the points belongs to some minimum spanning tree, so each greedy choice is safe."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2 log n): about n\u00b2/2 edges sorted.",
+     "Space: O(n\u00b2) for the edge list. Prim's algorithm with a heap avoids storing all edges."
+    ]
+   }
+  ],
+  "takeaway": "Kruskal's minimum spanning tree: sort all pair distances and union-find to skip cycles."
+ },
+ "1611": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ans ^= n",
+       "XOR (exclusive or) the running answer with the current number",
+       "Gray code inverse"
+      ],
+      [
+       "n >>= 1",
+       "Shift right: moves to the next higher-order prefix of the bits",
+       ""
+      ],
+      [
+       "loop until n == 0",
+       "XOR of n, n>>1, n>>2, \u2026 equals the position of n in the Gray code sequence",
+       "Converting a Gray code to its rank"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 6` (binary 110):"
+    ],
+    "table": {
+     "head": [
+      "n now",
+      "ans after XOR",
+      "ans (decimal)"
+     ],
+     "rows": [
+      [
+       "110",
+       "110",
+       "6"
+      ],
+      [
+       "11",
+       "101",
+       "5"
+      ],
+      [
+       "1",
+       "100",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 4. Results for 0..8: 0\u21920, 1\u21921, 2\u21923, 3\u21922, 4\u21927, 5\u21926, 6\u21924, 7\u21925, 8\u219215."
+    ]
+   },
+   {
+    "h": "Why is this the Gray code inverse?",
+    "p": [
+     "The operation sequence in the problem (flip the last bit, or flip the bit left of the lowest set bit) walks through the Gray code. The step count to reach 0 from n is the index of n in that sequence. The index is computed by `n ^ (n >> 1) ^ (n >> 2) ^ \u2026`, the standard Gray-to-binary conversion, so it is simply XOR-ing the shifted values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The minimum operations equal the Gray-to-binary conversion n ^ (n>>1) ^ (n>>2) ^ \u2026"
+ },
+ "1614": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "depth",
+       "Number of currently open parentheses",
+       ""
+      ],
+      [
+       "ch == '('",
+       "Entering a nested level: depth + 1",
+       ""
+      ],
+      [
+       "best = max(best, depth)",
+       "Records the deepest level seen (only needed when depth grows)",
+       ""
+      ],
+      [
+       "ch == ')'",
+       "Leaving a level",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"(1+(2*3)+((8)/4))+1\"`; only parenthesis characters change the state:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "depth",
+      "max so far"
+     ],
+     "rows": [
+      [
+       "(",
+       "1",
+       "1"
+      ],
+      [
+       "(",
+       "2",
+       "2"
+      ],
+      [
+       ")",
+       "1",
+       "2"
+      ],
+      [
+       "(",
+       "2",
+       "2"
+      ],
+      [
+       "(",
+       "3",
+       "3"
+      ],
+      [
+       ")",
+       "2",
+       "3"
+      ],
+      [
+       ")",
+       "1",
+       "3"
+      ],
+      [
+       ")",
+       "0",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why no stack?",
+    "p": [
+     "A stack would only store identical '(' symbols, so its size is what matters. A counter gives that size without storing anything."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Counter of open parentheses; the maximum value reached is the nesting depth."
+ },
+ "1632": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "groups[value] = [(i, j), \u2026]",
+       "Cells grouped by value; values are processed from smallest to largest",
+       "Process in increasing order so smaller ranks are final"
+      ],
+      [
+       "row_max[i], col_max[j]",
+       "The largest rank assigned so far in each row and column",
+       ""
+      ],
+      [
+       "p, find (Union-Find (disjoint set))",
+       "Within a group of equal values, cells sharing a row or column must get the SAME rank, so they are merged (column j is node m + j, to keep row and column ids apart)",
+       "Merging equal cells connected by a row or a column"
+      ],
+      [
+       "best[root] = max(\u2026row_max, col_max)",
+       "The rank for a connected group is 1 + the largest earlier rank in any of its rows and columns",
+       ""
+      ],
+      [
+       "update row_max / col_max after the group",
+       "Only after all of the group's ranks are known, so cells in the same group don't affect each other early",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[3,4]]`: values handled in increasing order (answer matrix, row maxima, column maxima after each group):"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "its cells",
+      "rank matrix",
+      "row_max",
+      "col_max"
+     ],
+     "rows": [
+      [
+       "1",
+       "[(0, 0)]",
+       "[[1, 0], [0, 0]]",
+       "[1, 0]",
+       "[1, 0]"
+      ],
+      [
+       "2",
+       "[(0, 1)]",
+       "[[1, 2], [0, 0]]",
+       "[2, 0]",
+       "[1, 2]"
+      ],
+      [
+       "3",
+       "[(1, 0)]",
+       "[[1, 2], [2, 0]]",
+       "[2, 2]",
+       "[2, 2]"
+      ],
+      [
+       "4",
+       "[(1, 1)]",
+       "[[1, 2], [2, 3]]",
+       "[2, 3]",
+       "[2, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final: `[[1, 2], [2, 3]]`. A matrix with all equal values `[[7, 7], [7, 7]]` gives `[[1, 1], [1, 1]]`: all cells are connected, so they share one rank."
+    ]
+   },
+   {
+    "h": "Why union equal cells in the same row or column?",
+    "p": [
+     "Equal values in one row or column must have the same rank (the rank rule says they cannot differ), and that equality chains: if A shares a row with B and B shares a column with C, then A, B and C all get one rank. Union-Find finds those groups, and each group takes 1 plus the maximum prior rank over all its rows and columns."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n log(m\u00b7n)) for sorting, plus near-constant Union-Find operations.",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Process values ascending; equal cells linked by a row or column share a rank = 1 + the largest rank already placed in their rows/columns."
+ },
+ "1644": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(node) \u2192 l, r",
+       "Post-order DFS (Depth-First Search): what each subtree found",
+       ""
+      ],
+      [
+       "node is p or node is q",
+       "Identity match with a target node; counts it and returns it",
+       "Compare node objects, not values"
+      ],
+      [
+       "node if l and r else (l or r)",
+       "If both sides found a target, this node is the LCA (Lowest Common Ancestor); otherwise pass up whatever was found",
+       ""
+      ],
+      [
+       "found == 2",
+       "Both targets must exist in the tree; this problem allows a missing node, so a count is needed",
+       "Difference from Lowest Common Ancestor I"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,5,1,6,2,0,8,null,null,7,4]`, `p = 5`, `q = 4`:"
+    ],
+    "table": {
+     "head": [
+      "event"
+     ],
+     "rows": [
+      [
+       "4 is a target"
+      ],
+      [
+       "5 is a target"
+      ]
+     ]
+    },
+    "bullets": [
+     "Targets found: 2, so the LCA is node 5. With `q` absent from the tree the search finds only 1 target and returns `None`."
+    ]
+   },
+   {
+    "h": "Why does the `found == 2` check matter?",
+    "p": [
+     "Without it, if q is missing the recursion would return p (the only target found), which looks like an LCA but is wrong. The counter confirms both nodes were actually seen. Because the search does not stop at the first match (it keeps going into both children), q is still found when it lies below p."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h)."
+    ]
+   }
+  ],
+  "takeaway": "LCA that counts how many targets were found, so a missing node returns None."
+ },
+ "1647": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s).values()",
+       "Occurrence counts of each letter",
+       ""
+      ],
+      [
+       "sorted(..., reverse=True)",
+       "Handle the largest frequency first so it keeps its value if free",
+       "Greedy order"
+      ],
+      [
+       "f in used",
+       "Another letter already has this frequency",
+       ""
+      ],
+      [
+       "f -= 1; deletions += 1",
+       "Delete one occurrence to lower the frequency by one",
+       ""
+      ],
+      [
+       "used.add(f)",
+       "Marks the final frequency (a frequency of 0 means all copies deleted, which is always allowed)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aaabbbcc\"` has frequencies 3, 3, 2:"
+    ],
+    "table": {
+     "head": [
+      "frequency",
+      "after lowering",
+      "deletions so far",
+      "used frequencies"
+     ],
+     "rows": [
+      [
+       "3",
+       "3",
+       "0",
+       "[3]"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "[2, 3]"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "[1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lower frequencies, never raise?",
+    "p": [
+     "Only deletions are allowed. Each letter's count can only go down, and the cheapest way to make counts distinct is to move each to the largest still-free value not above it. Processing from the biggest ensures that values are claimed in the best order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + K\u00b2) where K is the number of distinct letters (\u2264 26).",
+     "Space: O(K)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: from the largest frequency down, decrement until it is unused or zero."
+ },
+ "1650": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a, b = p, q",
+       "Two pointers, one from each node, climbing the parent links",
+       "Same trick as intersection of two linked lists"
+      ],
+      [
+       "a = a.parent if a else q",
+       "When a pointer runs off the top, it restarts at the OTHER starting node, which equalizes the path lengths",
+       ""
+      ],
+      [
+       "a is not b",
+       "Stops when both pointers sit on the same node (identity)",
+       ""
+      ],
+      [
+       "return a",
+       "Their meeting point is the lowest common ancestor",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,5,1,6,2,...]`, `p = 5`, `q = 1` (both children of 3):"
+    ],
+    "table": {
+     "head": [
+      "pointer a at",
+      "pointer b at"
+     ],
+     "rows": [
+      [
+       "3",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "They meet at node 3."
+    ]
+   },
+   {
+    "h": "Why do the pointers meet at the LCA?",
+    "p": [
+     "The node paths are a-to-root and b-to-root. After a pointer finishes its own path (length x + c, where c is the common part above the LCA) it continues on the other node's path. Both pointers have then walked the same total length, x + y + c, so they arrive at the LCA together (or both fall off the top together if there is none)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h).",
+     "Space: O(1), unlike the set-of-ancestors approach (O(h))."
+    ]
+   }
+  ],
+  "takeaway": "Two parent pointers that swap starting nodes after falling off the top meet at the LCA (Lowest Common Ancestor)."
+ },
+ "1659": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mask (base-3 number)",
+       "The last n cells in row-major order, each 0 (empty), 1 (introvert) or 2 (extrovert); this is the 'profile' of the boundary",
+       "Broken-profile DP (Dynamic Programming)"
+      ],
+      [
+       "up = mask // P; left = mask % 3",
+       "The neighbour above is the oldest digit (the one about to leave the profile); the neighbour to the left is the newest digit (none at the start of a row)",
+       ""
+      ],
+      [
+       "nm = (mask % P) * 3",
+       "Drops the up digit and makes room for the new cell's digit",
+       "Sliding the profile"
+      ],
+      [
+       "base / pair tables",
+       "Introvert: 120 alone, \u221230 per neighbour; extrovert: 40 alone, +20 per neighbour. `pair[a][b]` is the combined effect on both cells (\u221260, \u221210 or +40)",
+       "Pre-computing the happiness change per neighbouring pair"
+      ],
+      [
+       "go(pos+1, \u2026) three ways",
+       "Leave empty, place an introvert, or place an extrovert (if any remain)",
+       ""
+      ],
+      [
+       "@lru_cache(None)",
+       "Memoizes states (position, profile, introverts left, extroverts left)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 2`, `n = 3`, 1 introvert, 2 extroverts. The best arrangement, found by the memoized search over 3^(n\u22121) profiles, gives total happiness:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "maximum grid happiness",
+       "240"
+      ],
+      [
+       "profile size P = 3^(n\u22121)",
+       "9"
+      ],
+      [
+       "states per cell position",
+       "3^2 profiles \u00d7 (1+1) \u00d7 (2+1) counts"
+      ]
+     ]
+    },
+    "bullets": [
+     "The pair table reflects interactions: two extroverts next to each other add 40 (20 each), two introverts subtract 60, and an introvert next to an extrovert subtracts 10 (\u221230 for the introvert, +20 for the extrovert)."
+    ]
+   },
+   {
+    "h": "Why only the last n cells in the state?",
+    "p": [
+     "A cell interacts only with the cell above and the cell to the left. Processing in row-major order, the cells that can still matter for future placements are exactly the last n cells, so the profile is n digits (and since the oldest leaves each step, 3^(n\u22121) distinct states plus one new digit)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n \u00b7 3^n \u00b7 i \u00b7 e).",
+     "Space: the same order for the cache; n \u2264 5 keeps it small."
+    ]
+   }
+  ],
+  "takeaway": "Broken-profile DP: scan cells in order, keep the last n cells in base 3, add each placement's gain from the up/left neighbours."
+ },
+ "1662": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "\"\".join(word1)",
+       "Concatenates a list of strings with nothing between them",
+       "Joining pieces"
+      ],
+      [
+       "==",
+       "String equality: same characters in the same order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"ab\",\"c\"]` and `[\"a\",\"bc\"]`:"
+    ],
+    "table": {
+     "head": [
+      "list",
+      "joined"
+     ],
+     "rows": [
+      [
+       "['ab', 'c']",
+       "abc"
+      ],
+      [
+       "['a', 'bc']",
+       "abc"
+      ]
+     ]
+    },
+    "bullets": [
+     "Both become `abc`, so the answer is True, even though the pieces are split differently."
+    ]
+   },
+   {
+    "h": "When would you avoid joining?",
+    "p": [
+     "Joining uses O(total length) extra memory. If memory mattered, two index pointers (word index, character index) walking both lists in parallel would compare character by character in O(1) extra space, and stop at the first mismatch."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length).",
+     "Space: O(total length) for the joined strings."
+    ]
+   }
+  ],
+  "takeaway": "Join each list and compare; two-pointer streaming is the O(1)-space alternative."
+ },
+ "1665": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(tasks, key=lambda t: t[0] - t[1])",
+       "Order by actual \u2212 minimum, the most negative (largest gap between minimum and actual) first",
+       "Sorting by the difference"
+      ],
+      [
+       "need",
+       "Total energy supplied at the start",
+       ""
+      ],
+      [
+       "cur",
+       "Energy remaining right now",
+       ""
+      ],
+      [
+       "if cur < minimum: need += minimum - cur",
+       "Top up just enough to meet the task's minimum requirement",
+       "Lazy top-up"
+      ],
+      [
+       "cur -= actual",
+       "Spend the actual cost",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,4],[4,8]]`:"
+    ],
+    "table": {
+     "head": [
+      "task (actual, minimum)",
+      "actual \u2212 minimum",
+      "initial energy needed so far",
+      "energy left"
+     ],
+     "rows": [
+      [
+       "(4,8)",
+       "-4",
+       "8",
+       "4"
+      ],
+      [
+       "(2,4)",
+       "-2",
+       "8",
+       "2"
+      ],
+      [
+       "(1,2)",
+       "-1",
+       "8",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 8."
+    ]
+   },
+   {
+    "h": "Why sort by actual \u2212 minimum?",
+    "p": [
+     "After doing a task you lose `actual` but needed `minimum`; the unused buffer `minimum \u2212 actual` stays unspent. Doing the tasks with the biggest buffer first keeps leftover energy high for later tasks (an exchange argument shows swapping two adjacent tasks out of this order never reduces the required start energy)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Sort by (actual \u2212 minimum) ascending and top up energy lazily when a task's minimum is not met."
+ },
+ "1698": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "root = {}",
+       "A trie (prefix tree) built from nested dicts: each key is a character, each value is the child dict",
+       "Dict-of-dicts trie"
+      ],
+      [
+       "for ch in s[i:]",
+       "Inserts every suffix of s; every substring is a prefix of some suffix",
+       "Substrings = prefixes of suffixes"
+      ],
+      [
+       "if ch not in node: node[ch] = {}; cnt += 1",
+       "A new trie node means a substring never seen before, so count it",
+       "Counting distinct strings by new nodes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aabbaba\"`: inserting each suffix creates new trie nodes only for substrings not seen before:"
+    ],
+    "table": {
+     "head": [
+      "suffix start",
+      "suffix",
+      "new substrings added",
+      "total distinct"
+     ],
+     "rows": [
+      [
+       "0",
+       "aabbaba",
+       "7",
+       "7"
+      ],
+      [
+       "1",
+       "abbaba",
+       "5",
+       "12"
+      ],
+      [
+       "2",
+       "bbaba",
+       "5",
+       "17"
+      ],
+      [
+       "3",
+       "baba",
+       "3",
+       "20"
+      ],
+      [
+       "4",
+       "aba",
+       "1",
+       "21"
+      ],
+      [
+       "5",
+       "ba",
+       "0",
+       "21"
+      ],
+      [
+       "6",
+       "a",
+       "0",
+       "21"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 21."
+    ]
+   },
+   {
+    "h": "Why do trie nodes equal distinct substrings?",
+    "p": [
+     "Each path from the root spells a distinct string, and each trie node corresponds to exactly one such path. Because all suffixes are inserted, the set of paths is the set of all substrings, so the node count is the number of distinct substrings."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2), since the total suffix length is n(n+1)/2.",
+     "Space: O(n\u00b2) nodes in the worst case. A suffix automaton or suffix array reaches O(n) or O(n log n)."
+    ]
+   }
+  ],
+  "takeaway": "Insert all suffixes into a trie; each newly created node is a new distinct substring."
+ },
+ "1701": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "t",
+       "The time the chef becomes free",
+       "Single-server simulation"
+      ],
+      [
+       "max(t, arrive)",
+       "The chef starts at arrival if idle, or after finishing the previous order",
+       ""
+      ],
+      [
+       "t = \u2026 + cook",
+       "Finish time of this order",
+       ""
+      ],
+      [
+       "t - arrive",
+       "This customer's waiting time (waiting + cooking)",
+       ""
+      ],
+      [
+       "total / len(customers)",
+       "True division: the average as a float",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,5],[4,3]]`:"
+    ],
+    "table": {
+     "head": [
+      "(arrive, cook)",
+      "finish time",
+      "wait",
+      "total wait"
+     ],
+     "rows": [
+      [
+       "(1,2)",
+       "3",
+       "2",
+       "2"
+      ],
+      [
+       "(2,5)",
+       "8",
+       "6",
+       "8"
+      ],
+      [
+       "(4,3)",
+       "11",
+       "7",
+       "15"
+      ]
+     ]
+    },
+    "bullets": [
+     "Average: 15 / 3 = 5.0."
+    ]
+   },
+   {
+    "h": "Why `max(t, arrive)`?",
+    "p": [
+     "If the chef is idle when the customer arrives (t < arrive), cooking starts at arrival; if the chef is still busy (t > arrive), it starts when the chef frees up. The maximum covers both cases."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate a single chef: start = max(free time, arrival); wait = finish \u2212 arrival."
+ },
+ "1710": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(boxTypes, key=lambda b: -b[1])",
+       "Most valuable box types (units per box) first; the minus sign sorts descending",
+       "Greedy by value density"
+      ],
+      [
+       "take = min(count, truckSize)",
+       "Load as many of this type as fit",
+       ""
+      ],
+      [
+       "total += take * units",
+       "Units gained",
+       ""
+      ],
+      [
+       "truckSize -= take; if 0: break",
+       "Stop when the truck is full",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,3],[2,2],[3,1]]`, truck size 4:"
+    ],
+    "table": {
+     "head": [
+      "box type",
+      "taken",
+      "total units",
+      "space left"
+     ],
+     "rows": [
+      [
+       "1 boxes \u00d7 3 units",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "2 boxes \u00d7 2 units",
+       "2",
+       "7",
+       "1"
+      ],
+      [
+       "3 boxes \u00d7 1 units",
+       "1",
+       "8",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 8."
+    ]
+   },
+   {
+    "h": "Why is greedy optimal?",
+    "p": [
+     "Every box takes one slot, so the value per slot is just its units. Filling slots with the highest-value boxes first can't be beaten: swapping a chosen low-value box for an unchosen high-value one would increase the total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: sort by units per box descending and fill the truck."
+ },
+ "1719": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "adj = defaultdict(set)",
+       "Neighbour sets for each node (the 'ancestor-or-descendant' relation from the pairs)",
+       ""
+      ],
+      [
+       "nodes sorted by degree, descending",
+       "Candidates for parents come before their descendants (an ancestor is related to all its descendants, so it has at least as many neighbours)",
+       ""
+      ],
+      [
+       "len(adj[nodes[0]]) != n - 1 \u2192 0",
+       "The root must be related to every other node",
+       ""
+      ],
+      [
+       "d <= len(adj[nb]) < pd",
+       "Among the neighbours with degree at least d, the one with the smallest degree is the node's parent",
+       "Choosing the closest ancestor"
+      ],
+      [
+       "nb not in adj[parent] \u2192 0",
+       "Every neighbour of the node must also be an ancestor or descendant of its parent; otherwise no tree fits",
+       "Consistency check"
+      ],
+      [
+       "pd == d \u2192 res = 2",
+       "Parent and child with equal degree can swap places: more than one valid tree",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "Pairs `[[1,2],[2,3],[1,3]]` (every node is related to every other):"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "degree",
+      "chosen parent",
+      "parent degree",
+      "result"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "1",
+       "2",
+       "ambiguous (equal degree)"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "2",
+       "ambiguous (equal degree)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer 2: all three nodes are related to each other, so either of the two equal-degree choices gives a valid tree. For `[[1,2],[2,3]]` (node 2 is the unique root) the answer is 1; for `[[1,2],[2,3],[2,4],[1,5]]` (5 is related to 1 but not to 2, the root) it is 0."
+    ]
+   },
+   {
+    "h": "Why compare degrees?",
+    "p": [
+     "In a rooted tree, a node's neighbours in this relation are exactly its ancestors and descendants. An ancestor has all of its descendants as neighbours, so its degree is at least as large as theirs. Sorting by degree puts ancestors before descendants, so each node's parent is found among the neighbours of larger or equal degree."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 d) roughly, over each node's neighbours.",
+     "Space: O(n + pairs)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by degree: each node's parent is its smallest-degree neighbour with degree \u2265 its own; equal degrees give two answers."
+ },
+ "1740": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lca(n)",
+       "Returns the lowest common ancestor of the nodes with values p and q (assuming both exist), by post-order search",
+       "LCA (Lowest Common Ancestor) in a binary tree"
+      ],
+      [
+       "n.val in (p, q)",
+       "A target found: return it upward",
+       ""
+      ],
+      [
+       "n if l and r else l or r",
+       "Both sides found a target \u2192 this node is the LCA; otherwise pass up the one that was found",
+       ""
+      ],
+      [
+       "depth(a, target, 0)",
+       "Distance from the LCA down to the target; `max(\u2026)` picks the side where the target was found (the other side returns \u22121)",
+       ""
+      ],
+      [
+       "depth(a, p) + depth(a, q)",
+       "Distance between p and q = path up from p to the LCA plus down to q",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,5,1,6,2,0,8,null,null,7,4]`, `p = 5`, `q = 0`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "result"
+     ],
+     "rows": [
+      [
+       "LCA of 5 and 0",
+       "3"
+      ],
+      [
+       "depth of 5 below the LCA",
+       "1"
+      ],
+      [
+       "depth of 0 below the LCA",
+       "2"
+      ],
+      [
+       "distance",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why go through the LCA?",
+    "p": [
+     "In a tree there is exactly one path between two nodes, and it goes up to their lowest common ancestor and then down. Its length is the sum of the two vertical distances. If one node is the ancestor of the other, the LCA is that node and its depth is 0, giving just the other depth."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h)."
+    ]
+   }
+  ],
+  "takeaway": "Distance = depth(p below LCA) + depth(q below LCA)."
+ },
+ "1743": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g[a].append(b); g[b].append(a)",
+       "Adjacency lists: each pair says two numbers are neighbours in the array",
+       "Graph from adjacent pairs"
+      ],
+      [
+       "len(g[x]) == 1",
+       "Only the two ends of the array have one neighbour; all others have two",
+       "Finding the endpoint of a path"
+      ],
+      [
+       "nxt = g[cur][0] if g[cur][0] != prev else g[cur][1]",
+       "Step to the neighbour that is not the one we came from",
+       "Walking a path"
+      ],
+      [
+       "min(\u2026)",
+       "Either end works (the problem accepts either direction); `min` makes the result deterministic",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[2,1],[3,4],[3,2]]`: 1\u20132\u20133\u20134 is a path."
+    ],
+    "table": {
+     "head": [
+      "next value",
+      "how",
+      "array so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "start (an endpoint: one neighbour)",
+       "[1]"
+      ],
+      [
+       "2",
+       "from 1, skip previous None",
+       "[1, 2]"
+      ],
+      [
+       "3",
+       "from 2, skip previous 1",
+       "[1, 2, 3]"
+      ],
+      [
+       "4",
+       "from 3, skip previous 2",
+       "[1, 2, 3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the graph a simple path?",
+    "p": [
+     "The array has n distinct values and n\u22121 adjacent pairs, and each interior value appears in exactly two pairs. The graph is therefore a path, and walking it from an endpoint rebuilds the array."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Build an adjacency graph, start at a value with one neighbour, and walk the path."
+ },
+ "1752": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(i + 1) % len(nums)",
+       "The next index, wrapping from the last element to the first (circular comparison)",
+       "Treating the array as a circle"
+      ],
+      [
+       "nums[i] > nums[next]",
+       "A 'drop' between neighbours",
+       ""
+      ],
+      [
+       "sum(\u2026) <= 1",
+       "A sorted array, rotated, has at most one drop (the rotation point)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "array",
+      "drops around the circle",
+      "sorted and rotated?"
+     ],
+     "rows": [
+      [
+       "[3, 4, 5, 1, 2]",
+       "1",
+       "True"
+      ],
+      [
+       "[2, 1, 3, 4]",
+       "2",
+       "False"
+      ],
+      [
+       "[1, 2, 3]",
+       "1",
+       "True"
+      ],
+      [
+       "[1, 1, 1]",
+       "0",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare the last element to the first?",
+    "p": [
+     "A non-decreasing array has no drop on the circle except possibly the wrap from last to first. Rotating it moves that one drop to the rotation point. If the array was not sorted, at least two drops appear when going around the circle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count drops around the circular array (including last\u2192first); a rotated sorted array has at most one."
+ },
+ "1758": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "int(ch) != i % 2",
+       "Compares each digit with the pattern 0101\u2026, where position i should be i % 2",
+       ""
+      ],
+      [
+       "diff",
+       "Number of changes to reach '0101\u2026'",
+       ""
+      ],
+      [
+       "len(s) - diff",
+       "Changes to reach '1010\u2026': exactly the other positions",
+       "Complement pattern"
+      ],
+      [
+       "min(diff, len(s) - diff)",
+       "Pick the cheaper of the two alternating patterns",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"0100\"` compared with the pattern `0101`:"
+    ],
+    "table": {
+     "head": [
+      "index",
+      "digit",
+      "expected in 0101\u2026",
+      "mismatch?"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "False"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "False"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "False"
+      ],
+      [
+       "3",
+       "0",
+       "1",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "diff = 1 to reach 0101; to reach 1010 it takes 3. Answer 1."
+    ]
+   },
+   {
+    "h": "Why is `len(s) - diff` the cost of the other pattern?",
+    "p": [
+     "The two alternating patterns differ at every position, so a position that matches one pattern mismatches the other. The number of mismatches with the second pattern is therefore the number of matches with the first, len(s) \u2212 diff."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count mismatches against 0101\u2026; the other pattern costs n minus that."
+ },
+ "1773": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "{\"type\": 0, \"color\": 1, \"name\": 2}[ruleKey]",
+       "A dict literal mapping the rule name to a column index, looked up immediately",
+       "Lookup table for a small fixed mapping"
+      ],
+      [
+       "item[idx] == ruleValue",
+       "True when the chosen field equals the target",
+       ""
+      ],
+      [
+       "sum(\u2026 for item in items)",
+       "Counts the Trues, since True is 1",
+       "Counting matches with sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ruleKey = \"color\"` \u2192 index 1, `ruleValue = \"silver\"`:"
+    ],
+    "table": {
+     "head": [
+      "item",
+      "item[1]",
+      "matches?"
+     ],
+     "rows": [
+      [
+       "['phone', 'blue', 'pixel']",
+       "blue",
+       "False"
+      ],
+      [
+       "['computer', 'silver', 'lenovo']",
+       "silver",
+       "True"
+      ],
+      [
+       "['phone', 'gold', 'iphone']",
+       "gold",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 1."
+    ]
+   },
+   {
+    "h": "Why map the key to an index first?",
+    "p": [
+     "It avoids three separate if-branches inside the loop and does the key lookup once, outside the loop."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Map the rule name to a column index once, then count items whose field equals the value."
+ }
+}
