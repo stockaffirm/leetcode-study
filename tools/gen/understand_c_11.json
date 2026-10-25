@@ -1,0 +1,2310 @@
+{
+ "863": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent` dict",
+       "Maps every node to its parent, built by one DFS (`link`)",
+       "A tree only points downward; distance `k` can go UP, so we add the upward edge"
+      ],
+      [
+       "`link(node.left, node)`",
+       "Pass the current node as the parent of its children",
+       "Passing context down"
+      ],
+      [
+       "BFS from `target` with `(node, d)`",
+       "Treat the tree as an undirected graph (left, right, parent) and walk outward",
+       "Distance-k problems are BFS from a source"
+      ],
+      [
+       "`seen`",
+       "Prevents walking back to where we came from (the parent edge doubles as the cycle)",
+       "Visited set"
+      ],
+      [
+       "`d == k: ans.append`, `d < k: expand`",
+       "Collect nodes at exactly distance k and stop expanding beyond it",
+       "Level-limited BFS"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Target 5, `k = 2`. Nodes are dequeued in order of distance from 5:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Distance from 5",
+      "Role"
+     ],
+     "rows": [
+      [
+       "5",
+       "0",
+       "expand"
+      ],
+      [
+       "6",
+       "1",
+       "expand"
+      ],
+      [
+       "2",
+       "1",
+       "expand"
+      ],
+      [
+       "3",
+       "1",
+       "expand"
+      ],
+      [
+       "7",
+       "2",
+       "answer"
+      ],
+      [
+       "4",
+       "2",
+       "answer"
+      ],
+      [
+       "1",
+       "2",
+       "answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Nodes at distance 2: `7`, `4` (children of 2) and `1` (via the parent 3). The answer is `[7, 4, 1]` in some order."
+    ]
+   },
+   {
+    "h": "Why a parent map rather than recursion only?",
+    "p": [
+     "A pure downward DFS finds nodes at depth k below the target but misses those reached by first going up to an ancestor. The parent map turns the tree into a graph so one BFS covers both directions."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Handles 'up then down'?",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Downward DFS only",
+       "no",
+       "O(h)"
+      ],
+      [
+       "Parent map + BFS (this code)",
+       "yes",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the parent map and queue."
+    ]
+   }
+  ],
+  "takeaway": "Distance K in a tree: add parent pointers (turning it into a graph), then BFS from the target up to depth k."
+ },
+ "872": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`leaves(n)`",
+       "The leaf values of a subtree, left to right",
+       "In-order/pre-order DFS naturally yields leaves in left-to-right order"
+      ],
+      [
+       "`if not n: return []`",
+       "Empty subtree has no leaves",
+       "Base case"
+      ],
+      [
+       "`not n.left and not n.right`",
+       "A leaf",
+       "Leaf test"
+      ],
+      [
+       "`leaves(n.left) + leaves(n.right)`",
+       "Concatenate left leaves then right leaves",
+       "Preserves the leaf sequence"
+      ],
+      [
+       "list `==`",
+       "Python compares lists element by element, in order",
+       "Comparing two sequences"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Two trees with different shapes but the same leaf sequence:"
+    ],
+    "table": {
+     "head": [
+      "Tree",
+      "Leaf sequence"
+     ],
+     "rows": [
+      [
+       "tree 1",
+       "[6, 7, 4, 9, 8]"
+      ],
+      [
+       "tree 2",
+       "[6, 7, 4, 9, 8]"
+      ],
+      [
+       "equal?",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare sequences, not sets?",
+    "p": [
+     "Order matters: `[6,7]` and `[7,6]` have the same set of leaves but different leaf values sequences. A DFS that always visits left before right produces the left-to-right order the problem defines."
+    ],
+    "table": {
+     "head": [
+      "Leaf lists",
+      "Similar?"
+     ],
+     "rows": [
+      [
+       "`[6,7,4]` vs `[6,7,4]`",
+       "yes"
+      ],
+      [
+       "`[6,7,4]` vs `[7,6,4]`",
+       "no, though same set"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A memory improvement",
+    "p": [
+     "Building both lists costs O(n). Two generators that yield leaves lazily and compared with `zip_longest` stop at the first difference and use O(h) space."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n1 + n2).",
+     "Space: O(n1 + n2) for the lists (O(h) with generators)."
+    ]
+   }
+  ],
+  "takeaway": "Leaf-similar trees: collect leaves left to right with a DFS and compare the two lists."
+ },
+ "875": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 1, max(piles)`",
+       "Speeds from 1 up to the biggest pile (more than that never helps: one pile per hour)",
+       "Bounds of the answer"
+      ],
+      [
+       "`ceil(p / mid)`",
+       "Hours to finish a pile of `p` at speed `mid` (partial hours round up, since Koko can't switch piles mid-hour)",
+       "Ceiling division"
+      ],
+      [
+       "`sum(...) <= h`",
+       "Feasible: all piles finish within `h` hours",
+       "The monotone check"
+      ],
+      [
+       "`hi = mid`",
+       "`mid` works; the minimum speed is `mid` or smaller",
+       "Keep `mid`"
+      ],
+      [
+       "`lo = mid + 1`",
+       "Too slow: need a faster speed",
+       "Discard `mid`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`piles = [3,6,7,11]`, `h = 8`:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "Speed mid",
+      "Hours per pile",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "[1, 11]",
+       "6",
+       "1 + 1 + 2 + 2 = 6",
+       "≤ h → hi = mid"
+      ],
+      [
+       "[1, 6]",
+       "3",
+       "1 + 2 + 3 + 4 = 10",
+       "> h → lo = mid + 1"
+      ],
+      [
+       "[4, 6]",
+       "5",
+       "1 + 2 + 2 + 3 = 8",
+       "≤ h → hi = mid"
+      ],
+      [
+       "[4, 5]",
+       "4",
+       "1 + 2 + 2 + 3 = 8",
+       "≤ h → hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary search on the speed?",
+    "p": [
+     "If a speed `s` finishes in time, any faster speed does too, so feasibility is monotone: False…False True…True. Binary search finds the smallest True using O(log max) feasibility checks, each O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try every speed 1..max",
+       "O(n · max)"
+      ],
+      [
+       "Binary search on speed (this code)",
+       "O(n log max)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A float pitfall",
+    "p": [
+     "`ceil(p / mid)` uses floating division; for huge piles integer arithmetic `(p + mid - 1) // mid` is safer because it avoids rounding error."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max(piles)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Koko bananas: binary search the eating speed with a monotone 'finishes in h hours?' check."
+ },
+ "881": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(people)`",
+       "Lightest first, heaviest last",
+       "Greedy pairing needs sorted weights"
+      ],
+      [
+       "`i`, `j`",
+       "Lightest and heaviest remaining person",
+       "Two pointers from both ends"
+      ],
+      [
+       "`people[i] + people[j] <= limit`",
+       "Can the lightest ride with the heaviest?",
+       "Pair test"
+      ],
+      [
+       "`i += 1` only if paired; `j -= 1` always",
+       "The heaviest always boards a boat; the lightest joins if the weight allows",
+       "Each boat holds at most two"
+      ],
+      [
+       "`while i <= j`",
+       "`i == j` is the last single person",
+       "Handles odd counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,2,2,1]` sorted to `[1,2,2,3]`, limit 3:"
+    ],
+    "table": {
+     "head": [
+      "Pair considered",
+      "Sum",
+      "Decision",
+      "Boats"
+     ],
+     "rows": [
+      [
+       "1 (light), 3 (heavy)",
+       "1+3=4",
+       "heavy goes alone",
+       "1"
+      ],
+      [
+       "1 (light), 2 (heavy)",
+       "1+2=3",
+       "share a boat",
+       "2"
+      ],
+      [
+       "2 (light), 2 (heavy)",
+       "2+2=4",
+       "heavy goes alone",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pair the heaviest with the lightest?",
+    "p": [
+     "The heaviest person needs a boat anyway. If anyone can ride with them, the lightest is the best partner (most likely to fit). If even the lightest can't fit, the heaviest rides alone. Any other pairing can only use as many or more boats."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Greedy two pointers (this code)",
+       "O(n log n) for the sort"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) besides the sort."
+    ]
+   }
+  ],
+  "takeaway": "Boats to save people: sort and pair the heaviest with the lightest if they fit, otherwise the heaviest goes alone."
+ },
+ "893": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`w[0::2]`, `w[1::2]`",
+       "Characters at even indices and at odd indices (slice with step 2)",
+       "Splitting a string by position parity"
+      ],
+      [
+       "`sorted(...)`",
+       "Order the characters of each half; a swap of two even-position or two odd-position letters becomes invisible",
+       "Canonical form of a multiset"
+      ],
+      [
+       "`\"\".join(sorted(...))`",
+       "Turn the sorted list back into a string so it can be a hash key",
+       "Hashable key"
+      ],
+      [
+       "tuple `(even, odd)`",
+       "The group signature",
+       "Two strings are special-equivalent iff signatures match"
+      ],
+      [
+       "`len({...})`",
+       "Number of distinct signatures = number of groups",
+       "Set size"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Each word's signature (sorted even-index letters, sorted odd-index letters):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "even positions → sorted",
+      "odd positions → sorted",
+      "Signature"
+     ],
+     "rows": [
+      [
+       "abcd",
+       "ac",
+       "bd",
+       "('ac', 'bd')"
+      ],
+      [
+       "cdab",
+       "ca",
+       "db",
+       "('ac', 'bd')"
+      ],
+      [
+       "cbad",
+       "ca",
+       "bd",
+       "('ac', 'bd')"
+      ],
+      [
+       "xyzz",
+       "xz",
+       "yz",
+       "('xz', 'yz')"
+      ],
+      [
+       "zzxy",
+       "zx",
+       "zy",
+       "('xz', 'yz')"
+      ],
+      [
+       "zzyx",
+       "zy",
+       "zx",
+       "('yz', 'xz')"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this the right equivalence?",
+    "p": [
+     "The allowed move swaps two characters that are both at even indices or both at odd indices. Repeated swaps can reorder the even-index letters among themselves and the odd-index letters among themselves, but can never move a letter between even and odd positions. So two words are equivalent exactly when their even halves and odd halves are anagrams."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Equivalent?"
+     ],
+     "rows": [
+      [
+       "`abcd`, `cdab`",
+       "yes (swap a/c and b/d)"
+      ],
+      [
+       "`abcd`, `cbad`",
+       "yes (swap a/c)"
+      ],
+      [
+       "`abcd`, `xyzz`",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · L log L) for n words of length L.",
+     "Space: O(n · L)."
+    ]
+   }
+  ],
+  "takeaway": "Special-equivalent groups: canonical signature = (sorted even-index letters, sorted odd-index letters); count distinct signatures."
+ },
+ "896": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`inc`",
+       "Still possibly non-decreasing (no drop seen)",
+       "Track both directions at once"
+      ],
+      [
+       "`dec`",
+       "Still possibly non-increasing (no rise seen)",
+       "Second flag"
+      ],
+      [
+       "`nums[i] < nums[i-1]` sets `inc = False`",
+       "One drop rules out non-decreasing",
+       "Disproving a hypothesis"
+      ],
+      [
+       "`nums[i] > nums[i-1]` sets `dec = False`",
+       "One rise rules out non-increasing",
+       "Disproving the other"
+      ],
+      [
+       "`inc or dec`",
+       "Monotonic in at least one direction",
+       "Final test"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "inc",
+      "dec"
+     ],
+     "rows": [
+      [
+       "1 → 2",
+       "True",
+       "False"
+      ],
+      [
+       "2 → 2",
+       "True",
+       "False"
+      ],
+      [
+       "2 → 3",
+       "True",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two flags and not a direction variable?",
+    "p": [
+     "Equal neighbours (`2, 2`) don't commit to a direction, so the direction is unknown until a strict change appears. Two flags handle leading equal values and all-equal arrays without special cases; an all-equal array leaves both True."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "inc",
+      "dec",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`[1,2,2,3]`",
+       "True",
+       "False",
+       "True"
+      ],
+      [
+       "`[3,2,2,1]`",
+       "False",
+       "True",
+       "True"
+      ],
+      [
+       "`[1,3,2]`",
+       "False",
+       "False",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic array: one pass with two flags (still non-decreasing, still non-increasing); true if either survives."
+ },
+ "905": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`l`, `r`",
+       "Left and right pointers",
+       "Partitioning an array in place"
+      ],
+      [
+       "`nums[l] % 2 == 0`",
+       "Left element is already even, so it is in the right zone",
+       "Advance past correct elements"
+      ],
+      [
+       "`nums[r] % 2 == 1`",
+       "Right element is already odd, so it is in the right zone",
+       "Retreat past correct elements"
+      ],
+      [
+       "`else: swap`",
+       "Left is odd AND right is even: both are in the wrong zone, so swap them",
+       "Fix two misplaced elements at once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,1,2,4]`:"
+    ],
+    "table": {
+     "head": [
+      "l",
+      "r",
+      "nums[l]",
+      "nums[r]",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "odd",
+       "even",
+       "swap → [4, 1, 2, 3]"
+      ],
+      [
+       "0",
+       "3",
+       "4",
+       "3",
+       "left is even: l += 1"
+      ],
+      [
+       "1",
+       "3",
+       "1",
+       "3",
+       "right is odd: r -= 1"
+      ],
+      [
+       "1",
+       "2",
+       "odd",
+       "even",
+       "swap → [4, 2, 1, 3]"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "1",
+       "left is even: l += 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not advance after the swap?",
+    "p": [
+     "After swapping, `nums[l]` is even and `nums[r]` is odd; the next iteration's first two checks move both pointers. Doing it in the loop keeps the code to one place that moves each pointer."
+    ]
+   },
+   {
+    "h": "Contrast with a stable approach",
+    "p": [
+     "`[x for x in nums if x % 2 == 0] + [x for x in nums if x % 2]` is stable and simple but uses O(n) extra memory. The two-pointer version is in place and not stable, which the problem allows."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Space",
+      "Stable?"
+     ],
+     "rows": [
+      [
+       "two pointers (this code)",
+       "O(1)",
+       "no"
+      ],
+      [
+       "two list comprehensions",
+       "O(n)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Partition by parity in place: two pointers skip correct elements and swap when both ends are wrong."
+ },
+ "908": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`max(nums) - min(nums)`",
+       "The current spread of the array",
+       "Only the extremes determine the range"
+      ],
+      [
+       "`2 * k`",
+       "Every element can shift by at most `k` either way: the max can come down `k` and the min can go up `k`",
+       "Both ends move toward each other"
+      ],
+      [
+       "`max(0, …)`",
+       "If the shifts can close the whole gap the range becomes 0, never negative",
+       "Clamp"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [0, 10]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "max − min",
+       "10"
+      ],
+      [
+       "shift available (2k)",
+       "4"
+      ],
+      [
+       "10 − 4",
+       "6"
+      ],
+      [
+       "answer = max(0, 6)",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the max and min matter",
+    "p": [
+     "The range is `max - min`. To shrink it, push the maximum down by k and the minimum up by k. Every other element lies between them and can be moved by up to k to stay inside the new interval, so it cannot widen the range."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`[1]`, k=0",
+       "0"
+      ],
+      [
+       "`[0, 10]`, k=2",
+       "6"
+      ],
+      [
+       "`[1, 3, 6]`, k=3",
+       "0 (spread 5 ≤ 6)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) to find the max and min.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest range I: only max and min matter; each can move k toward the other, so the answer is max(0, max − min − 2k)."
+ },
+ "917": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`list(s)`",
+       "Strings are immutable; a list of characters can be swapped in place",
+       "Editing a string by position"
+      ],
+      [
+       "`chars[i].isalpha()`",
+       "True for letters",
+       "Separating letters from other characters"
+      ],
+      [
+       "`if not chars[i].isalpha(): i += 1`",
+       "Skip a non-letter on the left",
+       "The non-letters stay where they are"
+      ],
+      [
+       "`elif not chars[j].isalpha(): j -= 1`",
+       "Skip a non-letter on the right",
+       "Same on the other side"
+      ],
+      [
+       "`else: swap and move both`",
+       "Both ends are letters: swap them",
+       "Two-pointer reversal of a subsequence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"a-bC-dEf-ghIj\"` (the dashes never move). Each row is a swap:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "String after swap"
+     ],
+     "rows": [
+      [
+       "0",
+       "12",
+       "j-bC-dEf-ghIa"
+      ],
+      [
+       "2",
+       "11",
+       "j-IC-dEf-ghba"
+      ],
+      [
+       "3",
+       "10",
+       "j-Ih-dEf-gCba"
+      ],
+      [
+       "5",
+       "9",
+       "j-Ih-gEf-dCba"
+      ],
+      [
+       "6",
+       "7",
+       "j-Ih-gfE-dCba"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two pointers instead of reversing a filtered list?",
+    "p": [
+     "Filter, reverse and refill (`letters = [c for c in s if c.isalpha()]`, then pop from the end) is equally correct but needs O(n) extra space. The pointer version skips non-letters in place with O(1) extra beyond the character list."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "Two pointers (this code)",
+       "O(1) besides the char list"
+      ],
+      [
+       "Filter + reversed iterator",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the character list (strings are immutable in Python)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse only letters: two pointers skip non-letters and swap letters in place."
+ },
+ "920": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Number of playlists of length `i` that use exactly `j` DIFFERENT songs",
+       "DP over (length, distinct songs used)"
+      ],
+      [
+       "`dp[i-1][j-1] * (n - j + 1)`",
+       "Song `i` is NEW: choose any of the `n - (j - 1)` songs not used yet",
+       "Adding a brand-new song"
+      ],
+      [
+       "`dp[i-1][j] * (j - k)`",
+       "Song `i` is a REPEAT: pick among the `j` used songs, excluding the `k` most recently played ones",
+       "Replay rule: a song can repeat only after `k` other songs"
+      ],
+      [
+       "`if j > k`",
+       "If `j ≤ k` every used song is still 'cooling down', so no replay is possible",
+       "Guard"
+      ],
+      [
+       "`% MOD`",
+       "Counts grow huge; keep them modulo 10⁹ + 7",
+       "Counting problems with a modulus"
+      ],
+      [
+       "`dp[goal][n]`",
+       "Playlists of length `goal` using all `n` songs",
+       "Required: every song played at least once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `goal = 3`, `k = 1`: rows are playlist length `i`, columns are number of distinct songs `j`:"
+    ],
+    "table": {
+     "head": [
+      "i \\ j",
+      "0",
+      "1",
+      "2",
+      "3"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "3",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "6",
+       "0"
+      ],
+      [
+       "3",
+       "0",
+       "0",
+       "6",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why separate 'new song' and 'repeat'?",
+    "p": [
+     "The next song is either one never used (n − j + 1 choices, moving to j distinct songs) or one already used and not among the last `k` played (j − k choices, staying at j). These cases are disjoint and cover everything, so their counts add."
+    ],
+    "table": {
+     "head": [
+      "Last song is",
+      "From state",
+      "Choices"
+     ],
+     "rows": [
+      [
+       "new",
+       "(i-1, j-1)",
+       "n − (j−1)"
+      ],
+      [
+       "a repeat",
+       "(i-1, j)",
+       "j − k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(goal · n).",
+     "Space: O(goal · n) (can be reduced to O(n) with rolling rows)."
+    ]
+   }
+  ],
+  "takeaway": "Music playlists: DP on (length, distinct songs) where the next song is new (n−j+1 ways) or a repeat after k others (j−k ways)."
+ },
+ "938": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`root.val < low` → go right only",
+       "The node and its whole left subtree are below the range (BST property)",
+       "Pruning with ordering"
+      ],
+      [
+       "`root.val > high` → go left only",
+       "The node and its whole right subtree are above the range",
+       "Symmetric pruning"
+      ],
+      [
+       "else: `val + left + right`",
+       "The node is inside the range; both sides may hold more values",
+       "Normal case"
+      ],
+      [
+       "`if not root: return 0`",
+       "Empty subtree contributes nothing",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[10,5,15,3,7,null,18]`, range `[7, 15]`:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Compared to range",
+      "Action"
+     ],
+     "rows": [
+      [
+       "10",
+       "in range",
+       "add value, visit both"
+      ],
+      [
+       "5",
+       "< low",
+       "skip left subtree"
+      ],
+      [
+       "7",
+       "in range",
+       "add value, visit both"
+      ],
+      [
+       "15",
+       "in range",
+       "add value, visit both"
+      ],
+      [
+       "18",
+       "> high",
+       "skip right subtree"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The in-range values are 10, 7 and 15, which sum to 32. The nodes 5 and 18 are out of range, and the subtrees below them that cannot contain in-range values are skipped."
+    ]
+   },
+   {
+    "h": "Why is pruning valid?",
+    "p": [
+     "In a BST everything left of a node is smaller and everything right of it is larger. If `root.val < low`, every value in its left subtree is also `< low`, so only the right side can contain anything in range. The reverse holds for `root.val > high`. A plain DFS that visits every node would be O(n); pruning gives O(h + k) for k values in range."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Visit all nodes",
+       "O(n)"
+      ],
+      [
+       "Prune with BST order (this code)",
+       "O(h + k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) worst case, O(h + k) typically with pruning.",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Range sum in a BST: prune whole subtrees that cannot overlap [low, high] using the BST ordering."
+ },
+ "941": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first `while arr[i] < arr[i+1]`",
+       "Climb while strictly increasing",
+       "Walk up the hill"
+      ],
+      [
+       "`i == 0 or i == n - 1`",
+       "No climb at all (the peak is the first element), or no descent (the peak is the last element)",
+       "A mountain needs both sides"
+      ],
+      [
+       "second `while arr[i] > arr[i+1]`",
+       "Descend while strictly decreasing",
+       "Walk down"
+      ],
+      [
+       "`i == n - 1`",
+       "The descent reached the end: nothing but a clean down-slope followed the peak",
+       "Rejects plateaus and further climbs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "One pass up, one pass down:"
+    ],
+    "table": {
+     "head": [
+      "arr",
+      "Result",
+      "Trace"
+     ],
+     "rows": [
+      [
+       "[0, 3, 2, 1]",
+       "True",
+       "climb ends at index 1; descent ends at index 3"
+      ],
+      [
+       "[3, 5, 5]",
+       "False",
+       "climb ends at index 1; descent ends at index 1"
+      ],
+      [
+       "[0, 1, 2, 3]",
+       "False",
+       "climb ends at index 3; peak at an end → False"
+      ],
+      [
+       "[2, 1]",
+       "False",
+       "climb ends at index 0; peak at an end → False"
+      ],
+      [
+       "[0, 2, 3, 3, 5, 2, 1, 0]",
+       "False",
+       "climb ends at index 2; descent ends at index 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `i == n - 1` at the end a complete check?",
+    "p": [
+     "After the climb and the descent, any leftover element means the shape broke: either a flat step (`5, 5`) or a second rise. If the descent stops before the end, `i` is not `n - 1` and the answer is False."
+    ],
+    "table": {
+     "head": [
+      "Shape",
+      "Result"
+     ],
+     "rows": [
+      [
+       "strictly up then strictly down",
+       "True"
+      ],
+      [
+       "plateau at the top",
+       "False"
+      ],
+      [
+       "only up or only down",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Valid mountain: climb strictly up, require a peak that is not at an end, then descend strictly to the last index."
+ },
+ "947": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent` keyed by row numbers AND column numbers",
+       "Union-Find where each ROW and each COLUMN is a node; a stone connects its row and its column",
+       "Model a stone as an edge between two lines"
+      ],
+      [
+       "`~c`",
+       "Bitwise NOT: `-c - 1`, always negative, so column ids never collide with row ids (which are ≥ 0)",
+       "A trick to share one dictionary for two kinds of keys"
+      ],
+      [
+       "`parent[find(r)] = find(~c)`",
+       "Union the stone's row and column groups",
+       "Stones in the same row or column end up in one component"
+      ],
+      [
+       "`len({find(x) for x in parent})`",
+       "Number of connected components among rows and columns",
+       "Components of the bipartite row/column graph"
+      ],
+      [
+       "`len(stones) - components`",
+       "From each component you can remove all stones but one",
+       "Answer = stones − components"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Six stones; after each union the number of components among the rows/columns seen so far:"
+    ],
+    "table": {
+     "head": [
+      "Stone",
+      "Union",
+      "Components"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "row 0 with col 0 (stored as -1)",
+       "1"
+      ],
+      [
+       "(0,1)",
+       "row 0 with col 1 (stored as -2)",
+       "1"
+      ],
+      [
+       "(1,0)",
+       "row 1 with col 0 (stored as -1)",
+       "1"
+      ],
+      [
+       "(1,2)",
+       "row 1 with col 2 (stored as -3)",
+       "1"
+      ],
+      [
+       "(2,1)",
+       "row 2 with col 1 (stored as -2)",
+       "1"
+      ],
+      [
+       "(2,2)",
+       "row 2 with col 2 (stored as -3)",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `stones − components`?",
+    "p": [
+     "In a connected group of stones (linked through shared rows or columns) you can always remove stones until one is left, by removing a stone that is a leaf of a spanning tree. So each component keeps exactly one stone, and everything else can go."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Compare every pair of stones",
+       "O(n²)"
+      ],
+      [
+       "Union rows with columns (this code)",
+       "O(n · α)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · α(n)).",
+     "Space: O(n) for the parent map."
+    ]
+   }
+  ],
+  "takeaway": "Remove stones: union each stone's row with its column (`~c` keeps them distinct); answer is stones minus component count."
+ },
+ "953": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rank = {c: i for i, c in enumerate(order)}`",
+       "Letter → position in the alien alphabet",
+       "Replace a custom order with numbers"
+      ],
+      [
+       "`zip(words, words[1:])`",
+       "Each adjacent pair of words",
+       "A list is sorted iff every neighbouring pair is in order"
+      ],
+      [
+       "`[rank[c] for c in a] > [rank[c] for c in b]`",
+       "Python compares lists lexicographically (first difference decides, and a proper prefix is smaller), exactly the dictionary rule",
+       "Reusing the language's list comparison"
+      ],
+      [
+       "`return False` on the first bad pair",
+       "One out-of-order neighbour is enough",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['hello','leetcode']` with `order = 'hlabc…'` (h = 0, l = 1):"
+    ],
+    "table": {
+     "head": [
+      "a",
+      "b",
+      "ranks of a",
+      "ranks of b",
+      "a > b?"
+     ],
+     "rows": [
+      [
+       "hello",
+       "leetcode",
+       "[0, 6, 1, 1, 14]",
+       "[1, 6, 6, 19, 4, 14, 5, 6]",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do list comparisons handle the prefix rule?",
+    "p": [
+     "`apple` vs `app`: the ranks of `app` are a prefix of the ranks of `apple`, and Python treats the shorter list as smaller, so `apple > app` is True and the pair is rejected, as it should be (longer words after their own prefix is fine in the other order)."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "List comparison",
+      "Valid order?"
+     ],
+     "rows": [
+      [
+       "`app`, `apple`",
+       "shorter < longer",
+       "yes"
+      ],
+      [
+       "`apple`, `app`",
+       "longer > shorter",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only neighbours?",
+    "p": [
+     "Sortedness is transitive: if every adjacent pair is in order, the whole list is."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters).",
+     "Space: O(26) for `rank` plus the temporary rank lists."
+    ]
+   }
+  ],
+  "takeaway": "Alien dictionary check: map letters to ranks, then every adjacent pair of rank lists must be non-decreasing under list comparison."
+ },
+ "959": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent = list(range(4 * n * n))`",
+       "Each grid cell is split into 4 triangles (top, right, bottom, left), each a Union-Find node",
+       "Representing a diagonal cut by pieces"
+      ],
+      [
+       "`base = 4 * (i * n + j)`",
+       "Index of the cell's first triangle; offsets 0, 1, 2, 3 = top, right, bottom, left",
+       "Flattening (cell, triangle) into one index"
+      ],
+      [
+       "`'/'`: union top–left and right–bottom",
+       "A forward slash separates the top-left half from the bottom-right half",
+       "What each character connects"
+      ],
+      [
+       "`'\\\\'`: union top–right and bottom–left",
+       "A backslash separates top-right from bottom-left",
+       "Mirror image"
+      ],
+      [
+       "`' '`: union all four",
+       "A blank cell is one open region",
+       "No wall inside"
+      ],
+      [
+       "`union(base + 2, below's top)`, `union(base + 1, right's left)`",
+       "Neighbouring cells connect through their shared edge: my bottom triangle meets the cell below's top triangle, my right meets the right neighbour's left",
+       "No wall between cells"
+      ],
+      [
+       "`len({find(x) …})`",
+       "Number of connected groups of triangles = number of regions",
+       "Count components"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[' /', '/ ']` (n = 2): 16 triangles, indices `4·(row·2+col) + {0 top, 1 right, 2 bottom, 3 left}`. After all unions the groups are:"
+    ],
+    "table": {
+     "head": [
+      "Region",
+      "Triangles (cell, side)"
+     ],
+     "rows": [
+      [
+       "1",
+       "(0,0)t, (0,0)r, (0,0)b, (0,0)l, (0,1)t, (0,1)l, (1,0)t, (1,0)l"
+      ],
+      [
+       "2",
+       "(0,1)r, (0,1)b, (1,0)r, (1,0)b, (1,1)t, (1,1)r, (1,1)b, (1,1)l"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why four triangles per cell?",
+    "p": [
+     "A slash cuts a cell into two parts, but regions are decided by how those parts connect to neighbours. Splitting each cell into four triangles gives a node per side so that every wall (slash or backslash) is just a pair of unions, and edges between cells connect the touching triangles. Counting components of triangles then counts regions exactly."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Idea"
+     ],
+     "rows": [
+      [
+       "Scale the grid ×3 and flood fill",
+       "draw the slashes as lines of cells, then count components"
+      ],
+      [
+       "Union-Find on 4 triangles per cell (this code)",
+       "no drawing, just unions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² · α).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Regions cut by slashes: split every cell into four triangles, union what each character leaves connected, then union across cell edges and count components."
+ },
+ "968": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "return `0`",
+       "This node is NOT covered",
+       "Three states per node"
+      ],
+      [
+       "return `1`",
+       "This node HAS a camera",
+       "State two"
+      ],
+      [
+       "return `2`",
+       "This node is covered (by a child's camera), no camera on it",
+       "State three; also what an empty child returns, since a missing child needs nothing"
+      ],
+      [
+       "`if l == 0 or r == 0: cams += 1; return 1`",
+       "A child is uncovered, so the only place to cover it is HERE (its parent)",
+       "Greedy: put cameras as high as possible, never on leaves"
+      ],
+      [
+       "`if l == 1 or r == 1: return 2`",
+       "A child's camera covers this node",
+       "Covered for free"
+      ],
+      [
+       "`return 0` otherwise",
+       "Both children are covered but neither has a camera: this node is uncovered, and its parent must handle it",
+       "Delay the decision to the parent"
+      ],
+      [
+       "`if dfs(root) == 0: cams += 1`",
+       "The root can have no parent, so an uncovered root needs its own camera",
+       "Final check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[0,0,null,0,0]`: root with left child that has two leaf children. Nodes are processed bottom-up (post-order):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "left state",
+      "right state",
+      "Decision",
+      "Returns",
+      "Cameras"
+     ],
+     "rows": [
+      [
+       "node #1",
+       "2",
+       "2",
+       "children covered but no camera → I am NOT covered",
+       "0",
+       "0"
+      ],
+      [
+       "node #2",
+       "2",
+       "2",
+       "children covered but no camera → I am NOT covered",
+       "0",
+       "0"
+      ],
+      [
+       "node #3",
+       "0",
+       "0",
+       "child not covered → place camera here",
+       "1",
+       "1"
+      ],
+      [
+       "node #4",
+       "1",
+       "2",
+       "child has camera → covered",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why put cameras on parents of leaves?",
+    "p": [
+     "A camera covers its node, its parent and its children. A leaf's camera covers only the leaf and its parent, while a camera on the leaf's parent covers the parent, the leaf (and its sibling) and the grandparent. So placing cameras on leaves' parents dominates placing them on leaves, and the bottom-up greedy repeats that argument at every level."
+    ],
+    "table": {
+     "head": [
+      "Placement",
+      "Nodes covered"
+     ],
+     "rows": [
+      [
+       "camera on a leaf",
+       "leaf, parent"
+      ],
+      [
+       "camera on the leaf's parent",
+       "parent, both children, grandparent"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Binary tree cameras: bottom-up greedy with three states (uncovered, has camera, covered); put a camera on the parent of any uncovered child."
+ },
+ "974": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`s = (s + x) % k`",
+       "Prefix sum modulo k, kept small and non-negative (Python's `%` returns a non-negative result for positive k, even when the sum is negative)",
+       "Remainders of prefix sums"
+      ],
+      [
+       "`cnt[s]`",
+       "How many earlier prefixes (including the empty one) had remainder `s`",
+       "Counting equal remainders"
+      ],
+      [
+       "`cnt[0] = 1`",
+       "The empty prefix has remainder 0",
+       "So subarrays that start at index 0 are counted"
+      ],
+      [
+       "`ans += cnt[s]`",
+       "Each earlier prefix with the SAME remainder gives a subarray whose sum is divisible by k",
+       "Two prefixes with equal remainders differ by a multiple of k"
+      ],
+      [
+       "`cnt[s] += 1` after the lookup",
+       "Record the current prefix after counting",
+       "A prefix must not pair with itself"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,5,0,-2,-3,1]`, `k = 5`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "prefix % 5",
+      "Lookup",
+      "ans",
+      "counts"
+     ],
+     "rows": [
+      [
+       "4",
+       "4",
+       "cnt[4] was 0",
+       "0",
+       "{0: 1, 4: 1}"
+      ],
+      [
+       "5",
+       "4",
+       "cnt[4] was 1",
+       "1",
+       "{0: 1, 4: 2}"
+      ],
+      [
+       "0",
+       "4",
+       "cnt[4] was 2",
+       "3",
+       "{0: 1, 4: 3}"
+      ],
+      [
+       "-2",
+       "2",
+       "cnt[2] was 0",
+       "3",
+       "{0: 1, 4: 3, 2: 1}"
+      ],
+      [
+       "-3",
+       "4",
+       "cnt[4] was 3",
+       "6",
+       "{0: 1, 4: 4, 2: 1}"
+      ],
+      [
+       "1",
+       "0",
+       "cnt[0] was 1",
+       "7",
+       "{0: 2, 4: 4, 2: 1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why equal remainders mean divisible sums",
+    "p": [
+     "`sum(i..j) = prefix[j] − prefix[i−1]`. If both prefixes leave the same remainder mod k, their difference is a multiple of k. So the answer is the number of pairs of equal remainders: a hash map counts them in one pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All subarrays",
+       "O(n²)"
+      ],
+      [
+       "Prefix remainders + hash map (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The negative-number subtlety",
+    "p": [
+     "In C++/Java `-3 % 5` is `-3`, so you must add k before taking the modulus again. Python's `%` already returns a non-negative result, so this code needs no fix; in other languages normalise with `((s % k) + k) % k`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Subarray sums divisible by k: count equal prefix-sum remainders with a hash map; normalise negatives."
+ },
+ "977": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`res = [0] * n`",
+       "Output array to be filled from the END",
+       "The largest squares are known first"
+      ],
+      [
+       "`l`, `r`",
+       "Pointers at the ends: the most negative and the most positive values, so one of them has the largest absolute value",
+       "Sorted input with negatives: squares are biggest at the ends"
+      ],
+      [
+       "`for i in range(n - 1, -1, -1)`",
+       "Fill positions from the last to the first",
+       "Descending fill"
+      ],
+      [
+       "`abs(nums[l]) > abs(nums[r])`",
+       "Pick the end with the larger absolute value; its square is the largest remaining",
+       "Two-pointer merge"
+      ],
+      [
+       "`**`",
+       "Power operator",
+       "`x ** 2`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-4,-1,0,3,10]`:"
+    ],
+    "table": {
+     "head": [
+      "Position i",
+      "Compare",
+      "Choice",
+      "res"
+     ],
+     "rows": [
+      [
+       "4",
+       "|-4| ≤ |10|",
+       "take right 10² = 100",
+       "[0, 0, 0, 0, 100]"
+      ],
+      [
+       "3",
+       "|-4| > |3|",
+       "take left -4² = 16",
+       "[0, 0, 0, 16, 100]"
+      ],
+      [
+       "2",
+       "|-1| ≤ |3|",
+       "take right 3² = 9",
+       "[0, 0, 9, 16, 100]"
+      ],
+      [
+       "1",
+       "|-1| > |0|",
+       "take left -1² = 1",
+       "[0, 1, 9, 16, 100]"
+      ],
+      [
+       "0",
+       "|0| ≤ |0|",
+       "take right 0² = 0",
+       "[0, 1, 9, 16, 100]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not square and sort?",
+    "p": [
+     "Sorting squares is O(n log n). The input is sorted, so the squares of the negatives are decreasing and the squares of the non-negatives are increasing: two sorted runs, which two pointers merge in O(n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "square then sort",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "two pointers from the ends (this code)",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Squares of a sorted array: the biggest square is at one of the ends, so fill the result from the back with two pointers."
+ },
+ "980": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first double loop",
+       "Find the start `(si, sj)` and count walkable cells (`empty`: everything except obstacles `-1`, including the start and the end)",
+       "Setup: how many cells must be visited"
+      ],
+      [
+       "`dfs(i, j, left)`",
+       "Cells still to visit AFTER the current one",
+       "Backtracking with a countdown"
+      ],
+      [
+       "`grid[i][j] == 2` → `left == 0`",
+       "At the end square, count the path only if every walkable cell was visited",
+       "The 'walk over every square exactly once' rule"
+      ],
+      [
+       "`old, grid[i][j] = grid[i][j], -1`",
+       "Mark the current cell as used by turning it into an obstacle",
+       "In-place visited marker with a saved value to restore"
+      ],
+      [
+       "`grid[i][j] = old`",
+       "Undo on the way back",
+       "Backtracking"
+      ],
+      [
+       "`dfs(si, sj, empty - 1)`",
+       "The start is already visited, so `empty - 1` cells remain",
+       "Off-by-one: the start counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3×4 grid with start at top-left, end at `(2,2)`, an obstacle at `(2,3)`. There are 11 walkable cells. Paths that visit all of them (cells in order):"
+    ],
+    "table": {
+     "head": [
+      "Path #",
+      "Cells visited"
+     ],
+     "rows": [
+      [
+       "1",
+       "(0,0) → (1,0) → (2,0) → (2,1) → (1,1) → (0,1) → (0,2) → (0,3) → (1,3) → (1,2) → (2,2)"
+      ],
+      [
+       "2",
+       "(0,0) → (0,1) → (0,2) → (0,3) → (1,3) → (1,2) → (1,1) → (1,0) → (2,0) → (2,1) → (2,2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `left == 0` at the end square?",
+    "p": [
+     "Reaching `2` early means some empty cells are still unvisited, so that path is invalid. The countdown `left` tracks exactly how many cells remain; only when it hits 0 on arrival is every square covered once."
+    ],
+    "table": {
+     "head": [
+      "Arrival at end",
+      "Counted?"
+     ],
+     "rows": [
+      [
+       "`left == 0`",
+       "yes"
+      ],
+      [
+       "`left > 0`",
+       "no, empty cells remain"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(3^(m·n)) worst case (a Hamiltonian-path search), practical for the small grids allowed (m·n ≤ 20).",
+     "Space: O(m·n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Unique Paths III: backtracking over cells with a countdown of unvisited squares; count a path only if it reaches the end with none left."
+ },
+ "983": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[d]`",
+       "Minimum cost to cover all travel days up to day `d`",
+       "DP indexed by calendar day"
+      ],
+      [
+       "`d not in travel: dp[d] = dp[d-1]`",
+       "No travel today, so no extra cost",
+       "Free days"
+      ],
+      [
+       "`dp[d - 1] + costs[0]`",
+       "Buy a 1-day pass for today",
+       "Option 1"
+      ],
+      [
+       "`dp[max(0, d - 7)] + costs[1]`",
+       "A 7-day pass ending today covers days `d-6 … d`, so the cost before it is `dp[d - 7]`",
+       "Option 2; `max(0, …)` keeps the index valid"
+      ],
+      [
+       "`dp[max(0, d - 30)] + costs[2]`",
+       "A 30-day pass ending today",
+       "Option 3"
+      ],
+      [
+       "`travel = set(days)`",
+       "O(1) membership",
+       "Lookup"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`days = [1,4,6,7,8,20]`, `costs = [2,7,15]`. Only travel days need a decision (other days copy the previous total):"
+    ],
+    "table": {
+     "head": [
+      "Day",
+      "Option 1-day",
+      "Option 7-day",
+      "Option 30-day",
+      "dp[d]"
+     ],
+     "rows": [
+      [
+       "1",
+       "1-day: 2",
+       "7-day: 7",
+       "30-day: 15",
+       "2"
+      ],
+      [
+       "4",
+       "1-day: 4",
+       "7-day: 7",
+       "30-day: 15",
+       "4"
+      ],
+      [
+       "6",
+       "1-day: 6",
+       "7-day: 7",
+       "30-day: 15",
+       "6"
+      ],
+      [
+       "7",
+       "1-day: 8",
+       "7-day: 7",
+       "30-day: 15",
+       "7"
+      ],
+      [
+       "8",
+       "1-day: 9",
+       "7-day: 9",
+       "30-day: 15",
+       "9"
+      ],
+      [
+       "20",
+       "1-day: 11",
+       "7-day: 16",
+       "30-day: 15",
+       "11"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why look BACKWARD from each day?",
+    "p": [
+     "Deciding what pass to buy ON the day you need it and charging it to the days it covers lets the DP use already computed totals (`dp[d - 7]`) with no lookahead. Choosing passes by start day would need to remember which days are already covered."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP over calendar days (this code)",
+       "O(last day)"
+      ],
+      [
+       "DP over travel days only (with pointers)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(last day) ≤ 365.",
+     "Space: O(last day)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum cost for tickets: DP over days where each travel day takes the cheapest of a 1-, 7- or 30-day pass ending today."
+ }
+}
