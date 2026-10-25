@@ -39,3 +39,16 @@
   }
   document.addEventListener("lc-paint", refresh); refresh();
 })();
+
+/* Pattern note at the top of each topic: why the section exists, general logic, pseudo code, usual pattern. */
+(function(){
+  const T = window.TOPICS || {}, A = window.TOPIC_ALIAS || {}, e = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  document.querySelectorAll(".topic").forEach(t => {
+    const n = t.querySelector(".tn").textContent.trim(), k = T[n] ? n : A[n], d = T[k], tb = t.querySelector(".tb"); if(!d || !tb) return;
+    const x = document.createElement("details"); x.className = "about";
+    x.innerHTML = `<summary>About this pattern <small>why it is a section · logic · pseudo code · usual pattern</small></summary>
+      <p><b>Why it is a section.</b> ${e(d.why)}</p><p><b>General logic.</b></p><ol>${d.logic.map(l => `<li>${e(l)}</li>`).join("")}</ol>
+      <p><b>Pseudo code.</b></p><pre class="code ucode">${e(d.pseudo)}</pre><p><b>Usual pattern.</b> ${e(d.pattern)}</p>`;
+    tb.insertBefore(x, tb.firstChild);
+  });
+})();

@@ -32,6 +32,6 @@ const html=`<!doctype html>
 ${list("LeetCode 75","",g75,()=>true)}
 ${list("LeetCode 150","not in the 75",g150,id=>!in75.has(+id))}
 ${extra.map((e,i)=>{const seen=new Set([in75,in150,...member.slice(2,2+i).map(m=>m.ids)].flatMap(x=>[...x]));return list(esc(e.title),esc(e.note||"new problems only"),e.groups,id=>!seen.has(+id))}).join("\n")}
-</div><script src="assets/progress.js"></script><script src="assets/toc.js"></script></body></html>
+</div><script src="assets/progress.js"></script><script src="assets/topics.js"></script><script src="assets/toc.js"></script></body></html>
 `;
 fs.writeFileSync(path.join(root,"index.html"),html);console.log("extra sets:",extra.map(e=>e.key).join(",")||"none","|","75 list:",in75.size,"150-only rows:",[...in150].filter(i=>!in75.has(i)).length,"overlap:",[...in150].filter(i=>in75.has(i)).length);

@@ -1,0 +1,2390 @@
+{
+ "3": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen = {}  /  seen[ch] = r",
+       "Dict from character to the last index where it appeared",
+       "You need O(1) lookup of 'where did I last see this value?'"
+      ],
+      [
+       "ch in seen",
+       "O(1) membership test on the dict keys",
+       "Checking for a repeat without scanning the window"
+      ],
+      [
+       "enumerate(s)",
+       "Yields (index, character) pairs",
+       "You need the index and the item in the same loop"
+      ],
+      [
+       "max(best, r - l + 1)",
+       "Keeps the largest window length seen so far",
+       "Tracking a running maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Input `\"abcabcbb\"`. `l` is the left edge of the window and `r` the right edge. The window always holds distinct characters."
+    ],
+    "table": {
+     "head": [
+      "r",
+      "ch",
+      "last seen",
+      "repeat inside window?",
+      "l",
+      "window",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "\u2013",
+       "no",
+       "0",
+       "a",
+       "1"
+      ],
+      [
+       "1",
+       "b",
+       "\u2013",
+       "no",
+       "0",
+       "ab",
+       "2"
+      ],
+      [
+       "2",
+       "c",
+       "\u2013",
+       "no",
+       "0",
+       "abc",
+       "3"
+      ],
+      [
+       "3",
+       "a",
+       "0",
+       "yes",
+       "1",
+       "bca",
+       "3"
+      ],
+      [
+       "4",
+       "b",
+       "1",
+       "yes",
+       "2",
+       "cab",
+       "3"
+      ],
+      [
+       "5",
+       "c",
+       "2",
+       "yes",
+       "3",
+       "abc",
+       "3"
+      ],
+      [
+       "6",
+       "b",
+       "4",
+       "yes",
+       "5",
+       "cb",
+       "3"
+      ],
+      [
+       "7",
+       "b",
+       "6",
+       "yes",
+       "7",
+       "b",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `seen[ch] >= l` and not just `ch in seen`?",
+    "p": [
+     "`seen` is never cleaned, so it can remember a character from before the window start. Such a stale entry must not move `l` backwards or forwards. Trace of `\"abba\"`:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "ch",
+      "last seen",
+      "l after",
+      "window"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "\u2013",
+       "0",
+       "a"
+      ],
+      [
+       "1",
+       "b",
+       "\u2013",
+       "0",
+       "ab"
+      ],
+      [
+       "2",
+       "b",
+       "1",
+       "2",
+       "b"
+      ],
+      [
+       "3",
+       "a",
+       "0",
+       "2",
+       "ba"
+      ]
+     ]
+    },
+    "bullets": [
+     "At `r=3` the second `a` was last seen at index 0, which is already left of `l=2`, so it is not a repeat inside the window.",
+     "Without the `>= l` check, `l` would jump back to 1 and the window `\"ba\"` would wrongly become `\"bba\"`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n). `r` moves once across the string and `l` only ever moves right (it never goes backward), so no character is processed more than twice.",
+     "Space: O(min(n, alphabet size)) for the dict."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with a last-seen index map: expand `r` every step and jump `l` straight past a repeated character instead of shrinking one step at a time."
+ },
+ "6": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "[''] * numRows",
+       "A list of numRows empty strings, one per zigzag row",
+       "You build several output lines side by side"
+      ],
+      [
+       "rows[r] += ch",
+       "Appends the character to row r",
+       "Distributing characters into buckets as you scan"
+      ],
+      [
+       "d = 1 / d = -1",
+       "Direction flag: down or up the rows",
+       "Bouncing back and forth between two boundaries"
+      ],
+      [
+       "''.join(rows)",
+       "Concatenates the rows top to bottom",
+       "Joining a list of strings in one pass (cheaper than repeated +=)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"PAYPALISHIRING\"`, `numRows = 3`. `r` is the row the character goes into, `d` the direction used after placing it."
+    ],
+    "table": {
+     "head": [
+      "ch",
+      "row used",
+      "dir after",
+      "rows[0] | rows[1] | rows[2]"
+     ],
+     "rows": [
+      [
+       "P",
+       "0",
+       "+1",
+       "P |  | "
+      ],
+      [
+       "A",
+       "1",
+       "+1",
+       "P | A | "
+      ],
+      [
+       "Y",
+       "2",
+       "-1",
+       "P | A | Y"
+      ],
+      [
+       "P",
+       "1",
+       "-1",
+       "P | AP | Y"
+      ],
+      [
+       "A",
+       "0",
+       "+1",
+       "PA | AP | Y"
+      ],
+      [
+       "L",
+       "1",
+       "+1",
+       "PA | APL | Y"
+      ],
+      [
+       "I",
+       "2",
+       "-1",
+       "PA | APL | YI"
+      ],
+      [
+       "S",
+       "1",
+       "-1",
+       "PA | APLS | YI"
+      ],
+      [
+       "H",
+       "0",
+       "+1",
+       "PAH | APLS | YI"
+      ],
+      [
+       "I",
+       "1",
+       "+1",
+       "PAH | APLSI | YI"
+      ],
+      [
+       "R",
+       "2",
+       "-1",
+       "PAH | APLSI | YIR"
+      ],
+      [
+       "I",
+       "1",
+       "-1",
+       "PAH | APLSII | YIR"
+      ],
+      [
+       "N",
+       "0",
+       "+1",
+       "PAHN | APLSII | YIR"
+      ],
+      [
+       "G",
+       "1",
+       "+1",
+       "PAHN | APLSIIG | YIR"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check the direction at both ends?",
+    "p": [
+     "The direction flips only at the top row (`r == 0`) and the bottom row (`r == numRows - 1`). In between it keeps its value, which is what makes the path a zigzag rather than a sweep.",
+     "`numRows == 1` is handled first because with one row `r` is both the top and the bottom, so `d` would flip every step and `r` would leave the list."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for one pass over the string (plus the join).",
+     "Space: O(n) for the row strings."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The code never computes row positions with math. It simulates the walk, so there is no cycle-length formula (`2 * numRows - 2`) to get off by one."
+    ]
+   }
+  ],
+  "takeaway": "Simulate the zigzag with a row pointer and a direction flag that flips at the two boundaries, then join the rows."
+ },
+ "9": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x % 10",
+       "The last digit of x",
+       "Peeling digits off the right end"
+      ],
+      [
+       "x //= 10",
+       "Drops the last digit (integer division)",
+       "Shrinking a number one digit at a time"
+      ],
+      [
+       "rev = rev * 10 + x % 10",
+       "Appends that digit to the end of rev",
+       "Building a reversed number without strings"
+      ],
+      [
+       "rev // 10",
+       "Drops the middle digit of rev (odd-length case)",
+       "Comparing halves when length may be odd"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through two examples",
+    "p": [
+     "The loop stops once the reversed half is at least as large as what remains of `x`, so only half the digits are reversed.",
+     "`x = 12321` (odd length):"
+    ],
+    "table": {
+     "head": [
+      "x after",
+      "rev after"
+     ],
+     "rows": [
+      [
+       "1232",
+       "1"
+      ],
+      [
+       "123",
+       "12"
+      ],
+      [
+       "12",
+       "123"
+      ]
+     ]
+    },
+    "bullets": [
+     "Stop: `x = 12`, `rev = 123`. Not equal, but `rev // 10 = 12 == x`, so the middle digit `3` is ignored: palindrome."
+    ]
+   },
+   {
+    "h": "Even length",
+    "p": [
+     "`x = 1221`:"
+    ],
+    "table": {
+     "head": [
+      "x after",
+      "rev after"
+     ],
+     "rows": [
+      [
+       "122",
+       "1"
+      ],
+      [
+       "12",
+       "12"
+      ]
+     ]
+    },
+    "bullets": [
+     "Stop: `x == rev == 12`: palindrome."
+    ]
+   },
+   {
+    "h": "Why the early return for trailing zeros?",
+    "p": [
+     "A number ending in 0 can only be a palindrome if it is 0, because a palindrome would need to start with 0. Without the guard the loop wrongly accepts `10`: `x=10` gives `x=1, rev=0`, continues to `x=0, rev=1`, and then `x == rev // 10` is `0 == 0`. Running the code with the guard removed returns `True` for `10`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log10 n), one step per half of the digits.",
+     "Space: O(1). No string conversion, which is the point of this version."
+    ]
+   }
+  ],
+  "takeaway": "Reverse only the second half of the digits and compare with the first half; stopping at the midpoint avoids overflow and extra space."
+ },
+ "12": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "vals = [(1000,'M'), (900,'CM'), \u2026]",
+       "Ordered list of (value, symbol) pairs, largest first, with the subtractive forms (CM, CD, XC, XL, IX, IV) listed explicitly",
+       "The mapping has special cases that you want as data, not as if-branches"
+      ],
+      [
+       "for v, s in vals",
+       "Tuple unpacking in the loop header",
+       "Walking pairs in a fixed order"
+      ],
+      [
+       "while num >= v",
+       "Uses the same symbol as many times as it fits",
+       "Greedy repeated subtraction"
+      ],
+      [
+       "res += s",
+       "Appends to the result string",
+       "Building a short string (at most about 15 characters here)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 1994`. Only the rows where a symbol was used are shown."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Times used",
+      "num left",
+      "res so far"
+     ],
+     "rows": [
+      [
+       "(1000, 'M')",
+       "1",
+       "994",
+       "M"
+      ],
+      [
+       "(900, 'CM')",
+       "1",
+       "94",
+       "MCM"
+      ],
+      [
+       "(90, 'XC')",
+       "1",
+       "4",
+       "MCMXC"
+      ],
+      [
+       "(4, 'IV')",
+       "1",
+       "0",
+       "MCMXCIV"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy is correct here",
+    "p": [
+     "Listing 900, 400, 90, 40, 9, 4 as their own entries turns the subtractive rule into plain greedy choice: at every point the largest value that fits is always the right one, because the list is ordered and contains every legal symbol group.",
+     "Without the six subtractive entries, 4 would come out as `IIII` and 1994 as `MDCCCCLXXXXIIII`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1). The output has a bounded length (at most 15 symbols for inputs up to 3999) and the table has 13 entries.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy over a descending value table where the subtractive forms are extra rows; this turns a rule-heavy conversion into a simple loop."
+ },
+ "15": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums.sort()",
+       "Sorts in place in O(n log n)",
+       "You want two pointers or easy duplicate skipping"
+      ],
+      [
+       "nums[i] == nums[i-1]",
+       "Detects a repeated anchor value (valid only because the array is sorted)",
+       "De-duplicating without a set"
+      ],
+      [
+       "l, r = i + 1, len(nums) - 1",
+       "Two pointers closing in from both ends of the rest of the array",
+       "A sorted array and a target sum"
+      ],
+      [
+       "res.append([...])",
+       "Records one triplet",
+       "Collecting results"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sorted input `[-4, -1, -1, 0, 1, 2]`. `i` is the anchor, `l` and `r` the pointers."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "anchor",
+      "l",
+      "r",
+      "sum",
+      "action"
+     ],
+     "rows": [
+      [
+       "0",
+       "-4",
+       "1 (-1)",
+       "5 (2)",
+       "-3",
+       "sum<0: l+=1"
+      ],
+      [
+       "0",
+       "-4",
+       "2 (-1)",
+       "5 (2)",
+       "-3",
+       "sum<0: l+=1"
+      ],
+      [
+       "0",
+       "-4",
+       "3 (0)",
+       "5 (2)",
+       "-2",
+       "sum<0: l+=1"
+      ],
+      [
+       "0",
+       "-4",
+       "4 (1)",
+       "5 (2)",
+       "-1",
+       "sum<0: l+=1"
+      ],
+      [
+       "1",
+       "-1",
+       "2 (-1)",
+       "5 (2)",
+       "0",
+       "found"
+      ],
+      [
+       "1",
+       "-1",
+       "3 (0)",
+       "5 (2)",
+       "1",
+       "sum>0: r-=1"
+      ],
+      [
+       "1",
+       "-1",
+       "3 (0)",
+       "4 (1)",
+       "0",
+       "found"
+      ],
+      [
+       "2",
+       "-1",
+       "\u2013",
+       "\u2013",
+       "\u2013",
+       "skip duplicate anchor"
+      ],
+      [
+       "3",
+       "0",
+       "4 (1)",
+       "5 (2)",
+       "3",
+       "sum>0: r-=1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does moving a pointer work?",
+    "p": [
+     "Because the array is sorted, a sum that is too small can only grow by moving `l` right, and a sum that is too large can only shrink by moving `r` left. Every skipped pair is provably unable to reach 0, so the inner loop is O(n) instead of O(n\u00b2).",
+     "After finding a triplet, `l` skips past equal values (`while ... nums[l] == nums[l-1]`) so the same triplet is not reported twice. The anchor skip (`i and nums[i] == nums[i-1]`) removes duplicates for `i`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2): n anchors times an O(n) two-pointer sweep. The sort is O(n log n) and does not dominate.",
+     "Space: O(1) extra besides the output (ignoring the sort's internal space)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, fix one number, then use two converging pointers on the rest; skip equal values to avoid duplicate triplets."
+ },
+ "18": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums.sort()",
+       "Orders the array in place, O(n log n)",
+       "Two-pointer sum search and duplicate skipping both need sorted order"
+      ],
+      [
+       "range(n - 3), range(i + 1, n - 2)",
+       "Bounds that leave room for the two pointers after j",
+       "Avoiding index checks inside the loops"
+      ],
+      [
+       "nums[j] == nums[j - 1] with j > i + 1",
+       "Skips repeated values at that level; `j > i + 1` stops it from comparing against `nums[i]`",
+       "De-duplicating combinations without a set"
+      ],
+      [
+       "lo, hi two pointers",
+       "Converge on the remaining sum",
+       "Sorted array, find pairs hitting a target"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sorted `[-2, -1, 0, 0, 1, 2]`, target 0. Columns 1\u20134 are the four chosen numbers."
+    ],
+    "table": {
+     "head": [
+      "nums[i]",
+      "nums[j]",
+      "lo value",
+      "hi value",
+      "sum",
+      "action"
+     ],
+     "rows": [
+      [
+       "-2",
+       "-1",
+       "0",
+       "2",
+       "-1",
+       "too small: lo+=1"
+      ],
+      [
+       "-2",
+       "-1",
+       "0",
+       "2",
+       "-1",
+       "too small: lo+=1"
+      ],
+      [
+       "-2",
+       "-1",
+       "1",
+       "2",
+       "0",
+       "found"
+      ],
+      [
+       "-2",
+       "0",
+       "0",
+       "2",
+       "0",
+       "found"
+      ],
+      [
+       "-2",
+       "0",
+       "\u2013",
+       "\u2013",
+       "\u2013",
+       "skip duplicate j"
+      ],
+      [
+       "-1",
+       "0",
+       "0",
+       "2",
+       "1",
+       "too big: hi-=1"
+      ],
+      [
+       "-1",
+       "0",
+       "0",
+       "1",
+       "0",
+       "found"
+      ],
+      [
+       "-1",
+       "0",
+       "\u2013",
+       "\u2013",
+       "\u2013",
+       "skip duplicate j"
+      ],
+      [
+       "0",
+       "0",
+       "1",
+       "2",
+       "3",
+       "too big: hi-=1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `j > i + 1` and not `j > 0`?",
+    "p": [
+     "The duplicate check at level j must only compare with the previous value that was also tried as j for this i. Index `i + 1` is the first j for this i, so it has no previous sibling. With `j > 0` the first j would be skipped whenever it equals `nums[i]`, which would drop valid answers such as `[0, 0, 0, 0]` or `[-2, -2, 2, 2]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b3): two nested loops times an O(n) pointer sweep. For k-Sum this generalizes to O(n^(k-1)).",
+     "Space: O(1) extra besides the output and the sort."
+    ]
+   }
+  ],
+  "takeaway": "k-Sum is sort, fix k-2 numbers with duplicate skips, then close the last two with converging pointers."
+ },
+ "21": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dummy = cur = ListNode()",
+       "A throwaway head node; `cur` is the tail of the merged list",
+       "The head of the result is not known in advance"
+      ],
+      [
+       "cur.next, a = a, a.next",
+       "Links the smaller node to the tail and advances list a in one tuple assignment",
+       "Moving a node between lists without copying"
+      ],
+      [
+       "a.val <= b.val",
+       "`<=` takes from a on ties, which keeps the merge stable",
+       "Merging sorted sequences"
+      ],
+      [
+       "cur.next = a or b",
+       "Attaches whichever list still has nodes (the other is None)",
+       "Finishing after one side runs out, no loop needed"
+      ],
+      [
+       "dummy.next",
+       "The real head of the result",
+       "Returning from dummy-head code"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = 1\u21922\u21924`, `b = 1\u21923\u21924`:"
+    ],
+    "table": {
+     "head": [
+      "Pick",
+      "Merged list so far"
+     ],
+     "rows": [
+      [
+       "a (1)",
+       "1\u21922\u21924"
+      ],
+      [
+       "b (1)",
+       "1\u21921\u21923\u21924"
+      ],
+      [
+       "a (2)",
+       "1\u21921\u21922\u21924"
+      ],
+      [
+       "b (3)",
+       "1\u21921\u21922\u21923\u21924"
+      ],
+      [
+       "a (4)",
+       "1\u21921\u21922\u21923\u21924"
+      ],
+      [
+       "attach rest (b)",
+       "1\u21921\u21922\u21923\u21924\u21924"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dummy node?",
+    "p": [
+     "Without it the first node chosen would need special handling (`head = a` or `head = b`) before the loop. The dummy lets `cur.next = ...` work for the first node too, and `dummy.next` is returned at the end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m); each node is visited once.",
+     "Space: O(1). No nodes are created (except the dummy); the existing nodes are relinked."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "Once one list is empty the other is already sorted and every remaining node is larger than what is merged, so a single pointer assignment attaches the whole tail."
+    ]
+   }
+  ],
+  "takeaway": "Merging sorted lists is a dummy head plus a tail pointer that repeatedly takes the smaller front node; attach the leftover list in one step."
+ },
+ "24": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ListNode(0, head)",
+       "Dummy node placed before the head",
+       "The head itself can change (here the first pair moves)"
+      ],
+      [
+       "prev",
+       "Node just before the current pair",
+       "Rewiring needs the predecessor"
+      ],
+      [
+       "prev.next and prev.next.next",
+       "Both nodes of a pair exist",
+       "Stopping when 0 or 1 node remains"
+      ],
+      [
+       "a.next = b.next; b.next = a; prev.next = b",
+       "Three pointer writes that swap the pair in place",
+       "Rewiring links without touching values"
+      ],
+      [
+       "prev = a",
+       "After the swap `a` is the second node of the pair, so it is the new predecessor",
+       "Moving to the next pair"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1\u21922\u21923\u21924`. Each step swaps the pair `(a, b)` and the table shows the list from the head afterwards."
+    ],
+    "table": {
+     "head": [
+      "Pair (a,b)",
+      "List after the swap"
+     ],
+     "rows": [
+      [
+       "1,2",
+       "2\u21921\u21923\u21924"
+      ],
+      [
+       "3,4",
+       "2\u21921\u21924\u21923"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this order of the three writes?",
+    "p": [
+     "`a.next = b.next` goes first so the rest of the list (`3\u21924`) is saved before `b.next` is overwritten. Then `b.next = a` points b back at a, and `prev.next = b` hooks the swapped pair into the list. Doing `b.next = a` first would lose the node after b."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1); the nodes are relinked, not copied."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The loop condition checks `prev.next` before `prev.next.next`; with an odd count the final single node is simply left in place."
+    ]
+   }
+  ],
+  "takeaway": "Pointer surgery with a dummy head: save the tail of the pair first, then reverse the pair and reconnect the predecessor."
+ },
+ "27": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for x in nums",
+       "Read pointer: visits every element",
+       "One pass over the array"
+      ],
+      [
+       "k",
+       "Write pointer: count of kept elements and the next slot to fill",
+       "In-place filtering; the 'slow and fast pointer' pattern"
+      ],
+      [
+       "nums[k] = x",
+       "Overwrites the slot at k with a kept value",
+       "Compacting an array in place"
+      ],
+      [
+       "return k",
+       "New logical length; the contents beyond k don't matter",
+       "The problem only checks the first k elements"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,2,2,3]`, `val = 3`:"
+    ],
+    "table": {
+     "head": [
+      "x (read)",
+      "action",
+      "k after",
+      "nums after"
+     ],
+     "rows": [
+      [
+       "3",
+       "skip",
+       "0",
+       "[3, 2, 2, 3]"
+      ],
+      [
+       "2",
+       "keep: write at k",
+       "1",
+       "[2, 2, 2, 3]"
+      ],
+      [
+       "2",
+       "keep: write at k",
+       "2",
+       "[2, 2, 2, 3]"
+      ],
+      [
+       "3",
+       "skip",
+       "2",
+       "[2, 2, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it safe to overwrite while reading?",
+    "p": [
+     "`k` never gets ahead of the read position (it advances at most once per element read), so an overwrite only ever touches a slot that has already been read."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) with a single pass.",
+     "Space: O(1); no extra array."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The order of the kept elements is preserved. If the number of elements to remove is tiny, swapping with the last element writes less, but this version is simpler and stable."
+    ]
+   }
+  ],
+  "takeaway": "Read pointer scans, write pointer collects the survivors: the standard in-place filter."
+ },
+ "30": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "w, n = len(words[0]), len(words)",
+       "Word length and word count; every word has the same length",
+       "Fixed-size chunks make the total window length `w * n`"
+      ],
+      [
+       "Counter(words)",
+       "Multiset of required words, as word \u2192 count",
+       "Comparing 'same items, any order'; handles repeated words"
+      ],
+      [
+       "range(len(s) - w*n + 1)",
+       "Every start position where a full window fits",
+       "Sliding a fixed-size window"
+      ],
+      [
+       "s[i + j*w : i + (j+1)*w]",
+       "The j-th word-sized chunk inside the window",
+       "Cutting a string into equal pieces"
+      ],
+      [
+       "seen == need",
+       "Counters compare by contents, ignoring order",
+       "Anagram-style equality"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"barfoothefoobarman\"`, `words = [\"foo\", \"bar\"]`, window length 6:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "chunks",
+      "equals need?"
+     ],
+     "rows": [
+      [
+       "0",
+       "bar + foo",
+       "yes"
+      ],
+      [
+       "1",
+       "arf + oot",
+       "no"
+      ],
+      [
+       "2",
+       "rfo + oth",
+       "no"
+      ],
+      [
+       "3",
+       "foo + the",
+       "no"
+      ],
+      [
+       "4",
+       "oot + hef",
+       "no"
+      ],
+      [
+       "5",
+       "oth + efo",
+       "no"
+      ],
+      [
+       "6",
+       "the + foo",
+       "no"
+      ],
+      [
+       "7",
+       "hef + oob",
+       "no"
+      ],
+      [
+       "8",
+       "efo + oba",
+       "no"
+      ],
+      [
+       "9",
+       "foo + bar",
+       "yes"
+      ],
+      [
+       "10",
+       "oob + arm",
+       "no"
+      ],
+      [
+       "11",
+       "oba + rma",
+       "no"
+      ],
+      [
+       "12",
+       "bar + man",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a Counter and not a set or a sorted compare?",
+    "bullets": [
+     "A set ignores counts. With `words = [\"foo\", \"foo\", \"bar\"]` the window chunks `[\"foo\", \"bar\", \"bar\"]` give the same set `{foo, bar}` and would be accepted wrongly.",
+     "Counter equality keeps multiplicities and ignores order, which is exactly 'every word used exactly once, any order'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((len(s) \u2212 w\u00b7n + 1) \u00b7 n \u00b7 w): each window builds a Counter from n chunks of length w (hashing a chunk costs O(w)). This is the simple version; a sliding window per offset reaches O(len(s) \u00b7 w).",
+     "Space: O(n \u00b7 w) for the Counter."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-width window with a Counter comparison; the Counter handles duplicates and order-independence in one equality check."
+ },
+ "33": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo, hi = 0, len(nums) - 1",
+       "Inclusive search bounds",
+       "Binary search with `while lo <= hi`"
+      ],
+      [
+       "mid = (lo + hi) // 2",
+       "Middle index (floor)",
+       "Halving a range; Python ints don't overflow"
+      ],
+      [
+       "nums[lo] <= nums[mid]",
+       "Tests which half is sorted. `<=` matters when lo == mid",
+       "Binary search on a rotated array"
+      ],
+      [
+       "nums[lo] <= target < nums[mid]",
+       "Range test: is the target inside the sorted half?",
+       "Deciding which half to keep"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,5,6,7,0,1,2]`, `target = 0`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "nums[mid]",
+      "sorted half",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "6",
+       "3",
+       "7",
+       "left sorted",
+       "otherwise \u2192 lo = mid+1"
+      ],
+      [
+       "4",
+       "6",
+       "5",
+       "1",
+       "left sorted",
+       "target in [nums[lo], nums[mid]) \u2192 hi = mid-1"
+      ],
+      [
+       "4",
+       "4",
+       "4",
+       "0",
+       "\u2013",
+       "found, return mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check which half is sorted first?",
+    "p": [
+     "After rotation, comparing the target with `nums[mid]` alone says nothing about the side. But one half is always fully sorted, and in a sorted half a range check (`nums[lo] <= target < nums[mid]`) is reliable. If the target is not in the sorted half it must be in the other, so one comparison always eliminates half the array.",
+     "Why `<=` in `nums[lo] <= nums[mid]`? When `lo == mid` (a one- or two-element range) the left 'half' is a single element, which is sorted; using `<` would send that case to the right-half branch and mis-handle it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) because every iteration halves the range.",
+     "Space: O(1).",
+     "Distinct values are required: with duplicates `nums[lo] <= nums[mid]` can't tell which half is sorted (that is problem 81)."
+    ]
+   }
+  ],
+  "takeaway": "Modified binary search: at each step one half is sorted, so test whether the target lies in it and discard the other half."
+ },
+ "36": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen = set()",
+       "Hash set; O(1) add and membership",
+       "'Have I seen this before?'"
+      ],
+      [
+       "('r', r, v), ('c', c, v), ('b', r//3, c//3, v)",
+       "Three tuple keys per cell: value v in row r, in column c, in box (r//3, c//3). The leading tag keeps the three namespaces apart",
+       "One set standing in for 27 sets; tuples are hashable"
+      ],
+      [
+       "r // 3, c // 3",
+       "Maps 9\u00d79 coordinates to one of the 3\u00d73 boxes",
+       "Grouping grid cells into blocks"
+      ],
+      [
+       "any(k in seen for k in keys)",
+       "True as soon as one of the three keys exists",
+       "Short-circuit check of several conditions"
+      ],
+      [
+       "seen.update(keys)",
+       "Adds all three keys at once",
+       "Bulk insert"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "On the standard example board, the first cells of row 0 and row 1 add these keys (no clashes, so the board stays valid):"
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "value",
+      "keys added (row, col, box)",
+      "result"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "5",
+       "row 0, col 0, box (0, 0)",
+       "no clash"
+      ],
+      [
+       "(0,1)",
+       "3",
+       "row 0, col 1, box (0, 0)",
+       "no clash"
+      ],
+      [
+       "(0,4)",
+       "7",
+       "row 0, col 4, box (0, 1)",
+       "no clash"
+      ],
+      [
+       "(1,0)",
+       "6",
+       "row 1, col 0, box (0, 0)",
+       "no clash"
+      ],
+      [
+       "(1,3)",
+       "1",
+       "row 1, col 3, box (0, 1)",
+       "no clash"
+      ],
+      [
+       "(1,4)",
+       "9",
+       "row 1, col 4, box (0, 1)",
+       "no clash"
+      ],
+      [
+       "(1,5)",
+       "5",
+       "row 1, col 5, box (0, 1)",
+       "no clash"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A failing example",
+    "p": [
+     "If the top-left `5` is replaced by `8`, the scan reaches cell `(2,2)` with value `8`. The check finds this key already in `seen`: `[('b', 0, 0, '8')]`. The function returns False immediately; remaining cells are never read."
+    ]
+   },
+   {
+    "h": "Why tag the keys with 'r', 'c', 'b'?",
+    "p": [
+     "Without the tag, `(0, '5')` could mean either 'row 0 holds a 5' or 'column 0 holds a 5'. A 5 in row 0 and a different 5 in column 0 is perfectly legal, but untagged keys would collide and report a false duplicate. The tag keeps the three constraint families apart."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(81), constant, since the board is fixed at 9\u00d79 (O(n\u00b2) for an n\u00d7n generalization).",
+     "Space: O(81) keys at most, constant."
+    ]
+   }
+  ],
+  "takeaway": "Validate with one hash set of tagged keys (row, column, box) and stop at the first duplicate."
+ },
+ "39": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "def go(start, path, total)",
+       "Recursive helper; `start` is the first candidate index still allowed, `path` the numbers chosen, `total` their sum",
+       "Backtracking: build a partial answer, then undo it"
+      ],
+      [
+       "for i in range(start, len(c))",
+       "Only tries candidates at index \u2265 start",
+       "Avoiding permutations of the same combination"
+      ],
+      [
+       "go(i, ...) (not i + 1)",
+       "Passes `i` again so the same number can be reused",
+       "'Unlimited use of each item' problems"
+      ],
+      [
+       "path.append(x) \u2026 path.pop()",
+       "Choose, recurse, undo",
+       "Reusing one list for all branches instead of copying"
+      ],
+      [
+       "res.append(path[:])",
+       "Stores a copy of the path",
+       "`path` keeps mutating; without `[:]` res would end up full of the final empty list"
+      ],
+      [
+       "total + c[i] <= target",
+       "Prunes branches that already overshoot",
+       "Positive numbers only"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`c = [2,3,6,7]`, `target = 7`. Each row is one choose (or a record) in the order they happen:"
+    ],
+    "table": {
+     "head": [
+      "path",
+      "sum",
+      "event"
+     ],
+     "rows": [
+      [
+       "[2]",
+       "2",
+       "choose 2 (start=0)"
+      ],
+      [
+       "[2, 2]",
+       "4",
+       "choose 2 (start=0)"
+      ],
+      [
+       "[2, 2, 2]",
+       "6",
+       "choose 2 (start=0)"
+      ],
+      [
+       "[2, 2, 3]",
+       "7",
+       "choose 3 (start=1)"
+      ],
+      [
+       "[2, 2, 3]",
+       "7",
+       "total == target \u2192 record"
+      ],
+      [
+       "[2, 3]",
+       "5",
+       "choose 3 (start=1)"
+      ],
+      [
+       "[3]",
+       "3",
+       "choose 3 (start=1)"
+      ],
+      [
+       "[3, 3]",
+       "6",
+       "choose 3 (start=1)"
+      ],
+      [
+       "[6]",
+       "6",
+       "choose 6 (start=2)"
+      ],
+      [
+       "[7]",
+       "7",
+       "choose 7 (start=3)"
+      ],
+      [
+       "[7]",
+       "7",
+       "total == target \u2192 record"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `start` and why recurse with `i`?",
+    "bullets": [
+     "`start` forces candidates to be picked in non-decreasing index order, so `[2,2,3]` is generated once and `[3,2,2]` or `[2,3,2]` never are.",
+     "Recursing with `i` (not `i + 1`) allows reusing the same number; with `i + 1` each number could be used once (Combination Sum II style)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential, bounded by about O(N^(T/M)) where T is the target and M the smallest candidate (the recursion depth is at most T/M).",
+     "Space: O(T/M) recursion depth plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking with a start index to avoid duplicates; pass the same index again to reuse a number."
+ },
+ "42": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "l, r",
+       "Two pointers moving inward from the ends",
+       "Each step depends on the smaller of two ends"
+      ],
+      [
+       "lmax, rmax",
+       "Tallest bar seen so far from the left and from the right",
+       "Prefix/suffix maximums without storing arrays"
+      ],
+      [
+       "max(lmax, height[l])",
+       "Updates the running maximum",
+       "Tracking a running best"
+      ],
+      [
+       "lmax - height[l]",
+       "Water above bar l: the wall level minus the bar's height (never negative because lmax \u2265 height[l])",
+       "Computing a per-position quantity from a bound"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The classic input `[0,1,0,2,1,0,1,3,2,1,2,1]`, total water 6. Each row processes one bar:"
+    ],
+    "table": {
+     "head": [
+      "l",
+      "r",
+      "side processed",
+      "lmax",
+      "rmax",
+      "water added",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "11",
+       "left (h[l]=0)",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "11",
+       "right (h[r]=1)",
+       "0",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "10",
+       "left (h[l]=1)",
+       "1",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "10",
+       "left (h[l]=0)",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "10",
+       "right (h[r]=2)",
+       "1",
+       "2",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "9",
+       "right (h[r]=1)",
+       "1",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "8",
+       "right (h[r]=2)",
+       "1",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "7",
+       "left (h[l]=2)",
+       "2",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "4",
+       "7",
+       "left (h[l]=1)",
+       "2",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "5",
+       "7",
+       "left (h[l]=0)",
+       "2",
+       "2",
+       "2",
+       "5"
+      ],
+      [
+       "6",
+       "7",
+       "left (h[l]=1)",
+       "2",
+       "2",
+       "1",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it safe to use only the smaller side?",
+    "p": [
+     "Water above a bar is `min(left wall, right wall) \u2212 height`. If `height[l] < height[r]`, the left side is the limiting one. `lmax` is the exact left wall for `l`. The true right wall is at least `lmax`: every left bar passed so far was smaller than the bar at `r` at that moment, and that bar (or a taller one) still lies to the right of `l`. So the water at `l` is exactly `lmax \u2212 height[l]`, whatever sits between `l` and `r`. The same argument applies symmetrically on the right."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each bar is processed once.",
+     "Space: O(1). The prefix/suffix-array version needs O(n); the two pointers fold those arrays into two variables."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers from both ends, always processing the lower side, because the lower wall alone decides the water level there."
+ },
+ "45": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "far = max(far, i + nums[i])",
+       "Furthest index reachable from any position seen so far in this layer",
+       "Greedy 'how far can I get' reasoning"
+      ],
+      [
+       "cur_end",
+       "Right edge of the range reachable with `jumps` jumps",
+       "BFS-by-layers without a queue"
+      ],
+      [
+       "if i == cur_end",
+       "Reached the edge of the current layer, so another jump is required",
+       "Counting layers/levels"
+      ],
+      [
+       "range(len(nums) - 1)",
+       "Stops before the last index; at the last index no jump is needed",
+       "Avoiding one extra count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,1,1,4]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "i+nums[i]",
+      "far",
+      "cur_end",
+      "jumps",
+      "boundary hit?"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "2",
+       "2",
+       "2",
+       "1",
+       "yes: jump taken, new boundary"
+      ],
+      [
+       "1",
+       "3",
+       "4",
+       "4",
+       "2",
+       "1",
+       "\u2013"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "4",
+       "4",
+       "2",
+       "yes: jump taken, new boundary"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "4",
+       "4",
+       "2",
+       "\u2013"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this a BFS in disguise?",
+    "p": [
+     "Positions reachable in k jumps form a contiguous range, so a layer of BFS is just `(previous cur_end, cur_end]`. `far` is the farthest the next layer can reach. When `i` passes the layer's edge, one more jump is paid and the next layer begins. No queue is needed because the layer is an interval."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), single pass.",
+     "Space: O(1).",
+     "Assumes the end is reachable (the problem guarantees it). Without that guarantee `far` could stay equal to `i` and the answer would be wrong."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The loop excludes the last index on purpose: if `cur_end` were exactly `n \u2212 1` and the loop included it, an unnecessary extra jump would be counted."
+    ]
+   }
+  ],
+  "takeaway": "Greedy BFS over intervals: count a jump each time you pass the boundary of what the current jump count can reach."
+ },
+ "48": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(i + 1, n)",
+       "Visits only the cells above the diagonal, so every pair is swapped once",
+       "Transposing in place; starting at 0 would swap twice and undo itself"
+      ],
+      [
+       "m[i][j], m[j][i] = m[j][i], m[i][j]",
+       "Tuple swap, no temp variable",
+       "Swapping two cells"
+      ],
+      [
+       "row.reverse()",
+       "Reverses a list in place, O(n)",
+       "Mirroring a row; `row[::-1]` would create a copy and not change the matrix"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A clockwise rotation equals transpose, then reverse every row:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Matrix"
+     ],
+     "rows": [
+      [
+       "start",
+       "[[1, 2, 3], [4, 5, 6], [7, 8, 9]]"
+      ],
+      [
+       "swap m[0][1] \u2194 m[1][0]",
+       "[[1, 4, 3], [2, 5, 6], [7, 8, 9]]"
+      ],
+      [
+       "swap m[0][2] \u2194 m[2][0]",
+       "[[1, 4, 7], [2, 5, 6], [3, 8, 9]]"
+      ],
+      [
+       "swap m[1][2] \u2194 m[2][1]",
+       "[[1, 4, 7], [2, 5, 8], [3, 6, 9]]"
+      ],
+      [
+       "reverse row 0",
+       "[[7, 4, 1], [2, 5, 8], [3, 6, 9]]"
+      ],
+      [
+       "reverse row 1",
+       "[[7, 4, 1], [8, 5, 2], [3, 6, 9]]"
+      ],
+      [
+       "reverse row 2",
+       "[[7, 4, 1], [8, 5, 2], [9, 6, 3]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why transpose then reverse?",
+    "p": [
+     "The cell at row i, column j must end up at row j, column n\u22121\u2212i. Transpose moves it to (j, i); reversing each row maps column i to n\u22121\u2212i. The anticlockwise version reverses columns first (or transposes along the other diagonal)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2), each cell is touched a constant number of times.",
+     "Space: O(1); the matrix is modified in place as required."
+    ]
+   }
+  ],
+  "takeaway": "Rotate 90\u00b0 clockwise = transpose + reverse each row; both steps are in place."
+ },
+ "51": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cols, d1, d2 = set(), set(), set()",
+       "Occupied columns, '\\' diagonals and '/' diagonals; O(1) conflict test",
+       "Avoiding a scan of every placed queen"
+      ],
+      [
+       "r - c",
+       "Constant along a '\\' diagonal, so it identifies that diagonal",
+       "Grid diagonals"
+      ],
+      [
+       "r + c",
+       "Constant along a '/' diagonal",
+       "Grid anti-diagonals"
+      ],
+      [
+       "board.append(c) / board.pop()",
+       "Column chosen for each row so far (row = index)",
+       "Backtracking path"
+      ],
+      [
+       "'.' * c + 'Q' + '.' * (n - c - 1)",
+       "Builds one board row as text from the column index",
+       "Rendering results lazily at the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`. Rows are placed one per recursion level, the list shows the column of the queen in each row. Events until the first solution is found (there are two solutions in total, the second appears after more backtracking):"
+    ],
+    "table": {
+     "head": [
+      "Event",
+      "board (col per row)"
+     ],
+     "rows": [
+      [
+       "place row 0, col 0",
+       "[0]"
+      ],
+      [
+       "place row 1, col 2",
+       "[0, 2]"
+      ],
+      [
+       "undo row 1, col 2",
+       "[0]"
+      ],
+      [
+       "place row 1, col 3",
+       "[0, 3]"
+      ],
+      [
+       "place row 2, col 1",
+       "[0, 3, 1]"
+      ],
+      [
+       "undo row 2, col 1",
+       "[0, 3]"
+      ],
+      [
+       "undo row 1, col 3",
+       "[0]"
+      ],
+      [
+       "undo row 0, col 0",
+       "[]"
+      ],
+      [
+       "place row 0, col 1",
+       "[1]"
+      ],
+      [
+       "place row 1, col 3",
+       "[1, 3]"
+      ],
+      [
+       "place row 2, col 0",
+       "[1, 3, 0]"
+      ],
+      [
+       "place row 3, col 2",
+       "[1, 3, 0, 2]"
+      ],
+      [
+       "solution",
+       "[1, 3, 0, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why one queen per row?",
+    "p": [
+     "Each recursion level handles one row, so two queens can never share a row. Only columns and diagonals need checking, and the three sets make each check O(1). The backtracking removes the queen's entries from all three sets, so the sets always reflect only the current partial placement."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: roughly O(n!) in the worst case; pruning by the three sets cuts it dramatically in practice.",
+     "Space: O(n) for the recursion, the sets and `board`, plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking row by row with three sets (column, diagonal, anti-diagonal) for O(1) conflict checks."
+ },
+ "54": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "m.pop(0)",
+       "Removes and returns the first row (O(rows) because the list shifts)",
+       "Peeling off the top row"
+      ],
+      [
+       "zip(*m)",
+       "Transposes: `*m` unpacks the rows as arguments, `zip` groups the i-th item of each",
+       "Turning rows into columns"
+      ],
+      [
+       "[list(r) for r in zip(*m)]",
+       "zip gives tuples; this converts them back to lists",
+       "Needed because later `pop(0)` and `+=` expect lists"
+      ],
+      [
+       "[::-1]",
+       "Reverses the order of the rows",
+       "Combined with a transpose: rotate 90\u00b0 counter-clockwise"
+      ],
+      [
+       "res += row",
+       "Extends the result list in place",
+       "Appending a whole list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3],[4,5,6],[7,8,9]]`. Each loop takes the top row, then rotates what is left counter-clockwise so that the next unvisited edge (the right column) becomes the new top row."
+    ],
+    "table": {
+     "head": [
+      "Row taken",
+      "Matrix left (rotated)",
+      "res so far"
+     ],
+     "rows": [
+      [
+       "[1, 2, 3]",
+       "[[6, 9], [5, 8], [4, 7]]",
+       "[1, 2, 3]"
+      ],
+      [
+       "[6, 9]",
+       "[[8, 7], [5, 4]]",
+       "[1, 2, 3, 6, 9]"
+      ],
+      [
+       "[8, 7]",
+       "[[4], [5]]",
+       "[1, 2, 3, 6, 9, 8, 7]"
+      ],
+      [
+       "[4]",
+       "[[5]]",
+       "[1, 2, 3, 6, 9, 8, 7, 4]"
+      ],
+      [
+       "[5]",
+       "[]",
+       "[1, 2, 3, 6, 9, 8, 7, 4, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does transpose + reverse make the next side the top row?",
+    "p": [
+     "After removing the top row, the right-hand column should be read top to bottom next. Transposing makes that column the last row; reversing the row order moves it to the first row, ready for `pop(0)`. Each iteration therefore repeats the same simple step, turning a spiral into repeated 'take the top row'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: roughly O(n\u00b7m\u00b7(n+m)) as written: there are up to n+m rounds and each rebuilds the remaining matrix. It is short rather than optimal; the four-boundary walk is O(n\u00b7m).",
+     "Space: O(n\u00b7m) for the rebuilt matrix each round."
+    ]
+   }
+  ],
+  "takeaway": "Peel the top row, rotate the rest counter-clockwise with zip(*m)[::-1], repeat: elegant but costlier than boundary pointers."
+ },
+ "57": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "intervals[i][1] < new[0]",
+       "Interval ends strictly before the new one starts, so no overlap",
+       "Classifying an interval as 'left of' the new one"
+      ],
+      [
+       "intervals[i][0] <= new[1]",
+       "Interval starts at or before the new one's end, so it overlaps (given it isn't left of it)",
+       "Overlap test for sorted intervals"
+      ],
+      [
+       "min(new[0], \u2026), max(new[1], \u2026)",
+       "Grows the new interval to cover the overlap",
+       "Merging two intervals"
+      ],
+      [
+       "res += intervals[i:]",
+       "Slice from i, appended in one go",
+       "Copying the untouched tail"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]]`, `new = [4,8]`. The input is sorted, so the intervals fall into three consecutive groups."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Interval",
+      "new",
+      "res"
+     ],
+     "rows": [
+      [
+       "phase 1: ends before new starts",
+       "[1, 2]",
+       "[4, 8]",
+       "[[1, 2]]"
+      ],
+      [
+       "phase 2: overlaps new",
+       "[3, 5]",
+       "[3, 8]",
+       "[[1, 2]]"
+      ],
+      [
+       "phase 2: overlaps new",
+       "[6, 7]",
+       "[3, 8]",
+       "[[1, 2]]"
+      ],
+      [
+       "phase 2: overlaps new",
+       "[8, 10]",
+       "[3, 10]",
+       "[[1, 2]]"
+      ],
+      [
+       "append merged",
+       "\u2013",
+       "[3, 10]",
+       "[[1, 2], [3, 10]]"
+      ],
+      [
+       "phase 3: copy the rest",
+       "[[12, 16]]",
+       "[3, 10]",
+       "[[1, 2], [3, 10], [12, 16]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two separate while loops instead of one with ifs?",
+    "p": [
+     "The sorted order guarantees the three groups are contiguous: first all intervals fully left, then all that overlap, then all fully right. Two loops walk that structure directly, with a single shared index `i`, and the merged interval is appended exactly once between the groups."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass with no sorting needed since the input is already sorted.",
+     "Space: O(n) for the result."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "Touching intervals count as overlapping (`<=`), e.g. `[1,2]` and `[2,3]` merge into `[1,3]`; the first loop uses strict `<` for the same reason."
+    ]
+   }
+  ],
+  "takeaway": "Insert into sorted intervals with three phases: copy the ones before, merge the overlapping ones, copy the ones after."
+ },
+ "63": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp = [0] * n; dp[0] = 1",
+       "One row of path counts; the start has exactly one path",
+       "2-D grid DP that only needs the previous row"
+      ],
+      [
+       "dp[j] = 0 for an obstacle",
+       "No path can pass through a blocked cell",
+       "Zeroing out forbidden states"
+      ],
+      [
+       "dp[j] += dp[j - 1]",
+       "Before the line `dp[j]` still holds the count from the cell above, `dp[j-1]` is the count from the left (already updated); their sum is the new count",
+       "Rolling-array DP"
+      ],
+      [
+       "dp[-1]",
+       "Last element = paths to the bottom-right cell",
+       "Reading the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Grid with an obstacle in the middle. After each cell, `dp` holds the path counts for the current row (cells to the right of `j` still show the previous row's values):"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "grid",
+      "action",
+      "dp"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "j = 0: keep (paths from above)",
+       "[1, 0, 0]"
+      ],
+      [
+       "(0,1)",
+       "0",
+       "dp[j] += dp[j-1]",
+       "[1, 1, 0]"
+      ],
+      [
+       "(0,2)",
+       "0",
+       "dp[j] += dp[j-1]",
+       "[1, 1, 1]"
+      ],
+      [
+       "(1,0)",
+       "0",
+       "j = 0: keep (paths from above)",
+       "[1, 1, 1]"
+      ],
+      [
+       "(1,1)",
+       "1",
+       "obstacle \u2192 0",
+       "[1, 0, 1]"
+      ],
+      [
+       "(1,2)",
+       "0",
+       "dp[j] += dp[j-1]",
+       "[1, 0, 1]"
+      ],
+      [
+       "(2,0)",
+       "0",
+       "j = 0: keep (paths from above)",
+       "[1, 0, 1]"
+      ],
+      [
+       "(2,1)",
+       "0",
+       "dp[j] += dp[j-1]",
+       "[1, 1, 1]"
+      ],
+      [
+       "(2,2)",
+       "0",
+       "dp[j] += dp[j-1]",
+       "[1, 1, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can one row of dp replace the whole table?",
+    "p": [
+     "Each cell depends only on the cell above (the old `dp[j]`) and the cell to the left (`dp[j-1]`, already refreshed this row). Scanning left to right keeps exactly those two values available, so earlier rows can be forgotten."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(n), a single row.",
+     "If the start (`g[0][0]`) is an obstacle, the first cell sets `dp[0]` to 0 and everything after stays 0, so the answer is correctly 0."
+    ]
+   }
+  ],
+  "takeaway": "Grid-path DP with a rolling row: new count = from above + from left, zeroed on obstacles."
+ }
+}
