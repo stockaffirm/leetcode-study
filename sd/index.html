@@ -22,6 +22,7 @@
 <script>
 (function(){
   const SB_URL = "https://mxdljkwconnaanpgvigz.supabase.co", SB_KEY = "sb_publishable_o6BVx6t3iKn1VP4hkrVWQQ_xjofy47K";
+  const PROVIDERS = ["github"]; /* add "google" once the Google OAuth key is set up in Supabase */
   const $ = s => document.querySelector(s), app = $("#app");
   const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const fmt = t => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>");
@@ -61,7 +62,7 @@
   function gate(){
     if(!S.user) return `<p class="lead">Private notes for senior and Principal-level interviews. Access is by approval.</p>
       <div class="card"><h2>Sign in</h2><p>Sign in, then request access. You are let in once it is approved.</p>
-      <div class="btns"><button class="btn pri" data-p="google">Continue with Google</button><button class="btn" data-p="github">Continue with GitHub</button></div></div>`;
+      <div class="btns">${PROVIDERS.map((p, i) => `<button class="btn${i ? "" : " pri"}" data-p="${p}">Continue with ${p === "google" ? "Google" : "GitHub"}</button>`).join("")}</div></div>`;
     if(S.access === "denied") return `<div class="card"><h2>Access not granted</h2><p>This request was not approved.</p></div>`;
     if(S.access === "pending") return `<div class="card"><h2>Waiting for approval</h2><p class="msg">Your request is in. You will see the notes here as soon as it is approved. Check back later.</p></div>`;
     return `<div class="card"><h2>Request access</h2><p>You are signed in as <b>${esc(S.user.email)}</b>. Ask for access and wait for approval.</p><div class="btns"><button class="btn pri" id="req">Request access</button></div></div>`;
