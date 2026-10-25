@@ -1,0 +1,1797 @@
+{
+ "99": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "stack + `while node: push; node = node.left`",
+       "Iterative inorder traversal: go left as far as possible, then process, then go right",
+       "Inorder without recursion"
+      ],
+      [
+       "prev",
+       "The previously visited node, so adjacent values can be compared",
+       ""
+      ],
+      [
+       "prev.val > node.val",
+       "In a BST (Binary Search Tree) the inorder sequence must be increasing, so a drop marks a misplaced pair",
+       "Detecting inversions"
+      ],
+      [
+       "first = prev (only the first time); second = node (every time)",
+       "The first violation's larger value, and the last violation's smaller value",
+       ""
+      ],
+      [
+       "first.val, second.val = second.val, first.val",
+       "Swapping the two values repairs the tree without relinking",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,3,null,null,2]` (1's left child 3, whose right child is 2). Inorder visits 3, 2, 1:"
+    ],
+    "table": {
+     "head": [
+      "visited",
+      "previous",
+      "note"
+     ],
+     "rows": [
+      [
+       "3",
+       "\u2013",
+       "\u2013"
+      ],
+      [
+       "2",
+       "3",
+       "inversion: 3 > 2"
+      ],
+      [
+       "1",
+       "2",
+       "inversion: 2 > 1"
+      ]
+     ]
+    },
+    "bullets": [
+     "first = 3, second = 1: swapping their values gives a valid BST."
+    ]
+   },
+   {
+    "h": "Why `first` once but `second` every time?",
+    "p": [
+     "If the two swapped nodes are adjacent in inorder there is ONE inversion, and first/second are that pair. If they are far apart there are TWO inversions: the first inversion's larger value is the misplaced big one, and the second inversion's smaller value is the misplaced small one. Setting `second` on every inversion makes it end at the later one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) for the stack. Morris traversal (temporary threading) reduces it to O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Inorder of a BST must be increasing; the first drop's larger node and the last drop's smaller node are the swapped pair."
+ },
+ "1029": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(costs, key=lambda c: c[0] - c[1])",
+       "Orders people by how much cheaper city A is than city B (most negative first)",
+       "Sorting by the cost difference"
+      ],
+      [
+       "n = len(costs) // 2",
+       "Exactly half go to each city",
+       ""
+      ],
+      [
+       "costs[:n] / costs[n:]",
+       "The n people who prefer A most go to A; the rest go to B",
+       ""
+      ],
+      [
+       "sum(c[0] \u2026) + sum(c[1] \u2026)",
+       "Total cost of the assignment",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[10,20],[30,200],[400,50],[30,20]]` sorted by `costA \u2212 costB`:"
+    ],
+    "table": {
+     "head": [
+      "person (A, B)",
+      "A \u2212 B",
+      "sent to",
+      "cost paid"
+     ],
+     "rows": [
+      [
+       "[30, 200]",
+       "-170",
+       "city A",
+       "30"
+      ],
+      [
+       "[10, 20]",
+       "-10",
+       "city A",
+       "10"
+      ],
+      [
+       "[30, 20]",
+       "10",
+       "city B",
+       "20"
+      ],
+      [
+       "[400, 50]",
+       "350",
+       "city B",
+       "50"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 110."
+    ]
+   },
+   {
+    "h": "Why sort by the difference?",
+    "p": [
+     "Suppose everyone first flies to city B; the cost is the sum of all B costs. Sending a person to A changes the total by `costA \u2212 costB`. We must send exactly n people to A, so we choose the n with the smallest (most negative) differences. That is an exchange argument: any other choice has a larger total change."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Greedy by cost difference: send the n people with the smallest A \u2212 B to city A."
+ },
+ "1152": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(zip(timestamp, username, website))",
+       "Combines the three lists into tuples and sorts by time (timestamp is first), restoring each user's visit order",
+       "zip + sort"
+      ],
+      [
+       "visits[u].append(w)",
+       "Per-user list of sites in time order",
+       "Grouping with defaultdict"
+      ],
+      [
+       "combinations(ws, 3)",
+       "From `itertools`: every 3-element subsequence in original order (not contiguous)",
+       "Choosing ordered patterns"
+      ],
+      [
+       "set(\u2026)",
+       "Each user counts a pattern once, however many times they visited it",
+       "Count users, not occurrences"
+      ],
+      [
+       "min(p for p, c in cnt.items() if c == best)",
+       "Among the most frequent patterns, the lexicographically smallest tuple",
+       "Tie-breaking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Per-user visit sequences after sorting by time:"
+    ],
+    "table": {
+     "head": [
+      "user",
+      "visits in time order",
+      "3-site patterns (distinct)"
+     ],
+     "rows": [
+      [
+       "joe",
+       "['home', 'about', 'career']",
+       "1"
+      ],
+      [
+       "james",
+       "['home', 'cart', 'maps', 'home']",
+       "4"
+      ],
+      [
+       "mary",
+       "['home', 'about', 'career']",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Highest user count is 2; the smallest of those patterns is `['home', 'about', 'career']`."
+    ]
+   },
+   {
+    "h": "Why set() per user?",
+    "p": [
+     "The score of a pattern is the number of different users who visited it. If a user visited `home \u2192 about \u2192 career` three times, they still count once. The set removes the repeats before counting."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log N + \u03a3 C(m, 3)) for N visits, where m is a user's visit count; the combinations term dominates for users with many visits.",
+     "Space: O of the number of distinct patterns."
+    ]
+   }
+  ],
+  "takeaway": "Group visits by user in time order, count each 3-site subsequence once per user, return the most common (lexicographically smallest on ties)."
+ },
+ "1155": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[s]",
+       "Number of ways to reach sum s with the dice rolled so far",
+       "Counting DP (Dynamic Programming)"
+      ],
+      [
+       "dp[0] = 1",
+       "Zero dice make sum 0 in one way",
+       "Base case"
+      ],
+      [
+       "range(1, min(k, s) + 1)",
+       "The last die shows 1..k but cannot exceed the target sum so far",
+       ""
+      ],
+      [
+       "new[s] += dp[s - f]",
+       "Ways to reach s: ways to reach s \u2212 f with one fewer die, over every face f",
+       ""
+      ],
+      [
+       "% MOD",
+       "Keeps numbers small as the problem asks (10\u2079+7)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`, `k = 6`, `target = 7`; index = sum:"
+    ],
+    "table": {
+     "head": [
+      "after",
+      "dp (index 0..7)"
+     ],
+     "rows": [
+      [
+       "0 dice",
+       "[1, 0, 0, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "1 dice",
+       "[0, 1, 1, 1, 1, 1, 1, 0]"
+      ],
+      [
+       "2 dice",
+       "[0, 0, 1, 2, 3, 4, 5, 6]"
+      ]
+     ]
+    },
+    "bullets": [
+     "`dp[7] = 6` (1+6, 2+5, \u2026, 6+1)."
+    ]
+   },
+   {
+    "h": "Why a fresh `new` array each round?",
+    "p": [
+     "Each die must be counted exactly once. Updating `dp` in place would let the same die contribute more than once to a sum in a round. Building `new` from the previous round's `dp` keeps one die per round."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 target \u00b7 k).",
+     "Space: O(target)."
+    ]
+   }
+  ],
+  "takeaway": "Dice-sum DP: new[s] = \u03a3 over faces f of old[s \u2212 f], one array per die."
+ },
+ "1161": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque([root])",
+       "BFS (Breadth-First Search) queue",
+       ""
+      ],
+      [
+       "for _ in range(len(q))",
+       "Processes exactly the nodes of one level, because the length is read before the loop changes the queue",
+       "Level-by-level traversal"
+      ],
+      [
+       "s > best",
+       "Strict `>` keeps the smallest level on ties, as required",
+       ""
+      ],
+      [
+       "-inf",
+       "Sum smaller than any possible level sum (sums can be negative)",
+       "Initial maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,7,0,7,-8,null,null]`:"
+    ],
+    "table": {
+     "head": [
+      "level",
+      "level sum",
+      "best sum so far",
+      "best level"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "7",
+       "7",
+       "2"
+      ],
+      [
+       "3",
+       "-1",
+       "7",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: level 2."
+    ]
+   },
+   {
+    "h": "Why start `best` at \u2212inf and not 0?",
+    "p": [
+     "Level sums can all be negative. With `best = 0` a tree whose levels all sum below 0 would never update `ans`, returning level 1 even when another level is larger."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w) for the queue, w = maximum width."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS: sum each level and keep the first level with the largest sum."
+ },
+ "1167": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "heapify(sticks)",
+       "Turns the list into a min-heap in O(n); the smallest stick is always at index 0",
+       "Priority queue"
+      ],
+      [
+       "heappop",
+       "Takes the smallest item in O(log n)",
+       ""
+      ],
+      [
+       "heappush(sticks, a + b)",
+       "Puts the merged stick back",
+       ""
+      ],
+      [
+       "cost += a + b",
+       "Joining two sticks costs their combined length",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,4,3]`:"
+    ],
+    "table": {
+     "head": [
+      "smallest",
+      "second smallest",
+      "merged",
+      "total cost",
+      "sticks left"
+     ],
+     "rows": [
+      [
+       "2",
+       "3",
+       "5",
+       "5",
+       "[4, 5]"
+      ],
+      [
+       "4",
+       "5",
+       "9",
+       "14",
+       "[9]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why always merge the two smallest?",
+    "p": [
+     "Every merge cost is paid again each time the merged stick is merged later, so long sticks should be merged as few times as possible. This is the same greedy as Huffman coding: repeatedly combining the two smallest minimizes the total weighted cost."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra (the heap reuses the input list)."
+    ]
+   }
+  ],
+  "takeaway": "Huffman-style greedy with a min-heap: always merge the two shortest sticks."
+ },
+ "1188": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "threading.Condition()",
+       "A lock plus a waiting room: threads can wait until another thread signals a change",
+       "Producer/consumer coordination"
+      ],
+      [
+       "with self.cv:",
+       "Acquires the lock for the block, releases it on exit (even after an exception)",
+       ""
+      ],
+      [
+       "while len(self.q) >= self.cap: self.cv.wait()",
+       "A full queue: releases the lock and sleeps until notified, then re-checks the condition",
+       "Waiting for a condition"
+      ],
+      [
+       "self.cv.notify_all()",
+       "Wakes the waiting threads after the queue changed (a space opened or an item appeared)",
+       ""
+      ],
+      [
+       "deque.popleft()",
+       "O(1) removal from the front",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Capacity 2. A real run of this code (the third enqueue ran in a separate thread):"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "effect"
+     ],
+     "rows": [
+      [
+       "enqueue(1)",
+       "size 1"
+      ],
+      [
+       "enqueue(2)",
+       "size 2 (full)"
+      ],
+      [
+       "enqueue(3) in another thread",
+       "blocks while the queue is full"
+      ],
+      [
+       "dequeue()",
+       "returns 1, wakes the producer"
+      ],
+      [
+       "producer finishes",
+       "size 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `while` and not `if` around `wait()`?",
+    "p": [
+     "When a waiting thread wakes up, another thread may have already filled (or emptied) the queue again, or the wake-up may be spurious. With `while`, the condition is re-checked after every wake-up and the thread goes back to sleep if it still cannot proceed. `if` would let it continue with a stale assumption."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per operation when it does not block.",
+     "Space: O(capacity)."
+    ]
+   }
+  ],
+  "takeaway": "Condition variable with while-wait loops: producers wait while full, consumers wait while empty, both notify after changing the queue."
+ },
+ "1197": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x, y = abs(x), abs(y)",
+       "The board is symmetric, so only the first quadrant needs searching",
+       "Exploiting symmetry"
+      ],
+      [
+       "deque / for _ in range(len(q))",
+       "BFS (Breadth-First Search) one layer per move, so `steps` is the move count",
+       "Shortest path in an unweighted graph"
+      ],
+      [
+       "the 8 (dx, dy) pairs",
+       "All knight moves",
+       ""
+      ],
+      [
+       "-2 <= nx <= x + 2 and -2 <= ny <= y + 2",
+       "A small margin around the target: the path may need to step slightly outside the quadrant",
+       "Bounding an infinite board"
+      ],
+      [
+       "seen",
+       "Prevents revisiting squares",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Target (5, 5). Number of squares in each BFS layer:"
+    ],
+    "table": {
+     "head": [
+      "moves",
+      "squares in layer",
+      "first squares"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[(0, 0)]"
+      ],
+      [
+       "1",
+       "8",
+       "[(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1 \u2026"
+      ],
+      [
+       "2",
+       "19",
+       "[(-2, 0), (-2, 4), (-1, -1), (-1, 1), (-1, 3), (0, -2), (0, 2), (0, 4) \u2026"
+      ],
+      [
+       "3",
+       "30",
+       "[(-2, 3), (-2, 5), (-1, 0), (-1, 4), (-1, 6), (0, -1), (0, 1), (0, 3), \u2026"
+      ],
+      [
+       "4",
+       "29",
+       "[(-2, -2), (-2, 2), (-2, 6), (-1, 5), (-1, 7), (0, 6), (1, 5), (1, 7), \u2026"
+      ]
+     ]
+    },
+    "bullets": [
+     "The target appears in layer 4."
+    ]
+   },
+   {
+    "h": "Why the margin of 2 and not a tight box?",
+    "p": [
+     "The shortest route to a corner can need a step to a square with a negative coordinate, for example to reach (1, 1). A margin of 2 beyond the target on each side (and \u22122 below zero) keeps all useful squares while bounding the search."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(x \u00b7 y) squares in the bounded area.",
+     "Space: O(x \u00b7 y)."
+    ]
+   }
+  ],
+  "takeaway": "BFS from the origin over knight moves, restricted to a small box around the target by symmetry."
+ },
+ "1200": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(arr)",
+       "The minimum difference can only occur between neighbours in sorted order",
+       ""
+      ],
+      [
+       "zip(arr, arr[1:])",
+       "All adjacent pairs",
+       "Pairwise neighbours"
+      ],
+      [
+       "min(b - a \u2026)",
+       "Smallest gap",
+       ""
+      ],
+      [
+       "[[a, b] \u2026 if b - a == best]",
+       "Every pair with that gap, already in ascending order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,2,1,3]` \u2192 sorted `[1, 2, 3, 4]`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "difference"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "1"
+      ],
+      [
+       "(2, 3)",
+       "1"
+      ],
+      [
+       "(3, 4)",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Minimum difference 1; all three pairs qualify."
+    ]
+   },
+   {
+    "h": "Why only adjacent pairs?",
+    "p": [
+     "If a < b < c, then c \u2212 a is larger than both c \u2212 b and b \u2212 a. So a pair with elements between them can never have the smallest difference, and checking neighbours after sorting is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then the smallest gap must be between neighbours; collect every neighbour pair with that gap."
+ },
+ "1209": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st",
+       "Stack of [character, run length] pairs; a run is a streak of equal characters",
+       "Run-length stack"
+      ],
+      [
+       "st[-1][0] == ch",
+       "The current character extends the top run",
+       ""
+      ],
+      [
+       "st[-1][1] += 1; == k: st.pop()",
+       "A run reaching k disappears, which can bring two neighbouring runs of the same letter together",
+       "Cascading removal"
+      ],
+      [
+       "''.join(c * n for c, n in st)",
+       "Rebuilds the string from the remaining runs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"deeedbbcccbdaa\"`, k = 3:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "action",
+      "stack (char+count)"
+     ],
+     "rows": [
+      [
+       "d",
+       "new run",
+       "['d1']"
+      ],
+      [
+       "e",
+       "new run",
+       "['d1', 'e1']"
+      ],
+      [
+       "e",
+       "count of 'e' \u2192 2",
+       "['d1', 'e2']"
+      ],
+      [
+       "e",
+       "count of 'e' \u2192 3 = k \u2192 removed",
+       "['d1']"
+      ],
+      [
+       "d",
+       "count of 'd' \u2192 2",
+       "['d2']"
+      ],
+      [
+       "b",
+       "new run",
+       "['d2', 'b1']"
+      ],
+      [
+       "b",
+       "count of 'b' \u2192 2",
+       "['d2', 'b2']"
+      ],
+      [
+       "c",
+       "new run",
+       "['d2', 'b2', 'c1']"
+      ],
+      [
+       "c",
+       "count of 'c' \u2192 2",
+       "['d2', 'b2', 'c2']"
+      ],
+      [
+       "c",
+       "count of 'c' \u2192 3 = k \u2192 removed",
+       "['d2', 'b2']"
+      ],
+      [
+       "b",
+       "count of 'b' \u2192 3 = k \u2192 removed",
+       "['d2']"
+      ],
+      [
+       "d",
+       "count of 'd' \u2192 3 = k \u2192 removed",
+       "[]"
+      ],
+      [
+       "a",
+       "new run",
+       "['a1']"
+      ],
+      [
+       "a",
+       "count of 'a' \u2192 2",
+       "['a2']"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final string: `aa`."
+    ]
+   },
+   {
+    "h": "Why store counts in the stack?",
+    "p": [
+     "Without the counts, every removal would need to rescan the string to see whether a run of k exists. The stack keeps the count of the current run, so the check is O(1) and a removal immediately exposes the previous run with its own count."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of (character, run length): pop a run when it reaches k."
+ },
+ "1221": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bal += 1 if c == 'R' else -1",
+       "R counts +1 and L counts \u22121, so a balanced piece sums to 0",
+       ""
+      ],
+      [
+       "bal == 0",
+       "A balanced prefix has just ended; cut here",
+       "Greedy: cut at the earliest chance"
+      ],
+      [
+       "res += 1",
+       "Counts the pieces",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"RLRRLLRLRL\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "balance",
+      "pieces"
+     ],
+     "rows": [
+      [
+       "R",
+       "1",
+       "0"
+      ],
+      [
+       "L",
+       "0",
+       "1"
+      ],
+      [
+       "R",
+       "1",
+       "1"
+      ],
+      [
+       "R",
+       "2",
+       "1"
+      ],
+      [
+       "L",
+       "1",
+       "1"
+      ],
+      [
+       "L",
+       "0",
+       "2"
+      ],
+      [
+       "R",
+       "1",
+       "2"
+      ],
+      [
+       "L",
+       "0",
+       "3"
+      ],
+      [
+       "R",
+       "1",
+       "3"
+      ],
+      [
+       "L",
+       "0",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why cut at the first zero?",
+    "p": [
+     "Cutting as early as possible gives the most pieces. Every cut leaves a remainder that is itself balanced (the total is balanced), so the greedy never makes later pieces impossible."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Running balance of R(+1)/L(\u22121): each time it returns to zero, one more balanced piece."
+ },
+ "1233": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "folder.sort()",
+       "Alphabetical order puts a folder immediately before its sub-folders",
+       "Sorting strings so prefixes come first"
+      ],
+      [
+       "f.startswith(ans[-1] + '/')",
+       "Is f inside the last kept folder? The added '/' avoids matching `/a` with `/ab`",
+       "Prefix check with a separator"
+      ],
+      [
+       "ans.append(f)",
+       "Keeps only top-level folders",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sorted: `['/a', '/a/b', '/c/d', '/c/d/e', '/c/f']`:"
+    ],
+    "table": {
+     "head": [
+      "folder",
+      "last kept folder after this step",
+      "decision"
+     ],
+     "rows": [
+      [
+       "/a",
+       "/a",
+       "keep"
+      ],
+      [
+       "/a/b",
+       "/a",
+       "sub-folder \u2192 skip"
+      ],
+      [
+       "/c/d",
+       "/c/d",
+       "keep"
+      ],
+      [
+       "/c/d/e",
+       "/c/d",
+       "sub-folder \u2192 skip"
+      ],
+      [
+       "/c/f",
+       "/c/f",
+       "keep"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the trailing '/' in the prefix?",
+    "p": [
+     "`\"/ab\".startswith(\"/a\")` is True, but `/ab` is not a sub-folder of `/a`. Checking `startswith(\"/a/\")` matches only real children."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n \u00b7 L) for sorting L-length paths.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then keep a path only if it does not start with the last kept path plus '/'."
+ },
+ "1236": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "startUrl.split('/')[2]",
+       "The host name: `http://news.yahoo.com/...` splits into ['http:', '', 'news.yahoo.com', \u2026]",
+       "Parsing a URL cheaply"
+      ],
+      [
+       "seen / deque",
+       "BFS (Breadth-First Search) queue and a visited set to avoid loops between pages",
+       "Graph traversal with cycles"
+      ],
+      [
+       "v.split('/')[2] == host",
+       "Only follow links on the same host",
+       ""
+      ],
+      [
+       "htmlParser.getUrls(u)",
+       "Provided API that returns the links found on a page",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A small site: the start page links to a page on its own host and to another host:"
+    ],
+    "table": {
+     "head": [
+      "page",
+      "links found",
+      "new pages queued"
+     ],
+     "rows": [
+      [
+       "http://news.yahoo.com/news/topics/",
+       "['http://news.yahoo.com/news', 'http://news.google.com']",
+       "['http://news.yahoo.com/news']"
+      ],
+      [
+       "http://news.yahoo.com/news",
+       "['http://news.yahoo.com/news/topics/']",
+       "[]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Crawled: http://news.yahoo.com/news, http://news.yahoo.com/news/topics/."
+    ]
+   },
+   {
+    "h": "Why the visited set?",
+    "p": [
+     "Pages link to each other in cycles. Without `seen` the crawler would revisit the same pages forever. Marking a URL when it is queued (not when it is processed) also prevents duplicates in the queue."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E) for pages and links, plus `getUrls` costs.",
+     "Space: O(V)."
+    ]
+   }
+  ],
+  "takeaway": "BFS over links, restricted to the start URL's host, with a visited set."
+ },
+ "1239": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "combos = {0: 0}",
+       "Map from a letter-set bitmask to the longest concatenation length using exactly that set; the empty set has length 0",
+       "Bitmask representation of a set of letters"
+      ],
+      [
+       "1 << (ord(ch) - 97)",
+       "One bit per letter a\u2013z",
+       ""
+      ],
+      [
+       "m & bit",
+       "Detects a repeated letter inside the word itself",
+       ""
+      ],
+      [
+       "old & m == 0",
+       "The word's letters are disjoint from the existing set, so it can be appended",
+       "Disjointness test"
+      ],
+      [
+       "old | m",
+       "The union of letter sets",
+       ""
+      ],
+      [
+       "list(combos.items())",
+       "Iterates a snapshot so new entries are not processed in the same round",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"un\",\"iq\",\"ue\"]`:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "letter mask (binary)",
+      "state after"
+     ],
+     "rows": [
+      [
+       "un",
+       "100000010000000000000",
+       "2 masks, best length 2"
+      ],
+      [
+       "iq",
+       "10000000100000000",
+       "4 masks, best length 4"
+      ],
+      [
+       "ue",
+       "100000000000000010000",
+       "6 masks, best length 4"
+      ]
+     ]
+    },
+    "bullets": [
+     "`un` + `iq` = 4 letters is the best; `un` and `ue` share `u`, so they cannot be combined."
+    ]
+   },
+   {
+    "h": "Why a dict of masks and not recursion over subsets?",
+    "p": [
+     "The number of distinct letter sets is bounded by 2^26, but in practice only a few are reachable. The dict visits just those, and each word is processed once per existing set, which is much smaller than trying all subsets of words."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 reachable masks), at most O(n \u00b7 2^26) but small in practice.",
+     "Space: O(reachable masks)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP in a dict: extend every reachable letter set by each word whose letters are unique and disjoint."
+ },
+ "1242": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ThreadPoolExecutor(max_workers=4)",
+       "A pool of 4 worker threads that run tasks concurrently; `with` shuts it down cleanly",
+       "Overlapping slow network calls"
+      ],
+      [
+       "pool.map(htmlParser.getUrls, frontier)",
+       "Fetches every page of the current level in parallel, returning results in the input order",
+       "Parallel map"
+      ],
+      [
+       "frontier / nxt",
+       "Level-by-level BFS (Breadth-First Search): all pages of one level are fetched together",
+       ""
+      ],
+      [
+       "seen",
+       "Updated only in the main thread, after results are back, so no lock is needed",
+       "Avoiding shared-state races"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A small site (the parallel fetches happen inside each level):"
+    ],
+    "table": {
+     "head": [
+      "frontier (fetched in parallel)",
+      "new pages for the next level"
+     ],
+     "rows": [
+      [
+       "['http://news.yahoo.com/news/topics/']",
+       "['http://news.yahoo.com/news', 'http://news.yahoo.com/about']"
+      ],
+      [
+       "['http://news.yahoo.com/news', 'http://news.yahoo.com/about']",
+       "[]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Pages kept: http://news.yahoo.com/about, http://news.yahoo.com/news, http://news.yahoo.com/news/topics/ (the google.com link is on a different host)."
+    ]
+   },
+   {
+    "h": "Why is it safe without locks?",
+    "p": [
+     "Only `getUrls` runs in the worker threads and it returns data. All reads and writes of `seen` and `nxt` happen in the main thread while consuming the results of `pool.map`. Since no two threads touch the same mutable structure, there is no race."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: about (number of levels) \u00d7 (slowest fetch in each level) instead of the sum of all fetches.",
+     "Space: O(V)."
+    ]
+   }
+  ],
+  "takeaway": "Level-synchronous BFS: fetch each level in parallel with a thread pool, update the visited set only in the main thread."
+ },
+ "1245": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "n = len(edges) + 1",
+       "A tree with n nodes has n \u2212 1 edges",
+       ""
+      ],
+      [
+       "g[a].append(b); g[b].append(a)",
+       "Adjacency list for an undirected tree",
+       ""
+      ],
+      [
+       "bfs(s)",
+       "Breadth-first distances from s; returns the farthest node and its distance",
+       "Single-source shortest paths in an unweighted tree"
+      ],
+      [
+       "d.index(max(d))",
+       "A node at the maximum distance",
+       ""
+      ],
+      [
+       "two BFS runs",
+       "The first from any node finds one end of a longest path, the second from that end measures the diameter",
+       "Double-sweep"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges `[[0,1],[0,2]]`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "result"
+     ],
+     "rows": [
+      [
+       "BFS from 0: distances",
+       "[0, 1, 1]"
+      ],
+      [
+       "farthest node from 0",
+       "1"
+      ],
+      [
+       "BFS from that node: distances",
+       "[1, 0, 2]"
+      ],
+      [
+       "diameter = max distance",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the double sweep work?",
+    "p": [
+     "In a tree, the node farthest from ANY starting node is an endpoint of some longest path. Starting again from that endpoint, the farthest node is the other endpoint, and its distance is the diameter. This holds only for trees (it fails with weighted negative edges or in general graphs)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) with two BFS runs.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Tree diameter by two BFS runs: farthest node from anywhere, then farthest from that node."
+ },
+ "1248": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "odd += x % 2",
+       "Running number of odd numbers: turns the array into 0/1 and uses prefix sums",
+       ""
+      ],
+      [
+       "cnt = defaultdict(int); cnt[0] = 1",
+       "How many prefixes had each odd-count; the empty prefix has 0 odd numbers",
+       "Prefix-sum counter"
+      ],
+      [
+       "cnt[odd - k]",
+       "Earlier prefixes with exactly k fewer odd numbers: each gives a subarray with exactly k odd numbers",
+       ""
+      ],
+      [
+       "cnt[odd] += 1",
+       "Records the current prefix after counting",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2,1,1]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "odd count",
+      "need earlier prefix with",
+      "matches",
+      "total",
+      "cnt"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "-2",
+       "0",
+       "0",
+       "{0: 1, -2: 0, 1: 1}"
+      ],
+      [
+       "1",
+       "2",
+       "-1",
+       "0",
+       "0",
+       "{0: 1, -2: 0, 1: 1, -1: 0, 2: 1}"
+      ],
+      [
+       "2",
+       "2",
+       "-1",
+       "0",
+       "0",
+       "{0: 1, -2: 0, 1: 1, -1: 0, 2: 2}"
+      ],
+      [
+       "1",
+       "3",
+       "0",
+       "1",
+       "1",
+       "{0: 1, -2: 0, 1: 1, -1: 0, 2: 2, 3: 1}"
+      ],
+      [
+       "1",
+       "4",
+       "1",
+       "1",
+       "2",
+       "{0: 1, -2: 0, 1: 1, -1: 0, 2: 2, 3: 1, 4: 1}"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why is this the same as the 'subarray sum equals k' problem?",
+    "p": [
+     "Replace each number by `x % 2`. A subarray has exactly k odd numbers iff its 0/1 sum is k. Prefix sums with a counter give the number of subarrays with a given sum in one pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Map to 0/1 (odd), then count subarrays with sum k using prefix sums and a counter."
+ },
+ "1254": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "fill(i, j)",
+       "Iterative DFS (Depth-First Search) with an explicit stack that turns a connected group of 0s (land) into 1s (water)",
+       "Flood fill"
+      ],
+      [
+       "bounds check + grid[a][b] == 0",
+       "Only land inside the grid is filled; stack entries outside are discarded when popped",
+       ""
+      ],
+      [
+       "first loop (border cells)",
+       "Land touching the border cannot be a closed island; flooding it first removes it",
+       "Eliminate the cases that don't count"
+      ],
+      [
+       "second loop",
+       "Each remaining 0 starts a closed island: count it and flood it so it is counted once",
+       "Counting connected components"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Here 0 is land and 1 is water. Cells filled from the border: [(0, 7, '3 cells'), (4, 7, '1 cells')]."
+    ],
+    "table": {
+     "head": [
+      "island starting at",
+      "cells in it",
+      "counted"
+     ],
+     "rows": [
+      [
+       "(1,1)",
+       "10",
+       "closed island"
+      ],
+      [
+       "(3,6)",
+       "1",
+       "closed island"
+      ]
+     ]
+    },
+    "bullets": [
+     "Closed islands: 2."
+    ]
+   },
+   {
+    "h": "Why remove border land first?",
+    "p": [
+     "An island is closed only if water (1) surrounds it completely, so a land group touching the edge is not closed. Flooding all border land beforehand lets the second pass count every remaining group without checking its edges."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n) for the stack."
+    ]
+   }
+  ],
+  "takeaway": "Flood the border land first, then count the remaining land components."
+ },
+ "1257": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "parent[child] = r[0]",
+       "Child \u2192 parent map built from the lists (each list is a region followed by its sub-regions)",
+       "Inverting the tree edges"
+      ],
+      [
+       "anc.add(region1); region1 = parent.get(region1)",
+       "Collects region1 and all its ancestors up to the root; `get` returns None at the root and ends the loop",
+       "Walking up a tree"
+      ],
+      [
+       "while region2 not in anc: region2 = parent[region2]",
+       "Climbs from region2 until it meets one of region1's ancestors: the lowest common ancestor",
+       "LCA (Lowest Common Ancestor) with a set"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Regions tree (Earth \u2192 North America, South America; \u2026), `region1 = Quebec`, `region2 = New York`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "result"
+     ],
+     "rows": [
+      [
+       "ancestors of Quebec",
+       "Quebec \u2192 Canada \u2192 North America \u2192 Earth"
+      ],
+      [
+       "climbing from New York",
+       "New York \u2192 United States \u2192 North America"
+      ],
+      [
+       "first node already in the ancestor set",
+       "North America"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why climb with a set?",
+    "p": [
+     "Both regions share all ancestors above the LCA. Storing one path in a set lets the other path stop at the first shared node, and that first shared node is the lowest one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total regions + depth).",
+     "Space: O(total regions) for the parent map."
+    ]
+   }
+  ],
+  "takeaway": "Child\u2192parent map, collect one region's ancestors in a set, climb from the other until a hit."
+ },
+ "1266": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(points, points[1:])",
+       "Consecutive pairs of points in visiting order",
+       ""
+      ],
+      [
+       "abs(a[0] - b[0]), abs(a[1] - b[1])",
+       "Horizontal and vertical distances",
+       ""
+      ],
+      [
+       "max(dx, dy)",
+       "Chebyshev distance: with diagonal moves allowed, the time is the larger of the two",
+       "Moves in 8 directions"
+      ],
+      [
+       "sum(\u2026)",
+       "Total time",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1],[3,4],[-1,0]]`:"
+    ],
+    "table": {
+     "head": [
+      "leg",
+      "dx",
+      "dy",
+      "time = max(dx, dy)"
+     ],
+     "rows": [
+      [
+       "[1, 1] \u2192 [3, 4]",
+       "2",
+       "3",
+       "3"
+      ],
+      [
+       "[3, 4] \u2192 [-1, 0]",
+       "4",
+       "4",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total 7."
+    ]
+   },
+   {
+    "h": "Why max and not sum?",
+    "p": [
+     "Each second you can change x by 1, y by 1, or both. Diagonal steps cover both directions at once, so the time to cover (dx, dy) is the larger of the two; the sum would be right only if diagonal moves were not allowed (Manhattan distance)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "With diagonal moves, the travel time between points is max(|dx|, |dy|); sum over consecutive legs."
+ }
+}
