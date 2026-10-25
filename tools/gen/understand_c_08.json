@@ -1,0 +1,2401 @@
+{
+ "542": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dist` filled with -1",
+       "-1 means 'not reached yet'; it doubles as the visited marker",
+       "Combine distance and visited in one grid"
+      ],
+      [
+       "seed `q` with EVERY 0 cell at distance 0",
+       "Multi-source BFS: all zeros start together",
+       "The nearest 0 for each cell is the shortest path from ANY zero"
+      ],
+      [
+       "`q.popleft()`",
+       "Process cells in order of distance",
+       "FIFO order makes the first time a cell is reached the shortest"
+      ],
+      [
+       "`dist[a][b] < 0`",
+       "Only unvisited neighbours are updated",
+       "Never overwrite a shorter distance"
+      ],
+      [
+       "`dist[r][c] + 1`",
+       "A neighbour is one step farther than the cell that reached it",
+       "BFS layer rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0,0],[0,1,0],[1,1,1]]`. The five zeros seed the queue at distance 0; each BFS wave labels the cells one step farther."
+    ],
+    "table": {
+     "head": [
+      "Wave (distance)",
+      "Cells labelled"
+     ],
+     "rows": [
+      [
+       "1",
+       "[(1, 1), (2, 0), (2, 2)]"
+      ],
+      [
+       "2",
+       "[(2, 1)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The final grid is `[[0,0,0],[0,1,0],[1,2,1]]`: the bottom-middle cell is 2 away from the nearest zero."
+    ]
+   },
+   {
+    "h": "Why start from the zeros rather than from every 1?",
+    "p": [
+     "BFS from each `1` costs O((mn)²) in total. One BFS seeded with all zeros computes every distance in a single O(mn) sweep, because 'distance to the nearest zero' is exactly the BFS depth in the combined search."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "BFS from every 1",
+       "O((mn)²)"
+      ],
+      [
+       "Multi-source BFS from all 0s (this code)",
+       "O(mn)"
+      ],
+      [
+       "Two-pass DP (top-left then bottom-right)",
+       "O(mn)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n), each cell is queued once.",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Distance to the nearest 0: multi-source BFS seeded with all zeros; the first time a cell is reached is its shortest distance."
+ },
+ "545": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`is_leaf(n)`",
+       "Node with no children",
+       "Leaves are handled separately so they are never counted twice"
+      ],
+      [
+       "`res = [root.val] if not is_leaf(root) else []`",
+       "The root starts the boundary; a lone root is a leaf and will be added by the leaf pass",
+       "Avoids a duplicate root"
+      ],
+      [
+       "left-boundary `while`",
+       "Walk down preferring `left`, else `right`, skipping leaves",
+       "The boundary goes down the left edge, and turns right only when there is no left child"
+      ],
+      [
+       "`leaves(n)`",
+       "Pre-order DFS collecting leaves left to right",
+       "Bottom edge of the boundary"
+      ],
+      [
+       "right-boundary `while` into `right`",
+       "Walk down preferring `right`, else `left`, skipping leaves",
+       "Collected top-down but needed bottom-up"
+      ],
+      [
+       "`right[::-1]`",
+       "Reverse so the right boundary is emitted bottom to top (counter-clockwise)",
+       "Order requirement"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `1` with right child `2` whose children are `3` and `4`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Output so far / list"
+     ],
+     "rows": [
+      [
+       "root (not a leaf)",
+       "[1]"
+      ],
+      [
+       "left boundary (top-down, no leaves)",
+       "[1]"
+      ],
+      [
+       "all leaves, left to right",
+       "[1, 3, 4]"
+      ],
+      [
+       "right boundary collected top-down",
+       "[2]"
+      ],
+      [
+       "append reversed right boundary",
+       "[1, 3, 4, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three separate passes?",
+    "p": [
+     "The boundary is: left edge (top to bottom), then all leaves (left to right), then right edge (bottom to top). Doing them separately keeps each rule simple, and excluding leaves from the edge walks guarantees every node appears once. Without the leaf exclusion the bottom-most boundary nodes would appear twice."
+    ],
+    "table": {
+     "head": [
+      "Part",
+      "Direction",
+      "Excludes"
+     ],
+     "rows": [
+      [
+       "left boundary",
+       "top → bottom",
+       "leaves"
+      ],
+      [
+       "leaves",
+       "left → right",
+       "(none)"
+      ],
+      [
+       "right boundary",
+       "bottom → top",
+       "leaves"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A subtle point",
+    "p": [
+     "On the left boundary, if a node has no left child the walk switches to the right child (`node.left if node.left else node.right`). The same mirror rule applies on the right. `[1,null,2,3,4]` has no left boundary at all, but the right boundary is `2` (then the leaf `4` is skipped)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each pass visits each node at most once.",
+     "Space: O(h) recursion plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Tree boundary = root, left edge without leaves, all leaves, right edge without leaves reversed."
+ },
+ "554": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter()`",
+       "Position → number of rows with a brick edge there",
+       "Frequency of an event"
+      ],
+      [
+       "`pos += b`",
+       "Running horizontal position after each brick",
+       "Prefix sums within a row"
+      ],
+      [
+       "`row[:-1]`",
+       "Skip the last brick: the wall's right edge is not a usable gap (a line there crosses no bricks but is not allowed)",
+       "Exclude the boundary"
+      ],
+      [
+       "`max(cnt.values(), default=0)`",
+       "Most rows sharing one edge position; `default=0` handles a wall of single-brick rows",
+       "`max` of an empty sequence would raise"
+      ],
+      [
+       "`len(wall) - max(...)`",
+       "Rows crossed = all rows minus the rows that have an edge at the best line",
+       "Complement counting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edge positions inside each row (cumulative sums without the last brick):"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Bricks",
+      "Internal edge positions"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 2, 2, 1]",
+       "[1, 3, 5]"
+      ],
+      [
+       "2",
+       "[3, 1, 2]",
+       "[3, 4]"
+      ],
+      [
+       "3",
+       "[1, 3, 2]",
+       "[1, 4]"
+      ],
+      [
+       "4",
+       "[2, 4]",
+       "[2]"
+      ],
+      [
+       "5",
+       "[3, 1, 2]",
+       "[3, 4]"
+      ],
+      [
+       "6",
+       "[1, 3, 1, 1]",
+       "[1, 4, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Counting",
+    "p": [
+     "Edge position counts: {1: 3, 2: 1, 3: 3, 4: 4, 5: 2}. Position 4 appears in 4 rows, so a line there crosses 6 - 4 = 2 rows. The answer is 2."
+    ]
+   },
+   {
+    "h": "Why count edges rather than test each position?",
+    "p": [
+     "Positions can be as large as 2³¹, so scanning every x is impossible. Only positions that are an edge in some row can beat 'cross everything', and the Counter holds exactly those."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Try every x",
+       "O(width · rows)",
+       "O(1)"
+      ],
+      [
+       "Counter of edges (this code)",
+       "O(total bricks)",
+       "O(distinct edges)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(B) for B bricks in total.",
+     "Space: O(distinct edge positions)."
+    ]
+   }
+  ],
+  "takeaway": "Brick wall: count how many rows share each internal edge position; the best line crosses rows − max count."
+ },
+ "560": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prefix`",
+       "Sum of `nums[0..i]`",
+       "Prefix sums turn 'sum of a subarray' into a subtraction"
+      ],
+      [
+       "`seen`",
+       "Prefix value → how many times it has occurred so far, starting with `{0: 1}` for the empty prefix",
+       "Counting earlier prefixes"
+      ],
+      [
+       "`seen.get(prefix - k, 0)`",
+       "Subarrays ending here with sum `k` = earlier prefixes equal to `prefix - k`",
+       "`sum(i..j) = prefix[j] - prefix[i-1]`"
+      ],
+      [
+       "`seen[prefix] = seen.get(prefix, 0) + 1`",
+       "Record the current prefix AFTER the lookup",
+       "So an empty subarray is never counted as matching itself"
+      ],
+      [
+       "`{0: 1}` seed",
+       "Lets subarrays that start at index 0 be found",
+       "Without it `[3]` with `k = 3` would give 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3]`, `k = 3`. The two subarrays are `[1,2]` and `[3]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "prefix",
+      "Lookup",
+      "count",
+      "seen"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "seen[-2] = 0",
+       "0",
+       "{0: 1, 1: 1}"
+      ],
+      [
+       "2",
+       "3",
+       "seen[0] = 1",
+       "1",
+       "{0: 1, 1: 1, 3: 1}"
+      ],
+      [
+       "3",
+       "6",
+       "seen[3] = 1",
+       "2",
+       "{0: 1, 1: 1, 3: 1, 6: 1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a hash map and not a sliding window?",
+    "p": [
+     "A sliding window needs non-negative numbers so that growing increases the sum. With negatives, many different start points can give the same sum, so we count how many earlier prefixes match instead of moving pointers."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Handles negatives?"
+     ],
+     "rows": [
+      [
+       "All subarrays",
+       "O(n²)",
+       "yes"
+      ],
+      [
+       "Sliding window",
+       "O(n)",
+       "no"
+      ],
+      [
+       "Prefix sums + hash map (this code)",
+       "O(n)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Subarray sum equals k: prefix sums plus a hash map of how many times each prefix has occurred; look up `prefix - k`."
+ },
+ "572": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`same(a, b)`",
+       "Are the two trees identical in shape and values?",
+       "Tree equality (problem 100)"
+      ],
+      [
+       "`not a or not b: return a is b`",
+       "If either is empty, they match only when BOTH are empty",
+       "`None is None` is True; a node is not None is False"
+      ],
+      [
+       "`a.val == b.val and same(left) and same(right)`",
+       "Compare roots, then both subtrees",
+       "Short-circuits on the first difference"
+      ],
+      [
+       "`same(root, subRoot) or isSubtree(root.left, …) or isSubtree(root.right, …)`",
+       "`subRoot` matches here, or somewhere in the left subtree, or somewhere in the right",
+       "Try every node as a possible match root"
+      ],
+      [
+       "`if not root: return False`",
+       "An empty tree contains no non-empty subtree",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [3,4,5,1,2]`, `subRoot = [4,1,2]`. Nodes are tried in pre-order until `same` succeeds:"
+    ],
+    "table": {
+     "head": [
+      "Node tried as root",
+      "Check",
+      "Result"
+     ],
+     "rows": [
+      [
+       "3",
+       "same(root, sub)",
+       "False"
+      ],
+      [
+       "4",
+       "same(root, sub)",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare whole subtrees, not just roots?",
+    "p": [
+     "`subRoot` must match a node's ENTIRE subtree, including its empty children. A match at a node whose subtree has extra descendants does not count: `[4,1,2,0]` does not match `[4,1,2]` even though the top looks the same; `same` enforces this through the `a is b` empty check."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Result"
+     ],
+     "rows": [
+      [
+       "subtree identical",
+       "True"
+      ],
+      [
+       "same top but extra node below",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Complexity and an improvement",
+    "p": [
+     "Each node triggers a comparison costing up to the size of `subRoot`: O(m·n). Serialising both trees and using substring search (KMP), or hashing subtrees (Merkle hashing), brings it to O(m + n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) for trees of m and n nodes.",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Subtree check: try every node as the root of a match, comparing full subtrees with a two-tree `same` recursion."
+ },
+ "605": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if n == 0: return True`",
+       "Nothing to plant",
+       "Edge case"
+      ],
+      [
+       "`i == 0 or flowerbed[i-1] == 0`",
+       "Left side is free: either the edge of the bed or an empty plot",
+       "`or` short-circuits so `flowerbed[-1]` is never read"
+      ],
+      [
+       "`i == len - 1 or flowerbed[i+1] == 0`",
+       "Right side is free, same trick",
+       "Edge handling without padding"
+      ],
+      [
+       "`flowerbed[i] = 1`",
+       "Plant greedily and update the bed so the NEXT plot sees it",
+       "Mutating the input to track state"
+      ],
+      [
+       "`count >= n: return True`",
+       "Stop as soon as enough flowers fit",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,0,0,1]`, `n = 1`:"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Neighbours",
+      "Action",
+      "Bed",
+      "Planted"
+     ],
+     "rows": [
+      [
+       "1",
+       "neighbour planted",
+       "skip",
+       "[1, 0, 0, 0, 1]",
+       "0"
+      ],
+      [
+       "2",
+       "both neighbours free",
+       "plant",
+       "[1, 0, 1, 0, 1]",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is greedy planting optimal?",
+    "p": [
+     "Planting at the first legal position leaves the most room to the right and blocks only the next plot (which would have been blocked by the same flower anyway). Delaying a flower can never allow more flowers."
+    ],
+    "table": {
+     "head": [
+      "Bed",
+      "Greedy count"
+     ],
+     "rows": [
+      [
+       "`0,0,0,0,0`",
+       "3 (plots 0, 2, 4)"
+      ],
+      [
+       "`1,0,0,0,1`",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A side effect",
+    "p": [
+     "The function modifies `flowerbed`. If the caller needs it unchanged, copy it first or track `prev` as a boolean instead."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (the bed is changed in place)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: plant at every plot whose neighbours are free, updating the bed as you go; stop when n flowers are placed."
+ },
+ "611": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(nums)`",
+       "After sorting, the longest side is the last of the three, so only `a + b > c` has to be checked",
+       "Triangle inequality reduces to one test"
+      ],
+      [
+       "outer loop `k` downward",
+       "Fix the longest side `nums[k]`",
+       "Fixing the largest element"
+      ],
+      [
+       "`i, j = 0, k - 1`",
+       "Two pointers in the prefix below `k`",
+       "Pair-sum with two pointers"
+      ],
+      [
+       "`nums[i] + nums[j] > nums[k]`",
+       "If true for `(i, j)`, it is true for every `i' ∈ [i, j-1]` paired with `j` (sorted, so those are larger)",
+       "Counting a whole range at once"
+      ],
+      [
+       "`count += j - i`",
+       "All pairs `(i..j-1, j)` form a triangle with `k`",
+       "Range counting"
+      ],
+      [
+       "`j -= 1` / `i += 1`",
+       "Shrink toward smaller / larger sums",
+       "Standard two-pointer move"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,2,3,4]` (already sorted):"
+    ],
+    "table": {
+     "head": [
+      "Fixed side",
+      "Pointers",
+      "Check",
+      "Added",
+      "count"
+     ],
+     "rows": [
+      [
+       "k=3 (4)",
+       "i=0, j=2",
+       "2+3=5 > 4",
+       "+2",
+       "2"
+      ],
+      [
+       "k=3 (4)",
+       "i=0, j=1",
+       "2+2=4 ≤ 4",
+       "0",
+       "2"
+      ],
+      [
+       "k=2 (3)",
+       "i=0, j=1",
+       "2+2=4 > 3",
+       "+1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `count += j - i`?",
+    "p": [
+     "With `nums[i] + nums[j] > nums[k]`, every index between `i` and `j-1` has a value at least `nums[i]`, so pairing it with `j` also exceeds `nums[k]`. That is `j - i` triangles at once; then `j` moves left because all pairs using this `j` are now counted."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "All triples",
+       "O(n³)"
+      ],
+      [
+       "Fix k + binary search for the third",
+       "O(n² log n)"
+      ],
+      [
+       "Fix k + two pointers (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) after an O(n log n) sort.",
+     "Space: O(1) extra besides the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Count triangles: sort, fix the largest side, and use two pointers on the smaller values, adding `j - i` when the sum exceeds the side."
+ },
+ "617": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if not root1: return root2`",
+       "If one tree is missing here, the other tree's whole subtree is the answer",
+       "Reusing existing nodes instead of copying"
+      ],
+      [
+       "`if not root2: return root1`",
+       "Symmetric",
+       "Base cases handle all the 'only one side exists' situations"
+      ],
+      [
+       "`root1.val += root2.val`",
+       "Merge into `root1` in place",
+       "Saves allocating new nodes"
+      ],
+      [
+       "`root1.left = mergeTrees(root1.left, root2.left)`",
+       "Recurse and RE-ATTACH the result, since the left child may have changed from `None` to a node",
+       "Return value must be assigned"
+      ],
+      [
+       "`return root1`",
+       "`root1` is now the merged tree",
+       "Return the root of the merged subtree"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,2,5]` + `[2,1,3,null,4,null,7]`. Rows are the calls in order (`root.L` is the left child, and so on):"
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Case",
+      "Value / action"
+     ],
+     "rows": [
+      [
+       "root",
+       "1 + 2",
+       "3"
+      ],
+      [
+       "root.L",
+       "3 + 1",
+       "4"
+      ],
+      [
+       "root.L.L",
+       "t2 empty",
+       "reuse t1 subtree 5"
+      ],
+      [
+       "root.L.R",
+       "t1 empty",
+       "reuse t2 subtree 4"
+      ],
+      [
+       "root.R",
+       "2 + 3",
+       "5"
+      ],
+      [
+       "root.R.L",
+       "t1 empty",
+       "reuse t2 subtree None"
+      ],
+      [
+       "root.R.R",
+       "t1 empty",
+       "reuse t2 subtree 7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The merged tree is `[3,4,5,5,4,null,7]`."
+    ]
+   },
+   {
+    "h": "Why reuse nodes?",
+    "p": [
+     "When only one side has a subtree there is nothing to add, so the existing subtree is attached directly: no copying, and the work stops at that point. It does mean the result shares nodes with the inputs (and `root1` is modified), which the problem allows."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "Build a new tree",
+       "O(min(m, n))",
+       "O(output)"
+      ],
+      [
+       "Merge into root1 (this code)",
+       "O(min(m, n))",
+       "O(h) stack"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(min(m, n)), recursion stops where either tree is empty.",
+     "Space: O(min(h1, h2)) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Merge two trees by recursion: if one side is empty return the other, otherwise add values and merge the children."
+ },
+ "632": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`heap = [(lst[0], i, 0) …]`",
+       "One entry per list: its current element, which list, and the index in it",
+       "k-way merge state"
+      ],
+      [
+       "`heapify(heap)`",
+       "O(k) build of a min-heap",
+       "Seeding"
+      ],
+      [
+       "`hi = max(lst[0] …)`",
+       "Largest of the current elements: the right end of the current window",
+       "The heap gives the left end (min); `hi` tracks the max separately"
+      ],
+      [
+       "window `[heap[0][0], hi]`",
+       "Contains one element from each list by construction",
+       "The smallest range covering all lists"
+      ],
+      [
+       "pop min, push its successor",
+       "Advance the list that currently supplies the smallest value, the only move that can shrink the range",
+       "Moving the left end"
+      ],
+      [
+       "`if j + 1 == len(nums[i]): break`",
+       "When any list is exhausted, no range can cover all lists any more",
+       "Termination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Lists `[4,10,15,24,26]`, `[0,9,12,20]`, `[5,18,22,30]`. Each row pops the current minimum and pushes the next element of the same list."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Heap min after",
+      "hi (max)",
+      "Best range",
+      "Note"
+     ],
+     "rows": [
+      [
+       "init",
+       "0",
+       "5",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (0, list 1) push 9",
+       "4",
+       "9",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (4, list 0) push 10",
+       "5",
+       "10",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (5, list 2) push 18",
+       "9",
+       "18",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (9, list 1) push 12",
+       "10",
+       "18",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (10, list 0) push 15",
+       "12",
+       "18",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (12, list 1) push 20",
+       "15",
+       "20",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (15, list 0) push 24",
+       "18",
+       "24",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (18, list 2) push 22",
+       "20",
+       "24",
+       "[0, 5]",
+       "-"
+      ],
+      [
+       "pop (20, list 1)",
+       "-",
+       "24",
+       "[20, 24]",
+       "list exhausted → stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why advance the minimum?",
+    "p": [
+     "The window always holds one element per list. To make the range smaller, either the minimum must rise or the maximum must fall. The maximum can't fall (each list element is only replaced by a larger one), so the only way to improve is to move the minimum forward. Moving any other element only increases `hi` or leaves the range the same."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Merge all, sliding window over values",
+       "O(N log N)"
+      ],
+      [
+       "Heap of k heads (this code)",
+       "O(N log k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log k), N total elements and k lists.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest range covering k lists: min-heap of one element per list, track the max, and repeatedly advance the list that holds the minimum."
+ },
+ "635": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.logs`",
+       "List of `(id, timestamp)` in arrival order",
+       "Few entries, simple scans"
+      ],
+      [
+       "`self.cut`",
+       "Granularity → how many characters of the fixed-width timestamp to compare",
+       "The format `YYYY:MM:DD:HH:MM:SS` is fixed-width, so a prefix is a time unit"
+      ],
+      [
+       "`t[:k]`",
+       "The timestamp truncated to the chosen unit",
+       "Slicing implements 'ignore finer units'"
+      ],
+      [
+       "`lo <= t[:k] <= hi`",
+       "String comparison works because the fields are zero-padded and ordered most significant first",
+       "Lexicographic order equals chronological order"
+      ],
+      [
+       "list comprehension",
+       "Collect matching ids",
+       "Filter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Logs `1: 2017:01:01:23:59:59`, `2: 2017:01:01:22:59:59`, `3: 2016:01:01:00:00:00`. Range `2016:01:01:01:01:01` to `2017:01:01:23:00:00`:"
+    ],
+    "table": {
+     "head": [
+      "id",
+      "timestamp",
+      "Year prefix",
+      "Hour prefix",
+      "In range (Year)",
+      "In range (Hour)"
+     ],
+     "rows": [
+      [
+       "1",
+       "2017:01:01:23:59:59",
+       "2017",
+       "2017:01:01:23",
+       "yes",
+       "yes"
+      ],
+      [
+       "2",
+       "2017:01:01:22:59:59",
+       "2017",
+       "2017:01:01:22",
+       "yes",
+       "yes"
+      ],
+      [
+       "3",
+       "2016:01:01:00:00:00",
+       "2016",
+       "2016:01:01:00",
+       "yes",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Year granularity returns `[1, 2, 3]`; Hour granularity returns `[1, 2]`, since log 3 (`2016:01:01:00`) is before the start hour `2016:01:01:01`."
+    ]
+   },
+   {
+    "h": "Why string comparison is valid",
+    "p": [
+     "Fixed-width, zero-padded fields mean the first differing character decides the order, and that character is in the most significant differing unit. So comparing truncated prefixes equals comparing the times at that granularity."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "put",
+      "retrieve"
+     ],
+     "rows": [
+      [
+       "List + scan (this code)",
+       "O(1)",
+       "O(n)"
+      ],
+      [
+       "Sorted list + binary search",
+       "O(n) insert",
+       "O(log n + k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `put` O(1); `retrieve` O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Log storage: fixed-width timestamps compare correctly as strings, so truncating to the granularity prefix gives range queries by unit."
+ },
+ "638": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`go(need)`",
+       "Minimum cost to buy exactly the quantities in the tuple `need`",
+       "State = what is still needed"
+      ],
+      [
+       "`tuple(needs)`",
+       "Lists aren't hashable; tuples are, so they can be cache keys",
+       "Memoising on a list-like state"
+      ],
+      [
+       "`sum(p * n …)`",
+       "Cost with no offers: buy everything at the regular price",
+       "Baseline"
+      ],
+      [
+       "`offer[:-1]`",
+       "The quantities in an offer; the last element is its price",
+       "Slicing off the price"
+      ],
+      [
+       "`min(nxt) >= 0`",
+       "The offer must not exceed what is still needed",
+       "Skip offers that overbuy"
+      ],
+      [
+       "`offer[-1] + go(nxt)`",
+       "Use the offer once, then solve the remainder",
+       "Recursion on the reduced need"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Remember results per need tuple",
+       "Overlapping subproblems (different offer orders reach the same remainder)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Prices `[2,5]`, offers `[3,0,5]` and `[1,2,10]`, needs `[3,2]`. States are solved depth-first; each row is a state solved for the first time:"
+    ],
+    "table": {
+     "head": [
+      "need",
+      "Cost without offers",
+      "Best offer applied",
+      "Min cost"
+     ],
+     "rows": [
+      [
+       "(0, 2)",
+       "10",
+       "none",
+       "10"
+      ],
+      [
+       "(2, 0)",
+       "4",
+       "none",
+       "4"
+      ],
+      [
+       "(3, 2)",
+       "16",
+       "[1, 2, 10]",
+       "14"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`go((3, 2))` is 14: apply the offer `[1,2,10]` once (10), leaving need `(2, 0)`, which costs 2 × 2 = 4 at list price. The other offer `[3,0,5]` leaves need `(0, 2)`, which costs 10, for a total of 15, and buying everything at list price costs 16."
+    ]
+   },
+   {
+    "h": "Why memoise?",
+    "p": [
+     "Using offer A then offer B reaches the same remainder as B then A. Without the cache the search re-solves these orders; with it each distinct `need` tuple is solved once."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "States"
+     ],
+     "rows": [
+      [
+       "No memo",
+       "every ordered sequence of offers"
+      ],
+      [
+       "Memo (this code)",
+       "at most ∏(needᵢ + 1) states"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(states × offers × items).",
+     "Space: O(states)."
+    ]
+   }
+  ],
+  "takeaway": "Shopping offers: memoised recursion on the tuple of remaining needs; at each state try buying the rest at list price or applying any offer that does not overbuy."
+ },
+ "641": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.a = [0] * k`",
+       "Fixed-size array: the circular buffer",
+       "Bounded queue/deque with no resizing"
+      ],
+      [
+       "`self.head`",
+       "Index of the front element",
+       "One pointer plus a size replaces two pointers and a full/empty ambiguity"
+      ],
+      [
+       "`self.size`",
+       "Number of stored elements",
+       "`size == 0` is empty, `size == len(a)` is full"
+      ],
+      [
+       "`(self.head - 1) % len(self.a)`",
+       "Step the head back one slot, wrapping from 0 to the end (Python's `%` is never negative)",
+       "Insert at the front"
+      ],
+      [
+       "`(self.head + self.size) % len(self.a)`",
+       "The first free slot after the last element, wrapping around",
+       "Insert at the back"
+      ],
+      [
+       "`deleteLast`: only `size -= 1`",
+       "The slot is simply considered free; the stale value stays but is never read",
+       "Logical deletion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Capacity 3. `a` is the raw array, `head` the front index:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "a",
+      "head",
+      "size"
+     ],
+     "rows": [
+      [
+       "insertLast(1)",
+       "True",
+       "[1, 0, 0]",
+       "0",
+       "1"
+      ],
+      [
+       "insertLast(2)",
+       "True",
+       "[1, 2, 0]",
+       "0",
+       "2"
+      ],
+      [
+       "insertFront(3)",
+       "True",
+       "[1, 2, 3]",
+       "2",
+       "3"
+      ],
+      [
+       "insertFront(4)",
+       "False",
+       "[1, 2, 3]",
+       "2",
+       "3"
+      ],
+      [
+       "getRear()",
+       "2",
+       "[1, 2, 3]",
+       "2",
+       "3"
+      ],
+      [
+       "isFull()",
+       "True",
+       "[1, 2, 3]",
+       "2",
+       "3"
+      ],
+      [
+       "deleteLast()",
+       "True",
+       "[1, 2, 3]",
+       "2",
+       "2"
+      ],
+      [
+       "insertFront(4)",
+       "True",
+       "[1, 4, 3]",
+       "1",
+       "3"
+      ],
+      [
+       "getFront()",
+       "4",
+       "[1, 4, 3]",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track `size` instead of head and tail?",
+    "p": [
+     "With only two indices, an empty buffer and a full buffer both look like `head == tail`. A separate `size` removes that ambiguity without wasting a slot. The rear is derived: `head + size - 1`."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "Full vs empty",
+      "Wasted slot"
+     ],
+     "rows": [
+      [
+       "head + tail only",
+       "ambiguous",
+       "need one spare slot"
+      ],
+      [
+       "head + size (this code)",
+       "unambiguous",
+       "none"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `% len(self.a)`?",
+    "p": [
+     "When the front moves left from index 0 it must land at the last index, and when the rear passes the end it must wrap to 0. The modulo gives that wrap-around in one expression; every operation is O(1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) for every operation.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Circular deque on a fixed array: keep `head` and `size`, and wrap every index with `% capacity`."
+ },
+ "647": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`range(2 * len(s) - 1)`",
+       "One index per center: `n` characters plus `n - 1` gaps between them",
+       "Odd and even palindromes in one loop"
+      ],
+      [
+       "`l = center // 2`",
+       "The left start: the character index for an even `center`, or the left character of a gap for an odd `center`",
+       "Mapping a center number to a starting pair"
+      ],
+      [
+       "`r = l + center % 2`",
+       "`r = l` for a character center (odd length) and `r = l + 1` for a gap center (even length)",
+       "One formula for both cases"
+      ],
+      [
+       "`while l >= 0 and r < len(s) and s[l] == s[r]`",
+       "Expand outward while the ends match; every success is one more palindromic substring",
+       "Counting as you expand"
+      ],
+      [
+       "`count += 1`",
+       "Each expansion step that passes is a distinct palindrome (different `l`, `r`)",
+       "Counting by position, not by distinct text"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"aaa\"` has 5 centers and 6 palindromic substrings (`a`, `a`, `a`, `aa`, `aa`, `aaa`):"
+    ],
+    "table": {
+     "head": [
+      "center",
+      "(l, r) start",
+      "Palindromes found from this center",
+      "count"
+     ],
+     "rows": [
+      [
+       "0",
+       "(0, 0)",
+       "['a']",
+       "1"
+      ],
+      [
+       "1",
+       "(0, 1)",
+       "['aa']",
+       "2"
+      ],
+      [
+       "2",
+       "(1, 1)",
+       "['a', 'aaa']",
+       "4"
+      ],
+      [
+       "3",
+       "(1, 2)",
+       "['aa']",
+       "5"
+      ],
+      [
+       "4",
+       "(2, 2)",
+       "['a']",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count substrings by position?",
+    "p": [
+     "The problem counts every occurrence, so the two `a` substrings in `aa` count separately. Expanding from each center finds exactly one palindrome per valid `(l, r)` pair, so no deduplication is needed. For `\"abc\"` only the 3 single letters qualify."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Check all substrings",
+       "O(n³)",
+       "O(1)"
+      ],
+      [
+       "Expand around centers (this code)",
+       "O(n²)",
+       "O(1)"
+      ],
+      [
+       "Manacher",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Same idea as problem 5",
+    "p": [
+     "Longest Palindromic Substring uses identical center expansion but keeps the longest instead of counting each step."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) worst case (e.g. all the same letter).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count palindromic substrings by expanding around all 2n-1 centers; each successful expansion is one more palindrome."
+ },
+ "650": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`d`",
+       "Candidate prime factor, tried in increasing order",
+       "Trial-division factorisation"
+      ],
+      [
+       "`while n % d == 0`",
+       "Divide out every copy of `d`",
+       "Dividing out repeated primes"
+      ],
+      [
+       "`steps += d`",
+       "A factor `d` costs `d` operations: one Copy All plus `d - 1` Pastes",
+       "Cost of multiplying the screen by `d`"
+      ],
+      [
+       "`n //= d`",
+       "Reduce what is left to build",
+       "Factor stripping"
+      ],
+      [
+       "`while n > 1`",
+       "Stop when nothing is left",
+       "Termination (when `n` is prime, `d` reaches `n` itself)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 12 = 2 · 2 · 3`: the answer is the SUM of the prime factors."
+    ],
+    "table": {
+     "head": [
+      "factor d",
+      "n after",
+      "steps"
+     ],
+     "rows": [
+      [
+       "2",
+       "6",
+       "2"
+      ],
+      [
+       "2",
+       "3",
+       "4"
+      ],
+      [
+       "3",
+       "1",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer the sum of prime factors?",
+    "p": [
+     "To go from `k` characters to `k·d` you copy once and paste `d - 1` times: `d` operations. Building `n` is a chain of such multiplications, so the cost is the sum of the factors used. Splitting a composite `a·b` into `a` then `b` costs `a + b`, which is never more than `a·b` for `a, b ≥ 2`, so using primes is optimal."
+    ],
+    "table": {
+     "head": [
+      "Factors of 12",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "12",
+       "12"
+      ],
+      [
+       "4 · 3",
+       "7"
+      ],
+      [
+       "2 · 2 · 3",
+       "7"
+      ],
+      [
+       "6 · 2",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no divisibility check for prime `d`?",
+    "p": [
+     "Because small factors were already divided out, any `d` that divides `n` at this point is prime. A composite `d` can't divide a remaining `n` whose smaller prime factors are gone."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) worst case (when n is prime, `d` counts up to n); O(√n) with a stop at √n and handling the leftover prime.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "2 Keys Keyboard = sum of the prime factors of n, found by trial division."
+ },
+ "653": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "Values visited so far",
+       "Classic Two Sum: remember earlier values in a set"
+      ],
+      [
+       "`k - node.val in seen`",
+       "Is the complement already visited?",
+       "O(1) membership"
+      ],
+      [
+       "`seen.add(node.val)` AFTER the check",
+       "A node can't pair with itself",
+       "Check first, then record"
+      ],
+      [
+       "`dfs(node.left) or dfs(node.right)`",
+       "Search both sides; `or` short-circuits on the first success",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[5,3,6,2,4,null,7]`, `k = 9`, pre-order visit:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Needs",
+      "seen before",
+      "Action"
+     ],
+     "rows": [
+      [
+       "5",
+       "4",
+       "[]",
+       "add to seen"
+      ],
+      [
+       "3",
+       "6",
+       "[5]",
+       "add to seen"
+      ],
+      [
+       "2",
+       "7",
+       "[3, 5]",
+       "add to seen"
+      ],
+      [
+       "4",
+       "5",
+       "[2, 3, 5]",
+       "found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not use the BST property?",
+    "p": [
+     "The set solution ignores the ordering and works on any binary tree, in O(n) time and O(n) space. Using the BST (in-order list plus two pointers, or BST iterators from both ends) gives O(n) time with O(h) space for the iterator version."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Set + DFS (this code)",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "In-order list + two pointers",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Two BST iterators (smallest/largest)",
+       "O(n)",
+       "O(h)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the set, plus O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Two Sum on a BST: a hash set of seen values during any traversal; the BST property enables an O(h)-space two-iterator variant."
+ },
+ "662": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(node, i)` in the queue",
+       "Each node carries its position index as if the tree were a complete binary tree",
+       "Heap-style numbering: children of `i` are `2i` and `2i + 1`"
+      ],
+      [
+       "`first = q[0][1]`",
+       "Index of the leftmost node of the level",
+       "Normalisation base"
+      ],
+      [
+       "`i -= first`",
+       "Shift indices so each level starts at 0, which keeps numbers small",
+       "Prevents huge integers on deep, skewed trees (in fixed-width languages it prevents overflow)"
+      ],
+      [
+       "`last = i`",
+       "Index of the rightmost node after the loop (the final one popped)",
+       "Width = `last - 0 + 1`"
+      ],
+      [
+       "`best = max(best, last + 1)`",
+       "Width counts the empty slots between the end nodes too",
+       "The problem defines width by end nodes, nulls included"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,2,5,3,null,9]`. Each row lists `(value, normalised index)` for one level:"
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "(value, index)",
+      "Width",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "[(1, 0)]",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "[(3, 0), (2, 1)]",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "[(5, 0), (3, 1), (9, 3)]",
+       "4",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why indexes instead of counting nodes?",
+    "p": [
+     "Null children between two real nodes still count toward width. Giving every node the index it would have in a complete tree turns width into a simple subtraction: rightmost minus leftmost plus one."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Nodes",
+      "Width counting nodes",
+      "Width by index"
+     ],
+     "rows": [
+      [
+       "3 (5, 3, _, 9)",
+       "3",
+       "3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtract `first`?",
+    "p": [
+     "Without normalising, an index at depth d can reach 2^d. Subtracting the leftmost index per level keeps values bounded by the level's width. In Python integers don't overflow, but in Java/C++ this is an essential detail."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w), the widest level."
+    ]
+   }
+  ],
+  "takeaway": "Maximum width: BFS with heap-style indices (children 2i and 2i+1), normalised per level; width = rightmost − leftmost + 1."
+ },
+ "671": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`first = root.val`",
+       "The minimum of the whole tree is the root (each node is ≤ its children, by the problem's special structure)",
+       "Use the structural guarantee instead of a general search"
+      ],
+      [
+       "`node.val > first`",
+       "The first value larger than the minimum on a path is a candidate for second minimum",
+       "Anything below it is at least as large, so no need to descend"
+      ],
+      [
+       "`res`",
+       "Smallest candidate found so far (`-1` = none)",
+       "Running best"
+      ],
+      [
+       "`res != -1 and node.val >= res: return`",
+       "Prune: nothing here can beat the current answer",
+       "Branch pruning"
+      ],
+      [
+       "`else: dfs(left); dfs(right)`",
+       "A node equal to the minimum may hide a larger value deeper",
+       "Keep searching only through nodes equal to `first`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,2,5,null,null,5,7]`: the root and its left child are 2 (the minimum), the right child 5 is the first larger value."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "2",
+       "= 2 → keep looking below"
+      ],
+      [
+       "2",
+       "= 2 → keep looking below"
+      ],
+      [
+       "5",
+       "> 2 → answer = 5, stop going deeper"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we stop at the first larger value on each path?",
+    "p": [
+     "In this special tree a parent is the minimum of its two children (each node's value equals the smaller child). So every descendant of a node with value `v` is at least `v`. The first value above `first` on a path is therefore the smallest on that path, and descending further only finds larger ones."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Idea"
+     ],
+     "rows": [
+      [
+       "Collect all values, sort distinct",
+       "O(n log n)",
+       "ignores structure"
+      ],
+      [
+       "Track min and second min over all nodes",
+       "O(n)",
+       "general"
+      ],
+      [
+       "Prune using the structure (this code)",
+       "O(n) worst, often less",
+       "stop at first value > min"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edge case",
+    "p": [
+     "If every node equals the root there is no second minimum and `res` stays `-1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) worst case.",
+     "Space: O(h)."
+    ]
+   }
+  ],
+  "takeaway": "Second minimum in a 'parent = min of children' tree: the root is the minimum, so search only through nodes equal to it and stop at the first larger value."
+ },
+ "674": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "Length of the increasing run ending at index i (at least 1)",
+       "Run-length streak"
+      ],
+      [
+       "`nums[i] > nums[i-1]`",
+       "STRICTLY greater continues the run",
+       "Strictness: equal values break the run"
+      ],
+      [
+       "`cur + 1 if … else 1`",
+       "Extend, or restart at 1 (the current element itself)",
+       "Reset to 1, not 0"
+      ],
+      [
+       "`best = max(best, cur)`",
+       "Longest so far",
+       "Updated on every step"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,5,4,7]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Check",
+      "cur",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "start",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "3 > 1",
+       "2",
+       "2"
+      ],
+      [
+       "5",
+       "5 > 3",
+       "3",
+       "3"
+      ],
+      [
+       "4",
+       "4 ≤ 5",
+       "1",
+       "3"
+      ],
+      [
+       "7",
+       "7 > 4",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reset to 1 and not 0?",
+    "p": [
+     "A single element is a run of length 1. Resetting to 0 would undercount every run by one."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "Result for [1,3,5,4,7]"
+     ],
+     "rows": [
+      [
+       "reset to 1 (this code)",
+       "3"
+      ],
+      [
+       "reset to 0",
+       "2 (wrong)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Subsequence vs subarray",
+    "p": [
+     "The name says subsequence but the elements must be contiguous: it is the longest increasing subarray, solvable in O(n). The non-contiguous LIS (problem 300) needs DP or patience sorting."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Longest continuous increasing run: one streak counter that extends on `>` and resets to 1."
+ },
+ "680": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pal(l, r)`",
+       "Plain palindrome check of `s[l..r]` with two pointers",
+       "Reusable helper"
+      ],
+      [
+       "outer `while l < r`",
+       "Walk inward from both ends while characters match",
+       "Standard palindrome scan"
+      ],
+      [
+       "first mismatch",
+       "The one allowed deletion must be one of the two mismatching characters",
+       "Only two possibilities to try"
+      ],
+      [
+       "`pal(l + 1, r) or pal(l, r - 1)`",
+       "Delete the left character, or delete the right one, and check the rest",
+       "Branch once, then finish with the plain check"
+      ],
+      [
+       "`return True` after the loop",
+       "No mismatch: already a palindrome (zero deletions)",
+       "Fall-through success"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"abca\"`: the ends match, then `b` vs `c` mismatch."
+    ],
+    "table": {
+     "head": [
+      "Mismatch",
+      "Option 1",
+      "Option 2"
+     ],
+     "rows": [
+      [
+       "s[1]='b' ≠ s[2]='c'",
+       "skip left: s[2..2]='c' → True",
+       "skip right: s[1..1]='b' → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only two choices?",
+    "p": [
+     "Everything before the mismatch already matches, so deleting an earlier character would break a matching pair. The deleted character must be one of the two at the mismatch, giving exactly two substrings to check, each in O(n). Total O(n), not O(n²)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try deleting every index and re-check",
+       "O(n²)"
+      ],
+      [
+       "Branch at the first mismatch (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A failing case",
+    "p": [
+     "`\"abc\"`: mismatch `a` vs `c`; skipping left gives `\"bc\"` (no) and skipping right gives `\"ab\"` (no), so the answer is False."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Valid Palindrome II: scan inward; at the first mismatch try skipping the left or the right character and finish with a plain palindrome check."
+ },
+ "686": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`-(-len(b) // len(a))`",
+       "Ceiling division using floor division of a negative: `ceil(x / y) = -(-x // y)`",
+       "Integer ceiling without `math.ceil` or floats"
+      ],
+      [
+       "`times`",
+       "The minimum copies needed just to be long enough to contain `b`",
+       "Lower bound on the answer"
+      ],
+      [
+       "`for k in (times, times + 1)`",
+       "Only these two repetition counts can work",
+       "`b` can start anywhere inside the first copy, costing at most one extra copy"
+      ],
+      [
+       "`b in a * k`",
+       "Substring test on the repeated string",
+       "Python's `in` is a fast substring search"
+      ],
+      [
+       "`return -1`",
+       "If neither works, no number of repeats ever will",
+       "Impossible case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = \"abcd\"`, `b = \"cdabcdab\"` (length 8, so `times = 2`):"
+    ],
+    "table": {
+     "head": [
+      "Copies k",
+      "a * k",
+      "b in a * k"
+     ],
+     "rows": [
+      [
+       "2",
+       "abcdabcd",
+       "False"
+      ],
+      [
+       "3",
+       "abcdabcdabcd",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only `times` and `times + 1`?",
+    "p": [
+     "`b` starts at some offset `o < len(a)` in the repeated string, so it spans from `o` to `o + len(b)`. The needed length is at most `len(a) - 1 + len(b)`, i.e. `ceil(len(b)/len(a)) + 1` copies. Beyond that, more copies add nothing new because the pattern is periodic. Fewer than `times` copies are shorter than `b`."
+    ],
+    "table": {
+     "head": [
+      "Copies",
+      "Why"
+     ],
+     "rows": [
+      [
+       "< times",
+       "shorter than b: impossible"
+      ],
+      [
+       "times",
+       "works if b aligns with the start of a copy"
+      ],
+      [
+       "times + 1",
+       "covers any offset"
+      ],
+      [
+       "> times + 1",
+       "never needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(a) · (len(b)/len(a)) ) = O(len(a) + len(b)) per substring search with an efficient algorithm; Python's `in` is O(n·m) worst case.",
+     "Space: O(len(a) + len(b)) for the repeated string."
+    ]
+   }
+  ],
+  "takeaway": "Repeated string match: only ceil(|b|/|a|) and one more repetition need testing, using a substring check."
+ }
+}
