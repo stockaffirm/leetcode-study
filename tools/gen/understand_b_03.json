@@ -1,0 +1,2151 @@
+{
+ "121": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`low = float('inf')`",
+       "Cheapest price seen so far (starts above any real price)",
+       "Avoids a special case for the first day"
+      ],
+      [
+       "`min(low, p)`",
+       "Updates the best day to buy",
+       "Running minimum over the prefix"
+      ],
+      [
+       "`p - low`",
+       "Profit if you sell today after buying at the lowest earlier price",
+       "One subtraction per day replaces checking every earlier day"
+      ],
+      [
+       "`max(best, p - low)`",
+       "Keeps the best profit seen",
+       "Running maximum; starts at 0 so a losing market returns 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [7,1,5,3,6,4]`:"
+    ],
+    "table": {
+     "head": [
+      "Price p",
+      "low after min",
+      "p − low",
+      "best"
+     ],
+     "rows": [
+      [
+       "7",
+       "7",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "5",
+       "1",
+       "4",
+       "4"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "4"
+      ],
+      [
+       "6",
+       "1",
+       "5",
+       "5"
+      ],
+      [
+       "4",
+       "1",
+       "3",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can `low` be updated before computing the profit?",
+    "p": [
+     "On the day when `p` is the new minimum, `p - low` is 0 (buy and sell the same day), so it never beats `best` incorrectly. The sell day always comes after (or on) the buy day, since `low` only includes prices up to today."
+    ]
+   },
+   {
+    "h": "Why is a single pass enough?",
+    "p": [
+     "For each sell day the best buy day is simply the cheapest earlier day, and that is available as a running value."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try every buy/sell pair",
+       "O(n²)"
+      ],
+      [
+       "Track the minimum so far",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1).",
+     "Falling prices, e.g. `[7,6,4,3,1]`: every `p - low` is 0, so the answer stays 0."
+    ]
+   }
+  ],
+  "takeaway": "Single pass tracking the minimum so far: best profit = max(price − lowest earlier price)."
+ },
+ "124": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`best = float('-inf')`",
+       "Best path sum seen; starts below any possible sum",
+       "Values may all be negative, so 0 would be wrong"
+      ],
+      [
+       "`nonlocal best`",
+       "Lets the inner function assign to the outer variable",
+       "A closure that updates shared state without a global"
+      ],
+      [
+       "`max(gain(child), 0)`",
+       "Ignore a child's arm if it would reduce the sum",
+       "Choose 'take it or leave it' per side"
+      ],
+      [
+       "`n.val + l + r`",
+       "Best path that turns at this node (both arms)",
+       "The candidate answer 'through this node'"
+      ],
+      [
+       "`return n.val + max(l, r)`",
+       "Best path going down from this node into one arm",
+       "What a parent is allowed to extend; a parent can't use both arms"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[-10,9,20,null,null,15,7]`. Nodes finish in post-order (children first):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Left gain l",
+      "Right gain r",
+      "Through-node val+l+r",
+      "Returned to parent",
+      "best"
+     ],
+     "rows": [
+      [
+       "9",
+       "0",
+       "0",
+       "9",
+       "9",
+       "9"
+      ],
+      [
+       "15",
+       "0",
+       "0",
+       "15",
+       "15",
+       "15"
+      ],
+      [
+       "7",
+       "0",
+       "0",
+       "7",
+       "7",
+       "15"
+      ],
+      [
+       "20",
+       "15",
+       "7",
+       "42",
+       "35",
+       "42"
+      ],
+      [
+       "-10",
+       "9",
+       "35",
+       "34",
+       "25",
+       "42"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two different numbers: what is recorded vs what is returned?",
+    "p": [
+     "If the function returned `n.val + l + r`, a parent could combine it with its other child and form a path that visits the node twice or branches, which is not a path."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Shape",
+      "Used for"
+     ],
+     "rows": [
+      [
+       "`n.val + l + r`",
+       "∧ — goes down both sides",
+       "the answer (a path may bend once at its top node)"
+      ],
+      [
+       "`n.val + max(l, r)`",
+       "one straight arm",
+       "what the parent may extend; a path can't fork upward"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why clamp child gains at 0?",
+    "p": [
+     "A negative arm can only lower the total, and the path is allowed to stop at the node. Without `max(…, 0)`, root `-10` with children `9` and `20` would be dragged down. Here the final answer is 42 from 15 → 20 → 7."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — each node once.",
+     "Space: O(h) recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Tree DP: at each node record the best bent path through it, but return only the best single downward arm to the parent."
+ },
+ "127": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(set(''.join(words) + begin))`",
+       "Alphabet actually used by the words",
+       "Try only letters that could appear (≤ 26) instead of a–z"
+      ],
+      [
+       "`set(words)`",
+       "Hash set of valid words",
+       "O(1) test `nxt in words`"
+      ],
+      [
+       "`deque([(begin, 1)])`",
+       "BFS queue of (word, length so far)",
+       "BFS finds the shortest sequence because it explores by number of steps"
+      ],
+      [
+       "`w[:i] + ch + w[i+1:]`",
+       "The word with position i replaced by `ch`",
+       "Generate every one-letter neighbour"
+      ],
+      [
+       "`words.remove(nxt)`",
+       "Deletes the word as soon as it is queued",
+       "Doubles as a visited marker, so no word is enqueued twice"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`hit → cog`, list `[hot, dot, dog, lot, log, cog]`. Each pop expands all one-letter neighbours still in the set:"
+    ],
+    "table": {
+     "head": [
+      "Popped word",
+      "Length d",
+      "Action"
+     ],
+     "rows": [
+      [
+       "hit",
+       "1",
+       "enqueue hot"
+      ],
+      [
+       "hot",
+       "2",
+       "enqueue dot, lot"
+      ],
+      [
+       "dot",
+       "3",
+       "enqueue dog"
+      ],
+      [
+       "lot",
+       "3",
+       "enqueue log"
+      ],
+      [
+       "dog",
+       "4",
+       "enqueue cog"
+      ],
+      [
+       "log",
+       "4",
+       "enqueue nothing"
+      ],
+      [
+       "cog",
+       "5",
+       "is endWord → return 5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why BFS and why remove words from the set?",
+    "bullets": [
+     "BFS visits words in increasing distance, so the first time `end` is popped its depth is the minimum number of words.",
+     "Removing a word when it is first reached is safe: any later path to it would be at least as long. This keeps each word in the queue at most once.",
+     "The beginWord is not in the set, so it never needs to be removed."
+    ]
+   },
+   {
+    "h": "Why generate neighbours instead of comparing every pair of words?",
+    "p": [
+     "With a large list and short words, trying L positions × alphabet letters is much cheaper than comparing all pairs."
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "Compare all word pairs",
+       "O(n²·L)"
+      ],
+      [
+       "Generate neighbours (this code)",
+       "O(n·L·|alphabet|)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·L·26) hash lookups, with each lookup hashing a word of length L (so about O(n·L²·26) character work in the worst case).",
+     "Space: O(n) for the set and queue.",
+     "If `end` isn't in the list it is never found, so the loop ends and returns 0."
+    ]
+   }
+  ],
+  "takeaway": "Shortest transformation = BFS on an implicit graph; generate one-letter neighbours and mark words visited by removing them from the set."
+ },
+ "130": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`mark(r, c)`",
+       "DFS that turns a connected group of `O` into `#`",
+       "Flood fill from a starting cell"
+      ],
+      [
+       "`0 <= r < m and 0 <= c < n and board[r][c] == 'O'`",
+       "Bounds check and 'unvisited O' test in one condition",
+       "The cell is both inside the board and still an `O`"
+      ],
+      [
+       "`board[r][c] = '#'`",
+       "Temporary marker meaning 'safe, connected to the border'",
+       "Marks visited in place and keeps the safe cells distinguishable"
+      ],
+      [
+       "loops over the four border lines",
+       "Start the DFS from every border cell",
+       "Anything reachable from the border is not capturable"
+      ],
+      [
+       "final double loop",
+       "`#` → `O`, everything else → `X`",
+       "Restore the safe O's and capture the rest in one pass"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `XXXX / XOOX / XXOX / XOXX`:"
+    ],
+    "table": {
+     "head": [
+      "Stage",
+      "Rows"
+     ],
+     "rows": [
+      [
+       "Start",
+       "XXXX / XOOX / XXOX / XOXX"
+      ],
+      [
+       "After marking from the border",
+       "XXXX / XOOX / XXOX / X#XX"
+      ],
+      [
+       "After the final pass",
+       "XXXX / XXXX / XXXX / XOXX"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why start from the border instead of looking for surrounded regions?",
+    "p": [
+     "'Surrounded' is hard to check from the inside (a region can leak to the border through any cell). The opposite question is easy: an `O` is safe exactly when it is connected to a border `O`. So mark the safe ones, and everything else that is still `O` must be captured. In the example the group at (1,1), (1,2), (2,2) has no border contact and is captured, while the `O` at (3,1) is on the border and survives."
+    ]
+   },
+   {
+    "h": "Why a temporary `#` rather than a visited set?",
+    "p": [
+     "Without a marker, the last pass could not tell a safe `O` from a capturable one. The marker both prevents revisiting during the DFS and records the result."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — each cell is marked at most once and checked a constant number of times.",
+     "Space: O(m·n) worst case for the recursion stack (the DFS can go as deep as the number of cells, which can also exceed Python's default recursion limit on large boards)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse the question: flood-fill from the border to find the safe O's, then flip everything else."
+ },
+ "133": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`copies = {node: Node(node.val)}`",
+       "Dict from original node → its copy",
+       "Nodes are hashed by identity, so each original maps to exactly one clone"
+      ],
+      [
+       "`stack = [node]`",
+       "Nodes whose neighbours still need processing",
+       "Iterative DFS; a deque would give BFS with the same result"
+      ],
+      [
+       "`nb not in copies`",
+       "This neighbour hasn't been cloned yet",
+       "Doubles as the visited check, which stops infinite loops on cycles"
+      ],
+      [
+       "`copies[cur].neighbors.append(copies[nb])`",
+       "Link the clone of `cur` to the clone of `nb`",
+       "Rebuilds every edge using clones, never originals"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Square graph: 1–2, 1–4, 2–3, 3–4 (adjacency `1:[2,4]`, `2:[1,3]`, `3:[2,4]`, `4:[1,3]`). Each pop processes one original node:"
+    ],
+    "table": {
+     "head": [
+      "Popped",
+      "Its neighbours",
+      "New clones pushed",
+      "Clone's neighbour list after"
+     ],
+     "rows": [
+      [
+       "1",
+       "[2, 4]",
+       "[2, 4]",
+       "[2, 4]"
+      ],
+      [
+       "4",
+       "[1, 3]",
+       "[3]",
+       "[1, 3]"
+      ],
+      [
+       "3",
+       "[2, 4]",
+       "—",
+       "[2, 4]"
+      ],
+      [
+       "2",
+       "[1, 3]",
+       "—",
+       "[1, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a map from original to copy?",
+    "p": [
+     "Graphs have cycles and shared neighbours. Without the map, you'd clone node 3 once from node 2 and again from node 4, creating two different copies, or loop forever around the cycle. The map guarantees one clone per original and lets any edge find the right clone in O(1)."
+    ]
+   },
+   {
+    "h": "Why register the clone before processing it?",
+    "p": [
+     "`copies[nb]` is set when the neighbour is first seen, before it is popped. A node that is reached again via a different path (node 3 from 2 and from 4) is already in `copies` and just gets linked, not re-pushed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E) — each node is cloned once and each adjacency entry visited once.",
+     "Space: O(V) for the map and stack."
+    ]
+   }
+  ],
+  "takeaway": "Deep-copy a graph with a hash map from original to clone, which also serves as the visited set."
+ },
+ "136": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`^` (XOR)",
+       "Bitwise exclusive-or: 1 where the bits differ",
+       "Cancels equal values: `a ^ a = 0`"
+      ],
+      [
+       "`res ^= x`",
+       "Folds each number into the running XOR",
+       "Order doesn't matter (commutative and associative)"
+      ],
+      [
+       "`res = 0`",
+       "XOR identity: `0 ^ a = a`",
+       "Starting value that doesn't change the first number"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,1,2,1,2]`, shown in 3-bit binary:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "x (binary)",
+      "res after (binary)",
+      "res"
+     ],
+     "rows": [
+      [
+       "4",
+       "100",
+       "100",
+       "4"
+      ],
+      [
+       "1",
+       "001",
+       "101",
+       "5"
+      ],
+      [
+       "2",
+       "010",
+       "111",
+       "7"
+      ],
+      [
+       "1",
+       "001",
+       "110",
+       "6"
+      ],
+      [
+       "2",
+       "010",
+       "100",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this work?",
+    "p": [
+     "XOR is commutative and associative, so the order is irrelevant: `4 ^ 1 ^ 2 ^ 1 ^ 2 = 4 ^ (1 ^ 1) ^ (2 ^ 2) = 4 ^ 0 ^ 0 = 4`. Every number that appears twice cancels itself out, leaving only the single one."
+    ]
+   },
+   {
+    "h": "Alternatives",
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Counter / dict",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Sum of set × 2 − sum of list",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "XOR (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1).",
+     "This relies on the guarantee that all other numbers appear exactly twice; with three copies the cancellation fails."
+    ]
+   }
+  ],
+  "takeaway": "XOR cancels pairs: fold everything with ^ and the unpaired value remains."
+ },
+ "139": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(wordDict)`",
+       "Hash set of words",
+       "O(1) average membership test `s[j:i] in words`"
+      ],
+      [
+       "`dp = [True] + [False] * len(s)`",
+       "`dp[i]` = can the first i characters be split into words? `dp[0]` is the empty prefix",
+       "Base case so a word starting at 0 works"
+      ],
+      [
+       "`s[j:i]`",
+       "Slice from j (included) to i (excluded)",
+       "The candidate last word of the prefix"
+      ],
+      [
+       "`any(dp[j] and s[j:i] in words for j in range(i))`",
+       "True if some split point j has a good prefix and the rest is a word",
+       "Generator with short-circuit: stops at the first success"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'leetcode'`, words `{leet, code}`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Prefix",
+      "Split points that work",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "1",
+       "l",
+       "none",
+       "False"
+      ],
+      [
+       "2",
+       "le",
+       "none",
+       "False"
+      ],
+      [
+       "3",
+       "lee",
+       "none",
+       "False"
+      ],
+      [
+       "4",
+       "leet",
+       "j=0: 'leet'",
+       "True"
+      ],
+      [
+       "5",
+       "leetc",
+       "none",
+       "False"
+      ],
+      [
+       "6",
+       "leetco",
+       "none",
+       "False"
+      ],
+      [
+       "7",
+       "leetcod",
+       "none",
+       "False"
+      ],
+      [
+       "8",
+       "leetcode",
+       "j=4: 'code'",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why DP and not greedy matching?",
+    "p": [
+     "Greedy can pick a word that blocks a later match. With `s = 'abcd'` and words `{a, abc, b, cd}`, always taking the longest match grabs `abc` and is left with `d`, but `a + b + cd` works. DP remembers *which prefixes are reachable* and tries all possible last words, so a failed greedy choice never hides a valid split."
+    ]
+   },
+   {
+    "h": "Why `dp[j] and …` first?",
+    "p": [
+     "The cheap boolean check runs first; the slice (a copy costing O(length)) and hash lookup happen only when the prefix up to `j` is splittable. This also prunes needless slices."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) pairs (i, j) plus the cost of slicing/hashing each substring, so about O(n³) character work in the worst case.",
+     "Space: O(n) for `dp`, O(total word length) for the set."
+    ]
+   }
+  ],
+  "takeaway": "Prefix DP: dp[i] is true if some earlier true prefix j leaves s[j:i] as a dictionary word."
+ },
+ "142": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`slow = slow.next`",
+       "Moves one node per step",
+       "Tortoise"
+      ],
+      [
+       "`fast = fast.next.next`",
+       "Moves two nodes per step",
+       "Hare; inside a cycle it must eventually land on `slow`"
+      ],
+      [
+       "`while fast and fast.next`",
+       "Stops at the list's end",
+       "If the list ends, there is no cycle"
+      ],
+      [
+       "`slow is fast`",
+       "Identity comparison (same node object)",
+       "`==` could compare values; two different nodes may hold equal values"
+      ],
+      [
+       "`slow = head`, then both move 1 step",
+       "Phase 2: find the cycle entry",
+       "Both pointers meet exactly where the cycle begins"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "List `3 → 2 → 0 → −4` with the tail linking back to `2`. Values shown are the node values the pointers sit on:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "slow",
+      "fast",
+      "Note"
+     ],
+     "rows": [
+      [
+       "start",
+       "3",
+       "3",
+       ""
+      ],
+      [
+       "phase 1 step",
+       "2",
+       "0",
+       ""
+      ],
+      [
+       "phase 1 step",
+       "0",
+       "2",
+       ""
+      ],
+      [
+       "phase 1 step",
+       "-4",
+       "-4",
+       "slow is fast → meet"
+      ],
+      [
+       "reset slow to head",
+       "3",
+       "-4",
+       ""
+      ],
+      [
+       "phase 2 step (both move 1)",
+       "2",
+       "2",
+       "same node → cycle start"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does restarting one pointer from the head find the entry?",
+    "p": [
+     "Let `a` = steps from the head to the cycle entry, `c` = the cycle length, and `b` = steps from the entry to the meeting point. When they meet, slow has walked `a + b` and fast `2(a + b)`, so fast has gone around the cycle extra whole laps: `a + b = k·c`. Hence `a = k·c − b`, which is the number of steps from the meeting point forward to the entry (plus whole laps). A pointer from the head and one from the meeting point, both moving 1 step at a time, therefore arrive at the entry together. In the example the entry is the node with value 2."
+    ]
+   },
+   {
+    "h": "Alternatives",
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Visited set of nodes",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Floyd (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — slow makes at most about a + c steps before the meeting, and phase 2 takes at most a more.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Floyd's tortoise and hare: detect the cycle with 1× and 2× pointers, then restart one from the head and move both by 1 to reach the entry."
+ },
+ "148": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`slow, fast = head, head.next`",
+       "Start `fast` one node ahead",
+       "Picks the left-middle for even lengths, so a 2-node list splits 1 + 1 (otherwise it would never shrink)"
+      ],
+      [
+       "`mid, slow.next = slow.next, None`",
+       "Saves the second half's head, then cuts the list",
+       "Tuple assignment: right side evaluated first"
+      ],
+      [
+       "`self.merge(a, b)`",
+       "Merges two sorted lists",
+       "The 'combine' step of merge sort"
+      ],
+      [
+       "`dummy = cur = ListNode()`",
+       "Placeholder head plus a tail pointer",
+       "Removes the 'which node is first?' special case"
+      ],
+      [
+       "`cur.next, a = a, a.next`",
+       "Attach the smaller node and advance that list",
+       "One-line splice using the old `a`"
+      ],
+      [
+       "`cur.next = a or b`",
+       "Appends whichever list still has nodes",
+       "The remainder is already sorted; `or` picks the non-empty one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`4 → 2 → 1 → 3`. Each row is one merge (listed in the order merges finish, deepest first):"
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Left half | right half (sorted already)",
+      "Merged result"
+     ],
+     "rows": [
+      [
+       "1",
+       "[4] | [2]",
+       "[2, 4]"
+      ],
+      [
+       "1",
+       "[1] | [3]",
+       "[1, 3]"
+      ],
+      [
+       "0",
+       "[4, 2] | [1, 3]",
+       "[1, 2, 3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why merge sort for a linked list?",
+    "p": [
+     "Linked lists can't index in O(1), but finding the middle and merging only need sequential access, so merge sort fits."
+    ],
+    "table": {
+     "head": [
+      "Sort",
+      "Needs random access?",
+      "Extra space on a linked list"
+     ],
+     "rows": [
+      [
+       "Quick sort / heap sort",
+       "yes (swapping indices)",
+       "hard to do well"
+      ],
+      [
+       "Merge sort",
+       "no — splits with slow/fast, merges by relinking",
+       "O(log n) recursion; no copying nodes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A subtle point: `<=` and stability",
+    "p": [
+     "Using `a.val <= b.val` takes from the left list on ties, so equal values keep their original relative order (a stable sort)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) — log n levels of splitting; each level scans and merges n nodes.",
+     "Space: O(log n) for the recursion stack (a bottom-up version gets O(1))."
+    ]
+   }
+  ],
+  "takeaway": "Top-down merge sort on a linked list: find the middle with slow/fast, cut, sort halves, merge by relinking."
+ },
+ "151": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s.split()`",
+       "Splits on whitespace runs; drops empty strings",
+       "Extra spaces vanish"
+      ],
+      [
+       "`reversed(...)`",
+       "Iterator over the list from the end",
+       "Reverses without making a second list"
+      ],
+      [
+       "`' '.join(...)`",
+       "Joins the items with exactly one space",
+       "Guarantees single spacing and no leading/trailing space"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`s`",
+       "'  the  sky is blue  '"
+      ],
+      [
+       "`s.split()`",
+       "['the', 'sky', 'is', 'blue']"
+      ],
+      [
+       "`reversed(...)`",
+       "['blue', 'is', 'sky', 'the']"
+      ],
+      [
+       "`' '.join(...)`",
+       "'blue is sky the'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `split()` with no argument?",
+    "p": [
+     "`s.split(' ')` would keep empty strings for repeated spaces (`['', '', 'the', '', 'sky', …]`), and the joined result would contain extra spaces. The no-argument form treats any whitespace run as one separator, so the output has exactly one space between words."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the word list. (An in-place solution on a mutable character array is the usual O(1)-space follow-up: reverse the whole string, then reverse each word.)"
+    ]
+   }
+  ],
+  "takeaway": "Normalize with `split()`, reverse, and `join`: the library does the whitespace handling for you."
+ },
+ "154": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 0, len(nums) - 1`",
+       "Search range ends (both inclusive)",
+       "Binary search for the minimum, not for a target"
+      ],
+      [
+       "`while lo < hi`",
+       "Stops when one candidate is left",
+       "The minimum is `nums[lo]` after the loop"
+      ],
+      [
+       "`nums[mid] > nums[hi]`",
+       "Mid is in the left (larger) part of the rotation",
+       "The minimum lies strictly to the right of mid"
+      ],
+      [
+       "`nums[mid] < nums[hi]`",
+       "Mid..hi is sorted",
+       "The minimum is at mid or to its left, so keep mid"
+      ],
+      [
+       "`hi -= 1` on a tie",
+       "Equal values give no information",
+       "Shrinks the range by one safely (see below)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,2,2,0,1]` gives 0:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "nums[mid] vs nums[hi]",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "2",
+       "2 vs 1",
+       "nums[mid] > nums[hi] → min is right of mid: lo = mid+1"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "0 vs 1",
+       "nums[mid] < nums[hi] → min is at mid or left: hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare with `hi` and not `lo`?",
+    "p": [
+     "Comparing `nums[mid]` with `nums[hi]` always reveals which side holds the drop: if mid is larger than hi, the drop (minimum) is right of mid; if smaller, the right part is sorted and the minimum is at or left of mid. Comparing with `lo` is ambiguous when the array isn't rotated at all."
+    ]
+   },
+   {
+    "h": "Why is `hi -= 1` safe on ties?",
+    "p": [
+     "If `nums[mid] == nums[hi]`, the value at `hi` also appears at `mid`, so even if `hi` is the minimum, a copy stays inside the range. Dropping `hi` never loses the minimum. Example: `[3,3,1,3]` (1): the tie at the start removes the last 3 and the search continues. This is also why the worst case, all elements equal, is O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) on average; O(n) worst case when many duplicates force `hi -= 1` repeatedly.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search comparing mid with hi; when equal, shrink hi by one — the cost of duplicates is a linear worst case."
+ },
+ "157": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`tmp = [''] * 4`",
+       "Scratch buffer that `read4` fills",
+       "`read4` always writes into a 4-slot buffer, even if you want fewer characters"
+      ],
+      [
+       "`c = read4(tmp)`",
+       "Characters actually copied (0 at end of file)",
+       "Return value drives both the stop condition and how much to copy"
+      ],
+      [
+       "`if c == 0: break`",
+       "End of file reached",
+       "Stops when the file has fewer than n characters"
+      ],
+      [
+       "`take = min(c, n - total)`",
+       "Copy no more than still requested",
+       "The last chunk may contain characters beyond n"
+      ],
+      [
+       "`buf[total:total+take] = tmp[:take]`",
+       "Slice assignment into the caller's buffer",
+       "Copy a block without an inner loop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "File `'abcdef'`, `n = 5`:"
+    ],
+    "table": {
+     "head": [
+      "read4 returned",
+      "tmp content",
+      "take",
+      "total",
+      "buf so far"
+     ],
+     "rows": [
+      [
+       "4",
+       "['a', 'b', 'c', 'd']",
+       "4",
+       "4",
+       "abcd"
+      ],
+      [
+       "2",
+       "['e', 'f']",
+       "1",
+       "5",
+       "abcde"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `min(c, n - total)`?",
+    "p": [
+     "The second `read4` returns 2 characters (`'e'`, `'f'`) but only 1 is still wanted. Copying all of `tmp` would write past `n`. Here `f` was read from the file but not delivered; for a single call to `read` that is fine, and it is exactly what makes the follow-up (many calls to `read`) need an internal leftover buffer."
+    ]
+   },
+   {
+    "h": "Why the loop ends two ways",
+    "bullets": [
+     "`total == n`: we have delivered everything requested.",
+     "`c == 0`: the file ended earlier; `total` is then the true length read (e.g. a 3-character file asked for 4 returns 3)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — about n/4 calls to `read4`.",
+     "Space: O(1) — a 4-element scratch buffer."
+    ]
+   }
+  ],
+  "takeaway": "Read in chunks of 4 until you have n characters or the file ends; copy only what is still needed."
+ },
+ "160": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`a, b = headA, headB`",
+       "One pointer per list",
+       "Walk both lists simultaneously"
+      ],
+      [
+       "`a is not b`",
+       "Compare node identity, not values",
+       "The lists share the same node object; equal values elsewhere don't count"
+      ],
+      [
+       "`a.next if a else headB`",
+       "Advance; at the end, jump to the other list's head",
+       "After switching, both pointers have walked `lenA + lenB` nodes in total"
+      ],
+      [
+       "`return a`",
+       "Intersection node, or `None`",
+       "If there is no intersection both pointers become `None` together"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A = `4→1→8→4→5`, B = `5→6→1→8→4→5`, where the tails share the nodes `8→4→5` (the `1`s in each list are different nodes). Values under each pointer after each step ('None' = fell off the end, then jumps to the other head):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "a",
+      "b"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "5"
+      ],
+      [
+       "1",
+       "1",
+       "6"
+      ],
+      [
+       "2",
+       "8",
+       "1"
+      ],
+      [
+       "3",
+       "4",
+       "8"
+      ],
+      [
+       "4",
+       "5",
+       "4"
+      ],
+      [
+       "5",
+       "None",
+       "5"
+      ],
+      [
+       "6",
+       "5",
+       "None"
+      ],
+      [
+       "7",
+       "6",
+       "4"
+      ],
+      [
+       "8",
+       "1",
+       "1"
+      ],
+      [
+       "9",
+       "8",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does switching lists make them meet?",
+    "p": [
+     "Let list A have `x` private nodes, list B have `y` private nodes, and `z` shared nodes. Pointer `a` walks `x + z` then `y`, pointer `b` walks `y + z` then `x`. After `x + y` steps both are at the start of the shared part. If there is no sharing (`z = 0`) they both reach `None` after `x + y` steps, so `a is b` is true with `None` and the loop ends returning `None`. The lengths' difference is cancelled with no need to compute lengths."
+    ]
+   },
+   {
+    "h": "Alternatives",
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Hash set of A's nodes",
+       "O(m + n)",
+       "O(m)"
+      ],
+      [
+       "Measure lengths, advance the longer",
+       "O(m + n)",
+       "O(1)"
+      ],
+      [
+       "Swap-heads trick (this code)",
+       "O(m + n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers that switch to the other list at the end: both walk m + n steps, so they land on the intersection together (or on None together)."
+ },
+ "163": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`prev = lower - 1`",
+       "Pretend the number just below the range was present",
+       "The first real number is then compared with a neighbour like all others"
+      ],
+      [
+       "`nums + [upper + 1]`",
+       "Appends a sentinel just above the range",
+       "The gap after the last element is handled by the same loop body"
+      ],
+      [
+       "`x - prev >= 2`",
+       "At least one integer lies strictly between `prev` and `x`",
+       "A difference of 1 means adjacent numbers (no gap)"
+      ],
+      [
+       "`[prev + 1, x - 1]`",
+       "The missing run between them",
+       "Inclusive endpoints"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [0,1,3,50,75]`, range `[0, 99]`, so `prev` starts at −1 and the sentinel is 100. Result: [[2, 2], [4, 49], [51, 74], [76, 99]]."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "prev",
+      "x − prev",
+      "Gap?",
+      "prev becomes"
+     ],
+     "rows": [
+      [
+       "0",
+       "-1",
+       "1",
+       "no",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "no",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "yes → add [2, 2]",
+       "3"
+      ],
+      [
+       "50",
+       "3",
+       "47",
+       "yes → add [4, 49]",
+       "50"
+      ],
+      [
+       "75",
+       "50",
+       "25",
+       "yes → add [51, 74]",
+       "75"
+      ],
+      [
+       "100",
+       "75",
+       "25",
+       "yes → add [76, 99]",
+       "100"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the two sentinels?",
+    "p": [
+     "Without `prev = lower - 1` the code would need a separate check for a gap before the first number; without the `upper + 1` entry, a separate check for the gap after the last one. With both, every gap is 'between two neighbours' and one condition covers it. An empty `nums` yields `[[lower, upper]]` because the only comparison is `upper + 1 - (lower - 1) >= 2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — one pass.",
+     "Space: O(1) extra besides the output (note: `nums + [upper+1]` builds a copy, so strictly O(n) unless you use `itertools.chain`)."
+    ]
+   }
+  ],
+  "takeaway": "Walk neighbouring pairs; a difference ≥ 2 is a missing range. Sentinels at both ends make the edges ordinary cases."
+ },
+ "166": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(numerator < 0) != (denominator < 0)`",
+       "True when exactly one is negative",
+       "Sign of a quotient without multiplying"
+      ],
+      [
+       "`abs()`, `//`, `%`",
+       "Magnitudes, integer part and remainder",
+       "Do long division on non-negative numbers"
+      ],
+      [
+       "`seen = {}` remainder → index in `res`",
+       "Where in the output each remainder first appeared",
+       "If a remainder repeats, the digits repeat from there"
+      ],
+      [
+       "`rem *= 10; res.append(str(rem // d))`",
+       "Bring down a zero and emit the next digit",
+       "Long division step"
+      ],
+      [
+       "`res.insert(seen[rem], '(')`",
+       "Inserts the opening bracket at the recorded position",
+       "List insert is O(n) but happens once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`4 / 333` → `0.(012)`. Integer part 0, remainder 4, then:"
+    ],
+    "table": {
+     "head": [
+      "Remainder",
+      "Work",
+      "Record"
+     ],
+     "rows": [
+      [
+       "4",
+       "4×10=40; digit 0; new rem 40",
+       "seen[4] = 2"
+      ],
+      [
+       "40",
+       "40×10=400; digit 1; new rem 67",
+       "seen[40] = 3"
+      ],
+      [
+       "67",
+       "67×10=670; digit 2; new rem 4",
+       "seen[67] = 4"
+      ],
+      [
+       "4",
+       "already in seen at index 2",
+       "insert '(' at 2, append ')'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a repeated remainder mean a repeating decimal?",
+    "p": [
+     "The next digit depends only on the current remainder. If the same remainder shows up again, everything after it replays identically, so the digits written since its first appearance form the repeating block. `1 / 6` gives `0.1(6)` for the same reason: remainder 4 repeats after the 6."
+    ]
+   },
+   {
+    "h": "Edge cases checked by running the code",
+    "table": {
+     "head": [
+      "Input",
+      "Output"
+     ],
+     "rows": [
+      [
+       "numerator 0",
+       "'0'"
+      ],
+      [
+       "-50 / 8",
+       "'-6.25'"
+      ],
+      [
+       "1 / 2",
+       "'0.5'"
+      ],
+      [
+       "2 / 1",
+       "'2' (remainder 0 → return early)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) — there are at most d−1 distinct nonzero remainders, so the loop stops within d steps.",
+     "Space: O(d) for the map and digits."
+    ]
+   }
+  ],
+  "takeaway": "Long division with a remainder→position map: a repeated remainder marks the start of the repeating digits."
+ },
+ "169": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cand`, `count`",
+       "Current candidate and its surplus over opponents",
+       "The whole algorithm's state"
+      ],
+      [
+       "`if count == 0: cand = x`",
+       "Pick a new candidate when the previous one was cancelled out",
+       "Restart after the votes balance"
+      ],
+      [
+       "`count += 1 if x == cand else -1`",
+       "Vote for or against the candidate",
+       "Conditional expression inside `+=`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,2,1,1,1,2,2]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "cand after",
+      "count after"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does cancelling pairs find the majority?",
+    "p": [
+     "Each time a non-candidate cancels a candidate vote, we remove one majority-element and one other element. The majority has more than half of all elements, so after all the pair-removals it cannot be fully cancelled: some copy remains. Note that the final `cand` is correct only because a majority is guaranteed; on `[1,2,3]` it would return 3, which isn't a majority. Without that guarantee you need a second pass to count `cand`."
+    ]
+   },
+   {
+    "h": "Alternatives",
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Counter",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Sort and take the middle",
+       "O(n log n)",
+       "O(1) or O(n)"
+      ],
+      [
+       "Boyer–Moore (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Boyer–Moore voting: the majority element survives pair-wise cancellation, so track one candidate and a counter."
+ },
+ "172": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`n //= 5`",
+       "Integer division: how many multiples of 5 (then 25, 125, …) are ≤ the original n",
+       "`n // 5^k` counts numbers divisible by 5^k"
+      ],
+      [
+       "`count += n`",
+       "Adds that tally",
+       "Each multiple of 5 contributes one factor, multiples of 25 a second one, and so on"
+      ],
+      [
+       "`while n`",
+       "Loops until n becomes 0",
+       "About log₅ n iterations"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 25`: `n //= 5` gives 5 (multiples of 5 up to 25), then 1 (the multiple of 25), then 0. Answer: 6."
+    ],
+    "table": {
+     "head": [
+      "n after //= 5",
+      "count"
+     ],
+     "rows": [
+      [
+       "5",
+       "5"
+      ],
+      [
+       "1",
+       "6"
+      ],
+      [
+       "0",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count factors of 5?",
+    "p": [
+     "A trailing zero comes from a factor 10 = 2 × 5. In n! there are far more factors of 2 than of 5, so the 5s decide the count. Numbers like 25 contain two 5s (so they're counted once at the `//5` step and once at the `//25` step), 125 contains three, and so on. For n = 125 the loop adds 25 + 5 + 1 + 0 = 31."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) — n is divided by 5 each time.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Trailing zeros of n! = number of factors of 5: sum n//5 + n//25 + n//125 + …"
+ },
+ "187": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(len(s) - 9)`",
+       "Start indices of every 10-letter window",
+       "The last window starts at `len(s) - 10`; `range` excludes its end"
+      ],
+      [
+       "`s[i:i+10]`",
+       "The 10-letter substring",
+       "Slice per window (O(10) each)"
+      ],
+      [
+       "`seen` set",
+       "Windows met at least once",
+       "O(1) membership"
+      ],
+      [
+       "`rep` set",
+       "Windows already reported",
+       "Prevents duplicates in the output when a window occurs 3+ times"
+      ],
+      [
+       "`res` list",
+       "Output in order of the second occurrence",
+       "A list preserves order; the set `rep` handles uniqueness"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT` has 23 windows of 10 letters. Only these windows are reported (all other windows are new when first seen):"
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "Window",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "10",
+       "AAAAACCCCC",
+       "seen before, not yet reported → report"
+      ],
+      [
+       "16",
+       "CCCCCAAAAA",
+       "seen before, not yet reported → report"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two sets?",
+    "p": [
+     "With only `seen`, a sequence appearing three times would be appended on its second and again on its third appearance. The check `w not in rep` ensures each repeated sequence is added once, on the first repeat."
+    ]
+   },
+   {
+    "h": "Alternative with less memory",
+    "p": [
+     "Each window has 10 letters from 4 symbols, i.e. 20 bits. A rolling 2-bit-per-letter integer hash stores integers instead of 10-character strings (the follow-up that matters for long inputs)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) windows, each slice and hash costs O(10), so O(n).",
+     "Space: O(n) for the sets."
+    ]
+   }
+  ],
+  "takeaway": "Sliding fixed-size window with seen/reported sets: report a window the second time you meet it."
+ },
+ "190": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`n & 1`",
+       "Lowest bit of n (0 or 1)",
+       "Extract one bit; `& 1` masks everything else"
+      ],
+      [
+       "`res << 1`",
+       "Shift result left by one bit (×2)",
+       "Make room at the right end for the next bit"
+      ],
+      [
+       "`(res << 1) | (n & 1)`",
+       "Append the extracted bit to `res`",
+       "`|` sets the new lowest bit"
+      ],
+      [
+       "`n >>= 1`",
+       "Shift n right (drop the bit just used)",
+       "Expose the next bit"
+      ],
+      [
+       "`for _ in range(32)`",
+       "Always 32 iterations",
+       "Leading zeros of `n` must also move to the other end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 11` (binary `1011`, i.e. `00…01011` in 32 bits). Selected iterations show how bits move from the low end of `n` to `res`:"
+    ],
+    "table": {
+     "head": [
+      "Iteration",
+      "res (binary)",
+      "n after (binary)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "101"
+      ],
+      [
+       "2",
+       "11",
+       "10"
+      ],
+      [
+       "3",
+       "110",
+       "1"
+      ],
+      [
+       "4",
+       "1101",
+       "0"
+      ],
+      [
+       "31",
+       "1101000000000000000000000000000",
+       "0"
+      ],
+      [
+       "32",
+       "11010000000000000000000000000000",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why exactly 32 iterations rather than 'while n'?",
+    "p": [
+     "With `while n`, a number like 11 would stop after 4 bits and leave the reversed bits at the wrong place. Running all 32 pushes the leading zeros through too, so the lowest bit of `n` ends up as the highest bit of `res`. For 11 the final result is 3489660928, which is `11010000000000000000000000000000` in 32 bits."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) — 32 iterations regardless of n.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse bits by popping the lowest bit of n (n & 1) and pushing it onto res (res << 1 | bit), 32 times."
+ },
+ "199": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque([root])`",
+       "BFS queue with the root",
+       "`popleft` is O(1)"
+      ],
+      [
+       "`size = len(q)`",
+       "Number of nodes on the current level, frozen before the loop",
+       "Separates levels in a single queue"
+      ],
+      [
+       "`for i in range(size)`",
+       "Processes exactly one level",
+       "Children appended meanwhile belong to the next level"
+      ],
+      [
+       "`i == size - 1`",
+       "This is the last node of the level",
+       "The last one in left-to-right order is the rightmost, which is what you see"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,null,5,null,4]`:"
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Nodes (left→right)",
+      "Rightmost → res"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]",
+       "1"
+      ],
+      [
+       "1",
+       "[2, 3]",
+       "3"
+      ],
+      [
+       "2",
+       "[5, 4]",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why 'last of each level' and not 'always go right'?",
+    "p": [
+     "Following only right children fails when a right subtree is shorter than the left one: in this tree, level 2 holds `5` (under 2) and `4` (under 3), and the view shows `4` because it is the rightmost; but in a tree where node 3 had no children, the view at that level would be `5`, found only by looking at the whole level."
+    ]
+   },
+   {
+    "h": "A subtle edge case",
+    "p": [
+     "`deque([root])` with `root = None` creates a one-element queue holding `None`; `popleft()` returns `None` and `node.left` raises `AttributeError` (checked by running it). The problem statement allows an empty tree, so a guard like `deque([root] if root else [])` is safer than this code as written."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — every node enqueued once.",
+     "Space: O(w) — the queue holds at most one level (the widest level)."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS keeping only the last node of each level — the rightmost node visible from the right."
+ }
+}
