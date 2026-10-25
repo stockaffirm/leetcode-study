@@ -36,7 +36,7 @@ D2 = {
 2136: (S("earliestFullBloom([1],[1])"), "Plant 1 day, grow 1 day.", "one seed"),
 3915: (S("maxAlternatingSum([3,5,4,2,4],1)"), "3 < 5 > 2 < 4 uses indices 0,1,3,4.", "k = 1"),
 526: (S("countArrangement(4)"), "Eight valid permutations.", "n = 4"),
-3552: (S("minMoves(['O..P','.#Q.','R...'])"), "Portals shorten the path.", "several portals"),
+3552: (S("minMoves(['A#.','.#.','..A'])"), "Step onto A and teleport straight to the goal A.", "teleport to the goal"),
 2491: (S("dividePlayers([3,4])"), "One team.", "one team"),
 1314: (S("matrixBlockSum([[1,2],[3,4]],1)"), "Every block covers the whole matrix.", "small matrix"),
 3651: (S("minCost([[1,2],[2,3],[3,4]],1)"), "Teleport from the larger cell to the goal.", "one teleport"),

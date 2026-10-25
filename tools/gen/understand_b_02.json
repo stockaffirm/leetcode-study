@@ -1,0 +1,556 @@
+{
+ "61": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`not head or not head.next`",
+       "Handles empty and one-node lists",
+       "Rotating them changes nothing; also protects `tail.next` below"
+      ],
+      [
+       "`while tail.next: tail = tail.next; n += 1`",
+       "Walks to the last node, counting nodes",
+       "You need both the length and the tail pointer in one pass"
+      ],
+      [
+       "`k %= n`",
+       "Reduces k to 0…n−1",
+       "Rotating by n returns the same list, so only `k mod n` matters (k can be huge)"
+      ],
+      [
+       "`for _ in range(n - k - 1)`",
+       "Moves `new_tail` to the node just before the cut",
+       "The `(n−k)`-th node ends the rotated list"
+      ],
+      [
+       "`tail.next = head`",
+       "Joins the old end to the old start",
+       "Closes the list into a ring so the cut is a single pointer change"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→3→4→5`, `k = 2`. Counting gives `n = 5`, tail = 5, `k %= n` leaves `k = 2`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`range(n−k−1)` = range(2)",
+       "`new_tail` moves 2 steps from head → node 3"
+      ],
+      [
+       "`new_head = new_tail.next`",
+       "node 4"
+      ],
+      [
+       "`new_tail.next = None`",
+       "list 1→2→3 is cut off"
+      ],
+      [
+       "`tail.next = head`",
+       "5 now points to 1"
+      ],
+      [
+       "return `new_head`",
+       "4→5→1→2→3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `k %= n` and why the early return when `k == 0`?",
+    "p": [
+     "Without the modulo, large k would walk around the ring many times. If `k % n == 0` the code would otherwise compute `range(n - 1)`, reach the tail, set `tail.next = None` and reconnect it to head: harmless here, but the early return avoids needless work."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "n",
+      "k % n",
+      "Effect"
+     ],
+     "rows": [
+      [
+       "2",
+       "5",
+       "2",
+       "rotate by 2"
+      ],
+      [
+       "5",
+       "5",
+       "0",
+       "return head unchanged"
+      ],
+      [
+       "7",
+       "5",
+       "2",
+       "same as 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — one pass to find the length and tail, one partial pass to the cut point.",
+     "Space: O(1) — only pointers."
+    ]
+   }
+  ],
+  "takeaway": "Rotate a list by making it a ring: find the length, reduce k modulo n, cut after the (n−k)-th node."
+ },
+ "64": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`float('inf')`",
+       "A value larger than any real sum",
+       "Represents a neighbour that doesn't exist, so `min` ignores it"
+      ],
+      [
+       "`grid[i-1][j] if i else inf`",
+       "Up neighbour only when the row index is nonzero",
+       "Border guard without negative indexing (`grid[-1]` would silently wrap!)"
+      ],
+      [
+       "`min(up, left)`",
+       "Cheaper of the two ways to arrive",
+       "DP transition for 'only right or down' moves"
+      ],
+      [
+       "`grid[i][j] += …`",
+       "Overwrites each cell with its best cumulative sum",
+       "In-place DP: the original value is no longer needed once used"
+      ],
+      [
+       "`grid[-1][-1]`",
+       "Bottom-right cell",
+       "The answer once the table is filled"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,3,1],[1,5,1],[4,2,1]]`. Each cell becomes its own cost plus the cheaper of the cumulative sums above and to the left. Final grid: [[1, 4, 5], [2, 7, 6], [6, 8, 7]]."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "up",
+      "left",
+      "grid[i][j] becomes"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "∞",
+       "1",
+       "4"
+      ],
+      [
+       "(0,2)",
+       "∞",
+       "4",
+       "5"
+      ],
+      [
+       "(1,0)",
+       "1",
+       "∞",
+       "2"
+      ],
+      [
+       "(1,1)",
+       "4",
+       "2",
+       "7"
+      ],
+      [
+       "(1,2)",
+       "5",
+       "7",
+       "6"
+      ],
+      [
+       "(2,0)",
+       "2",
+       "∞",
+       "6"
+      ],
+      [
+       "(2,1)",
+       "7",
+       "6",
+       "8"
+      ],
+      [
+       "(2,2)",
+       "6",
+       "8",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the explicit `inf` guards?",
+    "p": [
+     "In row 0 there is no cell above, and in column 0 no cell to the left. Reading `grid[i-1][j]` with `i = 0` would silently use the last row (Python negative indexing), giving wrong answers rather than an error. `inf` makes the missing side lose every `min`, so row 0 and column 0 only accumulate along the edge."
+    ]
+   },
+   {
+    "h": "Why does DP work here?",
+    "p": [
+     "Because moves are only right or down, any path to a cell must come from directly above or directly left. The best path to a cell is its cost plus the best path to one of those two. Greedy choices at each step would fail; the DP compares complete cumulative costs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — each cell once.",
+     "Space: O(1) extra, since the input grid is overwritten (use a copy if the input must be preserved)."
+    ]
+   }
+  ],
+  "takeaway": "Grid DP with two incoming directions: dp[i][j] = cost + min(from above, from left), reusing the grid as the table."
+ },
+ "67": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`len(a) - 1`, `len(b) - 1`",
+       "Start pointers at the last (least significant) digits",
+       "Add right to left like pencil-and-paper"
+      ],
+      [
+       "`while i >= 0 or j >= 0 or carry`",
+       "Continues while either string has digits or a carry remains",
+       "Different lengths and a final carry out (`1 + 1 = 10`) are both handled"
+      ],
+      [
+       "`int(a[i]) if i >= 0 else 0`",
+       "Digit, or 0 once that string is used up",
+       "Pads the shorter number with zeros virtually"
+      ],
+      [
+       "`s % 2`, `s // 2`",
+       "Result bit and carry from a 0–3 sum",
+       "Base-2 version of base-10 carry"
+      ],
+      [
+       "`res.append(...)` then `reversed`",
+       "Collect digits least-significant first, flip at the end",
+       "Appending to a list is O(1); prepending to a string is O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'11' + '1'` (3 + 1). Digits are consumed from the right; `res` collects bits least-significant first. Reversed, it reads `100`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "carry in",
+      "bit a",
+      "bit b",
+      "sum s",
+      "bit out (s%2)",
+      "carry out (s//2)"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "0",
+       "1",
+       "1",
+       "2",
+       "0",
+       "1"
+      ],
+      [
+       "0",
+       "-1",
+       "1",
+       "1",
+       "0",
+       "2",
+       "0",
+       "1"
+      ],
+      [
+       "-1",
+       "-2",
+       "1",
+       "0",
+       "0",
+       "1",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the loop include `or carry`?",
+    "p": [
+     "After both strings are exhausted a carry may still be pending. Here the third iteration has `i = -1`, `j = -1` but `carry = 1`, producing the leading `1`. Without `or carry` the answer would be `'00'`."
+    ]
+   },
+   {
+    "h": "Why not `bin(int(a, 2) + int(b, 2))`?",
+    "table": {
+     "head": [
+      "Method",
+      "Comment"
+     ],
+     "rows": [
+      [
+       "`bin(int(a,2)+int(b,2))[2:]`",
+       "Short and correct in Python (big ints), but hides the algorithm; interviewers often ask for the manual version"
+      ],
+      [
+       "Manual carry loop",
+       "Works in any language; O(n) with no big-number support"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(max(len a, len b)).",
+     "Space: O(max(len a, len b)) for the result list."
+    ]
+   }
+  ],
+  "takeaway": "Digit-by-digit addition with a carry: loop while either input has digits or a carry remains."
+ },
+ "70": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`a, b = 1, 1`",
+       "Ways to stand on step 0 (`a`) and step 1 (`b`)",
+       "Base cases of the recurrence ways(i) = ways(i−1) + ways(i−2)"
+      ],
+      [
+       "`range(n - 1)`",
+       "n−1 updates move `b` from step 1 up to step n",
+       "For n = 1 the loop doesn't run and the answer is 1"
+      ],
+      [
+       "`a, b = b, a + b`",
+       "Simultaneous assignment: the right side is computed with the old values",
+       "Slides the two-value window forward without a temp variable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5` needs 4 updates. `b` is always the number of ways to reach the current step, so the answer is 8:"
+    ],
+    "table": {
+     "head": [
+      "After",
+      "a (ways for step i−1)",
+      "b (ways for step i)"
+     ],
+     "rows": [
+      [
+       "start",
+       "1",
+       "1"
+      ],
+      [
+       "after step 1",
+       "1",
+       "2"
+      ],
+      [
+       "after step 2",
+       "2",
+       "3"
+      ],
+      [
+       "after step 3",
+       "3",
+       "5"
+      ],
+      [
+       "after step 4",
+       "5",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Fibonacci?",
+    "p": [
+     "The last move onto step i was either a 1-step from i−1 or a 2-step from i−2, and the two groups never overlap. So ways(i) = ways(i−1) + ways(i−2), the Fibonacci recurrence. Storing only the last two values removes the O(n) array."
+    ]
+   },
+   {
+    "h": "Why simultaneous assignment matters",
+    "p": [
+     "Writing `a = b; b = a + b` would make the second line use the new `a`, giving `b + b`. The tuple form `a, b = b, a + b` evaluates the right side first, so `a + b` uses the old values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) — one pass.",
+     "Space: O(1) — two variables."
+    ]
+   }
+  ],
+  "takeaway": "1-D DP compressed to two rolling values: ways(i) = ways(i−1) + ways(i−2), the Fibonacci pattern."
+ },
+ "73": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`{i for i, r in enumerate(m) if 0 in r}`",
+       "Set comprehension: indices of rows containing a 0",
+       "Collect a set of qualifying items in one expression; `0 in r` scans the row"
+      ],
+      [
+       "`{j for r in m for j, v in enumerate(r) if v == 0}`",
+       "Nested comprehension: column indices that contain a 0",
+       "Same, over two loops; the set removes duplicate columns for free"
+      ],
+      [
+       "`i in rows or j in cols`",
+       "O(1) set membership",
+       "The test for 'this cell must become 0'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,2,0],[3,4,5,2],[1,3,1,5]]`: rows containing a zero = [0], columns = [0, 3]. Every cell in those rows or columns becomes 0:"
+    ],
+    "table": {
+     "head": [
+      "Original row",
+      "Row in rows?",
+      "Result row"
+     ],
+     "rows": [
+      [
+       "[0, 1, 2, 0]",
+       "yes",
+       "[0, 0, 0, 0]"
+      ],
+      [
+       "[3, 4, 5, 2]",
+       "no",
+       "[0, 4, 5, 0]"
+      ],
+      [
+       "[1, 3, 1, 5]",
+       "no",
+       "[0, 3, 1, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why record first, modify after?",
+    "p": [
+     "If you zeroed as soon as you saw a 0, the new zeros would be mistaken for original zeros, and the whole matrix would turn to 0. Two passes (collect, then write) keep the decision based on the original values only."
+    ]
+   },
+   {
+    "h": "Why sets instead of O(1)-space marking?",
+    "table": {
+     "head": [
+      "Approach",
+      "Extra space",
+      "Complexity of code"
+     ],
+     "rows": [
+      [
+       "Row and column sets (this code)",
+       "O(m + n)",
+       "Simple"
+      ],
+      [
+       "Use first row and column as markers",
+       "O(1)",
+       "Needs care with the first row/col's own zeros"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) — one scan to collect, one pass to write.",
+     "Space: O(m + n) for the two sets."
+    ]
+   }
+  ],
+  "takeaway": "Record which rows and columns to clear, then clear in a second pass — never mutate while scanning for zeros."
+ }
+}
