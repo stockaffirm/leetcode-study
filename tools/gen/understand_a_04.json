@@ -1,0 +1,1809 @@
+{
+ "210": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "adj[b].append(a); indeg[a] += 1",
+       "Edge b \u2192 a: course a needs b first. `indeg[a]` counts unmet prerequisites",
+       "Building a dependency graph"
+      ],
+      [
+       "deque(i for i in range(n) if indeg[i] == 0)",
+       "Courses with no prerequisites go first",
+       "Kahn's algorithm start"
+      ],
+      [
+       "order.append(c)",
+       "Records the course when it is taken; the list is the answer",
+       "Unlike Course Schedule I, we keep the order"
+      ],
+      [
+       "return order if len(order) == n else []",
+       "A shorter order means a cycle, and no valid ordering exists",
+       "Cycle check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, prerequisites `[[1,0],[2,0],[3,1],[3,2]]`:"
+    ],
+    "table": {
+     "head": [
+      "taken",
+      "newly ready",
+      "queue",
+      "order so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1, 2]",
+       "[1, 2]",
+       "[0]"
+      ],
+      [
+       "1",
+       "[]",
+       "[2]",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "[3]",
+       "[3]",
+       "[0, 1, 2]"
+      ],
+      [
+       "3",
+       "[]",
+       "[]",
+       "[0, 1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Is the answer unique?",
+    "p": [
+     "No. After taking 0, both 1 and 2 are ready; the queue's FIFO order picks 1 first, giving `[0,1,2,3]`, but `[0,2,1,3]` is also valid and an accepted answer. Any order in which every course comes after its prerequisites works."
+    ]
+   },
+   {
+    "h": "Why does an incomplete order mean a cycle?",
+    "p": [
+     "Courses on a cycle wait for each other, so their indegree never reaches 0, they never enter the queue, and `order` ends up shorter than `n`. For example with courses 0 and 1 requiring each other, the queue starts empty and the result is `[]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Kahn's algorithm with the order recorded: BFS over zero-indegree nodes; a short result means a cycle."
+ },
+ "213": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "line(a)",
+       "House Robber I on a straight street: two rolling variables `prev` and `cur`",
+       "Reusing a solved sub-problem"
+      ],
+      [
+       "nums[1:]  /  nums[:-1]",
+       "Slices: the street without the first house, or without the last house",
+       "Breaking circular dependence"
+      ],
+      [
+       "len(nums) == 1",
+       "With one house the two slices are empty and would return 0, but the single house can be robbed",
+       "Edge case"
+      ],
+      [
+       "max(line(...), line(...))",
+       "Best of the two cases",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,2]`. The first and last houses are adjacent in the circle, so at most one is robbed. Two linear problems cover it:"
+    ],
+    "table": {
+     "head": [
+      "case",
+      "houses",
+      "best"
+     ],
+     "rows": [
+      [
+       "skip first",
+       "[3, 2]",
+       "3"
+      ],
+      [
+       "skip last",
+       "[2, 3]",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer `max(3, 3) = 3`. Robbing both 2s is impossible because they touch."
+    ]
+   },
+   {
+    "h": "Why do two linear passes cover every valid plan?",
+    "p": [
+     "Any legal plan leaves out the first house, the last house, or both. A plan without the first house is a plan on `nums[1:]`; a plan without the last is a plan on `nums[:-1]`. Taking the maximum of the two optimal results therefore contains the best legal plan, and neither case ever robs both ends."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), two passes (slicing copies O(n)).",
+     "Space: O(n) for the slices, O(1) otherwise."
+    ]
+   }
+  ],
+  "takeaway": "Circular House Robber: run the linear solution twice, once without the first house and once without the last."
+ },
+ "216": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(start, path, total)",
+       "Backtracking over digits 1\u20139; `start` prevents reuse and reordering",
+       "Choose each digit at most once"
+      ],
+      [
+       "len(path) == k",
+       "Stop when k digits are chosen, then test the sum",
+       "Fixed-size combination"
+      ],
+      [
+       "range(start, 10)",
+       "Digits ascending from `start`",
+       ""
+      ],
+      [
+       "if total + x > n: break",
+       "Digits only increase, so once x overshoots all later x do too: `break`, not `continue`",
+       "Pruning in sorted candidates"
+      ],
+      [
+       "go(x + 1, \u2026)",
+       "Next digit must be larger than x (each used once)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 3`, `n = 7`. Each row is a length-3 path that the search reaches (pruned branches never get there):"
+    ],
+    "table": {
+     "head": [
+      "path",
+      "sum",
+      "outcome"
+     ],
+     "rows": [
+      [
+       "[1, 2, 3]",
+       "6",
+       "length k but sum \u2260 n \u2192 reject"
+      ],
+      [
+       "[1, 2, 4]",
+       "7",
+       "length k and sum n \u2192 record"
+      ]
+     ]
+    },
+    "bullets": [
+     "Only `[1,2,4]` has digits that sum to 7."
+    ]
+   },
+   {
+    "h": "Why `break` and not `continue`?",
+    "p": [
+     "The loop goes over increasing digits, so once `total + x > n` every larger x fails as well. Breaking skips them all. With `continue` the answers would stay correct but the loop would test every remaining digit uselessly."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(C(9, k) \u00b7 k) at most, since only subsets of 1\u20139 are tried.",
+     "Space: O(k) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size subset search with ascending digits; break as soon as the running sum exceeds the target."
+ },
+ "219": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "last = {}",
+       "Dict value \u2192 most recent index where it occurred",
+       "Remembering the last position of each item"
+      ],
+      [
+       "x in last and i - last[x] <= k",
+       "Seen before, and close enough",
+       ""
+      ],
+      [
+       "last[x] = i",
+       "Always overwrites with the newest index, so later checks measure the smallest possible gap",
+       ""
+      ],
+      [
+       "enumerate(nums)",
+       "Index and value together",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,1]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "last index",
+      "gap",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "\u2013",
+       "\u2013",
+       "no"
+      ],
+      [
+       "1",
+       "2",
+       "\u2013",
+       "\u2013",
+       "no"
+      ],
+      [
+       "2",
+       "3",
+       "\u2013",
+       "\u2013",
+       "no"
+      ],
+      [
+       "3",
+       "1",
+       "0",
+       "3",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the latest index per value?",
+    "p": [
+     "For a repeated value, the closest earlier equal element is the most recent one. If the most recent occurrence is farther than k, every older one is farther still, so remembering older indices adds nothing."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the dict. A fixed-size sliding window set of size k reaches O(k) space."
+    ]
+   }
+  ],
+  "takeaway": "Hash map of last-seen index: the nearest previous duplicate decides whether a close pair exists."
+ },
+ "222": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "while l: l = l.left; hl += 1",
+       "Height along the leftmost path",
+       "Cheap O(h) measurement"
+      ],
+      [
+       "while r: r = r.right; hr += 1",
+       "Height along the rightmost path",
+       ""
+      ],
+      [
+       "2 ** hl - 1",
+       "Node count of a perfect tree of height hl, with no traversal",
+       "Formula shortcut"
+      ],
+      [
+       "1 + countNodes(left) + countNodes(right)",
+       "Otherwise recurse; at least one subtree is perfect",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,5,6]` (complete, last row partly filled):"
+    ],
+    "table": {
+     "head": [
+      "root",
+      "left height",
+      "right height",
+      "result"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "2",
+       "not perfect \u2192 1 + left + right"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "perfect \u2192 2^2 \u2212 1 = 3"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "not perfect \u2192 1 + left + right"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "perfect \u2192 2^1 \u2212 1 = 1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 6 nodes."
+    ]
+   },
+   {
+    "h": "Why is this faster than O(n)?",
+    "p": [
+     "In a complete tree, equal leftmost and rightmost heights mean the subtree is perfect, so it is counted by formula. Otherwise one of the two child subtrees is perfect (it ends at the full level) and resolves immediately in the next call, while only one child continues to recurse. So there are O(log n) levels of recursion, and each level measures heights in O(log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log\u00b2 n).",
+     "Space: O(log n) recursion depth."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The shortcut is valid only because the tree is complete. For a general tree, equal leftmost and rightmost heights say nothing about the shape in between."
+    ]
+   }
+  ],
+  "takeaway": "Complete-tree node count: compare leftmost and rightmost heights; if equal, use 2^h \u2212 1, else recurse."
+ },
+ "225": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque()",
+       "Double-ended queue with O(1) operations at both ends",
+       "Queue/stack building block"
+      ],
+      [
+       "self.q.append(x)",
+       "Adds to the back of the queue",
+       ""
+      ],
+      [
+       "self.q.append(self.q.popleft())",
+       "Moves the front element to the back (a rotation)",
+       "Reordering a queue"
+      ],
+      [
+       "self.q[0]",
+       "Peeks at the front; here this is the stack top",
+       ""
+      ],
+      [
+       "not self.q",
+       "True when empty",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The queue's front (left) is always the stack top. Each push rotates the older elements behind the new one:"
+    ],
+    "table": {
+     "head": [
+      "operation",
+      "queue (front \u2192 back)",
+      "result"
+     ],
+     "rows": [
+      [
+       "push(1)",
+       "[1]",
+       "top = 1"
+      ],
+      [
+       "push(2)",
+       "[2, 1]",
+       "top = 2"
+      ],
+      [
+       "push(3)",
+       "[3, 2, 1]",
+       "top = 3"
+      ],
+      [
+       "pop()",
+       "[2, 1]",
+       "returned 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why rotate on push instead of on pop?",
+    "p": [
+     "After `push` rotates `len(q) \u2212 1` items, the newest value sits at the front, so `pop` and `top` are plain queue operations in O(1). The cost is moved to `push`, which is O(n). The alternative moves the work into `pop` and `top` instead; either way one side pays O(n) because a queue can only remove from the front."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `push` O(n), `pop`/`top`/`empty` O(1).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack from one queue: after each push, rotate the older elements behind the newest one."
+ },
+ "228": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i, j",
+       "`i` is the start of a run, `j` scans forward to the end of the run",
+       "Grouping consecutive items"
+      ],
+      [
+       "nums[j+1] == nums[j] + 1",
+       "Next number continues the run",
+       ""
+      ],
+      [
+       "j + 1 < len(nums)",
+       "Bounds guard placed first so the index is never read out of range (short-circuit `and`)",
+       ""
+      ],
+      [
+       "f'{nums[i]}->{nums[j]}'",
+       "f-string formatting of the range",
+       ""
+      ],
+      [
+       "i = j + 1",
+       "Jump to the first element after the run",
+       "Each element is visited once overall"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,2,4,5,7]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "run",
+      "output"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "0..2",
+       "0->2"
+      ],
+      [
+       "3",
+       "4",
+       "4..5",
+       "4->5"
+      ],
+      [
+       "5",
+       "5",
+       "7..7",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this O(n) despite the nested while?",
+    "p": [
+     "The inner loop advances `j`, and then `i` jumps to `j + 1`. Every index is therefore scanned exactly once overall."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) besides the output."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "A single-element run (`i == j`) prints just the number, not `7->7`."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers over runs: extend j while consecutive, emit one range, jump i past it."
+ },
+ "231": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "n <= 0",
+       "Powers of two are positive; guards zero and negatives",
+       "Bit tricks usually assume non-negative input"
+      ],
+      [
+       "n - 1",
+       "Flips the lowest set bit to 0 and all lower bits to 1",
+       ""
+      ],
+      [
+       "n & (n - 1)",
+       "Clears the lowest set bit",
+       "Counting set bits, power-of-two test"
+      ],
+      [
+       "== 0",
+       "Zero only if n had exactly one set bit",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "n",
+      "n (binary)",
+      "n\u22121",
+      "n & (n\u22121)",
+      "power of two?"
+     ],
+     "rows": [
+      [
+       "16",
+       "10000",
+       "1111",
+       "0",
+       "True"
+      ],
+      [
+       "12",
+       "1100",
+       "1011",
+       "1000",
+       "False"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "0",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does it work?",
+    "p": [
+     "A power of two has a single 1 bit (`10000`); subtracting 1 turns it into `01111`, which shares no bit with the original, so the AND is 0. Any number with another set bit keeps the higher bits after the AND, so the result is not 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "Without the `n <= 0` check, `0 & -1 == 0` would report `0` as a power of two."
+    ]
+   }
+  ],
+  "takeaway": "A power of two has exactly one set bit, so n & (n\u22121) == 0; remember the n > 0 guard."
+ },
+ "234": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "slow, fast = slow.next, fast.next.next",
+       "Fast moves twice as far; when it stops, slow is at the middle",
+       "Finding the middle in one pass"
+      ],
+      [
+       "slow.next = prev; prev, slow = slow, nxt",
+       "Standard in-place list reversal (save next, flip pointer, advance)",
+       "O(1)-space reversal"
+      ],
+      [
+       "a, b = head, prev",
+       "`a` walks the first half, `b` walks the reversed second half",
+       "Comparing from both ends"
+      ],
+      [
+       "while b",
+       "Stops when the (shorter or equal) second half is used up; for odd lengths the middle node is skipped",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1 \u2192 2 \u2192 2 \u2192 1`:"
+    ],
+    "table": {
+     "head": [
+      "phase",
+      "state"
+     ],
+     "rows": [
+      [
+       "middle found",
+       "slow at value 2 (second half starts: 2\u21921)"
+      ],
+      [
+       "second half reversed",
+       "second half read from the new head: 1\u21922"
+      ],
+      [
+       "compare from both ends",
+       "1 vs 1, 2 vs 2 \u2192 all equal \u2192 True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does comparing only `b`'s length work for odd lengths?",
+    "p": [
+     "For `1\u21922\u21923\u21922\u21921`, `slow` stops on the middle `3` and the reversed half begins there: `1\u21922\u21923`. Comparing walks `a: 1,2,3` and `b: 1,2,3`, but `3` is compared with itself because after reversal the middle points back into the first half. Equal anyway, so the result is correct; the first-half pointer never needs its own bound."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), three passes.",
+     "Space: O(1). The copy-to-array version uses O(n).",
+     "The list is left modified (the second half stays reversed); restore it if the caller still needs the original."
+    ]
+   }
+  ],
+  "takeaway": "Palindrome list in O(1) space: find the middle with slow/fast, reverse the second half, compare."
+ },
+ "237": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "node.val = node.next.val",
+       "Copies the next node's value into this node",
+       "Deleting without access to the previous node"
+      ],
+      [
+       "node.next = node.next.next",
+       "Unlinks the next node, which is now a duplicate",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "List `4 \u2192 5 \u2192 1 \u2192 9`, delete the node holding 5 (we receive only that node):"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "list"
+     ],
+     "rows": [
+      [
+       "start",
+       "4\u21925\u21921\u21929"
+      ],
+      [
+       "node.val = node.next.val",
+       "4\u21921\u21921\u21929"
+      ],
+      [
+       "node.next = node.next.next",
+       "4\u21921\u21929"
+      ]
+     ]
+    },
+    "bullets": [
+     "The node containing 5 was never removed. Its slot now holds 1, and the old node holding 1 was bypassed."
+    ]
+   },
+   {
+    "h": "Why copy instead of unlink?",
+    "p": [
+     "Normally deleting a node needs the previous node to repoint its `next`. The problem gives no access to it, so the trick is to become the next node (copy its value and its link) instead."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "It cannot delete the tail node (there is no `node.next`); the problem guarantees the node is not the tail. It also changes which object holds which value, so any outside reference to the next node now points to an orphan."
+    ]
+   }
+  ],
+  "takeaway": "Delete a node you can't reach the predecessor of by overwriting it with its successor."
+ },
+ "240": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "r, c = 0, len(matrix[0]) - 1",
+       "Start at the top-right corner",
+       "Staircase search: the corner where moves are decisive"
+      ],
+      [
+       "v > target \u2192 c -= 1",
+       "Everything below v in its column is even larger, so the column is eliminated",
+       ""
+      ],
+      [
+       "v < target \u2192 r += 1",
+       "Everything left of v in its row is smaller, so the row is eliminated",
+       ""
+      ],
+      [
+       "while r < len(matrix) and c >= 0",
+       "Stops when the pointer walks off the matrix",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5\u00d75 matrix with rows and columns sorted ascending, target 5:"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "value",
+      "decision"
+     ],
+     "rows": [
+      [
+       "(0,4)",
+       "15",
+       "too big \u2192 move left (c -= 1)"
+      ],
+      [
+       "(0,3)",
+       "11",
+       "too big \u2192 move left (c -= 1)"
+      ],
+      [
+       "(0,2)",
+       "7",
+       "too big \u2192 move left (c -= 1)"
+      ],
+      [
+       "(0,1)",
+       "4",
+       "too small \u2192 move down (r += 1)"
+      ],
+      [
+       "(1,1)",
+       "5",
+       "equal \u2192 True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the top-right (or bottom-left) corner?",
+    "p": [
+     "From the top-left, both moves go to larger values and the search cannot choose. The top-right is the largest in its row and the smallest in its column, so each comparison removes a whole row or a whole column. A binary search per row also works but costs O(m log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n): at most one move per row plus one per column.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Staircase search from the top-right corner: each comparison eliminates one row or one column."
+ },
+ "243": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i1 = i2 = -1",
+       "Latest index of word1 and word2; \u22121 means not seen yet",
+       "Tracking the most recent position of two things"
+      ],
+      [
+       "elif w == word2",
+       "`elif` is fine as the words are distinct (this version assumes word1 \u2260 word2)",
+       ""
+      ],
+      [
+       "abs(i1 - i2)",
+       "Distance between the latest positions",
+       ""
+      ],
+      [
+       "best = len(wordsDict)",
+       "Larger than any real distance; initial minimum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word1 = coding`, `word2 = practice`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "word",
+      "i1",
+      "i2",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "practice",
+       "-1",
+       "0",
+       "5"
+      ],
+      [
+       "1",
+       "makes",
+       "-1",
+       "0",
+       "5"
+      ],
+      [
+       "2",
+       "perfect",
+       "-1",
+       "0",
+       "5"
+      ],
+      [
+       "3",
+       "coding",
+       "3",
+       "0",
+       "3"
+      ],
+      [
+       "4",
+       "makes",
+       "3",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the latest positions?",
+    "p": [
+     "For any occurrence of one word, the nearest occurrence of the other word is either the latest one before it or the next one after. Checking at every step against the latest index of the other word covers the 'before' side for each occurrence, and the 'after' side is covered when that other word is reached. So older positions are never needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), single pass.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "One pass keeping the last index of each target word; update the minimum gap whenever both are known."
+ },
+ "246": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pairs = {...}",
+       "Digit \u2192 what it looks like rotated 180\u00b0 (0\u21920, 1\u21921, 6\u21929, 8\u21928, 9\u21926)",
+       "Lookup table for a fixed mapping"
+      ],
+      [
+       "num[l] not in pairs",
+       "Digit with no valid rotation (2, 3, 4, 5, 7)",
+       ""
+      ],
+      [
+       "pairs[num[l]] != num[r]",
+       "The mirror digit must be the rotation of the left digit",
+       ""
+      ],
+      [
+       "while l <= r",
+       "`<=` so the middle digit of an odd-length number is also checked against itself",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"69\"`:"
+    ],
+    "table": {
+     "head": [
+      "l,r",
+      "num[l]",
+      "num[r]",
+      "pairs[num[l]]",
+      "result"
+     ],
+     "rows": [
+      [
+       "0,1",
+       "6",
+       "9",
+       "9",
+       "ok"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `l <= r` and not `l < r`?",
+    "p": [
+     "For an odd-length number the pointers meet on one middle digit, and that digit must be its own rotation: `\"8\"` qualifies, `\"6\"` does not (6 rotates to 9). With `<` the loop would skip that digit and wrongly accept `\"6\"`; with `<=` it checks `pairs[\"6\"] != \"6\"` and returns False."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers from the outside in, with a rotation lookup; include the centre digit by using l <= r."
+ },
+ "249": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "defaultdict(list)",
+       "Dict that creates an empty list for a new key",
+       "Grouping items by a key"
+      ],
+      [
+       "ord(s[i]) - ord(s[i-1])",
+       "Difference between consecutive letters",
+       "A shift-invariant description of the string"
+      ],
+      [
+       "% 26",
+       "Makes the difference wrap around the alphabet (a\u2192z is 25, z\u2192a is 1)",
+       "Cyclic shifting"
+      ],
+      [
+       "tuple(...)",
+       "Hashable key (lists are not hashable)",
+       ""
+      ],
+      [
+       "list(groups.values())",
+       "Collects the groups",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Each string's key is the tuple of consecutive differences mod 26:"
+    ],
+    "table": {
+     "head": [
+      "string",
+      "key"
+     ],
+     "rows": [
+      [
+       "abc",
+       "(1, 1)"
+      ],
+      [
+       "bcd",
+       "(1, 1)"
+      ],
+      [
+       "acef",
+       "(2, 2, 1)"
+      ],
+      [
+       "xyz",
+       "(1, 1)"
+      ],
+      [
+       "az",
+       "(25,)"
+      ],
+      [
+       "ba",
+       "(25,)"
+      ],
+      [
+       "a",
+       "()"
+      ],
+      [
+       "z",
+       "()"
+      ]
+     ]
+    },
+    "bullets": [
+     "`abc`, `bcd`, `xyz` all share `(1, 1)`; `az` and `ba` share `(25,)`; the single letters share `()`."
+    ]
+   },
+   {
+    "h": "Why mod 26?",
+    "p": [
+     "Shifting wraps `z` to `a`. In `az` the difference is `ord(\"z\") \u2212 ord(\"a\") = 25`, while in `ba` it is `ord(\"a\") \u2212 ord(\"b\") = \u22121`. Python's `-1 % 26` is 25, so both strings get the key `(25,)`. Without the modulo they would land in different groups although `ba` is `az` shifted by one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total number of characters).",
+     "Space: O(total characters) for keys and groups."
+    ]
+   }
+  ],
+  "takeaway": "Normalize each string to its sequence of letter differences (mod 26) and group by that tuple key."
+ },
+ "252": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(intervals)",
+       "Sorts by start time (lists compare element by element), returning a new list",
+       "Making overlap checks local"
+      ],
+      [
+       "intervals[i][0] < intervals[i-1][1]",
+       "Next meeting starts before the previous one ends",
+       "Adjacent overlap test"
+      ],
+      [
+       "range(1, len(intervals))",
+       "Compares each meeting with its predecessor",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,30],[5,10],[15,20]]` is already sorted by start:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "test",
+      "result"
+     ],
+     "rows": [
+      [
+       "[0, 30] then [5, 10]",
+       "5 < 30 ?",
+       "overlap \u2192 False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do adjacent pairs suffice after sorting?",
+    "p": [
+     "If any two meetings overlap, then some adjacent pair in start order overlaps too: if meeting A (earlier start) overlaps C, then B, which starts between them, starts before A ends (since C starts before A ends and B starts no later than C), so A and B overlap. Hence checking neighbours is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted copy (O(1) with in-place `.sort()`)."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The test is strict `<`, so back-to-back meetings like `[0,5]` and `[5,8]` are allowed."
+    ]
+   }
+  ],
+  "takeaway": "Sort by start time and check each meeting against the one before it; touching endpoints are not overlaps."
+ },
+ "255": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st",
+       "Stack of ancestors whose right subtree has not been entered yet (values decreasing from bottom to top)",
+       "Simulating preorder descent iteratively"
+      ],
+      [
+       "low",
+       "Lower bound for all later values: the last ancestor we turned right at",
+       ""
+      ],
+      [
+       "x < low \u2192 return False",
+       "A value below `low` would belong to a left subtree we already left",
+       "BST validity"
+      ],
+      [
+       "while st and st[-1] < x: low = st.pop()",
+       "x is bigger than the top ancestor, so we are going right of it; pop it and raise the bound",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`preorder = [5,2,1,3,6]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "popped",
+      "stack",
+      "low"
+     ],
+     "rows": [
+      [
+       "5",
+       "\u2013",
+       "[5]",
+       "-inf"
+      ],
+      [
+       "2",
+       "\u2013",
+       "[5, 2]",
+       "-inf"
+      ],
+      [
+       "1",
+       "\u2013",
+       "[5, 2, 1]",
+       "-inf"
+      ],
+      [
+       "3",
+       "popped [1, 2]",
+       "[5, 3]",
+       "2"
+      ],
+      [
+       "6",
+       "popped [3, 5]",
+       "[6]",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why raise `low` when popping?",
+    "p": [
+     "Popping an ancestor means the sequence moved into that ancestor's right subtree, so every later value must be larger than it. Any later value below the bound would have to sit in the left subtree we have finished, which is impossible in preorder. A counter-example is `[5,2,6,1]`: after 6 pops 5 and 2, `low = 5`, and `1 < 5` returns False."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each value is pushed and popped at most once.",
+     "Space: O(n) for the stack (an in-place version reuses the input array as the stack for O(1))."
+    ]
+   }
+  ],
+  "takeaway": "Verify BST preorder with a monotonic stack plus a rising lower bound."
+ },
+ "258": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "num == 0",
+       "Special case: the digital root of 0 is 0",
+       ""
+      ],
+      [
+       "(num - 1) % 9 + 1",
+       "Maps any positive number to 1..9, giving 9 (not 0) for multiples of 9",
+       "The digital-root formula"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "For 38: 3 + 8 = 11, 1 + 1 = 2, which matches `1 + 37 % 9 = 2`."
+    ],
+    "table": {
+     "head": [
+      "num",
+      "result"
+     ],
+     "rows": [
+      [
+       "38",
+       "2"
+      ],
+      [
+       "9",
+       "9"
+      ],
+      [
+       "10",
+       "1"
+      ],
+      [
+       "0",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does mod 9 work?",
+    "p": [
+     "Since 10 \u2261 1 (mod 9), a number and its digit sum leave the same remainder when divided by 9. Repeating the digit sum keeps that remainder until one digit is left. A positive multiple of 9 ends at 9, not 0, hence `(num \u2212 1) % 9 + 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Digital root has a closed form: 0 if num is 0, else 1 + (num \u2212 1) % 9."
+ },
+ "261": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "len(edges) != n - 1",
+       "A tree on n nodes has exactly n\u22121 edges; fewer means disconnected, more means a cycle",
+       "Cheap early rejection"
+      ],
+      [
+       "parent = list(range(n))",
+       "Union-Find: each node starts as its own root",
+       "Tracking connected components"
+      ],
+      [
+       "find(x)",
+       "Follows parents to the root, with path halving (`parent[x] = parent[parent[x]]`) to flatten the chain",
+       ""
+      ],
+      [
+       "ra == rb \u2192 return False",
+       "Both ends already connected, so this edge closes a cycle",
+       "Cycle detection"
+      ],
+      [
+       "parent[ra] = rb",
+       "Union: merge the two components",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, edges `[[0,1],[0,2],[0,3],[1,4]]` (4 edges = n\u22121, passes the first check):"
+    ],
+    "table": {
+     "head": [
+      "edge",
+      "roots",
+      "action",
+      "parent"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "0 vs 1",
+       "union: parent[0] = 1",
+       "[1, 1, 2, 3, 4]"
+      ],
+      [
+       "(0,2)",
+       "1 vs 2",
+       "union: parent[1] = 2",
+       "[1, 2, 2, 3, 4]"
+      ],
+      [
+       "(0,3)",
+       "2 vs 3",
+       "union: parent[2] = 3",
+       "[2, 2, 3, 3, 4]"
+      ],
+      [
+       "(1,4)",
+       "3 vs 4",
+       "union: parent[3] = 4",
+       "[2, 3, 3, 4, 4]"
+      ]
+     ]
+    },
+    "bullets": [
+     "No edge joined two nodes of the same component, so the graph is a tree."
+    ]
+   },
+   {
+    "h": "Why is the edge-count check enough together with cycle detection?",
+    "p": [
+     "With exactly n\u22121 edges and no cycle, the graph is a forest with n \u2212 (n\u22121) = 1 component, i.e. a single tree. So we don't need a separate connectivity pass. A graph with n\u22121 edges and a cycle must be disconnected, and the union-find finds the cycle edge: for edges `[[0,1],[1,2],[2,0],[3,4]]` on 5 nodes the third edge `(2,0)` finds both ends under root 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E \u00b7 \u03b1(n)), effectively linear.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Valid tree = exactly n\u22121 edges and no cycle; union-find detects the cycle edge."
+ },
+ "264": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ugly = [1]",
+       "The sequence built in order, starting with 1",
+       "Generating a sorted sequence from multiples"
+      ],
+      [
+       "i2, i3, i5",
+       "For each factor, the index of the smallest ugly number whose multiple is not yet in the list",
+       "Three-pointer merge"
+      ],
+      [
+       "min(ugly[i2]*2, ugly[i3]*3, ugly[i5]*5)",
+       "Next ugly number: the smallest of the three candidates",
+       ""
+      ],
+      [
+       "three separate `if`s (not elif)",
+       "Advance every pointer that produced the value, so duplicates such as 6 = 2\u00b73 = 3\u00b72 are generated once",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`. Each row shows the new number, the three candidates (\u00d72, \u00d73, \u00d75) it was chosen from, and the pointers afterwards:"
+    ],
+    "table": {
+     "head": [
+      "new ugly",
+      "candidates",
+      "i2",
+      "i3",
+      "i5"
+     ],
+     "rows": [
+      [
+       "1",
+       "\u2013",
+       "\u2013",
+       "\u2013",
+       "\u2013"
+      ],
+      [
+       "2",
+       "(2, 3, 5)",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "(4, 3, 5)",
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "4",
+       "(4, 6, 5)",
+       "2",
+       "1",
+       "0"
+      ],
+      [
+       "5",
+       "(6, 6, 5)",
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "6",
+       "(6, 6, 10)",
+       "3",
+       "2",
+       "1"
+      ],
+      [
+       "8",
+       "(8, 9, 10)",
+       "4",
+       "2",
+       "1"
+      ],
+      [
+       "9",
+       "(10, 9, 10)",
+       "4",
+       "3",
+       "1"
+      ],
+      [
+       "10",
+       "(10, 12, 10)",
+       "5",
+       "3",
+       "2"
+      ],
+      [
+       "12",
+       "(12, 12, 15)",
+       "6",
+       "4",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "The 10th ugly number is 12."
+    ]
+   },
+   {
+    "h": "Why `if`, not `elif`?",
+    "p": [
+     "At value 6 both `ugly[i2]*2` (3\u00b72) and `ugly[i3]*3` (2\u00b73) equal 6. Both pointers must move, otherwise 6 would be appended again on the next step."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the list. A min-heap with a seen-set is O(n log n)."
+    ]
+   }
+  ],
+  "takeaway": "Ugly numbers via three pointers merging the \u00d72, \u00d73, \u00d75 streams; advance all pointers that tie."
+ },
+ "270": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(abs(root.val - target), root.val) < (abs(best - target), best)",
+       "Compares tuples: smaller distance wins, and on an exact tie the smaller value wins (the problem asks for the smaller)",
+       "Tie-breaking with tuple comparison"
+      ],
+      [
+       "root.left if target < root.val else root.right",
+       "BST property: closer values lie in the direction of the target",
+       "Descending a BST iteratively"
+      ],
+      [
+       "while root",
+       "Stops when you fall off the tree",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[4,2,5,1,3]`, target 3.714286:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "distance",
+      "better?",
+      "best",
+      "go"
+     ],
+     "rows": [
+      [
+       "4",
+       "0.285714",
+       "no",
+       "4",
+       "left"
+      ],
+      [
+       "2",
+       "1.714286",
+       "no",
+       "4",
+       "right"
+      ],
+      [
+       "3",
+       "0.714286",
+       "no",
+       "4",
+       "right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we ignore the other subtree?",
+    "p": [
+     "If target < node.val, every value in the right subtree is \u2265 node.val and so farther from the target than the node itself, so nothing there can beat the current best. The same argument applies symmetrically, and each step discards a whole subtree."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h): O(log n) for a balanced tree, O(n) for a skewed one.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Closest value in a BST: walk down toward the target, tracking the best node seen (tuple comparison breaks ties)."
+ }
+}
