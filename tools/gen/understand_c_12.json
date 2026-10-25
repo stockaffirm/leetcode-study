@@ -1,0 +1,2469 @@
+{
+ "986": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i`, `j`",
+       "Pointers into the two sorted, disjoint lists",
+       "Merging two sorted sequences"
+      ],
+      [
+       "`lo = max(starts)`, `hi = min(ends)`",
+       "The overlap of two intervals, if any, is from the later start to the earlier end",
+       "Interval intersection formula"
+      ],
+      [
+       "`if lo <= hi`",
+       "The overlap exists (a single point `[5,5]` counts)",
+       "`<=` keeps touching intervals"
+      ],
+      [
+       "advance the pointer with the smaller END",
+       "That interval cannot overlap anything further in the other list, since the other list's next intervals start even later",
+       "Drop the interval that finishes first"
+      ],
+      [
+       "`else: j += 1`",
+       "Ties move `j`; the next iteration then moves `i` or finds an empty overlap",
+       "Either choice is safe on equal ends"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Each row compares the current interval from each list:"
+    ],
+    "table": {
+     "head": [
+      "First",
+      "Second",
+      "Intersection",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[0, 2]",
+       "[1, 5]",
+       "[1,2]",
+       "advance i (smaller end)"
+      ],
+      [
+       "[5, 10]",
+       "[1, 5]",
+       "[5,5]",
+       "advance j (smaller end)"
+      ],
+      [
+       "[5, 10]",
+       "[8, 12]",
+       "[8,10]",
+       "advance i (smaller end)"
+      ],
+      [
+       "[13, 23]",
+       "[8, 12]",
+       "none",
+       "advance j (smaller end)"
+      ],
+      [
+       "[13, 23]",
+       "[15, 24]",
+       "[15,23]",
+       "advance i (smaller end)"
+      ],
+      [
+       "[24, 25]",
+       "[15, 24]",
+       "[24,24]",
+       "advance j (smaller end)"
+      ],
+      [
+       "[24, 25]",
+       "[25, 26]",
+       "[25,25]",
+       "advance i (smaller end)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why advance the one that ends first?",
+    "p": [
+     "Both lists are sorted and internally disjoint. The interval that ends earlier is finished: the other interval might still overlap it, but any later interval in the other list starts after it ends. Advancing it never skips a possible overlap, and every step discards one interval, giving a linear scan."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Compare every pair",
+       "O(m · n)"
+      ],
+      [
+       "Two pointers (this code)",
+       "O(m + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n).",
+     "Space: O(1) besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Interval list intersection: two pointers; overlap is [max start, min end], and the interval that ends first is discarded."
+ },
+ "989": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i`",
+       "Index into the digit array from the right",
+       "Add numbers from the least significant digit"
+      ],
+      [
+       "`k % 10`, `k //= 10`",
+       "Peel the last digit off the integer `k`",
+       "The integer is consumed digit by digit, no need to convert it into an array"
+      ],
+      [
+       "`carry`",
+       "Running sum: digit + digit + carry from the previous column",
+       "Column addition"
+      ],
+      [
+       "`carry % 10`, `carry //= 10`",
+       "Output digit and the new carry",
+       "`divmod`-style split"
+      ],
+      [
+       "`while i >= 0 or k or carry`",
+       "Continue while any input remains or a carry is pending",
+       "Different lengths and a final carry"
+      ],
+      [
+       "`res[::-1]`",
+       "Digits were produced least significant first",
+       "Reverse once at the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,0,0] + 34`:"
+    ],
+    "table": {
+     "head": [
+      "Array digit",
+      "k digit",
+      "carry in",
+      "column sum",
+      "digit out"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "0",
+       "4",
+       "4"
+      ],
+      [
+       "0",
+       "3",
+       "0",
+       "3",
+       "3"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not convert the array to an integer?",
+    "p": [
+     "In Python it would work, but in languages with fixed-size integers the array can have up to 10⁴ digits, far beyond any integer type. Adding digit by digit never builds a huge number, and `k` (at most 10⁴ in value) is consumed in the same loop."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Works for 10⁴-digit arrays in Java/C++?"
+     ],
+     "rows": [
+      [
+       "array → integer → add → array",
+       "no, overflow"
+      ],
+      [
+       "digit-by-digit with carry (this code)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(max(n, digits of k)).",
+     "Space: O(max(n, digits of k)) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Array-form addition: add column by column from the right, consuming k's digits with %10 and //10, and carry through."
+ },
+ "992": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`at_most(g)`",
+       "Number of subarrays with AT MOST `g` distinct values",
+       "A sliding window handles 'at most', but 'exactly' is not monotone"
+      ],
+      [
+       "`cnt` dict + `len(cnt)`",
+       "Frequency of each value in the window; its size is the number of distinct values",
+       "Distinct count in a window"
+      ],
+      [
+       "`while len(cnt) > g: … left += 1`",
+       "Shrink from the left until the window is valid; delete keys that reach 0 so `len(cnt)` stays accurate",
+       "Maintain the invariant"
+      ],
+      [
+       "`res += right - left + 1`",
+       "Every subarray ending at `right` and starting in `[left, right]` is valid",
+       "Counting by right end"
+      ],
+      [
+       "`at_most(k) - at_most(k - 1)`",
+       "Subarrays with exactly k = (at most k) minus (at most k−1)",
+       "The standard 'exactly k' trick"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,1,2,3]`, `k = 2`. First `at_most(2)`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "window",
+      "Subarrays ending here",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[0,0]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "[0,1]",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "1",
+       "[0,2]",
+       "3",
+       "6"
+      ],
+      [
+       "3",
+       "2",
+       "[0,3]",
+       "4",
+       "10"
+      ],
+      [
+       "4",
+       "3",
+       "[3,4]",
+       "2",
+       "12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "And `at_most(1)`",
+    "p": [
+     "`at_most(2)` = 12 and `at_most(1)` = 5, so the answer is 12 − 5 = 7."
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "window",
+      "Subarrays ending here",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[0,0]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "[1,1]",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "[2,2]",
+       "1",
+       "3"
+      ],
+      [
+       "3",
+       "2",
+       "[3,3]",
+       "1",
+       "4"
+      ],
+      [
+       "4",
+       "3",
+       "[4,4]",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can't one window count 'exactly k'?",
+    "p": [
+     "For 'at most', growing the window can only add distinct values, so the valid left edges form a contiguous range and a monotone shrink works. For 'exactly k', shrinking can make a valid window invalid and growing can make it valid again, so the left boundary isn't monotone. The difference of two 'at most' counts avoids that."
+    ],
+    "table": {
+     "head": [
+      "Count",
+      "Window rule",
+      "Monotone?"
+     ],
+     "rows": [
+      [
+       "at most g",
+       "shrink while distinct > g",
+       "yes"
+      ],
+      [
+       "exactly k",
+       "distinct == k",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), two linear passes.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Exactly-k distinct = atMost(k) − atMost(k−1), each computed with a sliding window."
+ },
+ "998": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`val > root.val`",
+       "The new value beats the current root: it becomes the new root of this subtree",
+       "Max-tree rule: the root is the maximum"
+      ],
+      [
+       "`TreeNode(val, root)`",
+       "New node whose LEFT child is the old subtree",
+       "The old tree held earlier elements of the array, i.e. everything to the left of the new last element"
+      ],
+      [
+       "`root.right = insert(root.right, val)`",
+       "`val` was appended at the END of the array, so it belongs on the right spine",
+       "Appending an element only affects the rightmost path"
+      ],
+      [
+       "`not root`",
+       "Reached the end of the right spine: attach `val` as a leaf",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[4,1,3,null,null,2]` is the max-tree of `[1,4,2,3]`. Appending 5 (array `[1,4,2,3,5]`) makes 5 the new root with the whole old tree as its left child. Appending 2 instead walks down the right spine:"
+    ],
+    "table": {
+     "head": [
+      "val",
+      "Path taken",
+      "Result (level order)"
+     ],
+     "rows": [
+      [
+       "5",
+       "5 > 4 at the root → new root with old tree on the left",
+       "[5, 4, None, 1, 3, None, None, 2]"
+      ],
+      [
+       "2",
+       "2 < 4 → right; 2 < 3 → right; empty → leaf under 3",
+       "[4, 1, 3, None, None, 2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the right spine?",
+    "p": [
+     "The new value is appended at the end of the original array. The max-tree puts each element's right subtree over the elements after it, so the last element always lies on the right spine. The first node on the spine smaller than `val` is where `val` must take over, adopting that node and everything below as its left subtree."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Rebuild from the array",
+       "O(n)",
+       "O(n)"
+      ],
+      [
+       "Walk the right spine (this code)",
+       "O(h)",
+       "O(h) recursion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Insert into a max tree: the new value is appended last, so walk the right spine until a smaller node, and make val its parent."
+ },
+ "1004": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zeros`",
+       "Number of zeros inside the window",
+       "Flipping at most k zeros = allowing at most k zeros in the window"
+      ],
+      [
+       "`while zeros > k`",
+       "Shrink from the left until the window has at most `k` zeros",
+       "Restore the invariant"
+      ],
+      [
+       "`if nums[left] == 0: zeros -= 1`",
+       "Only count down if the element that leaves is a zero",
+       "Updating the count as the window shrinks"
+      ],
+      [
+       "`best = max(best, right - left + 1)`",
+       "Longest valid window so far",
+       "Track the maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,1,1,0,1]`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "zeros",
+      "window",
+      "length",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "[0,0]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "[0,1]",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "[0,2]",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "[0,3]",
+       "4",
+       "4"
+      ],
+      [
+       "4",
+       "0",
+       "1",
+       "[2,4]",
+       "3",
+       "4"
+      ],
+      [
+       "5",
+       "1",
+       "1",
+       "[2,5]",
+       "4",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reduce 'flip zeros' to 'allow zeros'?",
+    "p": [
+     "Flipping a zero to one is equivalent to tolerating that zero inside a run of ones. The longest run after at most k flips is the longest window containing at most k zeros. That replaces actual flipping with a counter."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try all flip subsets",
+       "O(2ⁿ)"
+      ],
+      [
+       "Sliding window with ≤ k zeros (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Max consecutive ones III: longest window with at most k zeros, using a sliding window."
+ },
+ "1010": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt[r]`",
+       "How many earlier songs have remainder `r` when divided by 60",
+       "Bucket by remainder"
+      ],
+      [
+       "`t % 60`",
+       "The remainder of this song",
+       "Divisibility depends only on remainders"
+      ],
+      [
+       "`(60 - r) % 60`",
+       "The remainder a partner needs so the sum is a multiple of 60; the outer `% 60` turns `60` into `0` for `r = 0`",
+       "Complement of a remainder"
+      ],
+      [
+       "`pairs += cnt[...]`",
+       "Each earlier song with the needed remainder forms one pair",
+       "Counting pairs as you go"
+      ],
+      [
+       "`cnt[r] += 1` after the lookup",
+       "A song cannot pair with itself",
+       "Update after counting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[30,20,150,100,40]`:"
+    ],
+    "table": {
+     "head": [
+      "t",
+      "t % 60",
+      "needed",
+      "earlier matches",
+      "pairs"
+     ],
+     "rows": [
+      [
+       "30",
+       "30",
+       "30",
+       "0",
+       "0"
+      ],
+      [
+       "20",
+       "20",
+       "40",
+       "0",
+       "0"
+      ],
+      [
+       "150",
+       "30",
+       "30",
+       "1",
+       "1"
+      ],
+      [
+       "100",
+       "40",
+       "20",
+       "1",
+       "2"
+      ],
+      [
+       "40",
+       "40",
+       "20",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the extra `% 60`?",
+    "p": [
+     "For `r = 0` the needed complement is `60 - 0 = 60`, which is not a valid bucket index. Songs with remainder 0 pair with other songs of remainder 0, so the complement must wrap to 0. Similarly `r = 30` pairs with another 30 (`60 - 30 = 30`)."
+    ],
+    "table": {
+     "head": [
+      "r",
+      "Complement"
+     ],
+     "rows": [
+      [
+       "0",
+       "0"
+      ],
+      [
+       "30",
+       "30"
+      ],
+      [
+       "20",
+       "40"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1), a 60-slot array."
+    ]
+   }
+  ],
+  "takeaway": "Pairs divisible by 60: bucket by remainder and look up each song's complement `(60 - r) % 60`."
+ },
+ "1025": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[i]`",
+       "Does the player to move win when the number on the board is `i`? (`dp[1]` is False: no move)",
+       "Win/lose game DP"
+      ],
+      [
+       "`i % x == 0`",
+       "`x` is a divisor of `i` with `0 < x < i`: a legal move",
+       "Move generation"
+      ],
+      [
+       "`not dp[i - x]`",
+       "After the move the opponent faces `i - x`; we want that to be a LOSING state for them",
+       "A state is winning if some move leads to a losing state"
+      ],
+      [
+       "`any(...)`",
+       "One good move is enough",
+       "Existential over moves"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Smallest cases, with the legal moves and which of them leave the opponent in a losing state:"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Divisors x",
+      "Winning moves (opponent loses at n−x)",
+      "Player to move wins?"
+     ],
+     "rows": [
+      [
+       "2",
+       "[1]",
+       "[1]",
+       "True"
+      ],
+      [
+       "3",
+       "[1]",
+       "[]",
+       "False"
+      ],
+      [
+       "4",
+       "[1, 2]",
+       "[1]",
+       "True"
+      ],
+      [
+       "5",
+       "[1]",
+       "[]",
+       "False"
+      ],
+      [
+       "6",
+       "[1, 2, 3]",
+       "[1, 3]",
+       "True"
+      ],
+      [
+       "7",
+       "[1]",
+       "[]",
+       "False"
+      ],
+      [
+       "8",
+       "[1, 2, 4]",
+       "[1]",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The pattern",
+    "p": [
+     "The table alternates: even n wins and odd n loses. (Odd n: every divisor is odd, so n − x is even, which is a winning position for the opponent. Even n: subtract 1 to hand over an odd number.) So the DP can be replaced by `n % 2 == 0`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP (this code)",
+       "O(n²)"
+      ],
+      [
+       "Parity observation",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the DP still worth showing?",
+    "p": [
+     "It is the template for turn-based games: define the state as the position of the player to move, and call it winning if any move reaches a losing state. The parity result is the follow-up an interviewer expects after the DP."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) because of the divisor scan for each i.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Divisor game: a position is winning if some move leaves the opponent losing; the table reveals that even n always wins."
+ },
+ "1040": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stones.sort()`",
+       "Positions in order",
+       "Window arguments need sorted positions"
+      ],
+      [
+       "`high`",
+       "Maximum moves: move an end stone to the nearest legal spot, then one move each into the gaps; formula `max(a[-1] − a[1], a[-2] − a[0]) − n + 2`",
+       "Counting empty spots strictly inside the range after the first move"
+      ],
+      [
+       "window `[j, i]` with `stones[i] - stones[j] < n`",
+       "A window of length `n` positions that already contains `i - j + 1` stones; the stones OUTSIDE it must move in",
+       "Minimum moves = n − (max stones in any window of size n)"
+      ],
+      [
+       "`low = min(low, n - (i - j + 1))`",
+       "Fewest moves for this window",
+       "Sliding window minimum"
+      ],
+      [
+       "special case `i - j + 1 == n - 1 and span == n - 2`",
+       "`n−1` stones are already consecutive and the last stone is stranded at an end: it cannot jump to the other end, needing 2 moves (it must step out and back)",
+       "The endpoint rule: a stone cannot move to a new endpoint position"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`stones = [7,4,9]` sorts to `[4,7,9]` (`n = 3`). The sliding window of span < 3 after each `i`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "stone",
+      "window [j, i]",
+      "Stones in window",
+      "Moves for this window",
+      "low"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "[0,0]",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "7",
+       "[1,1]",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "9",
+       "[1,2]",
+       "2",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`low = 1` (move 4 to 8: stones 7, 8, 9) and `high = 2`: the formula `max(9 − 7, 7 − 4) − 3 + 2 = 2`. The answer is `[1, 2]`. Other cases computed with the same code: `[6,5,4,3,10]` gives [2, 3] and `[100,101,104,102,103]` gives [0, 0]."
+    ]
+   },
+   {
+    "h": "Why the special case?",
+    "p": [
+     "Take `[3,4,5,6,10]` (n = 5). The window `3..6` holds 4 of the 5 stones, so the naive count is 1 move: put the stray stone at 7. But the stone at 10 is an endpoint and may not land where it would still be an endpoint, and 7 lies outside the range `3..6` of the other stones, so that move is illegal. It takes 2 moves, for example 3→8 (between 4 and 10), then 10→7 (between 4 and 8). The code returns the verified `[2, 3]` for this input."
+    ],
+    "table": {
+     "head": [
+      "Stones",
+      "Naive low",
+      "True low"
+     ],
+     "rows": [
+      [
+       "`[3,4,5,6,10]`",
+       "1",
+       "2"
+      ],
+      [
+       "`[1,2,4,5]`",
+       "1",
+       "1 (move 1 to 3)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort; the sliding window is O(n).",
+     "Space: O(1) besides the sort."
+    ]
+   }
+  ],
+  "takeaway": "Moving stones II: min moves = n minus the most stones in a window of length n (with a special case for n−1 consecutive stones with a gap); max moves from end-gap formula."
+ },
+ "1043": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[i]`",
+       "Best total for the first `i` elements after partitioning",
+       "Prefix DP"
+      ],
+      [
+       "`for j in range(1, min(k, i) + 1)`",
+       "The last block has length `j` (1 to k, at most `i`)",
+       "Try every allowed last-block length"
+      ],
+      [
+       "`mx = max(mx, arr[i - j])`",
+       "Running max of the last-block candidates, extended one element leftward per iteration",
+       "The block's values all become its max, so only the max matters"
+      ],
+      [
+       "`dp[i - j] + mx * j`",
+       "Best of the prefix before the block plus `j` copies of the max",
+       "Recurrence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,15,7,9,2,5,10]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "arr[i−1]",
+      "Last block lengths tried",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "last 1: dp[0] + 1×1 = 1",
+       "1"
+      ],
+      [
+       "2",
+       "15",
+       "last 1: dp[1] + 15×1 = 16; last 2: dp[0] + 15×2 = 30",
+       "30"
+      ],
+      [
+       "3",
+       "7",
+       "last 1: dp[2] + 7×1 = 37; last 2: dp[1] + 15×2 = 31; last 3: dp[0] + 15×3 = 45",
+       "45"
+      ],
+      [
+       "4",
+       "9",
+       "last 1: dp[3] + 9×1 = 54; last 2: dp[2] + 9×2 = 48; last 3: dp[1] + 15×3 = 46",
+       "54"
+      ],
+      [
+       "5",
+       "2",
+       "last 1: dp[4] + 2×1 = 56; last 2: dp[3] + 9×2 = 63; last 3: dp[2] + 9×3 = 57",
+       "63"
+      ],
+      [
+       "6",
+       "5",
+       "last 1: dp[5] + 5×1 = 68; last 2: dp[4] + 5×2 = 64; last 3: dp[3] + 9×3 = 72",
+       "72"
+      ],
+      [
+       "7",
+       "10",
+       "last 1: dp[6] + 10×1 = 82; last 2: dp[5] + 10×2 = 83; last 3: dp[4] + 10×3 = 84",
+       "84"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why extend `mx` as `j` grows?",
+    "p": [
+     "The block ending at `i` and of length `j` covers `arr[i-j .. i-1]`. Increasing `j` by one adds one element on the left, so the block max updates in O(1); the whole transition costs O(k) instead of O(k²)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Recompute max for every block",
+       "O(n · k²)"
+      ],
+      [
+       "Running max while extending (this code)",
+       "O(n · k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · k).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Partition for maximum sum: dp[i] tries every last-block length j ≤ k, using the running block max."
+ },
+ "1046": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`h = [-s for s in stones]`",
+       "Negated weights: Python's `heapq` is a MIN-heap, so storing negatives makes the largest weight come out first",
+       "Max-heap emulation"
+      ],
+      [
+       "`heapify(h)`",
+       "O(n) build",
+       "Faster than n pushes"
+      ],
+      [
+       "`-heappop(h)`",
+       "Largest remaining stone (negate back)",
+       "Take the heaviest"
+      ],
+      [
+       "`if a != b: heappush(h, -(a - b))`",
+       "The smash leaves a stone of weight `a − b`; equal stones vanish",
+       "Put the remainder back"
+      ],
+      [
+       "`-h[0] if h else 0`",
+       "The last stone, or 0 if none remain",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,7,4,1,8,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Two heaviest",
+      "Result",
+      "Heap (weights, largest first)"
+     ],
+     "rows": [
+      [
+       "8, 7",
+       "push 1",
+       "[4, 2, 1, 1, 1]"
+      ],
+      [
+       "4, 2",
+       "push 2",
+       "[2, 1, 1, 1]"
+      ],
+      [
+       "2, 1",
+       "push 1",
+       "[1, 1, 1]"
+      ],
+      [
+       "1, 1",
+       "equal: both destroyed",
+       "[1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a heap?",
+    "p": [
+     "Every round needs the two largest items of a changing collection. Sorting each round costs O(n log n), so O(n² log n) in total. A heap gives each extraction in O(log n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Re-sort every round",
+       "O(n² log n)"
+      ],
+      [
+       "Max-heap (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Last stone weight: a max-heap (negated min-heap) repeatedly smashing the two heaviest."
+ },
+ "1049": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total`",
+       "Sum of all weights",
+       "The two piles' sums add to `total`"
+      ],
+      [
+       "`bits |= bits << s`",
+       "Bitset of reachable subset sums, as in Partition Equal Subset Sum",
+       "Subset-sum DP in a Python integer"
+      ],
+      [
+       "`range(total // 2, -1, -1)`",
+       "Search from the half-sum downward: the pile sum closest to `total / 2` gives the smallest difference",
+       "Maximise the smaller pile"
+      ],
+      [
+       "`bits >> j & 1`",
+       "Is sum `j` reachable?",
+       "Reading a bit"
+      ],
+      [
+       "`total - 2 * j`",
+       "Difference between the two piles when one has sum `j`",
+       "|total − j − j|"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,7,4,1,8,1]` has total 23. Reachable subset sums up to 11: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]. The largest is 11."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "total",
+       "23"
+      ],
+      [
+       "best subset sum ≤ total/2",
+       "11"
+      ],
+      [
+       "other pile",
+       "12"
+      ],
+      [
+       "difference",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it a partition problem?",
+    "p": [
+     "Smashing stones is equivalent to assigning each stone a plus or minus sign: the final weight is |Σ± stoneᵢ|. Minimising it means splitting the stones into two groups whose sums are as close as possible. That is subset-sum on half of the total."
+    ],
+    "table": {
+     "head": [
+      "Problem",
+      "Reduction"
+     ],
+     "rows": [
+      [
+       "Last Stone Weight (1046)",
+       "greedy heap, specific order"
+      ],
+      [
+       "Last Stone Weight II (this problem)",
+       "any order: minimise |sum(A) − sum(B)|"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · total / w) with word size w; effectively O(n · total).",
+     "Space: O(total) bits."
+    ]
+   }
+  ],
+  "takeaway": "Last Stone Weight II = split stones into two groups with sums as close as possible; subset-sum bitset up to total/2."
+ },
+ "1052": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`base`",
+       "Customers already satisfied: those who arrive when the owner is not grumpy",
+       "The fixed part of the answer"
+      ],
+      [
+       "`extra`",
+       "Extra customers gained by using the secret technique on the current window of `minutes` minutes: only grumpy minutes inside it matter",
+       "Sliding window of 'unhappy customers'"
+      ],
+      [
+       "`if g: extra += c`",
+       "Add the new minute's unhappy customers",
+       "Window grows on the right"
+      ],
+      [
+       "`grumpy[i - minutes]` then `extra -= customers[i - minutes]`",
+       "Remove the minute that just left the window, if it had been counted",
+       "Window shrinks on the left"
+      ],
+      [
+       "`base + best`",
+       "Fixed satisfied customers plus the best extra window",
+       "Final answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`base = 10` (customers in non-grumpy minutes). The sliding window of 3 minutes tracks the grumpy customers it would rescue:"
+    ],
+    "table": {
+     "head": [
+      "Minute i",
+      "customers",
+      "grumpy",
+      "extra in window",
+      "best extra"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "5",
+       "1",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "6",
+       "7",
+       "0",
+       "1",
+       "3"
+      ],
+      [
+       "7",
+       "5",
+       "1",
+       "6",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can the window ignore non-grumpy minutes?",
+    "p": [
+     "The technique only changes grumpy minutes; non-grumpy minutes are already counted in `base` whether or not they fall in the window. So the window sum should include only the customers of grumpy minutes."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try every window, re-sum",
+       "O(n · minutes)"
+      ],
+      [
+       "Sliding window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Grumpy bookstore owner: fixed base of happy-minute customers plus the best fixed-length window of grumpy-minute customers."
+ },
+ "1058": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`int(v)`",
+       "Floor of the price (prices are non-negative)",
+       "Floor via truncation"
+      ],
+      [
+       "`floors`",
+       "Sum of all floors: the smallest possible rounded total",
+       "Lower bound of the achievable sum"
+      ],
+      [
+       "`fracs`",
+       "Fractional parts of the non-integer prices (integers round with zero error)",
+       "Only non-integers have a choice"
+      ],
+      [
+       "`ceilings = floors + len(fracs)`",
+       "Largest achievable total: round every fractional price up",
+       "Upper bound"
+      ],
+      [
+       "`up = target - floors`",
+       "How many prices must be rounded UP to hit the target",
+       "Count to round up"
+      ],
+      [
+       "`sort(reverse=True)`, `fracs[:up]`",
+       "Round up the prices with the LARGEST fractions: rounding up costs `1 − f`, which is smallest when `f` is big",
+       "Greedy choice by cost"
+      ],
+      [
+       "`'%.3f' % err`",
+       "Format with three decimals",
+       "Output format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": "Prices 0.700, 2.800, 4.900, target 8. Floors sum to 6, ceilings to 9, so exactly 2 prices must round up. Fractions sorted descending: [0.9, 0.8, 0.7].",
+    "table": {
+     "head": [
+      "Price",
+      "Fraction",
+      "Round up cost (1 − f)",
+      "Round down cost (f)",
+      "Choice"
+     ],
+     "rows": [
+      [
+       "4.900",
+       "0.9",
+       "0.1",
+       "0.9",
+       "UP"
+      ],
+      [
+       "2.800",
+       "0.8",
+       "0.2",
+       "0.8",
+       "UP"
+      ],
+      [
+       "0.700",
+       "0.7",
+       "0.3",
+       "0.7",
+       "down"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "The floors are 0 + 2 + 4 = 6 and the target is 8, so two prices must round up. The two largest fractions are 0.9 and 0.8; rounding those up costs 0.1 + 0.2 = 0.3, and rounding 0.7 down costs 0.7. Total error 0.3 + 0.7 = 1.000."
+   },
+   {
+    "h": "Why is greedy right?",
+    "p": [
+     "Each price independently costs `f` if rounded down or `1 − f` if rounded up, and the number rounded up is fixed. Switching a price from down to up changes the total by `(1 − f) − f = 1 − 2f`, which is smallest for the largest `f`. Choosing the `up` largest fractions minimises the total."
+    ],
+    "table": {
+     "head": [
+      "Fraction f",
+      "Cost down",
+      "Cost up",
+      "Rounding up saves"
+     ],
+     "rows": [
+      [
+       "0.9",
+       "0.9",
+       "0.1",
+       "0.8"
+      ],
+      [
+       "0.7",
+       "0.7",
+       "0.3",
+       "0.4"
+      ],
+      [
+       "0.2",
+       "0.2",
+       "0.8",
+       "−0.6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Minimize rounding error: the target fixes how many prices round up; round up the ones with the largest fractional parts."
+ },
+ "1064": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`arr[mid] >= mid`",
+       "Predicate: has the value caught up with or passed its index?",
+       "Monotone because values are distinct integers in increasing order"
+      ],
+      [
+       "`hi = mid`",
+       "`mid` could be the first fixed point, so keep it",
+       "Lower-bound search for the first True"
+      ],
+      [
+       "`lo = mid + 1`",
+       "Here `arr[mid] < mid`, so no fixed point at or left of `mid`",
+       "Discard"
+      ],
+      [
+       "`return lo if arr[lo] == lo else -1`",
+       "The first index with `arr[i] >= i` is the only candidate; check equality",
+       "Verify the candidate"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-10,-5,0,3,7]`:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "arr[mid]",
+      "Test",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[0, 4]",
+       "2",
+       "0",
+       "0 < 2",
+       "lo = mid + 1"
+      ],
+      [
+       "[3, 4]",
+       "3",
+       "3",
+       "3 ≥ 3",
+       "hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `arr[i] - i` monotone?",
+    "p": [
+     "Distinct integers in strictly increasing order grow by at least 1 per step, so `arr[i+1] - (i+1) ≥ arr[i] - i`. The difference never decreases, so the sign changes at most once: negative…then zero or positive. Binary search finds the first non-negative spot, and that is the only place a zero can be."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+     ],
+     "rows": [
+      [
+       "arr[i]",
+       "−10",
+       "−5",
+       "0",
+       "3",
+       "7"
+      ],
+      [
+       "arr[i] − i",
+       "−10",
+       "−6",
+       "−2",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed point in a sorted array of distinct integers: `arr[i] - i` is non-decreasing, so binary search for the first `arr[i] >= i`."
+ },
+ "1079": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(tiles)`",
+       "How many of each letter we hold",
+       "Duplicates: treat equal tiles as one kind, not as different objects"
+      ],
+      [
+       "`for c in cnt` over DISTINCT letters",
+       "Each distinct letter is tried once per position, so equal tiles never produce duplicate sequences",
+       "Dedup by choosing a letter, not a tile"
+      ],
+      [
+       "`cnt[c] -= 1` … `cnt[c] += 1`",
+       "Use a tile, recurse, give it back",
+       "Backtracking on counts"
+      ],
+      [
+       "`total += 1 + dfs()`",
+       "The 1 counts the sequence ending at the tile just placed; `dfs()` counts all its extensions",
+       "Count every non-empty sequence exactly once"
+      ],
+      [
+       "`if cnt[c]`",
+       "Only letters with tiles left",
+       "Availability check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"AAB\"`: the sequences created, in the order DFS places them:"
+    ],
+    "table": {
+     "head": [
+      "#",
+      "Sequence"
+     ],
+     "rows": [
+      [
+       "1",
+       "A"
+      ],
+      [
+       "2",
+       "AA"
+      ],
+      [
+       "3",
+       "AAB"
+      ],
+      [
+       "4",
+       "AB"
+      ],
+      [
+       "5",
+       "ABA"
+      ],
+      [
+       "6",
+       "B"
+      ],
+      [
+       "7",
+       "BA"
+      ],
+      [
+       "8",
+       "BAA"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Eight different non-empty sequences: A, AA, AAB, AB, ABA, B, BA, BAA."
+    ]
+   },
+   {
+    "h": "Why counts instead of a set of strings?",
+    "p": [
+     "Generating all permutations of every subset and putting them in a set creates many duplicates first (the two A tiles are interchangeable). Iterating over distinct letters with counts creates each distinct sequence exactly once, so the number of recursive calls equals the answer."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Work"
+     ],
+     "rows": [
+      [
+       "all permutations of all subsets + set",
+       "exceeds the answer by the duplicate count"
+      ],
+      [
+       "counts-based DFS (this code)",
+       "exactly the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(answer × distinct letters), at most about n! for n tiles.",
+     "Space: O(n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Letter tile possibilities: DFS over distinct letters with a count map; each recursive call is one new distinct sequence."
+ },
+ "1091": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`grid[0][0] or grid[n-1][n-1]`",
+       "A blocked start or goal means no path",
+       "Quick rejection"
+      ],
+      [
+       "`(r, c, d)` in the queue",
+       "Cell plus the path length so far (counting cells, so the start is 1)",
+       "BFS carrying the distance"
+      ],
+      [
+       "`for dr in (-1, 0, 1): for dc in (-1, 0, 1)`",
+       "The 8 neighbours (the zero move is filtered because the start cell is already marked)",
+       "8-directional movement"
+      ],
+      [
+       "`grid[a][b] == 0` then `= 1`",
+       "Only open cells; marking at enqueue time is the visited set (mutates the grid)",
+       "In-place visited marking"
+      ],
+      [
+       "`return d` at the goal",
+       "BFS reaches the goal first via a shortest path",
+       "Unweighted shortest path"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0,0],[1,1,0],[1,1,0]]`: cells dequeued in BFS order with the path length (cells) so far:"
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Path length d"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "1"
+      ],
+      [
+       "(0,1)",
+       "2"
+      ],
+      [
+       "(0,2)",
+       "3"
+      ],
+      [
+       "(1,2)",
+       "3"
+      ],
+      [
+       "(2,2)",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why mark cells when enqueuing, not when dequeuing?",
+    "p": [
+     "Marking on enqueue prevents the same cell from being queued many times by different neighbours at the same level, keeping the queue small and the algorithm O(n²). Marking on dequeue still gives the right answer but can enqueue a cell up to 8 times."
+    ],
+    "table": {
+     "head": [
+      "When marked",
+      "Queue entries per cell"
+     ],
+     "rows": [
+      [
+       "on enqueue (this code)",
+       "1"
+      ],
+      [
+       "on dequeue",
+       "up to 8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²) for the queue."
+    ]
+   }
+  ],
+  "takeaway": "Shortest clear path: BFS over 8 directions, marking cells as visited when they are enqueued; the depth of the goal is the answer."
+ },
+ "1094": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`timeline`",
+       "A difference array indexed by location: change in passengers at each stop",
+       "Range updates 'add n over [a, b)' in O(1)"
+      ],
+      [
+       "`timeline[a] += n`",
+       "Passengers board at `a`",
+       "Start of the range"
+      ],
+      [
+       "`timeline[b] -= n`",
+       "They leave at `b` (and are not counted at `b`)",
+       "End is exclusive"
+      ],
+      [
+       "running sum `cur`",
+       "Passengers in the car at each location",
+       "Prefix sum of the differences"
+      ],
+      [
+       "`cur > capacity: return False`",
+       "The car is over capacity somewhere",
+       "Check the maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`trips = [[2,1,5],[3,3,7]]`, `capacity = 4`: 2 passengers from 1 to 5, 3 from 3 to 7."
+    ],
+    "table": {
+     "head": [
+      "Location",
+      "Δ passengers",
+      "In car",
+      "Status"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "ok"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "ok"
+      ],
+      [
+       "2",
+       "0",
+       "2",
+       "ok"
+      ],
+      [
+       "3",
+       "3",
+       "5",
+       "over capacity"
+      ],
+      [
+       "4",
+       "0",
+       "5",
+       "over capacity"
+      ],
+      [
+       "5",
+       "-2",
+       "3",
+       "ok"
+      ],
+      [
+       "6",
+       "0",
+       "3",
+       "ok"
+      ],
+      [
+       "7",
+       "-3",
+       "0",
+       "ok"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a difference array?",
+    "p": [
+     "Adding `n` to every location in `[a, b)` one by one costs O(b − a) per trip. Recording only `+n` at the start and `−n` at the end and taking a prefix sum applies all trips in O(1) each plus one linear pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Update each stop per trip",
+       "O(trips × length)"
+      ],
+      [
+       "Difference array + prefix sum (this code)",
+       "O(trips + locations)"
+      ],
+      [
+       "Sort events or a heap",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + L) for n trips and L locations (L ≤ 1000).",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Car pooling: difference array of passenger changes by location; the running sum must never exceed the capacity."
+ },
+ "1106": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "Stack of operators and operand characters `t`/`f`",
+       "Evaluate nested expressions without recursion"
+      ],
+      [
+       "skip `,` and `(`",
+       "They carry no information once the operator is on the stack",
+       "Ignore separators"
+      ],
+      [
+       "push everything else",
+       "Operators `! & |` and values `t`, `f`",
+       "Delay evaluation until the closing bracket"
+      ],
+      [
+       "on `)`: pop until an operator",
+       "Collect the operands of the innermost group",
+       "The most recent operator belongs to this `)`"
+      ],
+      [
+       "`!` uses `vals[0]`, `&` uses `all`, `|` uses `any`",
+       "Apply the operator to the collected operands",
+       "Boolean logic"
+      ],
+      [
+       "push the result back as `'t'`/`'f'`",
+       "The subexpression becomes an operand for the enclosing one",
+       "Reduce and continue"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"|(f,f,f,t)\"`:"
+    ],
+    "table": {
+     "head": [
+      "Char",
+      "Action",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "|",
+       "push",
+       "|"
+      ],
+      [
+       "f",
+       "push",
+       "|f"
+      ],
+      [
+       "f",
+       "push",
+       "|ff"
+      ],
+      [
+       "f",
+       "push",
+       "|fff"
+      ],
+      [
+       "t",
+       "push",
+       "|ffft"
+      ],
+      [
+       ")",
+       "pop ['t', 'f', 'f', 'f'] then operator '|'",
+       "t"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A nested expression",
+    "p": [
+     "`!(&(f,t))`: the inner `&(f,t)` reduces to `f`, then `!` of that is `t`."
+    ],
+    "table": {
+     "head": [
+      "Expression",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`&(t,f)`",
+       "False"
+      ],
+      [
+       "`!(&(f,t))`",
+       "True"
+      ],
+      [
+       "`|(&(t,f,t),!(t))`",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack?",
+    "p": [
+     "Brackets nest, and the innermost group always closes first, which is exactly last-in-first-out. When `)` appears, everything above the nearest operator on the stack is that group's operands."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Note"
+     ],
+     "rows": [
+      [
+       "Stack (this code)",
+       "single pass, O(n)"
+      ],
+      [
+       "Recursive descent",
+       "also O(n), needs an index"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Boolean expression parsing: push characters, and at each `)` pop operands back to the operator, apply it, and push the result."
+ },
+ "1109": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`diff` of size `n + 1`",
+       "Difference array: `diff[i]` is the change in seats from flight `i-1` to flight `i`; the extra slot absorbs an end index at `n`",
+       "Range add without touching the middle"
+      ],
+      [
+       "`diff[first - 1] += seats`",
+       "Start of the range (flights are 1-indexed)",
+       "Convert to 0-based"
+      ],
+      [
+       "`diff[last] -= seats`",
+       "Cancel after flight `last` (0-based index `last` is flight `last + 1`)",
+       "End of the range"
+      ],
+      [
+       "`accumulate(diff[:n])`",
+       "Running sum turns differences into per-flight totals",
+       "Prefix sum"
+      ],
+      [
+       "`list(...)`",
+       "`accumulate` returns an iterator; convert to a list",
+       "Materialise"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`: each booking changes two cells of the difference array."
+    ],
+    "table": {
+     "head": [
+      "Booking [first,last] × seats",
+      "diff after"
+     ],
+     "rows": [
+      [
+       "[1,2] × 10",
+       "[10, 0, -10, 0, 0, 0]"
+      ],
+      [
+       "[2,3] × 20",
+       "[10, 20, -10, -20, 0, 0]"
+      ],
+      [
+       "[2,5] × 25",
+       "[10, 45, -10, -20, 0, -25]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Prefix sums",
+    "p": [
+     "`accumulate` of the first five values gives [10, 55, 45, 25, 25]: flight 2 has 10 + 20 + 25 = 55 seats booked."
+    ]
+   },
+   {
+    "h": "Why not add seats to every flight in the range?",
+    "p": [
+     "That is O(length) per booking. With up to 20,000 bookings over 20,000 flights the direct approach is 4·10⁸ operations. The difference array makes each booking O(1) and recovers the totals in one linear pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "add to each flight",
+       "O(bookings × n)"
+      ],
+      [
+       "difference array (this code)",
+       "O(bookings + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(bookings + n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Flight bookings: difference array (+seats at the start, −seats after the end) followed by a prefix sum."
+ },
+ "1136": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`indeg[b]`",
+       "Number of prerequisites of course `b` not yet taken",
+       "Kahn's topological sort"
+      ],
+      [
+       "`q` of zero in-degree courses",
+       "Courses that can be taken now",
+       "BFS frontier"
+      ],
+      [
+       "`sem += 1`, `for _ in range(len(q))`",
+       "Each BFS LEVEL is one semester: take everything available at once",
+       "Level-by-level topological sort = minimum number of layers"
+      ],
+      [
+       "`indeg[v] -= 1; if indeg[v] == 0: q.append(v)`",
+       "Taking a course may unlock its dependents for the NEXT semester",
+       "Release successors"
+      ],
+      [
+       "`taken == n`",
+       "If some courses never reached in-degree 0 there is a cycle",
+       "Cycle detection"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, relations `1→3`, `2→3`:"
+    ],
+    "table": {
+     "head": [
+      "Semester",
+      "Courses taken",
+      "Newly available"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 2]",
+       "[3]"
+      ],
+      [
+       "2",
+       "[3]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the number of levels the answer?",
+    "p": [
+     "In each semester you may take any number of courses whose prerequisites are done. Taking ALL available courses each semester is optimal, because it only unlocks more. The number of semesters then equals the length of the longest prerequisite chain, which is the number of BFS layers."
+    ],
+    "table": {
+     "head": [
+      "Graph",
+      "Semesters"
+     ],
+     "rows": [
+      [
+       "1→3, 2→3",
+       "2"
+      ],
+      [
+       "1→2→3",
+       "3"
+      ],
+      [
+       "1→2→1 (cycle)",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Parallel courses: level-by-level Kahn's algorithm; the number of levels is the answer and a leftover course means a cycle."
+ }
+}
