@@ -283,3 +283,29 @@ if(!P.variants.some(v=>v.trace)) $("#modes").style.display="none";
 renderSummary();renderUnderstand();
 renderTabs(); renderStatic(); if(!V().frames.length && V().trace) setMode("trace"); else render();
 })();
+
+/* Notepad: a floating icon opens a blank white pad for typing your own answer. Saved per problem in this browser. */
+(function(){
+  const Q = window.PROBLEM; if(!Q) return;
+  const key = "lc.pad." + Q.id, get = () => { try { return localStorage.getItem(key) || ""; } catch(e){ return ""; } }, put = v => { try { v ? localStorage.setItem(key, v) : localStorage.removeItem(key); } catch(e){} };
+  const fab = document.createElement("button"); fab.type = "button"; fab.className = "padfab"; fab.title = "Notepad: type your own answer"; fab.setAttribute("aria-label", "Open notepad");
+  fab.innerHTML = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg>';
+  const ov = document.createElement("div"); ov.className = "padov"; ov.hidden = true;
+  ov.innerHTML = '<div class="padbox" role="dialog" aria-label="Notepad"><div class="padhd"><b>Your answer</b><span class="padsub"></span><span class="padbt"><button type="button" data-a="copy">Copy</button><button type="button" data-a="clear">Clear</button><button type="button" data-a="close" aria-label="Close">✕</button></span></div><textarea class="padta" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Type your code here. Tab indents. Saved in this browser."></textarea></div>';
+  document.body.append(fab, ov);
+  const ta = ov.querySelector("textarea"), sub = ov.querySelector(".padsub");
+  const open = () => { ta.value = get(); ov.hidden = false; sub.textContent = Q.id + ". " + Q.title; setTimeout(() => ta.focus(), 30); };
+  const close = () => { put(ta.value); ov.hidden = true; fab.classList.toggle("has", !!get()); fab.focus(); };
+  fab.onclick = open; fab.classList.toggle("has", !!get());
+  ta.addEventListener("input", () => put(ta.value));
+  ta.addEventListener("keydown", e => {
+    if(e.key === "Tab"){ e.preventDefault(); const s = ta.selectionStart, t = ta.selectionEnd; ta.setRangeText("    ", s, t, "end"); put(ta.value); }
+    if(e.key === "Escape"){ e.stopPropagation(); close(); }
+    e.stopPropagation();   /* keep the lesson's arrow-key and space shortcuts out of the pad */
+  });
+  ["keyup", "keypress"].forEach(ev => ta.addEventListener(ev, e => e.stopPropagation()));
+  ov.addEventListener("click", e => { if(e.target === ov) close(); const a = e.target.dataset && e.target.dataset.a;
+    if(a === "close") close();
+    if(a === "clear" && (!ta.value || confirm("Clear everything you typed for this problem?"))){ ta.value = ""; put(""); ta.focus(); }
+    if(a === "copy"){ const b = e.target; const done = () => { b.textContent = "Copied ✓"; setTimeout(() => b.textContent = "Copy", 1400); }; if(navigator.clipboard) navigator.clipboard.writeText(ta.value).then(done, () => { ta.select(); document.execCommand("copy"); done(); }); else { ta.select(); document.execCommand("copy"); done(); } } });
+})();

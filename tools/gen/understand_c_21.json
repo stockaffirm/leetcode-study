@@ -1,0 +1,2234 @@
+{
+ "2408": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.cols`",
+       "Table name → number of columns",
+       "Validate row length"
+      ],
+      [
+       "`self.rows[name]`",
+       "A dict `rowId → row` per table; a dict (not a list) so deleting a row leaves a gap instead of renumbering",
+       "Stable ids after deletions"
+      ],
+      [
+       "`self.next[name]`",
+       "Next auto-increment id, which only grows (deleted ids are never reused)",
+       "Auto-increment counter"
+      ],
+      [
+       "`ins`",
+       "Fails for an unknown table or a wrong number of values; otherwise stores and increments",
+       "Input validation first"
+      ],
+      [
+       "`rmv`: `pop(rowId, None)`",
+       "Delete if present; `None` default makes deleting a missing row harmless",
+       "`dict.pop` with a default"
+      ],
+      [
+       "`sel`",
+       "Returns `\"<null>\"` for a bad table, row or column, else the cell (column ids are 1-based)",
+       "Defensive lookups"
+      ],
+      [
+       "`exp`",
+       "One string per row: `id,col1,col2,…`, in insertion order (dicts keep it)",
+       "Dictionary order is insertion order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tables `one` (2 columns), `two` (3), `three` (1). Operations on table `two`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Stored rows",
+      "Next ids"
+     ],
+     "rows": [
+      [
+       "ins('two', ['first', 'second', 'third'])",
+       "True",
+       "{'two': {1: ['first', 'second', 'third']}}",
+       "{'one': 1, 'two': 2, 'three': 1}"
+      ],
+      [
+       "sel('two', 1, 3)",
+       "third",
+       "{'two': {1: ['first', 'second', 'third']}}",
+       "{'one': 1, 'two': 2, 'three': 1}"
+      ],
+      [
+       "ins('two', ['fourth', 'fifth', 'sixth'])",
+       "True",
+       "{'two': {1: ['first', 'second', 'third'], 2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ],
+      [
+       "exp('two',)",
+       "['1,first,second,third', '2,fourth,fifth,sixth']",
+       "{'two': {1: ['first', 'second', 'third'], 2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ],
+      [
+       "rmv('two', 1)",
+       "-",
+       "{'two': {2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ],
+      [
+       "sel('two', 2, 2)",
+       "fifth",
+       "{'two': {2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ],
+      [
+       "exp('two',)",
+       "['2,fourth,fifth,sixth']",
+       "{'two': {2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ],
+      [
+       "ins('two', ['a', 'b'])",
+       "False",
+       "{'two': {2: ['fourth', 'fifth', 'sixth']}}",
+       "{'one': 1, 'two': 3, 'three': 1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dict of rows?",
+    "p": [
+     "With a list, deleting row 1 would shift later rows or require tombstones. A dict keyed by the original row id leaves id 2 as id 2 after row 1 is removed, which is what `selectCell` and `exportTable` expect. The counter never decreases so ids are not reused."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "Delete",
+      "Select by id",
+      "Id stability"
+     ],
+     "rows": [
+      [
+       "dict by id (this code)",
+       "O(1)",
+       "O(1)",
+       "yes"
+      ],
+      [
+       "list",
+       "O(n) shifts",
+       "O(1)",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) for insert, remove and select; O(rows · columns) for export.",
+     "Space: O(total cells)."
+    ]
+   }
+  ],
+  "takeaway": "Design SQL: per table, a dict of rows by id plus a growing counter; validate on insert and answer lookups defensively."
+ },
+ "2414": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(s, s[1:])`",
+       "Each adjacent pair `(a, b)`",
+       "Compare neighbours"
+      ],
+      [
+       "`ord(b) == ord(a) + 1`",
+       "`b` is the next letter of the alphabet after `a` (`ord` gives the character code)",
+       "Consecutive letters"
+      ],
+      [
+       "`run = run + 1 if … else 1`",
+       "Extend the run or restart at 1",
+       "Streak counter"
+      ],
+      [
+       "`best = max(best, run)`",
+       "Longest run seen",
+       "Maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"abacaba\"`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Consecutive?",
+      "run",
+      "best"
+     ],
+     "rows": [
+      [
+       "a→b",
+       "True",
+       "2",
+       "2"
+      ],
+      [
+       "b→a",
+       "False",
+       "1",
+       "2"
+      ],
+      [
+       "a→c",
+       "False",
+       "1",
+       "2"
+      ],
+      [
+       "c→a",
+       "False",
+       "1",
+       "2"
+      ],
+      [
+       "a→b",
+       "True",
+       "2",
+       "2"
+      ],
+      [
+       "b→a",
+       "False",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it `else 1` and not `else 0`?",
+    "p": [
+     "A single character is itself a run of length 1 (for example the `a` in the pair `b→a`), so a broken run restarts at 1, not 0."
+    ],
+    "table": {
+     "head": [
+      "Reset value",
+      "Result for `abacaba`"
+     ],
+     "rows": [
+      [
+       "1 (this code)",
+       "2"
+      ],
+      [
+       "0",
+       "1 (wrong)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Longest alphabetical run: scan adjacent pairs, extend while ord(b) == ord(a) + 1, otherwise restart at 1."
+ },
+ "2420": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dec[i]`",
+       "Length of the non-increasing run ENDING at `i`",
+       "Precompute run lengths from the left"
+      ],
+      [
+       "`inc[i]`",
+       "Length of the non-decreasing run STARTING at `i` (computed right to left)",
+       "Run lengths from the right"
+      ],
+      [
+       "`dec[i - 1] >= k`",
+       "The `k` elements just BEFORE `i` are non-increasing",
+       "Left window check in O(1)"
+      ],
+      [
+       "`inc[i + 1] >= k`",
+       "The `k` elements just AFTER `i` are non-decreasing",
+       "Right window check in O(1)"
+      ],
+      [
+       "`range(k, n - k)`",
+       "`i` needs `k` elements on each side",
+       "Valid indices"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,1,1,3,4,1]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "dec[i]",
+      "inc[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "5"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "4"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "3"
+      ],
+      [
+       "4",
+       "3",
+       "1",
+       "2"
+      ],
+      [
+       "5",
+       "4",
+       "1",
+       "1"
+      ],
+      [
+       "6",
+       "1",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Good indices need `dec[i−1] ≥ 2` and `inc[i+1] ≥ 2`: that holds for [2, 3]."
+    ]
+   },
+   {
+    "h": "Why precompute run lengths?",
+    "p": [
+     "Testing 'k elements are non-increasing' by scanning costs O(k) per index. A run-length array answers it in O(1) with one pass from each side."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan k elements on both sides",
+       "O(n · k)"
+      ],
+      [
+       "run-length arrays (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Good indices: precompute non-increasing run lengths ending at each index and non-decreasing runs starting at each index; check both neighbours' runs ≥ k."
+ },
+ "2429": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`bin(num2).count('1')`",
+       "The number of set bits `x` must have (popcount of `num2`)",
+       "Required bit count"
+      ],
+      [
+       "first loop from bit 30 down",
+       "Copy `num1`'s highest set bits into `x` while bits remain to place",
+       "XOR with `num1` is smallest when `x` matches `num1` in the HIGH bits"
+      ],
+      [
+       "`x |= 1 << b`",
+       "Set bit `b` of `x`",
+       "Build `x`"
+      ],
+      [
+       "second loop from bit 0 up",
+       "If bits are still needed, set the LOWEST zero bits of `x`",
+       "Extra bits cost the least in low positions"
+      ],
+      [
+       "`cnt`",
+       "How many bits are still to place",
+       "Counter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num1 = 1`, `num2 = 12` (`1100`, so 2 set bits):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Action",
+      "x (binary)",
+      "bits left"
+     ],
+     "rows": [
+      [
+       "bit 0 of num1 is 1",
+       "copy it",
+       "1",
+       "1"
+      ],
+      [
+       "bit 1 of x is 0",
+       "set it (lowest free bit)",
+       "11",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another example",
+    "p": [
+     "`num1 = 25` (`11001`), `num2 = 72` (`1001000`, 2 set bits). `x` copies the top two set bits of `num1`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Action",
+      "x (binary)",
+      "bits left"
+     ],
+     "rows": [
+      [
+       "bit 4 of num1 is 1",
+       "copy it",
+       "10000",
+       "1"
+      ],
+      [
+       "bit 3 of num1 is 1",
+       "copy it",
+       "11000",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why high bits first, low bits for the rest?",
+    "p": [
+     "`x XOR num1` has a 1 wherever the two differ. A difference in a high bit costs far more than any number of low-bit differences. So the best `x` agrees with `num1` on its highest set bits (making those XOR to 0) and, if more bits are needed, places the extra bits in the lowest positions."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Choice"
+     ],
+     "rows": [
+      [
+       "`num2` has fewer set bits than `num1`",
+       "keep only the highest set bits of `num1`"
+      ],
+      [
+       "`num2` has more set bits",
+       "keep all of `num1`'s bits, add the lowest free bits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimize XOR with a given popcount: match num1's highest set bits first, then fill any remaining bits at the lowest free positions."
+ },
+ "2432": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`prev`",
+       "Finish time of the previous task: each task starts when the previous one ends (the first starts at 0)",
+       "Durations from consecutive end times"
+      ],
+      [
+       "`d = end - prev`",
+       "Duration of this employee's task",
+       "Difference of timestamps"
+      ],
+      [
+       "`d > best`",
+       "A strictly longer task replaces the current answer",
+       "New maximum"
+      ],
+      [
+       "`d == best and emp < who`",
+       "On a tie keep the employee with the smaller id",
+       "Tie-break rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`logs = [[0,3],[2,5],[0,9],[1,15]]`:"
+    ],
+    "table": {
+     "head": [
+      "Employee",
+      "Duration",
+      "Longest so far",
+      "Employee with it"
+     ],
+     "rows": [
+      [
+       "0",
+       "3 − 0 = 3",
+       "3",
+       "0"
+      ],
+      [
+       "2",
+       "5 − 3 = 2",
+       "3",
+       "0"
+      ],
+      [
+       "0",
+       "9 − 5 = 4",
+       "4",
+       "0"
+      ],
+      [
+       "1",
+       "15 − 9 = 6",
+       "6",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why derive durations from end times?",
+    "p": [
+     "The log only records when each task ENDED; the tasks run back to back, so the duration of the i-th task is its end time minus the previous end time."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "one pass (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hardest worker: durations are consecutive differences of end times; track the maximum with a smaller-id tie-break."
+ },
+ "2435": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[j][r]`",
+       "Number of paths from the top-left to the cell in column `j` of the CURRENT row whose sum has remainder `r` mod `k`",
+       "DP keyed by the remainder of the running sum"
+      ],
+      [
+       "`v = grid[i][j] % k`",
+       "The cell's value reduced mod k",
+       "Keep numbers small"
+      ],
+      [
+       "`dp[j][r]` (old row) and `new[j - 1][r]`",
+       "Paths arriving from above and from the left",
+       "Rolling row: `dp` is the previous row, `new` the current one"
+      ],
+      [
+       "`new[j][(r + v) % k] += ways`",
+       "Entering this cell shifts the remainder by `v`",
+       "Remainder transition"
+      ],
+      [
+       "`dp[n - 1][0]`",
+       "Paths to the bottom-right with sum ≡ 0 (mod k)",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[5,2,4],[3,0,5],[0,7,2]]`, `k = 3`: the table `dp[j][r]` after each row (columns j, remainders r):"
+    ],
+    "table": {
+     "head": [
+      "After row",
+      "dp[column][remainder]"
+     ],
+     "rows": [
+      [
+       "0",
+       "[[0, 0, 1], [0, 1, 0], [0, 0, 1]]"
+      ],
+      [
+       "1",
+       "[[0, 0, 1], [0, 1, 1], [1, 2, 0]]"
+      ],
+      [
+       "2",
+       "[[0, 0, 1], [2, 0, 1], [2, 1, 3]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track the remainder rather than the full sum?",
+    "p": [
+     "Only `sum mod k` decides divisibility, and the remainder takes just `k` values, so the state is (cell, remainder) with at most `m·n·k` entries. Tracking the exact sum would multiply the states by the sum range."
+    ],
+    "table": {
+     "head": [
+      "State",
+      "Size"
+     ],
+     "rows": [
+      [
+       "(cell, exact sum)",
+       "m·n·(max sum)"
+      ],
+      [
+       "(cell, sum mod k) (this code)",
+       "m·n·k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·k).",
+     "Space: O(n·k) with the rolling row."
+    ]
+   }
+  ],
+  "takeaway": "Paths with sum divisible by k: DP over (cell, running sum mod k) using a rolling row."
+ },
+ "2438": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(n >> b) & 1`",
+       "Is bit `b` of `n` set?",
+       "Binary representation"
+      ],
+      [
+       "`powers = [1 << b …]`",
+       "The powers of two that sum to `n`, smallest first: its binary decomposition",
+       "The 'minimum number of powers of 2 that sum to n' is exactly the set bits"
+      ],
+      [
+       "`powers[l:r + 1]`",
+       "The queried range",
+       "Slice"
+      ],
+      [
+       "`p = p * v % MOD`",
+       "Multiply the range, reducing modulo 10⁹ + 7 each time",
+       "Large products"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 15` is `1111`, so `powers = [1, 2, 4, 8]`."
+    ],
+    "table": {
+     "head": [
+      "Query [l, r]",
+      "Powers in range",
+      "Product"
+     ],
+     "rows": [
+      [
+       "[0, 1]",
+       "[1, 2]",
+       "2"
+      ],
+      [
+       "[2, 2]",
+       "[4]",
+       "4"
+      ],
+      [
+       "[0, 3]",
+       "[1, 2, 4, 8]",
+       "64"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A faster idea",
+    "p": [
+     "Since every element is a power of two, the product of a range is `2` to the power of the sum of the exponents, computable with a prefix sum of bit positions and one `pow(2, e, MOD)`. This code multiplies directly, at most 30 numbers per query, which is fast enough."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Per query"
+     ],
+     "rows": [
+      [
+       "multiply the slice (this code)",
+       "O(30)"
+      ],
+      [
+       "prefix sum of exponents + `pow`",
+       "O(log)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q · log n).",
+     "Space: O(log n)."
+    ]
+   }
+  ],
+  "takeaway": "Range products of powers: the powers are the set bits of n; multiply the queried slice modulo 10⁹+7."
+ },
+ "2444": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`bad`",
+       "Index of the last element outside `[minK, maxK]`: no valid subarray can span it",
+       "Barrier"
+      ],
+      [
+       "`lo`, `hi`",
+       "Last index where `minK` appeared, last index where `maxK` appeared",
+       "Last-seen positions"
+      ],
+      [
+       "`min(lo, hi) - bad`",
+       "Number of valid LEFT ends for subarrays ending at `i`: left ends in `(bad, min(lo, hi)]` contain both bounds and no barrier",
+       "Count by right end"
+      ],
+      [
+       "`max(0, …)`",
+       "If one of the bounds hasn't appeared since the last barrier the difference is negative: count 0",
+       "Clamp"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,5,2,7,5]`, `minK = 1`, `maxK = 5`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "bad",
+      "lo (last minK)",
+      "hi (last maxK)",
+      "Added",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "-1",
+       "0",
+       "-1",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "-1",
+       "0",
+       "-1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "5",
+       "-1",
+       "0",
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "-1",
+       "0",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "7",
+       "4",
+       "0",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "5",
+       "5",
+       "4",
+       "0",
+       "5",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count by right end?",
+    "p": [
+     "For a fixed right end `i`, a valid subarray must start after the last barrier, and start at or before the last `minK` and the last `maxK`. That gives `min(lo, hi) − bad` choices, found with three running indices instead of checking each subarray."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "every subarray",
+       "O(n²)"
+      ],
+      [
+       "three last-seen indices (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Subarrays with fixed min and max: track the last bad index and the last occurrences of minK and maxK; each right end contributes min(last minK, last maxK) − last bad."
+ },
+ "2453": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`x % space`",
+       "Seeding target `s` destroys every target `t` with `t ≡ s (mod space)`, `t ≥ s`; so targets with the same remainder form a class",
+       "Group by residue"
+      ],
+      [
+       "`Counter(...)`",
+       "Size of each residue class",
+       "Frequencies"
+      ],
+      [
+       "`top = max(cnt.values())`",
+       "The largest class",
+       "The best remainder to destroy"
+      ],
+      [
+       "`min(x for x in nums if cnt[x % space] == top)`",
+       "Seed the SMALLEST number in a best class, since the smallest one destroys all the others in the class",
+       "Smallest value on ties between classes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,7,8,1,1,5]`, `space = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Remainder",
+      "Numbers",
+      "Count"
+     ],
+     "rows": [
+      [
+       "0",
+       "[8]",
+       "1"
+      ],
+      [
+       "1",
+       "[3, 7, 1, 1, 5]",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The class with remainder 1 has 5 numbers (3, 7, 1, 1, 5); its smallest member is 1, so seed 1."
+    ]
+   },
+   {
+    "h": "Why the smallest member of the class?",
+    "p": [
+     "Seeding `s` destroys `s, s + space, s + 2·space, …`, so seeding the smallest member of a class destroys every other member (they are all larger by a multiple of `space`). Any larger seed would miss the smaller members."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate each seed",
+       "O(n²)"
+      ],
+      [
+       "group by remainder (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(space) in the worst case."
+    ]
+   }
+  ],
+  "takeaway": "Destroy sequential targets: group numbers by remainder mod space; seed the smallest number of the largest group (smallest overall on ties)."
+ },
+ "2456": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total`",
+       "Counter: creator → total views of all their videos (popularity)",
+       "Accumulate per key"
+      ],
+      [
+       "`best[c] = (views, id)`",
+       "The creator's best video: most views, then the lexicographically smaller id on ties",
+       "Track an arg-max with a tie-break"
+      ],
+      [
+       "`v > best[c][0] or (v == … and i < best[c][1])`",
+       "Strictly more views, or equal views with a smaller id",
+       "Compare two criteria"
+      ],
+      [
+       "`max(total.values())`",
+       "The highest popularity",
+       "Winner score"
+      ],
+      [
+       "`sorted([c, best[c][1]] …)`",
+       "All creators tied at the top, each with their best video id (the answer may be in any order; sorting makes it stable)",
+       "Collect the winners"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`creators = [alice, bob, alice, chris]`, `ids = [one, two, three, four]`, `views = [5, 10, 5, 4]`:"
+    ],
+    "table": {
+     "head": [
+      "Creator",
+      "Id",
+      "Views",
+      "total",
+      "best (views, id)"
+     ],
+     "rows": [
+      [
+       "alice",
+       "one",
+       "5",
+       "{'alice': 5}",
+       "{'alice': (5, 'one')}"
+      ],
+      [
+       "bob",
+       "two",
+       "10",
+       "{'alice': 5, 'bob': 10}",
+       "{'alice': (5, 'one'), 'bob': (10, 'two')}"
+      ],
+      [
+       "alice",
+       "three",
+       "5",
+       "{'alice': 10, 'bob': 10}",
+       "{'alice': (5, 'one'), 'bob': (10, 'two')}"
+      ],
+      [
+       "chris",
+       "four",
+       "4",
+       "{'alice': 10, 'bob': 10, 'chris': 4}",
+       "{'alice': (5, 'one'), 'bob': (10, 'two'), 'chris': (4, 'four')}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "alice and bob are both at 10 views (alice 5 + 5, bob 10). alice's best video is `one` (tie at 5 views broken by the smaller id), bob's is `two`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(number of creators)."
+    ]
+   }
+  ],
+  "takeaway": "Most popular creator: sum views per creator, track each creator's best video with a tie-break on id, and list the creators with the maximum total."
+ },
+ "2462": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`left`",
+       "Min-heap of the first `candidates` costs (the front window)",
+       "Two windows: front and back"
+      ],
+      [
+       "`right = costs[max(candidates, n - candidates):]`",
+       "Min-heap of the last `candidates` costs; `max(...)` stops the two windows from overlapping when `n < 2·candidates`",
+       "Avoid counting a worker twice"
+      ],
+      [
+       "`i`, `j`",
+       "Next unseen index from the front and from the back",
+       "The still-unseen middle is `i..j`"
+      ],
+      [
+       "`left[0] <= right[0]`",
+       "Pick the cheaper of the two window minimums; ties go to the smaller INDEX, which is the left window",
+       "Tie-break: lowest index"
+      ],
+      [
+       "`if i <= j: heappush(...)`",
+       "After a hire, refill that window with the next unseen worker, if any remain",
+       "Slide the window inward"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`costs = [17,12,10,2,7,2,11,20,8]`, `k = 3`, `candidates = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Hire",
+      "Window",
+      "Cost",
+      "Total",
+      "left heap",
+      "right heap"
+     ],
+     "rows": [
+      [
+       "1",
+       "left",
+       "2",
+       "2",
+       "[7, 10, 12, 17]",
+       "[2, 8, 11, 20]"
+      ],
+      [
+       "2",
+       "right",
+       "2",
+       "4",
+       "[7, 10, 12, 17]",
+       "[8, 11, 20]"
+      ],
+      [
+       "3",
+       "left",
+       "7",
+       "11",
+       "[10, 12, 17]",
+       "[8, 11, 20]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two heaps?",
+    "p": [
+     "Each round we may only consider the first and last `candidates` unhired workers. One heap per end gives each window's minimum in O(1), and refilling after a hire keeps exactly `candidates` workers visible on each side (as long as the middle isn't exhausted)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan the candidate windows each round",
+       "O(k · candidates)"
+      ],
+      [
+       "two heaps (this code)",
+       "O((candidates + k) log candidates)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((candidates + k) log candidates).",
+     "Space: O(candidates)."
+    ]
+   }
+  ],
+  "takeaway": "Hire k workers: two min-heaps for the front and back candidate windows; hire the cheaper top (left on ties) and refill from the unseen middle."
+ },
+ "2468": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for b in range(1, n + 1)`",
+       "Try each possible number of parts `b`, smallest first",
+       "The suffix `<i/b>` depends on `b`, so `b` is guessed"
+      ],
+      [
+       "`d = len(str(b))`",
+       "Digits in the total, which appear in every suffix",
+       "Suffix length: `<`, `i`, `/`, `b`, `>` = `3 + len(i) + d`"
+      ],
+      [
+       "`limit - 3 - d - d <= 0: return []`",
+       "Even the shortest suffix (single-digit `i`) leaves no room for message text",
+       "Impossible: a larger `b` only makes suffixes longer"
+      ],
+      [
+       "`b * (limit - 3 - d) - sum(len(str(i)) …)`",
+       "Total characters of message that fit: `b` parts of `limit − 3 − d` minus the digits of every `i`",
+       "Capacity for a given `b`"
+      ],
+      [
+       "`total >= n`",
+       "The first `b` whose capacity holds the whole message gives the fewest parts",
+       "Smallest feasible `b`"
+      ],
+      [
+       "build loop with `take = limit - len(suffix)`",
+       "Fill each part with as many characters as its suffix allows",
+       "Greedy fill"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`message = \"short message\"` (13 characters), `limit = 15`:"
+    ],
+    "table": {
+     "head": [
+      "b (parts)",
+      "Capacity",
+      "Fits 13?"
+     ],
+     "rows": [
+      [
+       "1",
+       "10",
+       "False"
+      ],
+      [
+       "2",
+       "20",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "With 2 parts the suffixes are `<1/2>` and `<2/2>` (5 characters), leaving 10 characters per part: capacity 20 ≥ 13. The parts are ['short mess<1/2>', 'age<2/2>']."
+    ]
+   },
+   {
+    "h": "Why must the number of parts be tried in increasing order?",
+    "p": [
+     "The suffix length grows with `b` (more digits), so a larger `b` carries less message per part. The first `b` whose capacity covers the message is the minimum number of parts, and parts must all be filled to the limit except the last, which this construction does."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try each b with a capacity formula (this code)",
+       "O(n · log n) plus building"
+      ],
+      [
+       "binary search on b",
+       "not valid: capacity is not monotone in b everywhere"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) in the worst case (the digit sums are recomputed for each b).",
+     "Space: O(n) for the parts."
+    ]
+   }
+  ],
+  "takeaway": "Split message: try the number of parts b from 1 up, compute how many message characters fit once each '<i/b>' suffix is paid for, and build the parts for the first b that fits."
+ },
+ "2477": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dfs(u, parent)`",
+       "Returns the number of representatives in the subtree of `u` (one per city, including `u`)",
+       "Subtree size via post-order"
+      ],
+      [
+       "`people`",
+       "Everyone who must pass through the road from `u` up to its parent",
+       "Edge flow = subtree size"
+      ],
+      [
+       "`(people + seats - 1) // seats`",
+       "Cars needed to carry them over that road: ceiling of `people / seats` (each car uses one litre per road)",
+       "Ceiling division"
+      ],
+      [
+       "`if u != 0`",
+       "The capital has no road above it",
+       "Skip the root"
+      ],
+      [
+       "`self.fuel`",
+       "Total over all roads",
+       "Accumulator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Star tree: capital 0 with leaves 1, 2, 3; `seats = 5`:"
+    ],
+    "table": {
+     "head": [
+      "City",
+      "People in subtree",
+      "Cars on its road",
+      "Fuel so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the cost per edge independent?",
+    "p": [
+     "Every representative in a subtree must cross the edge above it, and cars can carry `seats` people. Merging people into full cars as early as possible is optimal, so the cars needed on an edge is exactly ⌈people / seats⌉, and edges don't interact."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate cars",
+       "complicated"
+      ],
+      [
+       "subtree sizes + ceiling (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) (recursion depth up to n)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum fuel cost: for each non-root node, the cars needed on its parent edge are ceil(subtree size / seats); sum them with a post-order DFS."
+ },
+ "2483": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`penalty` initial = number of `Y`",
+       "If the shop closes at hour 0, every customer who would come (`Y`) is a penalty",
+       "Penalty of closing immediately"
+      ],
+      [
+       "`penalty += 1 if ch == 'N' else -1`",
+       "Moving the closing time past hour `i`: an `N` hour now counts as 1 (open with no customer), a `Y` hour removes 1 (customer served)",
+       "Update the penalty incrementally"
+      ],
+      [
+       "`penalty < best`",
+       "A strictly smaller penalty at hour `i + 1`",
+       "Strict `<` keeps the EARLIEST closing time on ties"
+      ],
+      [
+       "`hour`",
+       "The best closing time found",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"YYNY\"`: closing at hour `h` means open for the first `h` hours."
+    ],
+    "table": {
+     "head": [
+      "Closing hour",
+      "Hour just added",
+      "Penalty",
+      "Best penalty",
+      "Best hour"
+     ],
+     "rows": [
+      [
+       "0",
+       "-",
+       "3",
+       "3",
+       "0"
+      ],
+      [
+       "1",
+       "Y",
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "Y",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "N",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "Y",
+       "1",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can the penalty be updated incrementally?",
+    "p": [
+     "Penalty(h) = (number of `N` in the first h hours) + (number of `Y` in the remaining hours). Extending the open period by one hour moves that hour from the second group to the first: `+1` if it was `N`, `−1` if it was `Y`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "recompute for every closing hour",
+       "O(n²)"
+      ],
+      [
+       "incremental update (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Best closing time: start with penalty = number of Y, then sweep, adding 1 for N and subtracting 1 for Y, keeping the earliest minimum."
+ },
+ "2489": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`z`, `o`",
+       "Prefix counts of zeros and ones",
+       "Prefix counts"
+      ],
+      [
+       "`key = z * num2 - o * num1`",
+       "A substring has `zeros : ones = num1 : num2` iff `zeros·num2 = ones·num1`; for a substring between two prefixes this means their keys are EQUAL",
+       "Turn a ratio condition into an equality of a linear key"
+      ],
+      [
+       "`seen[key]`",
+       "How many earlier prefixes (including the empty one) have this key",
+       "Count equal keys"
+      ],
+      [
+       "`seen = Counter({0: 1})`",
+       "The empty prefix has key 0",
+       "Substrings that start at index 0"
+      ],
+      [
+       "`res += seen[key]` then `seen[key] += 1`",
+       "Pairs of equal prefix keys are substrings with the right ratio",
+       "Lookup, then update"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"0110011\"`, ratio `1 : 2` (`num1 = 1`, `num2 = 2`):"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "zeros",
+      "ones",
+      "key = 2·z − o",
+      "Earlier prefixes with this key",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "2",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "0",
+       "2",
+       "2",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "0",
+       "3",
+       "2",
+       "4",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "3",
+       "3",
+       "3",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "3",
+       "4",
+       "2",
+       "2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do equal keys mean the right ratio?",
+    "p": [
+     "For a substring `s[i..j]`, zeros = `z_j − z_i` and ones = `o_j − o_i`. The condition `zeros·num2 = ones·num1` rearranges to `(z_j·num2 − o_j·num1) = (z_i·num2 − o_i·num1)`, i.e. the keys of the two prefixes are equal. The same trick solves 'equal number of 0s and 1s' (num1 = num2)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all substrings",
+       "O(n²)"
+      ],
+      [
+       "prefix keys + hash map (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Substrings with a fixed 0:1 ratio: prefix key z·num2 − o·num1; count pairs of equal keys with a hash map."
+ },
+ "2534": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`q = [deque(), deque()]`",
+       "Two FIFO queues: index 0 = people entering, index 1 = people exiting; order within a queue is by arrival then index",
+       "Separate queues per direction"
+      ],
+      [
+       "`while i < n and arrival[i] <= t`",
+       "Add everyone who has arrived by time `t` (the input is sorted by arrival time)",
+       "Simulation with a pointer into arrivals"
+      ],
+      [
+       "`prev`",
+       "Direction used in the previous second: if the door was in use, the same direction has priority; after an idle second, exit has priority",
+       "Door priority rule"
+      ],
+      [
+       "`if q[0] and q[1]: d = prev`",
+       "Both queues waiting: keep the last direction",
+       "Tie-break by `prev`"
+      ],
+      [
+       "`else: prev = 1; t += 1; continue`",
+       "No one is waiting: the door is idle this second, so the next conflict prefers exit",
+       "Idle resets the priority"
+      ],
+      [
+       "`ans[q[d].popleft()] = t`",
+       "Record the second this person passes",
+       "Result per person"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arrival = [0,1,1,2,4]`, `state = [0,1,0,0,1]` (0 = enter, 1 = exit):"
+    ],
+    "table": {
+     "head": [
+      "Time t",
+      "Person",
+      "Why",
+      "Direction"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "only enter queue",
+       "enter"
+      ],
+      [
+       "1",
+       "2",
+       "both queues non-empty → same direction as before (enter)",
+       "enter"
+      ],
+      [
+       "2",
+       "3",
+       "both queues non-empty → same direction as before (enter)",
+       "enter"
+      ],
+      [
+       "3",
+       "1",
+       "only exit queue",
+       "exit"
+      ],
+      [
+       "4",
+       "4",
+       "only exit queue",
+       "exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why simulate second by second?",
+    "p": [
+     "Priorities depend on the previous second's direction and on who has arrived. A per-second simulation with two queues follows the rules exactly. The loop runs at most `n + max(arrival)` iterations since time only jumps by 1 and every non-idle second processes one person."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "second-by-second simulation (this code)",
+       "O(n + max arrival)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + max(arrival)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Door crossing: simulate each second with separate enter and exit queues, applying the 'same direction as last second, exit first after idle' rule."
+ },
+ "2537": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pairs`",
+       "Number of index pairs `(i, j)` in the window with equal values",
+       "Maintain a pair count incrementally"
+      ],
+      [
+       "`pairs += freq[x]` before `freq[x] += 1`",
+       "Adding `x` creates one new pair with each earlier copy of `x` in the window",
+       "Update on insert"
+      ],
+      [
+       "`freq[nums[l]] -= 1; pairs -= freq[nums[l]]`",
+       "Removing `nums[l]` destroys one pair with each remaining copy (the count AFTER decrementing)",
+       "Update on removal"
+      ],
+      [
+       "`while pairs >= k`",
+       "The window is 'good'; shrink as far as it stays good",
+       "Find the shortest good window ending at `r`"
+      ],
+      [
+       "`res += n - r`",
+       "A good window `[l, r]` means every longer subarray starting at `l` (ending at `r..n−1`) is also good",
+       "Count by left end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,4,3,2,2,4]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "x",
+      "pairs",
+      "window",
+      "Shrink steps (+n−r)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "0",
+       "[0,0]",
+       "-",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "[0,1]",
+       "-",
+       "0"
+      ],
+      [
+       "2",
+       "4",
+       "0",
+       "[0,2]",
+       "-",
+       "0"
+      ],
+      [
+       "3",
+       "3",
+       "1",
+       "[0,3]",
+       "-",
+       "0"
+      ],
+      [
+       "4",
+       "2",
+       "1",
+       "[0,4]",
+       "-",
+       "0"
+      ],
+      [
+       "5",
+       "2",
+       "1",
+       "[1,5]",
+       "['+2']",
+       "2"
+      ],
+      [
+       "6",
+       "4",
+       "1",
+       "[3,6]",
+       "['+1', '+1']",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `res += n - r` while shrinking?",
+    "p": [
+     "Each time the window `[l, r]` is good, any subarray that starts at `l` and ends at `r, r+1, …, n−1` is good as well (it contains the window). That is `n − r` subarrays for this left end. Moving `l` right until the window stops being good counts each good left end once."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all subarrays with pair counts",
+       "O(n²)"
+      ],
+      [
+       "sliding window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count good subarrays (at least k equal pairs): sliding window with an incrementally maintained pair count; each good left end contributes n − r."
+ },
+ "2549": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n - 1`",
+       "After enough days every number `2..n` appears on the board; `1` appears only if `n = 1`",
+       "Each day, a number `x` on the board adds every `i` with `x % i == 1`"
+      ],
+      [
+       "`max(1, …)`",
+       "For `n = 1` the board stays `{1}`, answer 1",
+       "Edge case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`: start with `{5}`. Since `5 % 4 == 1`, 4 is added; then `4 % 3 == 1` adds 3; `3 % 2 == 1` adds 2. After enough days the board is `{2, 3, 4, 5}`, four numbers."
+    ],
+    "table": {
+     "head": [
+      "Day",
+      "New numbers added",
+      "Board"
+     ],
+     "rows": [
+      [
+       "0",
+       "-",
+       "{5}"
+      ],
+      [
+       "1",
+       "4  (5 % 4 = 1)",
+       "{4, 5}"
+      ],
+      [
+       "2",
+       "3  (4 % 3 = 1)",
+       "{3, 4, 5}"
+      ],
+      [
+       "3",
+       "2  (3 % 2 = 1)",
+       "{2, 3, 4, 5}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `n − 1`?",
+    "p": "For `x ≥ 3`, `x % (x − 1) == 1`, so each day the smallest number `x` on the board adds `x − 1`. The chain ends at 2: the remainder rule never produces 1 (that would need `x % i == 1` with `i = 1`, but `x % 1 = 0`). The board therefore ends as `{2, …, n}` which has `n − 1` numbers when `n ≥ 2`, and is just `{1}` when `n = 1`.",
+    "table": {
+     "head": [
+      "n",
+      "Distinct numbers"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "2"
+      ],
+      [
+       "5",
+       "4"
+      ],
+      [
+       "100",
+       "99"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count distinct numbers on the board: the process adds n−1, n−2, …, 2, so the answer is max(1, n − 1)."
+ },
+ "2552": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`less[k]`",
+       "Number of indices `i < j` (for the current `j`) with `nums[i] < nums[k]` — maintained as `j` advances",
+       "Count the 'i' in an `i < j < k < l` pattern"
+      ],
+      [
+       "`great`",
+       "Number of indices `l > k` with `nums[l] > nums[j]`, accumulated while `k` moves LEFT",
+       "Count the 'l'"
+      ],
+      [
+       "`nums[k] < nums[j]` → `res += less[k] * great`",
+       "Here `k` plays the role of the pattern's `k` (value between: `nums[i] < nums[k] < nums[j] < nums[l]`): multiply the choices for `i` and for `l`",
+       "Count by the middle pair `(j, k)`"
+      ],
+      [
+       "`less[k] += 1` loop after",
+       "Once `j` is processed, it becomes a possible `i` for later `j`s: add it to every `k > j` it is smaller than",
+       "Update the prefix counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,2,4,5]`; the pattern is `i < j < k < l` with `nums[i] < nums[k] < nums[j] < nums[l]`:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "nums[j]",
+      "Quadruplets counted with this j",
+      "less[]",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "[0, 1, 1, 1, 1]",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "[0, 1, 1, 2, 2]",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "0",
+       "[0, 1, 1, 3, 3]",
+       "2"
+      ],
+      [
+       "3",
+       "4",
+       "0",
+       "[0, 1, 1, 3, 4]",
+       "2"
+      ],
+      [
+       "4",
+       "5",
+       "0",
+       "[0, 1, 1, 3, 4]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why O(n²)?",
+    "p": [
+     "Checking all quadruples is O(n⁴). Fixing the middle pair `(j, k)` and counting the smaller left elements (`less`) and the larger right elements (`great`) separately turns the work into two nested loops with O(1) updates."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all quadruples",
+       "O(n⁴)"
+      ],
+      [
+       "fix (j, k), count i and l (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Increasing quadruplets (nums[i] < nums[k] < nums[j] < nums[l]): fix the middle pair (j, k) and multiply the count of smaller values to the left by larger values to the right."
+ }
+}

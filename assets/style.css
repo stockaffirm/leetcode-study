@@ -201,3 +201,12 @@ h1{font-size:28px}
 .vc.hot{background:var(--hot);color:var(--hot-ink);border-color:var(--accent)}.vc.ok{background:var(--accent-soft);border-color:var(--accent)}.vc.bad{opacity:.35;text-decoration:line-through}.vp{min-height:15px;font:700 11px -apple-system,sans-serif;color:var(--accent)}
 .vnote{margin:8px 0 4px;font-size:14px;min-height:40px}.vbar{display:flex;align-items:center;gap:10px}.vbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:2px 10px;cursor:pointer}.vct{font-size:12px;color:var(--mute)}
 @media (max-width:560px){.vrow{flex-direction:column;gap:2px}.vn{flex:none;padding-top:0}.vc{min-width:28px;padding:3px 5px;font-size:12px}}
+
+/* Notepad popup */
+.padfab{position:fixed;right:14px;top:42%;z-index:20;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);box-shadow:0 2px 10px rgba(0,0,0,.18);cursor:pointer;display:grid;place-items:center}.padfab:hover{border-color:var(--accent);color:var(--accent)}.padfab.has::after{content:"";position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--ok)}
+.padov{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:12px}.padov[hidden]{display:none}
+.padbox{width:min(780px,100%);height:min(78vh,720px);background:#fff;color:#111;border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
+.padhd{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #e5e5e5;font:14px -apple-system,BlinkMacSystemFont,sans-serif}.padsub{color:#777;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.padbt{display:flex;gap:6px}
+.padbt button{border:1px solid #ccc;background:#fff;color:#111;border-radius:8px;padding:5px 11px;font:600 13px -apple-system,sans-serif;cursor:pointer}.padbt button:hover{background:#f3f3f3}
+.padta{flex:1;width:100%;border:0;outline:0;resize:none;padding:14px 16px;background:#fff;color:#111;font:14px/1.55 ui-monospace,Menlo,Consolas,monospace;tab-size:4}
+@media (max-width:560px){.padfab{right:8px;top:auto;bottom:74px;width:42px;height:42px}.padbox{height:84vh}}

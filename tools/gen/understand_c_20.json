@@ -1,0 +1,1333 @@
+{
+ "2333": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt = Counter(abs(a - b) …)`",
+       "How many positions have each absolute difference",
+       "Each operation changes a difference by 1 (moving either `nums1[i]` or `nums2[i]` by 1), so only the multiset of differences matters"
+      ],
+      [
+       "`k = k1 + k2`",
+       "Total operations: they are interchangeable",
+       "Combine the two budgets"
+      ],
+      [
+       "`vals = sorted(cnt, reverse=True)`",
+       "Distinct differences, largest first",
+       "Reduce the largest differences first"
+      ],
+      [
+       "`group`",
+       "Number of positions currently at the top level `v`",
+       "Lowering the whole group together"
+      ],
+      [
+       "`need = (v - nxt) * group`",
+       "Operations needed to bring the whole group down to the next distinct value",
+       "Level-by-level flattening"
+      ],
+      [
+       "`divmod(k, group)`",
+       "Spread the remaining `k` evenly over the group: `q` full steps for everyone, `r` of them get one more",
+       "Distribute a remainder"
+      ],
+      [
+       "`(group - r) * (v - q) ** 2 + r * (v - q - 1) ** 2`",
+       "Squared cost of the flattened group, plus the untouched smaller differences",
+       "Final cost"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,3,4]`, `nums2 = [2,10,20,19]`, `k1 = 4`, `k2 = 3`. Differences are 1, 8, 17, 15. With `k = 0` the cost is 1 + 64 + 289 + 225 = 579. With 7 operations:"
+    ],
+    "table": {
+     "head": [
+      "Level v",
+      "Group size",
+      "Next level",
+      "Ops to lower the group",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "17",
+       "1",
+       "15",
+       "2",
+       "k 7 ≥ 2 → lower all 1 to 15, k = 5"
+      ],
+      [
+       "15",
+       "2",
+       "8",
+       "14",
+       "k 5 < 14 → q, r = 2, 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "With 7 operations the minimal sum of squared differences is 378: the budget flattens the biggest differences (17 and 15) down toward the next level, and the remaining operations are spread evenly over the group."
+   },
+   {
+    "h": "Why reduce the largest differences first?",
+    "p": [
+     "The cost is the sum of squares, which is convex: reducing a large value saves more than reducing a small one (a drop from 17 to 16 saves 33, from 2 to 1 saves 3). So always lowering the current maximum is optimal, and doing it level by level on the whole group is the fast way to simulate that."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "use a max-heap, decrement one at a time",
+       "O(k log n)"
+      ],
+      [
+       "flatten level by level on sorted distinct values (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum sum of squared differences: only absolute differences matter; spend the combined budget lowering the largest differences level by level, spreading the remainder evenly."
+ },
+ "2336": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.cur`",
+       "Smallest number that has NEVER been popped: all numbers `≥ cur` are still in the set",
+       "The untouched infinite tail needs only one counter"
+      ],
+      [
+       "`self.heap`",
+       "Min-heap of numbers below `cur` that were popped and then added back",
+       "Only returned numbers need to be stored"
+      ],
+      [
+       "`self.inHeap`",
+       "Set mirror of the heap to reject duplicate add-backs in O(1)",
+       "Membership test for a heap"
+      ],
+      [
+       "`popSmallest`: heap first, else `cur`",
+       "Added-back numbers are all smaller than `cur`, so the heap's minimum is the global minimum",
+       "Order of preference"
+      ],
+      [
+       "`addBack`: `num < self.cur and num not in self.inHeap`",
+       "A number `≥ cur` was never removed, and a number already waiting in the heap is already in the set",
+       "Two conditions that make adding back a no-op"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pop, pop, addBack(1), pop, pop, addBack(2) twice, pop`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "cur",
+      "heap"
+     ],
+     "rows": [
+      [
+       "popSmallest()",
+       "1",
+       "2",
+       "[]"
+      ],
+      [
+       "popSmallest()",
+       "2",
+       "3",
+       "[]"
+      ],
+      [
+       "addBack(1,)",
+       "-",
+       "3",
+       "[1]"
+      ],
+      [
+       "popSmallest()",
+       "1",
+       "3",
+       "[]"
+      ],
+      [
+       "popSmallest()",
+       "3",
+       "4",
+       "[]"
+      ],
+      [
+       "addBack(2,)",
+       "-",
+       "4",
+       "[2]"
+      ],
+      [
+       "addBack(2,)",
+       "-",
+       "4",
+       "[2]"
+      ],
+      [
+       "popSmallest()",
+       "2",
+       "4",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a counter plus a heap?",
+    "p": [
+     "The set is infinite, so it can't be stored. Everything ≥ `cur` is untouched; only numbers popped earlier and added back (all below `cur`) need explicit storage, and the heap keeps them ordered."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Pop",
+      "Add back"
+     ],
+     "rows": [
+      [
+       "counter + heap + set (this code)",
+       "O(log n)",
+       "O(log n)"
+      ],
+      [
+       "sorted set (balanced tree)",
+       "O(log n)",
+       "O(log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) per operation.",
+     "Space: O(number of added-back numbers)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest infinite set: a counter for the untouched tail plus a min-heap (and a set) for numbers added back."
+ },
+ "2342": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sum(int(c) for c in str(x))`",
+       "Digit sum of `x`",
+       "Digit sums via strings"
+      ],
+      [
+       "`best[s]`",
+       "The LARGEST number seen so far with digit sum `s`",
+       "For a fixed digit sum, only the biggest earlier number can give the best pair"
+      ],
+      [
+       "`best[s] + x`",
+       "The best pair sum ending with this number",
+       "Pair with the previous maximum of the same class"
+      ],
+      [
+       "`best[s] = max(best.get(s, 0), x)`",
+       "Update the maximum for the class AFTER using it",
+       "So a number doesn't pair with itself"
+      ],
+      [
+       "`ans = -1`",
+       "No pair found means −1",
+       "Default"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[18, 43, 36, 13, 7]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Digit sum",
+      "Pair sum found",
+      "Answer so far",
+      "best per digit sum"
+     ],
+     "rows": [
+      [
+       "18",
+       "9",
+       "-",
+       "-1",
+       "{9: 18}"
+      ],
+      [
+       "43",
+       "7",
+       "-",
+       "-1",
+       "{9: 18, 7: 43}"
+      ],
+      [
+       "36",
+       "9",
+       "54",
+       "54",
+       "{9: 36, 7: 43}"
+      ],
+      [
+       "13",
+       "4",
+       "-",
+       "54",
+       "{9: 36, 7: 43, 4: 13}"
+      ],
+      [
+       "7",
+       "7",
+       "50",
+       "54",
+       "{9: 36, 7: 43, 4: 13}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only keep the maximum per digit sum?",
+    "p": [
+     "A pair needs two numbers with the same digit sum. For the new number `x`, the best partner is the largest earlier number in its class, so storing just that maximum (not every number) is enough and the whole thing is one pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs",
+       "O(n²)"
+      ],
+      [
+       "dictionary of class maximums (this code)",
+       "O(n · digits)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · d) for d digits.",
+     "Space: O(number of distinct digit sums) ≤ 82."
+    ]
+   }
+  ],
+  "takeaway": "Max pair with equal digit sums: group by digit sum and keep the largest number per group while scanning."
+ },
+ "2345": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(x - y, x + y)`",
+       "A mountain with peak `(x, y)` and 45° slopes covers the base interval `[x − y, x + y]` on the ground",
+       "Turn each mountain into an interval"
+      ],
+      [
+       "`sorted(..., key=lambda t: (t[0], -t[1]))`",
+       "Sort by left end ascending and, on ties, by right end DESCENDING, so the biggest mountain with that left end comes first",
+       "Larger covers the smaller one"
+      ],
+      [
+       "`far`",
+       "The largest right end seen so far",
+       "A mountain is hidden if its base is inside an earlier (larger) base"
+      ],
+      [
+       "`r > far`",
+       "This mountain extends past everything before it: not hidden by another mountain",
+       "Sweep"
+      ],
+      [
+       "`Counter(map(tuple, peaks))`",
+       "Identical peaks hide each other (neither is visible)",
+       "Duplicate mountains"
+      ],
+      [
+       "`cnt[((l + r) // 2, (r - l) // 2)] == 1`",
+       "Recover the peak `(x, y)` from the interval and check it is unique",
+       "Interval → peak"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Peaks `[[2,2],[6,3],[5,4]]`: bases `[0,4]`, `[3,9]`, `[1,9]`."
+    ],
+    "table": {
+     "head": [
+      "Base",
+      "far after",
+      "Decision",
+      "Visible so far"
+     ],
+     "rows": [
+      [
+       "[0, 4]",
+       "4",
+       "visible",
+       "1"
+      ],
+      [
+       "[1, 9]",
+       "9",
+       "visible",
+       "2"
+      ],
+      [
+       "[3, 9]",
+       "9",
+       "inside an earlier mountain → hidden",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the sort order matters",
+    "p": [
+     "A mountain is hidden if its base lies inside another's base. Sorting by left end then by right end descending guarantees that, when we reach a mountain, every mountain that could contain it has already been processed: if `r ≤ far` it is contained in an earlier one. Equal bases from duplicate peaks are handled by the Counter."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "compare every pair",
+       "O(n²)"
+      ],
+      [
+       "sort + sweep (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Visible mountains: convert peaks to base intervals [x−y, x+y], sort, and sweep; a mountain is visible if it extends past all earlier intervals and its peak is unique."
+ },
+ "2351": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "A set of the letters already read",
+       "Detect duplicates in one pass"
+      ],
+      [
+       "`ch in seen`",
+       "O(1) membership",
+       "Check before adding"
+      ],
+      [
+       "return the FIRST letter that is already in `seen`",
+       "The first letter to appear twice is the one whose SECOND occurrence comes earliest",
+       "Not the letter whose first occurrence is earliest"
+      ],
+      [
+       "no final return",
+       "The problem guarantees a repeated letter exists",
+       "Safe to omit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"abccbaacz\"`:"
+    ],
+    "table": {
+     "head": [
+      "Char",
+      "Action",
+      "seen"
+     ],
+     "rows": [
+      [
+       "a",
+       "new",
+       "['a']"
+      ],
+      [
+       "b",
+       "new",
+       "['a', 'b']"
+      ],
+      [
+       "c",
+       "new",
+       "['a', 'b', 'c']"
+      ],
+      [
+       "c",
+       "already in seen",
+       "return it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this the right definition of 'first'?",
+    "p": [
+     "The question is about the letter that appears twice FIRST, i.e. whose second occurrence has the smallest index. Scanning left to right and stopping at the first character already seen finds exactly that. In the example `b` and `a` also repeat, but their second occurrences come after the second `c`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Second occurrence index"
+     ],
+     "rows": [
+      [
+       "c",
+       "3"
+      ],
+      [
+       "b",
+       "4"
+      ],
+      [
+       "a",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), at most 27 steps.",
+     "Space: O(1), at most 26 letters."
+    ]
+   }
+  ],
+  "takeaway": "First letter to appear twice: scan with a set and return the first character already seen."
+ },
+ "2360": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`edges[u]`",
+       "Each node has at most one outgoing edge (a functional graph); `-1` means none",
+       "Every walk either ends or enters a cycle"
+      ],
+      [
+       "`seen[u] = step`",
+       "Stamp each visited node with a global, increasing step number",
+       "Time-stamp visits instead of using separate visited sets per walk"
+      ],
+      [
+       "`start`",
+       "The first stamp of the current walk",
+       "Which nodes belong to THIS walk"
+      ],
+      [
+       "`seen[u] >= start`",
+       "If we hit a node stamped during the current walk, we've closed a cycle",
+       "Distinguish a new cycle from running into an old walk"
+      ],
+      [
+       "`step - seen[u]`",
+       "Cycle length: the number of nodes visited since `u` was first stamped",
+       "Stamp difference"
+      ],
+      [
+       "`if seen[s]: continue`",
+       "Never restart from a node already covered",
+       "Each node is visited once overall"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [3,3,4,2,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Start",
+      "Nodes visited (node, stamp)",
+      "Result",
+      "Best"
+     ],
+     "rows": [
+      [
+       "0",
+       "[(0, 1), (3, 2), (2, 3), (4, 4)]",
+       "hit node 3 stamped 2 ≥ start 1 → cycle length 3",
+       "3"
+      ],
+      [
+       "1",
+       "[(1, 5)]",
+       "hit node 3 from an earlier walk → no new cycle",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare with `start`?",
+    "p": [
+     "A node stamped in an EARLIER walk is already part of an explored tail (any cycle through it was counted then), so hitting it means this walk just joins old territory. Only a stamp from the current walk (`≥ start`) proves a new cycle."
+    ],
+    "table": {
+     "head": [
+      "Stamp of the node we hit",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "≥ start",
+       "closed a new cycle"
+      ],
+      [
+       "< start",
+       "joined an old path: no new cycle"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is stamped once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Longest cycle in a functional graph: walk from each unvisited node stamping steps; hitting a stamp from the current walk gives a cycle of length (current step − stamp)."
+ },
+ "2366": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "scan from the RIGHT",
+       "The last element never needs to change; each element only has to be ≤ the element to its right",
+       "Sorting constraints that propagate leftward"
+      ],
+      [
+       "`prev`",
+       "The smallest value the next element must not exceed",
+       "The new right bound"
+      ],
+      [
+       "`x <= prev`",
+       "Already fine: it becomes the new bound",
+       "No operation"
+      ],
+      [
+       "`k = ceil(x / prev)`",
+       "Minimum number of parts to split `x` so that each part is ≤ `prev`",
+       "Ceiling division"
+      ],
+      [
+       "`ops += k - 1`",
+       "Splitting into `k` parts takes `k − 1` replacement operations",
+       "Count the splits"
+      ],
+      [
+       "`prev = x // k`",
+       "Make the parts as equal as possible; the SMALLEST part is `x // k` and becomes the new bound for the element on the left",
+       "Maximise the smallest part to give the left element the most room"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3, 9, 3]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Decision",
+      "New bound",
+      "ops"
+     ],
+     "rows": [
+      [
+       "3",
+       "last element stays",
+       "3",
+       "0"
+      ],
+      [
+       "9",
+       "9 > 3: split into 3 parts",
+       "smallest part 3",
+       "2"
+      ],
+      [
+       "3",
+       "3 ≤ 3",
+       "3",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why make the parts as equal as possible?",
+    "p": [
+     "Splitting `9` into `3 + 3 + 3` gives a smallest part of 3, which is the largest possible minimum for 3 parts. A larger minimum part means the element to the left may be larger without needing more splits. Uneven parts like `1 + 4 + 4` would have a smaller minimum and force more work to the left."
+    ],
+    "table": {
+     "head": [
+      "Split of 9 into 3 parts",
+      "Smallest part"
+     ],
+     "rows": [
+      [
+       "3 + 3 + 3",
+       "3"
+      ],
+      [
+       "1 + 4 + 4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum replacements to sort: scan from the right; split each too-large element into the fewest parts ≤ the bound, with equal parts to maximise the new bound."
+ },
+ "2375": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st.append(str(i + 1))`",
+       "Push the next unused digit (digits 1, 2, 3, … in order, each used once)",
+       "Using digits in increasing order is what makes the result smallest"
+      ],
+      [
+       "`pattern[i] == 'I'` or end",
+       "On an increase (or at the end) the pending digits can be emitted",
+       "An 'I' closes a group"
+      ],
+      [
+       "`while st: res.append(st.pop())`",
+       "Pop in REVERSE order: a run of `D`s means the digits in the run must decrease, so reverse them",
+       "Reversing a block turns an increasing sequence into a decreasing one"
+      ],
+      [
+       "`''.join(res)`",
+       "Concatenate the reversed blocks",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pattern = \"IIIDIDDD\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "pattern[i]",
+      "Stack after push",
+      "Result so far",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "I",
+       "",
+       "1",
+       "flush stack"
+      ],
+      [
+       "1",
+       "I",
+       "",
+       "12",
+       "flush stack"
+      ],
+      [
+       "2",
+       "I",
+       "",
+       "123",
+       "flush stack"
+      ],
+      [
+       "3",
+       "D",
+       "4",
+       "123",
+       "-"
+      ],
+      [
+       "4",
+       "I",
+       "",
+       "12354",
+       "flush stack"
+      ],
+      [
+       "5",
+       "D",
+       "6",
+       "12354",
+       "-"
+      ],
+      [
+       "6",
+       "D",
+       "67",
+       "12354",
+       "-"
+      ],
+      [
+       "7",
+       "D",
+       "678",
+       "12354",
+       "-"
+      ],
+      [
+       "8",
+       "(end)",
+       "",
+       "123549876",
+       "flush stack"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does reversing blocks give the smallest number?",
+    "p": [
+     "Each maximal run of `D`s needs a decreasing run of digits. The smallest way to satisfy it is to take the next consecutive unused digits and reverse them. Each `I` then starts with the next, larger unused digits, so earlier positions stay as small as possible."
+    ],
+    "table": {
+     "head": [
+      "Pattern",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`III`",
+       "1234"
+      ],
+      [
+       "`DDD`",
+       "4321"
+      ],
+      [
+       "`IIIDIDDD`",
+       "123549876"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest number from a DI string: push digits 1..n+1 on a stack and flush (reversed) whenever you reach an 'I' or the end."
+ },
+ "2390": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stack`",
+       "The characters kept so far",
+       "A star removes the closest non-star character to its left, which is the most recent kept one"
+      ],
+      [
+       "`ch == '*': stack.pop()`",
+       "Delete the most recent kept character",
+       "Undo the last push"
+      ],
+      [
+       "`stack.append(ch)`",
+       "Keep a normal character",
+       "Push"
+      ],
+      [
+       "`''.join(stack)`",
+       "The final string",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"leet**cod*e\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Action",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "l",
+       "push",
+       "l"
+      ],
+      [
+       "e",
+       "push",
+       "le"
+      ],
+      [
+       "e",
+       "push",
+       "lee"
+      ],
+      [
+       "t",
+       "push",
+       "leet"
+      ],
+      [
+       "*",
+       "pop 't'",
+       "lee"
+      ],
+      [
+       "*",
+       "pop 'e'",
+       "le"
+      ],
+      [
+       "c",
+       "push",
+       "lec"
+      ],
+      [
+       "o",
+       "push",
+       "leco"
+      ],
+      [
+       "d",
+       "push",
+       "lecod"
+      ],
+      [
+       "*",
+       "pop 'd'",
+       "leco"
+      ],
+      [
+       "e",
+       "push",
+       "lecoe"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can `pop()` never fail?",
+    "p": [
+     "The problem guarantees every star has a non-star character to its left to remove, so the stack is never empty when a `*` arrives."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "repeated string slicing",
+       "O(n²)"
+      ],
+      [
+       "stack (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Removing stars: a stack; a star pops the most recently kept character."
+ },
+ "2402": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`meetings.sort()`",
+       "Process meetings by start time, as the rule says earlier-starting meetings get priority",
+       "Order matters for the simulation"
+      ],
+      [
+       "`free`",
+       "Min-heap of free room numbers: the lowest-numbered room is preferred",
+       "Heap by room number"
+      ],
+      [
+       "`busy`",
+       "Min-heap of `(end time, room)` for rooms in use, ordered by when they free up (ties by room number)",
+       "Earliest-finishing room first"
+      ],
+      [
+       "`while busy and busy[0][0] <= start`",
+       "Release every room whose meeting has ended by now",
+       "Move rooms from busy to free"
+      ],
+      [
+       "delayed meeting: `t + end - start`",
+       "If no room is free, the meeting waits for the earliest room and keeps its DURATION",
+       "New end time = freed time + duration"
+      ],
+      [
+       "`count.index(max(count))`",
+       "Most-used room, with the smallest number on ties (`index` returns the first match)",
+       "Tie-break by lowest room"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "2 rooms, meetings `[0,10] [1,5] [2,7] [3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "Meeting",
+      "What happens",
+      "Meetings per room"
+     ],
+     "rows": [
+      [
+       "[0,10]",
+       "room 0 free → [0,10]",
+       "[1, 0]"
+      ],
+      [
+       "[1,5]",
+       "room 1 free → [1,5]",
+       "[1, 1]"
+      ],
+      [
+       "[2,7]",
+       "all busy → wait for room 1 until 5, runs [5,10]",
+       "[1, 2]"
+      ],
+      [
+       "[3,4]",
+       "all busy → wait for room 0 until 10, runs [10,11]",
+       "[2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two heaps?",
+    "p": [
+     "We need two things quickly: the lowest-numbered FREE room, and the room that frees up EARLIEST. One heap keyed by room number and one keyed by end time give each in O(log n)."
+    ],
+    "table": {
+     "head": [
+      "Structure",
+      "Key",
+      "Purpose"
+     ],
+     "rows": [
+      [
+       "`free`",
+       "room number",
+       "assign the lowest free room"
+      ],
+      [
+       "`busy`",
+       "(end time, room)",
+       "find the room freeing soonest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log m + m log n) for m meetings.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Meeting Rooms III: sort meetings, keep a heap of free rooms and a heap of busy rooms by end time, and delay a meeting to the earliest free-up time when all are busy."
+ },
+ "2405": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "Letters in the current substring",
+       "A set to detect a repeat"
+      ],
+      [
+       "`c in seen`",
+       "The current letter would repeat inside the current part",
+       "Cut BEFORE it"
+      ],
+      [
+       "`parts += 1; seen = set()`",
+       "Start a new part, with an empty letter set",
+       "Reset"
+      ],
+      [
+       "`seen.add(c)` after the check",
+       "The letter belongs to the (possibly new) current part",
+       "Always add"
+      ],
+      [
+       "`parts = 1`",
+       "The string is non-empty, so there is at least one part",
+       "Initial count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"abacaba\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Action",
+      "parts",
+      "seen after (before adding c)"
+     ],
+     "rows": [
+      [
+       "a",
+       "new letter",
+       "1",
+       "a"
+      ],
+      [
+       "b",
+       "new letter",
+       "1",
+       "ab"
+      ],
+      [
+       "a",
+       "repeat → start a new part",
+       "2",
+       "{}"
+      ],
+      [
+       "c",
+       "new letter",
+       "2",
+       "ac"
+      ],
+      [
+       "a",
+       "repeat → start a new part",
+       "3",
+       "{}"
+      ],
+      [
+       "b",
+       "new letter",
+       "3",
+       "ab"
+      ],
+      [
+       "a",
+       "repeat → start a new part",
+       "4",
+       "{}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy?",
+    "p": [
+     "Each part has distinct letters, so making a part as long as possible leaves a shorter suffix for the rest. Cutting earlier can only produce the same number of parts or more. This is the same exchange argument as in Partition Labels."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "greedy cut at the first repeat (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (at most 26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Optimal partition into distinct-letter substrings: extend each part greedily and cut just before a repeated letter."
+ }
+}
