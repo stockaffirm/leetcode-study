@@ -1,0 +1,1927 @@
+{
+ "351": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "skip[a][b] = mid",
+       "Table of the key that lies between two keys on a straight line (e.g. 1 and 3 need 2), 0 when nothing lies between",
+       "Encoding special-case rules as data"
+      ],
+      [
+       "used[]",
+       "Keys already on the pattern",
+       "Backtracking visited marks"
+      ],
+      [
+       "skip[cur][nxt] == 0 or used[skip[cur][nxt]]",
+       "A move is legal when nothing lies between the keys, or the key in between was already used",
+       ""
+      ],
+      [
+       "cnt = 1 if length >= m",
+       "Every prefix of length at least m is itself a valid pattern, so count it",
+       "Counting at every depth"
+      ],
+      [
+       "4 * dfs(1) + 4 * dfs(2) + dfs(5)",
+       "Symmetry: the 4 corners give equal counts, the 4 edge keys give equal counts, plus the centre",
+       "Using symmetry to cut work by about 9x to 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Patterns of exactly L keys (m = n = L). The three starts are a corner (key 1), an edge key (key 2) and the centre (key 5):"
+    ],
+    "table": {
+     "head": [
+      "L",
+      "from corner 1",
+      "from edge 2",
+      "from centre 5",
+      "total 4\u00b7c + 4\u00b7e + centre"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "9"
+      ],
+      [
+       "2",
+       "5",
+       "7",
+       "8",
+       "56"
+      ],
+      [
+       "3",
+       "31",
+       "37",
+       "48",
+       "320"
+      ],
+      [
+       "4",
+       "154",
+       "188",
+       "256",
+       "1624"
+      ]
+     ]
+    },
+    "bullets": [
+     "L = 1 gives 9: one pattern per key. For L = 2: 4\u00b75 + 4\u00b77 + 8 = 56."
+    ]
+   },
+   {
+    "h": "Why does `used[...]` of the middle key matter?",
+    "p": [
+     "From 1 you may go to 3 only if 2 is already on the pattern, because the line would otherwise pass over it. Knight-like jumps such as 1 to 6 have no key in between, so `skip` is 0 and they are always allowed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: bounded by the number of patterns (at most 9! = 362,880 orderings), and the symmetry reduces the starts from 9 to 3.",
+     "Space: O(9) recursion depth and visited array."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking (trying a choice, recursing, then undoing it) with a skip table for jumped-over keys, plus symmetry to run only three starts."
+ },
+ "609": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "p.split(' ')",
+       "Splits a directory line into the directory and its file tokens",
+       ""
+      ],
+      [
+       "root, *files = \u2026",
+       "Star unpacking: first item to `root`, the rest to the list `files`",
+       "Splitting a head from a tail"
+      ],
+      [
+       "f.split('(')",
+       "Separates `name` from `content)`",
+       ""
+      ],
+      [
+       "content[:-1]",
+       "Drops the trailing ')'",
+       ""
+      ],
+      [
+       "groups = defaultdict(list)",
+       "Maps file content to the list of full paths with that content",
+       "Grouping by a key"
+      ],
+      [
+       "[g for g in groups.values() if len(g) > 1]",
+       "Only contents that appear in two or more files are duplicates",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Four directory lines. Each file is filed under its content:"
+    ],
+    "table": {
+     "head": [
+      "file path",
+      "content",
+      "groups so far"
+     ],
+     "rows": [
+      [
+       "root/a/1.txt",
+       "abcd",
+       "{'abcd': ['root/a/1.txt']}"
+      ],
+      [
+       "root/a/2.txt",
+       "efgh",
+       "{'abcd': ['root/a/1.txt'], 'efgh': ['root/a/2.txt']}"
+      ],
+      [
+       "root/c/3.txt",
+       "abcd",
+       "{'abcd': ['root/a/1.txt', 'root/c/3.txt'], 'efgh': ['root/a/2.txt']}"
+      ],
+      [
+       "root/c/d/4.txt",
+       "efgh",
+       "{'abcd': ['root/a/1.txt', 'root/c/3.txt'], 'efgh': ['root/a/2.txt', 'root/c/d/4.txt']}"
+      ],
+      [
+       "root/4.txt",
+       "efgh",
+       "{'abcd': ['root/a/1.txt', 'root/c/3.txt'], 'efgh': ['root/a/2.txt', 'root/c/d/4.txt', 'root/4.txt']}"
+      ]
+     ]
+    },
+    "bullets": [
+     "Groups with more than one file: `[['root/a/1.txt', 'root/c/3.txt'], ['root/a/2.txt', 'root/c/d/4.txt', 'root/4.txt']]`."
+    ]
+   },
+   {
+    "h": "Why key by content rather than compare files pairwise?",
+    "p": [
+     "Pairwise comparison is O(F\u00b2) in the number of files F. Hashing the content puts equal files in the same bucket in one pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters), since every content string is hashed once.",
+     "Space: O(total characters) for the keys and paths."
+    ]
+   }
+  ],
+  "takeaway": "Group by content with a hash map (defaultdict of lists) and keep groups of size two or more."
+ },
+ "621": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(tasks)",
+       "How many times each task appears",
+       ""
+      ],
+      [
+       "mx = max(cnt.values())",
+       "Count of the most frequent task; it forces the frame length",
+       ""
+      ],
+      [
+       "n_max",
+       "How many tasks tie for that maximum",
+       ""
+      ],
+      [
+       "(mx - 1) * (n + 1) + n_max",
+       "(mx \u2212 1) full frames of n + 1 slots, then a last row holding each of the n_max top tasks once",
+       "Closed-form scheduling formula"
+      ],
+      [
+       "max(len(tasks), \u2026)",
+       "If there are plenty of other tasks, no idle time is needed and the answer is just the task count",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`A A A B B B`, n = 2:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "mx",
+       "3"
+      ],
+      [
+       "n_max",
+       "2"
+      ],
+      [
+       "(mx\u22121)\u00b7(n+1) + n_max",
+       "8"
+      ],
+      [
+       "len(tasks)",
+       "6"
+      ],
+      [
+       "answer",
+       "8"
+      ]
+     ]
+    },
+    "bullets": [
+     "Schedule: A B _ A B _ A B (8 slots, two idle)."
+    ]
+   },
+   {
+    "h": "Why the formula and not a simulation?",
+    "p": [
+     "The most frequent task must be separated by n other slots, so it fixes (mx \u2212 1) frames of width n + 1. Other tasks fill the gaps. If gaps run out, extra tasks simply lengthen the schedule beyond the frame, so the length never drops below `len(tasks)`. Another case: `AAAABBBBCC`, n=1 gives 10 = the task count, with no idle slots."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(T) for T tasks.",
+     "Space: O(1) (at most 26 task types)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy formula: the most frequent task sets the frame (max-1)*(n+1)+ties; answer is the larger of that and the task count."
+ },
+ "630": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(courses, key=lambda c: c[1])",
+       "Orders by deadline, earliest first",
+       "Deadline scheduling"
+      ],
+      [
+       "heappush(heap, -dur)",
+       "Python's `heapq` is a min-heap (priority queue returning the smallest item), so negating durations makes the longest course pop first",
+       "Max-heap trick"
+      ],
+      [
+       "total += dur",
+       "Total time spent on the courses currently chosen",
+       ""
+      ],
+      [
+       "total > last \u2192 heappop",
+       "Deadline missed: drop the longest chosen course, which frees the most time",
+       "Regret-style greedy"
+      ],
+      [
+       "len(heap)",
+       "Number of courses kept",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Courses sorted by deadline:"
+    ],
+    "table": {
+     "head": [
+      "(duration, deadline)",
+      "total time",
+      "action",
+      "kept durations"
+     ],
+     "rows": [
+      [
+       "(100,200)",
+       "100",
+       "fits",
+       "[100]"
+      ],
+      [
+       "(1000,1250)",
+       "1100",
+       "fits",
+       "[100, 1000]"
+      ],
+      [
+       "(200,1300)",
+       "1300",
+       "fits",
+       "[100, 200, 1000]"
+      ],
+      [
+       "(2000,3200)",
+       "1300",
+       "over deadline 3200: drop longest (2000)",
+       "[100, 200, 1000]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why drop the longest course, even if it is the new one?",
+    "p": [
+     "Courses are processed in deadline order, so any chosen set fits if its total time meets the current deadline. When it does not, removing one course must restore feasibility, and removing the longest does that while losing only one course. Swapping a long earlier course for a short new one keeps the count the same but leaves more time for later courses."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort and heap operations.",
+     "Space: O(n) for the heap."
+    ]
+   }
+  ],
+  "takeaway": "Sort by deadline, add each course, and when the deadline is missed drop the longest one chosen so far (max-heap via negation)."
+ },
+ "633": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "isqrt(c)",
+       "Exact integer square root (floor), from `math`; avoids float rounding issues of `c ** 0.5`",
+       ""
+      ],
+      [
+       "l, r = 0, isqrt(c)",
+       "Two pointers over the sorted range of candidate roots",
+       "Two-pointer search in a monotone sum"
+      ],
+      [
+       "l*l + r*r",
+       "Current sum of squares",
+       ""
+      ],
+      [
+       "s < c: l += 1 / s > c: r -= 1",
+       "Increase the sum by raising the small side, decrease it by lowering the big side",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`c = 5`:"
+    ],
+    "table": {
+     "head": [
+      "l",
+      "r",
+      "l\u00b2 + r\u00b2",
+      "action"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "4",
+       "too small \u2192 l += 1"
+      ],
+      [
+       "1",
+       "2",
+       "5",
+       "equal \u2192 True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can pointers only move inward?",
+    "p": [
+     "If `l\u00b2 + r\u00b2 < c`, every pair that uses this `l` with any `r' \u2264 r` is even smaller, so `l` can be discarded (`l += 1`). If the sum is larger than `c`, every pair using this `r` with any `l' \u2265 l` is even larger, so `r` can be discarded (`r -= 1`). Each step removes one candidate, exactly like Two Sum on a sorted array."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(\u221ac).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers from 0 and isqrt(c): the sum of squares is monotone in each pointer."
+ },
+ "636": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "log.split(':')",
+       "Parses `id:start|end:time`",
+       ""
+      ],
+      [
+       "st",
+       "Call stack of function ids currently running",
+       "A stack mirrors nested calls"
+      ],
+      [
+       "prev",
+       "The time up to which time has already been credited",
+       "Sweep-line bookkeeping"
+      ],
+      [
+       "res[st[-1]] += t - prev",
+       "On a start, credit the interrupted function with the time it ran",
+       ""
+      ],
+      [
+       "t - prev + 1 on end",
+       "End times are inclusive, so the function ran through the whole unit t; +1 counts it",
+       ""
+      ],
+      [
+       "prev = t + 1",
+       "After an end, the parent resumes at the next unit",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`, logs `0:start:0, 1:start:2, 1:end:5, 0:end:6`:"
+    ],
+    "table": {
+     "head": [
+      "log",
+      "stack",
+      "prev",
+      "exclusive time"
+     ],
+     "rows": [
+      [
+       "0:start:0",
+       "[0]",
+       "0",
+       "[0, 0]"
+      ],
+      [
+       "1:start:2",
+       "[0, 1]",
+       "2",
+       "[2, 0]"
+      ],
+      [
+       "1:end:5",
+       "[0]",
+       "6",
+       "[2, 4]"
+      ],
+      [
+       "0:end:6",
+       "[]",
+       "7",
+       "[3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `+1` and `prev = t + 1` on end but not on start?",
+    "p": [
+     "A start at time t begins at the beginning of unit t, so the interrupted function ran units prev..t\u22121 (length t \u2212 prev). An end at time t finishes at the end of unit t, so the function ran through unit t (length t \u2212 prev + 1), and the next work begins at t + 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) for L log lines.",
+     "Space: O(depth of calls)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of running functions plus a 'credited up to' pointer; ends are inclusive, which is the +1."
+ },
+ "645": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(nums)",
+       "Sum with the duplicate included",
+       ""
+      ],
+      [
+       "sum(set(nums))",
+       "Sum of distinct values: the duplicate counted once and the missing number absent",
+       "A set removes repeats"
+      ],
+      [
+       "n * (n + 1) // 2",
+       "Sum 1..n, the sum when nothing is wrong",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,4]`, n = 4:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "sum(nums)",
+       "9"
+      ],
+      [
+       "sum(set(nums))",
+       "7"
+      ],
+      [
+       "duplicate = sum \u2212 sum(set)",
+       "2"
+      ],
+      [
+       "n(n+1)/2",
+       "10"
+      ],
+      [
+       "missing = n(n+1)/2 \u2212 sum(set)",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer `[2, 3]`."
+    ]
+   },
+   {
+    "h": "Why do these differences give the two values?",
+    "p": [
+     "`sum(nums) \u2212 sum(set(nums))` leaves exactly one extra copy of the repeated number. `sum(1..n) \u2212 sum(set(nums))` leaves exactly the missing number, since the set has every value 1..n except it. This relies on exactly one value duplicated and one missing."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the set; an in-place sign-marking method uses O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Arithmetic on sums: duplicate = sum \u2212 sum(set), missing = n(n+1)/2 \u2212 sum(set)."
+ },
+ "648": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "roots = set(dictionary)",
+       "O(1) average membership tests",
+       ""
+      ],
+      [
+       "sentence.split()",
+       "Splits on whitespace",
+       ""
+      ],
+      [
+       "w[:i] in roots",
+       "Tests each prefix, shortest first; the first hit is the shortest root",
+       "Shortest-prefix search"
+      ],
+      [
+       "break",
+       "Stops at the first (shortest) prefix match",
+       ""
+      ],
+      [
+       "' '.join(out)",
+       "Rebuilds the sentence",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Roots `cat, bat, rat`:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "result",
+      "note"
+     ],
+     "rows": [
+      [
+       "the",
+       "the",
+       "kept"
+      ],
+      [
+       "cattle",
+       "cat",
+       "replaced"
+      ],
+      [
+       "was",
+       "was",
+       "kept"
+      ],
+      [
+       "rattled",
+       "rat",
+       "replaced"
+      ],
+      [
+       "by",
+       "by",
+       "kept"
+      ],
+      [
+       "the",
+       "the",
+       "kept"
+      ],
+      [
+       "battery",
+       "bat",
+       "replaced"
+      ]
+     ]
+    },
+    "bullets": [
+     "Output: `the cat was rat by the bat`."
+    ]
+   },
+   {
+    "h": "Why test prefixes from short to long?",
+    "p": [
+     "The task asks for the shortest root, so the first match when lengths increase is the answer, and no further prefixes are checked. A Trie (prefix tree) would avoid re-hashing each prefix, but the set version is simpler."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total letters \u00b7 average word length), since each prefix slice costs O(length).",
+     "Space: O(dictionary size)."
+    ]
+   }
+  ],
+  "takeaway": "For each word, test prefixes shortest-first against a set and cut at the first hit."
+ },
+ "657": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x = y = 0",
+       "Chained assignment: both coordinates start at the origin",
+       ""
+      ],
+      [
+       "if/elif chain on the move",
+       "Each letter changes one coordinate by 1",
+       ""
+      ],
+      [
+       "x == 0 and y == 0",
+       "The robot is home iff both net displacements are zero",
+       "Tracking only the net result, not the path"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"UD\"` returns True (up then down). For `\"UDLL\"` the table shows where the robot ends up:"
+    ],
+    "table": {
+     "head": [
+      "move",
+      "x",
+      "y"
+     ],
+     "rows": [
+      [
+       "U",
+       "0",
+       "1"
+      ],
+      [
+       "D",
+       "0",
+       "0"
+      ],
+      [
+       "L",
+       "-1",
+       "0"
+      ],
+      [
+       "L",
+       "-2",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "`\"UDLL\"` ends at (\u22122, 0), so it is False."
+    ]
+   },
+   {
+    "h": "Why is counting enough?",
+    "p": [
+     "Position is the sum of the moves, and order does not matter for the final position. The string works iff #U = #D and #L = #R, so `moves.count('U') == moves.count('D') and moves.count('L') == moves.count('R')` is an equivalent one-liner."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Net displacement: the robot returns iff ups equal downs and lefts equal rights."
+ },
+ "669": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "root.val < low: return trim(root.right)",
+       "Node and everything in its left subtree are too small (BST property), so the answer lies in the right subtree",
+       "Pruning a whole subtree by one comparison"
+      ],
+      [
+       "root.val > high: return trim(root.left)",
+       "Mirror case",
+       ""
+      ],
+      [
+       "root.left = trim(root.left) \u2026",
+       "In range: keep the node and re-attach the trimmed children",
+       "Rebuilding links via return values"
+      ],
+      [
+       "if not root: return None",
+       "Base case",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "BST `[1,0,2]` (1 with left child 0 and right child 2), keep values in [1, 2]:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "decision"
+     ],
+     "rows": [
+      [
+       "1",
+       "in range: keep, trim both children"
+      ],
+      [
+       "0",
+       "0 < 1: discard node and its left subtree, use right"
+      ],
+      [
+       "2",
+       "in range: keep, trim both children"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `1(,2)` in `v(left,right)` form: 1 with right child 2."
+    ]
+   },
+   {
+    "h": "Why can a whole subtree be skipped?",
+    "p": [
+     "In a BST (Binary Search Tree) all values in a node's left subtree are smaller than the node. If the node is already below `low`, its left subtree is too. The recursion therefore returns the trimmed right subtree directly, and the parent links to it, bypassing the node."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) worst case, each node visited once.",
+     "Space: O(h) recursion depth, h = tree height."
+    ]
+   }
+  ],
+  "takeaway": "BST trimming by recursion: out-of-range nodes are replaced by the trimmed subtree on the in-range side."
+ },
+ "678": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo",
+       "Smallest possible number of unmatched '(' if every '*' is chosen to help close",
+       "Tracking a range of possibilities instead of branching"
+      ],
+      [
+       "hi",
+       "Largest possible number of unmatched '(' if every '*' is treated as '('",
+       ""
+      ],
+      [
+       "lo += 1 if ch == '(' else -1",
+       "'(' raises it; ')' and '*' (as ')') lower it",
+       ""
+      ],
+      [
+       "hi < 0 \u2192 False",
+       "Even with every '*' opening, there are too many ')'",
+       ""
+      ],
+      [
+       "lo = max(lo, 0)",
+       "A '*' does not have to close anything, so the count never goes below zero",
+       ""
+      ],
+      [
+       "return lo == 0",
+       "Zero must be reachable",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"(*))\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "lo after",
+      "hi after",
+      "note"
+     ],
+     "rows": [
+      [
+       "(",
+       "1",
+       "1",
+       "\u2013"
+      ],
+      [
+       "*",
+       "0",
+       "2",
+       "\u2013"
+      ],
+      [
+       ")",
+       "0",
+       "1",
+       "\u2013"
+      ],
+      [
+       ")",
+       "0",
+       "0",
+       "\u2013"
+      ]
+     ]
+    },
+    "bullets": [
+     "Ends with `lo = 0`, so the string is valid (the `*` acts as '(')."
+    ]
+   },
+   {
+    "h": "Why is a range enough?",
+    "p": [
+     "Every reachable count of open parentheses lies between lo and hi, and every value in between is reachable because each '*' changes the count by at most one in either direction. Only whether 0 lies in [lo, hi] at the end matters, and `hi < 0` at any time kills all options."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1). A stack-based or DP (Dynamic Programming) solution is slower or larger."
+    ]
+   }
+  ],
+  "takeaway": "Greedy range [lo, hi] of possible open-parenthesis counts; fail if hi goes negative, succeed if lo ends at 0."
+ },
+ "684": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "parent = list(range(n + 1))",
+       "Union-Find (disjoint set) forest: each node starts as its own root; index 0 is unused because nodes are numbered from 1",
+       ""
+      ],
+      [
+       "find(x)",
+       "Follows parents to the root, shortening the path as it goes (`parent[x] = parent[parent[x]]`, path halving)",
+       "Near-constant time lookups"
+      ],
+      [
+       "ra == rb \u2192 return [a, b]",
+       "Both ends already connected, so this edge would close a cycle",
+       "Cycle detection while building a graph"
+      ],
+      [
+       "parent[ra] = rb",
+       "Union: merge the two components",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[1,3],[2,3]]`:"
+    ],
+    "table": {
+     "head": [
+      "edge",
+      "roots",
+      "action"
+     ],
+     "rows": [
+      [
+       "(1,2)",
+       "1 \u2260 2",
+       "union: parent[1] = 2  \u2192 [0, 2, 2, 3]"
+      ],
+      [
+       "(1,3)",
+       "2 \u2260 3",
+       "union: parent[2] = 3  \u2192 [0, 2, 3, 3]"
+      ],
+      [
+       "(2,3)",
+       "3 = 3",
+       "same set \u2192 redundant edge"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer `[2, 3]`."
+    ]
+   },
+   {
+    "h": "Why does the first cycle-closing edge give the right answer?",
+    "p": [
+     "The graph has n nodes and n edges, so there is exactly one cycle. Edges are processed in input order, so the edge that first connects two already-connected nodes is the last edge of that cycle in the input, which is what the problem asks for."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 \u03b1(n)), where \u03b1 is the inverse Ackermann function (practically constant).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find (disjoint set): the first edge whose endpoints already share a root is the redundant one."
+ },
+ "687": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(node)",
+       "Returns the longest same-value downward path (in edges) starting at node",
+       "Post-order DFS (Depth-First Search)"
+      ],
+      [
+       "l + 1 if node.left.val == node.val else 0",
+       "Extend the child's path only if values match; otherwise the chain restarts at 0",
+       ""
+      ],
+      [
+       "best = max(best, left + right)",
+       "Path bending at node: both arms joined",
+       ""
+      ],
+      [
+       "return max(left, right)",
+       "A path continuing to the parent can use only one arm",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[5,4,5,1,1,null,5]`, nodes in post-order:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "left arm",
+      "right arm",
+      "bent path",
+      "returns",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "4",
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "5",
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "5",
+       "0",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "5",
+       "0",
+       "2",
+       "2",
+       "2",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "The longest path is 5 \u2192 5 \u2192 5 (right side) with 2 edges."
+    ]
+   },
+   {
+    "h": "Why `l + 1` and not `l` when the values match?",
+    "p": [
+     "`go` returns the number of edges below the child. Joining the child to the node adds one edge, hence +1. Checking the child's value on the parent (`node.left.val == node.val`) is also what handles a different-valued child whose own chain is long, which must not count."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Like the tree diameter, but each arm only counts when the child's value equals the node's."
+ },
+ "690": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "by_id = {e[0]: e for e in employees}",
+       "Dict from id to employee record for O(1) lookup (the input is a flat list)",
+       "Turning a list into an index"
+      ],
+      [
+       "_, imp, subs = by_id[i]",
+       "Tuple unpacking; `_` ignores the id",
+       ""
+      ],
+      [
+       "imp + sum(dfs(s) for s in subs)",
+       "Own importance plus all subordinates', recursively (generator expression)",
+       "Tree sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,5,[2,3]],[2,3,[]],[3,3,[]]]`, id = 1; calls finish in this order:"
+    ],
+    "table": {
+     "head": [
+      "id",
+      "importance",
+      "subordinates",
+      "subtree total"
+     ],
+     "rows": [
+      [
+       "2",
+       "3",
+       "[]",
+       "3"
+      ],
+      [
+       "3",
+       "3",
+       "[]",
+       "3"
+      ],
+      [
+       "1",
+       "5",
+       "[2, 3]",
+       "11"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total = 11."
+    ]
+   },
+   {
+    "h": "Why build the dict first?",
+    "p": [
+     "Looking an employee up by scanning the list would cost O(n) per lookup and O(n\u00b2) overall. One O(n) pass builds a dict, and then each employee is visited once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the dict plus recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Index employees by id, then DFS (Depth-First Search) summing importance down the subordinate tree."
+ },
+ "696": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur",
+       "Length of the current run of equal characters",
+       "Run-length encoding on the fly"
+      ],
+      [
+       "prev",
+       "Length of the run just before it",
+       ""
+      ],
+      [
+       "res += min(prev, cur)",
+       "Between two adjacent runs there are min(prev, cur) valid substrings (like 0011, 01)",
+       ""
+      ],
+      [
+       "return res + min(prev, cur)",
+       "Counts the final pair of runs, which the loop never closed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"00110011\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "event",
+      "prev",
+      "cur",
+      "res"
+     ],
+     "rows": [
+      [
+       "start",
+       "\u2013",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "1",
+       "same char: run grows",
+       "0",
+       "2",
+       "0"
+      ],
+      [
+       "2",
+       "run ended: add min(0,2)",
+       "2",
+       "1",
+       "0"
+      ],
+      [
+       "3",
+       "same char: run grows",
+       "2",
+       "2",
+       "0"
+      ],
+      [
+       "4",
+       "run ended: add min(2,2)",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "5",
+       "same char: run grows",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "6",
+       "run ended: add min(2,2)",
+       "2",
+       "1",
+       "4"
+      ],
+      [
+       "7",
+       "same char: run grows",
+       "2",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final: res + min(prev, cur) = 4 + 2 = 6."
+    ]
+   },
+   {
+    "h": "Why min of the two adjacent runs?",
+    "p": [
+     "A valid substring has k zeros then k ones (or the reverse) across a boundary. For runs of lengths a and b, k can be 1..min(a, b), giving min(a, b) substrings per boundary, and different boundaries produce different substrings."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Run lengths: each boundary between runs contributes min(previous run, current run)."
+ },
+ "699": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "tops",
+       "List of (left, right, height) for every settled square",
+       ""
+      ],
+      [
+       "l < right and left < r",
+       "Open-interval overlap test: touching edges do not count",
+       "Interval overlap"
+      ],
+      [
+       "base = max(base, h)",
+       "The new square rests on the tallest square it overlaps",
+       ""
+      ],
+      [
+       "h = base + side",
+       "Its top height",
+       ""
+      ],
+      [
+       "best = max(best, h)",
+       "Overall tallest stack so far, which is what is reported after each drop",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,3],[6,1]]`: squares given as (left, side length):"
+    ],
+    "table": {
+     "head": [
+      "square",
+      "overlapped squares (l, r, h)",
+      "base",
+      "top height",
+      "tallest so far"
+     ],
+     "rows": [
+      [
+       "left=1, side=2",
+       "[]",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "left=2, side=3",
+       "[(1, 3, 2)]",
+       "2",
+       "5",
+       "5"
+      ],
+      [
+       "left=6, side=1",
+       "[]",
+       "0",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the strict `<` in the overlap test?",
+    "p": [
+     "Squares that only touch at an edge do not stack. In the example the third square at x = 6 does not overlap anything. Using `<=` would wrongly stack squares that merely share an edge."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2), each drop scans earlier squares.",
+     "Space: O(n). A segment tree achieves O(n log n)."
+    ]
+   }
+  ],
+  "takeaway": "Brute-force coordinate stacking: a new square lands on the tallest earlier square it overlaps with strict interval overlap."
+ },
+ "708": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "not head \u2192 node.next = node",
+       "Empty list: the new node is a one-element circle",
+       ""
+      ],
+      [
+       "cur.val <= insertVal <= nxt.val",
+       "Normal case: fits between two ascending neighbours",
+       ""
+      ],
+      [
+       "cur.val > nxt.val",
+       "Detects the wrap point (largest \u2192 smallest), where the circle restarts",
+       ""
+      ],
+      [
+       "insertVal >= cur.val or insertVal <= nxt.val",
+       "At the wrap, a value larger than the maximum or smaller than the minimum belongs there",
+       ""
+      ],
+      [
+       "if cur is head: break",
+       "Full lap without a fit (e.g. all values equal): insert anywhere",
+       "Termination in a circular structure"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Circular list `3\u21924\u21921\u2192(3)`, insert 2:"
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "next",
+      "decision"
+     ],
+     "rows": [
+      [
+       "3",
+       "4",
+       "keep going"
+      ],
+      [
+       "4",
+       "1",
+       "keep going"
+      ],
+      [
+       "1",
+       "3",
+       "insert here"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `3\u21924\u21921\u21922\u2192(back)`."
+    ]
+   },
+   {
+    "h": "Why is the loop `while True` with a lap check?",
+    "p": [
+     "A circular list has no null end to stop on, so the loop stops either when a spot is found or when `cur` returns to `head`. The lap check covers the case where every node has the same value: no ascending pair or wrap point matches, so it is inserted after the last node visited."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Walk the circle looking for an ascending gap that fits, or the wrap point if the value is a new extreme; stop after one lap."
+ },
+ "714": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "hold",
+       "Best profit while holding a share",
+       "Two-state DP (Dynamic Programming)"
+      ],
+      [
+       "cash",
+       "Best profit while holding nothing",
+       ""
+      ],
+      [
+       "max(hold, cash - p)",
+       "Keep holding, or buy today using cash",
+       ""
+      ],
+      [
+       "max(cash, hold + p - fee)",
+       "Stay in cash, or sell today and pay the fee (charged once per transaction, here at the sale)",
+       ""
+      ],
+      [
+       "hold, cash = \u2026, \u2026",
+       "Tuple assignment reads both OLD values on the right side before either is updated",
+       "No temporary variable needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [1,3,2,8,4,9]`, `fee = 2`:"
+    ],
+    "table": {
+     "head": [
+      "price",
+      "hold",
+      "cash"
+     ],
+     "rows": [
+      [
+       "start",
+       "-1",
+       "0"
+      ],
+      [
+       "3",
+       "-1",
+       "0"
+      ],
+      [
+       "2",
+       "-1",
+       "0"
+      ],
+      [
+       "8",
+       "-1",
+       "5"
+      ],
+      [
+       "4",
+       "1",
+       "5"
+      ],
+      [
+       "9",
+       "1",
+       "8"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: cash = 8 (buy 1, sell 8, buy 4, sell 9; fees 2 + 2)."
+    ]
+   },
+   {
+    "h": "Why does the simultaneous assignment matter?",
+    "p": [
+     "If `hold` were updated first, `cash` would use today's new `hold`, effectively allowing buy and sell on the same day. The tuple assignment evaluates both right-hand sides from yesterday's values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two-state DP (hold / cash) with the fee paid at sale; update both from the previous day's values."
+ },
+ "639": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i]",
+       "Number of ways to decode the first i characters, modulo 10\u2079+7",
+       "Counting DP (Dynamic Programming)"
+      ],
+      [
+       "9 * dp[i-1] when c == '*'",
+       "A lone '*' can be any digit 1\u20139",
+       "One-character decodes"
+      ],
+      [
+       "c != '0' \u2192 dp[i-1]",
+       "A lone digit 1\u20139 decodes one way; a lone '0' decodes none",
+       ""
+      ],
+      [
+       "15 * dp[i-2] for '**'",
+       "Both '*' stand for digits 1\u20139, so the valid pairs are 11\u201319 (9 of them) and 21\u201326 (6 of them): 15 in total",
+       "Counting combinations of wildcards"
+      ],
+      [
+       "'*' then c <= '6': 2 * dp[i-2]",
+       "First digit can be 1 or 2 (2x is valid only for x \u2264 6)",
+       ""
+      ],
+      [
+       "% MOD",
+       "The counts grow quickly; the problem asks for the result modulo 10\u2079+7",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"1*\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "last two chars",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1*",
+       "18"
+      ]
+     ]
+    },
+    "bullets": [
+     "Single-character part: 9 ways ('1' then any of 1\u20139). Pair part: 11\u201319 gives 9 more, total 18. Other checks by running the code: `\"**\"` \u2192 96, `\"2*\"` \u2192 15."
+    ]
+   },
+   {
+    "h": "Why the three-way case split on the previous character?",
+    "p": [
+     "Each branch multiplies `dp[i-2]` by the number of valid pairs, so wildcards expand the counts without any enumeration."
+    ],
+    "table": {
+     "head": [
+      "previous char p",
+      "valid two-digit codes with c"
+     ],
+     "rows": [
+      [
+       "'*'",
+       "1x always, 2x only for x \u2264 6"
+      ],
+      [
+       "'1'",
+       "1x for any digit x (9 options if c is '*')"
+      ],
+      [
+       "'2'",
+       "2x for x \u2264 6 (6 options if c is '*')"
+      ],
+      [
+       "'3'\u2013'9' or '0'",
+       "none (two-digit codes start with 1 or 2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n); two rolling variables would give O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Decode Ways with wildcards: dp over prefixes, multiplying by how many digits '*' can stand for in the single and the pair case."
+ },
+ "642": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "counts = defaultdict(int)",
+       "Sentence \u2192 how many times it was typed; a missing key reads as 0",
+       "Frequency map"
+      ],
+      [
+       "self.cur",
+       "The prefix typed so far",
+       ""
+      ],
+      [
+       "s.startswith(self.cur)",
+       "Filters sentences that begin with the prefix",
+       ""
+      ],
+      [
+       "hits.sort(key=lambda s: (-counts[s], s))",
+       "Hot degree descending, then alphabetical (ASCII order) for ties: the tuple key sorts by two criteria, the minus sign flips the first",
+       "Multi-key sort"
+      ],
+      [
+       "hits[:3]",
+       "At most three suggestions",
+       ""
+      ],
+      [
+       "'#'",
+       "Ends the sentence: records it and resets the prefix",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sentences `i love you` (5), `island` (3), `iroman` (2), `i love leetcode` (2); typing `i`, space, `a`, `#`:"
+    ],
+    "table": {
+     "head": [
+      "typed",
+      "returned"
+     ],
+     "rows": [
+      [
+       "'i'",
+       "['i love you', 'island', 'i love leetcode']"
+      ],
+      [
+       "' '",
+       "['i love you', 'i love leetcode']"
+      ],
+      [
+       "'a'",
+       "[]"
+      ],
+      [
+       "'#'",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan every sentence instead of using a Trie (prefix tree)?",
+    "p": [
+     "This version is the simplest correct one: each keystroke filters all sentences, O(S\u00b7L) per call. A Trie would walk only the prefix path and keep candidates at each node, which wins when the sentence set is large, but takes much more code."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(S\u00b7L + S log S) per keystroke for S sentences of length L.",
+     "Space: O(total characters)."
+    ]
+   }
+  ],
+  "takeaway": "Count map plus filter-and-sort on every keystroke (hot-degree descending, then alphabetical); a Trie is the scalable upgrade."
+ }
+}
