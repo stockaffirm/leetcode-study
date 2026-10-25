@@ -1,0 +1,1821 @@
+{
+ "1275": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "p = 1 if i % 2 == 0 else -1",
+       "Players alternate: A moves on even turns (+1), B on odd turns (\u22121)",
+       ""
+      ],
+      [
+       "rows[r] += p; cols[c] += p",
+       "Signed counters per row and column",
+       "Counting instead of storing the board"
+      ],
+      [
+       "r == c / r + c == 2",
+       "The cell is on the main diagonal / the anti-diagonal of a 3\u00d73 board",
+       ""
+      ],
+      [
+       "3 in (abs(\u2026), \u2026)",
+       "A line holding three marks of one player has net \u00b13",
+       ""
+      ],
+      [
+       "'Draw' if len(moves) == 9 else 'Pending'",
+       "No winner: full board is a draw, otherwise the game goes on",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0],[2,0],[1,1],[2,1],[2,2]]`:"
+    ],
+    "table": {
+     "head": [
+      "turn",
+      "player",
+      "cell",
+      "rows",
+      "cols",
+      "diag",
+      "anti",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "A",
+       "(0,0)",
+       "[1, 0, 0]",
+       "[1, 0, 0]",
+       "1",
+       "0",
+       "\u2013"
+      ],
+      [
+       "1",
+       "B",
+       "(2,0)",
+       "[1, 0, -1]",
+       "[0, 0, 0]",
+       "1",
+       "-1",
+       "\u2013"
+      ],
+      [
+       "2",
+       "A",
+       "(1,1)",
+       "[1, 1, -1]",
+       "[0, 1, 0]",
+       "2",
+       "0",
+       "\u2013"
+      ],
+      [
+       "3",
+       "B",
+       "(2,1)",
+       "[1, 1, -2]",
+       "[0, 0, 0]",
+       "2",
+       "0",
+       "\u2013"
+      ],
+      [
+       "4",
+       "A",
+       "(2,2)",
+       "[1, 1, -1]",
+       "[0, 0, 1]",
+       "3",
+       "0",
+       "WIN"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a signed counter?",
+    "p": [
+     "Opposing marks cancel, so a line reaches \u00b13 only when all three cells belong to one player. This avoids storing the board and checks only the lines through the last move."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(number of moves).",
+     "Space: O(1) (n = 3)."
+    ]
+   }
+  ],
+  "takeaway": "Signed counters per row, column and diagonal: a value of \u00b13 means a win."
+ },
+ "1284": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mat[i][j] << (i * n + j)",
+       "Packs the matrix into one integer: cell (i, j) is bit i\u00b7n + j",
+       "Bitmask as a compact state"
+      ],
+      [
+       "mask",
+       "For each cell, the bits flipped by pressing it: itself and its in-grid neighbours",
+       "Precomputed move effects"
+      ],
+      [
+       "s ^ mk",
+       "XOR (exclusive or) flips exactly the bits in the mask",
+       "Applying a flip"
+      ],
+      [
+       "deque / seen",
+       "BFS (Breadth-First Search) over states: the first time 0 is reached is the minimum number of flips",
+       "Shortest path in a state graph"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,0],[0,1]]` is the integer `8` (binary `1000`); the zero matrix is 0. States reached by BFS layer (as 4-bit masks):"
+    ],
+    "table": {
+     "head": [
+      "flips",
+      "states reached"
+     ],
+     "rows": [
+      [
+       "0",
+       "1000"
+      ],
+      [
+       "1",
+       "1111, 0011, 0101, 0110"
+      ],
+      [
+       "2",
+       "0100, 0010, 0001, 1110, 1101, 1011"
+      ],
+      [
+       "3",
+       "1001, 1010, 1100, 0000"
+      ]
+     ]
+    },
+    "bullets": [
+     "State 0 is reached after 3 flips."
+    ]
+   },
+   {
+    "h": "Why BFS over bitmasks works here",
+    "p": [
+     "With at most 9 cells there are at most 2^9 = 512 states, and each of the cells gives one transition. BFS finds the fewest flips. Flipping a cell twice cancels, so each cell is pressed 0 or 1 times in an optimal solution; the BFS covers all those combinations implicitly."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2^(m\u00b7n) \u00b7 m\u00b7n).",
+     "Space: O(2^(m\u00b7n))."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask BFS: states are the whole board packed in an integer; each press XORs a precomputed mask."
+ },
+ "1287": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "step = n // 4",
+       "A value occupying more than 25% of the array covers more than n/4 positions in a row",
+       ""
+      ],
+      [
+       "arr[i] == arr[i + step]",
+       "In a sorted array, equal values at distance `step` mean the whole stretch between them is that value, so it appears at least step + 1 times",
+       "Sorted array: check a fixed gap"
+      ],
+      [
+       "range(n - step)",
+       "Keeps i + step inside the array",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,6,6,6,6,7,10]`, n = 9, step = 2:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "arr[i]",
+      "arr[i + step]",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "2",
+       "\u2013"
+      ],
+      [
+       "1",
+       "2",
+       "6",
+       "\u2013"
+      ],
+      [
+       "2",
+       "2",
+       "6",
+       "\u2013"
+      ],
+      [
+       "3",
+       "6",
+       "6",
+       "equal \u2192 answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the gap test find it?",
+    "p": [
+     "The special value appears more than n/4 times, in one contiguous block of length at least step + 1. Inside that block some i has arr[i] and arr[i + step] both inside, so they are equal. For other values the gap test can fire only on a block of at least step + 1 elements, which would also exceed 25%, and the problem guarantees exactly one such value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n). A binary search per candidate gives O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "In a sorted array, a value over 25% shows up as arr[i] == arr[i + n//4]."
+ },
+ "1290": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "v = v * 2 + head.val",
+       "Appends one bit on the right: shift the number left (\u00d72) and add the new bit",
+       "Parsing a binary number digit by digit"
+      ],
+      [
+       "head = head.next",
+       "Advance along the list",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1 \u2192 0 \u2192 1`:"
+    ],
+    "table": {
+     "head": [
+      "bit",
+      "v"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "`101` in binary is 5."
+    ]
+   },
+   {
+    "h": "Why no need to know the length?",
+    "p": [
+     "The most significant bit comes first, and each step multiplies what was read so far by 2. The place value of earlier bits grows automatically, so no powers of 2 and no length are needed (Horner's rule)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Horner's rule on the list: v = 2v + bit."
+ },
+ "1293": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(r, c, left)",
+       "BFS (Breadth-First Search) state: position plus how many obstacle removals remain",
+       "Adding a resource count to the state"
+      ],
+      [
+       "nl = left - grid[a][b]",
+       "Entering an obstacle (1) costs one removal, an empty cell (0) costs nothing",
+       ""
+      ],
+      [
+       "nl >= 0 and (a, b, nl) not in seen",
+       "Only affordable moves, and each (cell, remaining) state at most once",
+       ""
+      ],
+      [
+       "k >= m + n - 2: return m + n - 2",
+       "Shortcut: with enough removals, the straight Manhattan route always works",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5\u00d73 grid, k = 1. BFS layers (number of states, and the first few as (row, col, removals left)):"
+    ],
+    "table": {
+     "head": [
+      "steps",
+      "states in layer",
+      "first states"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[(0, 0, 1)]"
+      ],
+      [
+       "1",
+       "2",
+       "[(0, 1, 1), (1, 0, 0)]"
+      ],
+      [
+       "2",
+       "4",
+       "[(0, 0, 0), (0, 2, 1), (1, 1, 0), (2, 0, 0)]"
+      ],
+      [
+       "3",
+       "5",
+       "[(0, 1, 0), (1, 2, 0), (1, 2, 1), (2, 1, 0)] \u2026"
+      ],
+      [
+       "4",
+       "4",
+       "[(0, 2, 0), (2, 2, 0), (2, 2, 1), (4, 0, 0)]"
+      ],
+      [
+       "5",
+       "3",
+       "[(2, 1, 1), (3, 2, 0), (4, 1, 0)]"
+      ],
+      [
+       "6",
+       "3",
+       "[(2, 0, 1), (3, 1, 0), (4, 2, 0)]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The goal (4, 2) is reached after 6 steps."
+    ]
+   },
+   {
+    "h": "Why must `left` be part of the state?",
+    "p": [
+     "Arriving at a cell with 1 removal left is better than arriving with 0, since the former can still break a wall later. Treating only the cell as visited would discard the better arrival if it came second. States with different `left` are different, so both are kept."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n\u00b7k).",
+     "Space: O(m\u00b7n\u00b7k)."
+    ]
+   }
+  ],
+  "takeaway": "BFS over (row, column, removals left): entering an obstacle spends one removal."
+ },
+ "1296": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "len(nums) % k",
+       "The numbers must split into groups of exactly k",
+       "Early check"
+      ],
+      [
+       "Counter(nums)",
+       "How many of each number",
+       ""
+      ],
+      [
+       "for x in sorted(cnt)",
+       "Smallest remaining number must start a group",
+       "Greedy from the minimum"
+      ],
+      [
+       "cnt[y] < c \u2192 False",
+       "Not enough of y to continue c groups",
+       ""
+      ],
+      [
+       "cnt[y] -= c",
+       "Uses c cards of y at once",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,3,4,4,5,6]`, k = 4:"
+    ],
+    "table": {
+     "head": [
+      "start x",
+      "groups started",
+      "action"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1 group(s) [1, 2, 3, 4]"
+      ],
+      [
+       "3",
+       "1",
+       "1 group(s) [3, 4, 5, 6]"
+      ]
+     ]
+    },
+    "bullets": [
+     "All counts reach 0, so the answer is True: `[1,2,3,4]` and `[3,4,5,6]`."
+    ]
+   },
+   {
+    "h": "Why the smallest number must start a group",
+    "p": [
+     "Nothing smaller remains, so it cannot be in the middle of a run; it must be the first number of its group. Repeating this forced choice either finishes or finds a missing number."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort over distinct values.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy from the smallest value: it must start a consecutive group of k."
+ },
+ "1302": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque([root])",
+       "BFS (Breadth-First Search) queue",
+       ""
+      ],
+      [
+       "total = 0 at the start of each level",
+       "Reset for every level, so after the loop `total` holds the LAST level's sum",
+       "Keeping only the final layer's value"
+      ],
+      [
+       "for _ in range(len(q))",
+       "Processes exactly one level",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,5,null,6,7,null,null,null,null,8]`:"
+    ],
+    "table": {
+     "head": [
+      "level values",
+      "level sum"
+     ],
+     "rows": [
+      [
+       "[1]",
+       "1"
+      ],
+      [
+       "[2, 3]",
+       "5"
+      ],
+      [
+       "[4, 5, 6]",
+       "15"
+      ],
+      [
+       "[7, 8]",
+       "15"
+      ]
+     ]
+    },
+    "bullets": [
+     "The last level is the deepest, so its sum, 15, is returned."
+    ]
+   },
+   {
+    "h": "Why is no explicit 'deepest level' variable needed?",
+    "p": [
+     "The loop ends when the queue is empty, which happens right after the deepest level is processed. `total` was overwritten at the start of each level, so it still holds the deepest level's sum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w), w = maximum width."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS that resets the sum each level; the last value of total is the deepest level's sum."
+ },
+ "1314": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "P[i+1][j+1]",
+       "Sum of the rectangle from (0,0) to (i,j): the 2-D prefix sum, with a padding row and column of zeros",
+       "Rectangle sums in O(1)"
+      ],
+      [
+       "mat + P[i][j+1] + P[i+1][j] - P[i][j]",
+       "Inclusion\u2013exclusion: add above and left, subtract their overlap",
+       ""
+      ],
+      [
+       "max(0, i - k), min(m, i + k + 1)",
+       "Clamps the block to the matrix; the +1 converts to an exclusive end",
+       ""
+      ],
+      [
+       "P[r2][c2] - P[r1][c2] - P[r2][c1] + P[r1][c1]",
+       "Sum of the rectangle rows r1..r2\u22121, cols c1..c2\u22121",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3],[4,5,6],[7,8,9]]`, k = 1. The prefix table P (padded):"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "c0",
+      "c1",
+      "c2",
+      "c3"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "3",
+       "6"
+      ],
+      [
+       "2",
+       "0",
+       "5",
+       "12",
+       "21"
+      ],
+      [
+       "3",
+       "0",
+       "12",
+       "27",
+       "45"
+      ]
+     ]
+    },
+    "bullets": [
+     "Block sums: `[[12, 21, 16], [27, 45, 33], [24, 39, 28]]`. For the centre cell: P[3][3] \u2212 P[0][3] \u2212 P[3][0] + P[0][0] = 45."
+    ]
+   },
+   {
+    "h": "Why add back `P[r1][c1]`?",
+    "p": [
+     "Subtracting the strip above and the strip on the left removes the top-left corner area twice, so it is added back once (inclusion\u2013exclusion)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "2-D prefix sums: every k-block sum is four lookups with inclusion\u2013exclusion."
+ },
+ "1326": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "reach[lo] = max(reach[lo], i + r)",
+       "For each left end `lo`, the furthest right end of any tap starting there; this turns taps into jump lengths",
+       "Reducing intervals to a Jump Game"
+      ],
+      [
+       "far = max(far, reach[i])",
+       "Furthest point reachable from any position seen so far",
+       ""
+      ],
+      [
+       "i == cur_end",
+       "At the edge of the area covered by the taps opened so far, another tap is required",
+       "BFS layers without a queue"
+      ],
+      [
+       "far <= cur_end \u2192 -1",
+       "No tap extends the coverage: a gap that cannot be watered",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `ranges = [3,4,1,1,0,0]` (tap i covers [i \u2212 r, i + r]):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "reach[i]",
+      "far",
+      "cur_end",
+      "taps",
+      "event"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "5",
+       "5",
+       "1",
+       "open a tap, boundary moves"
+      ]
+     ]
+    },
+    "bullets": [
+     "One tap (tap 1, range 4) covers [0, 5]: answer 1."
+    ]
+   },
+   {
+    "h": "Why is this Jump Game II?",
+    "p": [
+     "Each tap covering [lo, hi] acts as a jump from position lo to anything up to hi. Minimum taps equals minimum jumps from 0 to n, solved greedily: always extend to the furthest reachable point, and count a jump when you pass the current boundary."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for `reach`."
+    ]
+   }
+  ],
+  "takeaway": "Convert taps to 'furthest right end per left end', then run the greedy Jump Game II."
+ },
+ "1335": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(i, days)",
+       "Minimum total difficulty to finish jobs i.. in exactly `days` days",
+       "Partition DP (Dynamic Programming) with memoization"
+      ],
+      [
+       "days == 1: max(jobs[i:])",
+       "All remaining jobs on the last day; its difficulty is their maximum",
+       "Base case"
+      ],
+      [
+       "cur = max(cur, jobDifficulty[j])",
+       "Difficulty of today's block grows as it takes jobs i..j",
+       "Running maximum over a prefix"
+      ],
+      [
+       "range(i, n - days + 1)",
+       "Leaves at least one job for each remaining day",
+       ""
+      ],
+      [
+       "@lru_cache(None)",
+       "Caches results per (i, days)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[6,5,4,3,2,1]`, `d = 2`: where to split between day 1 and day 2:"
+    ],
+    "table": {
+     "head": [
+      "day 1",
+      "its max",
+      "day 2",
+      "its max",
+      "total"
+     ],
+     "rows": [
+      [
+       "day 1 takes jobs 0..0",
+       "6",
+       "day 2 takes jobs 1..5",
+       "5",
+       "11"
+      ],
+      [
+       "day 1 takes jobs 0..1",
+       "6",
+       "day 2 takes jobs 2..5",
+       "4",
+       "10"
+      ],
+      [
+       "day 1 takes jobs 0..2",
+       "6",
+       "day 2 takes jobs 3..5",
+       "3",
+       "9"
+      ],
+      [
+       "day 1 takes jobs 0..3",
+       "6",
+       "day 2 takes jobs 4..5",
+       "2",
+       "8"
+      ],
+      [
+       "day 1 takes jobs 0..4",
+       "6",
+       "day 2 takes jobs 5..5",
+       "1",
+       "7"
+      ]
+     ]
+    },
+    "bullets": [
+     "Best split is the minimum: 7."
+    ]
+   },
+   {
+    "h": "Why must the jobs stay in order?",
+    "p": [
+     "Job j depends on all earlier jobs, so each day takes a contiguous block. The DP therefore only chooses where each block ends, rather than which jobs go where."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2 \u00b7 d): n\u00b7d states, up to n transitions each.",
+     "Space: O(n\u00b7d)."
+    ]
+   }
+  ],
+  "takeaway": "Partition DP: choose where each day's contiguous block ends; day cost is the block's maximum."
+ },
+ "1344": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(hour % 12) * 30",
+       "Hour hand base angle: 12 hours = 360\u00b0, so 30\u00b0 per hour, and 12 maps to 0",
+       ""
+      ],
+      [
+       "minutes * 0.5",
+       "The hour hand also moves 0.5\u00b0 each minute (30\u00b0 per 60 minutes)",
+       "A detail that is easy to forget"
+      ],
+      [
+       "minutes * 6",
+       "Minute hand: 360\u00b0 per 60 minutes",
+       ""
+      ],
+      [
+       "min(d, 360 - d)",
+       "The angle between the hands is the smaller of the two arcs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "hour",
+      "minutes",
+      "hour hand \u00b0",
+      "minute hand \u00b0",
+      "difference",
+      "answer"
+     ],
+     "rows": [
+      [
+       "12",
+       "30",
+       "15.0",
+       "180",
+       "165.0",
+       "165.0"
+      ],
+      [
+       "3",
+       "30",
+       "105.0",
+       "180",
+       "75.0",
+       "75.0"
+      ],
+      [
+       "3",
+       "15",
+       "97.5",
+       "90",
+       "7.5",
+       "7.5"
+      ]
+     ]
+    },
+    "bullets": [
+     "12:30 gives 165.0: the hour hand sits 15\u00b0 past 12, the minute hand at 180\u00b0."
+    ]
+   },
+   {
+    "h": "Why `min(d, 360 - d)`?",
+    "p": [
+     "The absolute difference can exceed 180\u00b0 (for example 270\u00b0), but the angle between two hands is always taken as the smaller one, which is 360\u00b0 minus the difference."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hour hand = 30\u00b7h + 0.5\u00b7m, minute hand = 6\u00b7m; answer is min(d, 360 \u2212 d)."
+ },
+ "1347": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s)",
+       "Letter counts of s",
+       ""
+      ],
+      [
+       "cnt.subtract(Counter(t))",
+       "Subtracts t's counts from s's counts in place; counts may become negative (unlike the `-` operator, which drops them)",
+       "Keeping negative counts"
+      ],
+      [
+       "sum(v for v in cnt.values() if v > 0)",
+       "Letters s has too many of: each needs one replacement",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"bab\"`, `t = \"aba\"`:"
+    ],
+    "table": {
+     "head": [
+      "letter",
+      "count in s \u2212 count in t"
+     ],
+     "rows": [
+      [
+       "a",
+       "-1"
+      ],
+      [
+       "b",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Positive total = 1: replace one `b` with `a` (the negative `a` entry is the matching shortage)."
+    ]
+   },
+   {
+    "h": "Why count only the positive side?",
+    "p": [
+     "s and t have the same length, so the total surplus equals the total shortage. Every replacement fixes one surplus letter and one shortage at once, so the number of replacements equals the sum of positives (equivalently, the absolute sum divided by 2)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) for 26 letters."
+    ]
+   }
+  ],
+  "takeaway": "Counter difference: replacements needed = total letters s has in surplus over t."
+ },
+ "1353": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "events.sort()",
+       "Sorts by start day",
+       ""
+      ],
+      [
+       "heap of end days",
+       "A min-heap (smallest item first) of the end days of events that have started and are still open",
+       "Always pick the event that expires soonest"
+      ],
+      [
+       "if not heap: day = events[i][0]",
+       "Nothing to attend: jump to the next start day",
+       ""
+      ],
+      [
+       "heappush while start <= day",
+       "Adds every event available today",
+       ""
+      ],
+      [
+       "heappop",
+       "Attend the event with the earliest end",
+       "Earliest-deadline-first"
+      ],
+      [
+       "while heap and heap[0] < day: heappop",
+       "Discards events that already ended",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,3],[3,4]]`:"
+    ],
+    "table": {
+     "head": [
+      "day",
+      "open events' end days (before choosing)",
+      "action"
+     ],
+     "rows": [
+      [
+       "1",
+       "[2]",
+       "attend the event ending 2"
+      ],
+      [
+       "2",
+       "[3]",
+       "attend the event ending 3"
+      ],
+      [
+       "3",
+       "[4]",
+       "attend the event ending 4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Attended: 3."
+    ]
+   },
+   {
+    "h": "Why attend the event that ends first?",
+    "p": [
+     "Among open events, the one expiring soonest has the least chance later, while the others can still be attended on a later day. Choosing it first can never lose an event compared with any other choice (an exchange argument)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sweep through days with a min-heap of end days: attend the earliest-ending open event each day."
+ },
+ "1359": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ways = 1",
+       "With one order there is exactly one valid sequence (pickup, then delivery)",
+       "Base case"
+      ],
+      [
+       "(2 * i - 1) * i",
+       "Number of ways to insert order i's pickup and delivery into a valid sequence of 2(i\u22121) items (derivation below)",
+       "Counting by insertion"
+      ],
+      [
+       "% MOD",
+       "Keeps the number small (10\u2079+7)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Number of valid sequences for the first i orders:"
+    ],
+    "table": {
+     "head": [
+      "orders i",
+      "ways"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "6"
+      ],
+      [
+       "3",
+       "90"
+      ]
+     ]
+    },
+    "bullets": [
+     "For 3 orders: 1 \u00d7 3 \u00d7 2 = 6 \u2192 \u00d75\u00d73 = 90."
+    ]
+   },
+   {
+    "h": "Why (2i \u2212 1) \u00b7 i?",
+    "p": [
+     "With 2(i\u22121) items already placed there are 2i \u2212 1 gaps (before the first item, between items, and after the last). Put the pickup in gap g (g = 1..2i\u22121); the delivery must come after it, so it can go in any of the 2i \u2212 g gaps at or after the pickup's position. Summing over g gives (2i\u22121) + (2i\u22122) + \u2026 + 1 = (2i\u22121)\u00b72i/2 = (2i\u22121)\u00b7i."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1). The closed form is (2n)! / 2\u207f."
+    ]
+   }
+  ],
+  "takeaway": "Insert each new order into the existing sequence: (2i \u2212 1)\u00b7i ways, multiplied over i."
+ },
+ "1368": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dirs[d]",
+       "Directions indexed 0\u20133 for the signs 1 (right), 2 (left), 3 (down), 4 (up)",
+       ""
+      ],
+      [
+       "cost = dist + (0 if grid[i][j] == d + 1 else 1)",
+       "Following the arrow costs 0; changing the sign to go another way costs 1",
+       "0/1 edge weights"
+      ],
+      [
+       "dq.appendleft / dq.append",
+       "0-1 BFS (Breadth-First Search): a zero-cost move goes to the FRONT of the double-ended queue, a cost-1 move to the back",
+       "Shortest paths when weights are only 0 or 1"
+      ],
+      [
+       "cost < dist[a][b]",
+       "Relaxation: update only if a cheaper way was found",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Grid rows `1111 / 2222 / 1111 / 2222`. Final minimum cost to each cell:"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "col 0",
+      "col 1",
+      "col 2",
+      "col 3"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "3",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `dist[3][3] = 3`."
+    ]
+   },
+   {
+    "h": "Why 0-1 BFS and not Dijkstra?",
+    "p": [
+     "With only costs 0 and 1, a double-ended queue keeps nodes in nondecreasing distance order: zero-cost moves are processed immediately (front), cost-1 moves wait (back). This gives Dijkstra's result in O(V + E) instead of O((V + E) log V)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "0-1 BFS with a deque: free moves go to the front, paid moves to the back."
+ },
+ "1380": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "min(r) for r in matrix",
+       "Minimum of each row",
+       ""
+      ],
+      [
+       "zip(*matrix)",
+       "Transposes: yields the columns as tuples",
+       ""
+      ],
+      [
+       "max(c) \u2026",
+       "Maximum of each column",
+       ""
+      ],
+      [
+       "v == rows[i] == cols[j]",
+       "Chained comparison: v is the minimum of its row and the maximum of its column",
+       "Saddle-point check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[3,7,8],[9,11,13],[15,16,17]]`:"
+    ],
+    "table": {
+     "head": [
+      "",
+      "values"
+     ],
+     "rows": [
+      [
+       "row minimums",
+       "[3, 9, 15]"
+      ],
+      [
+       "column maximums",
+       "[15, 16, 17]"
+      ],
+      [
+       "lucky numbers",
+       "[15]"
+      ]
+     ]
+    },
+    "bullets": [
+     "15 is the minimum of its row and the maximum of its column."
+    ]
+   },
+   {
+    "h": "Why precompute row minimums and column maximums?",
+    "p": [
+     "Checking each cell against its whole row and column would cost O(m\u00b7n\u00b7(m+n)). Computing the 2 sets of extremes first makes each cell a constant-time comparison, for O(m\u00b7n) overall."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m + n)."
+    ]
+   }
+  ],
+  "takeaway": "Precompute row minimums and column maximums; a lucky number equals both."
+ },
+ "1383": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(zip(efficiency, speed), reverse=True)",
+       "Engineers ordered by efficiency, highest first",
+       "Fixing the minimum efficiency by sort order"
+      ],
+      [
+       "heappush(heap, s)",
+       "Min-heap of the speeds in the team (smallest speed pops first)",
+       ""
+      ],
+      [
+       "total -= heappop(heap)",
+       "If the team exceeds k, drop the slowest engineer",
+       "Keep the k largest speeds"
+      ],
+      [
+       "total * e",
+       "Team performance with e as the current (smallest so far) efficiency",
+       ""
+      ],
+      [
+       "% (10**9 + 7)",
+       "Applied once at the end; `best` itself is kept exact so the maximum comparison is correct",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`speed = [2,10,3,1,5,8]`, `efficiency = [5,4,3,9,7,2]`, k = 2. Engineers by efficiency, high to low:"
+    ],
+    "table": {
+     "head": [
+      "engineer",
+      "speeds in team",
+      "sum of speeds",
+      "\u00d7 efficiency",
+      "event",
+      "best"
+     ],
+     "rows": [
+      [
+       "(e=9, s=1)",
+       "[1]",
+       "1",
+       "9",
+       "\u2013",
+       "9"
+      ],
+      [
+       "(e=7, s=5)",
+       "[1, 5]",
+       "6",
+       "42",
+       "\u2013",
+       "42"
+      ],
+      [
+       "(e=5, s=2)",
+       "[2, 5]",
+       "7",
+       "35",
+       "drop slowest (1)",
+       "42"
+      ],
+      [
+       "(e=4, s=10)",
+       "[5, 10]",
+       "15",
+       "60",
+       "drop slowest (2)",
+       "60"
+      ],
+      [
+       "(e=3, s=3)",
+       "[5, 10]",
+       "15",
+       "45",
+       "drop slowest (3)",
+       "60"
+      ],
+      [
+       "(e=2, s=8)",
+       "[8, 10]",
+       "18",
+       "36",
+       "drop slowest (5)",
+       "60"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort by efficiency?",
+    "p": [
+     "A team's efficiency is its minimum. Going down the sorted order, the current engineer has the lowest efficiency so far, so every engineer already added can join without lowering it. For that fixed efficiency, the best team takes the k largest speeds among those added, hence the min-heap that discards the smallest."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by efficiency descending; keep the k fastest engineers in a min-heap; evaluate sum \u00d7 current efficiency."
+ },
+ "1386": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "rows[r] |= 1 << s",
+       "Per row, a bitmask of reserved seats (bit s set means seat s is taken)",
+       "Compact set of small integers"
+      ],
+      [
+       "2 * (n - len(rows))",
+       "Rows without any reservation fit two families each",
+       "Count untouched rows in bulk"
+      ],
+      [
+       "0x3C, 0xF0, 0x3C0",
+       "Masks of seats 2\u20135 (left block), 4\u20137 (middle), 6\u20139 (right block)",
+       ""
+      ],
+      [
+       "not mask & block",
+       "True when none of the block's seats is reserved",
+       "Testing a block with AND"
+      ],
+      [
+       "left and right \u2192 2; else any \u2192 1",
+       "Two disjoint blocks fit two families; otherwise one family if any block is free",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, reservations in rows 1\u20133. Untouched rows contribute 2 each. Rows with reservations:"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "reserved mask (bit s = seat s, written high to low)",
+      "left free",
+      "middle free",
+      "right free",
+      "families"
+     ],
+     "rows": [
+      [
+       "1",
+       "0100001100",
+       "False",
+       "True",
+       "False",
+       "1"
+      ],
+      [
+       "2",
+       "0001000000",
+       "True",
+       "False",
+       "False",
+       "1"
+      ],
+      [
+       "3",
+       "10000000010",
+       "True",
+       "True",
+       "True",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 4."
+    ]
+   },
+   {
+    "h": "Why only rows with reservations are looped over?",
+    "p": [
+     "n can be up to 10\u2079 but the reservations are few. Rows with none always hold two families, so they are counted by arithmetic, and only the (at most) reservation-count rows are examined."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(R) for R reservations.",
+     "Space: O(R)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask per reserved row; untouched rows add 2 families each."
+ },
+ "1389": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(nums, index)",
+       "Pairs each value with its target position",
+       ""
+      ],
+      [
+       "res.insert(i, v)",
+       "Inserts v before position i, shifting later items right (O(n))",
+       "Placing at an index in order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [0,1,2,3,4]`, `index = [0,1,2,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "insert at",
+      "list"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "[0]"
+      ],
+      [
+       "1",
+       "1",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "2",
+       "[0, 1, 2]"
+      ],
+      [
+       "3",
+       "2",
+       "[0, 1, 3, 2]"
+      ],
+      [
+       "4",
+       "1",
+       "[0, 4, 1, 3, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does inserting in order work?",
+    "p": [
+     "The index of each element refers to the array at the time of its insertion, so replaying the operations in sequence gives exactly the intended result, shifting earlier elements as needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2) in the worst case because of shifting.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Replay the inserts: list.insert shifts later elements, matching the problem's rules."
+ },
+ "1392": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lps[i]",
+       "Length of the longest proper prefix of s[:i+1] that is also its suffix (the KMP (Knuth\u2013Morris\u2013Pratt) failure table)",
+       "Prefix\u2013suffix matching"
+      ],
+      [
+       "k",
+       "Length of the current matched prefix",
+       ""
+      ],
+      [
+       "while k and s[i] != s[k]: k = lps[k-1]",
+       "On a mismatch, fall back to the next shorter border instead of starting over",
+       "Why KMP is linear"
+      ],
+      [
+       "s[:lps[-1]]",
+       "The longest happy prefix is the longest proper border of the whole string",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"level\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "lps[i]",
+      "fall-backs"
+     ],
+     "rows": [
+      [
+       "0",
+       "l",
+       "0",
+       "\u2013"
+      ],
+      [
+       "1",
+       "e",
+       "0",
+       "\u2013"
+      ],
+      [
+       "2",
+       "v",
+       "0",
+       "\u2013"
+      ],
+      [
+       "3",
+       "e",
+       "0",
+       "\u2013"
+      ],
+      [
+       "4",
+       "l",
+       "1",
+       "\u2013"
+      ]
+     ]
+    },
+    "bullets": [
+     "`lps[-1] = 1`: the longest prefix equal to a suffix (not the whole string) is `\"l\"`."
+    ]
+   },
+   {
+    "h": "Why is the fall-back correct and linear?",
+    "p": [
+     "Any border of s[:i] that could extend with s[i] is a border of the current border, so jumping to `lps[k-1]` tries all candidates in decreasing order. `k` increases by at most 1 per character and each fall-back decreases it, so total work is O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "KMP failure function: lps[-1] is the length of the longest proper prefix that is also a suffix."
+ }
+}

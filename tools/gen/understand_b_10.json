@@ -1,0 +1,1811 @@
+{
+ "280": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`i % 2 == 1`",
+       "Odd index: this element must be ≥ its left neighbour",
+       "Pattern `nums[0] ≤ nums[1] ≥ nums[2] ≤ …`"
+      ],
+      [
+       "`nums[i] < nums[i-1]` (odd i)",
+       "Violation of `nums[i-1] ≤ nums[i]`",
+       "Fix it locally"
+      ],
+      [
+       "`nums[i] > nums[i-1]` (even i)",
+       "Violation of `nums[i-1] ≥ nums[i]`",
+       "Fix it locally"
+      ],
+      [
+       "`nums[i], nums[i-1] = nums[i-1], nums[i]`",
+       "Swap",
+       "Tuple swap without a temp"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,5,2,1,6,4]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Check",
+      "nums"
+     ],
+     "rows": [
+      [
+       "start",
+       "—",
+       "[3, 5, 2, 1, 6, 4]"
+      ],
+      [
+       "1",
+       "need nums[0] ≤ nums[1] → ok",
+       "[3, 5, 2, 1, 6, 4]"
+      ],
+      [
+       "2",
+       "need nums[1] ≥ nums[2] → ok",
+       "[3, 5, 2, 1, 6, 4]"
+      ],
+      [
+       "3",
+       "need nums[2] ≤ nums[3] → violated, swap",
+       "[3, 5, 1, 2, 6, 4]"
+      ],
+      [
+       "4",
+       "need nums[3] ≥ nums[4] → violated, swap",
+       "[3, 5, 1, 6, 2, 4]"
+      ],
+      [
+       "5",
+       "need nums[4] ≤ nums[5] → ok",
+       "[3, 5, 1, 6, 2, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a swap not break the earlier pair?",
+    "p": [
+     "Suppose pair (i−1, i−2) already satisfies its relation and we swap positions i−1 and i because of a violation. For an odd i, nums[i] < nums[i−1] and the pair before required nums[i−2] ≥ nums[i−1]; after the swap the new nums[i−1] is the smaller of the two, so nums[i−2] ≥ it still holds. The even case is symmetric. One left-to-right pass is therefore enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Wiggle sort in one pass: fix each adjacent pair by swapping when the up/down relation is violated; the swap keeps the earlier relation true."
+ },
+ "298": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dfs(node, parent_val, run)`",
+       "Visit a node knowing its parent's value and the run length ending at the parent",
+       "Information flows DOWN the tree as parameters"
+      ],
+      [
+       "`node.val == parent_val + 1`",
+       "Value continues the sequence",
+       "Run grows by one, otherwise restarts at 1"
+      ],
+      [
+       "`nonlocal best`",
+       "Update the outer variable from the inner function",
+       "Collect the maximum over all nodes"
+      ],
+      [
+       "`float('-inf')`",
+       "Parent value for the root",
+       "Never equals `value + 1`, so the root starts a run of 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,null,3,2,4,null,null,null,5]` (3 has children 2 and 4; 4 has right child 5). Answer: 3 (3 → 4 → 5)."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Parent value",
+      "Run ending here",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "−∞",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "3",
+       "2",
+       "2"
+      ],
+      [
+       "5",
+       "4",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pass the run downward instead of returning it?",
+    "p": [
+     "The sequence must go downwards from parent to child, so each node only needs its parent's value and run length. A top-down DFS (Depth-First Search) carries these as arguments, and no combining of children's results is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Top-down DFS (Depth-First Search): pass the parent value and current run length; extend the run when value = parent + 1, else restart."
+ },
+ "616": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s.find(w)`",
+       "Index of the first occurrence, or −1",
+       "Locate a match"
+      ],
+      [
+       "`s.find(w, start + 1)`",
+       "Search again from the next position",
+       "`+1` (not `+len(w)`) so overlapping matches (`'aaa'` in `'aaaa'`) are found"
+      ],
+      [
+       "`bold = [False] * len(s)`",
+       "One flag per character",
+       "Mark covered characters first, build the string after; merging overlaps and touching matches comes for free"
+      ],
+      [
+       "`bold[i] and (i == 0 or not bold[i-1])`",
+       "Start of a bold run",
+       "Opening tag only at the first character of a run"
+      ],
+      [
+       "`bold[i] and (i == len(s)-1 or not bold[i+1])`",
+       "End of a bold run",
+       "Closing tag at the last character of a run"
+      ],
+      [
+       "`''.join(res)`",
+       "Join pieces",
+       "Single pass to build the output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "words",
+      "bold flags",
+      "Result"
+     ],
+     "rows": [
+      [
+       "abcxyz123",
+       "abc, 123",
+       "111000111",
+       "<b>abc</b>xyz<b>123</b>"
+      ],
+      [
+       "aaabbcc",
+       "aaa, aab, bc",
+       "1111110",
+       "<b>aaabbc</b>c"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why mark first and wrap later?",
+    "p": [
+     "Matches may overlap (`aaa` and `aab` share letters) or touch (`aab` ends where `bc` starts). If tags were inserted per match you would need to merge them afterwards. With one flag per character, a bold run is simply a maximal stretch of True flags, so merging is automatic: in the second example every character except the last `c` is covered, giving one tag pair."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·w·L) in the worst case for searching; marking and output are O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Mark every covered character first, then open a tag at the start of each run of flags and close it at the end."
+ },
+ "691": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[mask]`",
+       "Fewest stickers to cover exactly the target positions in `mask`",
+       "Bit i set means target[i] is covered"
+      ],
+      [
+       "`dp = [INF] * (1 << n)`",
+       "One entry for each subset of target positions",
+       "2ⁿ states, so n is small (≤ 15)"
+      ],
+      [
+       "`first = next((i for … if not (mask >> i) & 1), None)`",
+       "Lowest uncovered position",
+       "Every solution must cover this letter with some sticker, so only stickers containing it need to be tried"
+      ],
+      [
+       "`Counter(st)`",
+       "Letters available on the sticker",
+       "A sticker can be used for repeated letters at most as often as they appear on it"
+      ],
+      [
+       "`nm |= 1 << i`",
+       "Mark position i covered",
+       "Greedily cover every uncovered position this sticker can supply"
+      ],
+      [
+       "`dp[nm] = dp[mask] + 1`",
+       "One more sticker",
+       "Relaxation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Target `thehat` (positions 0–5), stickers `with example science`. Bits are written left to right, one per target letter (1 = covered). The cheapest chain found by the DP uses 3 stickers:"
+    ],
+    "table": {
+     "head": [
+      "Covered before",
+      "Sticker used",
+      "Covered after",
+      "dp"
+     ],
+     "rows": [
+      [
+       "000000",
+       "with",
+       "110000",
+       "1"
+      ],
+      [
+       "110000",
+       "example",
+       "111010",
+       "2"
+      ],
+      [
+       "111010",
+       "with",
+       "111111",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why always fix the first uncovered letter?",
+    "p": [
+     "Without this rule the same set of stickers could be applied in many orders, creating redundant states. Insisting that the next sticker covers the first missing letter orders the choices canonically and cuts the transitions per state to the stickers containing that letter. Impossible targets leave `dp[-1] = INF` and the function returns −1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ · s · n) with s stickers.",
+     "Space: O(2ⁿ)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP over covered letters: from each state, apply a sticker that covers the first missing letter and take the minimum count."
+ },
+ "781": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(answers)`",
+       "How many rabbits gave each answer",
+       "Rabbits with the same answer can share a colour group"
+      ],
+      [
+       "`a + 1`",
+       "Size of a full colour group",
+       "A rabbit saying `a` means a+1 rabbits of that colour in total"
+      ],
+      [
+       "`(c + a) // (a + 1)`",
+       "Number of groups needed for c rabbits = ceil(c / (a + 1))",
+       "Integer ceiling trick: `ceil(x/y) == (x + y − 1) // y`"
+      ],
+      [
+       "`… * (a + 1)`",
+       "Total rabbits counting the unseen ones in each group",
+       "Groups are filled even if some members did not speak"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2]`: answer = 5."
+    ],
+    "table": {
+     "head": [
+      "Answer a",
+      "Count c",
+      "Groups ceil(c/(a+1))",
+      "Rabbits = groups × (a+1)"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why group the same answers together?",
+    "p": [
+     "To minimise the total, assume rabbits giving the same answer share colours as much as possible. Two rabbits saying 1 can be the same colour pair (group of 2). One rabbit saying 2 needs a group of 3 even though the other two never answered. A third rabbit saying 1 would need a second group of 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Group equal answers: c rabbits saying a need ceil(c/(a+1)) groups of size a+1."
+ },
+ "784": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ch.isalpha()`",
+       "True for letters",
+       "Only letters branch; digits are copied"
+      ],
+      [
+       "`ch.lower()`, `ch.upper()`",
+       "The two cases of a letter",
+       "The two choices at each letter"
+      ],
+      [
+       "`[p + c for p in res for c in (…)]`",
+       "Every existing prefix extended with both cases",
+       "Doubles the list at each letter (nested comprehension: first `for` is the outer loop)"
+      ],
+      [
+       "`[p + ch for p in res]`",
+       "Extend every prefix with the digit",
+       "Digits have one option"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'a1b2'`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "res"
+     ],
+     "rows": [
+      [
+       "start",
+       "['']"
+      ],
+      [
+       "after 'a'",
+       "['a', 'A']"
+      ],
+      [
+       "after '1'",
+       "['a1', 'A1']"
+      ],
+      [
+       "after 'b'",
+       "['a1b', 'a1B', 'A1b', 'A1B']"
+      ],
+      [
+       "after '2'",
+       "['a1b2', 'a1B2', 'A1b2', 'A1B2']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why build iteratively instead of recursing?",
+    "p": [
+     "Each character multiplies the number of strings by 2 (letters) or 1 (digits). The list `res` always contains all strings for the prefix processed so far, so no recursion or undo is needed (compare backtracking on a shared list)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·2ᵏ) where k = number of letters (each string costs O(n) to build).",
+     "Space: O(n·2ᵏ) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Grow all prefixes level by level: double the list for each letter, copy for each digit."
+ },
+ "787": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dist`",
+       "Cheapest known price to each city using at most r flights",
+       "Bellman-Ford: relax every edge repeatedly"
+      ],
+      [
+       "`for _ in range(k + 1)`",
+       "k stops = k+1 flights = k+1 rounds",
+       "Each round allows one more flight"
+      ],
+      [
+       "`nxt = dist[:]`",
+       "Copy of the previous round",
+       "Relaxations in this round must read only the previous round's values"
+      ],
+      [
+       "`dist[u] + w < nxt[v]`",
+       "Is flying u→v cheaper than the best known for v?",
+       "Standard edge relaxation"
+      ],
+      [
+       "`dist = nxt`",
+       "Commit the round",
+       "Moves from r flights to r+1 flights"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "4 cities, `src = 0`, `dst = 3`, `k = 1` (so at most 2 flights):"
+    ],
+    "table": {
+     "head": [
+      "After",
+      "dist (city 0, 1, 2, 3)"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, '∞', '∞', '∞']"
+      ],
+      [
+       "after round 1 (≤ 1 flight)",
+       "[0, 100, '∞', '∞']"
+      ],
+      [
+       "after round 2 (≤ 2 flights)",
+       "[0, 100, 200, 700]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why copy the array each round?",
+    "p": [
+     "Without `nxt`, a single round could chain several flights (0→1 then 1→2 in the same pass), ignoring the limit on stops. Reading from `dist` and writing to `nxt` ensures that after round r every value uses at most r flights. Here that gives 700 for city 3; the cheaper 0→1→2→3 (400) needs three flights and is excluded with k = 1."
+    ]
+   },
+   {
+    "h": "Why not Dijkstra?",
+    "p": [
+     "Dijkstra picks the globally cheapest path, but a cheap path with too many stops is invalid and an expensive path with fewer stops may be needed. Bellman-Ford with a round limit keeps the number of flights as part of the state."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k·E).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Bellman-Ford limited to k+1 rounds: relax all flights from a snapshot of the previous round so each round adds exactly one flight."
+ },
+ "790": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp = [1, 1, 2]`",
+       "`dp[i]` = ways to tile a 2 × i board; `dp[0] = 1` (the empty board), `dp[1] = 1`, `dp[2] = 2`",
+       "Base cases for the recurrence"
+      ],
+      [
+       "`2 * dp[-1] + dp[-3]`",
+       "dp[i] = 2·dp[i−1] + dp[i−3]",
+       "The closed recurrence (derived below)"
+      ],
+      [
+       "`dp[-1]`, `dp[-3]`",
+       "Last and third-last items of the list",
+       "The previous values, without index arithmetic"
+      ],
+      [
+       "`% (10**9 + 7)`",
+       "Keep numbers small",
+       "The count grows quickly"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Values from the recurrence compared with an exhaustive count of tilings (brute force over a bitmask of covered cells):"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "dp[n] (recurrence)",
+      "Brute force"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "5",
+       "5"
+      ],
+      [
+       "4",
+       "11",
+       "11"
+      ],
+      [
+       "5",
+       "24",
+       "24"
+      ],
+      [
+       "6",
+       "53",
+       "53"
+      ],
+      [
+       "7",
+       "117",
+       "117"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Where does the recurrence come from?",
+    "bullets": [
+     "Let f(n) be the number of full tilings of 2×n and g(n) the number of tilings of a 'jagged' board (2×n with one extra cell sticking out in the next column).",
+     "A full tiling ends with a vertical domino (f(n−1)), two horizontal dominoes (f(n−2)), or one of two mirror-image trominoes completing a jagged board (2·g(n−1)): f(n) = f(n−1) + f(n−2) + 2·g(n−1).",
+     "A jagged board either ends with a horizontal domino on the long side (g(n−1)) or a tromino-plus-fill (f(n−2)): g(n) = g(n−1) + f(n−2).",
+     "Subtracting f(n−1) from f(n) and substituting g(n−1) − g(n−2) = f(n−3) gives f(n) − f(n−1) = f(n−1) + f(n−3), i.e. f(n) = 2·f(n−1) + f(n−3)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) (could be O(1) keeping three values)."
+    ]
+   }
+  ],
+  "takeaway": "Tiling recurrence f(n) = 2·f(n−1) + f(n−3), obtained by tracking full and jagged boards and eliminating the jagged ones."
+ },
+ "793": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`f(x)`",
+       "Trailing zeros of x! = x//5 + x//25 + …",
+       "Count factors of 5 (see Factorial Trailing Zeroes)"
+      ],
+      [
+       "`hi = 5 * (k + 1)`",
+       "Safe upper bound for the answer",
+       "f(5(k+1)) ≥ k+1 > k, so the first x with f(x) ≥ k is below it"
+      ],
+      [
+       "`f(mid) >= k` → `hi = mid`",
+       "Lower-bound binary search",
+       "f is non-decreasing in x, so we can find the first x with f(x) ≥ k"
+      ],
+      [
+       "`5 if f(lo) == k else 0`",
+       "Answer is 5 or 0",
+       "f only increases when x passes a multiple of 5, so if any x gives k, exactly the five x in a block of consecutive numbers do"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 5` returns 0: the search ends at lo = 25 with f(lo) = 6 ≠ 5 (f jumps from 4 at x = 24 to 6 at x = 25, skipping 5)."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "f(mid)",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "30",
+       "15",
+       "3",
+       "f(mid) < k → lo = mid+1"
+      ],
+      [
+       "16",
+       "30",
+       "23",
+       "4",
+       "f(mid) < k → lo = mid+1"
+      ],
+      [
+       "24",
+       "30",
+       "27",
+       "6",
+       "f(mid) ≥ k → hi = mid"
+      ],
+      [
+       "24",
+       "27",
+       "25",
+       "6",
+       "f(mid) ≥ k → hi = mid"
+      ],
+      [
+       "24",
+       "25",
+       "24",
+       "4",
+       "f(mid) < k → lo = mid+1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Other values",
+    "p": [
+     "`k = 3` has x = 15…19 (five values); `k = 0` has x = 0…4 (five values)."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "First x with f(x) ≥ k",
+      "f(x)",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "3",
+       "15",
+       "3",
+       "5"
+      ],
+      [
+       "0",
+       "0",
+       "0",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer only ever 0 or 5?",
+    "p": [
+     "f(x) is constant on blocks 5m … 5m+4 and rises at each multiple of 5 (by one, or more at multiples of 25, which is why some k are skipped). So the set {x : f(x) = k} is empty or a full block of five."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log² k): the binary search takes O(log k) steps and each `f` call is O(log k).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search for the first x whose trailing-zero count reaches k; the preimage has size 5 if it hits k exactly, else 0."
+ },
+ "796": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`len(s) == len(goal)`",
+       "Lengths must match",
+       "Otherwise `goal in s + s` could succeed for a shorter goal"
+      ],
+      [
+       "`s + s`",
+       "The string written twice",
+       "Every rotation of s appears as a substring of s + s"
+      ],
+      [
+       "`goal in s + s`",
+       "Substring test",
+       "Python's `in` on strings searches for a contiguous match"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Expression",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`s + s`",
+       "'abcdeabcde'"
+      ],
+      [
+       "position of `'cdeab'` in `s + s`",
+       "2"
+      ],
+      [
+       "`rotateString('abcde','cdeab')`",
+       "True"
+      ],
+      [
+       "`rotateString('abcde','abced')`",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the doubled string work?",
+    "p": [
+     "Rotating s by k shifts its first k letters to the end. In `s + s` the substring starting at index k of length n is exactly that rotation. Conversely, any length-n substring of `s + s` starting at 0…n−1 is a rotation. The length check rules out partial matches."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) with a linear-time search (Python's `in` is typically fast but not guaranteed linear in the worst case).",
+     "Space: O(n) for the doubled string."
+    ]
+   }
+  ],
+  "takeaway": "A string is a rotation of another exactly when it appears inside the doubled string and has the same length."
+ },
+ "799": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`row = [float(poured)]`",
+       "Amount of champagne that ARRIVES at each glass of the current row",
+       "Not capped at 1, so overflow can be computed"
+      ],
+      [
+       "`(v - 1) / 2`",
+       "Overflow of a full glass, split between the two below",
+       "A glass keeps 1; the rest splits equally"
+      ],
+      [
+       "`nxt[i] += over; nxt[i+1] += over`",
+       "Each overflow reaches the glass below-left and below-right",
+       "Glass i of the next row gets contributions from glass i−1 and i above"
+      ],
+      [
+       "`min(1.0, row[query_glass])`",
+       "A glass holds at most one cup",
+       "Cap the answer at 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`poured = 2`, query (row 1, glass 1) gives 0.5: the top glass keeps 1 cup and passes 0.5 to each glass below. For `poured = 4`, query (row 2, glass 1) the arriving amounts are below and the answer is 0.5."
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Amount arriving at each glass"
+     ],
+     "rows": [
+      [
+       "0",
+       "[4.0]"
+      ],
+      [
+       "1",
+       "[1.5, 1.5]"
+      ],
+      [
+       "2",
+       "[0.25, 0.5, 0.25]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep only one row at a time?",
+    "p": [
+     "Row r+1 depends only on row r, so after computing the next row the previous one can be discarded: O(rows) space. The simulation stops at `query_row`, so rows below it are never built."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(query_row²) — row r has r+1 glasses.",
+     "Space: O(query_row)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate overflow row by row: each glass above 1 cup passes half of its excess to each of the two glasses below."
+ },
+ "802": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`rev[v].append(u)`",
+       "Reversed graph: for each edge u→v store v→u",
+       "Lets us walk from a safe node back to those that point to it"
+      ],
+      [
+       "`outdeg`",
+       "Number of outgoing edges not yet known to lead to safe nodes",
+       "When it reaches 0, all paths from the node end in safe nodes"
+      ],
+      [
+       "`deque(i … if outdeg[i] == 0)`",
+       "Terminal nodes",
+       "Safe by definition; BFS (Breadth-First Search) starts here"
+      ],
+      [
+       "`outdeg[p] -= 1` then `== 0`",
+       "One more outgoing edge of p is proven safe",
+       "p becomes safe once every edge is"
+      ],
+      [
+       "`safe` list",
+       "Marks nodes found safe",
+       "Nodes on a cycle or leading into one never reach outdegree 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2],[2,3],[5],[0],[5],[],[]]` → [2, 4, 5, 6]. Nodes 0, 1, 3 lie on or lead into the cycle 0→1→3→0 and are never freed:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Queue change",
+      "outdeg"
+     ],
+     "rows": [
+      [
+       "start (terminals)",
+       "[5, 6]",
+       "[2, 2, 1, 1, 1, 0, 0]"
+      ],
+      [
+       "pop 5",
+       "enqueue [2, 4]",
+       "[2, 2, 0, 1, 0, 0, 0]"
+      ],
+      [
+       "pop 6",
+       "enqueue nothing",
+       "[2, 2, 0, 1, 0, 0, 0]"
+      ],
+      [
+       "pop 2",
+       "enqueue nothing",
+       "[1, 1, 0, 1, 0, 0, 0]"
+      ],
+      [
+       "pop 4",
+       "enqueue nothing",
+       "[1, 1, 0, 1, 0, 0, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse the graph?",
+    "p": [
+     "This is topological sorting (Kahn's algorithm) on the reversed graph. Safety flows backwards: a node is safe if all its successors are safe. Starting from terminals and removing edges backwards finds exactly the nodes that cannot reach a cycle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Safe nodes = those that cannot reach a cycle: run Kahn's topological sort on the reversed graph starting from terminals."
+ },
+ "811": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`item.split()`",
+       "Splits on whitespace into count and domain",
+       "`'9001 discuss.leetcode.com'` → `['9001', 'discuss.leetcode.com']`"
+      ],
+      [
+       "`domain.split('.')`",
+       "List of labels",
+       "`['discuss', 'leetcode', 'com']`"
+      ],
+      [
+       "`'.'.join(parts[i:])`",
+       "Domain suffix starting at label i",
+       "All parent domains: discuss.leetcode.com, leetcode.com, com"
+      ],
+      [
+       "`Counter`",
+       "Dict with default 0 for `+=`",
+       "Accumulate counts per domain"
+      ],
+      [
+       "`sorted(str(v) + ' ' + d …)`",
+       "Format and sort the output strings",
+       "The checker may expect any order; sorted gives a deterministic one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Input `['9001 discuss.leetcode.com', '100 yahoo.com', '5 mail.yahoo.com']`:"
+    ],
+    "table": {
+     "head": [
+      "Entry",
+      "Domains incremented"
+     ],
+     "rows": [
+      [
+       "9001 discuss.leetcode.com",
+       "['discuss.leetcode.com', 'leetcode.com', 'com']"
+      ],
+      [
+       "100 yahoo.com",
+       "['yahoo.com', 'com']"
+      ],
+      [
+       "5 mail.yahoo.com",
+       "['mail.yahoo.com', 'yahoo.com', 'com']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`['105 yahoo.com', '5 mail.yahoo.com', '9001 discuss.leetcode.com', '9001 leetcode.com', '9106 com']`. `com` collects 9001 + 100 + 5 = 9106 because every domain ends in `com`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length of all domains) — each suffix is built once (O(L²) per domain in the worst case for L characters).",
+     "Space: O(total length)."
+    ]
+   }
+  ],
+  "takeaway": "Add each entry's count to every dot-separated suffix of its domain in a Counter."
+ },
+ "814": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`root.left = self.pruneTree(root.left)`",
+       "Prune the left subtree first and attach the result",
+       "Post-order: children are processed before the node"
+      ],
+      [
+       "`not root.left and not root.right and root.val == 0`",
+       "After pruning, the node is a leaf with value 0",
+       "Its subtree contains no 1, so remove it"
+      ],
+      [
+       "`return None`",
+       "Tell the parent to drop this child",
+       "Deletion by returning None and reassigning the pointer"
+      ],
+      [
+       "`return root`",
+       "Keep the node",
+       "Includes any node with value 1 or with a kept child"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,null,0,0,1]` written as `value(left,right)` with `·` for none: before `1(·,0(0,1))`, after `1(·,0(·,1))`. Nodes are finished in this order:"
+    ],
+    "table": {
+     "head": [
+      "Node value",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "leaf with 0 → removed (return None)"
+      ],
+      [
+       "1",
+       "kept (has a 1 below or is 1)"
+      ],
+      [
+       "0",
+       "kept (has a 1 below or is 1)"
+      ],
+      [
+       "1",
+       "kept (has a 1 below or is 1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why post-order?",
+    "p": [
+     "Whether a node must be removed depends on its children after they were pruned: a 0 whose only child was a 0-leaf becomes a 0-leaf itself and must go too. Deciding top-down would not know yet. That is why pruning happens in the recursive calls before the check."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Post-order pruning: prune children first; a node that is then a 0-leaf is removed by returning None to its parent."
+ },
+ "820": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`keep = set(words)`",
+       "Candidate words that must be written out",
+       "Set removes duplicate words"
+      ],
+      [
+       "`w[k:]`",
+       "Suffix of w starting at k",
+       "Every proper suffix of w is covered by w's encoding"
+      ],
+      [
+       "`keep.discard(w[k:])`",
+       "Remove that suffix if present",
+       "`discard` doesn't raise when it is absent"
+      ],
+      [
+       "`sum(len(w) + 1 for w in keep)`",
+       "Each survivor costs its length plus one `#`",
+       "Length of the shortest encoding"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['time','me','bell']`: suffixes that are also words are discarded; survivors ['bell', 'time'] give 10 (`time#bell#`)."
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Suffix found in set",
+      "Action"
+     ],
+     "rows": [
+      [
+       "time",
+       "me",
+       "discarded (suffix of time)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does discarding suffixes give the shortest encoding?",
+    "p": [
+     "If a word is a suffix of another word, it can read off the tail of the longer word's encoding for free (start at the right index, stop at the `#`). Words that aren't suffixes of anything else must be written out. So the answer is the sum of (length + 1) over words that are not proper suffixes of other words."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(Σ L²): each word creates up to L suffixes of up to L characters.",
+     "Space: O(Σ L)."
+    ]
+   }
+  ],
+  "takeaway": "Remove every word that is a proper suffix of another word; the rest are written out once each with a trailing #."
+ },
+ "826": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(zip(difficulty, profit))`",
+       "Jobs ordered by difficulty",
+       "Jobs a worker can do then form a prefix"
+      ],
+      [
+       "`sorted(worker)`",
+       "Workers from weakest to strongest",
+       "The set of doable jobs only grows"
+      ],
+      [
+       "`while i < len(jobs) and jobs[i][0] <= w`",
+       "Admit all jobs the worker can do",
+       "Pointer `i` only moves forward across all workers"
+      ],
+      [
+       "`best = max(best, profit)`",
+       "Best profit among admitted jobs",
+       "Remembered across workers (a stronger worker can do everything a weaker one can)"
+      ],
+      [
+       "`total += best`",
+       "Each worker earns the best doable profit",
+       "Several workers may take the same job"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "difficulty `[2,4,6,8,10]`, profit `[10,20,30,40,50]`, workers `[4,5,6,7]`:"
+    ],
+    "table": {
+     "head": [
+      "Worker ability",
+      "Newly doable jobs",
+      "best profit",
+      "total"
+     ],
+     "rows": [
+      [
+       "4",
+       "[(2, 10), (4, 20)]",
+       "20",
+       "20"
+      ],
+      [
+       "5",
+       "—",
+       "20",
+       "40"
+      ],
+      [
+       "6",
+       "[(6, 30)]",
+       "30",
+       "70"
+      ],
+      [
+       "7",
+       "—",
+       "30",
+       "100"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort workers too?",
+    "p": [
+     "Sorting both lists makes this a two-pointer sweep: `i` never needs to go back, since a worker with higher ability can do every job a weaker worker could. Without sorting workers you would need a binary search on a prefix-maximum array per worker."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + m log m).",
+     "Space: O(n) for the sorted job list."
+    ]
+   }
+  ],
+  "takeaway": "Sort jobs by difficulty and workers by ability, sweeping one pointer while keeping the best profit so far."
+ },
+ "829": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`k`",
+       "Number of consecutive terms",
+       "Try each possible run length"
+      ],
+      [
+       "`k * (k + 1) // 2 <= n`",
+       "Smallest possible sum of k positive consecutive numbers (1+…+k)",
+       "Stop when even the smallest run is too big"
+      ],
+      [
+       "`k * (k - 1) // 2`",
+       "1+2+…+(k−1)",
+       "A run starting at a is a, a+1, …, a+k−1 with sum k·a + k(k−1)/2"
+      ],
+      [
+       "`(n - k*(k-1)//2) % k == 0`",
+       "Is the starting number a a whole positive integer?",
+       "Solve n = k·a + k(k−1)/2 for a"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 15` has 4 ways (15, 7+8, 4+5+6, 1+2+3+4+5):"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "k(k−1)/2",
+      "n − k(k−1)/2",
+      "Divisible by k?",
+      "Start a"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "15",
+       "True",
+       "15"
+      ],
+      [
+       "2",
+       "1",
+       "14",
+       "True",
+       "7"
+      ],
+      [
+       "3",
+       "3",
+       "12",
+       "True",
+       "4"
+      ],
+      [
+       "4",
+       "6",
+       "9",
+       "False",
+       "—"
+      ],
+      [
+       "5",
+       "10",
+       "5",
+       "True",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the formula?",
+    "p": [
+     "A run of k consecutive numbers starting at a sums to k·a + (0+1+…+(k−1)) = k·a + k(k−1)/2. For n = 15 and k = 3: 3a + 3 = 15 gives a = 4, so 4+5+6. The condition `k·a ≥ k` (a ≥ 1) is guaranteed by the loop bound `k(k+1)/2 ≤ n`. Since k grows as about √(2n), the loop is O(√n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(√n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Try every run length k: n = k·a + k(k−1)/2 has a positive integer start a exactly when n − k(k−1)/2 is divisible by k."
+ },
+ "841": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`seen = {0}`",
+       "Rooms entered so far (room 0 is open)",
+       "O(1) membership"
+      ],
+      [
+       "`stack`",
+       "Rooms entered but whose keys have not yet been read",
+       "Iterative DFS (Depth-First Search); a deque would give BFS with the same answer"
+      ],
+      [
+       "`rooms[r]`",
+       "Keys found in room r",
+       "Each key is the number of a room"
+      ],
+      [
+       "`k not in seen`",
+       "A newly reachable room",
+       "Mark and queue it"
+      ],
+      [
+       "`len(seen) == len(rooms)`",
+       "Every room was visited",
+       "Graph reachability test"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,3],[3,0,1],[2],[0]]`: room 2 is never reachable (its key is only in room 2 itself). Result: False."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "seen",
+      "stack"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0]",
+       "[0]"
+      ],
+      [
+       "enter room 0, keys [1, 3]",
+       "[0, 1, 3]",
+       "[1, 3]"
+      ],
+      [
+       "enter room 3, keys [0]",
+       "[0, 1, 3]",
+       "[1]"
+      ],
+      [
+       "enter room 1, keys [3, 0, 1]",
+       "[0, 1, 3]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why DFS (or BFS) here?",
+    "p": [
+     "Rooms are nodes and keys are directed edges; the question is whether every node is reachable from room 0. Any traversal answers it; `seen` guarantees each room is expanded once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + total keys).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Reachability from room 0: traverse with a stack and a seen set, then compare the number of seen rooms to n."
+ },
+ "844": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`next_valid(x, i)`",
+       "Index of the next character that survives backspaces, scanning leftwards from i",
+       "Simulates the editor without building the final string"
+      ],
+      [
+       "`skip`",
+       "Number of pending backspaces",
+       "Each `#` adds one; each normal character consumes one"
+      ],
+      [
+       "`i, j` from the ends",
+       "Compare the two strings from the end",
+       "Backspaces affect characters to their LEFT, so scanning right-to-left sees them first"
+      ],
+      [
+       "`elif i >= 0 or j >= 0: return False`",
+       "One string has a surviving letter and the other doesn't",
+       "Different lengths after editing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'ab#c'` and `'ad#c'` (both type `ac`):"
+    ],
+    "table": {
+     "head": [
+      "i (in s)",
+      "s[i]",
+      "j (in t)",
+      "t[j]"
+     ],
+     "rows": [
+      [
+       "3",
+       "c",
+       "3",
+       "c"
+      ],
+      [
+       "0",
+       "a",
+       "0",
+       "a"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case: `'a#c'` vs `'b'`",
+    "p": [
+     "Result False: the first surviving letters are `c` and `b`."
+    ],
+    "table": {
+     "head": [
+      "i (in s)",
+      "s[i]",
+      "j (in t)",
+      "t[j]"
+     ],
+     "rows": [
+      [
+       "2",
+       "c",
+       "0",
+       "b"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan from the end?",
+    "p": [
+     "Reading left to right you cannot know whether a letter will be deleted until later backspaces arrive. From the right, a `#` is seen before the letters it deletes, so a simple counter decides survival. This avoids building two edited strings (the stack solution uses O(n) space; this uses O(1))."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compare from the right with a skip counter: backspaces are seen before the letters they delete, so no stack is needed."
+ },
+ "853": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(zip(position, speed), reverse=True)`",
+       "Cars from closest to the target to furthest",
+       "A car can only be blocked by cars ahead of it"
+      ],
+      [
+       "`(target - p) / s`",
+       "Time to reach the target if never blocked",
+       "Arrival time"
+      ],
+      [
+       "`t > last`",
+       "This car would arrive later than the fleet ahead",
+       "It can't catch up, so it forms a new fleet"
+      ],
+      [
+       "`last = t`",
+       "Arrival time of the newest (slowest) fleet",
+       "A car arriving earlier or at the same time merges into that fleet"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`target = 12`, positions `[10,8,0,5,3]`, speeds `[2,4,1,1,3]`: 3 fleets."
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Speed",
+      "Free arrival time",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "10",
+       "2",
+       "1.0",
+       "t > previous slowest → new fleet"
+      ],
+      [
+       "8",
+       "4",
+       "1.0",
+       "t ≤ fleet ahead → joins it"
+      ],
+      [
+       "5",
+       "1",
+       "7.0",
+       "t > previous slowest → new fleet"
+      ],
+      [
+       "3",
+       "3",
+       "3.0",
+       "t ≤ fleet ahead → joins it"
+      ],
+      [
+       "0",
+       "1",
+       "12.0",
+       "t > previous slowest → new fleet"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare arrival times?",
+    "p": [
+     "Processing from the front, if the car behind would arrive no later than the fleet ahead, it catches up and then has to slow down to the fleet's pace (or arrives exactly together), so it joins that fleet. If it would arrive later, it never catches up. So the fleet count is the number of strict increases in arrival time while scanning from the front. (Equal times mean meeting at the target, which counts as one fleet.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting.",
+     "Space: O(n) for the sorted list."
+    ]
+   }
+  ],
+  "takeaway": "Sort by position descending and count each car whose unobstructed arrival time exceeds every fleet ahead of it."
+ }
+}
