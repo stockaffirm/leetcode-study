@@ -1,0 +1,2428 @@
+{
+ "341": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.st`",
+       "Stack of `NestedInteger` items; the TOP is the next item in order",
+       "Iterating a tree-like structure without recursion"
+      ],
+      [
+       "`reversed(nestedList)`",
+       "Push in reverse so that the first element ends up on top (a stack pops from the end)",
+       "Preserving left-to-right order with a stack"
+      ],
+      [
+       "`isInteger()` / `getInteger()` / `getList()`",
+       "Given API: is this element a number, its value, or its inner list",
+       "Branching on the element type"
+      ],
+      [
+       "`while self.st and not self.st[-1].isInteger()`",
+       "Unpack lists at the top until an integer is on top (or the stack is empty); `while` because a list can start with another list or be empty",
+       "Lazy flattening"
+      ],
+      [
+       "`self.st.extend(reversed(…getList()))`",
+       "Replace a list on top with its elements, reversed",
+       "Expanding one level of nesting"
+      ],
+      [
+       "`next()` calls `hasNext()` first",
+       "Guarantees an integer is on top before popping",
+       "`hasNext` does the real work, `next` relies on it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1],2,[1,1]]`. The stack is shown bottom → top; `list[...]` is a nested list not yet expanded. Only the first rows are shown."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "init",
+       "-",
+       "['list[1, 1]', 'int 2', 'list[1, 1]']"
+      ],
+      [
+       "hasNext()",
+       "True",
+       "['list[1, 1]', 'int 2', 'int 1', 'int 1']"
+      ],
+      [
+       "next()",
+       "1",
+       "['list[1, 1]', 'int 2', 'int 1']"
+      ],
+      [
+       "hasNext()",
+       "True",
+       "['list[1, 1]', 'int 2', 'int 1']"
+      ],
+      [
+       "next()",
+       "1",
+       "['list[1, 1]', 'int 2']"
+      ],
+      [
+       "hasNext()",
+       "True",
+       "['list[1, 1]', 'int 2']"
+      ],
+      [
+       "next()",
+       "2",
+       "['list[1, 1]']"
+      ],
+      [
+       "hasNext()",
+       "True",
+       "['int 1', 'int 1']"
+      ],
+      [
+       "next()",
+       "1",
+       "['int 1']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the work in `hasNext` rather than `__init__`?",
+    "p": [
+     "Expanding everything in the constructor flattens the whole structure up front: O(total elements) time and memory before the first call, and it ruins laziness if the caller only needs a few values. The lazy stack expands only what is needed and uses memory proportional to the nesting depth plus the current level."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Constructor",
+      "Memory",
+      "Lazy?"
+     ],
+     "rows": [
+      [
+       "Flatten recursively into a list",
+       "O(N)",
+       "O(N)",
+       "no"
+      ],
+      [
+       "Stack, expand in `hasNext` (this code)",
+       "O(1)",
+       "O(depth + current level)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edge cases handled by the `while`",
+    "bullets": [
+     "Empty inner lists such as `[[], 1]`: expanding `[]` pushes nothing, so the loop continues to the `1`.",
+     "Deep nesting such as `[[[1]]]`: the loop expands one level per iteration until an integer surfaces."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) amortised per call; each element is pushed and popped once.",
+     "Space: O(N) worst case for one huge list; O(depth) when lists are small."
+    ]
+   }
+  ],
+  "takeaway": "Nested-list iterator: a stack holding the remaining items in reverse; `hasNext` unwraps lists on top until an integer appears."
+ },
+ "344": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i, j = 0, len(s) - 1`",
+       "Pointers at both ends",
+       "Two-pointer in-place reversal"
+      ],
+      [
+       "`s[i], s[j] = s[j], s[i]`",
+       "Tuple swap with no temporary variable",
+       "Swapping two list slots"
+      ],
+      [
+       "`while i < j`",
+       "Stop when the pointers meet or cross; the middle element of an odd length stays",
+       "Each pair is swapped exactly once"
+      ],
+      [
+       "no return value",
+       "The problem requires modifying `s` in place",
+       "`s[::-1]` would create a copy, not modify the list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"h\",\"e\",\"l\",\"l\",\"o\"]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "list after swap"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "oellh"
+      ],
+      [
+       "1",
+       "3",
+       "olleh"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `i < j` and not `i <= j`?",
+    "p": [
+     "When `i == j` the pointers are on the middle element of an odd-length list; swapping it with itself is harmless but pointless. Using `<` avoids the extra work and, for even lengths, stops after n/2 swaps."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "Two pointers (this code)",
+       "O(n)",
+       "O(1)"
+      ],
+      [
+       "`s.reverse()`",
+       "O(n)",
+       "O(1)"
+      ],
+      [
+       "`s[:] = s[::-1]`",
+       "O(n)",
+       "O(n) temporary copy"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A pitfall",
+    "p": [
+     "Writing `s = s[::-1]` rebinds the local name and leaves the caller's list unchanged. Use slice assignment `s[:] = …` or swap in place."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), n/2 swaps.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "In-place reverse with two converging pointers and tuple swaps."
+ },
+ "347": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → frequency",
+       "Frequency counting"
+      ],
+      [
+       "`buckets = [[] for _ in range(len(nums)+1)]`",
+       "Index = frequency, entry = list of values with that frequency; a value can appear at most `len(nums)` times",
+       "Bucket sort: when the sort key is a bounded integer"
+      ],
+      [
+       "`cnt.items()`",
+       "Pairs `(value, count)`",
+       "Dict iteration with both parts"
+      ],
+      [
+       "`range(len(nums), 0, -1)`",
+       "Walk from the highest possible frequency down to 1",
+       "Reading the buckets in descending frequency"
+      ],
+      [
+       "`if len(ans) == k: return ans`",
+       "Stop as soon as k values are collected",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,1,2,2,3]`, `k = 2`. Counts: {1: 3, 2: 2, 3: 1}. Buckets by frequency: {3: [1], 2: [2], 1: [3]}. Scan from 6 down:"
+    ],
+    "table": {
+     "head": [
+      "Frequency scanned",
+      "Value taken",
+      "ans"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "[1]"
+      ],
+      [
+       "2",
+       "2",
+       "[1, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why bucket sort rather than sorting or a heap?",
+    "p": [
+     "Frequencies are integers between 1 and n, so they can index an array directly, which removes the log factor. A heap is the answer when the interviewer asks for streaming or when k is tiny."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Sort values by count",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "Min-heap of size k",
+       "O(n log k)",
+       "O(n + k)"
+      ],
+      [
+       "Bucket sort (this code)",
+       "O(n)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A detail",
+    "p": [
+     "If several values share a frequency the order among them is arbitrary, which the problem allows. The answer is guaranteed to be unique as a set, so we may stop in the middle of a bucket."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Top-k frequent: count with Counter, bucket values by frequency, and read buckets from the highest frequency down."
+ },
+ "350": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(nums1)`",
+       "How many times each value occurs in the first array",
+       "Multiset (bag) semantics: duplicates matter"
+      ],
+      [
+       "`cnt[x] > 0`",
+       "Is there an unused copy of `x` left? (A Counter returns 0 for missing keys, so no KeyError)",
+       "Safe lookup"
+      ],
+      [
+       "`cnt[x] -= 1`",
+       "Use up one copy",
+       "Each element of `nums1` can match only once"
+      ],
+      [
+       "iterate `nums2`",
+       "Output values in the order they appear in the second array",
+       "Result order is free, so this is fine"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,2,1]`, `nums2 = [2,2]`."
+    ],
+    "table": {
+     "head": [
+      "x from nums2",
+      "Decision",
+      "Counter of nums1",
+      "result"
+     ],
+     "rows": [
+      [
+       "2",
+       "taken",
+       "{1: 2, 2: 1}",
+       "[2]"
+      ],
+      [
+       "2",
+       "taken",
+       "{1: 2, 2: 0}",
+       "[2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a Counter and not a set?",
+    "p": [
+     "Sets give the unique intersection (problem 349). Here a value present twice in both arrays must appear twice in the result, so we need to track how many copies are available."
+    ],
+    "table": {
+     "head": [
+      "Problem",
+      "Structure",
+      "Result for [1,2,2,1] and [2,2]"
+     ],
+     "rows": [
+      [
+       "349 Intersection",
+       "set",
+       "[2]"
+      ],
+      [
+       "350 Intersection II",
+       "Counter (this code)",
+       "[2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Follow-ups interviewers ask",
+    "bullets": [
+     "Both arrays sorted: use two pointers, O(1) extra space.",
+     "`nums1` much smaller: build the Counter from the smaller array.",
+     "`nums2` too big for memory: stream it in chunks against a Counter of `nums1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n).",
+     "Space: O(min(m, n)) if the Counter is built from the smaller array (this code builds it from `nums1`)."
+    ]
+   }
+  ],
+  "takeaway": "Intersection with duplicates: count one array, then consume counts while scanning the other."
+ },
+ "353": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`body` (a deque)",
+       "Snake segments from tail (left) to head (right)",
+       "Add at the head and remove from the tail in O(1)"
+      ],
+      [
+       "`cells` (a set)",
+       "The same cells as a set for O(1) collision checks",
+       "A queue is O(n) to search, so keep a set alongside"
+      ],
+      [
+       "`direction` dict",
+       "Maps U/D/L/R to row and column offsets",
+       "Replaces a chain of if/elif"
+      ],
+      [
+       "`ate`",
+       "The new head lands on the next unclaimed food, checked BEFORE removing the tail",
+       "The snake grows only when it eats"
+      ],
+      [
+       "`popleft()` + `discard(tail)` when not eating",
+       "Move forward by dropping the tail",
+       "The snake keeps its length"
+      ],
+      [
+       "collision check AFTER removing the tail",
+       "Moving into the cell the tail just left is legal",
+       "Checking before removal would wrongly kill the snake"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board 3 wide × 2 high, food at `(1,2)` then `(0,1)`. Moves `R D R U L U`. Body listed tail → head."
+    ],
+    "table": {
+     "head": [
+      "Move",
+      "Body after",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "R",
+       "[(0, 1)]",
+       "0"
+      ],
+      [
+       "D",
+       "[(1, 1)]",
+       "0"
+      ],
+      [
+       "R",
+       "[(1, 1), (1, 2)]",
+       "1"
+      ],
+      [
+       "U",
+       "[(1, 2), (0, 2)]",
+       "1"
+      ],
+      [
+       "L",
+       "[(1, 2), (0, 2), (0, 1)]",
+       "2"
+      ],
+      [
+       "U",
+       "[(1, 2), (0, 2), (0, 1)]",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why remove the tail before the collision check?",
+    "p": [
+     "With a snake of length 4 chasing its own tail in a 2×2 loop, the head may legally step onto the cell the tail is vacating in the same move. Removing the tail first and then testing `(r, c) in cells` allows this. When the snake ate this turn, the tail stays, so stepping onto it is a collision."
+    ],
+    "table": {
+     "head": [
+      "Order",
+      "Head moves to the old tail cell",
+      "Correct?"
+     ],
+     "rows": [
+      [
+       "check collision, then remove tail",
+       "reported as a crash",
+       "wrong"
+      ],
+      [
+       "remove tail, then check (this code)",
+       "allowed",
+       "right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why both a deque and a set?",
+    "p": [
+     "The deque gives the body order (needed to find the tail), the set answers 'is this cell occupied?' in O(1). Using only the deque makes each move O(length)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per move.",
+     "Space: O(snake length + food)."
+    ]
+   }
+  ],
+  "takeaway": "Snake game: a deque for body order plus a set for O(1) collision checks; drop the tail first (unless eating) and then test for collision."
+ },
+ "359": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.last`",
+       "Message → timestamp of the last time it was PRINTED",
+       "Per-key state with O(1) lookup"
+      ],
+      [
+       "`timestamp - self.last[message] < 10`",
+       "Less than 10 seconds since the last print: suppress",
+       "Rate limiting by a fixed window"
+      ],
+      [
+       "`self.last[message] = timestamp` only when printing",
+       "Suppressed attempts do not extend the window",
+       "The rule is relative to the last PRINTED time"
+      ],
+      [
+       "`message in self.last and …`",
+       "Short-circuit: a new message has no history and always prints",
+       "Guarding the dict lookup"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`foo@1, bar@2, foo@3, bar@8, foo@10, foo@11`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Check",
+      "Prints?",
+      "last dict"
+     ],
+     "rows": [
+      [
+       "foo@1",
+       "first time",
+       "True",
+       "{'foo': 1}"
+      ],
+      [
+       "bar@2",
+       "first time",
+       "True",
+       "{'foo': 1, 'bar': 2}"
+      ],
+      [
+       "foo@3",
+       "3 - 1 = 2 < 10",
+       "False",
+       "{'foo': 1, 'bar': 2}"
+      ],
+      [
+       "bar@8",
+       "8 - 2 = 6 < 10",
+       "False",
+       "{'foo': 1, 'bar': 2}"
+      ],
+      [
+       "foo@10",
+       "10 - 1 = 9 < 10",
+       "False",
+       "{'foo': 1, 'bar': 2}"
+      ],
+      [
+       "foo@11",
+       "11 - 1 = 10 ≥ 10",
+       "True",
+       "{'foo': 11, 'bar': 2}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only update on a successful print?",
+    "p": [
+     "`foo@10` is rejected because 10 - 1 = 9 < 10. If rejected calls updated the dictionary, `foo@11` would compare against 10 and be rejected, but the correct answer is True because the last print was at 1. Updating on suppressed calls would turn the limit into 'quiet for 10 seconds', a different rule."
+    ],
+    "table": {
+     "head": [
+      "Version",
+      "`foo@11` result"
+     ],
+     "rows": [
+      [
+       "update only when printed (this code)",
+       "True"
+      ],
+      [
+       "update on every call",
+       "False (wrong)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Memory follow-up",
+    "p": [
+     "The dict grows with the number of distinct messages and never shrinks. If memory matters, keep a deque of (timestamp, message) and a set, evicting entries older than 10 seconds on each call."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call.",
+     "Space: O(number of distinct messages)."
+    ]
+   }
+  ],
+  "takeaway": "Rate limiter with a hash map of last-printed timestamps; only a printed message updates its entry."
+ },
+ "362": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.q` (deque of timestamps)",
+       "Hits in arrival order; timestamps are non-decreasing, so the oldest is always at the left",
+       "Sliding time window"
+      ],
+      [
+       "`q.append(timestamp)`",
+       "Record a hit in O(1)",
+       "Newest at the right end"
+      ],
+      [
+       "`q[0] <= timestamp - 300`",
+       "Oldest hit is 300 or more seconds old: outside the window `(t-300, t]`",
+       "Window boundary: at `t = 301`, hit 1 expires"
+      ],
+      [
+       "`popleft()`",
+       "Evict an expired hit in O(1)",
+       "A list's `pop(0)` would be O(n)"
+      ],
+      [
+       "`len(self.q)`",
+       "Hits still inside the window",
+       "Count after cleanup"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`hit(1), hit(2), hit(3), getHits(4), hit(300), getHits(300), getHits(301)`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Queue"
+     ],
+     "rows": [
+      [
+       "hit(1)",
+       "-",
+       "[1]"
+      ],
+      [
+       "hit(2)",
+       "-",
+       "[1, 2]"
+      ],
+      [
+       "hit(3)",
+       "-",
+       "[1, 2, 3]"
+      ],
+      [
+       "getHits(4)",
+       "3",
+       "[1, 2, 3]"
+      ],
+      [
+       "hit(300)",
+       "-",
+       "[1, 2, 3, 300]"
+      ],
+      [
+       "getHits(300)",
+       "4",
+       "[1, 2, 3, 300]"
+      ],
+      [
+       "getHits(301)",
+       "3",
+       "[2, 3, 300]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `<=` and not `<`?",
+    "p": [
+     "The window is the last 300 seconds: `(t-300, t]`. At `t = 301` the hit at time 1 is exactly 300 seconds old and must no longer count, which is why the comparison is `<=`; with `<` it would still be counted (answer 4 instead of 3)."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "`<=` (this code)",
+      "`<`"
+     ],
+     "rows": [
+      [
+       "getHits(300)",
+       "4",
+       "4"
+      ],
+      [
+       "getHits(301)",
+       "3 (hit at 1 expired)",
+       "4 (wrong)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative design",
+    "p": [
+     "For a very high hit rate, store (timestamp, count) pairs or a fixed array of 300 buckets indexed by `timestamp % 300` with their timestamps: O(1) memory instead of O(hits in the window)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `hit` O(1); `getHits` O(1) amortised (each hit is removed once).",
+     "Space: O(hits in the last 300 seconds)."
+    ]
+   }
+  ],
+  "takeaway": "Hit counter: a deque of timestamps; evict from the left everything older than the window when asked."
+ },
+ "365": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`target <= x + y`",
+       "You can never hold more than the two jugs' total capacity",
+       "Upper bound"
+      ],
+      [
+       "`gcd(x, y)`",
+       "Greatest common divisor (from `math`)",
+       "Number theory: the amounts you can pour are combinations `a·x + b·y`"
+      ],
+      [
+       "`target % gcd(x, y) == 0`",
+       "Bézout's identity: `a·x + b·y` can produce exactly the multiples of `gcd(x, y)`",
+       "Reachability by integer linear combinations"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Each case checks both conditions:"
+    ],
+    "table": {
+     "head": [
+      "x, y, target",
+      "target ≤ x + y",
+      "target % gcd == 0",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "3, 5, 4",
+       "True",
+       "4 % 1 = 0",
+       "True"
+      ],
+      [
+       "2, 6, 5",
+       "True",
+       "5 % 2 = 1",
+       "False"
+      ],
+      [
+       "1, 2, 3",
+       "True",
+       "3 % 1 = 0",
+       "True"
+      ],
+      [
+       "2, 4, 6",
+       "True",
+       "6 % 2 = 0",
+       "True"
+      ],
+      [
+       "2, 4, 7",
+       "False",
+       "7 % 2 = 1",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the gcd decide it?",
+    "p": [
+     "Every fill, empty or pour changes the total water by a multiple of x or y, so the total is always `a·x + b·y` for integers a, b (negative allowed for emptying). By Bézout the set of such values is exactly the multiples of `gcd(x, y)`. The other direction, that every such target ≤ x + y is actually reachable, holds by a constructive pouring strategy."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "BFS over states (a, b)",
+       "O(x·y)"
+      ],
+      [
+       "gcd test (this code)",
+       "O(log min(x, y))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "An edge case",
+    "p": [
+     "`x = 0` or `y = 0`: `gcd(x, 0) = x`, so the test reduces to 'target is a multiple of the other jug', capped by capacity. `target = 0` is always reachable (`0 % g == 0`). (If both are 0, `gcd` is 0 and the modulo would fail, but constraints say x, y ≥ 1.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log min(x, y)) for the gcd.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Water jug = number theory: the target is reachable iff target ≤ x + y and target is a multiple of gcd(x, y)."
+ },
+ "368": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "After sorting, if `a` divides `b` then `a ≤ b`, so only earlier elements can be divisors",
+       "Turns divisibility into an ordered relation"
+      ],
+      [
+       "`dp[i]`",
+       "Size of the largest divisible subset that ENDS at `nums[i]` (as its largest element)",
+       "Longest-increasing-subsequence style DP"
+      ],
+      [
+       "`nums[i] % nums[j] == 0`",
+       "`nums[j]` divides `nums[i]`",
+       "The chain condition"
+      ],
+      [
+       "`prev[i]`",
+       "Index of the previous element in that best chain (-1 if none)",
+       "Reconstructing the actual subset, not just its size"
+      ],
+      [
+       "`best`",
+       "Index where the longest chain ends",
+       "Track the arg-max"
+      ],
+      [
+       "`while best != -1` … `res[::-1]`",
+       "Follow `prev` back to the start, then reverse",
+       "Path reconstruction"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,4,16,8]` sorts to `[3,4,8,16]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "dp[i]",
+      "prev[i]",
+      "best index"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "1",
+       "-",
+       "0"
+      ],
+      [
+       "1",
+       "4",
+       "1",
+       "-",
+       "0"
+      ],
+      [
+       "2",
+       "8",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "16",
+       "3",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "Following `prev` from the best index gives [16, 8, 4] (largest first), and reversing gives `[4, 8, 16]`. A subset of size 3 such as `[4, 8, 16]` is the longest possible here."
+   },
+   {
+    "h": "Why checking only the previous chain element is enough",
+    "p": [
+     "Divisibility is transitive: if `a | b` and `b | c` then `a | c`. So when `nums[i]` is divisible by the last element of a valid chain, it is divisible by every element before it. That is why `dp[i]` only needs `dp[j]` and `nums[j] | nums[i]`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Try all subsets",
+       "O(2ⁿ · n²)"
+      ],
+      [
+       "Sort + O(n²) DP (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) for the DP after an O(n log n) sort.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Largest divisible subset: sort, then LIS-style DP using transitivity of divisibility, with a prev array to rebuild the set."
+ },
+ "371": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`a ^ b`",
+       "Sum of the bits WITHOUT carries",
+       "XOR is addition modulo 2 per bit"
+      ],
+      [
+       "`(a & b) << 1`",
+       "The carries: positions where both bits are 1, moved one place left",
+       "Carry computation"
+      ],
+      [
+       "`while b`",
+       "Repeat until no carry remains",
+       "Adding the carry may create new carries"
+      ],
+      [
+       "`& mask` (`0xFFFFFFFF`)",
+       "Keep only 32 bits; Python integers are unbounded and negatives would otherwise carry forever",
+       "Simulating 32-bit two's complement in Python"
+      ],
+      [
+       "`a if a <= 0x7FFFFFFF else ~(a ^ mask)`",
+       "If bit 31 is set the 32-bit value is negative: convert to Python's negative number",
+       "Reading a 32-bit pattern as signed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`5 + 7`: each iteration replaces `(a, b)` with `(a ^ b, carries)` until the carry is 0."
+    ],
+    "table": {
+     "head": [
+      "a (sum bits)",
+      "b (carry)"
+     ],
+     "rows": [
+      [
+       "0101",
+       "0111"
+      ],
+      [
+       "0010",
+       "1010"
+      ],
+      [
+       "1000",
+       "0100"
+      ],
+      [
+       "1100",
+       "0000"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Check with a small case",
+    "p": [
+     "`1 + 2`: a = `01`, b = `10`. XOR gives `11`, carry `(01 & 10) << 1 = 0`. Done: 3. Negative case `-1 + 1`: the masked 32-bit pattern of -1 is all ones; the carries ripple through all 32 bits, `a` ends as 0, and the answer is 0. `-2 + -3` returns -5."
+    ]
+   },
+   {
+    "h": "Why the mask?",
+    "p": [
+     "In Python `-1` is an infinite string of 1s, so `(a & b) << 1` for negatives never reaches 0 and the loop would not terminate. Masking to 32 bits drops the overflow bit like real hardware, and the final conversion restores the sign."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Without mask",
+      "With mask"
+     ],
+     "rows": [
+      [
+       "Negative operands",
+       "may loop forever",
+       "terminates in ≤ 32 iterations"
+      ],
+      [
+       "Result sign",
+       "Python handles it",
+       "must convert from 32-bit pattern"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1), at most 32 iterations.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Addition without `+`: XOR gives the sum without carries, AND-shift gives the carries; repeat until no carry, masking to 32 bits in Python."
+ },
+ "374": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`guess(mid)`",
+       "Given API: `-1` if the picked number is LOWER than `mid`, `1` if HIGHER, `0` if equal",
+       "Read the sign convention carefully: it describes the pick relative to your guess, not your guess relative to the pick"
+      ],
+      [
+       "`lo <= hi`",
+       "Closed range; both ends are valid candidates",
+       "Exact-match binary search"
+      ],
+      [
+       "`g < 0: hi = mid - 1`",
+       "Pick is below `mid`, so discard `mid` and everything above it",
+       "Both bounds exclude `mid` because it was already tested"
+      ],
+      [
+       "`g > 0: lo = mid + 1`",
+       "Pick is above `mid`",
+       "Symmetric"
+      ],
+      [
+       "`return mid` when `g == 0`",
+       "Found",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`, the picked number is 6."
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "guess(mid)",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[1, 10]",
+       "5",
+       "1",
+       "pick is higher → lo = mid + 1"
+      ],
+      [
+       "[6, 10]",
+       "8",
+       "-1",
+       "pick is lower → hi = mid - 1"
+      ],
+      [
+       "[6, 7]",
+       "6",
+       "0",
+       "found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `mid - 1` here but `mid` in First Bad Version?",
+    "p": [
+     "Here an exact answer is reported (`guess == 0`), so when `mid` is wrong it can be excluded safely. In First Bad Version a `True` at `mid` doesn't prove `mid` is the FIRST bad one, so it has to stay in range."
+    ],
+    "table": {
+     "head": [
+      "Problem",
+      "Test result",
+      "Keep mid?"
+     ],
+     "rows": [
+      [
+       "374 Guess Number",
+       "wrong guess",
+       "no: `mid ± 1`"
+      ],
+      [
+       "278 First Bad Version",
+       "bad (maybe the first)",
+       "yes: `hi = mid`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) calls to `guess`.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Classic exact-match binary search: closed range, discard mid on every miss, mind the direction of the API's return values."
+ },
+ "377": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[t]`",
+       "Number of ordered sequences of numbers from `nums` that add up to `t`",
+       "Counting DP over a target"
+      ],
+      [
+       "`dp = [1] + [0] * target`",
+       "`dp[0] = 1`: one way to make 0 (the empty sequence)",
+       "Base case that starts the chain"
+      ],
+      [
+       "outer loop over `t`, inner over `nums`",
+       "For each total, try every number as the LAST element",
+       "This loop order counts ORDER (permutations)"
+      ],
+      [
+       "`x <= t`",
+       "Can't use a number bigger than the remaining total",
+       "Avoids a negative index"
+      ],
+      [
+       "`dp[t] += dp[t - x]`",
+       "Sequences ending in `x` = ways to make `t - x`",
+       "Recurrence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3]`, `target = 4`: `dp[4] = 7` counts `1+1+1+1`, `1+1+2`, `1+2+1`, `2+1+1`, `2+2`, `1+3`, `3+1`."
+    ],
+    "table": {
+     "head": [
+      "t",
+      "Sum of dp[t - x]",
+      "dp[t]"
+     ],
+     "rows": [
+      [
+       "0",
+       "-",
+       "1"
+      ],
+      [
+       "1",
+       "dp[0]=1",
+       "1"
+      ],
+      [
+       "2",
+       "dp[1]=1 + dp[0]=1",
+       "2"
+      ],
+      [
+       "3",
+       "dp[2]=2 + dp[1]=1 + dp[0]=1",
+       "4"
+      ],
+      [
+       "4",
+       "dp[3]=4 + dp[2]=2 + dp[1]=1",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the loop order matters",
+    "p": [
+     "With the total as the OUTER loop, each `t` considers every possible last number, so `1+2` and `2+1` are counted separately (permutations). Swapping the loops (numbers outside, totals inside) counts each multiset once, which is the Coin Change II / combinations answer (here 4)."
+    ],
+    "table": {
+     "head": [
+      "Loop order",
+      "Counts",
+      "dp[4] for [1,2,3]"
+     ],
+     "rows": [
+      [
+       "total outside, numbers inside (this code)",
+       "ordered sequences",
+       "7"
+      ],
+      [
+       "numbers outside, totals inside",
+       "combinations",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A caveat",
+    "p": [
+     "Despite the name this problem counts permutations. With negative numbers allowed the count could be infinite; the follow-up asks what restriction is needed (a limit on sequence length)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(target × len(nums)).",
+     "Space: O(target)."
+    ]
+   }
+  ],
+  "takeaway": "Combination Sum IV counts ordered sequences: iterate the target in the outer loop and the numbers in the inner loop."
+ },
+ "380": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.vals`",
+       "Dynamic array of the elements",
+       "O(1) random access by index, so `random.choice` is O(1)"
+      ],
+      [
+       "`self.pos`",
+       "Value → its index in `vals`",
+       "O(1) membership and index lookup"
+      ],
+      [
+       "swap-with-last",
+       "Overwrite the removed slot with the last element and update its index",
+       "Delete from the middle of an array in O(1) by giving up order"
+      ],
+      [
+       "`self.vals.pop()`",
+       "Removes the last element in O(1)",
+       "Only the END of a list is cheap to remove"
+      ],
+      [
+       "`random.choice(self.vals)`",
+       "Uniformly random element",
+       "Needs a list/array, not a set"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Insert 10, 20, 30, then remove 10 and 30. `vals` and `pos` after each operation:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "vals",
+      "pos"
+     ],
+     "rows": [
+      [
+       "insert(10)",
+       "True",
+       "[10]",
+       "{10: 0}"
+      ],
+      [
+       "insert(20)",
+       "True",
+       "[10, 20]",
+       "{10: 0, 20: 1}"
+      ],
+      [
+       "insert(30)",
+       "True",
+       "[10, 20, 30]",
+       "{10: 0, 20: 1, 30: 2}"
+      ],
+      [
+       "remove(10)",
+       "True",
+       "[30, 20]",
+       "{20: 1, 30: 0}"
+      ],
+      [
+       "remove(30)",
+       "True",
+       "[20]",
+       "{20: 0}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why swap with the last instead of deleting in place?",
+    "p": [
+     "`list.remove` or `del vals[i]` shifts everything after `i`: O(n). Copying the last element into slot `i` and popping the end is O(1). The price is that order is not preserved, which a set doesn't promise anyway."
+    ],
+    "table": {
+     "head": [
+      "Structure",
+      "insert",
+      "remove",
+      "getRandom"
+     ],
+     "rows": [
+      [
+       "list only",
+       "O(1)",
+       "O(n)",
+       "O(1)"
+      ],
+      [
+       "set only",
+       "O(1)",
+       "O(1)",
+       "O(n)"
+      ],
+      [
+       "list + dict (this code)",
+       "O(1)",
+       "O(1)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The edge case in `remove`",
+    "p": [
+     "If `v` is itself the last element, `last == v`: the code writes `vals[i] = v`, sets `pos[v] = i`, pops it, then deletes `pos[v]`. The order matters: the `pos[last] = i` write happens BEFORE `del self.pos[v]`, so the final delete removes the right entry and nothing stale is left."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) average per operation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "O(1) insert/delete/random: array for random access plus a value→index dict, deleting by swapping with the last element."
+ },
+ "383": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(ransomNote)`",
+       "Letters needed and how many of each",
+       "Multiset counting"
+      ],
+      [
+       "`Counter(a) - Counter(b)`",
+       "Counter subtraction: keeps only letters where `a` has MORE than `b` (positive differences); non-positive results are dropped",
+       "Multiset difference: 'what is still missing'"
+      ],
+      [
+       "`not (…)`",
+       "An empty Counter is falsy: nothing is missing",
+       "Truthiness of containers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ransomNote = \"aa\"`, `magazine = \"aab\"`:"
+    ],
+    "table": {
+     "head": [
+      "Counter",
+      "Contents"
+     ],
+     "rows": [
+      [
+       "need",
+       "a:2"
+      ],
+      [
+       "have",
+       "a:2, b:1"
+      ],
+      [
+       "need − have",
+       "(empty)"
+      ],
+      [
+       "result",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Cases",
+    "table": {
+     "head": [
+      "ransomNote, magazine",
+      "need − have",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`a`, `b`",
+       "{'a': 1}",
+       "False"
+      ],
+      [
+       "`aa`, `ab`",
+       "{'a': 1}",
+       "False"
+      ],
+      [
+       "`aa`, `aab`",
+       "{}",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtraction instead of comparing counts for equality?",
+    "p": [
+     "The magazine may contain extra letters, so the counts need not be equal. We only need `have[c] >= need[c]` for every needed letter, which is exactly 'the difference is empty'. Note that `Counter` subtraction with the `-` operator discards zero and negative entries, whereas `.subtract()` keeps them."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Counter difference (this code)",
+       "O(m + n)",
+       "O(k)"
+      ],
+      [
+       "26-slot array decrement",
+       "O(m + n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(ransomNote) + len(magazine)).",
+     "Space: O(k), the number of distinct letters."
+    ]
+   }
+  ],
+  "takeaway": "Ransom note: multiset containment; `Counter(note) - Counter(magazine)` is empty exactly when the magazine has enough of every letter."
+ },
+ "392": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i`",
+       "How many characters of `s` have been matched so far (also the next one to look for)",
+       "Greedy pointer into the pattern"
+      ],
+      [
+       "`for ch in t`",
+       "Scan the long string once, left to right",
+       "The long string is read sequentially"
+      ],
+      [
+       "`i < len(s) and ch == s[i]`",
+       "Bounds check first, then try to match the next needed character",
+       "Prevents IndexError once `s` is fully matched"
+      ],
+      [
+       "`return i == len(s)`",
+       "All of `s` was found, in order",
+       "Final test"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"ace\"`, `t = \"abcde\"`:"
+    ],
+    "table": {
+     "head": [
+      "char of t",
+      "Action",
+      "i"
+     ],
+     "rows": [
+      [
+       "a",
+       "matches s[0]='a'",
+       "1"
+      ],
+      [
+       "b",
+       "skip",
+       "1"
+      ],
+      [
+       "c",
+       "matches s[1]='c'",
+       "2"
+      ],
+      [
+       "d",
+       "skip",
+       "2"
+      ],
+      [
+       "e",
+       "matches s[2]='e'",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the greedy match correct?",
+    "p": [
+     "Matching the earliest possible occurrence of each character leaves the longest remaining part of `t` for the later characters, so it never hurts. If any valid matching exists, the greedy one does too."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Two pointers (this code)",
+       "O(len(t))",
+       "O(1)"
+      ],
+      [
+       "DP (LCS with s)",
+       "O(len(s)·len(t))",
+       "O(len(s))"
+      ],
+      [
+       "Index lists + binary search (many queries)",
+       "O(len(s) log len(t)) per query",
+       "O(len(t))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The follow-up",
+    "p": [
+     "For billions of `s` queries against the same `t`, precompute for each character the sorted list of its positions in `t`, then match each `s` by binary searching the next position after the previous one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(t)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Subsequence check = one greedy pass with a pointer into the pattern; the follow-up is positions-per-letter with binary search."
+ },
+ "398": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt`",
+       "How many occurrences of `target` have been seen so far",
+       "Reservoir size 1"
+      ],
+      [
+       "`random.randrange(cnt)`",
+       "Random integer in `0..cnt-1`",
+       "Choose with probability 1/cnt"
+      ],
+      [
+       "`== 0`",
+       "Happens with probability exactly 1/cnt: replace the current choice with this index",
+       "Reservoir sampling update"
+      ],
+      [
+       "`res = i`",
+       "The currently selected index",
+       "Holds the answer so far"
+      ],
+      [
+       "no extra storage",
+       "Doesn't build a list of indices, so it uses O(1) memory",
+       "Large arrays where indices cannot be stored"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,3,3]`, `target = 3` has matches at indices 2, 3, 4. The m-th match replaces the choice with probability 1/m and then survives each later match j with probability (j-1)/j:"
+    ],
+    "table": {
+     "head": [
+      "m-th match",
+      "Index",
+      "Chance it is chosen",
+      "Chance it survives later matches",
+      "Final probability"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "1/1",
+       "1/2 × 2/3",
+       "1/3"
+      ],
+      [
+       "2",
+       "3",
+       "1/2",
+       "2/3",
+       "1/3"
+      ],
+      [
+       "3",
+       "4",
+       "1/3",
+       "—",
+       "1/3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is each index equally likely?",
+    "p": [
+     "Match number m is picked with probability 1/m, and survives match j (j > m) with probability (j-1)/j. The product telescopes: 1/m × m/(m+1) × … × (n-1)/n = 1/n. So every one of the n matches ends with probability exactly 1/n, without knowing n in advance."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Pick time",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "Store index lists in a dict at init",
+       "O(1)",
+       "O(n)"
+      ],
+      [
+       "Reservoir sampling (this code)",
+       "O(n) per pick",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "When to choose which",
+    "p": [
+     "If `pick` is called many times and memory is available, the dict of index lists is faster per call. The reservoir version is the answer when the follow-up says 'the array is too large to store extra data'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) per `pick`.",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Random pick index = reservoir sampling of size 1: replace the choice with the m-th match with probability 1/m."
+ },
+ "404": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dfs(node, is_left)`",
+       "Sum of left leaves in this subtree; the flag says whether `node` is its parent's LEFT child",
+       "Passing context from parent to child"
+      ],
+      [
+       "`not node.left and not node.right`",
+       "Leaf test",
+       "A leaf has no children"
+      ],
+      [
+       "`node.val if is_left else 0`",
+       "Count the leaf only if it is a left child",
+       "The flag is what distinguishes a left leaf"
+      ],
+      [
+       "`dfs(node.left, True) + dfs(node.right, False)`",
+       "Recurse and add; the flag is set by which child we go to",
+       "Divide and conquer sum"
+      ],
+      [
+       "`dfs(root, False)`",
+       "The root is not a left child, so a root that is a leaf counts as 0",
+       "Initial flag"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[3,9,20,null,null,15,7]`: leaves are 9 (left child of 3), 15 (left child of 20) and 7 (right child of 20)."
+    ],
+    "table": {
+     "head": [
+      "Leaf",
+      "Is it a left child?",
+      "Contribution"
+     ],
+     "rows": [
+      [
+       "9",
+       "left",
+       "9"
+      ],
+      [
+       "15",
+       "left",
+       "15"
+      ],
+      [
+       "7",
+       "right",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a flag rather than checking `node.left.left`?",
+    "p": [
+     "You can instead test in the parent whether `node.left` is a leaf. The flag approach keeps the leaf test in one place and handles the root naturally. The common bug is counting any leaf that is the left child of ANY ancestor; only direct left children count."
+    ],
+    "table": {
+     "head": [
+      "Tree",
+      "Answer",
+      "Why"
+     ],
+     "rows": [
+      [
+       "`[1]`",
+       "0",
+       "the root is not a left child"
+      ],
+      [
+       "`[1,2]`",
+       "2",
+       "2 is a left leaf"
+      ],
+      [
+       "`[1,null,2]`",
+       "0",
+       "2 is a right leaf"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Sum of left leaves: DFS carrying an `is_left` flag; count a node only if it is a leaf reached as a left child."
+ },
+ "407": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`h` (min-heap of `(height, i, j)`)",
+       "The current boundary of the explored region, lowest wall first",
+       "Dijkstra-like expansion from the weakest point"
+      ],
+      [
+       "push every border cell, mark `seen`",
+       "Water can only escape across the border, so the border is the first wall",
+       "Initial frontier"
+      ],
+      [
+       "`heappop`",
+       "Takes the lowest wall: the water level just inside it cannot be higher than this wall",
+       "The weakest wall decides the level"
+      ],
+      [
+       "`max(0, height - heightMap[a][b])`",
+       "Water held on the neighbour = how far the wall exceeds its ground",
+       "Non-negative contribution"
+      ],
+      [
+       "`heappush(h, (max(height, heightMap[a][b]), a, b))`",
+       "The neighbour becomes a wall of effective height max(wall, ground)",
+       "Water fills low cells up to the wall, so they act as that taller wall"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3×6 map. Only pops that discover new cells are shown (each shows the wall height and what water it adds to the neighbours it reveals):"
+    ],
+    "table": {
+     "head": [
+      "Pop (wall height)",
+      "Newly discovered cells",
+      "Total water"
+     ],
+     "rows": [
+      [
+       "(0,3) wall 1",
+       "(1,3) h=3 +0",
+       "0"
+      ],
+      [
+       "(0,2) wall 3",
+       "(1,2) h=1 +2",
+       "2"
+      ],
+      [
+       "(0,4) wall 3",
+       "(1,4) h=2 +1",
+       "3"
+      ],
+      [
+       "(1,0) wall 3",
+       "(1,1) h=2 +1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a heap and not the two-pointer trick from the 1D problem?",
+    "p": [
+     "In 1D the water level at a cell is min(max-left, max-right). In 2D water can escape in any direction, so the level at a cell is limited by the LOWEST path of walls to the outside. Always expanding from the lowest wall guarantees that when we reach a cell, the wall we came through is the lowest possible barrier, i.e. the true water level."
+    ],
+    "table": {
+     "head": [
+      "Problem",
+      "Structure",
+      "Time"
+     ],
+     "rows": [
+      [
+       "42 Trapping Rain Water",
+       "two pointers",
+       "O(n)"
+      ],
+      [
+       "407 Trapping Rain Water II (this code)",
+       "min-heap from the border",
+       "O(mn log mn)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `m < 3 or n < 3` returns 0",
+    "p": [
+     "With fewer than three rows or columns every cell is on the border, and border cells can't hold water."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·log(m·n)), each cell is pushed and popped once.",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "2D rain water: start from the border in a min-heap and flood inward; each new cell holds water up to the lowest wall that reached it."
+ },
+ "410": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parts(limit)`",
+       "Greedy count of how many subarrays are needed if no subarray may exceed `limit`",
+       "A feasibility check that is monotone in `limit`"
+      ],
+      [
+       "`cur + x > limit`",
+       "Adding `x` would break the limit: start a new part",
+       "Greedy packing: put as much as fits in each part"
+      ],
+      [
+       "`lo, hi = max(nums), sum(nums)`",
+       "The answer is at least the largest element and at most the whole sum",
+       "Bounds of the search range"
+      ],
+      [
+       "`parts(mid) <= k: hi = mid`",
+       "`mid` is big enough (maybe too big): look lower, keep `mid`",
+       "Binary search on the answer: find the smallest feasible value"
+      ],
+      [
+       "`else: lo = mid + 1`",
+       "`mid` is too small: more than k parts needed",
+       "Discard"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [7,2,5,10,8]`, `k = 2`. The answer 18 comes from `[7,2,5] | [10,8]`."
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "parts(mid)",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "[10, 32]",
+       "21",
+       "2",
+       "≤ k → hi = mid"
+      ],
+      [
+       "[10, 21]",
+       "15",
+       "3",
+       "> k → lo = mid + 1"
+      ],
+      [
+       "[16, 21]",
+       "18",
+       "2",
+       "≤ k → hi = mid"
+      ],
+      [
+       "[16, 18]",
+       "17",
+       "3",
+       "> k → lo = mid + 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we binary search the answer?",
+    "p": [
+     "If a limit L allows splitting into at most k parts, any larger limit also does (parts can only get fewer). So feasibility is False…False True…True in `limit`, and binary search finds the smallest True. This pattern, 'minimise the maximum', appears in Capacity to Ship Packages and Koko Eating Bananas."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP over (position, parts)",
+       "O(n²·k)"
+      ],
+      [
+       "Binary search on the answer + greedy check (this code)",
+       "O(n · log(sum))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the greedy check correct?",
+    "p": [
+     "Packing as many elements as possible into each part uses the fewest parts for a given limit. If even the greedy count exceeds k, no arrangement works."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · log(sum(nums))).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimise the largest subarray sum: binary search on the limit with a greedy 'how many parts' feasibility check."
+ },
+ "413": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums[i] - nums[i-1] == nums[i-1] - nums[i-2]`",
+       "The last three numbers form an arithmetic triple",
+       "Local test on a sliding window of 3"
+      ],
+      [
+       "`cur`",
+       "Number of arithmetic slices ENDING at index i (they all extend the current run)",
+       "DP state that depends on the previous index only"
+      ],
+      [
+       "`cur += 1`",
+       "Extending a run by one element adds one new slice for every earlier start of that run, plus the new triple",
+       "Counting slices by their right end"
+      ],
+      [
+       "`total += cur`",
+       "Add all slices ending here to the grand total",
+       "Sum over right ends"
+      ],
+      [
+       "`cur = 0`",
+       "The run broke",
+       "Reset"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Triple",
+      "Check",
+      "cur (slices ending at i)",
+      "total"
+     ],
+     "rows": [
+      [
+       "2",
+       "[1, 2, 3]",
+       "same difference",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "[2, 3, 4]",
+       "same difference",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `cur` grow by exactly one each time?",
+    "p": [
+     "If a run of equal differences has length L, the slices ending at its newest element are the ones starting at each of the earlier positions that leave at least three elements: L - 2 of them. Appending one more element adds one new start, so `cur` increases by one. The sum 1 + 2 + … + m counts all slices in a run, e.g. a run of 5 equal-spaced elements has 1 + 2 + 3 = 6 slices."
+    ],
+    "table": {
+     "head": [
+      "Run length",
+      "Slices ending at newest",
+      "Total slices in run"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "2",
+       "3"
+      ],
+      [
+       "5",
+       "3",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A second check",
+    "p": [
+     "`[1,2,3,4,6,8,9,10]` has three runs of equal differences (`1,2,3,4`, then `4,6,8`, then `8,9,10`). `cur` resets at every break, and the total is 3 + 1 + 1 = 5:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "cur",
+      "total"
+     ],
+     "rows": [
+      [
+       "2",
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "4",
+       "2",
+       "3"
+      ],
+      [
+       "4",
+       "6",
+       "0",
+       "3"
+      ],
+      [
+       "5",
+       "8",
+       "1",
+       "4"
+      ],
+      [
+       "6",
+       "9",
+       "0",
+       "4"
+      ],
+      [
+       "7",
+       "10",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Arithmetic slices: `cur` counts slices ending at i (grows by 1 while the difference holds, resets otherwise) and `total` sums it."
+ }
+}
