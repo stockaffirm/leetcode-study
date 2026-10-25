@@ -1103,17 +1103,38 @@
    {
     "h": "Walk through an example",
     "p": [
-     "A 4\u00d74 maze (`.` open, `+` wall), entrance at (1, 0). Cells entered by BFS in order with their distance:"
+     "A 5\u00d75 maze (`.` open, `+` wall), entrance at (1, 0), whose only exit is the open bottom cell (4, 3). Cells entered by BFS in order with their distance:"
     ],
     "table": {
      "head": [
       "cell",
       "steps from entrance"
      ],
-     "rows": []
+     "rows": [
+      [
+       "(1,1)",
+       "1"
+      ],
+      [
+       "(1,2)",
+       "2"
+      ],
+      [
+       "(2,2)",
+       "3"
+      ],
+      [
+       "(3,2)",
+       "4"
+      ],
+      [
+       "(3,3)",
+       "5"
+      ]
+     ]
     },
     "bullets": [
-     "The nearest exit is found at distance 1."
+     "The nearest exit is found at distance 6."
     ]
    },
    {
