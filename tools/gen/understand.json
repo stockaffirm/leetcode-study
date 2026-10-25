@@ -1,0 +1,27 @@
+{
+ "933": {
+  "blocks": [
+   {"h": "What each operation does", "table": {"head": ["Code", "Meaning"], "rows": [
+     ["deque()", "Creates an empty double-ended queue"],
+     ["self.q.append(t)", "Adds the new timestamp to the right (newest end)"],
+     ["self.q[0]", "Gets the oldest timestamp (left end)"],
+     ["self.q.popleft()", "Removes the oldest timestamp"],
+     ["len(self.q)", "Counts the requests still inside the window"]]}},
+   {"h": "Walk through an example", "p": ["Requests arrive at `ping(1)`, `ping(100)`, `ping(3001)`, `ping(3002)`. After each ping the valid range is `[t-3000, t]`; anything older than the range is removed from the left."],
+    "table": {"head": ["Call", "Valid range", "Queue after cleanup", "Returns"], "rows": [
+     ["ping(1)", "[-2999, 1]", "1", "1"],
+     ["ping(100)", "[-2900, 100]", "1, 100", "2"],
+     ["ping(3001)", "[1, 3001]", "1, 100, 3001", "3"],
+     ["ping(3002)", "[2, 3002]", "100, 3001, 3002  (1 removed: 1 < 2)", "3"]]}},
+   {"h": "Why `while` instead of `if`?", "p": ["More than one timestamp can expire at once. Take `q = [1, 100, 200, 300, 5000]` and `t = 5000`; the valid range is `[2000, 5000]`, so all four older timestamps must go.", "With `if` you would remove only `1` and still return a wrong count. With `while` you keep removing from the left until the oldest remaining timestamp is valid."]},
+   {"h": "Why a deque instead of a list?", "table": {"head": ["Operation", "list", "deque"], "rows": [
+     ["Add at the end", "append(t) — O(1) amortized", "append(t) — O(1)"],
+     ["Remove the first item", "pop(0) — O(n), shifts everything", "popleft() — O(1)"],
+     ["Read the first item", "q[0] — O(1)", "q[0] — O(1)"]]},
+    "p": ["We add new timestamps at one end and remove old ones from the other, which is exactly what a deque is built for."]},
+   {"h": "Time and space", "bullets": ["Time: O(1) amortized per `ping()`. Each timestamp is appended once and removed at most once. A single call can take O(n) if it removes many old timestamps.", "Space: O(n), where n is the most timestamps held in the queue at once."]},
+   {"h": "One subtle point", "p": ["The code reads `self.q[0]` without checking the queue is nonempty. That is safe here because `ping()` always appends the current timestamp first, and timestamps arrive in strictly increasing order, so the loop can never empty the queue."]}
+  ],
+  "takeaway": "This is a sliding time window implemented with a queue. When events arrive in time order and you must drop old events while keeping recent ones, a deque is usually the right tool."
+ }
+}

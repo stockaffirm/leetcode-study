@@ -99,7 +99,7 @@
 
   /* ---- index page: checkboxes + sync button ---- */
   const rows = [...document.querySelectorAll(".rowx")]; if(!rows.length){ if(gh.cfg()) sync(); return; }
-  P.paint = () => rows.forEach(r => { const d = P.has(r.dataset.id), w = P.hasW(r.dataset.id); r.classList.toggle("done", d); r.querySelector(".rd").setAttribute("aria-checked", d); r.querySelector(".wk").setAttribute("aria-checked", w); });
+  P.paint = () => { rows.forEach(r => { const d = P.has(r.dataset.id), w = P.hasW(r.dataset.id); r.classList.toggle("done", d); r.querySelector(".rd").setAttribute("aria-checked", d); r.querySelector(".wk").setAttribute("aria-checked", w); }); document.dispatchEvent(new Event("lc-paint")); };
   rows.forEach(r => { r.querySelector(".rd").onclick = () => { P.set(r.dataset.id, !P.has(r.dataset.id)); P.paint(); }; r.querySelector(".wk").onclick = () => { P.setW(r.dataset.id, !P.hasW(r.dataset.id)); P.paint(); }; });
   const tools = document.querySelector(".tools");
   if(tools){

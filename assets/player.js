@@ -25,6 +25,7 @@ $("#app").innerHTML = `
 <div class="right"><section class="sec" id="flowSec"><h2><b>3</b>Flow<span class="arrows"><button id="fprev" title="Previous flow step">◀</button><button id="fnext" title="Next flow step">▶</button></span></h2><div class="flow" id="flow"></div></section>
 <section class="sec dock"><h2><b>4</b>Diagram<span class="modes" id="modes"><button data-mode="guided" class="on" title="Curated steps with explanations">Guided</button><button data-mode="trace" title="Run the real code and step through every line">Every line</button></span><span class="exs" id="exs"><button data-ex="1" class="on" title="The main example">Example</button><button data-ex="2" title="A failure / edge case">Edge case</button></span><span class="arrows"><button id="dprev" title="Previous detail step (shift+←)">◀</button><span class="dct" id="dct"></span><button id="dnext" title="Next detail step (shift+→)">▶</button></span></h2><div class="stage" id="stage"></div><p class="cap" id="cap"></p></section></div></div>
 <section class="sec sum" id="summary"></section>
+<section class="sec und" id="understand"></section>
 ${pnav}
 <div class="bar"><div class="in">
   <button id="prev" title="Previous flow step (←)">◀ Flow</button>
@@ -77,6 +78,12 @@ function renderSummary(){
     ${P.ex2?`<div class="pn pe"><h3>Edge / failure case</h3><p class="spio"><b>Input</b> ${esc(P.ex2.input)}<br><b>Output</b> ${esc(P.ex2.output)}</p><p>${esc(P.ex2.why)}</p></div>`:""}<div class="pn px"><h3>Complexity</h3><ul><li><b>Time:</b> <span class="sf">${esc(B.time)}</span></li><li><b>Space:</b> <span class="sf b">${esc(B.space)}</span></li></ul><p>${esc(B.explain||"")}</p></div>
   </div><div class="pn pw"><h3>Example walkthrough</h3><p class="spio"><b>Input</b> ${esc(P.input)}</p>${steps}
     <div class="sstep sres"><div class="sinfo"><b>Result</b></div><div class="sdia">${last?sRows(last.sub&&last.sub.length?last.sub[last.sub.length-1].rows:last.rows):""}</div><div class="snote">Output: ${esc(P.output)}</div></div></div></div>`;
+}
+function fmt(t){return esc(t).replace(/`([^`]+)`/g,"<code>$1</code>")}
+function renderUnderstand(){
+  const U=P.understand, el=$("#understand"); if(!U){ el.style.display="none"; return; }
+  const tb=t=>`<div class="utw"><table class="ut"><thead><tr>${t.head.map(h=>`<th>${fmt(h)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r=>`<tr>${r.map((c,i)=>`<td>${i==0&&/[(\[=.]/.test(c)&&t.head[0]==="Code"?`<code>${esc(c)}</code>`:fmt(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  el.innerHTML=`<h2>Understanding the code</h2>`+U.blocks.map((b,i)=>`<div class="pn ub"><h3><b>${i+1}</b>${fmt(b.h)}</h3>${(b.p||[]).map(x=>`<p>${fmt(x)}</p>`).join("")}${b.code?`<pre class="code ucode">${esc(b.code)}</pre>`:""}${b.table?tb(b.table):""}${b.bullets?`<ul>${b.bullets.map(x=>`<li>${fmt(x)}</li>`).join("")}</ul>`:""}</div>`).join("")+(U.takeaway?`<div class="pn utake"><b>Interview takeaway</b> ${fmt(U.takeaway)}</div>`:"");
 }
 function copyCode(){
   const txt=V().code, b=$("#copy"), done=()=>{ b.textContent="Copied ✓"; b.classList.add("ok"); setTimeout(()=>{b.textContent="Copy all"; b.classList.remove("ok");},1600); };
@@ -273,6 +280,6 @@ $("#copy").onclick=copyCode;
 document.querySelectorAll("#modes button").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 document.querySelectorAll("#exs button").forEach(b=>b.onclick=()=>{ stop(); ex=+b.dataset.ex; if(mode!=="trace"){ mode="trace"; } tidx=0; idx=0; stage.innerHTML=""; rowEls.clear(); setMode("trace"); });
 if(!P.variants.some(v=>v.trace)) $("#modes").style.display="none";
-renderSummary();
+renderSummary();renderUnderstand();
 renderTabs(); renderStatic(); if(!V().frames.length && V().trace) setMode("trace"); else render();
 })();

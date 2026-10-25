@@ -17,5 +17,25 @@
     btns.forEach(x => x.setAttribute("aria-pressed", "false"));
     b.setAttribute("aria-pressed", on);
     rows.forEach(r => r.classList.toggle("hl", on && (r.dataset.s || "").split(" ").includes(b.dataset.flt)));
+    document.dispatchEvent(new Event("lc-paint"));
   });
+})();
+
+/* Section headers: total / read / wrote counts, and a highlight + match count when a filter (LeetCode 75, Meta, ...) is on,
+   so a minimised section still shows what is inside it. */
+(function(){
+  const heads = [...document.querySelectorAll(".plist > .ph, .topic > .th")].map(h => {
+    const sec = h.parentElement, bd = document.createElement("span"); bd.className = "bd"; h.appendChild(bd);
+    return { sec, bd, rows: [...sec.querySelectorAll(".rowx")] };
+  });
+  const pill = (cls, txt) => `<span class="bp ${cls}">${txt}</span>`;
+  function refresh(){
+    heads.forEach(({ sec, bd, rows }) => {
+      const read = rows.filter(r => r.classList.contains("done")).length, wrote = rows.filter(r => r.querySelector(".wk[aria-checked=true]")).length,
+            hi = rows.filter(r => r.classList.contains("hl")).length;
+      sec.classList.toggle("hl", hi > 0);
+      bd.innerHTML = (hi ? pill("hi", "★ " + hi + " match" + (hi > 1 ? "es" : "")) : "") + pill("tot", rows.length + " total") + pill("rd", read + " read") + pill("wr", wrote + " wrote");
+    });
+  }
+  document.addEventListener("lc-paint", refresh); refresh();
 })();
