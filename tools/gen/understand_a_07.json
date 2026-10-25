@@ -1,0 +1,2043 @@
+{
+ "468": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "queryIP.split('.')  /  split(':')",
+       "Cuts the text into fields by the separator; a trailing or doubled separator creates empty fields",
+       "Field-based validation"
+      ],
+      [
+       "len(parts) == 4",
+       "IPv4 has exactly four fields (IPv6 eight)",
+       ""
+      ],
+      [
+       "all(c in digits for c in p)",
+       "Every character is a decimal digit; also rejects '-' and '+', which `int()` would accept",
+       "Stricter than `p.isdigit()` since isdigit accepts other Unicode digits"
+      ],
+      [
+       "p == '0' or p[0] != '0'",
+       "No leading zeros, except for the single digit 0",
+       ""
+      ],
+      [
+       "int(p) <= 255",
+       "Range check; evaluated last so `int` only sees validated digit strings",
+       "Order of conditions in a short-circuit `and`"
+      ],
+      [
+       "1 <= len(p) <= 4 and all(c in hexd \u2026)",
+       "IPv6 groups hold 1\u20134 hex digits",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "input",
+      "result",
+      "reason"
+     ],
+     "rows": [
+      [
+       "172.16.254.1",
+       "IPv4",
+       "4 fields, all valid"
+      ],
+      [
+       "172.16.254.01",
+       "Neither",
+       "field '01' has a leading zero"
+      ],
+      [
+       "256.1.1.1",
+       "Neither",
+       "256 > 255"
+      ],
+      [
+       "2001:0db8:85a3:0:0:8A2E:0370:7334",
+       "IPv6",
+       "8 groups of 1\u20134 hex digits"
+      ],
+      [
+       "2001:0db8:85a3::8A2E:037j:7334",
+       "Neither",
+       "7 groups and a 'j' (not hex)"
+      ],
+      [
+       "1.1.1.1.",
+       "Neither",
+       "trailing '.' makes a fifth, empty field"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check `p and \u2026` first inside the IPv4 test?",
+    "p": [
+     "An empty field (from `\"1..1.1\"` or a trailing dot) would make `p[0]` raise IndexError and `int('')` raise ValueError. The leading `p and` short-circuits on an empty string and the whole field is rejected, so the validator never crashes on malformed input."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) in the length of the input.",
+     "Space: O(n) for the split lists."
+    ]
+   }
+  ],
+  "takeaway": "Validate by splitting on the separator and checking each field with short-circuit rules: emptiness, allowed characters, leading zeros, range."
+ },
+ "474": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Largest number of strings that fit within i zeros and j ones",
+       "2-D 0/1 knapsack"
+      ],
+      [
+       "s.count('0'), s.count('1')",
+       "The string's cost in zeros and ones",
+       ""
+      ],
+      [
+       "range(m, z - 1, -1)",
+       "Capacities in DECREASING order, so each string is used at most once",
+       "In-place 0/1 knapsack update"
+      ],
+      [
+       "dp[i - z][j - o] + 1",
+       "Best with the leftover budget, plus this string",
+       ""
+      ],
+      [
+       "max(dp[i][j], \u2026)",
+       "Skip the string or take it",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['10','0001','111001','1','0']`, `m = 5` zeros, `n = 3` ones. After each string, the answer `dp[5][3]` and the last row `dp[5]` (budget of 5 zeros and 0..3 ones):"
+    ],
+    "table": {
+     "head": [
+      "string",
+      "zeros",
+      "ones",
+      "dp[5][3]",
+      "dp[5]"
+     ],
+     "rows": [
+      [
+       "'10'",
+       "1",
+       "1",
+       "1",
+       "[0, 1, 1, 1]"
+      ],
+      [
+       "'0001'",
+       "3",
+       "1",
+       "2",
+       "[0, 1, 2, 2]"
+      ],
+      [
+       "'111001'",
+       "2",
+       "4",
+       "2",
+       "[0, 1, 2, 2]"
+      ],
+      [
+       "'1'",
+       "0",
+       "1",
+       "3",
+       "[0, 1, 2, 3]"
+      ],
+      [
+       "'0'",
+       "1",
+       "0",
+       "4",
+       "[1, 2, 3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate the capacities downward?",
+    "p": [
+     "`dp[i - z][j - o]` must still hold the value from BEFORE this string was considered. Going from large `i`, `j` down to small, the smaller cells are updated later and are still unchanged when read. Iterating upwards would read cells already updated for this string and could use it twice, turning the problem into an unbounded knapsack."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L \u00b7 m \u00b7 n) for L strings.",
+     "Space: O(m \u00b7 n)."
+    ]
+   }
+  ],
+  "takeaway": "0/1 knapsack in two dimensions (zeros and ones budget): update from the largest capacities down."
+ },
+ "477": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x >> b & 1",
+       "Bit b of x: shift right b places, then keep the lowest bit (`>>` binds tighter than `&`)",
+       "Reading a single bit"
+      ],
+      [
+       "c = sum(\u2026)",
+       "How many numbers have bit b set",
+       "Counting per bit position"
+      ],
+      [
+       "c * (n - c)",
+       "Number of pairs that differ at this bit: one set and one unset",
+       "Combinatorial counting instead of comparing all pairs"
+      ],
+      [
+       "range(32)",
+       "All bit positions of a non-negative 32-bit value",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,14,2]` = `[0100, 1110, 0010]`. Only the lowest 4 bit positions can be nonzero; the other 28 contribute 0:"
+    ],
+    "table": {
+     "head": [
+      "bit",
+      "ones (c)",
+      "zeros (n\u2212c)",
+      "differing pairs c\u00b7(n\u2212c)",
+      "running total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "3",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "2",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total Hamming distance = 6."
+    ]
+   },
+   {
+    "h": "Why count bits instead of comparing pairs?",
+    "p": [
+     "Hamming distance sums over bit positions, and for each position the contribution of all pairs is independent. Comparing all pairs costs O(n\u00b2\u00b732); counting ones per position costs O(32\u00b7n), and `c\u00b7(n\u2212c)` counts exactly the pairs with different bits at that position."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(32\u00b7n) = O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Total Hamming distance = \u03a3 over bit positions of ones \u00d7 zeros."
+ },
+ "480": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "window = sorted(nums[:k])",
+       "Keeps the current window in sorted order at all times",
+       "Median = middle element(s) of a sorted list"
+      ],
+      [
+       "window[k//2] + window[(k-1)//2]) / 2",
+       "For odd k both indices are the same middle element; for even k they are the two middle elements, averaged",
+       "One formula for both parities"
+      ],
+      [
+       "bisect_left(window, x)",
+       "Binary search for x's position (O(log k)); with `pop` it removes the outgoing value",
+       ""
+      ],
+      [
+       "insort(window, x)",
+       "Inserts x at the right place to keep the list sorted (binary search + O(k) shift)",
+       ""
+      ],
+      [
+       "if i == len(nums): break",
+       "Stops the slide after recording the last window",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,-1,-3,5,3,6,7]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "window (indices)",
+      "sorted window",
+      "median"
+     ],
+     "rows": [
+      [
+       "[0..2]",
+       "[-1, 1, 3]",
+       "1.0"
+      ],
+      [
+       "[1..3]",
+       "[-3, -1, 3]",
+       "-1.0"
+      ],
+      [
+       "[2..4]",
+       "[-3, -1, 5]",
+       "-1.0"
+      ],
+      [
+       "[3..5]",
+       "[-3, 3, 5]",
+       "3.0"
+      ],
+      [
+       "[4..6]",
+       "[3, 5, 6]",
+       "5.0"
+      ],
+      [
+       "[5..7]",
+       "[3, 6, 7]",
+       "6.0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a sorted list and not two heaps?",
+    "p": [
+     "Heaps cannot remove an arbitrary element cheaply, which sliding windows need. A sorted list handles removal by value with bisect."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "slide cost",
+      "why"
+     ],
+     "rows": [
+      [
+       "Sorted list + bisect (this code)",
+       "O(k) for the shift, O(log k) to locate",
+       "simple, and memmove is fast for moderate k"
+      ],
+      [
+       "Two heaps + lazy deletion",
+       "O(log k) amortized",
+       "more code, and stale entries must be tracked"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 k) worst case because of list insertion and deletion shifts, with O(n log k) comparisons.",
+     "Space: O(k) for the window."
+    ]
+   }
+  ],
+  "takeaway": "Keep the window sorted with bisect and insort; the median is read from the middle indices."
+ },
+ "486": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Best score DIFFERENCE (current player \u2212 opponent) the player to move can achieve on piles i..j",
+       "Minimax collapsed into one number"
+      ],
+      [
+       "dp[i][i] = nums[i]",
+       "One pile: take it",
+       ""
+      ],
+      [
+       "nums[i] - dp[i + 1][j]",
+       "Take the left pile; the opponent then plays optimally on i+1..j, and their advantage is subtracted",
+       "Zero-sum games: your gain is the opponent's loss"
+      ],
+      [
+       "dp[0][n-1] >= 0",
+       "Player 1 wins or ties (the problem counts a tie as a win for player 1)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,5,2]`:"
+    ],
+    "table": {
+     "head": [
+      "range",
+      "dp value",
+      "how"
+     ],
+     "rows": [
+      [
+       "[0..0]",
+       "1",
+       "single pile"
+      ],
+      [
+       "[1..1]",
+       "5",
+       "single pile"
+      ],
+      [
+       "[2..2]",
+       "2",
+       "single pile"
+      ],
+      [
+       "[0..1]",
+       "4",
+       "max(1 \u2212 dp[1][1], 5 \u2212 dp[0][0])"
+      ],
+      [
+       "[1..2]",
+       "3",
+       "max(5 \u2212 dp[2][2], 2 \u2212 dp[1][1])"
+      ],
+      [
+       "[0..2]",
+       "-2",
+       "max(1 \u2212 dp[1][2], 2 \u2212 dp[0][1])"
+      ]
+     ]
+    },
+    "bullets": [
+     "`dp[0][2] = \u22122 < 0`: player 1 cannot win."
+    ]
+   },
+   {
+    "h": "Why subtract the sub-game?",
+    "p": [
+     "After you pick, the roles swap: the opponent is now the player to move on the smaller range, and `dp[...]` is their best advantage. Your advantage is therefore your pick minus theirs. Because both play optimally, a single table of differences replaces separate tables for each player."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n\u00b2), reducible to O(n) with a rolling diagonal."
+    ]
+   }
+  ],
+  "takeaway": "Predict the Winner: interval DP of score difference; take an end, subtract the opponent's best difference on the rest."
+ },
+ "498": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "diags[i + j].append(mat[i][j])",
+       "All cells on the same anti-diagonal share the sum i + j, so i + j is the group key",
+       "Grouping cells by a derived key"
+      ],
+      [
+       "defaultdict(list)",
+       "Creates the list on first use",
+       ""
+      ],
+      [
+       "range(m + n - 1)",
+       "There are m + n \u2212 1 anti-diagonals",
+       ""
+      ],
+      [
+       "diags[d][::-1] if d % 2 == 0",
+       "Cells were appended top row first, so each diagonal reads from top-right to bottom-left. Even diagonals must run bottom-left \u2192 top-right, so they are reversed",
+       ""
+      ],
+      [
+       "res += \u2026",
+       "Extends the answer",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3\u00d73 matrix. Diagonal `d` collects the cells with `i + j = d`:"
+    ],
+    "table": {
+     "head": [
+      "d",
+      "collected (top row first)",
+      "order",
+      "appended"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]",
+       "reversed",
+       "[1]"
+      ],
+      [
+       "1",
+       "[2, 4]",
+       "as is",
+       "[2, 4]"
+      ],
+      [
+       "2",
+       "[3, 5, 7]",
+       "reversed",
+       "[7, 5, 3]"
+      ],
+      [
+       "3",
+       "[6, 8]",
+       "as is",
+       "[6, 8]"
+      ],
+      [
+       "4",
+       "[9]",
+       "reversed",
+       "[9]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[1, 2, 4, 7, 5, 3, 6, 8, 9]`."
+    ]
+   },
+   {
+    "h": "Why does the zigzag need reversal only on every other diagonal?",
+    "p": [
+     "The traversal alternates direction. Collecting in row order gives one direction for free (up-right to down-left, i.e. top to bottom). The opposite direction is that list reversed. Parity of `d` decides which one is needed, starting with `d = 0` (a single cell) going 'up'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n) for the grouping; a direct simulation with a direction flag uses O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Group cells by i + j, then read the groups in order, reversing every other one."
+ },
+ "510": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "node.right \u2192 leftmost",
+       "If there is a right subtree, the successor is its leftmost (smallest) node",
+       "In-order successor, case 1"
+      ],
+      [
+       "node.parent",
+       "Parent pointer, which this variant provides",
+       "Walking up without a root reference"
+      ],
+      [
+       "node is node.parent.right",
+       "Identity test: are we a right child? `is`, not `==`, because values need not identify a node",
+       ""
+      ],
+      [
+       "return node.parent",
+       "Case 2: climb until we come from a left child; that parent is the successor (None if we reach the root from the right)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "Tree `2 (left 1, right 3)`, with `3` having a right child `4`. Node 1 has no right child, and it is a left child:"
+    ],
+    "table": {
+     "head": [
+      "start",
+      "steps",
+      "successor"
+     ],
+     "rows": [
+      [
+       "1",
+       "up once more: 2",
+       "2"
+      ],
+      [
+       "4 (the maximum)",
+       "up to 3 (we were its right child); up to 2 (we were its right child); up once more: none",
+       "None"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two cases?",
+    "p": [
+     "In-order visits left, node, right. After finishing a node, the next node is either the first one in its right subtree (case 1) or, if there is no right subtree, we go back up to the nearest ancestor that has not yet been visited, i.e. the first ancestor reached by climbing out of a left child (case 2). If the climb ends at the root coming from the right, the node was the last in order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Inorder successor with parent pointers: leftmost of the right subtree, otherwise the first ancestor reached from a left child."
+ },
+ "516": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Length of the longest palindromic subsequence inside s[i..j]",
+       "Interval DP"
+      ],
+      [
+       "dp[i][i] = 1",
+       "Any single character is a palindrome",
+       ""
+      ],
+      [
+       "s[i] == s[j]: dp[i+1][j-1] + 2",
+       "Matching ends wrap the best inner palindrome",
+       ""
+      ],
+      [
+       "max(dp[i+1][j], dp[i][j-1])",
+       "Otherwise drop one end and keep the better result",
+       ""
+      ],
+      [
+       "range(n - 1, -1, -1)",
+       "i runs downward so that row i+1 is ready when row i needs it",
+       "Fill order for interval DP"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"bbbab\"`; `dp[i][j]` for i \u2264 j (blank = unused):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j=0",
+      "j=1",
+      "j=2",
+      "j=3",
+      "j=4"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "2",
+       "3",
+       "3",
+       "4"
+      ],
+      [
+       "1",
+       "",
+       "1",
+       "2",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "",
+       "",
+       "1",
+       "1",
+       "3"
+      ],
+      [
+       "3",
+       "",
+       "",
+       "",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "",
+       "",
+       "",
+       "",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "`dp[0][4] = 4` (subsequence `bbbb`)."
+    ]
+   },
+   {
+    "h": "Why can the inner term `dp[i+1][j-1]` be read when j = i + 1?",
+    "p": [
+     "For adjacent equal characters `dp[i+1][i]` is a lower-triangle cell that was never written, so it is 0, and the result is 0 + 2 = 2, which is correct (the two characters themselves). The initialization to 0 handles that case for free."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n\u00b2), or O(n) with a rolling row.",
+     "Equivalent to LCS of `s` and its reverse."
+    ]
+   }
+  ],
+  "takeaway": "Longest palindromic subsequence: interval DP where equal ends add 2 to the inner answer, otherwise drop an end."
+ },
+ "489": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen",
+       "Cells visited in robot-relative coordinates (the start is (0,0); the real map is unknown)",
+       "DFS over a map you discover as you go"
+      ],
+      [
+       "dirs = ((-1,0),(0,1),(1,0),(0,-1))",
+       "Up, right, down, left in clockwise order, matching `turnRight()`",
+       "Direction index `d` plus `(d + k) % 4` visits the four directions clockwise"
+      ],
+      [
+       "robot.move()",
+       "Tries to step forward and returns False if blocked; it is the only way to detect walls",
+       ""
+      ],
+      [
+       "back()",
+       "Turn around (two right turns), step back, turn around again, restoring the original heading",
+       "Undoing a move in physical backtracking"
+      ],
+      [
+       "robot.turnRight()",
+       "At the end of each loop iteration so the robot faces the next direction to try",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A 3\u00d73 room with a wall in the middle (1 = free). First cells of the exploration, from the start at the top-left corner treated as (0,0):"
+    ],
+    "table": {
+     "head": [
+      "at",
+      "action",
+      "note"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "clean",
+       "dir 0"
+      ],
+      [
+       "(0,0)",
+       "blocked toward (-1,0) (wall)",
+       "dir 0"
+      ],
+      [
+       "(0,0)",
+       "move to (0,1)",
+       "dir 1"
+      ],
+      [
+       "(0,1)",
+       "clean",
+       "dir 1"
+      ],
+      [
+       "(0,1)",
+       "move to (0,2)",
+       "dir 1"
+      ],
+      [
+       "(0,2)",
+       "clean",
+       "dir 1"
+      ],
+      [
+       "(0,2)",
+       "blocked toward (0,3) (wall)",
+       "dir 1"
+      ],
+      [
+       "(0,2)",
+       "move to (1,2)",
+       "dir 2"
+      ],
+      [
+       "(1,2)",
+       "clean",
+       "dir 2"
+      ],
+      [
+       "(1,2)",
+       "move to (2,2)",
+       "dir 2"
+      ],
+      [
+       "(2,2)",
+       "clean",
+       "dir 2"
+      ],
+      [
+       "(2,2)",
+       "blocked toward (3,2) (wall)",
+       "dir 2"
+      ],
+      [
+       "(2,2)",
+       "move to (2,1)",
+       "dir 3"
+      ],
+      [
+       "(2,1)",
+       "clean",
+       "dir 3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Every one of the 8 free cells is cleaned exactly once (cells cleaned: `[(0, 0), (0, 1), (0, 2), (1, 2), (2, 2), (2, 1), (2, 0), (1, 0)]`)."
+    ]
+   },
+   {
+    "h": "Why is `back()` necessary?",
+    "p": [
+     "The robot can only move relative to its own heading and has no teleport. Returning from a recursive call must also move the real robot back to the cell it came from, facing the same way as before, or the next loop iteration would turn from the wrong position. `back()` is the physical equivalent of returning from the call."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N) cells, with at most four moves/turns each.",
+     "Space: O(N) for `seen` and the recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "DFS on an unknown map: track relative coordinates, try four directions clockwise, and physically backtrack with turn-turn-move-turn-turn."
+ },
+ "525": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bal += 1 if x else -1",
+       "Turns 1 into +1 and 0 into \u22121, so a balanced subarray sums to 0",
+       "Reducing 'equal counts' to 'sum is zero'"
+      ],
+      [
+       "first = {0: -1}",
+       "Maps a balance to the FIRST index where it occurred; `0 \u2192 \u22121` represents the empty prefix",
+       "Prefix-sum + hash map"
+      ],
+      [
+       "bal in first",
+       "The same balance seen before means the subarray between the two positions sums to 0",
+       ""
+      ],
+      [
+       "best = max(best, i - first[bal])",
+       "Length from just after the earlier index to i",
+       ""
+      ],
+      [
+       "else: first[bal] = i",
+       "Only the earliest index is stored, so the subarray is as long as possible",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,0,0,1,1,0]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "balance",
+      "event",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "-1",
+       "first time: store index",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "seen at -1 \u2192 length 2",
+       "2"
+      ],
+      [
+       "2",
+       "0",
+       "-1",
+       "seen at 0 \u2192 length 2",
+       "2"
+      ],
+      [
+       "3",
+       "0",
+       "-2",
+       "first time: store index",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "-1",
+       "seen at 0 \u2192 length 4",
+       "4"
+      ],
+      [
+       "5",
+       "1",
+       "0",
+       "seen at -1 \u2192 length 6",
+       "6"
+      ],
+      [
+       "6",
+       "0",
+       "-1",
+       "seen at 0 \u2192 length 6",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `first = {0: -1}`?",
+    "p": [
+     "A subarray starting at index 0 has balance 0 when it ends, e.g. `[0,1]` at i = 1. Its length must be `1 \u2212 (\u22121) = 2`. Without the seed `0: \u22121`, the first balance of 0 would be treated as a first occurrence and the answer would be 0. The `\u22121` stands for the empty prefix before the array."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) in the worst case for the dict."
+    ]
+   }
+  ],
+  "takeaway": "Map 0/1 to \u22121/+1 and use prefix sums: equal prefix balances bound a balanced subarray; store only the first index."
+ },
+ "528": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "accumulate(w)",
+       "Running sums of the weights (`itertools`)",
+       "Turning weights into consecutive intervals on a number line"
+      ],
+      [
+       "random.randint(1, self.pre[-1])",
+       "Uniform integer in 1..total (inclusive on both ends)",
+       ""
+      ],
+      [
+       "bisect_left(self.pre, x)",
+       "Smallest index i with pre[i] \u2265 x, via binary search",
+       "Mapping a random point to the interval that contains it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`w = [1, 3]` \u2192 `pre = [1, 4]`. Index 0 owns the numbers up to 1, and index 1 owns 2..4. Every possible random draw x:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "bisect_left(pre, x)",
+      "index picked"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "1",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Index 1 is picked 3 times out of 4, index 0 once: probability 3/4 versus 1/4."
+    ]
+   },
+   {
+    "h": "Why `bisect_left` and why start `randint` at 1?",
+    "p": [
+     "With `pre = [1, 4]` and x in 1..4, `bisect_left` gives index 0 for x = 1 and index 1 for x = 2, 3, 4, matching the weights 1 and 3. If x started at 0, the value 0 would also map to index 0, giving weight 2 to the first index. And `bisect_right` would shift every boundary by one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "`__init__`: O(n). `pickIndex`: O(log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Weighted random: prefix sums partition 1..total, a uniform draw plus binary search finds its owner."
+ },
+ "540": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "if mid % 2: mid -= 1",
+       "Forces mid to an even index so it is the START of a would-be pair",
+       "Aligning to pair boundaries"
+      ],
+      [
+       "nums[mid] == nums[mid + 1]",
+       "Left of the single element, pairs begin at even indices; so an intact pair means the single is further right",
+       ""
+      ],
+      [
+       "lo = mid + 2",
+       "Skips the verified pair",
+       ""
+      ],
+      [
+       "hi = mid",
+       "Keeps mid, which might be the single element itself",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2,3,3,4,4,8,8]`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid (even)",
+      "nums[mid] vs next",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "8",
+       "4",
+       "3 vs 4",
+       "pair broken \u2192 single is at mid or left: hi = mid"
+      ],
+      [
+       "0",
+       "4",
+       "2",
+       "2 vs 3",
+       "pair broken \u2192 single is at mid or left: hi = mid"
+      ],
+      [
+       "0",
+       "2",
+       "0",
+       "1 vs 1",
+       "pair intact \u2192 single is to the right: lo = mid+2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Returns `nums[2] = 2`."
+    ]
+   },
+   {
+    "h": "Why does the parity trick work?",
+    "p": [
+     "Before the single element, every pair occupies indices (even, odd). After it, pairs shift to (odd, even). Checking an even index `mid` against `mid + 1` tells which side we are on: equal \u2192 still in the unshifted region, so the single is to the right; different \u2192 the shift has already happened (or mid is the single), so it is at `mid` or to the left."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1).",
+     "XOR of all elements also works in O(n) but ignores the sorted property."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on pair alignment: round mid down to even, and compare with its right neighbour to see whether the pairs have shifted."
+ },
+ "543": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "height(node)",
+       "Returns the node's height in nodes (None = 0); calls on the children happen first (post-order)",
+       ""
+      ],
+      [
+       "nonlocal best",
+       "Lets the nested function update the enclosing `best`",
+       "Collecting a global answer while returning a different value"
+      ],
+      [
+       "best = max(best, l + r)",
+       "The longest path through this node as the highest point has l + r edges",
+       ""
+      ],
+      [
+       "return 1 + max(l, r)",
+       "What the parent needs: the height, not the diameter",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,2,3,4,5]`; nodes finish in post-order:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "left height",
+      "right height",
+      "path via node (l + r)",
+      "returns",
+      "best"
+     ],
+     "rows": [
+      [
+       "4",
+       "0",
+       "0",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "5",
+       "0",
+       "0",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "0",
+       "0",
+       "0",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "3",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do we return the height but record the diameter separately?",
+    "p": [
+     "A path through a node uses BOTH of its children, but a path continuing up to the parent can use only one of them. So the value passed upward must be the single-branch height, while the two-branch sum is recorded as a candidate answer. Mixing the two is the classic mistake."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   },
+   {
+    "h": "Subtle point",
+    "p": [
+     "The longest path need not pass through the root. Computing `best` at every node covers all possible highest points."
+    ]
+   }
+  ],
+  "takeaway": "Diameter = max over nodes of (left height + right height); return the height upward, keep the sum in a nonlocal."
+ },
+ "546": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "@lru_cache(None)",
+       "Memoizes `dp` on its arguments (l, r, k); `None` means unbounded cache",
+       "Top-down DP without writing a table"
+      ],
+      [
+       "dp(l, r, k)",
+       "Best score for boxes l..r when `k` extra boxes with the same colour as boxes[r] are attached to the right of r",
+       "A state that remembers pending equal boxes"
+      ],
+      [
+       "while r > l and boxes[r] == boxes[r-1]: r -= 1; k += 1",
+       "Absorbs equal neighbours into k so identical runs are never split",
+       "Shrinking the state"
+      ],
+      [
+       "dp(l, r-1, 0) + (k+1)**2",
+       "Option 1: remove boxes[r] with its k attached boxes now, scoring (k+1)\u00b2",
+       ""
+      ],
+      [
+       "dp(l, i, k+1) + dp(i+1, r-1, 0)",
+       "Option 2: for a same-coloured box i, first clear the middle i+1..r\u22121, so boxes[r] joins i's group",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "For `boxes = [1,3,1]` the best plan is to remove the 3 first (1 point) and then the two 1s together (4 points):"
+    ],
+    "table": {
+     "head": [
+      "plan",
+      "score"
+     ],
+     "rows": [
+      [
+       "remove 3, then 1+1 together",
+       "1 + 4 = 5"
+      ],
+      [
+       "remove each separately",
+       "1 + 1 + 1 = 3"
+      ],
+      [
+       "dp(0, 2, 0) returned",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "For the full example `[1, 3, 2, 2, 2, 3, 4, 3, 1]` the memoized search returns `23` after 27 distinct calls (cached repeats don't count)."
+    ]
+   },
+   {
+    "h": "Why does the state need `k`?",
+    "p": [
+     "Joining boxes of the same colour is rewarded quadratically, but the best join may combine boxes that are far apart after the middle is removed. Without `k` the recursion cannot tell how many same-coloured boxes are already waiting beside boxes[r], so subproblems on a plain range [l, r] are not self-contained. The extra parameter makes the subproblem complete, giving O(n\u00b3) states."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u2074) worst case: O(n\u00b3) states (l, r, k) with an O(n) loop each.",
+     "Space: O(n\u00b3) for the cache."
+    ]
+   }
+  ],
+  "takeaway": "Remove Boxes: memoized interval DP with an extra count k of equal-coloured boxes attached to the right end."
+ },
+ "549": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dfs(node) \u2192 (inc, dec)",
+       "Longest consecutive run going DOWN from node with values increasing (+1 each step), and the longest with values decreasing (\u22121 each step)",
+       "Returning a pair from a recursion"
+      ],
+      [
+       "child.val == node.val + 1",
+       "Child extends the increasing run: `inc = ci + 1`",
+       ""
+      ],
+      [
+       "child.val == node.val - 1",
+       "Child extends the decreasing run",
+       ""
+      ],
+      [
+       "inc + dec - 1",
+       "A path that bends at this node: one arm increasing, the other decreasing (they share the node, so subtract 1)",
+       ""
+      ],
+      [
+       "return 0, 0 for None",
+       "Base case",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[2,1,3]`: node 2 with children 1 and 3. Post-order:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "inc",
+      "dec",
+      "path through node",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "3",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "At 2: the child 1 extends `dec` (2 \u2192 1) and the child 3 extends `inc` (2 \u2192 3), so the path 1 \u2192 2 \u2192 3 has length 2 + 2 \u2212 1 = 3."
+    ]
+   },
+   {
+    "h": "Why is `inc + dec - 1` the path length?",
+    "p": [
+     "Going down one child, the values go up by 1 each step; going down the other child they go down by 1 each step. Read from one leaf, through the node, to the other leaf, the whole path is monotone (\u2026, node\u22121, node, node+1, \u2026). `inc` counts the node plus the increasing arm, `dec` counts the node plus the decreasing arm, so the node is counted twice."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h)."
+    ]
+   }
+  ],
+  "takeaway": "Track the longest increasing and decreasing runs down from each node; a path bending at a node has length inc + dec \u2212 1."
+ },
+ "564": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "10 ** (L-1) - 1, 10 ** L + 1",
+       "Edge candidates: 99\u20269 (one digit fewer) and 100\u202601 (one digit more)",
+       "Where the prefix trick fails, e.g. 100 \u2192 99 or 999 \u2192 1001"
+      ],
+      [
+       "prefix = int(n[:(L+1)//2])",
+       "The first half including the middle digit for odd lengths",
+       ""
+      ],
+      [
+       "(prefix-1, prefix, prefix+1)",
+       "Mirroring the same, a smaller or a larger prefix gives the three closest same-length palindromes",
+       ""
+      ],
+      [
+       "s + s[::-1]  /  s + s[-2::-1]",
+       "Mirror for even length / odd length (skips the middle digit so it isn't repeated)",
+       "Building a palindrome from its first half"
+      ],
+      [
+       "cands.discard(num)",
+       "The answer must differ from n itself",
+       ""
+      ],
+      [
+       "min(cands, key=lambda c: (abs(c-num), c))",
+       "Closest, with the smaller value on ties",
+       "Tuple key for tie-breaking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = \"123\"` (odd length 3, prefix `12`):"
+    ],
+    "table": {
+     "head": [
+      "prefix",
+      "mirrored palindrome"
+     ],
+     "rows": [
+      [
+       "11",
+       "111"
+      ],
+      [
+       "12",
+       "121"
+      ],
+      [
+       "13",
+       "131"
+      ]
+     ]
+    },
+    "bullets": [
+     "With the two edge candidates the full set is `[99, 111, 121, 131, 1001]`. Closest to 123 is 121 (distance 2); 131 is 8 away."
+    ]
+   },
+   {
+    "h": "Why only these five candidates?",
+    "p": [
+     "The closest palindrome keeps the same leading half, or changes it by \u00b11 (when the half is rounded down or up), or falls to the nearest number with a different length (all 9s or 1 followed by zeros and a 1). Anything else is farther away because changing a higher digit moves the number by far more."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) to build the few candidates.",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Nearest palindrome: mirror the first half at prefix\u22121, prefix and prefix+1, add the 99\u20269 and 100\u202601 edge cases, and pick the closest."
+ },
+ "567": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "need = Counter(s1)",
+       "Letter counts that a permutation of s1 must have",
+       "Permutation = same multiset of letters"
+      ],
+      [
+       "win[ch] += 1 / win[old] -= 1",
+       "Adds the entering letter and removes the leaving one: the window slides in O(1)",
+       "Fixed-size sliding window"
+      ],
+      [
+       "del win[old] when 0",
+       "Keeps `win == need` exact (no zero-count keys)",
+       ""
+      ],
+      [
+       "win == need",
+       "Counter equality",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s1 = \"ab\"`, `s2 = \"eidbaooo\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "added",
+      "dropped",
+      "window",
+      "equals need?"
+     ],
+     "rows": [
+      [
+       "0",
+       "e",
+       "\u2013",
+       "e",
+       "\u2013"
+      ],
+      [
+       "1",
+       "i",
+       "\u2013",
+       "ei",
+       "\u2013"
+      ],
+      [
+       "2",
+       "d",
+       "drop 'e'",
+       "id",
+       "\u2013"
+      ],
+      [
+       "3",
+       "b",
+       "drop 'i'",
+       "db",
+       "\u2013"
+      ],
+      [
+       "4",
+       "a",
+       "drop 'd'",
+       "ba",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a fixed-size window?",
+    "p": [
+     "A permutation of s1 has exactly len(s1) characters and appears contiguously in s2, so only windows of that length need testing. The window grows until it reaches len(s1), then each step adds one letter and removes one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 A) with A \u2264 26 distinct letters to compare (O(n) in practice).",
+     "Space: O(A)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size window of len(s1) over s2, comparing letter counts; the same pattern as Find All Anagrams."
+ },
+ "582": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "kids = defaultdict(list)",
+       "Maps a parent pid to the list of its children; a missing key gives []",
+       "Inverting a child\u2192parent list into parent\u2192children"
+      ],
+      [
+       "zip(pid, ppid)",
+       "Pairs each process with its parent",
+       ""
+      ],
+      [
+       "deque([kill])",
+       "BFS queue starting at the killed process",
+       ""
+      ],
+      [
+       "q.extend(kids[u])",
+       "Enqueues all children of u in one call",
+       ""
+      ],
+      [
+       "res.append(u)",
+       "Every dequeued process is killed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pid = [1,3,10,5]`, `ppid = [3,0,5,3]`; the tree is 3 \u2192 {1, 5}, 5 \u2192 {10}. Kill 5:"
+    ],
+    "table": {
+     "head": [
+      "process",
+      "children",
+      "queue after",
+      "killed so far"
+     ],
+     "rows": [
+      [
+       "5",
+       "[10]",
+       "[10]",
+       "[5]"
+      ],
+      [
+       "10",
+       "[]",
+       "[]",
+       "[5, 10]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why build the child map first?",
+    "p": [
+     "The input gives each process's parent, but killing needs the opposite direction (from a process to its descendants). One O(n) pass builds `kids`, after which every process is visited once, and without it each step would scan the whole list for children, making it O(n\u00b2)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Invert parent pointers into a children map, then BFS or DFS from the killed process."
+ },
+ "588": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.root = {}",
+       "A trie-like tree of nested dicts: a directory is a dict of children, a file is a str",
+       "Hierarchical data without node classes"
+      ],
+      [
+       "[p for p in path.split('/') if p]",
+       "Splits on '/' and drops empty parts (from the leading '/' and from the root path '/')",
+       ""
+      ],
+      [
+       "_walk(path, create)",
+       "Follows the path; with `create` it makes missing directories (mkdir); without it returns None for a missing path",
+       ""
+      ],
+      [
+       "isinstance(node, str)",
+       "A file: `ls` on a file returns just its name",
+       "Telling a file from a directory"
+      ],
+      [
+       "node.setdefault(p, {})",
+       "Returns the existing child, or inserts and returns a new empty dict",
+       "Get-or-create"
+      ],
+      [
+       "node.get(name, '') + content",
+       "Appends to existing content, or starts from the empty string",
+       ""
+      ],
+      [
+       "sorted(node.keys())",
+       "`ls` must list entries lexicographically",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Calls in order, with the tree after each:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "tree (nested dicts)"
+     ],
+     "rows": [
+      [
+       "ls('/')",
+       "[]",
+       "{}"
+      ],
+      [
+       "mkdir('/a/b/c')",
+       "\u2013",
+       "{'a': {'b': {'c': {}}}}"
+      ],
+      [
+       "addContentToFile('/a/b/c/d', 'hello')",
+       "\u2013",
+       "{'a': {'b': {'c': {'d': 'hello'}}}}"
+      ],
+      [
+       "ls('/')",
+       "['a']",
+       "{'a': {'b': {'c': {'d': 'hello'}}}}"
+      ],
+      [
+       "readContentFromFile('/a/b/c/d')",
+       "hello",
+       "{'a': {'b': {'c': {'d': 'hello'}}}}"
+      ],
+      [
+       "ls('/a/b/c/d')",
+       "['d']",
+       "{'a': {'b': {'c': {'d': 'hello'}}}}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store files as strings inside the same dicts?",
+    "p": [
+     "One structure serves both: a dict value means directory, a str value means file contents. Path resolution is the same loop for everything, and the type tells `ls` what to do (list children vs. print the file name). A separate `Node` class would add code without adding capability."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) per operation for path length L, plus O(k log k) for sorting k entries in `ls`.",
+     "Space: O(total path components + file content)."
+    ]
+   }
+  ],
+  "takeaway": "A file system as nested dicts: dict = directory, str = file; every operation walks the path components."
+ },
+ "594": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(nums)",
+       "Frequency of every value",
+       ""
+      ],
+      [
+       "cnt.items()",
+       "Iterates (value, count) pairs",
+       ""
+      ],
+      [
+       "x + 1 in cnt",
+       "A harmonious subsequence uses values x and x+1 only; the difference must be exactly 1",
+       ""
+      ],
+      [
+       "c + cnt[x + 1]",
+       "All copies of x plus all copies of x+1; order does not matter for subsequences",
+       "Subsequence = pick elements in order, so the whole group qualifies"
+      ],
+      [
+       "max(..., default=0)",
+       "If no pair exists, the generator is empty and `max` would raise; `default=0` returns 0",
+       "Safe max on a possibly empty iterable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,2,2,5,2,3,7]`: counts and pair totals:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "count(x)",
+      "count(x+1)",
+      "x and x+1 together"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "3",
+       "4"
+      ],
+      [
+       "3",
+       "2",
+       "\u2013",
+       "no x+1"
+      ],
+      [
+       "2",
+       "3",
+       "2",
+       "5"
+      ],
+      [
+       "5",
+       "1",
+       "\u2013",
+       "no x+1"
+      ],
+      [
+       "7",
+       "1",
+       "\u2013",
+       "no x+1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Best is x = 2: three 2s plus two 3s = 5."
+    ]
+   },
+   {
+    "h": "Why can we ignore element positions?",
+    "p": [
+     "A subsequence keeps relative order but may skip elements. Taking every occurrence of x and x+1 in their original order is itself a valid subsequence, so only the counts matter."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the Counter."
+    ]
+   }
+  ],
+  "takeaway": "Count values; the answer is the best count[x] + count[x+1] over values where x+1 exists."
+ }
+}
