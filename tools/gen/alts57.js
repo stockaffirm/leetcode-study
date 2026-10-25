@@ -106,20 +106,15 @@ class Solution:
                 best = c
         return best
 `)});
-alt(1564,{name:"Fill from the deep end with the biggest box that fits",tag:"Alternative",time:"O(n log n)",space:"O(n)",explain:"Process rooms from the back; use the largest remaining box that fits the room's capacity.",code:C(`
+alt(1564,{name:"Walk the rooms from the deep end",tag:"Alternative",time:"O(n log n)",space:"O(n)",explain:"Prefix minima are non-increasing, so reading them from the back gives rooms from the smallest capacity to the largest; match the smallest boxes first without sorting the capacities.",code:C(`
 class Solution:
     def maxBoxesInWarehouse(self, boxes, warehouse):
         caps = list(accumulate(warehouse, min))
         boxes.sort()
-        j = len(boxes) - 1
-        count = 0
+        j = 0
         for cap in reversed(caps):
-            while j >= 0 and boxes[j] > cap:
-                j -= 1
-            if j < 0:
-                break
-            count += 1
-            j -= 1
-        return count
+            if j < len(boxes) and boxes[j] <= cap:
+                j += 1
+        return j
 `)});
 };

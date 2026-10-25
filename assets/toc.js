@@ -46,9 +46,14 @@
   document.querySelectorAll(".topic").forEach(t => {
     const n = t.querySelector(".tn").textContent.trim(), k = T[n] ? n : A[n], d = T[k], tb = t.querySelector(".tb"); if(!d || !tb) return;
     const x = document.createElement("details"); x.className = "about";
-    x.innerHTML = `<summary>About this pattern <small>why it is a section · logic · pseudo code · usual pattern</small></summary>
+    x.innerHTML = `<summary>About this pattern <small>animation · why it is a section · logic · pseudo code · usual pattern</small></summary>
+      <div class="tv"></div>
       <p><b>Why it is a section.</b> ${e(d.why)}</p><p><b>General logic.</b></p><ol>${d.logic.map(l => `<li>${e(l)}</li>`).join("")}</ol>
       <p><b>Pseudo code.</b></p><pre class="code ucode">${e(d.pseudo)}</pre><p><b>Usual pattern.</b> ${e(d.pattern)}</p>`;
     tb.insertBefore(x, tb.firstChild);
+    const sc = window.TOPIC_VIS && window.TOPIC_VIS[k], box = x.querySelector(".tv"); let vis = null;
+    if(!sc || !window.mountTopicVis){ box.remove(); return; }
+    const calm = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    x.addEventListener("toggle", () => { if(x.open){ vis = vis || window.mountTopicVis(box, sc); if(!calm) vis.play(); } else if(vis) vis.stop(); });
   });
 })();

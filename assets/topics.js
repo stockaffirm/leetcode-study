@@ -20,22 +20,22 @@ window.TOPICS = {
  why:"These problems have overlapping sub-problems: the same smaller question is asked again and again. Storing each answer once turns an exponential search into a polynomial one.",
  logic:["Define dp[state] in one sentence ('the best answer using the first i items').","Write the recurrence: how dp[state] comes from smaller states.","Fix the base cases, then fill states in an order where dependencies are already known.","Keep only the rows you still need to save space."],
  pseudo:"dp = [base] * (n + 1)\nfor i in 1..n:\n    dp[i] = best over choices of f(dp[i - step], cost)\nreturn dp[n]",
- pattern:"1D (climb, rob, coin change), 2D grid or two sequences (paths, edit distance, LCS), knapsack (take or skip), and memoised recursion (@cache) when the order is awkward."},
+ pattern:"1D (climb, rob, coin change), 2D grid or two sequences (paths, edit distance, LCS (Longest Common Subsequence)), knapsack (take or skip), and memoised recursion (@cache) when the order is awkward."},
 "Graph":{
  why:"Anything made of things and connections is a graph: grids, courses with prerequisites, networks, word ladders. This section covers traversing it and answering reachability, shortest-path and ordering questions.",
- logic:["Turn the input into an adjacency list (or treat grid cells as nodes with 4 neighbours).","Keep a visited set so each node is processed once.","DFS goes deep and suits connectivity, cycles and components; BFS goes level by level and gives the shortest path when edges are unweighted.","Use topological order (indegree queue) when edges mean 'must come before'."],
+ logic:["Turn the input into an adjacency list (or treat grid cells as nodes with 4 neighbours).","Keep a visited set so each node is processed once.","DFS (Depth-First Search) goes deep and suits connectivity, cycles and components; BFS (Breadth-First Search) goes level by level and gives the shortest path when edges are unweighted.","Use topological order (indegree queue) when edges mean 'must come before'."],
  pseudo:"visited = {start}; queue = deque([start])\nwhile queue:\n    node = queue.popleft()\n    for nxt in graph[node]:\n        if nxt not in visited:\n            visited.add(nxt); queue.append(nxt)",
- pattern:"BFS with a deque; recursive or stack DFS; grid flood fill; Kahn's topological sort; Dijkstra with a heap for weighted edges."},
+ pattern:"BFS (Breadth-First Search) with a deque; recursive or stack-based DFS (Depth-First Search); grid flood fill; Kahn's topological sort; Dijkstra with a heap for weighted edges."},
 "Math / Bit Manipulation":{
  why:"Some problems are won by a numeric insight or a bit trick rather than a data structure, and they show up as quick wins or tricky corner cases.",
- logic:["Look for a formula, a modulo or divisibility rule before looping.","Watch overflow and negative numbers; Python integers do not overflow but the problem may ask for 32-bit behaviour.","For bits, think in terms of AND, OR, XOR, shifts and masks on single bits."],
+ logic:["Look for a formula, a modulo or divisibility rule before looping.","Watch overflow and negative numbers; Python integers do not overflow but the problem may ask for 32-bit behaviour.","For bits, think in terms of AND, OR, XOR (exclusive OR), shifts and masks on single bits."],
  pseudo:"while n:\n    digit = n % 10          # or: bit = n & 1\n    n //= 10                # or: n >>= 1\n    update the answer from digit",
  pattern:"x & (x - 1) clears the lowest set bit; x ^ x = 0 cancels pairs; divmod peels digits; fast power by repeated squaring."},
 "Design":{
- why:"Design problems ask you to build a small data structure or system (LRU cache, iterator, counter) and choose structures so every operation meets its time limit.",
+ why:"Design problems ask you to build a small data structure or system (LRU (Least Recently Used) cache, iterator, counter) and choose structures so every operation meets its time limit.",
  logic:["List the operations and the time each must take.","Pick the structures that give those times, often two working together (hash map plus linked list).","Keep them consistent: every update touches all of them."],
  pseudo:"class Thing:\n    def __init__(self): create the structures\n    def op1(self, ...): update structures, return result\n    def op2(self, ...): ...",
- pattern:"Hash map plus doubly linked list (LRU); deque for sliding windows; heap for top-k; hash map to index for O(1) random pick."},
+ pattern:"Hash map plus doubly linked list (LRU, Least Recently Used, cache); deque for sliding windows; heap for top-k; hash map to index for O(1) random pick."},
 "Backtracking":{
  why:"When you must list every valid arrangement (subsets, permutations, placements), you try a choice, go deeper, and undo it. This section is that choose, explore, un-choose loop.",
  logic:["State what a partial answer looks like and when it is complete.","At each step loop over the choices that are still legal.","Add the choice, recurse, then remove it so the next choice starts clean.","Prune early when a partial answer can never be valid."],
@@ -53,9 +53,9 @@ window.TOPICS = {
  pattern:"Sort then sweep; track the farthest reachable index (jump game); two-ended pick; heap when the best choice changes as you go."},
 "Binary Tree":{
  why:"Trees are recursive by nature: a tree's answer is built from its left and right sub-tree answers. This section covers walking trees depth-first and level by level.",
- logic:["Write the answer for None (the base case) and for one node in terms of its children.","DFS (recursion) for depth, paths, validity and sub-tree facts; BFS (queue) for levels and shortest depth.","Return a value up, or update a shared variable while returning something else."],
+ logic:["Write the answer for None (the base case) and for one node in terms of its children.","DFS (Depth-First Search, using recursion) for depth, paths, validity and sub-tree facts; BFS (Breadth-First Search, using a queue) for levels and shortest depth.","Return a value up, or update a shared variable while returning something else."],
  pseudo:"def dfs(node):\n    if not node: return base\n    left = dfs(node.left)\n    right = dfs(node.right)\n    return combine(node.val, left, right)",
- pattern:"Post-order for heights and diameters; pre-order for building and path sums; BFS with a deque and a level-size loop; lowest common ancestor by returning the found node up."},
+ pattern:"Post-order for heights and diameters; pre-order for building and path sums; BFS (Breadth-First Search) with a deque and a level-size loop; lowest common ancestor by returning the found node up."},
 "Stack / Monotonic Stack":{
  why:"A stack remembers the most recent unfinished thing (open bracket, last number). A monotonic stack keeps its items in order so 'next greater' style questions are answered in one pass.",
  logic:["Push what is waiting for an answer.","When the new item settles something, pop it and record the answer.","For a monotonic stack, pop while the top breaks the order (smaller or larger), then push."],
@@ -77,10 +77,10 @@ window.TOPICS = {
  pseudo:"heap = []\nfor x in items:\n    heappush(heap, x)\n    if len(heap) > k: heappop(heap)\nreturn heap[0]       # k-th largest",
  pattern:"Top-k with a size-k heap; two heaps for a running median; heap of (cost, node) for Dijkstra; merge k sorted lists."},
 "Matrix":{
- why:"Grids are arrays of arrays with their own tricks: neighbours, rotation, spirals and in-place updates. Many are really graph or DP problems on a grid.",
+ why:"Grids are arrays of arrays with their own tricks: neighbours, rotation, spirals and in-place updates. Many are really graph or DP (Dynamic Programming) problems on a grid.",
  logic:["Write the four neighbour offsets once and loop over them.","Check bounds before every access.","For in-place edits, mark cells with a temporary value and fix them up in a second pass."],
  pseudo:"for r in range(R):\n    for c in range(C):\n        for dr, dc in ((1,0),(-1,0),(0,1),(0,-1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < R and 0 <= nc < C: use grid[nr][nc]",
- pattern:"Transpose then reverse to rotate; layer-by-layer spiral; BFS or DFS flood fill; row and column flags to zero a matrix."},
+ pattern:"Transpose then reverse to rotate; layer-by-layer spiral; BFS (Breadth-First Search) or DFS (Depth-First Search) flood fill; row and column flags to zero a matrix."},
 "Prefix Sum":{
  why:"If you must sum many ranges or count ranges with a target sum, precomputing running totals turns every range query into one subtraction.",
  logic:["prefix[i] is the sum of the first i items.","The sum of items i..j is prefix[j + 1] - prefix[i].","For 'count sub-arrays with sum k', store how many times each prefix has appeared in a dict."],
@@ -112,7 +112,7 @@ window.TOPICS = {
  pseudo:"node = root\nfor ch in word:\n    node = node.children.setdefault(ch, TrieNode())\nnode.end = True",
  pattern:"Insert, search, starts-with; word search II (trie plus backtracking); replace words by shortest root."},
 "Binary Search Tree":{
- why:"A BST keeps left < node < right, so searching, inserting and validating can follow one branch instead of the whole tree, and an in-order walk comes out sorted.",
+ why:"A BST (Binary Search Tree) keeps left < node < right, so searching, inserting and validating can follow one branch instead of the whole tree, and an in-order walk comes out sorted.",
  logic:["Compare with the node and go left or right.","In-order traversal gives sorted order, which answers k-th smallest and validity questions.","Carry lower and upper bounds down when validating."],
  pseudo:"def search(node, v):\n    while node and node.val != v:\n        node = node.left if v < node.val else node.right\n    return node",
  pattern:"Validate with bounds; in-order for k-th smallest; lowest common ancestor by value; build from a sorted array by picking the middle."},

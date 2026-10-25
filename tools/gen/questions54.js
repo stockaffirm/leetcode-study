@@ -1,0 +1,13 @@
+// Citadel: precise, layman-readable statements
+module.exports={
+1801:"orders[i] = [price, amount, type]: type 0 is a buy order, type 1 a sell order. A new buy order is matched against the cheapest backlog sell orders priced at or below it; a new sell order against the highest backlog buy orders priced at or above it; unmatched amounts join the backlog. Return the total amount left in the backlog modulo 1 000 000 007. Example: [[10,5,0],[15,2,1],[25,1,1],[30,4,0]] → 6.",
+1515:"Find a point (the service centre) that minimises the sum of Euclidean distances to the given customer positions and return that minimum sum (rounded to 5 decimals here). Example: [[0,1],[1,0],[1,2],[2,1]] → 4.0.",
+2361:"A train line has stops 0…n. Between stops i−1 and i the regular route costs regular[i−1] and the express route costs express[i−1]. Switching from regular to express costs expressCost (switching back is free). Starting on the regular route at stop 0, return the minimum cost to reach each stop 1…n. Example: regular [1,6,9,5], express [5,2,3,10], expressCost 8 → [1,7,14,19].",
+3186:"Each spell has a damage value. If you cast a spell with damage p you cannot cast any spell with damage p−2, p−1, p+1 or p+2 (spells with the same damage are fine). Return the maximum total damage. Example: [1,1,3,4] → 6.",
+2661:"arr lists the numbers of the matrix mat (each appears once) in the order they are painted. Return the first index i such that, after painting arr[0..i], some row or column is completely painted. Example: arr [1,3,4,2], mat [[1,4],[2,3]] → 2.",
+4069:"Buy at most one share at a time. Buying on day i and selling on day j earns prices[j] − prices[i] − costs[j − i]; after selling on day j you may buy again only from day j + cooldown + 1. Return the maximum total profit (0 if no trade is profitable). Example: prices [1,5,3], cooldown 1, costs [0,1,2] → 3.",
+1632:"Replace every element of the matrix by its rank: rank 1 is the smallest; within a row or column a larger element gets a larger rank, equal elements in the same row or column get equal ranks; ranks must be as small as possible. Return the rank matrix. Example: [[1,2],[3,4]] → [[1,2],[2,3]].",
+2958:"Return the length of the longest subarray in which every value occurs at most k times. Example: [1,2,3,1,2,3,1,2], k=2 → 6.",
+1155:"You roll n dice, each with faces 1…k. Return the number of ways the faces can add up to target, modulo 1 000 000 007. Example: n=2, k=6, target=7 → 6.",
+935:"A chess knight stands on a phone keypad and makes n−1 knight moves, writing down the digit under it after each move (it may start on any digit). Return the number of different digit strings of length n it can produce, modulo 1 000 000 007. Example: n=2 → 20.",
+};

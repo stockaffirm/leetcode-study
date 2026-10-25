@@ -95,19 +95,28 @@ class Solution:
         res.append(word2[j:])
         return ''.join(res)
 `)});
-alt(964,{name:"Memoised recursion",tag:"Alternative",time:"O(log target)",space:"O(log target)",explain:"cost(target, k) either builds the last digit upwards or borrows from the next power; recursion on target // x.",code:C(`
+alt(964,{name:"Digit DP with a carry array",tag:"Alternative",time:"O(log target)",space:"O(log target)",explain:"Write target in base x. At each digit with value v (plus a possible carry) either use v copies of x^i or subtract (x − v) copies and pass a carry upwards; keep the cheapest cost for carry 0 and carry 1.",code:C(`
 class Solution:
     def leastOpsExpressTarget(self, x, target):
-        @lru_cache(None)
-        def f(t, k):
-            if t == 0:
-                return 0
-            q, r = divmod(t, x)
-            cost_k = 2 if k == 0 else k
-            down = r * cost_k + f(q, k + 1)
-            up = (x - r) * cost_k + f(q + 1, k + 1)
-            return min(down, up)
-        return f(target, 0) - 1
+        digs = []
+        t = target
+        while t:
+            digs.append(t % x)
+            t //= x
+        digs.append(0)
+        INF = float('inf')
+        c0, c1 = 0, INF
+        for i, d in enumerate(digs):
+            w = 2 if i == 0 else i
+            n0 = n1 = INF
+            for carry, cost in ((0, c0), (1, c1)):
+                if cost == INF:
+                    continue
+                v = d + carry
+                n0 = min(n0, cost + v * w)
+                n1 = min(n1, cost + (x - v) * w)
+            c0, c1 = n0, n1
+        return c0 - 1
 `)});
 alt(2316,{name:"DFS components",tag:"Alternative",time:"O(n + e)",space:"O(n + e)",explain:"Find component sizes with DFS and count cross-component pairs.",code:C(`
 class Solution:

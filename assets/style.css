@@ -190,3 +190,14 @@ h1{font-size:28px}
 @media (max-width:560px){.about>summary small{display:block;margin:2px 0 0}.about{margin:8px 6px}}
 
 .sdnav{margin:8px 0}.sdnav a{display:inline-block;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--accent);font-weight:700;text-decoration:none}.sdnav small{font-weight:500;color:var(--mute)}
+
+/* Animated pattern demo */
+.tv{margin:6px 12px 10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--code-bg);overflow-x:auto}
+.vsvg{display:block;width:100%;max-width:420px;margin:0 auto 6px}.ve{stroke:var(--mute);stroke-width:1.5}.ve.off{opacity:.18}
+.vg circle{fill:var(--card);stroke:var(--mute);stroke-width:1.5;transition:fill .35s,stroke .35s}.vg text{font:700 12px -apple-system,BlinkMacSystemFont,sans-serif;fill:var(--ink)}
+.vg.off{opacity:.2}.vg.queued circle{stroke:var(--accent);stroke-dasharray:4 3}.vg.seen circle{fill:var(--accent-soft);stroke:var(--accent)}.vg.cur circle{fill:var(--hot);stroke:var(--accent);stroke-width:2.5}.vg.cur text{fill:var(--hot-ink)}
+.vrow{display:flex;align-items:flex-start;gap:8px;margin:4px 0}.vn{flex:0 0 118px;font-size:12px;color:var(--mute);padding-top:6px}.vcells{display:flex;flex-wrap:wrap;gap:4px}.vcol{display:flex;flex-direction:column;align-items:center}
+.vc{min-width:32px;padding:4px 7px;border:1.5px solid var(--mute);border-radius:7px;background:var(--card);font:600 13px ui-monospace,Menlo,monospace;text-align:center;transition:background .3s,border-color .3s,opacity .3s}
+.vc.hot{background:var(--hot);color:var(--hot-ink);border-color:var(--accent)}.vc.ok{background:var(--accent-soft);border-color:var(--accent)}.vc.bad{opacity:.35;text-decoration:line-through}.vp{min-height:15px;font:700 11px -apple-system,sans-serif;color:var(--accent)}
+.vnote{margin:8px 0 4px;font-size:14px;min-height:40px}.vbar{display:flex;align-items:center;gap:10px}.vbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:2px 10px;cursor:pointer}.vct{font-size:12px;color:var(--mute)}
+@media (max-width:560px){.vrow{flex-direction:column;gap:2px}.vn{flex:none;padding-top:0}.vc{min-width:28px;padding:3px 5px;font-size:12px}}
