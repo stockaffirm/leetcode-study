@@ -872,7 +872,7 @@
       [
        "`dp[i][j]`",
        "Longest good subsequence ENDING at index `i` that has at most `j` places where adjacent chosen elements differ",
-       "DP over (end index, allowed changes)"
+       "DP (Dynamic Programming) over (end index, allowed changes)"
       ],
       [
        "`[[1] * (k + 1) …]`",
@@ -1015,7 +1015,7 @@
       ],
       [
        "`nums[j] ^= 1` for three cells",
-       "XOR with 1 flips a bit",
+       "XOR (exclusive OR) with 1 flips a bit",
        "Toggle"
       ],
       [
@@ -1733,7 +1733,7 @@
       [
        "`dp[carry]` over letters",
        "Minimum operations after processing the letters so far, where `carry` extra characters are being passed on to the NEXT letter by changing them into it (a change costs 1, while delete + insert would cost 2)",
-       "Pass-the-surplus DP over the alphabet"
+       "Pass-the-surplus DP (Dynamic Programming) over the alphabet"
       ],
       [
        "`t = c[i] + x`",

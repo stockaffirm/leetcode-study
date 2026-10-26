@@ -22,7 +22,7 @@
       ],
       [
        "`isInteger()` / `getInteger()` / `getList()`",
-       "Given API: is this element a number, its value, or its inner list",
+       "Given API (Application Programming Interface): is this element a number, its value, or its inner list",
        "Branching on the element type"
       ],
       [
@@ -939,7 +939,7 @@
      ],
      "rows": [
       [
-       "BFS over states (a, b)",
+       "BFS (Breadth-First Search) over states (a, b)",
        "O(x·y)"
       ],
       [
@@ -984,7 +984,7 @@
       [
        "`dp[i]`",
        "Size of the largest divisible subset that ENDS at `nums[i]` (as its largest element)",
-       "Longest-increasing-subsequence style DP"
+       "Longest-increasing-subsequence style DP (Dynamic Programming)"
       ],
       [
        "`nums[i] % nums[j] == 0`",
@@ -1088,7 +1088,7 @@
     ]
    }
   ],
-  "takeaway": "Largest divisible subset: sort, then LIS-style DP using transitivity of divisibility, with a prev array to rebuild the set."
+  "takeaway": "Largest divisible subset: sort, then LIS (Longest Increasing Subsequence)-style DP using transitivity of divisibility, with a prev array to rebuild the set."
  },
  "371": {
   "blocks": [
@@ -1104,7 +1104,7 @@
       [
        "`a ^ b`",
        "Sum of the bits WITHOUT carries",
-       "XOR is addition modulo 2 per bit"
+       "XOR (exclusive OR) is addition modulo 2 per bit"
       ],
       [
        "`(a & b) << 1`",
@@ -1213,7 +1213,7 @@
      "rows": [
       [
        "`guess(mid)`",
-       "Given API: `-1` if the picked number is LOWER than `mid`, `1` if HIGHER, `0` if equal",
+       "Given API (Application Programming Interface): `-1` if the picked number is LOWER than `mid`, `1` if HIGHER, `0` if equal",
        "Read the sign convention carefully: it describes the pick relative to your guess, not your guess relative to the pick"
       ],
       [
@@ -1322,7 +1322,7 @@
       [
        "`dp[t]`",
        "Number of ordered sequences of numbers from `nums` that add up to `t`",
-       "Counting DP over a target"
+       "Counting DP (Dynamic Programming) over a target"
       ],
       [
        "`dp = [1] + [0] * target`",
@@ -2029,7 +2029,7 @@
     ]
    }
   ],
-  "takeaway": "Sum of left leaves: DFS carrying an `is_left` flag; count a node only if it is a leaf reached as a left child."
+  "takeaway": "Sum of left leaves: DFS (Depth-First Search) carrying an `is_left` flag; count a node only if it is a leaf reached as a left child."
  },
  "407": {
   "blocks": [
@@ -2237,7 +2237,7 @@
      ],
      "rows": [
       [
-       "DP over (position, parts)",
+       "DP (Dynamic Programming) over (position, parts)",
        "O(n²·k)"
       ],
       [
@@ -2282,7 +2282,7 @@
       [
        "`cur`",
        "Number of arithmetic slices ENDING at index i (they all extend the current run)",
-       "DP state that depends on the previous index only"
+       "DP (Dynamic Programming) state that depends on the previous index only"
       ],
       [
        "`cur += 1`",

@@ -101,7 +101,7 @@
        "O(n)"
       ],
       [
-       "DP with 3 states",
+       "DP (Dynamic Programming) with 3 states",
        "O(n)"
       ]
      ]
@@ -272,7 +272,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "`[[0,1,0],[1,1,0],[0,0,1]]`: the scan starts a DFS at each cell, but only land cells return a positive size."
+     "`[[0,1,0],[1,1,0],[0,0,1]]`: the scan starts a DFS (Depth-First Search) at each cell, but only land cells return a positive size."
     ],
     "table": {
      "head": [
@@ -451,7 +451,7 @@
    {
     "h": "Time and space",
     "bullets": [
-     "Time: O(k^n) worst case, far less with pruning (the problem is NP-hard); a bitmask DP over subsets gives O(n · 2^n).",
+     "Time: O(k^n) worst case, far less with pruning (the problem is NP-hard); a bitmask DP (Dynamic Programming) over subsets gives O(n · 2^n).",
      "Space: O(n) recursion."
     ]
    }
@@ -481,7 +481,7 @@
       ],
       [
        "`while True` with `cur`",
-       "Walk down from the root like a BST search",
+       "Walk down from the root like a BST (Binary Search Tree) search",
        "Iterative insertion, O(1) space"
       ],
       [
@@ -1624,7 +1624,7 @@
       [
        "737 Sentence Similarity II (this code)",
        "yes",
-       "Union-Find (or DFS on a graph)"
+       "Union-Find (or DFS (Depth-First Search) on a graph)"
       ]
      ]
     }
@@ -1658,7 +1658,7 @@
       [
        "`take`",
        "Best total if we TAKE value `v`",
-       "House Robber style two-state DP"
+       "House Robber style two-state DP (Dynamic Programming)"
       ],
       [
        "`skip`",
@@ -1911,7 +1911,7 @@
       [
        "`b`",
        "Minimum cost to stand on step `i` (the top is step `len(cost)`)",
-       "DP where each state depends on the previous two"
+       "DP (Dynamic Programming) where each state depends on the previous two"
       ],
       [
        "`a`",
@@ -2035,7 +2035,7 @@
        "Encoding cell states in the grid itself"
       ],
       [
-       "BFS from each unseen `1`",
+       "BFS (Breadth-First Search) from each unseen `1`",
        "Collects one region: its `cells`, its `front` (set of distinct healthy cells it would infect next), and `perim` (the number of walls needed, counting each region-to-healthy edge)",
        "A region is a connected component of infected cells"
       ],
@@ -2153,7 +2153,7 @@
       [
        "`dead = set(deadends)`",
        "O(1) lookup of forbidden states",
-       "Membership tests in the BFS inner loop"
+       "Membership tests in the BFS (Breadth-First Search) inner loop"
       ],
       [
        "`'0000' in dead: return -1`",
@@ -2254,7 +2254,7 @@
        "shortest path, ≤ 10,000 states × 8 moves"
       ],
       [
-       "DFS",
+       "DFS (Depth-First Search)",
        "finds a path but not necessarily the shortest"
       ]
      ]

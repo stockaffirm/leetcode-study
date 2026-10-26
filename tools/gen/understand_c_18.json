@@ -658,7 +658,7 @@
       [
        "`dp[e]`",
        "The maximum number of floors we can fully resolve with `e` eggs and the current number of `moves`",
-       "Flip the DP: instead of 'moves for n floors', compute 'floors for m moves'"
+       "Flip the DP (Dynamic Programming): instead of 'moves for n floors', compute 'floors for m moves'"
       ],
       [
        "`dp[e] + dp[e-1] + 1`",
@@ -831,7 +831,7 @@
     }
    },
    {
-    "h": "Why is this digit DP linear in the number of digits?",
+    "h": "Why is this digit DP (Dynamic Programming) linear in the number of digits?",
     "p": [
      "Instead of enumerating numbers up to n, the code counts them in groups: all shorter lengths together, then for each prefix position the numbers that diverge from `n` there. That is `len(str(n))` steps, each O(d)."
     ],
@@ -1204,7 +1204,7 @@
      ],
      "rows": [
       [
-       "BFS from server 0 → `dist`",
+       "BFS (Breadth-First Search) from server 0 → `dist`",
        "Number of hops from the master server to each data server",
        "Shortest path in an unweighted graph"
       ],
@@ -1830,7 +1830,7 @@
      "rows": [
       [
        "`path(node, target, acc)`",
-       "DFS that returns True if `target` is in the subtree and appends the turns ('L'/'R') on the way BACK up, so the list is in reverse (leaf-to-root) order",
+       "DFS (Depth-First Search) that returns True if `target` is in the subtree and appends the turns ('L'/'R') on the way BACK up, so the list is in reverse (leaf-to-root) order",
        "Record a root-to-node path"
       ],
       [
@@ -1841,7 +1841,7 @@
       [
        "common prefix loop",
        "The shared prefix of the two paths leads to the lowest common ancestor",
-       "LCA via path prefixes"
+       "LCA (Lowest Common Ancestor) via path prefixes"
       ],
       [
        "`'U' * (len(a) - i)`",
@@ -2565,7 +2565,7 @@
    {
     "h": "Why topological order?",
     "p": [
-     "The ancestors of `v` are the parents plus all their ancestors. If parents are always finished before children, a single union per edge gives every ancestor. A DFS from each node would repeat work over shared descendants."
+     "The ancestors of `v` are the parents plus all their ancestors. If parents are always finished before children, a single union per edge gives every ancestor. A DFS (Depth-First Search) from each node would repeat work over shared descendants."
     ],
     "table": {
      "head": [
@@ -2574,7 +2574,7 @@
      ],
      "rows": [
       [
-       "DFS/BFS from every node (reverse graph)",
+       "DFS/BFS (Breadth-First Search) from every node (reverse graph)",
        "O(n · (n + E))"
       ],
       [
@@ -2592,7 +2592,7 @@
     ]
    }
   ],
-  "takeaway": "All ancestors in a DAG: process nodes in topological order and merge each parent's ancestor set (plus the parent) into its children."
+  "takeaway": "All ancestors in a DAG (Directed Acyclic Graph): process nodes in topological order and merge each parent's ancestor set (plus the parent) into its children."
  },
  "2204": {
   "blocks": [
@@ -2626,7 +2626,7 @@
        "Multi-source start"
       ],
       [
-       "second BFS",
+       "second BFS (Breadth-First Search)",
        "Distance from each tree node to the nearest cycle node",
        "Multi-source BFS from the cycle"
       ]
@@ -2686,7 +2686,7 @@
    {
     "h": "Why peel leaves?",
     "p": [
-     "The graph has exactly one cycle (n nodes, n edges, connected). Repeatedly deleting degree-1 nodes removes every tree branch and leaves only the cycle, because nodes on a cycle always keep degree ≥ 2. That finds the cycle without DFS back-edge tracking."
+     "The graph has exactly one cycle (n nodes, n edges, connected). Repeatedly deleting degree-1 nodes removes every tree branch and leaves only the cycle, because nodes on a cycle always keep degree ≥ 2. That finds the cycle without DFS (Depth-First Search) back-edge tracking."
     ],
     "table": {
      "head": [

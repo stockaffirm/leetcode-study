@@ -1268,7 +1268,7 @@
       [
        "`neg = (dividend < 0) != (divisor < 0)`",
        "Result is negative iff exactly one operand is negative",
-       "XOR of two booleans without bit tricks"
+       "XOR (exclusive OR) of two booleans without bit tricks"
       ],
       [
        "`abs(...)`",
@@ -1883,7 +1883,7 @@
    {
     "h": "Why only remember the last `*`?",
     "p": [
-     "Any earlier `*` can absorb whatever the later one could, so once we pass a second `*` the earlier one never needs to expand again: whatever came before is already matched. This greedy shortcut replaces the O(n·m) DP table with O(1) state."
+     "Any earlier `*` can absorb whatever the later one could, so once we pass a second `*` the earlier one never needs to expand again: whatever came before is already matched. This greedy shortcut replaces the O(n·m) DP (Dynamic Programming) table with O(1) state."
     ],
     "table": {
      "head": [
@@ -2182,7 +2182,7 @@
       [
        "`cur`",
        "Best sum of a subarray that must END at the current element",
-       "DP state that depends only on the previous state, so one variable instead of an array"
+       "DP (Dynamic Programming) state that depends only on the previous state, so one variable instead of an array"
       ],
       [
        "`best`",

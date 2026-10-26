@@ -254,7 +254,7 @@
       [
        "`deque` of zero in-degree letters",
        "Characters with no remaining predecessors can come next",
-       "BFS queue for Kahn's algorithm"
+       "BFS (Breadth-First Search) queue for Kahn's algorithm"
       ],
       [
        "`len(out) == len(g)`",
@@ -386,7 +386,7 @@
       [
        "`inorder(node)`",
        "In-order traversal visits values in ascending order",
-       "BST: sorted order for free"
+       "BST (Binary Search Tree): sorted order for free"
       ],
       [
        "`win` (a deque)",
@@ -632,7 +632,7 @@
      "rows": [
       [
        "`isBadVersion(mid)`",
-       "Given API: costs one call; false for good versions, true for bad ones, and stays true afterwards",
+       "Given API (Application Programming Interface): costs one call; false for good versions, true for bad ones, and stays true afterwards",
        "A monotone predicate: all False then all True"
       ],
       [
@@ -751,7 +751,7 @@
       [
        "`popleft()`",
        "Take the list whose turn it is",
-       "FIFO gives the rotation"
+       "FIFO (First In, First Out) gives the rotation"
       ],
       [
        "`if i + 1 < len(v): append((v, i + 1))`",
@@ -1454,7 +1454,7 @@
     }
    },
    {
-    "h": "Why Union-Find and not DFS after every addition?",
+    "h": "Why Union-Find and not DFS (Depth-First Search) after every addition?",
     "p": [
      "Re-running a flood-fill after each of k additions costs O(k·m·n). Union-Find handles each addition in nearly O(1): it only checks the four neighbours."
     ],
@@ -1465,7 +1465,7 @@
      ],
      "rows": [
       [
-       "DFS/BFS recount after every addition",
+       "DFS/BFS (Breadth-First Search) recount after every addition",
        "O(k · m · n)"
       ],
       [
@@ -1614,7 +1614,7 @@
       ],
       [
        "`deque([(root, 0)])`",
-       "BFS queue of (node, column) pairs; root is column 0",
+       "BFS (Breadth-First Search) queue of (node, column) pairs; root is column 0",
        "Carrying extra state with each node"
       ],
       [
@@ -1623,7 +1623,7 @@
        "Vertical position of a node"
       ],
       [
-       "BFS (not DFS)",
+       "BFS (not DFS (Depth-First Search))",
        "Visits level by level, so within a column the values come top to bottom",
        "Required vertical order within a column"
       ],
@@ -1730,7 +1730,7 @@
       [
        "`total[a][b]`",
        "Sum of shortest walking distances from every building to empty cell (a, b)",
-       "Aggregating a BFS result over many sources"
+       "Aggregating a BFS (Breadth-First Search) result over many sources"
       ],
       [
        "`reach[a][b]`",
@@ -1935,7 +1935,7 @@
     }
    },
    {
-    "h": "Why Union-Find instead of DFS here?",
+    "h": "Why Union-Find instead of DFS (Depth-First Search) here?",
     "p": [
      "Both are correct. DFS needs an adjacency list built first (O(V + E) memory) and a visited array; Union-Find processes edges one at a time with just the parent array and works well when edges stream in."
     ],
@@ -1948,7 +1948,7 @@
      ],
      "rows": [
       [
-       "DFS/BFS",
+       "DFS/BFS (Breadth-First Search)",
        "O(V + E)",
        "O(V + E)",
        "simple, gives the actual components"
@@ -2112,7 +2112,7 @@
       [
        "`go(r, c)`",
        "Length of the longest increasing path STARTING at (r, c)",
-       "DFS with a clear definition so results can be cached"
+       "DFS (Depth-First Search) with a clear definition so results can be cached"
       ],
       [
        "`@lru_cache(None)`",
@@ -2251,7 +2251,7 @@
     ]
    }
   ],
-  "takeaway": "Longest increasing path in a grid: DFS with memoisation; strictly increasing moves make the graph a DAG, so no visited set is needed."
+  "takeaway": "Longest increasing path in a grid: DFS with memoisation; strictly increasing moves make the graph a DAG (Directed Acyclic Graph), so no visited set is needed."
  },
  "332": {
   "blocks": [
@@ -2295,7 +2295,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "Tickets `MUC→LHR`, `JFK→MUC`, `SFO→SJC`, `LHR→SFO` form a single chain, so the DFS just follows it. The post-order list is built from the end of the journey backwards:"
+     "Tickets `MUC→LHR`, `JFK→MUC`, `SFO→SJC`, `LHR→SFO` form a single chain, so the DFS (Depth-First Search) just follows it. The post-order list is built from the end of the journey backwards:"
     ],
     "table": {
      "head": [
@@ -2382,7 +2382,7 @@
       [
        "`ans = [0] * (n + 1)`",
        "`ans[i]` = number of 1 bits in i; `ans[0] = 0`",
-       "DP array indexed by the number itself"
+       "DP (Dynamic Programming) array indexed by the number itself"
       ],
       [
        "`i >> 1`",

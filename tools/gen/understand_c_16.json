@@ -252,7 +252,7 @@
       ],
       [
        "`node in targets: return node`",
-       "Hitting a target ends the search below it: an ancestor of a target can only be the LCA if the other targets are elsewhere",
+       "Hitting a target ends the search below it: an ancestor of a target can only be the LCA (Lowest Common Ancestor) if the other targets are elsewhere",
        "Early stop at a target"
       ],
       [
@@ -646,7 +646,7 @@
      ],
      "rows": [
       [
-       "BFS per query using only short edges",
+       "BFS (Breadth-First Search) per query using only short edges",
        "O(Q · (V + E))"
       ],
       [
@@ -797,7 +797,7 @@
       [
        "first double loop",
        "Find the start cell `*`",
-       "Locate the BFS source"
+       "Locate the BFS (Breadth-First Search) source"
       ],
       [
        "`deque([(si, sj)])`, `seen`",
@@ -1105,7 +1105,7 @@
       [
        "`go(i, left)`",
        "Best value using events `i..` with at most `left` events still allowed",
-       "DP over (index, remaining)"
+       "DP (Dynamic Programming) over (index, remaining)"
       ],
       [
        "`go(i + 1, left)`",

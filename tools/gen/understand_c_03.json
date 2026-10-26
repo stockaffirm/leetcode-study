@@ -545,7 +545,7 @@
        "A 2-bit counter per bit position: states 00, 01, 10"
       ],
       [
-       "`^` (XOR)",
+       "`^` (XOR (exclusive OR))",
        "Toggles bits: adds 1 in `ones` when the bit was 0",
        "Bit-level parity update"
       ],
@@ -893,7 +893,7 @@
       "Operation",
       "Evicted",
       "Returns",
-      "Order after (LRU → MRU)"
+      "Order after (LRU (Least Recently Used) → MRU)"
      ],
      "rows": [
       [
@@ -1124,7 +1124,7 @@
       [
        "`hi`",
        "Largest product of a subarray ending at the current element",
-       "DP state kept as two variables because a negative flips order"
+       "DP (Dynamic Programming) state kept as two variables because a negative flips order"
       ],
       [
        "`lo`",
@@ -1382,7 +1382,7 @@
       ],
       [
        "`read4(tmp)`",
-       "Provided API: fills up to 4 characters into `tmp` and returns how many it actually read",
+       "Provided API (Application Programming Interface): fills up to 4 characters into `tmp` and returns how many it actually read",
        "The only way to reach the file"
       ],
       [
@@ -1403,7 +1403,7 @@
       [
        "`self.q.popleft()`",
        "O(1) removal from the front, in order",
-       "FIFO buffer; a list `pop(0)` would be O(n)"
+       "FIFO (First In, First Out) buffer; a list `pop(0)` would be O(n)"
       ]
      ]
     }
@@ -2046,7 +2046,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "BST `7 / (3, 15 / (9, 20))`. Stack shown bottom → top."
+     "BST (Binary Search Tree) `7 / (3, 15 / (9, 20))`. Stack shown bottom → top."
     ],
     "table": {
      "head": [
@@ -2281,7 +2281,7 @@
       [
        "`buy[t]`",
        "Best cash balance while HOLDING a share, during the t-th transaction (balance after paying for it)",
-       "A DP state for 'in a position' vs. 'flat'"
+       "A DP (Dynamic Programming) state for 'in a position' vs. 'flat'"
       ],
       [
        "`sell[t]`",

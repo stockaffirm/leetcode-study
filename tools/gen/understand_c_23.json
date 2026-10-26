@@ -248,7 +248,7 @@
       [
        "loop from bit `n - 1` down to 0",
        "Decide the n free bits from the most significant to the least",
-       "The XOR with `x` can flip each of these bits freely"
+       "The XOR (exclusive OR) with `x` can flip each of these bits freely"
       ],
       [
        "`ba == bb`",
@@ -375,7 +375,7 @@
       [
        "`dp[i]`",
        "Most blocks into which the first `i` elements can be merged so that block sums are non-decreasing",
-       "DP over prefix length"
+       "DP (Dynamic Programming) over prefix length"
       ],
       [
        "`last[i]`",
@@ -789,7 +789,7 @@
      ],
      "rows": [
       [
-       "DP over letter choices",
+       "DP (Dynamic Programming) over letter choices",
        "O(26 · n)"
       ],
       [

@@ -90,7 +90,7 @@
     }
    },
    {
-    "h": "Why a bitset instead of a boolean DP array?",
+    "h": "Why a bitset instead of a boolean DP (Dynamic Programming) array?",
     "p": [
      "The classic DP loops over `x` and then over sums in reverse: O(n · target) bit-by-bit operations. A shift-and-or does all sums for one item in a single big-integer operation, which runs about 64 sums per machine word."
     ],
@@ -215,7 +215,7 @@
     }
    },
    {
-    "h": "Why not DFS?",
+    "h": "Why not DFS (Depth-First Search)?",
     "p": [
      "A flood fill marks cells visited (mutating the board or using O(mn) extra space). Because ships are guaranteed to be straight and separated, checking just up and left identifies each ship's first cell with no extra memory."
     ],
@@ -493,7 +493,7 @@
      ],
      "rows": [
       [
-       "DFS from every node, brute force",
+       "DFS (Depth-First Search) from every node, brute force",
        "O(n²) worst, O(n log n) balanced",
        "O(h)"
       ],
@@ -863,7 +863,7 @@
      "rows": [
       [
        "`x ^ y`",
-       "XOR: a bit is 1 exactly where x and y differ",
+       "XOR (exclusive OR): a bit is 1 exactly where x and y differ",
        "Comparing two numbers bit by bit"
       ],
       [
@@ -969,7 +969,7 @@
       [
        "`used`",
        "A bitmask of the numbers already taken: bit `i` set means `i + 1` is used",
-       "Small sets (≤ 20 items) as DP state"
+       "Small sets (≤ 20 items) as DP (Dynamic Programming) state"
       ],
       [
        "`win(used, total)`",
@@ -1098,7 +1098,7 @@
      "rows": [
       [
        "`rand7()`",
-       "Given API: uniform integers 1..7",
+       "Given API (Application Programming Interface): uniform integers 1..7",
        "The only source of randomness"
       ],
       [
@@ -1312,7 +1312,7 @@
       [
        "`ways`",
        "Dict: running sum → number of sign assignments so far that produce it",
-       "DP keyed by value, sparse instead of a big array"
+       "DP (Dynamic Programming) keyed by value, sparse instead of a big array"
       ],
       [
        "`{0: 1}`",
@@ -1835,7 +1835,7 @@
       [
        "`max(node.val for node in q)`",
        "At the start of each round the queue holds exactly one whole level, so its max is that level's max",
-       "Level-order BFS: the queue IS the level"
+       "Level-order BFS (Breadth-First Search): the queue IS the level"
       ],
       [
        "`for _ in range(len(q))`",
@@ -1881,7 +1881,7 @@
     }
    },
    {
-    "h": "BFS vs DFS",
+    "h": "BFS vs DFS (Depth-First Search)",
     "p": [
      "DFS with a `depth` argument and `res[depth] = max(res[depth], val)` also works in O(n) time and O(h) space. BFS reads naturally for 'per level' questions and the code above needs no depth variable."
     ],
@@ -1929,7 +1929,7 @@
       [
        "`dp[a]`",
        "Number of combinations of the coins processed so far that sum to `a`",
-       "Counting DP"
+       "Counting DP (Dynamic Programming)"
       ],
       [
        "`dp = [1] + [0] * amount`",
@@ -2038,7 +2038,7 @@
      "rows": [
       [
        "in-order traversal",
-       "Visits BST values in ascending order",
+       "Visits BST (Binary Search Tree) values in ascending order",
        "BST: sorted order for free"
       ],
       [

@@ -1,0 +1,2333 @@
+{
+ "2964": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen[r]",
+       "Number of pairs (i, j) with i < j < k whose sum has remainder r mod d",
+       "Pair counts by remainder"
+      ],
+      [
+       "(-nums[k]) % d",
+       "The remainder a pair must have so that the pair's sum plus nums[k] is divisible by d",
+       "Complement modulo d"
+      ],
+      [
+       "count += seen[\u2026]",
+       "Triplets ending at k",
+       ""
+      ],
+      [
+       "for i in range(k): seen[\u2026] += 1",
+       "Adds the new pairs (i, k) AFTER counting, so they are available as pairs for later k",
+       "Update after query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,3,4,7,8]`, `d = 5`:"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "nums[k]",
+      "needed pair remainder",
+      "triplets ending here",
+      "total",
+      "pair counts by remainder"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "2",
+       "0",
+       "0",
+       "{2: 0}"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "0",
+       "0",
+       "{2: 0, 1: 1}"
+      ],
+      [
+       "2",
+       "4",
+       "1",
+       "1",
+       "1",
+       "{2: 2, 1: 1}"
+      ],
+      [
+       "3",
+       "7",
+       "3",
+       "0",
+       "1",
+       "{2: 2, 1: 2, 3: 0, 0: 2}"
+      ],
+      [
+       "4",
+       "8",
+       "2",
+       "2",
+       "3",
+       "{2: 3, 1: 4, 3: 0, 0: 3}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dict of pair sums?",
+    "p": [
+     "The triple loop is O(n\u00b3). Counting pairs by remainder reduces the third element's lookup to O(1), so the total is O(n\u00b2)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "For each k, count earlier pairs whose sum has remainder (\u2212nums[k]) mod d, stored in a dict of remainders."
+ },
+ "2970": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first loop (i)",
+       "`i` is the end of the longest strictly increasing prefix",
+       "Longest sorted prefix"
+      ],
+      [
+       "i == n \u2212 1 \u2192 n(n+1)/2",
+       "The whole array is already increasing: any subarray may be removed",
+       ""
+      ],
+      [
+       "res = i + 2",
+       "Removing a suffix starting at index s \u2264 i + 1 leaves an increasing prefix (i + 2 choices, including removing everything)",
+       ""
+      ],
+      [
+       "j loop from the right",
+       "`j` walks the longest increasing suffix; for each suffix start j, `i` is moved left until nums[i] < nums[j]",
+       "Merging a prefix and a suffix"
+      ],
+      [
+       "res += i + 2",
+       "Number of valid prefix lengths that combine with the suffix starting at j",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[6,5,7,8]`:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "longest increasing prefix ends at i",
+       "0"
+      ],
+      [
+       "longest increasing suffix starts at index",
+       "1"
+      ],
+      [
+       "answer",
+       "7"
+      ]
+     ]
+    },
+    "bullets": [
+     "Removable subarrays: `[6]`, `[6,5]`, `[5]`, `[6,5,7]`, `[5,7]`, `[6,5,7,8]`, `[5,7,8]`: 7 in total."
+    ]
+   },
+   {
+    "h": "Why two pointers?",
+    "p": [
+     "After removing a middle part, what remains is a prefix and a suffix. Both must be increasing, and the last prefix element must be smaller than the first suffix element. As the suffix start j moves left (longer suffix), the allowed prefix can only get shorter, so `i` only moves left: two pointers instead of a double loop."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Increasing prefix + increasing suffix with two pointers: count the compatible (prefix, suffix) pairs."
+ },
+ "2976": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "d = [[INF] * 26 for _ in range(26)]",
+       "Matrix of the cheapest known cost to turn letter i into letter j; diagonal is 0",
+       "Graph with 26 nodes"
+      ],
+      [
+       "d[x][y] = min(d[x][y], c)",
+       "Multiple rules for the same pair: keep the cheapest",
+       ""
+      ],
+      [
+       "triple loop over k, i, j",
+       "Floyd\u2013Warshall algorithm: allows k as an intermediate letter, giving all-pairs shortest paths",
+       "Many queries on a small graph"
+      ],
+      [
+       "zip(source, target)",
+       "Convert each position independently by the cheapest path",
+       ""
+      ],
+      [
+       "c == INF \u2192 -1",
+       "A required conversion is impossible",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`source = \"abcd\"`, `target = \"acbe\"` with rules a\u2192b 2, b\u2192c 5, c\u2192b 5, c\u2192e 1, e\u2192b 2, d\u2192e 20:"
+    ],
+    "table": {
+     "head": [
+      "position",
+      "cheapest cost",
+      "running total"
+     ],
+     "rows": [
+      [
+       "a \u2192 a",
+       "0",
+       "0"
+      ],
+      [
+       "b \u2192 c",
+       "5",
+       "5"
+      ],
+      [
+       "c \u2192 b",
+       "3",
+       "8"
+      ],
+      [
+       "d \u2192 e",
+       "20",
+       "28"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 28. The direct rule c\u2192b costs 5, but the chain c\u2192e\u2192b costs 1 + 2 = 3, which Floyd\u2013Warshall finds; d\u2192e costs 20, and a\u2192a costs 0."
+    ]
+   },
+   {
+    "h": "Why all-pairs shortest paths?",
+    "p": [
+     "Conversions can chain (a\u2192b then b\u2192c), so the cost to convert one letter to another is the shortest path in the conversion graph. With only 26 letters Floyd\u2013Warshall costs 26\u00b3 operations and then every position is an O(1) lookup."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26\u00b3 + n).",
+     "Space: O(26\u00b2)."
+    ]
+   }
+  ],
+  "takeaway": "Floyd\u2013Warshall on 26 letters, then sum the cheapest conversion for each position."
+ },
+ "3012": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "m = min(nums)",
+       "The smallest element",
+       ""
+      ],
+      [
+       "any(x % m for x in nums)",
+       "If some element is not a multiple of m, then x % m is a smaller positive number that can be produced and then eats everything else: the answer is 1",
+       "Euclid-style remainder argument"
+      ],
+      [
+       "(nums.count(m) + 1) // 2",
+       "Otherwise only copies of m survive; each operation on two copies of m removes both and adds a 0 (m % m), and pairs of m's eventually leave ceil(count / 2) elements",
+       "Ceiling division by 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,5,5,10,5]`: the minimum is 5 and every element is a multiple of 5."
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "min",
+       "5"
+      ],
+      [
+       "all multiples of min?",
+       "True"
+      ],
+      [
+       "count of min",
+       "4"
+      ],
+      [
+       "answer = (count + 1) // 2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why those two cases?",
+    "p": [
+     "The operation picks two positive elements and replaces them with the remainder of one modulo the other. If some element x is not a multiple of the minimum m, then x % m is a positive value smaller than m; once such a smaller element exists, it can reduce every other element, and the array can be shrunk to a single element. If every element is a multiple of m, every remainder is 0 or comes from two equal copies of m, so only the copies of m pair off, leaving ceil(count / 2). I checked this formula against a brute-force search over small arrays and it matched every time."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "If any number is not a multiple of the minimum the answer is 1, otherwise ceil(count of minimum / 2)."
+ },
+ "3015": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "j - i",
+       "Walking along the street between houses i and j",
+       ""
+      ],
+      [
+       "abs(x - i) + 1 + abs(y - j)",
+       "Go from i to house x, take the shortcut road x\u2013y (1 step), then walk from y to j",
+       "Path through a shortcut"
+      ],
+      [
+       "abs(y - i) + 1 + abs(x - j)",
+       "The shortcut used in the other direction",
+       ""
+      ],
+      [
+       "res[d - 1] += 2",
+       "Counts the ordered pairs (i, j) and (j, i) at distance d",
+       "Symmetric pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, shortcut between houses 2 and 4. Pairs where the shortcut gives a shorter path than the street:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "street",
+      "via x\u2192y",
+      "via y\u2192x",
+      "distance"
+     ],
+     "rows": [
+      [
+       "(1,4)",
+       "3",
+       "2",
+       "6",
+       "2"
+      ],
+      [
+       "(1,5)",
+       "4",
+       "3",
+       "7",
+       "3"
+      ],
+      [
+       "(2,4)",
+       "2",
+       "1",
+       "5",
+       "1"
+      ],
+      [
+       "(2,5)",
+       "3",
+       "2",
+       "6",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[10, 8, 2, 0, 0]`."
+    ]
+   },
+   {
+    "h": "Why min of three routes?",
+    "p": [
+     "The shortest route is either along the street only, or uses the shortcut once, entering at x or at y. Using the shortcut twice never helps. So the answer is the minimum of these three."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For each pair take min(direct, via x\u2192y, via y\u2192x) and count it twice (ordered pairs)."
+ },
+ "3024": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a, b, c = sorted(nums)",
+       "Unpacks the three sides in ascending order",
+       ""
+      ],
+      [
+       "a + b <= c",
+       "Triangle inequality: the two smaller sides must be strictly longer than the largest, else no triangle",
+       "Only the largest side needs checking"
+      ],
+      [
+       "len(set(nums))",
+       "Number of distinct side lengths: 1 \u2192 equilateral, 2 \u2192 isosceles, 3 \u2192 scalene",
+       "Set size as a classifier"
+      ],
+      [
+       "[\u2026][len(set(nums)) - 1]",
+       "Indexes a list of names by the count minus one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "sides",
+      "sorted",
+      "a + b \u2264 c?",
+      "distinct",
+      "type"
+     ],
+     "rows": [
+      [
+       "[3, 3, 3]",
+       "[3, 3, 3]",
+       "False",
+       "1",
+       "equilateral"
+      ],
+      [
+       "[3, 4, 5]",
+       "[3, 4, 5]",
+       "False",
+       "3",
+       "scalene"
+      ],
+      [
+       "[3, 3, 6]",
+       "[3, 3, 6]",
+       "True",
+       "2",
+       "none"
+      ],
+      [
+       "[3, 4, 4]",
+       "[3, 4, 4]",
+       "False",
+       "2",
+       "isosceles"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check only the largest side?",
+    "p": [
+     "The triangle inequality must hold for all three pairs. If the sum of the two smaller sides exceeds the largest, then the other two inequalities (a + c > b, b + c > a) hold automatically, since c \u2265 b and c \u2265 a."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sort the sides, check a+b > c, and name the type from the number of distinct lengths."
+ },
+ "3030": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for i in range(m - 2) \u2026 j in range(n - 2)",
+       "Top-left corner of every 3\u00d73 window",
+       ""
+      ],
+      [
+       "all(abs(a \u2212 b) <= threshold \u2026)",
+       "Every pair of horizontally and vertically adjacent cells in the window differs by at most `threshold`: the window is a valid region",
+       "Checking adjacency constraints"
+      ],
+      [
+       "avg = sum(...) // 9",
+       "The region's average, rounded down",
+       ""
+      ],
+      [
+       "total[a][b] += avg; cnt[a][b] += 1",
+       "Cells can belong to several regions: accumulate the sum of averages and the number of regions",
+       "Accumulate then average"
+      ],
+      [
+       "total // cnt if cnt else image",
+       "Final cell = rounded-down mean of its regions' averages, or the original value if in no region",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`threshold = 3`: valid 3\u00d73 regions (top-left corner and average):"
+    ],
+    "table": {
+     "head": [
+      "window",
+      "average"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "9"
+      ],
+      [
+       "(0,1)",
+       "9"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[[9, 9, 9, 9], [9, 9, 9, 9], [9, 9, 9, 9]]`."
+    ]
+   },
+   {
+    "h": "Why keep total and count separately?",
+    "p": [
+     "The final value is the average of the averages of all regions covering a cell, rounded down once at the end. Storing the sum and the count lets us do exactly one division per cell."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n\u00b79).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Check each 3\u00d73 window for the threshold, add its average to every cell it covers, and divide by the number of covering regions."
+ },
+ "3042": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "words[j].startswith(w)",
+       "w is a prefix of words[j]",
+       "str.startswith"
+      ],
+      [
+       "words[j].endswith(w)",
+       "w is a suffix of words[j]",
+       "str.endswith"
+      ],
+      [
+       "two loops with i < j",
+       "Each ordered pair once, where words[i] is the shorter candidate",
+       "Brute force on small input"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"a\",\"aba\",\"ababa\",\"aa\"]`: qualifying pairs (i, j):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "words[i]",
+      "words[j]"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "a",
+       "aba"
+      ],
+      [
+       "0",
+       "2",
+       "a",
+       "ababa"
+      ],
+      [
+       "0",
+       "3",
+       "a",
+       "aa"
+      ],
+      [
+       "1",
+       "2",
+       "aba",
+       "ababa"
+      ]
+     ]
+    },
+    "bullets": [
+     "Count: 4."
+    ]
+   },
+   {
+    "h": "Why brute force is fine here",
+    "p": [
+     "The constraints are small (up to 50 words of length 10), so O(n\u00b2 \u00b7 L) is trivial. Version II of this problem needs a trie of (prefix char, suffix char) pairs, as in the next problem."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2 \u00b7 L).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Check startswith and endswith for every pair i < j."
+ },
+ "3045": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "node.setdefault((w[i], w[n-1-i]), {})",
+       "Trie edge labelled with the pair (i-th letter from the front, i-th letter from the back); creates the child if missing",
+       "Walking two ends of a string at once"
+      ],
+      [
+       "'#' key",
+       "Counter at a node: how many earlier words end exactly here",
+       "End-of-word marker with a count"
+      ],
+      [
+       "count += node.get('#', 0)",
+       "Every earlier word that ends at a node on this path is both a prefix and a suffix of w",
+       ""
+      ],
+      [
+       "node['#'] = node.get('#', 0) + 1",
+       "Registers the current word after counting",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"a\",\"aba\",\"ababa\",\"aa\"]` (each word's pairs are (front letter, back letter)):"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "earlier words that are a prefix and suffix",
+      "total"
+     ],
+     "rows": [
+      [
+       "a",
+       "0",
+       "0"
+      ],
+      [
+       "aba",
+       "1",
+       "1"
+      ],
+      [
+       "ababa",
+       "2",
+       "3"
+      ],
+      [
+       "aa",
+       "1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pairs of letters?",
+    "p": [
+     "Let u have k letters and be an earlier word. Its path is the pairs (u[i], u[k\u22121\u2212i]) for i < k. The first k pairs of w are (w[i], w[n\u22121\u2212i]). Matching them means u[i] == w[i] (u is a prefix of w) and u[k\u22121\u2212i] == w[n\u22121\u2212i] (u is the last k letters of w, read backwards, i.e. a suffix). So one walk along w's path meets every earlier word that is both a prefix and a suffix of w."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length of words).",
+     "Space: O(total length)."
+    ]
+   }
+  ],
+  "takeaway": "Trie over pairs (front letter, back letter); end counters give the number of earlier words that are both prefix and suffix."
+ },
+ "3069": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a, b = [nums[0]], [nums[1]]",
+       "First two elements go to the two arrays",
+       ""
+      ],
+      [
+       "a[-1] > b[-1]",
+       "Compare the last elements; the new element goes to `a` if its last is greater, else to `b`",
+       "Rule-based simulation"
+      ],
+      [
+       "a + b",
+       "Concatenation of the two lists",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,3]`: a = [2], b = [1]. The next element 3: last of a (2) > last of b (1)?"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "a",
+      "b"
+     ],
+     "rows": [
+      [
+       "start",
+       "[2]",
+       "[1]"
+      ],
+      [
+       "add 3 \u2192 a (2 > 1)",
+       "[2, 3]",
+       "[1]"
+      ],
+      [
+       "result a + b",
+       "[2, 3, 1]",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a plain simulation?",
+    "p": [
+     "The statement defines exactly one rule per element, so following it directly is both simple and O(n). Version II adds a counting rule that needs a data structure (Fenwick tree)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate: append to the array whose last element is greater (ties go to b), then concatenate."
+ },
+ "3072": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "rank / vals",
+       "Coordinate compression: values mapped to 1..m so the trees stay small",
+       ""
+      ],
+      [
+       "add(tree, i), prefix(tree, i)",
+       "Fenwick tree (Binary Indexed Tree): point update and prefix count in O(log m)",
+       "Counting elements \u2264 x dynamically"
+      ],
+      [
+       "g1 = len(a) \u2212 prefix(t1, r)",
+       "greaterCount(arr1, x): elements of arr1 strictly greater than x = size minus how many are \u2264 x",
+       ""
+      ],
+      [
+       "tie-breaking",
+       "If counts tie, the shorter array gets x; if lengths also tie, arr1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,3,3]`: a = [2], b = [1]; then:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "greater in arr1",
+      "greater in arr2",
+      "goes to",
+      "arr1",
+      "arr2"
+     ],
+     "rows": [
+      [
+       "3",
+       "0",
+       "0",
+       "arr1",
+       "[2, 3]",
+       "[1]"
+      ],
+      [
+       "3",
+       "0",
+       "0",
+       "arr2",
+       "[2, 3]",
+       "[1, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[2, 3, 1, 3]`."
+    ]
+   },
+   {
+    "h": "Why a Fenwick tree per array?",
+    "p": [
+     "For each new element we need 'how many existing elements are greater' in both arrays. Re-counting is O(n); a Fenwick tree answers prefix counts and absorbs inserts in O(log n), so the whole process is O(n log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two Fenwick trees over compressed ranks give 'count greater than x' in each array; apply the tie rules."
+ },
+ "3078": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "R, C = len(pattern), len(pattern[0])",
+       "Pattern height and width: the window size",
+       ""
+      ],
+      [
+       "two loops over top-left corners",
+       "Every placement of the pattern on the board",
+       "Sliding a 2-D window"
+      ],
+      [
+       "p.isdigit(): int(p) != v",
+       "A digit in the pattern must equal the cell exactly",
+       ""
+      ],
+      [
+       "mp.setdefault(p, v) != v",
+       "A letter is bound to the first value seen; later cells with the same letter must match it (setdefault returns the existing value or stores the new one)",
+       "Binding a variable on first use"
+      ],
+      [
+       "len(set(mp.values())) == len(mp)",
+       "Different letters must stand for different values",
+       "Injectivity check"
+      ],
+      [
+       "not (set(mp.values()) & digits)",
+       "A letter's value must not equal any digit used in the pattern",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `[[1,1,2],[3,3,4],[6,6,6]]`, pattern `[\"ab\",\"66\"]`: windows that fit the digits and letter bindings:"
+    ],
+    "table": {
+     "head": [
+      "window top-left",
+      "letter bindings",
+      "valid?"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "{'a': 1, 'b': 1}",
+       "digit/letter mismatch"
+      ],
+      [
+       "(0,1)",
+       "{'a': 1, 'b': 2}",
+       "digit/letter mismatch"
+      ],
+      [
+       "(1,0)",
+       "{'a': 3, 'b': 3}",
+       "False"
+      ],
+      [
+       "(1,1)",
+       "{'a': 3, 'b': 4}",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "First valid window: `[1, 1]`."
+    ]
+   },
+   {
+    "h": "Why check three conditions?",
+    "p": [
+     "Matching has to respect digits (exact), repeated letters (same value), and distinct letters (different values, and different from the digits). The first is checked cell by cell, the other two after the window is scanned, from the final bindings."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n\u00b7R\u00b7C).",
+     "Space: O(letters)."
+    ]
+   }
+  ],
+  "takeaway": "Slide the pattern over the board, binding letters on first use; check digits, repeated letters and distinctness."
+ },
+ "3090": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cnt[ch] += 1",
+       "Count of each character in the window (Counter returns 0 for new keys)",
+       "Sliding window with a count limit"
+      ],
+      [
+       "while cnt[ch] > 2",
+       "The new character exceeds two occurrences: shrink from the left until it is back to two",
+       ""
+      ],
+      [
+       "right - left + 1",
+       "Window length",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"bcbbbcba\"`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "char",
+      "left",
+      "window",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "b",
+       "0",
+       "b",
+       "1"
+      ],
+      [
+       "1",
+       "c",
+       "0",
+       "bc",
+       "2"
+      ],
+      [
+       "2",
+       "b",
+       "0",
+       "bcb",
+       "3"
+      ],
+      [
+       "3",
+       "b",
+       "1",
+       "cbb",
+       "3"
+      ],
+      [
+       "4",
+       "b",
+       "3",
+       "bb",
+       "3"
+      ],
+      [
+       "5",
+       "c",
+       "3",
+       "bbc",
+       "3"
+      ],
+      [
+       "6",
+       "b",
+       "4",
+       "bcb",
+       "3"
+      ],
+      [
+       "7",
+       "a",
+       "4",
+       "bcba",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why `while` for the shrink?",
+    "p": [
+     "Removing the leftmost character may be a different letter, so one removal may not fix the violation. The loop continues until the new character's count is at most 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(alphabet)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with counts: shrink while the newly added character occurs more than twice."
+ },
+ "3096": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "1 if p else -1",
+       "A level you can pass gives +1, an impossible one \u22121 (the player loses a point)",
+       "Mapping outcomes to scores"
+      ],
+      [
+       "total",
+       "Bob's and Alice's points together as a signed sum of all levels",
+       ""
+      ],
+      [
+       "pre",
+       "Alice's score after playing the first i + 1 levels",
+       "Prefix sum"
+      ],
+      [
+       "pre > total - pre",
+       "Alice's score exceeds Bob's score on the remaining levels (Bob's = total \u2212 pre)",
+       ""
+      ],
+      [
+       "range(len(score) - 1)",
+       "Bob must play at least one level, so Alice stops at most one before the end",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`possible = [1,0,1,0]`:"
+    ],
+    "table": {
+     "head": [
+      "levels Alice plays",
+      "Alice's score",
+      "Bob's score",
+      "Alice ahead?"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "-1",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Smallest number of levels: 1."
+    ]
+   },
+   {
+    "h": "Why return the first success?",
+    "p": [
+     "The question asks for the minimum number of levels Alice must play, and the loop tries 1, 2, 3, \u2026 in increasing order, so the first success is the minimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums of \u00b11: the first split where prefix > total \u2212 prefix."
+ },
+ "3105": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(nums, nums[1:])",
+       "Adjacent pairs (a, b)",
+       ""
+      ],
+      [
+       "inc = inc + 1 if b > a else 1",
+       "Length of the strictly increasing run ending here",
+       "Streak counters"
+      ],
+      [
+       "dec = dec + 1 if b < a else 1",
+       "Same for decreasing (an equal pair resets both)",
+       ""
+      ],
+      [
+       "max(best, inc, dec)",
+       "Longest of either kind",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,4,3,3,2]`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "increasing run",
+      "decreasing run",
+      "best"
+     ],
+     "rows": [
+      [
+       "1\u21924",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "4\u21923",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "3\u21923",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "3\u21922",
+       "1",
+       "2",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why track both?",
+    "p": [
+     "A subarray can be monotone in either direction. Keeping two streaks in one pass avoids scanning twice, and an equal pair breaks both."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two streak counters (increasing and decreasing) in one pass; equal neighbours reset both."
+ },
+ "3123": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g[u].append((v, w)); g[v].append((u, w))",
+       "Weighted undirected adjacency list",
+       ""
+      ],
+      [
+       "dijkstra(src)",
+       "Shortest distances from src with a min-heap; stale heap entries are skipped (`d > dist[u]: continue`)",
+       "Single-source shortest paths with non-negative weights"
+      ],
+      [
+       "d0 = dijkstra(0), d1 = dijkstra(n \u2212 1)",
+       "Distances from the start and from the end (graph is undirected, so Dijkstra from the end gives distances to the end)",
+       "Two sweeps instead of one per edge"
+      ],
+      [
+       "d0[u] + w + d1[v] == total",
+       "Edge (u, v) lies on a shortest path if going start \u2192 u, across the edge, then v \u2192 end costs exactly the shortest distance (check both directions)",
+       "Edge on some shortest path"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "6 nodes, 8 roads. Distances from node 0: `[0, 4, 1, 2, 7, 5]`, to node 5: `[5, 1, 4, 3, 2, 0]`; shortest total = 5:"
+    ],
+    "table": {
+     "head": [
+      "edge (u, v, w)",
+      "d0[u] + w + d1[v]",
+      "d0[v] + w + d1[u]",
+      "on a shortest path?"
+     ],
+     "rows": [
+      [
+       "[0, 1, 4]",
+       "5",
+       "13",
+       "True"
+      ],
+      [
+       "[0, 2, 1]",
+       "5",
+       "7",
+       "True"
+      ],
+      [
+       "[1, 3, 2]",
+       "9",
+       "5",
+       "True"
+      ],
+      [
+       "[1, 4, 3]",
+       "9",
+       "11",
+       "False"
+      ],
+      [
+       "[1, 5, 1]",
+       "5",
+       "7",
+       "True"
+      ],
+      [
+       "[2, 3, 1]",
+       "5",
+       "7",
+       "True"
+      ],
+      [
+       "[3, 5, 3]",
+       "5",
+       "11",
+       "True"
+      ],
+      [
+       "[4, 5, 2]",
+       "9",
+       "9",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[True, True, True, False, True, True, True, False]`."
+    ]
+   },
+   {
+    "h": "Why two Dijkstra runs?",
+    "p": [
+     "Testing each edge by recomputing a shortest path would be one Dijkstra per edge. Two runs give every needed distance: an edge belongs to some shortest path iff it can be inserted between a shortest prefix and a shortest suffix without exceeding the optimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E log V).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Dijkstra from both ends; an edge is on a shortest path iff d_start[u] + w + d_end[v] equals the shortest distance."
+ },
+ "3135": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur[j] = prev[j-1] + 1",
+       "Length of the common substring that ends at initial[i\u22121] and target[j\u22121]: extend the diagonal",
+       "Longest common substring DP (Dynamic Programming)"
+      ],
+      [
+       "no match \u2192 cur[j] stays 0",
+       "Unlike a subsequence, a substring must be contiguous, so a mismatch resets the length",
+       ""
+      ],
+      [
+       "prev, cur",
+       "Two rows only: each cell depends on the previous row's diagonal",
+       "Rolling array"
+      ],
+      [
+       "n + m \u2212 2 * best",
+       "Keep the longest common substring; delete everything else from initial (n \u2212 best) and add the rest of target (m \u2212 best)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`initial = \"abcde\"`, `target = \"cdef\"`; the DP row after each character of `initial`, and the longest common substring so far:"
+    ],
+    "table": {
+     "head": [
+      "initial char",
+      "row (target positions 0..4)",
+      "longest so far"
+     ],
+     "rows": [
+      [
+       "a",
+       "[0, 0, 0, 0, 0]",
+       "0"
+      ],
+      [
+       "b",
+       "[0, 0, 0, 0, 0]",
+       "0"
+      ],
+      [
+       "c",
+       "[0, 1, 0, 0, 0]",
+       "1"
+      ],
+      [
+       "d",
+       "[0, 0, 2, 0, 0]",
+       "2"
+      ],
+      [
+       "e",
+       "[0, 0, 0, 3, 0]",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Longest common substring `cde` has length 3: answer 5 + 4 \u2212 2\u00b73 = 3."
+    ]
+   },
+   {
+    "h": "Why a common SUBSTRING?",
+    "p": [
+     "Operations only add or remove characters at the ends, so what survives from `initial` is one contiguous block. That block must also appear contiguously in `target`: the longest common substring."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b7m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Only ends can change, so keep the longest common substring: answer = n + m \u2212 2\u00b7LCSubstring."
+ },
+ "3147": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = energy[:]",
+       "total[i] = energy collected if you start at i and jump by k until you leave the array",
+       "Suffix DP along a stride"
+      ],
+      [
+       "range(n \u2212 1 \u2212 k, \u22121, \u22121)",
+       "Processes from right to left; positions i \u2265 n \u2212 k have no further jump",
+       ""
+      ],
+      [
+       "total[i] += total[i + k]",
+       "Add the total of the rest of the chain",
+       ""
+      ],
+      [
+       "max(total)",
+       "Best starting point",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`energy = [5,2,-10,-5,1]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "calculation",
+      "total array"
+     ],
+     "rows": [
+      [
+       "1",
+       "2 + total[4]",
+       "[5, 3, -10, -5, 1]"
+      ],
+      [
+       "0",
+       "5 + total[3]",
+       "[0, 3, -10, -5, 1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: max(total) = 3."
+    ]
+   },
+   {
+    "h": "Why right to left?",
+    "p": [
+     "The chain starting at i continues with the chain starting at i + k. Computing the later positions first means total[i + k] is final when it is added."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "total[i] = energy[i] + total[i+k], computed from right to left; answer is the maximum."
+ },
+ "3159": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pos = [i for i, v in enumerate(nums) if v == x]",
+       "All indexes where x occurs, in increasing order",
+       "Precomputing positions"
+      ],
+      [
+       "pos[q - 1]",
+       "The q-th occurrence (1-based) is at list position q \u2212 1",
+       ""
+      ],
+      [
+       "q <= len(pos) else -1",
+       "Fewer than q occurrences: \u22121",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,1,7]`, x = 1: occurrences at `[0, 2]`:"
+    ],
+    "table": {
+     "head": [
+      "query q",
+      "answer"
+     ],
+     "rows": [
+      [
+       "1",
+       "0"
+      ],
+      [
+       "3",
+       "-1"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why precompute?",
+    "p": [
+     "Scanning `nums` for every query would cost O(n) each. A single pass builds the positions list, so each query is O(1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "List the positions of x once; query q is positions[q\u22121]."
+ },
+ "3168": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur",
+       "People currently in the waiting room (E enters, L leaves)",
+       "Running balance"
+      ],
+      [
+       "best = max(best, cur)",
+       "The peak occupancy is the number of chairs needed",
+       "Maximum of a running total"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"ELELEEL\"`:"
+    ],
+    "table": {
+     "head": [
+      "event",
+      "people inside",
+      "peak"
+     ],
+     "rows": [
+      [
+       "E",
+       "1",
+       "1"
+      ],
+      [
+       "L",
+       "0",
+       "1"
+      ],
+      [
+       "E",
+       "1",
+       "1"
+      ],
+      [
+       "L",
+       "0",
+       "1"
+      ],
+      [
+       "E",
+       "1",
+       "1"
+      ],
+      [
+       "E",
+       "2",
+       "2"
+      ],
+      [
+       "L",
+       "1",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Chairs needed: 2."
+    ]
+   },
+   {
+    "h": "Why the peak?",
+    "p": [
+     "Chairs are reused after people leave, so the room needs enough chairs for the moment with the most people at once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Running occupancy (E +1, L \u22121); the maximum is the answer."
+ },
+ "3171": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur",
+       "The set of distinct OR values of all subarrays ending at the current position",
+       "Set of values instead of subarrays"
+      ],
+      [
+       "{x | a for a in cur}",
+       "Extend every subarray ending at the previous index by x: OR with x",
+       "Set comprehension"
+      ],
+      [
+       "cur.add(x)",
+       "The one-element subarray [x]",
+       ""
+      ],
+      [
+       "min(best, abs(v - k))",
+       "Best distance to k seen so far",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,4,5]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "OR values of subarrays ending here",
+      "best |v \u2212 k|"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1]",
+       "2"
+      ],
+      [
+       "2",
+       "[2, 3]",
+       "0"
+      ],
+      [
+       "4",
+       "[4, 6, 7]",
+       "0"
+      ],
+      [
+       "5",
+       "[5, 7]",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 0."
+    ]
+   },
+   {
+    "h": "Why is the set small?",
+    "p": [
+     "OR can only turn bits on as the subarray grows. For a fixed right end, the OR values form a chain where each value contains the previous one's bits, so there are at most ~30 distinct values (one per extra bit, for 30-bit numbers). So `cur` has O(log max) elements."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max).",
+     "Space: O(log max)."
+    ]
+   }
+  ],
+  "takeaway": "Keep the set of distinct ORs of subarrays ending at each index; it stays at most ~30 values."
+ },
+ "3174": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "c.isdigit()",
+       "True for '0'\u2013'9'",
+       ""
+      ],
+      [
+       "st.pop()",
+       "A digit deletes itself and the nearest non-digit on its left, which is the top of the stack of letters",
+       "Stack = nearest earlier survivor"
+      ],
+      [
+       "st.append(c)",
+       "Letters are kept for now",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"cb34\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "action",
+      "stack"
+     ],
+     "rows": [
+      [
+       "c",
+       "letter: push",
+       "c"
+      ],
+      [
+       "b",
+       "letter: push",
+       "cb"
+      ],
+      [
+       "3",
+       "digit: removes the closest non-digit to its left ('b')",
+       "c"
+      ],
+      [
+       "4",
+       "digit: removes the closest non-digit to its left ('c')",
+       ""
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `` (empty)."
+    ]
+   },
+   {
+    "h": "Why a stack?",
+    "p": [
+     "Each digit must remove the closest remaining letter to its left: exactly the most recently pushed survivor. A stack gives that in O(1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of letters: every digit pops the nearest remaining letter."
+ },
+ "3177": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "end[x][j]",
+       "Longest good subsequence ending with value x that has at most j positions where neighbours differ",
+       "DP (Dynamic Programming) indexed by last value and number of changes"
+      ],
+      [
+       "best_at[j]",
+       "Longest good subsequence with at most j changes, ending in any value",
+       "Best over all last values"
+      ],
+      [
+       "end[x][j] + 1",
+       "Append x after a subsequence that already ends with x: no new change",
+       ""
+      ],
+      [
+       "best_at[j \u2212 1] + 1",
+       "Append x after a subsequence ending with a different value: uses one more change",
+       ""
+      ],
+      [
+       "for j in range(k, -1, -1)",
+       "Descending, so best_at[j \u2212 1] refers to values from before x was processed",
+       "Order of updates"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,1,1,3]`, `k = 2`: the table best_at[j] (longest subsequence with at most j changes) after all numbers:"
+    ],
+    "table": {
+     "head": [
+      "j (changes allowed)",
+      "best_at[j]"
+     ],
+     "rows": [
+      [
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "4"
+      ],
+      [
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why two tables?",
+    "p": [
+     "Appending the same value as the last element costs nothing (`end[x][j]`), while appending a different value costs one change and can build on the best subsequence overall (`best_at[j\u22121]`). Keeping both makes each step O(k)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b7k).",
+     "Space: O(n\u00b7k) in the worst case (one row per distinct value)."
+    ]
+   }
+  ],
+  "takeaway": "DP over (last value, changes used): extend with the same value for free, or any other value for one change."
+ },
+ "3186": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cnt = Counter(power); vals = sorted(cnt)",
+       "Distinct damage values in order, with how many spells have each",
+       ""
+      ],
+      [
+       "bisect_left(vals, v \u2212 2)",
+       "Index of the first value \u2265 v \u2212 2: all earlier values (\u2264 v \u2212 3) are compatible with v",
+       "Binary search for the last compatible group"
+      ],
+      [
+       "best[i + 1] = max(best[i], best[j] + v * cnt[v])",
+       "Either skip v, or take all spells of value v (casting one forbids neighbours within 2, but equal values are fine) plus the best of compatible smaller values",
+       "House-Robber-like DP (Dynamic Programming)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`power = [1,1,3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "value v",
+      "count",
+      "v \u2212 2",
+      "j = index of first value \u2265 v \u2212 2",
+      "best total so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "-1",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "0",
+       "3"
+      ],
+      [
+       "4",
+       "1",
+       "2",
+       "1",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 6."
+    ]
+   },
+   {
+    "h": "Why take all copies of a value?",
+    "p": [
+     "If you cast one spell of damage v, the values v \u2212 2 .. v + 2 (other than v itself) are blocked, and other spells of damage v are not. So taking all copies is free and strictly better than taking some."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Group by damage value; take-or-skip DP where taking v requires the best total of values \u2264 v \u2212 3 (found by bisect)."
+ },
+ "3192": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "flips",
+       "Number of suffix flips done so far (each flip inverts every element from the chosen index to the end)",
+       "Counting operations instead of performing them"
+      ],
+      [
+       "flips & 1",
+       "Parity of flips: an odd count means the current element is inverted",
+       "Lazy flipping"
+      ],
+      [
+       "x ^ (flips & 1)",
+       "XOR (exclusive or) gives the element's current value",
+       ""
+      ],
+      [
+       "== 0 \u2192 flips += 1",
+       "A current 0 must be fixed now by flipping from here to the end",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,1,0,1]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "current value after earlier flips",
+      "flips so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "1",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "0",
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "0",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why is the greedy forced?",
+    "p": [
+     "Scanning left to right, the only operation that changes the current element without disturbing the already-fixed prefix is a flip starting here. So a 0 must be flipped immediately, and counting the parity avoids actually flipping the suffix (which would be O(n\u00b2))."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Left-to-right greedy with a flip counter's parity: a current 0 forces a suffix flip."
+ },
+ "3195": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "any(r)",
+       "True if the row has at least one 1 (non-zero)",
+       "Short-circuit any"
+      ],
+      [
+       "rows = [i for i, r in enumerate(grid) if any(r)]",
+       "Indexes of rows containing a 1, in increasing order",
+       ""
+      ],
+      [
+       "cols = [j \u2026 if any(r[j] for r in grid)]",
+       "Same for columns",
+       ""
+      ],
+      [
+       "(rows[-1] \u2212 rows[0] + 1) * (cols[-1] \u2212 cols[0] + 1)",
+       "Height \u00d7 width of the bounding rectangle",
+       "Bounding box"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,0],[1,0,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "rows with a 1",
+       "[0, 1]"
+      ],
+      [
+       "columns with a 1",
+       "[0, 1, 2]"
+      ],
+      [
+       "height",
+       "2"
+      ],
+      [
+       "width",
+       "3"
+      ],
+      [
+       "area",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the extremes?",
+    "p": [
+     "The smallest axis-aligned rectangle covering all ones is determined by the first and last row and the first and last column that contain a 1. Everything else is inside."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m + n)."
+    ]
+   }
+  ],
+  "takeaway": "Bounding box: (last row \u2212 first row + 1) \u00d7 (last column \u2212 first column + 1) over rows/columns with a 1."
+ }
+}

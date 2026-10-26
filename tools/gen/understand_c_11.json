@@ -21,7 +21,7 @@
        "Passing context down"
       ],
       [
-       "BFS from `target` with `(node, d)`",
+       "BFS (Breadth-First Search) from `target` with `(node, d)`",
        "Treat the tree as an undirected graph (left, right, parent) and walk outward",
        "Distance-k problems are BFS from a source"
       ],
@@ -143,7 +143,7 @@
       [
        "`leaves(n)`",
        "The leaf values of a subtree, left to right",
-       "In-order/pre-order DFS naturally yields leaves in left-to-right order"
+       "In-order/pre-order DFS (Depth-First Search) naturally yields leaves in left-to-right order"
       ],
       [
        "`if not n: return []`",
@@ -1037,7 +1037,7 @@
       [
        "`dp[i][j]`",
        "Number of playlists of length `i` that use exactly `j` DIFFERENT songs",
-       "DP over (length, distinct songs used)"
+       "DP (Dynamic Programming) over (length, distinct songs used)"
       ],
       [
        "`dp[i-1][j-1] * (n - j + 1)`",
@@ -1160,7 +1160,7 @@
      "rows": [
       [
        "`root.val < low` → go right only",
-       "The node and its whole left subtree are below the range (BST property)",
+       "The node and its whole left subtree are below the range (BST (Binary Search Tree) property)",
        "Pruning with ordering"
       ],
       [
@@ -1230,7 +1230,7 @@
    {
     "h": "Why is pruning valid?",
     "p": [
-     "In a BST everything left of a node is smaller and everything right of it is larger. If `root.val < low`, every value in its left subtree is also `< low`, so only the right side can contain anything in range. The reverse holds for `root.val > high`. A plain DFS that visits every node would be O(n); pruning gives O(h + k) for k values in range."
+     "In a BST everything left of a node is smaller and everything right of it is larger. If `root.val < low`, every value in its left subtree is also `< low`, so only the right side can contain anything in range. The reverse holds for `root.val > high`. A plain DFS (Depth-First Search) that visits every node would be O(n); pruning gives O(h + k) for k values in range."
     ],
     "table": {
      "head": [
@@ -2186,7 +2186,7 @@
       [
        "`dp[d]`",
        "Minimum cost to cover all travel days up to day `d`",
-       "DP indexed by calendar day"
+       "DP (Dynamic Programming) indexed by calendar day"
       ],
       [
        "`d not in travel: dp[d] = dp[d-1]`",

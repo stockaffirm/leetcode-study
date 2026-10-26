@@ -12,7 +12,7 @@
      "rows": [
       [
        "`row = [1] * n`",
-       "One DP row: `row[j]` = number of paths to column `j` in the current grid row. The first grid row is all 1s (only one way: go right)",
+       "One DP (Dynamic Programming) row: `row[j]` = number of paths to column `j` in the current grid row. The first grid row is all 1s (only one way: go right)",
        "Compressing a 2D DP table to a single row"
       ],
       [
@@ -1358,7 +1358,7 @@
      "rows": [
       [
        "`build(lo, hi)`",
-       "Returns **all** BST shapes using exactly the values lo..hi",
+       "Returns **all** BST (Binary Search Tree) shapes using exactly the values lo..hi",
        "Recursion that returns a list of results instead of one value"
       ],
       [
@@ -1476,7 +1476,7 @@
       ],
       [
        "`lo < root.val < hi`",
-       "Strict bounds: BST rules here forbid duplicates",
+       "Strict bounds: BST (Binary Search Tree) rules here forbid duplicates",
        "Chained comparison, one expression"
       ],
       [
@@ -1784,7 +1784,7 @@
    {
     "h": "Why recursion rather than a loop?",
     "p": [
-     "A tree's depth is naturally defined from its children's depths, so the function is a one-line translation of the definition. The iterative alternative is level-order BFS counting levels (O(n) time, O(w) space for the widest level)."
+     "A tree's depth is naturally defined from its children's depths, so the function is a one-line translation of the definition. The iterative alternative is level-order BFS (Breadth-First Search) counting levels (O(n) time, O(w) space for the widest level)."
     ]
    },
    {
@@ -1823,12 +1823,12 @@
       [
        "`for _ in range(len(q))`",
        "Freezes the level size before the loop; `len(q)` is evaluated once, so nodes appended during the loop wait for the next round",
-       "Processing a BFS one level at a time"
+       "Processing a BFS (Breadth-First Search) one level at a time"
       ],
       [
        "`q.popleft()` / `q.append()`",
        "O(1) dequeue from the front and enqueue at the back",
-       "FIFO order; `list.pop(0)` would be O(n)"
+       "FIFO (First In, First Out) order; `list.pop(0)` would be O(n)"
       ],
       [
        "`level`",
@@ -2124,7 +2124,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "Target 22. Every root-to-leaf path is visited in DFS order; only those whose remaining sum is 0 are saved."
+     "Target 22. Every root-to-leaf path is visited in DFS (Depth-First Search) order; only those whose remaining sum is 0 are saved."
     ],
     "table": {
      "head": [
@@ -2259,7 +2259,7 @@
     }
    },
    {
-    "h": "Why O(1) space when BFS needs O(n)?",
+    "h": "Why O(1) space when BFS (Breadth-First Search) needs O(n)?",
     "p": [
      "BFS uses a queue to remember the level. Here the level above is already linked by `next`, so we can walk it like a list while wiring the level below. Only `leftmost` and `node` are stored."
     ],

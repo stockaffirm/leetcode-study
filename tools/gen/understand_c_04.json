@@ -12,7 +12,7 @@
      "rows": [
       [
        "`sink(r, c)`",
-       "DFS that flips every land cell connected to (r, c) to `'0'`",
+       "DFS (Depth-First Search) that flips every land cell connected to (r, c) to `'0'`",
        "Flood fill: mark a region visited by destroying it, instead of keeping a `visited` set"
       ],
       [
@@ -105,7 +105,7 @@
    {
     "h": "Recursion depth risk",
     "p": [
-     "A single huge island makes the recursion as deep as the island size (up to m·n). Python's default limit (~1000) breaks on a 100×100 all-land grid; use an explicit stack or BFS with a deque for large grids."
+     "A single huge island makes the recursion as deep as the island size (up to m·n). Python's default limit (~1000) breaks on a 100×100 all-land grid; use an explicit stack or BFS (Breadth-First Search) with a deque for large grids."
     ]
    },
    {
@@ -605,7 +605,7 @@
    {
     "h": "Walk through the search",
     "p": [
-     "On the 4×4 board `oaan / etae / ihkr / iflv` the DFS starts from every cell, walking the trie and the board together. It finds `oath` (o→a→t→h) and `eat` (e→a→t); `pea` and `rain` are never completed. The search made 41 `dfs` calls in total."
+     "On the 4×4 board `oaan / etae / ihkr / iflv` the DFS (Depth-First Search) starts from every cell, walking the trie and the board together. It finds `oath` (o→a→t→h) and `eat` (e→a→t); `pea` and `rain` are never completed. The search made 41 `dfs` calls in total."
     ],
     "table": {
      "head": [
@@ -984,7 +984,7 @@
       [
        "`dp[i][j]`",
        "Side length of the largest all-1 square whose BOTTOM-RIGHT corner is cell (i-1, j-1)",
-       "DP on grids where a cell's answer depends on its up, left, and up-left neighbours"
+       "DP (Dynamic Programming) on grids where a cell's answer depends on its up, left, and up-left neighbours"
       ],
       [
        "`(rows + 1) × (cols + 1)` table",
@@ -1430,7 +1430,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "BST `[5,3,6,2,4,null,null,1]`, `k = 3`. Values come out in sorted order: 1, 2, 3 …"
+     "BST (Binary Search Tree) `[5,3,6,2,4,null,null,1]`, `k = 3`. Values come out in sorted order: 1, 2, 3 …"
     ],
     "table": {
      "head": [
@@ -1644,7 +1644,7 @@
       ],
       [
        "`left`, `right`",
-       "What each subtree reports: a target found, the LCA, or `None`",
+       "What each subtree reports: a target found, the LCA (Lowest Common Ancestor), or `None`",
        "Recursion returns different meanings depending on the situation"
       ],
       [
@@ -2509,7 +2509,7 @@
      "rows": [
       [
        "`go(node, path)`",
-       "DFS carrying the path string built so far",
+       "DFS (Depth-First Search) carrying the path string built so far",
        "Passing state down the recursion as an argument"
       ],
       [
@@ -2619,7 +2619,7 @@
       [
        "`x ^= v` over all numbers",
        "Pairs cancel (`a ^ a = 0`), leaving `x = a ^ b` for the two unique numbers",
-       "XOR-cancel duplicates"
+       "XOR (exclusive OR)-cancel duplicates"
       ],
       [
        "`x & -x`",

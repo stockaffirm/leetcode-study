@@ -1141,7 +1141,7 @@
      ],
      "rows": [
       [
-       "BFS over strings",
+       "BFS (Breadth-First Search) over strings",
        "exponential"
       ],
       [
@@ -1403,7 +1403,7 @@
       [
        "`ends`, `best`",
        "Parallel lists: after finishing jobs up to time `ends[k]`, the best profit is `best[k]`; both increase, so binary search works",
-       "A monotone DP table instead of one entry per job"
+       "A monotone DP (Dynamic Programming) table instead of one entry per job"
       ],
       [
        "`bisect_right(ends, s) - 1`",
@@ -1768,7 +1768,7 @@
       [
        "`dp[r]`",
        "Largest sum seen so far whose remainder mod 3 is `r`",
-       "DP over remainders"
+       "DP (Dynamic Programming) over remainders"
       ],
       [
        "`float('-inf')`",
@@ -2008,7 +2008,7 @@
       [
        "`dp[i][j]`",
        "Side length of the largest all-ones square whose BOTTOM-RIGHT corner is (i, j)",
-       "Same DP as Maximal Square"
+       "Same DP (Dynamic Programming) as Maximal Square"
       ],
       [
        "`1 + min(up, left, up-left)`",

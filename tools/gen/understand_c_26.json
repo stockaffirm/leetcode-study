@@ -1,0 +1,3069 @@
+{
+ "1979": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`min(nums)`, `max(nums)`",
+       "The smallest and largest numbers in the array",
+       "The problem asks only about these two"
+      ],
+      [
+       "`gcd(a, b)` (from `math`)",
+       "Greatest common divisor of two numbers",
+       "Euclid's algorithm built in"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,5,6,9,10]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "smallest",
+       "2"
+      ],
+      [
+       "largest",
+       "10"
+      ],
+      [
+       "gcd(2, 10)",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the smallest and largest?",
+    "p": [
+     "The question defines the answer as the greatest common divisor of the smallest and the largest number; the rest of the array is irrelevant. Finding the extremes is one pass, and `gcd` takes O(log max) steps."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "min and max",
+       "O(n)"
+      ],
+      [
+       "gcd",
+       "O(log max)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + log max).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "GCD (Greatest Common Divisor) of the smallest and largest elements: find min and max, then call gcd."
+ },
+ "2048": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`x = n + 1`",
+       "Start from the next integer: the answer must be strictly greater than `n`",
+       "Search upward"
+      ],
+      [
+       "`Counter(str(x))`",
+       "How many times each digit appears in `x`",
+       "Digit counts"
+      ],
+      [
+       "`all(int(d) == c for d, c in cnt.items())`",
+       "Numerically balanced: every digit `d` that appears must appear exactly `d` times (so no zero, since `0` appearing 0 times is impossible)",
+       "The balance test"
+      ],
+      [
+       "`while True: … x += 1`",
+       "Brute-force search; balanced numbers are plentiful enough (the next one is at most 1224444 for `n ≤ 10⁶`)",
+       "Fine for a tiny search space"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 1`: the first candidates and the first balanced number:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Digit counts",
+      "Balanced?"
+     ],
+     "rows": [
+      [
+       "2",
+       "{'2': 1}",
+       "False"
+      ],
+      [
+       "3",
+       "{'3': 1}",
+       "False"
+      ],
+      [
+       "4",
+       "{'4': 1}",
+       "False"
+      ],
+      [
+       "22",
+       "{'2': 2}",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "More answers",
+    "table": {
+     "head": [
+      "n",
+      "Next numerically balanced number"
+     ],
+     "rows": [
+      [
+       "1",
+       "22"
+      ],
+      [
+       "1000",
+       "1333"
+      ],
+      [
+       "3000",
+       "3133"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is brute force acceptable?",
+    "p": [
+     "Balanced numbers such as 1, 22, 122, 333, 1333, 4444, 14444 … are sparse but the input is at most 10⁶ and the largest answer is 1224444, so the loop runs at most about a million iterations of cheap work."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Note"
+     ],
+     "rows": [
+      [
+       "linear search (this code)",
+       "simple; ≤ ~10⁶ steps"
+      ],
+      [
+       "precompute all balanced numbers and binary search",
+       "faster for many queries"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((answer − n) · digits).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Next numerically balanced number: increase x until every digit d appears exactly d times."
+ },
+ "2264": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`range(len(num) - 2)`",
+       "Every start index of a window of three characters",
+       "Fixed-size window"
+      ],
+      [
+       "`num[i] == num[i + 1] == num[i + 2]`",
+       "Chained comparison: three equal digits",
+       "Detect a repeated triple"
+      ],
+      [
+       "`max(best, num[i:i + 3])`",
+       "Compare the triples as STRINGS: for strings of equal length, string order equals numeric order",
+       "Largest triple"
+      ],
+      [
+       "`best = \"\"`",
+       "Empty string if no triple exists (any non-empty string is greater than `\"\"`)",
+       "Default result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"6777133339\"`: the triples found are:"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Triple",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "777",
+       "777"
+      ],
+      [
+       "5",
+       "333",
+       "777"
+      ],
+      [
+       "6",
+       "333",
+       "777"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare strings instead of integers?",
+    "p": [
+     "`\"000\"` is a valid answer, and converting to an integer would lose the leading zeros. Comparing equal-length digit strings lexicographically gives the same order as comparing the numbers, and keeps the zeros."
+    ],
+    "table": {
+     "head": [
+      "Triples",
+      "Largest"
+     ],
+     "rows": [
+      [
+       "`\"000\"`, `\"333\"`",
+       "`\"333\"`"
+      ],
+      [
+       "`\"000\"` only",
+       "`\"000\"`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Largest 3-same-digit substring: slide a window of three characters and keep the maximum string."
+ },
+ "2327": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`new[d]`",
+       "Number of people who LEARN the secret on day `d`",
+       "Track newcomers per day"
+      ],
+      [
+       "`sharing`",
+       "Number of people who can share the secret on the current day: they learned it at least `delay` days ago and fewer than `forget` days ago",
+       "A sliding window over `new`"
+      ],
+      [
+       "`sharing += new[d - delay]`",
+       "People who learned it on day `d − delay` start sharing today",
+       "Enter the window"
+      ],
+      [
+       "`sharing -= new[d - forget]`",
+       "People who learned it on day `d − forget` forget today and leave the window",
+       "Leave the window"
+      ],
+      [
+       "`new[d] = sharing`",
+       "Each sharer tells exactly one new person per day",
+       "Newcomers = sharers"
+      ],
+      [
+       "`sum(new[n - forget + 1:])`",
+       "On day `n`, those who still know the secret learned it in the last `forget` days (they forget on day learned + forget)",
+       "Final answer"
+      ],
+      [
+       "`% MOD`",
+       "Counts grow exponentially",
+       "Modulus"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 6`, `delay = 2`, `forget = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Day",
+      "Sharers",
+      "New people",
+      "Know the secret at the end of this day"
+     ],
+     "rows": [
+      [
+       "1",
+       "-",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "1",
+       "3"
+      ],
+      [
+       "5",
+       "1",
+       "1",
+       "3"
+      ],
+      [
+       "6",
+       "2",
+       "2",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a running window and not a list of people?",
+    "p": [
+     "People are interchangeable once they know the secret; only the day they learned it matters. Keeping `new[d]` per day and a running count of the sharers makes each day O(1), instead of simulating every person."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate each person",
+       "exponential"
+      ],
+      [
+       "daily counts + window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "People aware of a secret: track how many learn it each day; the sharers are a sliding window of days between delay and forget."
+ },
+ "2411": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "scan from the RIGHT",
+       "The maximum OR of a subarray starting at `i` is the OR of everything from `i` to the end",
+       "OR only grows when more elements are added"
+      ],
+      [
+       "`last[b]`",
+       "The nearest index at or after `i` that has bit `b` set (since we scan right to left, the most recent update is the nearest)",
+       "Last-seen position per bit"
+      ],
+      [
+       "`max(last)`",
+       "The farthest 'nearest' position over all bits: to include every bit that appears somewhere to the right, the subarray must reach it",
+       "Reach all bits"
+      ],
+      [
+       "`max(last) - i + 1`",
+       "Length of the shortest subarray starting at `i` that has the full OR",
+       "Subarray length"
+      ],
+      [
+       "`max(1, …)`",
+       "If `nums[i]` has no bits and no later bits exist, the length is still at least 1",
+       "Minimum length"
+      ],
+      [
+       "31 bits",
+       "`nums[i] < 2^31`, so 31 bit positions",
+       "Fixed number of bits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,0,2,1,3]`. The table shows `last` for bits 0–2 and the resulting length (positions are listed left to right; the scan ran right to left):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "last[bit 0..2]",
+      "max(last)",
+      "Answer[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "{0: 0, 1: 2, 2: 0}",
+       "2",
+       "3"
+      ],
+      [
+       "1",
+       "0",
+       "{0: 3, 1: 2, 2: 0}",
+       "3",
+       "3"
+      ],
+      [
+       "2",
+       "2",
+       "{0: 3, 1: 2, 2: 0}",
+       "3",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "{0: 3, 1: 4, 2: 0}",
+       "4",
+       "2"
+      ],
+      [
+       "4",
+       "3",
+       "{0: 4, 1: 4, 2: 0}",
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the farthest nearest-occurrence?",
+    "p": [
+     "The maximum OR starting at `i` contains bit `b` iff some element at or after `i` has it. The shortest subarray that includes all those bits must stretch to the nearest occurrence of the bit whose nearest occurrence is farthest right. All other bits are collected on the way."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "compute OR for every subarray",
+       "O(n²)"
+      ],
+      [
+       "last-seen index per bit (this code)",
+       "O(31 · n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(31 · n).",
+     "Space: O(31 + n)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest subarrays with the maximum OR: scan from the right, tracking the nearest index of each bit; the answer at i is the farthest of those minus i plus one."
+ },
+ "2423": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(word)`",
+       "Letter → count",
+       "Frequencies"
+      ],
+      [
+       "`for c in list(cnt)`",
+       "Try removing exactly one occurrence of each distinct letter (`list(cnt)` copies the keys because we modify values)",
+       "Only one removal is allowed"
+      ],
+      [
+       "`cnt[c] -= 1`, later `cnt[c] += 1`",
+       "Simulate the removal, then restore",
+       "Undo after the test"
+      ],
+      [
+       "`{v for v in cnt.values() if v}`",
+       "The set of counts that are non-zero (a letter removed completely no longer matters)",
+       "Ignore letters that disappeared"
+      ],
+      [
+       "`len(vals) == 1`",
+       "All remaining letters have the same count",
+       "Equal frequencies"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"abcc\"`:"
+    ],
+    "table": {
+     "head": [
+      "Remove one",
+      "Counts after",
+      "Distinct non-zero counts",
+      "Equal?"
+     ],
+     "rows": [
+      [
+       "a",
+       "{'a': 0, 'b': 1, 'c': 2}",
+       "{1, 2}",
+       "False"
+      ],
+      [
+       "b",
+       "{'a': 1, 'b': 0, 'c': 2}",
+       "{1, 2}",
+       "False"
+      ],
+      [
+       "c",
+       "{'a': 1, 'b': 1, 'c': 1}",
+       "{1}",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why try every distinct letter?",
+    "p": [
+     "Only 26 letters exist, so trying each is at most 26 checks of 26 counts. Removing from a letter that is already minimal, maximal or unique each matters differently, and a direct simulation avoids a case analysis."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate each distinct letter (this code)",
+       "O(26 · 26 + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26²).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Equalize frequencies by removing one letter: try removing one occurrence of each distinct letter and check whether the non-zero counts coincide."
+ },
+ "2843": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`str(x)`, `h = len(s) // 2`",
+       "The digits of `x` and the length of each half",
+       "Split a number's digits in half"
+      ],
+      [
+       "`len(s) % 2 == 0`",
+       "A symmetric integer must have an even number of digits",
+       "Odd lengths can't be split evenly"
+      ],
+      [
+       "`sum(map(int, s[:h])) == sum(map(int, s[h:]))`",
+       "The digit sum of the first half equals that of the second half",
+       "Compare two sums"
+      ],
+      [
+       "loop over `range(low, high + 1)`",
+       "Check every integer in the range",
+       "The range is at most 10⁴"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`low = 1`, `high = 100`: the symmetric integers are the two-digit numbers with equal digits:"
+    ],
+    "table": {
+     "head": [
+      "Number",
+      "First half sum",
+      "Second half sum"
+     ],
+     "rows": [
+      [
+       "11",
+       "1",
+       "1"
+      ],
+      [
+       "22",
+       "2",
+       "2"
+      ],
+      [
+       "33",
+       "3",
+       "3"
+      ],
+      [
+       "44",
+       "4",
+       "4"
+      ],
+      [
+       "55",
+       "5",
+       "5"
+      ],
+      [
+       "66",
+       "6",
+       "6"
+      ],
+      [
+       "77",
+       "7",
+       "7"
+      ],
+      [
+       "88",
+       "8",
+       "8"
+      ],
+      [
+       "99",
+       "9",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why brute force?",
+    "p": [
+     "The upper limit is only 10⁴, so a direct check of each number costs about 10⁴ × 4 operations. A digit DP (Dynamic Programming) would be needed for much larger ranges."
+    ],
+    "table": {
+     "head": [
+      "Range limit",
+      "Approach"
+     ],
+     "rows": [
+      [
+       "10⁴ (this problem)",
+       "brute force"
+      ],
+      [
+       "10¹⁸",
+       "digit DP"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((high − low) · digits).",
+     "Space: O(digits)."
+    ]
+   }
+  ],
+  "takeaway": "Count symmetric integers: check each number has an even digit count and equal digit sums in its two halves."
+ },
+ "3005": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → frequency",
+       "Counting"
+      ],
+      [
+       "`top = max(cnt.values())`",
+       "The highest frequency",
+       "Maximum frequency"
+      ],
+      [
+       "`sum(1 for v in cnt.values() if v == top)`",
+       "How many distinct values reach that frequency",
+       "Count the winners"
+      ],
+      [
+       "`top * …`",
+       "Each winning value contributes `top` elements to the total",
+       "Total number of such elements"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,2,3,1,4]`:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Frequency"
+     ],
+     "rows": [
+      [
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "1"
+      ],
+      [
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The highest frequency is 2 (values 1 and 2), so the total number of elements with maximum frequency is 2 × 2 = 4."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k) for k distinct values."
+    ]
+   }
+  ],
+  "takeaway": "Elements with maximum frequency: highest count times the number of values attaining it."
+ },
+ "3110": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(s, s[1:])`",
+       "Adjacent character pairs",
+       "Neighbour comparison"
+      ],
+      [
+       "`ord(a) - ord(b)`",
+       "Difference of character codes",
+       "Alphabet distance"
+      ],
+      [
+       "`abs(...)`, `sum(...)`",
+       "Absolute differences added up",
+       "Score"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"hello\"`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Code difference",
+      "Absolute"
+     ],
+     "rows": [
+      [
+       "he",
+       "3",
+       "3"
+      ],
+      [
+       "el",
+       "-7",
+       "7"
+      ],
+      [
+       "ll",
+       "0",
+       "0"
+      ],
+      [
+       "lo",
+       "-3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "3 + 7 + 0 + 3 = 13."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) with a generator expression."
+    ]
+   }
+  ],
+  "takeaway": "Score of a string: sum of absolute differences between the codes of adjacent characters."
+ },
+ "3302": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`suf[j]`",
+       "The LATEST index in `word1` where the suffix `word2[j:]` can start matching exactly (greedy from the right); −1 if impossible",
+       "Precompute whether the rest of `word2` still fits after a given position"
+      ],
+      [
+       "forward scan with `res`, `j`",
+       "Pick indices from the left, always taking a match when possible: that keeps indices as small as possible (lexicographically smallest)",
+       "Greedy for the smallest sequence"
+      ],
+      [
+       "`skipped`",
+       "Whether the one allowed mismatch (a character differing from `word2[j]`) has been used",
+       "At most one mismatch is allowed"
+      ],
+      [
+       "`not skipped and (j + 1 == m or suf[j + 1] > i)`",
+       "Use the mismatch at position `i` only if the remaining characters of `word2` can still be matched exactly AFTER `i`",
+       "Safe to spend the mismatch"
+      ],
+      [
+       "`return res if j == m else []`",
+       "If all of `word2` was placed, return the indices, else no valid sequence",
+       "Final check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word1 = \"vbcca\"`, `word2 = \"abc\"`. The suffix table is `suf = [-1, 1, 3, -1]`: the suffix `c` can start no later than index 3, the suffix `bc` no later than index 1, and the whole `abc` has no exact match (the `-1`). Scanning left to right, the one allowed mismatch is spent at index 0 (`v`), because `bc` still fits exactly afterwards:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "word1[i]",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "v",
+       "mismatch used (rest of word2 still fits after 0)"
+      ],
+      [
+       "1",
+       "b",
+       "matches word2[1]"
+      ],
+      [
+       "2",
+       "c",
+       "matches word2[2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the earliest mismatch go first?",
+    "p": [
+     "The lexicographically smallest index sequence wants small indices early. Taking the mismatch at the first position where the rest still fits keeps every later index as small as possible. The `suf` table is what makes that check O(1). The code matched a brute force over all index subsequences on random inputs."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all index subsets",
+       "exponential"
+      ],
+      [
+       "suffix table + greedy (this code)",
+       "O(n + m)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest valid index sequence with one allowed mismatch: precompute the latest exact suffix matches from the right, then scan left to right, spending the mismatch only when the rest still fits."
+ },
+ "3362": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`queries.sort()`",
+       "Process queries by start index",
+       "Sweep from left to right"
+      ],
+      [
+       "`heap`",
+       "Max-heap (negated ends) of queries that have STARTED by index `i` and are not yet used",
+       "Among the available queries pick the one that reaches farthest right"
+      ],
+      [
+       "`ends`",
+       "Min-heap of end positions of the queries we have CHOSEN to keep and that still cover index `i`",
+       "Active chosen queries"
+      ],
+      [
+       "`while ends and ends[0] < i: heappop`",
+       "Drop chosen queries that ended before `i`",
+       "Expire"
+      ],
+      [
+       "`while len(ends) < need`",
+       "Index `i` needs `need` covering queries; add more from the heap, the one with the farthest end first",
+       "Greedy: cover each position with the longest-reaching queries"
+      ],
+      [
+       "`if not heap or -heap[0] < i: return -1`",
+       "No available query reaches `i`: impossible",
+       "Failure"
+      ],
+      [
+       "`len(queries) - used`",
+       "Queries never needed can be removed",
+       "Maximum removals"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,0,2]`, `queries = [[0,2],[0,2],[1,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "Index i",
+      "Needs",
+      "Queries added (end)",
+      "Active ends",
+      "Used"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "[2, 2]",
+       "[2, 2]",
+       "2"
+      ],
+      [
+       "1",
+       "0",
+       "-",
+       "[2, 2]",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "-",
+       "[2, 2]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Only 2 of the 3 queries are needed (both `[0,2]` queries), so 1 can be removed."
+    ]
+   },
+   {
+    "h": "Why take the query with the farthest end?",
+    "p": [
+     "At index `i` we must add queries that cover it. Among those that already started, the one ending farthest right helps the most positions later, so using it can never be worse than a shorter one (an exchange argument). The code matched a brute force over all subsets on random small inputs."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all subsets of queries",
+       "O(2^q)"
+      ],
+      [
+       "greedy sweep with heaps (this code)",
+       "O((n + q) log q)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log q).",
+     "Space: O(q)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum queries to remove: sweep the array, and when position i needs more coverage, activate the started query with the farthest end; unused queries are removable."
+ },
+ "3398": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ok(L)`",
+       "Can we flip at most `numOps` bits so that NO run of identical characters is longer than `L`?",
+       "Feasibility check for binary search on the answer"
+      ],
+      [
+       "`groupby(s)`",
+       "Splits the string into runs of equal characters (`itertools.groupby`)",
+       "Run lengths"
+      ],
+      [
+       "`len(run) // (L + 1)`",
+       "A run of length `r` needs `r // (L + 1)` flips: flip every `(L + 1)`-th character to break it into pieces of at most `L`",
+       "Break a long run with minimum flips"
+      ],
+      [
+       "`L == 1` special case",
+       "Runs of length 1 mean the string must alternate `0101…` or `1010…`; count mismatches against each pattern and take the smaller",
+       "The general formula fails for L = 1 (a flip could merge neighbours)"
+      ],
+      [
+       "binary search on `L`",
+       "If a limit `L` is achievable, every larger limit is too",
+       "Smallest feasible L"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"000001\"`, `numOps = 1`:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "L = mid",
+      "Flips needed",
+      "Feasible?",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[1, 6]",
+       "3",
+       "1 flips (each run of length r needs r // (L+1))",
+       "True",
+       "hi = mid"
+      ],
+      [
+       "[1, 3]",
+       "2",
+       "1 flips (each run of length r needs r // (L+1))",
+       "True",
+       "hi = mid"
+      ],
+      [
+       "[1, 2]",
+       "1",
+       "alternating patterns need min(2, 4) = 2 flips",
+       "False",
+       "lo = mid + 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `r // (L + 1)`?",
+    "p": [
+     "A run of `r` equal characters can be cut into pieces of length at most `L` by flipping one character after each block of `L`; flipping every `(L + 1)`-th character does it with `⌊r / (L + 1)⌋` flips. Each flipped character becomes the opposite bit and is separated from its neighbours in the run. The result was checked against a brute force over all flip choices."
+    ],
+    "table": {
+     "head": [
+      "Run length r",
+      "L",
+      "Flips"
+     ],
+     "rows": [
+      [
+       "5",
+       "2",
+       "5 // 3 = 1"
+      ],
+      [
+       "6",
+       "2",
+       "6 // 3 = 2"
+      ],
+      [
+       "5",
+       "1",
+       "(handled by the alternating-pattern case)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimize the longest identical run with flips: binary search L; a run of length r needs r // (L+1) flips, and L = 1 means matching an alternating pattern."
+ },
+ "3419": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rev[b].append((a, w))`",
+       "Reverse every edge `a → b`: instead of asking whether `a` can reach node 0, we start at node 0 and walk BACKWARDS to find every node that can reach it",
+       "Reachability TO a target = reachability FROM the target in the reversed graph"
+      ],
+      [
+       "`best[v]`",
+       "The smallest possible largest-edge weight on any path from `v` to node 0",
+       "Minimax (bottleneck) path distance"
+      ],
+      [
+       "`nd = max(d, w)`",
+       "Extending a path takes the MAX of edge weights, not the sum",
+       "Bottleneck path"
+      ],
+      [
+       "`heap` (Dijkstra's algorithm)",
+       "Always expand the node with the smallest bottleneck so far",
+       "Works because `max` never decreases along a path"
+      ],
+      [
+       "`len(best) == n`",
+       "Every node must be able to reach node 0, else −1",
+       "Reachability check"
+      ],
+      [
+       "`max(best.values())`",
+       "The answer: the worst bottleneck among all nodes",
+       "Max over nodes"
+      ],
+      [
+       "`threshold` is never used",
+       "A single outgoing edge per node (the first edge of its best path) is enough, so any `threshold ≥ 1` allows the same answer",
+       "The out-degree limit cannot matter here"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges reversed so we explore from node 0:"
+    ],
+    "table": {
+     "head": [
+      "Node popped",
+      "Updates"
+     ],
+     "rows": [
+      [
+       "node 0 (cost 0)",
+       "['node 1: 1', 'node 2: 2', 'node 3: 1']"
+      ],
+      [
+       "node 1 (cost 1)",
+       "['node 2: 1']"
+      ],
+      [
+       "node 2 (cost 1)",
+       "-"
+      ],
+      [
+       "node 3 (cost 1)",
+       "['node 4: 1']"
+      ],
+      [
+       "node 4 (cost 1)",
+       "-"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Every node reaches 0 using edges of weight at most 1, so the answer is 1. A brute force that tries each weight limit and checks reachability gave the same answer on random graphs."
+    ]
+   },
+   {
+    "h": "Why Dijkstra with `max`?",
+    "p": [
+     "Dijkstra works for any path cost that never gets smaller when a path is extended. The maximum of edge weights has that property, so the first time a node is popped its bottleneck is final."
+    ],
+    "table": {
+     "head": [
+      "Cost along a path",
+      "Dijkstra OK?"
+     ],
+     "rows": [
+      [
+       "sum of weights",
+       "yes"
+      ],
+      [
+       "max of weights (this code)",
+       "yes"
+      ],
+      [
+       "a quantity that can decrease",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E log V).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Minimize the maximum edge weight so everyone reaches node 0: Dijkstra on the reversed graph with cost = max edge on the path; answer is the largest resulting cost."
+ },
+ "3437": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`used[v]`",
+       "Which numbers are already in the permutation",
+       "Permutation backtracking"
+      ],
+      [
+       "`cur`",
+       "The permutation being built",
+       "Shared path list"
+      ],
+      [
+       "`(cur[-1] + v) % 2 == 1`",
+       "Adjacent numbers must have DIFFERENT parity: their sum is odd",
+       "The extra constraint on top of an ordinary permutation"
+      ],
+      [
+       "`res.append(cur[:])`",
+       "Save a copy of a complete valid permutation",
+       "Snapshot"
+      ],
+      [
+       "`for v in range(1, n + 1)`",
+       "Trying values in increasing order produces the permutations in lexicographic order",
+       "Sorted output for free"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`: every permutation of 1–4 whose neighbours alternate between odd and even:"
+    ],
+    "table": {
+     "head": [
+      "#",
+      "Permutation"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1, 2, 3, 4]"
+      ],
+      [
+       "2",
+       "[1, 4, 3, 2]"
+      ],
+      [
+       "3",
+       "[2, 1, 4, 3]"
+      ],
+      [
+       "4",
+       "[2, 3, 4, 1]"
+      ],
+      [
+       "5",
+       "[3, 2, 1, 4]"
+      ],
+      [
+       "6",
+       "[3, 4, 1, 2]"
+      ],
+      [
+       "7",
+       "[4, 1, 2, 3]"
+      ],
+      [
+       "8",
+       "[4, 3, 2, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "How many are there?",
+    "p": [
+     "The parities must alternate, so the odd and even numbers fill alternating slots: two possible patterns (odd first or even first), times the orderings of the odds and of the evens. For `n = 4` that is 2 × 2! × 2! = 8, matching the list."
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Valid permutations"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "2"
+      ],
+      [
+       "4",
+       "8"
+      ],
+      [
+       "5",
+       "12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · count), pruned by the parity check.",
+     "Space: O(n) recursion plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Alternating-parity permutations: ordinary permutation backtracking that only allows a next number whose sum with the previous one is odd."
+ },
+ "3443": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`x`, `y`",
+       "Current position after the first `i` moves (N/S change `y`, E/W change `x`)",
+       "Dead reckoning"
+      ],
+      [
+       "`abs(x) + abs(y)`",
+       "Manhattan distance from the origin",
+       "Distance with moves along axes"
+      ],
+      [
+       "`+ 2 * k`",
+       "Each of the `k` changes can turn a move AWAY from the farthest direction into one toward it, gaining 2 (it removes −1 and adds +1)",
+       "Gain from a flipped step"
+      ],
+      [
+       "`min(…, i)`",
+       "The distance can never exceed the number of steps taken so far",
+       "Upper bound"
+      ],
+      [
+       "`best = max(best, …)`",
+       "The maximum is reached at some prefix of the path",
+       "The best moment may be before the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"NWSE\"`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "Step i",
+      "Move",
+      "Position",
+      "Distance",
+      "Candidate",
+      "Best"
+     ],
+     "rows": [
+      [
+       "1",
+       "N",
+       "(0, 1)",
+       "1",
+       "min(1 + 2, 1) = 1",
+       "1"
+      ],
+      [
+       "2",
+       "W",
+       "(-1, 1)",
+       "2",
+       "min(2 + 2, 2) = 2",
+       "2"
+      ],
+      [
+       "3",
+       "S",
+       "(-1, 0)",
+       "1",
+       "min(1 + 2, 3) = 3",
+       "3"
+      ],
+      [
+       "4",
+       "E",
+       "(0, 0)",
+       "0",
+       "min(0 + 2, 4) = 2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `+ 2k` and `min(…, i)`?",
+    "p": [
+     "A step that moves away from the target direction costs 1 now; turning it into a step toward the target changes the distance by +2. We can do that for `k` steps, but the total can't exceed the steps taken, hence the `min`. Taking the maximum over all prefixes handles the best stopping moment. A brute force over all changes agreed on random strings."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all changes",
+       "exponential"
+      ],
+      [
+       "distance + 2k capped by i (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum Manhattan distance after k changes: track position along the path; at each prefix the best distance is min(|x| + |y| + 2k, steps)."
+ },
+ "3488": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pos[x]`",
+       "Sorted list of indices where value `x` occurs",
+       "Group positions by value"
+      ],
+      [
+       "`lst[j - 1]`, `lst[(j + 1) % m]`",
+       "The previous and next occurrence of the same value, wrapping around (Python's `lst[-1]` for `j = 0`, `% m` for the end)",
+       "In a circular array the closest equal element is among the neighbouring occurrences"
+      ],
+      [
+       "`gap = abs(i - o)`; `min(gap, n - gap)`",
+       "Circular distance: go directly or around the end of the array",
+       "Distance in a circular array"
+      ],
+      [
+       "`m == 1: continue`",
+       "A value with only one occurrence has no other equal element",
+       "Answer −1"
+      ],
+      [
+       "`best.get(q, -1)`",
+       "Answer queries by looking up the stored distance",
+       "Precompute once, answer in O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,1,4,1,3,2]` (circular, `n = 7`):"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Positions"
+     ],
+     "rows": [
+      [
+       "1",
+       "[0, 2, 4]"
+      ],
+      [
+       "2",
+       "[6]"
+      ],
+      [
+       "3",
+       "[1, 5]"
+      ],
+      [
+       "4",
+       "[3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Queries",
+    "p": [
+     "Query index 0 (value 1): the nearest other `1` is at index 2 (distance 2). Index 3 (value 4) occurs once: −1. Index 5 (value 3): the other `3` is at index 1; going around the end gives circular distance `min(4, 3) = 3`."
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "-1"
+      ],
+      [
+       "5",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only neighbouring occurrences?",
+    "p": [
+     "Among the sorted positions of one value, the closest other position to `i` on a circle is either the previous or the next one in circular order; any farther occurrence is beyond one of them. The result matched a brute force on random arrays."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan the array per query",
+       "O(q · n)"
+      ],
+      [
+       "group by value (this code)",
+       "O(n + q)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Closest equal element in a circular array: group indices by value and compare each index with its previous and next occurrence using circular distance."
+ },
+ "3494": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`done[i]`",
+       "The time wizard `i` finishes working on the previous potion (so they are free from then on)",
+       "State of each wizard between potions"
+      ],
+      [
+       "`cur = max(cur, done[i]) + skill[i] * m`",
+       "Wizard `i` can start when the potion arrives (`cur`) AND they are free (`done[i]`), and works for `skill[i] × m` time",
+       "Earliest finish through the pipeline"
+      ],
+      [
+       "`done[n - 1] = cur`",
+       "The last wizard finishes this potion at `cur`",
+       "Anchor the schedule at the end"
+      ],
+      [
+       "backward loop `done[i] = done[i + 1] - skill[i + 1] * m`",
+       "A potion cannot wait between wizards, so working backwards from the last wizard fixes when each earlier wizard actually finished this potion",
+       "The no-waiting rule"
+      ],
+      [
+       "`return done[-1]`",
+       "When the last potion leaves the last wizard",
+       "Total time"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`skill = [1,5,2,4]`, `mana = [5,1,4,2]` (the answer is the final finish time of the last wizard):"
+    ],
+    "table": {
+     "head": [
+      "Potion mana",
+      "Last wizard finishes at",
+      "done[] after backward pass"
+     ],
+     "rows": [
+      [
+       "5",
+       "60",
+       "[5, 30, 40, 60]"
+      ],
+      [
+       "1",
+       "64",
+       "[53, 58, 60, 64]"
+      ],
+      [
+       "4",
+       "102",
+       "[58, 78, 86, 102]"
+      ],
+      [
+       "2",
+       "110",
+       "[88, 98, 102, 110]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two passes per potion?",
+    "p": [
+     "The forward pass finds when the last wizard can finish if the potion were allowed to wait. But potions must move on immediately, so the real schedule is the one aligned to the last wizard's finish time. The backward pass computes that aligned timeline, which then constrains the next potion."
+    ],
+    "table": {
+     "head": [
+      "Pass",
+      "Purpose"
+     ],
+     "rows": [
+      [
+       "forward",
+       "earliest finish time of the last wizard"
+      ],
+      [
+       "backward",
+       "actual finish times of every wizard, with no waiting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · m) for n wizards and m potions.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Brewing potions: per potion, a forward pass finds the earliest finish at the last wizard, and a backward pass reconstructs each wizard's finish time under the no-waiting rule."
+ },
+ "3527": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`set(day)`",
+       "Unique responses within one day, so a response repeated on the same day counts once",
+       "Deduplicate per day"
+      ],
+      [
+       "`Counter(r for day … for r in set(day))`",
+       "Number of DAYS on which each response appears",
+       "Counting with a nested generator"
+      ],
+      [
+       "`max(cnt.values())`",
+       "The highest number of days",
+       "Maximum frequency"
+      ],
+      [
+       "`min(r for r, c in cnt.items() if c == best)`",
+       "Among the responses tied for the highest count, return the lexicographically smallest",
+       "Tie-break rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Four days of responses:"
+    ],
+    "table": {
+     "head": [
+      "Response",
+      "Days it appears"
+     ],
+     "rows": [
+      [
+       "bad",
+       "2"
+      ],
+      [
+       "good",
+       "3"
+      ],
+      [
+       "ok",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "`good` appears on 3 days, `ok` on 2, `bad` on 2. The highest count is 3, held only by `good`."
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total responses).",
+     "Space: O(distinct responses)."
+    ]
+   }
+  ],
+  "takeaway": "Most common response: count each response once per day with a set, then take the lexicographically smallest among the maximum counts."
+ },
+ "3545": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(Counter(s).values())`",
+       "Letter frequencies in increasing order",
+       "Delete the cheapest letters entirely"
+      ],
+      [
+       "`len(freq) - k`",
+       "How many distinct letters must disappear to leave at most `k`",
+       "Letters to remove"
+      ],
+      [
+       "`max(0, …)`",
+       "If there are already at most `k` distinct letters, nothing to remove",
+       "Clamp at zero"
+      ],
+      [
+       "`sum(freq[:…])`",
+       "Deleting ALL copies of the rarest letters costs their frequencies",
+       "Cheapest total deletion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abc\"`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "frequencies sorted",
+       "[1, 1, 1]"
+      ],
+      [
+       "letters to remove",
+       "1"
+      ],
+      [
+       "cost",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the rarest letters?",
+    "p": [
+     "To reduce the number of distinct letters you must delete every copy of some letters. Choosing the letters with the smallest frequencies deletes the fewest characters in total."
+    ],
+    "table": {
+     "head": [
+      "Choice",
+      "Deleted characters for `aaabbc`, k = 2"
+     ],
+     "rows": [
+      [
+       "delete letter `c` (rarest)",
+       "1"
+      ],
+      [
+       "delete letter `a`",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 log 26).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Keep at most k distinct characters: delete all copies of the rarest letters; the cost is the sum of the smallest frequencies."
+ },
+ "3629": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`factors(x)`",
+       "The set of prime factors of `x` by trial division up to √x",
+       "Small numbers; factor each once"
+      ],
+      [
+       "`pos[p]`",
+       "Indices whose value is divisible by the prime `p`",
+       "Teleport destinations for a prime"
+      ],
+      [
+       "BFS (Breadth-First Search) with `dist`",
+       "Shortest number of jumps; every move costs 1",
+       "Unweighted shortest path"
+      ],
+      [
+       "`nb = [i - 1, i + 1]`",
+       "Normal steps to the neighbouring indices",
+       "Adjacent moves"
+      ],
+      [
+       "`factors(nums[i]) == {nums[i]}`",
+       "The value at `i` is prime (its only prime factor is itself)",
+       "Teleportation applies only from a prime"
+      ],
+      [
+       "`nb += pos[nums[i]]`",
+       "Teleport to every index whose value is divisible by that prime",
+       "Jump anywhere with that factor"
+      ],
+      [
+       "`pos[nums[i]] = []`",
+       "Clear the list after using it once: every index in it has been reached at distance `dist[i] + 1`, and repeating the teleport would add nothing",
+       "Each prime's teleport list is expanded only once, which keeps the BFS near-linear"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,4,7,9]`: the BFS reaches the last index in 2 jumps (step to the `3`, then teleport from the prime `3` to the `9`):"
+    ],
+    "table": {
+     "head": [
+      "Index popped",
+      "Value",
+      "Move",
+      "Newly reached",
+      "dist"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "prime → teleport to [0, 2]",
+       "[1, 2]",
+       "[0, 1, 1, -1, -1]"
+      ],
+      [
+       "1",
+       "3",
+       "prime → teleport to [1, 4]",
+       "[4]",
+       "[0, 1, 1, -1, 2]"
+      ],
+      [
+       "2",
+       "4",
+       "not prime",
+       "[3]",
+       "[0, 1, 1, 2, 2]"
+      ],
+      [
+       "4",
+       "9",
+       "not prime",
+       "-",
+       "[0, 1, 1, 2, 2]"
+      ],
+      [
+       "3",
+       "7",
+       "prime → teleport to [3]",
+       "-",
+       "[0, 1, 1, 2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why clear the list after teleporting?",
+    "p": [
+     "From a prime `p`, teleporting reaches all indices divisible by `p`. A second prime-`p` index later would try to teleport to the same set, which is already at a distance no larger. Emptying the list guarantees each index is scanned from each prime at most once, so the total work stays near O(n · factors) instead of O(n²)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "re-scan the list for every prime index",
+       "O(n²) in the worst case"
+      ],
+      [
+       "clear after first use (this code)",
+       "O(n · factors)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · √max + n · ω) for factoring and the BFS.",
+     "Space: O(n · ω) for the index lists, with ω the number of distinct prime factors."
+    ]
+   }
+  ],
+  "takeaway": "Jumps via prime teleportation: BFS (Breadth-First Search) where a prime value teleports to every index divisible by it; each prime's index list is cleared after first use."
+ },
+ "3650": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g[u].append((v, w))`",
+       "Walk the edge `u → v` forward at cost `w`",
+       "Normal direction"
+      ],
+      [
+       "`g[v].append((u, 2 * w))`",
+       "Walk the same edge BACKWARD (`v → u`): reversing it costs `2w`",
+       "Reversal modelled as a more expensive edge"
+      ],
+      [
+       "`heap` with `(dist, node)`",
+       "Dijkstra's algorithm, the shortest path with non-negative costs",
+       "Weighted shortest path"
+      ],
+      [
+       "`if u == n - 1: return d`",
+       "The first pop of the destination has the minimum cost",
+       "Dijkstra's finality"
+      ],
+      [
+       "`return -1`",
+       "Destination unreachable",
+       "No route"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, edges `0→1 (3)`, `3→1 (1)`, `2→3 (4)`, `0→2 (2)`:"
+    ],
+    "table": {
+     "head": [
+      "Node popped",
+      "Cost",
+      "Updates"
+     ],
+     "rows": [
+      [
+       "node 0",
+       "0",
+       "['1: 3', '2: 2']"
+      ],
+      [
+       "node 2",
+       "2",
+       "['3: 6']"
+      ],
+      [
+       "node 1",
+       "3",
+       "['3: 5']"
+      ],
+      [
+       "node 3",
+       "5",
+       "destination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The best route is `0→1` (3) then backward over `3→1` (cost 2·1 = 2), total 5."
+    ]
+   },
+   {
+    "h": "Why model a reversal as an edge?",
+    "p": [
+     "Each reversal is used at most once on a shortest path (using the same edge twice would form a cycle), so letting a path traverse an edge backward at price `2w` captures the problem exactly, and the graph stays a plain weighted graph."
+    ],
+    "table": {
+     "head": [
+      "Direction",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "along the arrow",
+       "w"
+      ],
+      [
+       "against the arrow",
+       "2w"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((V + E) log V).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Path with edge reversals: add each edge in both directions, the reverse direction costing twice the weight, and run Dijkstra."
+ },
+ "3680": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rem`",
+       "The set of ordered matches `(a, b)` still to schedule: every ordered pair of different teams (each pair plays twice, once at each home)",
+       "Required matches"
+      ],
+      [
+       "`left[t]`",
+       "How many matches team `t` still has to play (each team plays `2 (n − 1)` in total)",
+       "Remaining workload"
+      ],
+      [
+       "`last`",
+       "The two teams in the previous match: neither may play in the next one (no consecutive matches)",
+       "The scheduling constraint"
+      ],
+      [
+       "`key = (left[a] + left[b], -a, -b)`",
+       "Prefer the match whose teams have the MOST matches left, with smaller team numbers on ties (the `-a, -b` parts)",
+       "Greedy: schedule the busiest teams first, so nobody is left with only conflicting matches at the end"
+      ],
+      [
+       "`max` over `key`",
+       "Picks the best available match each round",
+       "Greedy selection"
+      ],
+      [
+       "`if n < 5: return []`",
+       "For fewer than five teams the constraint can't be satisfied",
+       "Impossible small cases"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "For `n = 5` the schedule has 20 matches. The first ones:"
+    ],
+    "table": {
+     "head": [
+      "#",
+      "Match"
+     ],
+     "rows": [
+      [
+       "1",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "[2, 3]"
+      ],
+      [
+       "3",
+       "[0, 4]"
+      ],
+      [
+       "4",
+       "[1, 2]"
+      ],
+      [
+       "5",
+       "[3, 4]"
+      ],
+      [
+       "6",
+       "[0, 2]"
+      ],
+      [
+       "7",
+       "[1, 3]"
+      ],
+      [
+       "8",
+       "[2, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "What the output guarantees",
+    "p": [
+     "The generated schedule contains each ordered pair exactly once (20 matches for 5 teams), and no team plays in two consecutive matches; both properties were checked on the output for `n = 5`. The greedy rule of always choosing the match whose teams have the most work left avoids getting stuck with the remaining matches all sharing one team."
+    ],
+    "table": {
+     "head": [
+      "Check for n = 5",
+      "Result"
+     ],
+     "rows": [
+      [
+       "number of matches",
+       "20"
+      ],
+      [
+       "each ordered pair once",
+       "True"
+      ],
+      [
+       "no team in two consecutive matches",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(M²) for M = n(n − 1) matches, since each round scans the remaining set.",
+     "Space: O(M)."
+    ]
+   }
+  ],
+  "takeaway": "Generate a schedule: repeatedly pick, among matches not involving the previous match's teams, the one whose teams have the most matches remaining."
+ },
+ "3719": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`even`, `odd`",
+       "Sets of the DISTINCT even and odd values in the subarray `nums[i..j]`",
+       "Distinct counts need sets"
+      ],
+      [
+       "`(even if nums[j] % 2 == 0 else odd).add(nums[j])`",
+       "Add the value to the set that matches its parity (a conditional expression choosing the set)",
+       "Choose a container on the fly"
+      ],
+      [
+       "`len(even) == len(odd)`",
+       "Balanced: the number of distinct even values equals the number of distinct odd values",
+       "The balance condition"
+      ],
+      [
+       "`best = max(best, j - i + 1)`",
+       "Longest balanced subarray",
+       "Maximum"
+      ],
+      [
+       "O(n²) loop",
+       "Extend each start `i` one element at a time, updating the sets in O(1)",
+       "Fine for n ≤ 1000"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,5,4,3]` — the balanced subarrays found:"
+    ],
+    "table": {
+     "head": [
+      "Subarray",
+      "Distinct evens",
+      "Distinct odds",
+      "Length"
+     ],
+     "rows": [
+      [
+       "[0, 1]",
+       "[2]",
+       "[5]",
+       "2"
+      ],
+      [
+       "[0, 3]",
+       "[2, 4]",
+       "[3, 5]",
+       "4"
+      ],
+      [
+       "[1, 2]",
+       "[4]",
+       "[5]",
+       "2"
+      ],
+      [
+       "[2, 3]",
+       "[4]",
+       "[3]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sets?",
+    "p": [
+     "Repeated values must count once, so we track distinct values per parity. Because the subarray only grows to the right for a fixed `i`, each set update is O(1) and no recount is needed."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "recount distinct values for every subarray",
+       "O(n³)"
+      ],
+      [
+       "extend sets incrementally (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Longest balanced subarray: for each start, extend the end while keeping sets of distinct even and odd values; balanced when their sizes match."
+ },
+ "3815": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.bid[(userId, itemId)]`",
+       "The CURRENT bid of each user on each item",
+       "Ground truth for validity"
+      ],
+      [
+       "`self.heap[itemId]`",
+       "Per item: a min-heap of `(-amount, -userId)` so the top is the highest bid, with the largest user id on ties",
+       "Max-heap emulation with negatives"
+      ],
+      [
+       "`addBid` / `updateBid`",
+       "Record the new amount and push a new heap entry; the old entry becomes stale",
+       "An update is just another add"
+      ],
+      [
+       "`removeBid`",
+       "Delete from the dictionary only; the heap entry stays",
+       "Lazy deletion"
+      ],
+      [
+       "`getHighestBidder`",
+       "Look at the heap top; if it does not match the current bid (`bid.get((user, item)) == amount`), pop it and look again",
+       "Discard stale entries only when they reach the top"
+      ],
+      [
+       "`return -1`",
+       "No valid bid left on the item",
+       "Empty auction"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Item 7:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Current bids",
+      "Entries in the heap for item 7"
+     ],
+     "rows": [
+      [
+       "addBid(1, 7, 5)",
+       "-",
+       "{(1, 7): 5}",
+       "1"
+      ],
+      [
+       "addBid(2, 7, 6)",
+       "-",
+       "{(1, 7): 5, (2, 7): 6}",
+       "2"
+      ],
+      [
+       "getHighestBidder(7,)",
+       "2",
+       "{(1, 7): 5, (2, 7): 6}",
+       "2"
+      ],
+      [
+       "updateBid(1, 7, 8)",
+       "-",
+       "{(1, 7): 8, (2, 7): 6}",
+       "3"
+      ],
+      [
+       "getHighestBidder(7,)",
+       "1",
+       "{(1, 7): 8, (2, 7): 6}",
+       "3"
+      ],
+      [
+       "removeBid(2, 7)",
+       "-",
+       "{(1, 7): 8}",
+       "3"
+      ],
+      [
+       "getHighestBidder(7,)",
+       "1",
+       "{(1, 7): 8}",
+       "3"
+      ],
+      [
+       "removeBid(1, 7)",
+       "-",
+       "{}",
+       "3"
+      ],
+      [
+       "getHighestBidder(7,)",
+       "-1",
+       "{}",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "A heap cannot remove an arbitrary entry efficiently. Instead of searching for the old entry, we leave it and check validity against the dictionary when it surfaces. Each entry is pushed once and popped at most once, so every operation is O(log n) amortised."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Update",
+      "Highest bidder"
+     ],
+     "rows": [
+      [
+       "lazy heap (this code)",
+       "O(log n)",
+       "O(log n) amortised"
+      ],
+      [
+       "sorted container with delete",
+       "O(log n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) amortised per operation.",
+     "Space: O(number of bids ever placed)."
+    ]
+   }
+  ],
+  "takeaway": "Auction system: a dictionary of current bids plus a per-item max-heap of (amount, user) entries, discarding stale entries lazily when they reach the top."
+ },
+ "3893": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`S = sorted(startTime)`, `E = sorted(endTime)`",
+       "Sorted start times and sorted end times",
+       "Counting intervals by position with binary search"
+      ],
+      [
+       "`bisect_left(E, s)`",
+       "Number of intervals that END before `s` (strictly): they cannot overlap the interval starting at `s`",
+       "Intervals entirely to the left"
+      ],
+      [
+       "`n - bisect_right(S, e)`",
+       "Number of intervals that START after `e`: they cannot overlap the interval ending at `e`",
+       "Intervals entirely to the right"
+      ],
+      [
+       "`n - before - after`",
+       "Intervals that overlap `[s, e]` (including itself): everything except those entirely before and those entirely after",
+       "Complement counting"
+      ],
+      [
+       "`best = max(...)`",
+       "The largest such count over all intervals",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`startTime = [1,2,3]`, `endTime = [4,5,6]` (intervals `[1,4]`, `[2,5]`, `[3,6]`):"
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Ending before it starts",
+      "Starting after it ends",
+      "Overlapping it (incl. itself)",
+      "Best"
+     ],
+     "rows": [
+      [
+       "[1, 4]",
+       "0",
+       "0",
+       "3",
+       "3"
+      ],
+      [
+       "[2, 5]",
+       "0",
+       "0",
+       "3",
+       "3"
+      ],
+      [
+       "[3, 6]",
+       "0",
+       "0",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the complement works",
+    "p": [
+     "An interval can fail to overlap `[s, e]` only by lying entirely before it (ending before `s`) or entirely after it (starting after `e`); these two groups are disjoint. So the number overlapping is `n` minus both counts, and each count is a binary search in a sorted array."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "compare every pair",
+       "O(n²)"
+      ],
+      [
+       "sorted arrays + bisect (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Largest group of overlapping intervals around one interval: count intervals overlapping each one as n minus those ending before it starts and those starting after it ends, using two sorted arrays and binary search."
+ },
+ "3953": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`freq[x]`",
+       "How many times each value appears in `nums`",
+       "Frequency array over values up to `M`"
+      ],
+      [
+       "`cnt[d]`",
+       "How many elements of `nums` are DIVISIBLE by `d` (sum of `freq` over the multiples of `d`)",
+       "Divisor counting by looping over multiples (a harmonic sum, O(M log M))"
+      ],
+      [
+       "`mu[d]`",
+       "The Möbius function: 0 if `d` has a repeated prime factor, otherwise (−1) raised to the number of prime factors",
+       "Inclusion–exclusion over divisors"
+      ],
+      [
+       "`coprime[v] += mu[d] * cnt[d]` for each divisor `d` of `v`",
+       "Number of elements COPRIME with `v` (sharing no prime factor): the Möbius formula `Σ μ(d) · cnt[d]` over `d | v`",
+       "Count coprime elements without comparing every pair"
+      ],
+      [
+       "`bad = n - coprime[v]`",
+       "Elements that share a factor with `v`",
+       "The complement"
+      ],
+      [
+       "final loop over `v` from 1 to `maxVal`",
+       "For each candidate value `v`, the score is `v` minus a cost derived from `bad` (the rules about equal values and the value 1 are encoded in the `cost` lines)",
+       "The problem's own scoring rule applied to the coprime counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3, 4, 6]`, `maxVal = 5`. For each candidate `v`: how many elements are coprime with it, and the resulting score (the code's cost rule, then `v − cost`):"
+    ],
+    "table": {
+     "head": [
+      "v",
+      "Coprime elements",
+      "Elements sharing a factor (bad)",
+      "cost",
+      "v − cost"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "2",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "5",
+       "3",
+       "0",
+       "1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The best score is 4, for `v = 5`: it is coprime with 3, 4 and 6, so `bad = 0` and the cost is 1."
+    ]
+   },
+   {
+    "h": "Why the Möbius function?",
+    "p": [
+     "Counting elements coprime with `v` directly means checking every element against `v`. Inclusion–exclusion over the divisors of `v` replaces that by `Σ μ(d) · cnt[d]`, using the precomputed `cnt` array, so all values `v` are handled together in O(M log M) instead of O(n · maxVal)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "gcd of `v` with every element",
+       "O(n · maxVal · log)"
+      ],
+      [
+       "Möbius inclusion–exclusion (this code)",
+       "O(M log M)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(M log M) where M = max(max(nums), maxVal).",
+     "Space: O(M)."
+    ]
+   }
+  ],
+  "takeaway": "Co-prime scoring: count, for every value v, how many array elements are coprime with it using divisor counts and the Möbius function, then apply the problem's score to each v."
+ },
+ "4025": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g = max(lights)`",
+       "The code uses the largest light value as the length `g` of the window within each period during which a car passes without waiting",
+       "Synchronised lights share one period"
+      ],
+      [
+       "`r = t % period`",
+       "Position of the arrival within the repeating cycle",
+       "Periodic events: reduce time modulo the period"
+      ],
+      [
+       "`r >= g`",
+       "The car arrives after the free window has ended in this cycle",
+       "Outside the window the car must wait for the next cycle"
+      ],
+      [
+       "`period - r`",
+       "Time until the next cycle starts",
+       "Waiting time"
+      ],
+      [
+       "`worst = max(worst, …)`",
+       "The answer is the longest wait over all arrivals",
+       "Minimise-the-maximum objective reduces to computing the maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`period = 8`, `lights = [2,3]` (so `g = 3`), `arrivalTime = [2,5,8,11]`:"
+    ],
+    "table": {
+     "head": [
+      "Arrival t",
+      "t mod 8",
+      "Decision",
+      "Wait",
+      "Longest wait"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "r < g → no wait",
+       "0",
+       "0"
+      ],
+      [
+       "5",
+       "5",
+       "r ≥ g → wait",
+       "3",
+       "3"
+      ],
+      [
+       "8",
+       "0",
+       "r < g → no wait",
+       "0",
+       "3"
+      ],
+      [
+       "11",
+       "3",
+       "r ≥ g → wait",
+       "5",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The longest wait is 5, for the car arriving at `t = 11` (position 3 in its cycle, so it waits 8 − 3 = 5)."
+    ]
+   },
+   {
+    "h": "Why reduce modulo the period?",
+    "p": [
+     "Everything repeats every `period` time units, so only the arrival's position within the cycle matters, not how many cycles have passed. That turns a large time axis into one small cycle."
+    ],
+    "table": {
+     "head": [
+      "t",
+      "t mod 8"
+     ],
+     "rows": [
+      [
+       "2",
+       "2"
+      ],
+      [
+       "11",
+       "3"
+      ],
+      [
+       "19",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Traffic lights: reduce each arrival modulo the period; a car outside the free window waits until the next period, and the answer is the longest such wait."
+ }
+}

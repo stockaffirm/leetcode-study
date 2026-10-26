@@ -382,7 +382,7 @@
       ],
       [
        "`x ^= ord(c)`",
-       "XOR: a number XOR itself is 0, and XOR is order independent",
+       "XOR (exclusive OR): a number XOR itself is 0, and XOR is order independent",
        "Cancel everything that appears twice"
       ],
       [
@@ -1194,7 +1194,7 @@
     ]
    }
   ],
-  "takeaway": "Sum of root-to-leaf binary numbers: DFS carrying cur = cur × 2 + bit; add cur at each leaf."
+  "takeaway": "Sum of root-to-leaf binary numbers: DFS (Depth-First Search) carrying cur = cur × 2 + bit; add cur at each leaf."
  },
  "1217": {
   "blocks": [
@@ -1301,7 +1301,7 @@
      "rows": [
       [
        "`sea.hasShips(tr, bl)`",
-       "Given API: is there at least one ship in the rectangle? (calls are limited)",
+       "Given API (Application Programming Interface): is there at least one ship in the rectangle? (calls are limited)",
        "Cheap existence query on a rectangle"
       ],
       [

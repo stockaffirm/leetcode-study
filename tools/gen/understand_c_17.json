@@ -136,7 +136,7 @@
      "rows": [
       [
        "`x`",
-       "XOR of all numbers currently in the array",
+       "XOR (exclusive OR) of all numbers currently in the array",
        "Prefix XOR"
       ],
       [
@@ -1176,7 +1176,7 @@
       ],
       [
        "`order` extended while iterating it",
-       "BFS order of the nodes without a deque: appending to a list while looping over it visits the new items too",
+       "BFS (Breadth-First Search) order of the nodes without a deque: appending to a list while looping over it visits the new items too",
        "Iterative traversal"
       ],
       [
@@ -1401,7 +1401,7 @@
       [
        "`dp[t][v]`",
        "Minimum fee to be at city `v` having used EXACTLY `t` minutes",
-       "DP over (time, city): time is a dimension because the budget is on time"
+       "DP (Dynamic Programming) over (time, city): time is a dimension because the budget is on time"
       ],
       [
        "`dp[0][0] = passingFees[0]`",
@@ -1528,7 +1528,7 @@
       [
        "`dp[c]`",
        "Number of ways to colour the first `j` columns with the last column being `c`",
-       "Profile DP: the previous column is the state"
+       "Profile DP (Dynamic Programming): the previous column is the state"
       ],
       [
        "`dp = {c: sum(dp[p] for p in ok[c]) % MOD …}`",
@@ -1808,7 +1808,7 @@
       ],
       [
        "`deque((0, c) for c … not in water)`",
-       "Start BFS from EVERY dry cell in the top row at once",
+       "Start BFS (Breadth-First Search) from EVERY dry cell in the top row at once",
        "Multi-source BFS"
       ],
       [
@@ -2023,7 +2023,7 @@
     ]
    }
   ],
-  "takeaway": "Nodes equal to the sum of descendants: post-order DFS that returns subtree sums, comparing each node's value with the sum from its children."
+  "takeaway": "Nodes equal to the sum of descendants: post-order DFS (Depth-First Search) that returns subtree sums, comparing each node's value with the sum from its children."
  },
  "1976": {
   "blocks": [

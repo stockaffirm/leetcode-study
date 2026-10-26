@@ -422,7 +422,7 @@
       [
        "first loop from bit 30 down",
        "Copy `num1`'s highest set bits into `x` while bits remain to place",
-       "XOR with `num1` is smallest when `x` matches `num1` in the HIGH bits"
+       "XOR (exclusive OR) with `num1` is smallest when `x` matches `num1` in the HIGH bits"
       ],
       [
        "`x |= 1 << b`",
@@ -646,7 +646,7 @@
       [
        "`dp[j][r]`",
        "Number of paths from the top-left to the cell in column `j` of the CURRENT row whose sum has remainder `r` mod `k`",
-       "DP keyed by the remainder of the running sum"
+       "DP (Dynamic Programming) keyed by the remainder of the running sum"
       ],
       [
        "`v = grid[i][j] % k`",
@@ -1484,7 +1484,7 @@
     ]
    }
   ],
-  "takeaway": "Minimum fuel cost: for each non-root node, the cars needed on its parent edge are ceil(subtree size / seats); sum them with a post-order DFS."
+  "takeaway": "Minimum fuel cost: for each non-root node, the cars needed on its parent edge are ceil(subtree size / seats); sum them with a post-order DFS (Depth-First Search)."
  },
  "2483": {
   "blocks": [
@@ -1762,7 +1762,7 @@
      "rows": [
       [
        "`q = [deque(), deque()]`",
-       "Two FIFO queues: index 0 = people entering, index 1 = people exiting; order within a queue is by arrival then index",
+       "Two FIFO (First In, First Out) queues: index 0 = people entering, index 1 = people exiting; order within a queue is by arrival then index",
        "Separate queues per direction"
       ],
       [

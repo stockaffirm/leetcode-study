@@ -113,7 +113,7 @@
     ]
    }
   ],
-  "takeaway": "Good nodes: DFS carrying the maximum value along the path; a node is good if it is at least that maximum."
+  "takeaway": "Good nodes: DFS (Depth-First Search) carrying the maximum value along the path; a node is good if it is at least that maximum."
  },
  "1460": {
   "blocks": [
@@ -222,7 +222,7 @@
        "Undirected traversal that remembers direction"
       ],
       [
-       "DFS from city 0 with `seen`",
+       "DFS (Depth-First Search) from city 0 with `seen`",
        "The roads form a tree, so each road is crossed exactly once on the way out from 0",
        "Walk the tree outward from the target city"
       ],
@@ -642,7 +642,7 @@
       [
        "`dp[g][j]`",
        "Minimum total distance using `g` mailboxes for the first `j` houses",
-       "DP over (groups, prefix)"
+       "DP (Dynamic Programming) over (groups, prefix)"
       ],
       [
        "`dp[g-1][i] + cost[i][j-1]`",
@@ -1868,7 +1868,7 @@
      "rows": [
       [
        "`inorder(n)` into `self.vals`",
-       "Flatten the BST into a sorted list once",
+       "Flatten the BST (Binary Search Tree) into a sorted list once",
        "The iterator needs both directions, which a stack-based one-way iterator cannot do"
       ],
       [
@@ -2460,7 +2460,7 @@
        "O(mn log mn)"
       ],
       [
-       "Binary search on effort + BFS",
+       "Binary search on effort + BFS (Breadth-First Search)",
        "O(mn log H)"
       ],
       [

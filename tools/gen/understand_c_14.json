@@ -18,7 +18,7 @@
       [
        "`ways[d]`",
        "Number of different numbers of the current length that END on key `d`",
-       "DP over positions"
+       "DP (Dynamic Programming) over positions"
       ],
       [
        "`ways = [1] * 10`",
@@ -220,7 +220,7 @@
        "O(n²) worst case"
       ],
       [
-       "BFS with a queue plus a `waiting for key` set",
+       "BFS (Breadth-First Search) with a queue plus a `waiting for key` set",
        "O(n + keys + contained)"
       ]
      ]
@@ -934,7 +934,7 @@
       [
        "`dp`: mask → best count so far",
        "Best number of students in rows up to here whose LAST row uses `mask`",
-       "Row-by-row DP with the previous row as state"
+       "Row-by-row DP (Dynamic Programming) with the previous row as state"
       ],
       [
        "`max(dp.values())`",
@@ -1312,7 +1312,7 @@
        "In-degree ≤ 1"
       ],
       [
-       "BFS from the root with `seen`",
+       "BFS (Breadth-First Search) from the root with `seen`",
        "Walk the whole structure; revisiting a node means a cycle or a shared child",
        "Cycle detection while traversing"
       ],
@@ -1375,7 +1375,7 @@
       ],
       [
        "in-degree ≤ 1",
-       "shared children (DAG joins)"
+       "shared children (DAG (Directed Acyclic Graph) joins)"
       ],
       [
        "all nodes seen",
@@ -1499,7 +1499,7 @@
      "rows": [
       [
        "`inorder(n)` into `vals`",
-       "In-order traversal of a BST gives the values in sorted order",
+       "In-order traversal of a BST (Binary Search Tree) gives the values in sorted order",
        "Flatten a BST into a sorted array"
       ],
       [

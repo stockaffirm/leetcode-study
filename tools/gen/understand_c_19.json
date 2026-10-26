@@ -476,7 +476,7 @@
     ]
    }
   ],
-  "takeaway": "Longest path with different adjacent characters: tree DP keeping the two best child branches; update the global best with their sum and return only the best one."
+  "takeaway": "Longest path with different adjacent characters: tree DP (Dynamic Programming) keeping the two best child branches; update the global best with their sum and return only the best one."
  },
  "2258": {
   "blocks": [
@@ -490,7 +490,7 @@
      ],
      "rows": [
       [
-       "multi-source BFS → `fire[i][j]`",
+       "multi-source BFS (Breadth-First Search) → `fire[i][j]`",
        "The minute the fire reaches each cell (walls `2` block it); fire starts from all `1` cells at once",
        "Spread simulation as a precomputed arrival-time grid"
       ],
@@ -1648,7 +1648,7 @@
    {
     "h": "Why a dictionary of states?",
     "p": [
-     "There are only 6×6 = 36 possible pairs (fewer valid ones), so the DP table is tiny, and each step costs about 36 × 6 operations. The dictionary keeps only the valid pairs, which avoids testing the rules for impossible states."
+     "There are only 6×6 = 36 possible pairs (fewer valid ones), so the DP (Dynamic Programming) table is tiny, and each step costs about 36 × 6 operations. The dictionary keeps only the valid pairs, which avoids testing the rules for impossible states."
     ],
     "table": {
      "head": [

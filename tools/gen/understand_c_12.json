@@ -794,7 +794,7 @@
       [
        "`dp[i]`",
        "Does the player to move win when the number on the board is `i`? (`dp[1]` is False: no move)",
-       "Win/lose game DP"
+       "Win/lose game DP (Dynamic Programming)"
       ],
       [
        "`i % x == 0`",
@@ -1046,7 +1046,7 @@
       [
        "`dp[i]`",
        "Best total for the first `i` elements after partitioning",
-       "Prefix DP"
+       "Prefix DP (Dynamic Programming)"
       ],
       [
        "`for j in range(1, min(k, i) + 1)`",
@@ -1281,7 +1281,7 @@
       [
        "`bits |= bits << s`",
        "Bitset of reachable subset sums, as in Partition Equal Subset Sum",
-       "Subset-sum DP in a Python integer"
+       "Subset-sum DP (Dynamic Programming) in a Python integer"
       ],
       [
        "`range(total // 2, -1, -1)`",
@@ -1791,7 +1791,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "`\"AAB\"`: the sequences created, in the order DFS places them:"
+     "`\"AAB\"`: the sequences created, in the order DFS (Depth-First Search) places them:"
     ],
     "table": {
      "head": [
@@ -1891,7 +1891,7 @@
       [
        "`(r, c, d)` in the queue",
        "Cell plus the path length so far (counting cells, so the start is 1)",
-       "BFS carrying the distance"
+       "BFS (Breadth-First Search) carrying the distance"
       ],
       [
        "`for dr in (-1, 0, 1): for dc in (-1, 0, 1)`",
@@ -2385,7 +2385,7 @@
       [
        "`q` of zero in-degree courses",
        "Courses that can be taken now",
-       "BFS frontier"
+       "BFS (Breadth-First Search) frontier"
       ],
       [
        "`sem += 1`, `for _ in range(len(q))`",

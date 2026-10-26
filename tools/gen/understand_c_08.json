@@ -17,13 +17,13 @@
       ],
       [
        "seed `q` with EVERY 0 cell at distance 0",
-       "Multi-source BFS: all zeros start together",
+       "Multi-source BFS (Breadth-First Search): all zeros start together",
        "The nearest 0 for each cell is the shortest path from ANY zero"
       ],
       [
        "`q.popleft()`",
        "Process cells in order of distance",
-       "FIFO order makes the first time a cell is reached the shortest"
+       "FIFO (First In, First Out) order makes the first time a cell is reached the shortest"
       ],
       [
        "`dist[a][b] < 0`",
@@ -130,7 +130,7 @@
       ],
       [
        "`leaves(n)`",
-       "Pre-order DFS collecting leaves left to right",
+       "Pre-order DFS (Depth-First Search) collecting leaves left to right",
        "Bottom edge of the boundary"
       ],
       [
@@ -1780,7 +1780,7 @@
    {
     "h": "Walk through an example",
     "p": [
-     "BST `[5,3,6,2,4,null,7]`, `k = 9`, pre-order visit:"
+     "BST (Binary Search Tree) `[5,3,6,2,4,null,7]`, `k = 9`, pre-order visit:"
     ],
     "table": {
      "head": [
@@ -1966,7 +1966,7 @@
     ]
    }
   ],
-  "takeaway": "Maximum width: BFS with heap-style indices (children 2i and 2i+1), normalised per level; width = rightmost − leftmost + 1."
+  "takeaway": "Maximum width: BFS (Breadth-First Search) with heap-style indices (children 2i and 2i+1), normalised per level; width = rightmost − leftmost + 1."
  },
  "671": {
   "blocks": [
@@ -2184,7 +2184,7 @@
    {
     "h": "Subsequence vs subarray",
     "p": [
-     "The name says subsequence but the elements must be contiguous: it is the longest increasing subarray, solvable in O(n). The non-contiguous LIS (problem 300) needs DP or patience sorting."
+     "The name says subsequence but the elements must be contiguous: it is the longest increasing subarray, solvable in O(n). The non-contiguous LIS (problem 300) needs DP (Dynamic Programming) or patience sorting."
     ]
    },
    {

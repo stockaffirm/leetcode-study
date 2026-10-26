@@ -440,7 +440,7 @@
      ],
      "rows": [
       [
-       "try every start with a full DFS",
+       "try every start with a full DFS (Depth-First Search)",
        "O(n²)"
       ],
       [
@@ -1720,7 +1720,7 @@
    {
     "h": "Why four classes?",
     "p": [
-     "A move changes either the row or the column to a different value. Whether a cell is the destination, shares its row, shares its column, or neither fully determines how many ways it can reach each class next, so cells in the same class are interchangeable. That collapses an n·m-state DP into 4 states and k steps, giving O(k)."
+     "A move changes either the row or the column to a different value. Whether a cell is the destination, shares its row, shares its column, or neither fully determines how many ways it can reach each class next, so cells in the same class are interchangeable. That collapses an n·m-state DP (Dynamic Programming) into 4 states and k steps, giving O(k)."
     ],
     "table": {
      "head": [

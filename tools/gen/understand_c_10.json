@@ -464,7 +464,7 @@
       ],
       [
        "`seen` set + `deque`",
-       "BFS with visited states",
+       "BFS (Breadth-First Search) with visited states",
        "Shortest sequence of moves in an unweighted state graph"
       ],
       [
@@ -703,7 +703,7 @@
       ],
       [
        "`for s in range(len(graph))`",
-       "Start a BFS from every unvisited node: the graph may be disconnected",
+       "Start a BFS (Breadth-First Search) from every unvisited node: the graph may be disconnected",
        "Components must be checked independently"
       ],
       [
@@ -718,7 +718,7 @@
       ],
       [
        "`deque`",
-       "FIFO queue for BFS",
+       "FIFO (First In, First Out) queue for BFS",
        "Level by level colouring"
       ]
      ]
@@ -931,7 +931,7 @@
        "O(n log n)"
       ],
       [
-       "Digit DP",
+       "Digit DP (Dynamic Programming)",
        "O(log n)"
       ]
      ]
@@ -1071,7 +1071,7 @@
      "rows": [
       [
        "`go(u, path)`",
-       "DFS from node `u`; `path` is the route from node 0 to `u`",
+       "DFS (Depth-First Search) from node `u`; `path` is the route from node 0 to `u`",
        "Enumerating all paths"
       ],
       [
@@ -1086,7 +1086,7 @@
       ],
       [
        "no `visited` set",
-       "The graph is a DAG, so no cycles and every path is simple",
+       "The graph is a DAG (Directed Acyclic Graph), so no cycles and every path is simple",
        "A visited set would wrongly hide valid paths through shared nodes"
       ]
      ]
@@ -1349,7 +1349,7 @@
        "Inverted index: from a stop to the buses"
       ],
       [
-       "BFS over ROUTES, not stops",
+       "BFS (Breadth-First Search) over ROUTES, not stops",
        "A node is a bus route; one step = boarding another route at a shared stop",
        "Counting buses, not stops: staying on the same route is free"
       ],
@@ -1571,7 +1571,7 @@
        "O(n)"
       ],
       [
-       "Multi-source BFS from all `c`",
+       "Multi-source BFS (Breadth-First Search) from all `c`",
        "O(n)",
        "O(n)"
       ]
@@ -2159,7 +2159,7 @@
     }
    },
    {
-    "h": "Why memoised DFS?",
+    "h": "Why memoised DFS (Depth-First Search)?",
     "p": [
      "'At least as rich as x' includes everybody richer than anyone richer than x. Walking the whole chain for each x repeats work; because the answer for `y` already summarises all of `y`'s richer people, one DFS call per person suffices. The graph has no cycles (the data is consistent), so the recursion terminates."
     ],
@@ -2178,7 +2178,7 @@
        "O(n + E)"
       ],
       [
-       "Topological order DP",
+       "Topological order DP (Dynamic Programming)",
        "O(n + E)"
       ]
      ]
