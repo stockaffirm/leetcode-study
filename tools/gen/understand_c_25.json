@@ -1,0 +1,2199 @@
+{
+ "119": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`row = [1]`",
+       "Row 0 of Pascal's triangle",
+       "Start of the recurrence"
+      ],
+      [
+       "`row[i] + row[i + 1] for i in range(len(row) - 1)`",
+       "Each interior entry of the next row is the sum of the two entries above it",
+       "Pairwise sums of adjacent elements"
+      ],
+      [
+       "`[1] + … + [1]`",
+       "Every row starts and ends with 1",
+       "Add the boundary ones"
+      ],
+      [
+       "only the current row is kept",
+       "The problem asks for one row, so earlier rows are discarded",
+       "O(k) space instead of O(k²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`rowIndex = 3`:"
+    ],
+    "table": {
+     "head": [
+      "After step",
+      "Row"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]"
+      ],
+      [
+       "1",
+       "[1, 1]"
+      ],
+      [
+       "2",
+       "[1, 2, 1]"
+      ],
+      [
+       "3",
+       "[1, 3, 3, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we keep just one row?",
+    "p": [
+     "Row `k + 1` depends only on row `k`. Building the next row from the current one and replacing it uses only O(k) memory, unlike storing the full triangle (problem 118)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Space"
+     ],
+     "rows": [
+      [
+       "store all rows",
+       "O(k²)"
+      ],
+      [
+       "keep the current row (this code)",
+       "O(k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k²) — the rows have lengths 1, 2, …, k+1.",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Pascal's triangle row k: build each row from the previous one by adding adjacent pairs and adding 1 at both ends, keeping only the latest row."
+ },
+ "308": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`self.mat`",
+       "The current value of every cell, so an update can compute the CHANGE `delta`",
+       "Point updates need the old value"
+      ],
+      [
+       "`self.tree` (2D Fenwick tree, also called Binary Indexed Tree, BIT)",
+       "`tree[i][j]` holds the sum of a rectangular block whose size is set by the lowest set bits of `i` and `j`",
+       "Prefix sums with updates in O(log m · log n)"
+      ],
+      [
+       "`i += i & -i`, `j += j & -j`",
+       "Climb to every tree node whose block contains the updated cell",
+       "Update path (low bit trick)"
+      ],
+      [
+       "`i -= i & -i`, `j -= j & -j`",
+       "Walk down the prefix blocks that together cover rows `1..r`, columns `1..c`",
+       "Query path"
+      ],
+      [
+       "`_prefix(r, c)`",
+       "Sum of the rectangle from the top-left to `(r−1, c−1)`",
+       "2D prefix sum"
+      ],
+      [
+       "inclusion–exclusion in `sumRegion`",
+       "`P(r2+1, c2+1) − P(r1, c2+1) − P(r2+1, c1) + P(r1, c1)`",
+       "Rectangle sum from four prefix sums"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 5×5 matrix from the problem. `sumRegion(2,1,4,3)` is the sum of rows 2–4, columns 1–3; then `update(3,2,2)` sets cell (3,2) from 0 to 2:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`sumRegion(2, 1, 4, 3)`",
+       "8"
+      ],
+      [
+       "`update(3, 2, 2)`",
+       "(cell (3,2) changes from 0 to 2: delta = +2)"
+      ],
+      [
+       "`sumRegion(2, 1, 4, 3)`",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a Fenwick tree instead of prefix sums?",
+    "p": [
+     "A static 2D prefix-sum table answers a query in O(1) but an update costs O(m·n) because it changes many prefixes. A Fenwick tree balances both at O(log m · log n). With many updates and queries this wins."
+    ],
+    "table": {
+     "head": [
+      "Structure",
+      "Update",
+      "Query"
+     ],
+     "rows": [
+      [
+       "plain matrix",
+       "O(1)",
+       "O(m·n)"
+      ],
+      [
+       "2D prefix sums",
+       "O(m·n)",
+       "O(1)"
+      ],
+      [
+       "2D Fenwick tree (this code)",
+       "O(log m · log n)",
+       "O(log m · log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log m · log n) per update/query; construction O(m·n·log m·log n).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Mutable 2D range sum: a 2D Fenwick tree (Binary Indexed Tree) stores partial rectangle sums; updates add a delta along the low-bit path, and a region sum is four prefix queries."
+ },
+ "386": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "The current number in dictionary order",
+       "Walk a 10-ary trie (digits as a tree) in pre-order without recursion"
+      ],
+      [
+       "`cur * 10 <= n`",
+       "The first child (append digit 0) exists: go deeper",
+       "Pre-order: children before siblings"
+      ],
+      [
+       "`cur % 10 == 9 or cur + 1 > n`",
+       "No next sibling at this depth (last digit is 9, or the next number is too big): climb to the parent",
+       "Climb while there is no sibling"
+      ],
+      [
+       "`cur //= 10`",
+       "Move to the parent (drop the last digit)",
+       "Parent in the digit tree"
+      ],
+      [
+       "`cur += 1`",
+       "Move to the next sibling",
+       "Sibling"
+      ],
+      [
+       "`for _ in range(n)`",
+       "Exactly `n` numbers are produced",
+       "Count the output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 13` — the order is 1, 10, 11, 12, 13, 2, 3, …, 9:"
+    ],
+    "table": {
+     "head": [
+      "Output",
+      "Next move",
+      "Next cur"
+     ],
+     "rows": [
+      [
+       "1",
+       "× 10 (go deeper)",
+       "10"
+      ],
+      [
+       "10",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "11"
+      ],
+      [
+       "11",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "12"
+      ],
+      [
+       "12",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "13"
+      ],
+      [
+       "13",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "2"
+      ],
+      [
+       "2",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "3"
+      ],
+      [
+       "3",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "4"
+      ],
+      [
+       "4",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "5"
+      ],
+      [
+       "5",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "6"
+      ],
+      [
+       "6",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "7"
+      ],
+      [
+       "7",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "8"
+      ],
+      [
+       "8",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "9"
+      ],
+      [
+       "9",
+       "back up while last digit is 9 or cur+1 > n, then + 1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not sort the strings?",
+    "p": [
+     "`sorted(range(1, n + 1), key=str)` is O(n log n) time and needs O(n) extra space. The iterative trie walk produces each number in O(1) amortised and uses O(1) extra space, which is what the problem asks for."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Extra space"
+     ],
+     "rows": [
+      [
+       "sort as strings",
+       "O(n log n)",
+       "O(n)"
+      ],
+      [
+       "iterative trie walk (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Lexicographic numbers: walk the digit trie in pre-order iteratively — multiply by 10 to go deeper, otherwise climb past 9s (or numbers over n) and add 1."
+ },
+ "389": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ord(c)`",
+       "The character code of `c`",
+       "Treat characters as numbers"
+      ],
+      [
+       "`x ^= ord(c)`",
+       "XOR: a number XOR itself is 0, and XOR is order independent",
+       "Cancel everything that appears twice"
+      ],
+      [
+       "`s + t`",
+       "Concatenate: every letter of `s` appears twice overall (once in each string); the extra letter appears once",
+       "Pair up the letters"
+      ],
+      [
+       "`chr(x)`",
+       "Convert the remaining code back to a character",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abcd\"`, `t = \"abcde\"`; XOR the codes of `abcd` + `abcde`:"
+    ],
+    "table": {
+     "head": [
+      "Char",
+      "Code",
+      "Running XOR"
+     ],
+     "rows": [
+      [
+       "a",
+       "97",
+       "97"
+      ],
+      [
+       "b",
+       "98",
+       "3"
+      ],
+      [
+       "c",
+       "99",
+       "96"
+      ],
+      [
+       "d",
+       "100",
+       "4"
+      ],
+      [
+       "a",
+       "97",
+       "101"
+      ],
+      [
+       "b",
+       "98",
+       "7"
+      ],
+      [
+       "c",
+       "99",
+       "100"
+      ],
+      [
+       "d",
+       "100",
+       "0"
+      ],
+      [
+       "e",
+       "101",
+       "101"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why XOR?",
+    "p": [
+     "`a ^ a = 0` and `a ^ 0 = a`. Every letter present in both strings is XOR-ed twice and cancels, leaving only the code of the added letter. It uses O(1) extra space and doesn't care about the order of the letters."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time",
+      "Space"
+     ],
+     "rows": [
+      [
+       "Counter comparison",
+       "O(n)",
+       "O(26)"
+      ],
+      [
+       "sum of codes difference",
+       "O(n)",
+       "O(1)"
+      ],
+      [
+       "XOR (this code)",
+       "O(n)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Find the added letter: XOR all character codes of both strings; pairs cancel and the extra letter remains."
+ },
+ "506": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(score, reverse=True)`",
+       "Scores from highest to lowest",
+       "The rank of a score is its position in this order"
+      ],
+      [
+       "`enumerate(...)`",
+       "Gives `(rank, score)` with rank starting at 0",
+       "Position as rank"
+      ],
+      [
+       "`labels[s]`",
+       "Score → label (medal for the top three, else the place number as text)",
+       "Lookup table; scores are unique"
+      ],
+      [
+       "`medals[rank] if rank < 3 else str(rank + 1)`",
+       "Conditional expression for the label",
+       "Special labels for the top 3"
+      ],
+      [
+       "`[labels[s] for s in score]`",
+       "Map each original score to its label, keeping the original order",
+       "Results in input order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`score = [5,4,3,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Score",
+      "Rank",
+      "Label"
+     ],
+     "rows": [
+      [
+       "5",
+       "1",
+       "Gold Medal"
+      ],
+      [
+       "4",
+       "2",
+       "Silver Medal"
+      ],
+      [
+       "3",
+       "3",
+       "Bronze Medal"
+      ],
+      [
+       "2",
+       "4",
+       "4"
+      ],
+      [
+       "1",
+       "5",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dictionary?",
+    "p": [
+     "Sorting loses the original positions, so we record each score's label by VALUE and then walk the original list. Scores are all distinct (guaranteed), so the value is a valid key."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "sort + dict lookup (this code)",
+       "O(n log n)"
+      ],
+      [
+       "sort indices instead of values",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Relative ranks: sort scores descending, store each score's label in a dictionary, then look up labels in the original order."
+ },
+ "575": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`set(candyType)`",
+       "The distinct candy types",
+       "Count unique items"
+      ],
+      [
+       "`len(candyType) // 2`",
+       "She may eat only half of the candies",
+       "The budget"
+      ],
+      [
+       "`min(types, budget)`",
+       "She can't eat more types than exist, and can't eat more candies than allowed",
+       "Two upper bounds; the smaller one is achievable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`candyType = [1,1,2,2,3,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "distinct types",
+       "3"
+      ],
+      [
+       "allowed to eat",
+       "3"
+      ],
+      [
+       "answer = min",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the minimum always achievable?",
+    "p": [
+     "If there are at least as many types as the allowed number of candies, she eats one of each of `n/2` different types. Otherwise she can take one of every type and fill the rest with duplicates. Either way she reaches the smaller of the two bounds."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "types ≥ n/2",
+       "n/2"
+      ],
+      [
+       "types < n/2",
+       "types"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the set."
+    ]
+   }
+  ],
+  "takeaway": "Distribute candies: the answer is the smaller of the number of distinct types and half the number of candies."
+ },
+ "812": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`combinations(points, 3)`",
+       "Every unordered triple of points (`itertools.combinations`)",
+       "Try all triples when n is small (≤ 50)"
+      ],
+      [
+       "`x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)`",
+       "Twice the signed area of the triangle (the shoelace formula, a determinant)",
+       "Area from coordinates without square roots"
+      ],
+      [
+       "`abs(...) / 2`",
+       "Area is non-negative; divide the doubled area by 2",
+       "Absolute value"
+      ],
+      [
+       "`max(best, area)`",
+       "Largest area so far",
+       "Maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`points = [[0,0],[0,1],[1,0],[0,2],[2,0]]` — each row is a triple that improved the best area:"
+    ],
+    "table": {
+     "head": [
+      "Triple",
+      "Area",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "[(0, 0), (0, 1), (1, 0)]",
+       "0.5",
+       "0.5"
+      ],
+      [
+       "[(0, 0), (0, 1), (2, 0)]",
+       "1.0",
+       "1.0"
+      ],
+      [
+       "[(0, 0), (0, 2), (2, 0)]",
+       "2.0",
+       "2.0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the determinant formula?",
+    "p": [
+     "The cross product of two sides gives twice the signed area, and it is 0 for collinear points, so degenerate triples contribute 0 area automatically. It needs only integer multiplications until the final division."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Note"
+     ],
+     "rows": [
+      [
+       "Heron's formula",
+       "needs side lengths and square roots"
+      ],
+      [
+       "shoelace determinant (this code)",
+       "exact integer arithmetic"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Largest triangle area: try every triple and compute the area with the shoelace (cross-product) formula."
+ },
+ "836": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`min(rec1[2], rec2[2]) - max(rec1[0], rec2[0])`",
+       "Width of the overlap along x: the smaller right edge minus the larger left edge",
+       "Interval overlap in 1D"
+      ],
+      [
+       "`> 0` (strict)",
+       "Touching edges (width 0) do not count as overlap",
+       "The problem wants a positive area"
+      ],
+      [
+       "the same test for y",
+       "Both axes must overlap by a positive amount",
+       "Rectangles overlap iff their projections on both axes overlap"
+      ],
+      [
+       "`and`",
+       "Overlap requires both conditions",
+       "Combine axes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "rec1, rec2",
+      "x overlap",
+      "y overlap",
+      "Overlap?"
+     ],
+     "rows": [
+      [
+       "[0, 0, 2, 2], [1, 1, 3, 3]",
+       "1",
+       "1",
+       "True"
+      ],
+      [
+       "[0, 0, 1, 1], [1, 0, 2, 1]",
+       "0",
+       "1",
+       "False"
+      ],
+      [
+       "[0, 0, 1, 1], [2, 2, 3, 3]",
+       "-1",
+       "-1",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why test the projections?",
+    "p": [
+     "Two axis-aligned rectangles overlap exactly when their x-intervals overlap and their y-intervals overlap. That avoids checking corners or cases like one rectangle inside another."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Note"
+     ],
+     "rows": [
+      [
+       "check corner containment",
+       "many cases (containment, crossing)"
+      ],
+      [
+       "interval overlap on each axis (this code)",
+       "one formula"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Rectangle overlap: the x-intervals and the y-intervals must each overlap by a positive amount (min of right edges > max of left edges)."
+ },
+ "869": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(str(n))`",
+       "The digits of `n` in order: a digit multiset signature",
+       "Two numbers are rearrangements of each other iff their sorted digits are equal"
+      ],
+      [
+       "`1 << i for i in range(31)`",
+       "All powers of two below 2³¹ (the input fits in a 32-bit integer)",
+       "Only 31 candidates"
+      ],
+      [
+       "`any(sorted(str(1 << i)) == key …)`",
+       "Is some power of two a digit rearrangement of `n`?",
+       "Compare signatures"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 46` has the digit signature `['4','6']`. Among the powers of two, only 64 has the same signature:"
+    ],
+    "table": {
+     "head": [
+      "Power of two",
+      "Sorted digits",
+      "Equals ['4','6']?"
+     ],
+     "rows": [
+      [
+       "16",
+       "['1', '6']",
+       "False"
+      ],
+      [
+       "32",
+       "['2', '3']",
+       "False"
+      ],
+      [
+       "64",
+       "['4', '6']",
+       "True"
+      ],
+      [
+       "128",
+       "['1', '2', '8']",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare against powers of two?",
+    "p": [
+     "Trying all permutations of `n`'s digits is up to 9! = 362,880. Instead there are only 31 powers of two to compare with, each by a digit signature in O(digits)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Work"
+     ],
+     "rows": [
+      [
+       "all permutations of n",
+       "up to 9!"
+      ],
+      [
+       "31 power-of-two signatures (this code)",
+       "31 comparisons"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(31 · d log d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Reordered power of 2: compare the sorted digits of n with those of each of the 31 powers of two."
+ },
+ "1019": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`while head: vals.append(head.val)`",
+       "Copy the list values into an array for indexing",
+       "A linked list has no random access"
+      ],
+      [
+       "`st`",
+       "Stack of INDICES whose next greater value has not been found; their values are non-increasing from bottom to top",
+       "Monotonic stack"
+      ],
+      [
+       "`vals[st[-1]] < v`",
+       "The current value is the next greater element for the stacked index",
+       "Resolve waiting elements"
+      ],
+      [
+       "`res[st.pop()] = v`",
+       "Record the answer at the popped index",
+       "Answer array of zeros as default (no greater element)"
+      ],
+      [
+       "`res = [0] * len(vals)`",
+       "Elements never resolved keep 0",
+       "Default"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [2,1,5]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Value",
+      "Resolved",
+      "Stack (values)",
+      "res"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "-",
+       "[2]",
+       "[0, 0, 0]"
+      ],
+      [
+       "1",
+       "1",
+       "-",
+       "[2, 1]",
+       "[0, 0, 0]"
+      ],
+      [
+       "2",
+       "5",
+       "['index 1 → 5', 'index 0 → 5']",
+       "[5]",
+       "[5, 5, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack?",
+    "p": [
+     "Each element waits until a larger one appears. The stack keeps waiting elements in non-increasing order, so a new value resolves exactly the top elements smaller than it. Every index is pushed and popped at most once."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan right for every node",
+       "O(n²)"
+      ],
+      [
+       "monotonic stack (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Next greater node: copy values to an array, then a monotonic stack of indices fills in the next larger value for each element."
+ },
+ "1022": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cur = cur * 2 + node.val`",
+       "Append a binary digit: shift left by one bit and add the node's bit",
+       "Read a binary number digit by digit"
+      ],
+      [
+       "`not node.left and not node.right`",
+       "A leaf ends a root-to-leaf path: that path is a complete binary number",
+       "Leaf test"
+      ],
+      [
+       "`dfs(left, cur) + dfs(right, cur)`",
+       "Sum the values of all paths below",
+       "Divide and conquer"
+      ],
+      [
+       "`if not node: return 0`",
+       "Empty child contributes nothing",
+       "Base case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,0,1,0,1,0,1]`: the four root-to-leaf paths are:"
+    ],
+    "table": {
+     "head": [
+      "Path (binary)",
+      "Value"
+     ],
+     "rows": [
+      [
+       "100",
+       "4"
+      ],
+      [
+       "101",
+       "5"
+      ],
+      [
+       "110",
+       "6"
+      ],
+      [
+       "111",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "4 + 5 + 6 + 7 = 22."
+    ]
+   },
+   {
+    "h": "Why pass `cur` down?",
+    "p": [
+     "The number for a path is built as you descend. Passing the running value as an argument means each node does O(1) work and no path needs to be stored or re-read."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "collect each path then convert",
+       "O(n · h)"
+      ],
+      [
+       "carry the value down (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Sum of root-to-leaf binary numbers: DFS carrying cur = cur × 2 + bit; add cur at each leaf."
+ },
+ "1217": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`p % 2`",
+       "1 for an odd position, 0 for an even one",
+       "Parity"
+      ],
+      [
+       "`odd`",
+       "Number of chips on odd positions",
+       "Count one parity class"
+      ],
+      [
+       "`len(position) - odd`",
+       "Number of chips on even positions",
+       "The other class"
+      ],
+      [
+       "`min(odd, even)`",
+       "Moving a chip by 2 is free, so chips of the same parity can gather for free; moving between parities costs 1 per chip, so move the smaller group",
+       "Choose the cheaper group to move"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`position = [2,2,2,3,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Parity",
+      "Chips"
+     ],
+     "rows": [
+      [
+       "even",
+       "3"
+      ],
+      [
+       "odd",
+       "2"
+      ],
+      [
+       "cost = min",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only parity matters?",
+    "p": [
+     "A move of 2 costs nothing, so any chip can slide to any position of the same parity for free. Everyone ends on one position; chips whose parity differs from that position pay 1 each to make a single ±1 move. Pick the parity class with fewer chips to pay."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try each target position",
+       "O(n²)"
+      ],
+      [
+       "count parities (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Move chips to one position: moves of two are free, so the cost is the number of chips in the smaller parity class."
+ },
+ "1274": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sea.hasShips(tr, bl)`",
+       "Given API: is there at least one ship in the rectangle? (calls are limited)",
+       "Cheap existence query on a rectangle"
+      ],
+      [
+       "`not sea.hasShips(...) → return 0`",
+       "Prune empty rectangles immediately",
+       "Divide and conquer with pruning"
+      ],
+      [
+       "`tr == bl → return 1`",
+       "A single cell that has a ship (we already asked) holds exactly one ship",
+       "Base case"
+      ],
+      [
+       "`mx, my = midpoints`",
+       "Split the rectangle into four quadrants at the midpoint",
+       "Quad-tree style recursion"
+      ],
+      [
+       "four recursive calls",
+       "bottom-left, top-right, top-left, bottom-right quadrants",
+       "Cover the rectangle exactly once"
+      ],
+      [
+       "`tr.x < bl.x or tr.y < bl.y`",
+       "An empty rectangle (can arise when a dimension is 1 wide) returns 0",
+       "Guard degenerate splits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Ships at (1,1), (2,2), (3,3), (5,5); the search area is (0,0)–(4,4), so (5,5) is outside. Recursion tree of rectangles that contain ships (empty ones are pruned immediately). `hasShips` was called 17 times:"
+    ],
+    "table": {
+     "head": [
+      "Rectangle",
+      "Result"
+     ],
+     "rows": [
+      [
+       "rect (0,0)–(4,4)",
+       "has ships → split into 4"
+      ],
+      [
+       "  rect (0,0)–(2,2)",
+       "has ships → split into 4"
+      ],
+      [
+       "    rect (0,0)–(1,1)",
+       "has ships → split into 4"
+      ],
+      [
+       "      cell (1,1)",
+       "1 ship"
+      ],
+      [
+       "    cell (2,2)",
+       "1 ship"
+      ],
+      [
+       "  rect (3,3)–(4,4)",
+       "has ships → split into 4"
+      ],
+      [
+       "    cell (3,3)",
+       "1 ship"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why divide into four?",
+    "p": [
+     "There are at most 10 ships, so most of the area is empty. Each non-empty rectangle is split into four parts, and every empty part costs one query and stops. The number of queries is therefore about (ships × log(area)) instead of one query per cell."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Queries"
+     ],
+     "rows": [
+      [
+       "ask about every cell",
+       "O(area)"
+      ],
+      [
+       "quad-tree recursion (this code)",
+       "O(ships · log(area))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(S log N) queries for S ships on an N×N area.",
+     "Space: O(log N) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Count ships with limited queries: recursively split the rectangle into four quadrants, pruning every quadrant `hasShips` reports empty."
+ },
+ "1346": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "Values already visited",
+       "Two-sum style: look for a partner among earlier elements"
+      ],
+      [
+       "`x * 2 in seen`",
+       "An earlier element equals `2x`, so `x` is half of an element already seen",
+       "Check one direction"
+      ],
+      [
+       "`x % 2 == 0 and x // 2 in seen`",
+       "An earlier element is half of `x` (only possible if `x` is even)",
+       "Check the other direction"
+      ],
+      [
+       "`seen.add(x)` after the check",
+       "Don't pair an element with itself (matters for `0`: `0 = 2·0`, so only two zeros count)",
+       "Add after checking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [10, 2, 5, 3]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Checks",
+      "Found?"
+     ],
+     "rows": [
+      [
+       "10",
+       "20 in seen? False; 5 in seen? False",
+       "False"
+      ],
+      [
+       "2",
+       "4 in seen? False; 1 in seen? False",
+       "False"
+      ],
+      [
+       "5",
+       "10 in seen? True; - in seen? False",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why both directions?",
+    "p": [
+     "The pair `(a, b)` with `a = 2b` can appear in either order in the array. When the double comes first, `x // 2 in seen` finds it; when the half comes first, `x * 2 in seen` finds it. Checking both at each step handles every order in one pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs",
+       "O(n²)"
+      ],
+      [
+       "set + two checks (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Does an element and its double exist: one pass with a set, checking for 2x and for x/2 (when x is even) among earlier values."
+ },
+ "1415": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total = 3 * 2 ** (n - 1)`",
+       "Number of happy strings of length n: 3 choices for the first letter, 2 for each next letter (anything but the previous)",
+       "Count by multiplication"
+      ],
+      [
+       "`k -= 1`",
+       "Convert to a zero-based index",
+       "Index into a sorted list"
+      ],
+      [
+       "`block`",
+       "How many strings share each choice at the current position: `total / 3` at the first position, halved after each position",
+       "Size of a subtree of the choice tree"
+      ],
+      [
+       "`idx, k = divmod(k, block)`",
+       "Which choice (0, 1, ...) contains the k-th string, and the remaining index inside that block",
+       "Mixed-radix decomposition of k"
+      ],
+      [
+       "`choices`",
+       "The allowed letters in alphabetical order (excluding the previous letter)",
+       "Lexicographic order of choices"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `k = 3`: 12 happy strings in total, block sizes 4, 2, 1."
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "Choices",
+      "Block size",
+      "Chosen index",
+      "Letter",
+      "Built so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "['a', 'b', 'c']",
+       "4",
+       "0",
+       "a",
+       "a"
+      ],
+      [
+       "1",
+       "['b', 'c']",
+       "2",
+       "1",
+       "c",
+       "ac"
+      ],
+      [
+       "2",
+       "['a', 'b']",
+       "1",
+       "0",
+       "a",
+       "aca"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not generate all strings?",
+    "p": [
+     "Generating and sorting all `3·2^(n−1)` strings costs exponential time. The strings form a tree where each level multiplies by 2 (or 3 at the top), so the k-th string is found by repeated division, like converting `k` to a number in a mixed base: O(n) time."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "generate all, index k",
+       "O(2ⁿ · n)"
+      ],
+      [
+       "divmod by block sizes (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "K-th happy string: count how many strings sit under each choice (blocks of 2^(remaining)) and pick letters by divmod instead of generating anything."
+ },
+ "1544": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "Stack of kept characters",
+       "Adjacent pairs cancel, and a removal can expose a new adjacent pair"
+      ],
+      [
+       "`abs(ord(st[-1]) - ord(c)) == 32`",
+       "Same letter in different case: ASCII codes of `a` and `A` differ by exactly 32",
+       "Case-insensitive pair test via character codes"
+      ],
+      [
+       "`st.pop()`",
+       "Remove the top, which cancels the pair",
+       "Cancel"
+      ],
+      [
+       "`st.append(c)`",
+       "Otherwise keep the character",
+       "Push"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"leEeetcode\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Action",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "l",
+       "push",
+       "l"
+      ],
+      [
+       "e",
+       "push",
+       "le"
+      ],
+      [
+       "E",
+       "cancels 'e'",
+       "l"
+      ],
+      [
+       "e",
+       "push",
+       "le"
+      ],
+      [
+       "e",
+       "push",
+       "lee"
+      ],
+      [
+       "t",
+       "push",
+       "leet"
+      ],
+      [
+       "c",
+       "push",
+       "leetc"
+      ],
+      [
+       "o",
+       "push",
+       "leetco"
+      ],
+      [
+       "d",
+       "push",
+       "leetcod"
+      ],
+      [
+       "e",
+       "push",
+       "leetcode"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack?",
+    "p": [
+     "After removing `Ee`, the neighbours `l e` ... may form a new bad pair (e.g. `abBA`). A stack compares each new character only with the most recent kept one, so cascading removals happen automatically in one pass."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "repeat find-and-delete",
+       "O(n²)"
+      ],
+      [
+       "stack (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Make the string great: a stack that cancels an incoming letter against the top when they are the same letter in opposite case."
+ },
+ "1583": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rank[x][y]`",
+       "Position of `y` in `x`'s preference list (lower = preferred)",
+       "Turn a list into an O(1) comparison table"
+      ],
+      [
+       "`partner[x]`",
+       "Who `x` is currently paired with",
+       "Pairs → lookup"
+      ],
+      [
+       "`for u in preferences[x]: if u == y: break`",
+       "Scan `x`'s preferences from the best; stop when we reach the current partner, since only people ranked above the partner matter",
+       "Candidates `x` prefers over their partner"
+      ],
+      [
+       "`rank[u][x] < rank[u][v]`",
+       "`u` also prefers `x` over `u`'s own partner `v`",
+       "The unhappiness condition: both would rather be together"
+      ],
+      [
+       "`res += 1; break`",
+       "One such `u` is enough to make `x` unhappy",
+       "Count `x` once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, preferences `[[1,2,3],[3,2,0],[3,1,0],[1,2,0]]`, pairs `(0,1)` and `(2,3)`:"
+    ],
+    "table": {
+     "head": [
+      "Friend x",
+      "Partner",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "happy"
+      ],
+      [
+       "1",
+       "0",
+       "prefers 3 over partner 0, and 3 prefers 1 over 2 → unhappy"
+      ],
+      [
+       "2",
+       "3",
+       "happy"
+      ],
+      [
+       "3",
+       "2",
+       "prefers 1 over partner 2, and 1 prefers 3 over 0 → unhappy"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why precompute `rank`?",
+    "p": [
+     "Comparing two friends in a preference list by `list.index` costs O(n) each time. The rank table does it in O(1), so the whole check is O(n²) instead of O(n³)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "`list.index` comparisons",
+       "O(n³)"
+      ],
+      [
+       "rank table (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Unhappy friends: build a rank table, then for each friend check whether someone they prefer over their partner also prefers them over that person's partner."
+ },
+ "1658": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`target = sum(nums) - x`",
+       "We remove elements only from the two ENDS; what stays is a contiguous middle subarray with sum `total − x`",
+       "Reverse the question: find the longest middle subarray"
+      ],
+      [
+       "`if target < 0: return -1`",
+       "`x` is bigger than the whole array's sum",
+       "Impossible"
+      ],
+      [
+       "sliding window with `cur` and `left`",
+       "All values are positive, so shrinking from the left lowers the sum and growing raises it",
+       "Window sum with positive numbers"
+      ],
+      [
+       "`if cur == target: best = max(best, r - left + 1)`",
+       "Record the longest window that hits the target",
+       "Maximise the kept middle"
+      ],
+      [
+       "`len(nums) - best`",
+       "Operations = elements removed from the ends",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,4,2,3]`, `x = 5`, so the middle subarray must sum to 6:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "nums[r]",
+      "Window sum",
+      "Window",
+      "Longest middle so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "[0,0]",
+       "-1"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "[0,1]",
+       "-1"
+      ],
+      [
+       "2",
+       "4",
+       "6",
+       "[0,2]",
+       "3"
+      ],
+      [
+       "3",
+       "2",
+       "6",
+       "[2,3]",
+       "3"
+      ],
+      [
+       "4",
+       "3",
+       "5",
+       "[3,4]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a window in the middle?",
+    "p": [
+     "Removing from the ends in any order leaves a contiguous subarray. Minimising the number removed means maximising the length of the leftover with sum `total − x`. The 'longest subarray with a given sum' is a classic sliding-window problem for positive numbers."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all splits of left/right removals",
+       "O(n²)"
+      ],
+      [
+       "longest middle window (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reduce x to zero from the ends: the leftover middle has sum total − x, so find the longest such subarray with a sliding window."
+ },
+ "1700": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(students)`",
+       "How many students want each sandwich type",
+       "Only the counts matter, not the queue order"
+      ],
+      [
+       "`for s in sandwiches`",
+       "Serve sandwiches in stack order",
+       "The top sandwich is fixed"
+      ],
+      [
+       "`cnt[s] == 0: return sum(cnt.values())`",
+       "If nobody left wants the top sandwich, everyone remaining is stuck",
+       "Early termination"
+      ],
+      [
+       "`cnt[s] -= 1`",
+       "Some student who wants it takes it (students who don't want it rotate to the back until the right one reaches the front)",
+       "Order does not matter: the queue rotates"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`students = [1,1,0,0]`, `sandwiches = [0,1,0,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Top sandwich",
+      "What happens",
+      "Remaining wants"
+     ],
+     "rows": [
+      [
+       "0",
+       "a student who wants it eats",
+       "{1: 2, 0: 1}"
+      ],
+      [
+       "1",
+       "a student who wants it eats",
+       "{1: 1, 0: 1}"
+      ],
+      [
+       "0",
+       "a student who wants it eats",
+       "{1: 1, 0: 0}"
+      ],
+      [
+       "1",
+       "a student who wants it eats",
+       "{1: 0, 0: 0}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Everyone eats, so 0 students are left hungry."
+    ]
+   },
+   {
+    "h": "Why can we ignore the queue order?",
+    "p": [
+     "The queue rotates until a student who wants the top sandwich reaches the front, so the order does not change how many students of each type remain. The process only stops when no one wants the current top sandwich, which is a statement about counts."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate the queue",
+       "O(n²)"
+      ],
+      [
+       "counts (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Students unable to eat: count preferences; go through the sandwich stack and stop at the first type nobody wants, returning the number of students left."
+ },
+ "1820": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`grid[b][g]`",
+       "Boy `b` may invite girl `g`",
+       "A bipartite graph (boys on one side, girls on the other)"
+      ],
+      [
+       "`match[g]`",
+       "Which boy currently holds an invitation to girl `g` (−1 = free)",
+       "Matching array indexed by the girl"
+      ],
+      [
+       "`try_boy(b, seen)` (Kuhn's algorithm, a Depth-First Search, DFS, for augmenting paths)",
+       "Try to find a girl for boy `b`: take a free girl, or take a girl whose current boy can be rerouted to another girl",
+       "Maximum bipartite matching"
+      ],
+      [
+       "`seen`",
+       "Girls already tried in this attempt; prevents revisiting and infinite loops",
+       "Visited set per attempt"
+      ],
+      [
+       "`match[g] == -1 or try_boy(match[g], seen)`",
+       "Girl is free, or her current boy can move elsewhere",
+       "Augmenting path step"
+      ],
+      [
+       "`sum(try_boy(b, set()) …)`",
+       "Each success adds one more matched pair",
+       "Matching size"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,1,1],[1,0,1],[0,0,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "Boy",
+      "Matched?",
+      "match (girl → boy)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "True",
+       "[0, -1, -1]",
+       "1"
+      ],
+      [
+       "1",
+       "True",
+       "[1, 0, -1]",
+       "2"
+      ],
+      [
+       "2",
+       "True",
+       "[1, 0, 2]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can a boy 'steal' a girl?",
+    "p": [
+     "If the girl he wants is taken, the code asks her current boy to try another girl (recursively). If that succeeds, the girl is freed and reassigned. This chain is an augmenting path, and repeating the search for every boy finds a maximum matching."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "greedy first free girl",
+       "not optimal"
+      ],
+      [
+       "Kuhn's augmenting paths (this code)",
+       "O(m · edges)"
+      ],
+      [
+       "Hopcroft–Karp",
+       "O(E √V)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m · m·n) in the worst case.",
+     "Space: O(m + n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum accepted invitations: maximum bipartite matching with Kuhn's algorithm — for each boy search for a free girl or reroute the girl's current boy."
+ }
+}

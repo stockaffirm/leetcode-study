@@ -1,0 +1,1927 @@
+{
+ "1656": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.data = [None] * (n + 1)",
+       "Slots for ids 1..n (index 0 unused); None means 'not arrived yet'",
+       "Buffer for out-of-order arrivals"
+      ],
+      [
+       "self.ptr",
+       "The next id that must be delivered; everything before it has already been returned",
+       "Pointer to the next expected item"
+      ],
+      [
+       "while data[ptr] is not None",
+       "Releases the longest run of consecutive ids starting at ptr",
+       ""
+      ],
+      [
+       "return out",
+       "Chunk of values released by this insert (possibly empty)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`OrderedStream(5)`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "ptr after"
+     ],
+     "rows": [
+      [
+       "insert(3, 'ccccc')",
+       "[]",
+       "1"
+      ],
+      [
+       "insert(1, 'aaaaa')",
+       "['aaaaa']",
+       "2"
+      ],
+      [
+       "insert(2, 'bbbbb')",
+       "['bbbbb', 'ccccc']",
+       "4"
+      ],
+      [
+       "insert(5, 'eeeee')",
+       "[]",
+       "4"
+      ],
+      [
+       "insert(4, 'ddddd')",
+       "['ddddd', 'eeeee']",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is every insert cheap overall?",
+    "p": [
+     "Each slot is released exactly once, when ptr passes it. The while loop only advances ptr, so the total work across all inserts is O(n), even though one insert may release many values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) total over all calls (amortized O(1) per insert).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Buffer plus a pointer to the next expected id; each insert releases the contiguous run starting at the pointer."
+ },
+ "1749": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "run",
+       "Prefix sum (the empty prefix is 0)",
+       "Subarray sum = difference of two prefix sums"
+      ],
+      [
+       "hi, lo",
+       "Highest and lowest prefix sum seen, both starting at 0 for the empty prefix",
+       ""
+      ],
+      [
+       "hi - lo",
+       "The largest difference between any two prefix sums is the largest absolute subarray sum, whichever comes first",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,-3,2,3,-4]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "prefix sum",
+      "max prefix",
+      "min prefix",
+      "max \u2212 min"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "-3",
+       "-2",
+       "1",
+       "-2",
+       "3"
+      ],
+      [
+       "2",
+       "0",
+       "1",
+       "-2",
+       "3"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "-2",
+       "5"
+      ],
+      [
+       "-4",
+       "-1",
+       "3",
+       "-2",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 5."
+    ]
+   },
+   {
+    "h": "Why max prefix minus min prefix?",
+    "p": [
+     "Any subarray sum is prefix[j] \u2212 prefix[i]. The largest absolute value of such a difference is max(prefix) \u2212 min(prefix), because we can pick the pair (min, max) in either order and the absolute value ignores the sign."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum |subarray sum| = (max prefix sum) \u2212 (min prefix sum), both including the empty prefix 0."
+ },
+ "1893": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "covered = set()",
+       "All integers covered by any range",
+       ""
+      ],
+      [
+       "covered.update(range(a, b + 1))",
+       "Adds every integer of the inclusive range to the set",
+       "Bulk insert into a set"
+      ],
+      [
+       "all(x in covered for x in range(left, right + 1))",
+       "Every integer in the target range must be present; stops at the first missing one",
+       "all() short-circuits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Ranges `[[1,2],[3,4],[5,6]]`, target `[2, 5]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "covered?"
+     ],
+     "rows": [
+      [
+       "2",
+       "True"
+      ],
+      [
+       "3",
+       "True"
+      ],
+      [
+       "4",
+       "True"
+      ],
+      [
+       "5",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "All covered, so the answer is True."
+    ]
+   },
+   {
+    "h": "Is there a faster way?",
+    "p": [
+     "Values are small (up to 50), so a set is fine. For huge ranges you would sort the ranges and sweep, or use a difference array, in O(n log n) without enumerating every integer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total range lengths).",
+     "Space: O(number of covered integers)."
+    ]
+   }
+  ],
+  "takeaway": "Put every covered integer in a set and check each integer of [left, right]."
+ },
+ "1941": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s)",
+       "Frequency of every character",
+       ""
+      ],
+      [
+       "set(counter.values())",
+       "The distinct frequencies; if all frequencies are equal, the set has exactly one element",
+       "Set to test 'all the same'"
+      ],
+      [
+       "len(...) == 1",
+       "True when every character appears the same number of times",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "frequencies",
+      "distinct frequencies",
+      "result"
+     ],
+     "rows": [
+      [
+       "abacbc",
+       "{'a': 2, 'b': 2, 'c': 2}",
+       "{2}",
+       "True"
+      ],
+      [
+       "aaabb",
+       "{'a': 3, 'b': 2}",
+       "{2, 3}",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set of the counts?",
+    "p": [
+     "We don't care which characters have which count, only whether all counts are identical. Collapsing the counts into a set removes duplicates, so one remaining element means they all agree."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(26) for lowercase letters."
+    ]
+   }
+  ],
+  "takeaway": "Count characters, then check that the set of counts has exactly one value."
+ },
+ "1971": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "p = list(range(n))",
+       "Union-Find (disjoint set): every node starts as its own root",
+       ""
+      ],
+      [
+       "find(x) with path halving",
+       "Walks to the root while shortening paths (`p[x] = p[p[x]]`)",
+       ""
+      ],
+      [
+       "p[find(a)] = find(b)",
+       "Merges the components of a and b",
+       ""
+      ],
+      [
+       "find(source) == find(destination)",
+       "Same component \u21d4 a path exists",
+       "Connectivity queries"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Triangle `0\u20131\u20132\u20130`, source 0, destination 2:"
+    ],
+    "table": {
+     "head": [
+      "edge",
+      "parent array"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "[1, 1, 2]"
+      ],
+      [
+       "(1,2)",
+       "[1, 2, 2]"
+      ],
+      [
+       "(2,0)",
+       "[2, 2, 2]"
+      ]
+     ]
+    },
+    "bullets": [
+     "find(0) = 2, find(2) = 2: equal, so a path exists."
+    ]
+   },
+   {
+    "h": "Why Union-Find and not BFS (Breadth-First Search)?",
+    "p": [
+     "Both are O(n + E). Union-Find avoids building adjacency lists and recursion, and is handy when the question is only 'connected or not'. BFS/DFS is better if the actual path were needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + E) \u03b1(n)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Union all edges; the answer is whether source and destination share a root."
+ },
+ "2460": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums[i] == nums[i+1]",
+       "Adjacent equal values",
+       ""
+      ],
+      [
+       "nums[i] *= 2; nums[i+1] = 0",
+       "Merge: double the first, zero the second (done left to right, in place, as the statement requires)",
+       "In-place sequential update"
+      ],
+      [
+       "[x for x in nums if x]",
+       "Keeps the non-zero values in order",
+       "Filtering zeros"
+      ],
+      [
+       "+ [0] * (len(nums) - len(nonzero))",
+       "Pads zeros at the end",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,1,1,0]`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "array"
+     ],
+     "rows": [
+      [
+       "start",
+       "[1, 2, 2, 1, 1, 0]"
+      ],
+      [
+       "i = 1: merge",
+       "[1, 4, 0, 1, 1, 0]"
+      ],
+      [
+       "i = 3: merge",
+       "[1, 4, 0, 2, 0, 0]"
+      ],
+      [
+       "i = 4: merge",
+       "[1, 4, 0, 2, 0, 0]"
+      ],
+      [
+       "move zeros to the end",
+       "[1, 4, 2, 0, 0, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the merges happen before the shift?",
+    "p": [
+     "The statement applies the operations in index order on the original positions, and zeros inserted by a merge may sit between equal numbers (e.g. `2, 2, 2`: after merging the first two, the third no longer matches a neighbour). Shifting zeros only after all operations avoids changing which pairs are adjacent."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Apply merges left to right in place, then move zeros to the end by filtering and padding."
+ },
+ "2472": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "last",
+       "End of the previous chosen palindrome; the next one must start at or after it (non-overlapping)",
+       "Greedy interval selection"
+      ],
+      [
+       "for L in (k, k + 1)",
+       "Only lengths k and k + 1 need checking: any longer palindrome (length \u2265 k) contains a palindrome of length k or k+1 at its centre",
+       "Shortest useful candidates"
+      ],
+      [
+       "st = i - L + 1; st >= last",
+       "A candidate ending at i must start after `last`",
+       ""
+      ],
+      [
+       "t == t[::-1]",
+       "Palindrome check by comparing with the reversed string",
+       ""
+      ],
+      [
+       "count += 1; last = i + 1; break",
+       "Take the earliest-ending palindrome: leaves the most room for later ones",
+       "Earliest finish first"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abaccdbbd\"`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "end index i",
+      "palindrome chosen",
+      "count"
+     ],
+     "rows": [
+      [
+       "2",
+       "aba",
+       "1"
+      ],
+      [
+       "8",
+       "dbbd",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why is taking the earliest-ending palindrome optimal?",
+    "p": [
+     "This is interval scheduling: among non-overlapping intervals, always finishing as early as possible leaves the most room. Shorter palindromes are enough because a longer palindrome of length \u2265 k+2 contains a palindrome of length k or k+1 within it that ends earlier or at the same place."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 k) (each check is O(k)).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy interval scheduling: scan end positions, check palindromes of length k and k+1, take the first that starts after the last chosen end."
+ },
+ "2484": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cnt1[d]",
+       "How many times digit d appeared so far",
+       "Prefix counts"
+      ],
+      [
+       "cnt2[a*10 + b]",
+       "Number of subsequences 'ab' (a before b) so far",
+       "Counting 2-digit subsequences incrementally"
+      ],
+      [
+       "pre[i] = cnt2[:]",
+       "Snapshot of the 2-digit subsequence counts for the prefix BEFORE position i",
+       "Copy of the table (O(100))"
+      ],
+      [
+       "suf[i]",
+       "Same from the right: counts of 'ab' subsequences in the suffix after i",
+       ""
+      ],
+      [
+       "pre[i][ab] * suf[i][ba]",
+       "A length-5 palindrome is a b ? b a: the pair 'ab' on the left of the middle i and 'ba' on the right",
+       "Multiply independent sides"
+      ],
+      [
+       "range(2, n - 2)",
+       "The middle needs two positions on each side",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"103301\"`: middle positions with non-zero contributions (pre count \u00d7 suf count):"
+    ],
+    "table": {
+     "head": [
+      "middle i",
+      "left pair ab",
+      "pattern",
+      "ways on the left",
+      "ways on the right",
+      "palindromes"
+     ],
+     "rows": [
+      [
+       "2",
+       "10",
+       "10?01",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "10",
+       "10?01",
+       "1",
+       "1",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 2."
+    ]
+   },
+   {
+    "h": "Why fix the middle and multiply?",
+    "p": [
+     "A palindrome subsequence of length 5 is ab?ba. Once the middle position i is fixed, the left pair and the right pair are chosen independently from the prefix and suffix, so their counts multiply. Pre-computed tables make each (i, pair) an O(1) lookup."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(100 \u00b7 n).",
+     "Space: O(100 \u00b7 n) for the stored snapshots."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle digit; multiply the number of 'ab' pairs on the left by 'ba' pairs on the right using prefix/suffix tables."
+ },
+ "2493": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "comp[v] = s",
+       "Flood fill labels each node with its connected component",
+       "Connected components"
+      ],
+      [
+       "BFS (Breadth-First Search) from every node s",
+       "Computes layer numbers (distance) from s; the groups are the layers: nodes at distance d go in group d + 1",
+       ""
+      ],
+      [
+       "dist[v] == dist[u] \u2192 return -1",
+       "An edge joining two nodes in the same layer means the component is not bipartite (it has an odd cycle), so valid groups can't exist",
+       "Bipartite check"
+      ],
+      [
+       "max(dist.values()) + 1",
+       "Number of layers when starting from s",
+       ""
+      ],
+      [
+       "best[comp[s]] = max(\u2026)",
+       "For each component, the best start gives the most groups",
+       ""
+      ],
+      [
+       "sum(best.values())",
+       "Components are independent, so their group counts add",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges `[[1,2],[1,4],[1,5],[2,6],[2,3],[4,6]]` (one component of 6 nodes). Layers when starting from each node s:"
+    ],
+    "table": {
+     "head": [
+      "start s",
+      "component",
+      "number of layers (groups)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "3"
+      ],
+      [
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "4"
+      ],
+      [
+       "4",
+       "1",
+       "4"
+      ],
+      [
+       "5",
+       "1",
+       "4"
+      ],
+      [
+       "6",
+       "1",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "The best start gives 4 groups: answer 4. A triangle `1\u20132\u20133\u20131` returns -1, because two nodes in the same layer are adjacent."
+    ]
+   },
+   {
+    "h": "Why try every start node?",
+    "p": [
+     "The number of layers depends on where BFS starts. The longest possible layering of a component is achieved from some node (an endpoint of its longest shortest-path), and trying every node finds it. Start nodes whose layering has an intra-layer edge reveal an odd cycle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 (n + E)).",
+     "Space: O(n + E)."
+    ]
+   }
+  ],
+  "takeaway": "Connected components, then BFS from every node: layer count is the group count; an edge inside a layer means -1."
+ },
+ "2502": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.mem = [0] * n",
+       "Memory cells: 0 is free, otherwise the owner id mID",
+       "Simple array model"
+      ],
+      [
+       "run = run + 1 if v == 0 else 0",
+       "Length of the current run of free cells ending at i",
+       "Scanning for a contiguous run"
+      ],
+      [
+       "run == size",
+       "The first (leftmost) run of the requested size: return its start i \u2212 size + 1",
+       "Leftmost fit"
+      ],
+      [
+       "freeMemory",
+       "Scans the whole array, freeing every cell owned by mID, and returns how many",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`Allocator(10)`; memory shown as one digit per cell (0 = free):"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "memory"
+     ],
+     "rows": [
+      [
+       "allocate(1, 1)",
+       "0",
+       "1000000000"
+      ],
+      [
+       "allocate(1, 2)",
+       "1",
+       "1200000000"
+      ],
+      [
+       "allocate(1, 3)",
+       "2",
+       "1230000000"
+      ],
+      [
+       "freeMemory(2,)",
+       "1",
+       "1030000000"
+      ],
+      [
+       "allocate(3, 4)",
+       "3",
+       "1034440000"
+      ],
+      [
+       "allocate(1, 1)",
+       "1",
+       "1134440000"
+      ],
+      [
+       "allocate(1, 1)",
+       "6",
+       "1134441000"
+      ],
+      [
+       "freeMemory(1,)",
+       "3",
+       "0034440000"
+      ],
+      [
+       "allocate(10, 2)",
+       "-1",
+       "0034440000"
+      ],
+      [
+       "freeMemory(7,)",
+       "0",
+       "0034440000"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan instead of a smarter structure?",
+    "p": [
+     "With n \u2264 1000 and 1000 calls, an O(n) scan per call is fast enough and keeps the code obviously correct. A balanced tree of free intervals would give O(log n) but is much more code."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) per call.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Array of owner ids; allocate by finding the leftmost run of free cells of the required length."
+ },
+ "2523": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bytearray([1]) * (right + 1)",
+       "Mutable array of bytes, all 1: sieve[i] says whether i is still a prime candidate (compact and fast)",
+       "Sieve of Eratosthenes"
+      ],
+      [
+       "sieve[0:2] = zeros",
+       "0 and 1 are not prime",
+       ""
+      ],
+      [
+       "sieve[i*i::i] = bytearray(len(...))",
+       "Slice assignment crossing off every multiple of i from i\u00b2 on in one operation",
+       "Vectorised sieve step"
+      ],
+      [
+       "zip(primes, primes[1:])",
+       "Adjacent primes; the closest pair must be adjacent",
+       ""
+      ],
+      [
+       "b - a < gap (strict)",
+       "Keeps the first (smallest) pair on ties",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`left = 10`, `right = 19`: primes `[11, 13, 17, 19]`:"
+    ],
+    "table": {
+     "head": [
+      "adjacent pair",
+      "gap",
+      "result"
+     ],
+     "rows": [
+      [
+       "(11,13)",
+       "2",
+       "new best"
+      ],
+      [
+       "(13,17)",
+       "4",
+       "\u2013"
+      ],
+      [
+       "(17,19)",
+       "2",
+       "\u2013"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `[11, 13]`. If fewer than two primes exist the answer stays `[-1, -1]`."
+    ]
+   },
+   {
+    "h": "Why only adjacent primes?",
+    "p": [
+     "For primes p < q < r, the gap r \u2212 p is bigger than both q \u2212 p and r \u2212 q, so the closest pair can never skip a prime in between."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(right log log right).",
+     "Space: O(right)."
+    ]
+   }
+  ],
+  "takeaway": "Sieve of Eratosthenes to `right`, then scan adjacent primes for the smallest gap."
+ },
+ "2526": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.run",
+       "Length of the current streak of `value` at the end of the stream",
+       "Streak counter"
+      ],
+      [
+       "num == value ? run + 1 : 0",
+       "Extend the streak or reset it",
+       ""
+      ],
+      [
+       "run >= k",
+       "The last k numbers are all `value`",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`DataStream(value=4, k=3)`:"
+    ],
+    "table": {
+     "head": [
+      "consec(num)",
+      "streak",
+      "returns"
+     ],
+     "rows": [
+      [
+       "4",
+       "1",
+       "False"
+      ],
+      [
+       "4",
+       "2",
+       "False"
+      ],
+      [
+       "4",
+       "3",
+       "True"
+      ],
+      [
+       "3",
+       "0",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not store the stream?",
+    "p": [
+     "Only the length of the trailing run of `value` matters. A counter answers every query in O(1) and uses O(1) memory, however long the stream is."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Keep only the length of the current streak of the target value."
+ },
+ "2532": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "wait_l / wait_r",
+       "Heaps of workers waiting on the left / right bank; the key (\u2212(left + right crossing time), \u2212index) makes the LEAST efficient worker (larger sum, then larger index) come out first",
+       "Priority queue with a negated key (a min-heap used as a max-heap)"
+      ],
+      [
+       "work_l / work_r",
+       "Heaps of workers busy at a warehouse, ordered by the time they finish",
+       ""
+      ],
+      [
+       "while work\u2026 <= cur: move to wait",
+       "Workers who finished their job by time `cur` join the waiting queue of their bank",
+       "Event simulation"
+      ],
+      [
+       "if wait_r: \u2026 elif n > 0 and wait_l: \u2026",
+       "Priority rule: workers waiting on the right cross first; otherwise one from the left, only if boxes remain",
+       ""
+      ],
+      [
+       "else: cur = max(cur, next ready time)",
+       "If nobody is waiting, jump the clock to the next worker's finishing time",
+       "Skipping idle time"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 1` box, 3 workers `[[1,1,2,1],[1,1,3,1],[1,1,4,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "time after",
+      "event"
+     ],
+     "rows": [
+      [
+       "1",
+       "worker 2 crosses left \u2192 right, 0 boxes left to pick"
+      ],
+      [
+       "2",
+       "bridge idle: jump to the next time a worker is ready"
+      ],
+      [
+       "6",
+       "worker 2 crosses right \u2192 left (carrying a box)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Last worker reaches the left bank at time 6."
+    ]
+   },
+   {
+    "h": "Why heaps?",
+    "p": [
+     "Each moment needs the best waiting worker by a rule that depends on two keys, and workers move between 'waiting' and 'working' as time passes. Heaps give the best candidate in O(log k) and the finishing-time heaps release workers exactly when their job is done."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + k) log k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Event simulation with four heaps (waiting/working on each bank); least efficient worker has priority and idle gaps are skipped."
+ },
+ "2544": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str(n)",
+       "The digits as characters, left to right",
+       ""
+      ],
+      [
+       "sign = -sign",
+       "Flip between +1 and \u22121 for each digit",
+       "Alternating sign"
+      ],
+      [
+       "total += sign * int(d)",
+       "Add or subtract the digit",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`521`: the most significant digit gets +:"
+    ],
+    "table": {
+     "head": [
+      "digit",
+      "sign",
+      "total"
+     ],
+     "rows": [
+      [
+       "5",
+       "+",
+       "5"
+      ],
+      [
+       "2",
+       "\u2212",
+       "3"
+      ],
+      [
+       "1",
+       "+",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "5 \u2212 2 + 1 = 4."
+    ]
+   },
+   {
+    "h": "Why start from the string's left?",
+    "p": [
+     "The rule says the most significant digit is positive, and the signs alternate from there. Reading `str(n)` left to right matches it directly, avoiding the length-parity bookkeeping of a right-to-left digit loop."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d).",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Iterate the digits left to right with an alternating sign."
+ },
+ "2550": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pow(2, n, MOD)",
+       "Modular exponentiation: 2\u207f mod 10\u2079+7 computed in O(log n) without huge intermediate numbers",
+       "Fast power with a modulus"
+      ],
+      [
+       "- 2",
+       "Subtract the two non-colliding outcomes",
+       ""
+      ],
+      [
+       "% MOD",
+       "Keeps the result non-negative (Python's % already does)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`: each of the 3 monkeys moves clockwise or counter-clockwise, 2\u00b3 = 8 combinations:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "all combinations 2^n",
+       "8"
+      ],
+      [
+       "no collision: all clockwise",
+       "1"
+      ],
+      [
+       "no collision: all counter-clockwise",
+       "1"
+      ],
+      [
+       "collisions = 8 \u2212 2",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why exactly two safe outcomes?",
+    "p": [
+     "Two monkeys collide when they use the same edge in opposite directions or end on the same vertex. The only way for none to collide is for all to move the same way around the polygon, giving exactly 2 outcomes; everything else has at least one collision."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Total 2^n moves minus the 2 collision-free ones (all clockwise or all counter-clockwise)."
+ },
+ "2553": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for x in nums for d in str(x)",
+       "Nested comprehension: for each number, its digits as characters, in order",
+       ""
+      ],
+      [
+       "int(d)",
+       "Back to a digit",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[13,25,83,77]`:"
+    ],
+    "table": {
+     "head": [
+      "number",
+      "digits"
+     ],
+     "rows": [
+      [
+       "13",
+       "[1, 3]"
+      ],
+      [
+       "25",
+       "[2, 5]"
+      ],
+      [
+       "83",
+       "[8, 3]"
+      ],
+      [
+       "77",
+       "[7, 7]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Flattened: `[1, 3, 2, 5, 8, 3, 7, 7]`."
+    ]
+   },
+   {
+    "h": "Reading the comprehension order",
+    "p": [
+     "The `for` clauses read in the same order as nested loops: `for x in nums` is the outer loop, `for d in str(x)` the inner one. The expression at the front is evaluated innermost."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total digits).",
+     "Space: O(total digits)."
+    ]
+   }
+  ],
+  "takeaway": "A two-level list comprehension over numbers and their digit characters."
+ },
+ "2559": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "w[0] in 'aeiou' and w[-1] in 'aeiou'",
+       "First and last letters are vowels (substring test on a short string)",
+       ""
+      ],
+      [
+       "pre.append(pre[-1] + bool)",
+       "Prefix count: number of qualifying words among the first i words (True counts as 1)",
+       "Prefix sums over a 0/1 array"
+      ],
+      [
+       "pre[r + 1] - pre[l]",
+       "Qualifying words in the index range [l, r]",
+       "Range count in O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = [\"aba\",\"bcb\",\"ece\",\"aa\",\"e\"]`, prefix `[0, 1, 1, 2, 3, 4]`:"
+    ],
+    "table": {
+     "head": [
+      "query [l, r]",
+      "pre[r+1] \u2212 pre[l]",
+      "answer"
+     ],
+     "rows": [
+      [
+       "[0,2]",
+       "2 \u2212 0",
+       "2"
+      ],
+      [
+       "[1,4]",
+       "4 \u2212 1",
+       "3"
+      ],
+      [
+       "[1,1]",
+       "1 \u2212 1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why precompute?",
+    "p": [
+     "Each query would otherwise scan up to n words. The prefix array makes every query a subtraction, so Q queries cost O(n + Q) instead of O(n\u00b7Q)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + Q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums of 'starts and ends with a vowel'; each query is pre[r+1] \u2212 pre[l]."
+ },
+ "2562": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i, j",
+       "Two pointers closing in from both ends",
+       ""
+      ],
+      [
+       "int(str(a) + str(b))",
+       "Concatenates the digits of two numbers: string concatenation, then back to an integer",
+       "Concatenating numbers"
+      ],
+      [
+       "if i == j: total += nums[i]",
+       "With an odd count, the middle element is added alone",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[7,52,2,4]`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "concatenation",
+      "total"
+     ],
+     "rows": [
+      [
+       "nums[0]=7, nums[3]=4",
+       "74",
+       "74"
+      ],
+      [
+       "nums[1]=52, nums[2]=2",
+       "522",
+       "596"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 596."
+    ]
+   },
+   {
+    "h": "Why `i < j` then a separate `i == j` check?",
+    "p": [
+     "The loop handles complete pairs. When the length is odd, the pointers meet on a single middle element, which has no partner and is added by itself."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 d) for d-digit numbers.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers from both ends, concatenating digit strings; a lone middle element is added as is."
+ },
+ "2565": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "suf[j]",
+       "Latest index in s where the suffix t[j:] can start as a subsequence (n + 1 if impossible)",
+       "Greedy matching from the right"
+      ],
+      [
+       "k",
+       "Smallest index such that t[k:] still fits after the matched prefix t[:p]",
+       ""
+      ],
+      [
+       "p",
+       "How much of t's prefix has been matched greedily from the left",
+       "Two-sided greedy"
+      ],
+      [
+       "best = min(best, k - p)",
+       "Characters t[p:k] are the ones removed: the score is the length of the removed segment (right \u2212 left + 1)",
+       ""
+      ],
+      [
+       "while suf[k] <= i: k += 1",
+       "The suffix start must lie strictly after the prefix match at i; otherwise shorten the kept suffix",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abacaba\"`, `t = \"bzaa\"`: suffix positions `suf = [8, 8, 4, 6, 7]` (index in s where t[j:] can start from the right):"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "best score (shortest removed segment)",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Removing just `z` leaves `baa`, which is a subsequence of `abacaba`, so the minimum score is 1."
+    ]
+   },
+   {
+    "h": "Why a prefix + suffix decomposition?",
+    "p": [
+     "Removing t[left..right] keeps a prefix t[:left] and a suffix t[right+1:] that must both be subsequences of s, in order, without overlapping. Greedy left matching gives each prefix its earliest end; greedy right matching gives each suffix its latest start; two pointers choose the smallest removal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Match a prefix of t greedily from the left and a suffix from the right; the removed middle segment is the score."
+ },
+ "2571": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "n & 1",
+       "Lowest bit is 1 (n is odd)",
+       "Bit tests"
+      ],
+      [
+       "n & 3 == 3",
+       "The two lowest bits are `11`: adding 1 carries and clears a run of 1s (better than subtracting)",
+       "Looking at two bits"
+      ],
+      [
+       "n += 1 / n -= 1",
+       "Each is one operation (add or subtract a power of two): fixing the lowest set bit is the greedy choice",
+       ""
+      ],
+      [
+       "n >>= 1",
+       "Even number: shifting right just moves on to the next bit, at no cost",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 39` (binary 100111):"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "n after shift",
+      "operations so far"
+     ],
+     "rows": [
+      [
+       "\u202611: add 1 \u2192 40",
+       "20",
+       "1"
+      ],
+      [
+       "even: just shift",
+       "10",
+       "1"
+      ],
+      [
+       "even: just shift",
+       "5",
+       "1"
+      ],
+      [
+       "\u202601: subtract 1 \u2192 4",
+       "2",
+       "2"
+      ],
+      [
+       "even: just shift",
+       "1",
+       "2"
+      ],
+      [
+       "\u202601: subtract 1 \u2192 0",
+       "0",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3 operations."
+    ]
+   },
+   {
+    "h": "Why add when the low bits are 11?",
+    "p": [
+     "A run of ones such as `0111` costs 3 operations by subtracting each power but only 2 by adding the lowest (`+1` turns it into `1000`, then `-8`). So when two ones are adjacent, add 1; for an isolated one, subtract it. (A lone `\u2026011` pattern with value 3 is the standard exception: 3 costs 2 either way.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy on the low bits: a trailing 11 means add 1, an isolated 1 means subtract it, an even value just shifts."
+ },
+ "2574": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = sum(nums)",
+       "Sum of everything",
+       ""
+      ],
+      [
+       "left",
+       "Sum of the elements before the current index",
+       "Running prefix sum"
+      ],
+      [
+       "total - left - x",
+       "Right sum = everything minus the left part minus the current element",
+       "Right sum derived from the left sum"
+      ],
+      [
+       "abs(left \u2212 right)",
+       "Absolute difference",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[10,4,8,3]`, total 25:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "left sum",
+      "right sum",
+      "|left \u2212 right|"
+     ],
+     "rows": [
+      [
+       "10",
+       "0",
+       "15",
+       "15"
+      ],
+      [
+       "4",
+       "10",
+       "11",
+       "1"
+      ],
+      [
+       "8",
+       "14",
+       "3",
+       "11"
+      ],
+      [
+       "3",
+       "22",
+       "0",
+       "22"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[15, 1, 11, 22]`."
+    ]
+   },
+   {
+    "h": "Why compute right from total?",
+    "p": [
+     "A second pass or suffix array isn't necessary: right = total \u2212 left \u2212 x holds for every index, so one prefix variable is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Running left sum; right sum = total \u2212 left \u2212 current."
+ },
+ "2577": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pq of (time, row, col)",
+       "Dijkstra's algorithm with a min-heap: always expand the cell reachable earliest",
+       "Shortest path with waiting"
+      ],
+      [
+       "grid[0][1] > 1 and grid[1][0] > 1 \u2192 -1",
+       "You must move every second; if both first steps are locked at time 1 you are stuck and can't wait at the start",
+       "Special starting case"
+      ],
+      [
+       "nt = max(t + 1, grid[a][b])",
+       "Enter the neighbour at the earliest time it is open",
+       ""
+      ],
+      [
+       "if (nt - (t + 1)) % 2: nt += 1",
+       "You cannot stand still, but you can bounce back and forth between two cells, wasting time in steps of 2; so the extra waiting time must be even",
+       "Parity of waiting"
+      ],
+      [
+       "t > dist[r][c]: continue",
+       "Skip stale heap entries",
+       "Lazy deletion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The grid from the problem (cells expanded in order of earliest arrival time):"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "arrival time",
+      "event"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "expand"
+      ],
+      [
+       "(0,1)",
+       "1",
+       "expand"
+      ],
+      [
+       "(1,1)",
+       "2",
+       "expand"
+      ],
+      [
+       "(1,2)",
+       "3",
+       "expand"
+      ],
+      [
+       "(2,1)",
+       "3",
+       "expand"
+      ],
+      [
+       "(0,2)",
+       "4",
+       "expand"
+      ],
+      [
+       "(2,0)",
+       "4",
+       "expand"
+      ],
+      [
+       "(0,3)",
+       "5",
+       "expand"
+      ],
+      [
+       "(1,0)",
+       "5",
+       "expand"
+      ],
+      [
+       "(1,3)",
+       "6",
+       "expand"
+      ],
+      [
+       "(2,3)",
+       "7",
+       "goal"
+      ]
+     ]
+    },
+    "bullets": [
+     "Earliest arrival at the bottom-right: 7."
+    ]
+   },
+   {
+    "h": "Why the parity adjustment?",
+    "p": [
+     "If a cell opens later than t + 1, you must kill time by stepping back and forth, which takes 2 steps per loop. You can therefore arrive at time (t + 1) + 2k, never at an odd offset. Rounding the wait up to an even number gives the true earliest arrival."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n log(m\u00b7n)).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Dijkstra where entering a cell waits until it opens, with the wait rounded to an even number (you can only bounce back and forth)."
+ }
+}

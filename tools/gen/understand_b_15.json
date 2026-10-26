@@ -1,0 +1,2052 @@
+{
+ "241": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`e.isdigit()`",
+       "String is a plain number",
+       "Base case: one possible value"
+      ],
+      [
+       "`for i, c in enumerate(e): if c in '+-*'`",
+       "Try every operator as the LAST one applied",
+       "The outermost parenthesis splits the expression at exactly one operator"
+      ],
+      [
+       "`go(e[:i])` and `go(e[i+1:])`",
+       "All results of the left and right parts",
+       "Recursive subproblems on substrings"
+      ],
+      [
+       "nested `for a … for b …`",
+       "Combine every left value with every right value",
+       "Cartesian product of the sub-results"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Memoise by substring",
+       "Substrings repeat across splits; LRU (Least Recently Used) cache without size limit"
+      ],
+      [
+       "`sorted(..., reverse=True)`",
+       "Descending order as the problem here expects",
+       "Results come from different split orders"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'2-1-1'`:"
+    ],
+    "table": {
+     "head": [
+      "Sub-expression",
+      "Results"
+     ],
+     "rows": [
+      [
+       "2",
+       "[2]"
+      ],
+      [
+       "1-1",
+       "[0]"
+      ],
+      [
+       "2-1",
+       "[1]"
+      ],
+      [
+       "1",
+       "[1]"
+      ],
+      [
+       "2-1-1 (split at first '-')",
+       "2 − [0] → [2]"
+      ],
+      [
+       "2-1-1 (split at second '-')",
+       "[1] − 1 → [0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`sorted(go('2-1-1'), reverse=True)` = [2, 0] (from `(2-1)-1 = 0` and `2-(1-1) = 2`). For `'2*3-4*5'` the code finds 5 values: [10, -10, -10, -14, -34]."
+    ]
+   },
+   {
+    "h": "Why does splitting at the last operator cover every parenthesisation?",
+    "p": [
+     "Any full parenthesisation has one operator applied last, which splits the expression into a left and a right part, each parenthesised independently. Trying every operator as that last one enumerates all of them. Memoising on the substring avoids recomputing the same parts. The number of results is a Catalan number, so the running time is exponential in the output size."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Exponential: the number of results is a Catalan number.",
+     "Space: O(number of results) per memoised substring."
+    ]
+   }
+  ],
+  "takeaway": "Divide and conquer: choose each operator as the last applied, combine all left and right results, and memoise substrings."
+ },
+ "310": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`g = [set() for _ in range(n)]`",
+       "Adjacency sets",
+       "`discard`/`pop` are O(1)"
+      ],
+      [
+       "`len(g[i]) == 1`",
+       "Leaf: exactly one neighbour",
+       "Leaves are the outermost nodes"
+      ],
+      [
+       "`remaining -= len(leaves)`",
+       "Remove the whole current layer of leaves",
+       "Peel the tree like an onion"
+      ],
+      [
+       "`g[leaf].pop()` then `g[nb].discard(leaf)`",
+       "Detach the leaf from its neighbour",
+       "Update degrees"
+      ],
+      [
+       "`len(g[nb]) == 1`",
+       "The neighbour became a leaf",
+       "It joins the next layer"
+      ],
+      [
+       "`while remaining > 2`",
+       "Stop when 1 or 2 nodes remain",
+       "A tree has one or two centres"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 6, edges `[[3,0],[3,1],[3,2],[3,4],[5,4]]` → [3, 4]. Start: leaves are nodes 0, 1, 2, 5."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Next leaves",
+      "Nodes remaining"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, 1, 2, 5]",
+       "6"
+      ],
+      [
+       "peel",
+       "[3, 4]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A star: n = 4, edges `[[1,0],[1,2],[1,3]]` → [1]",
+    "p": [
+     "Peeling the three leaves leaves only node 1, the only centre."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Next leaves",
+      "Nodes remaining"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, 2, 3]",
+       "4"
+      ],
+      [
+       "peel",
+       "[1]",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the centres give minimum height?",
+    "p": [
+     "The height from a root is the distance to its farthest node. The middle of the longest path in a tree is the best root, and a tree has one or two such middle nodes. Peeling leaves layer by layer removes the ends of every long path equally, so what is left is exactly the centre."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Peel leaf layers until one or two nodes remain: those centres are the roots of minimum-height trees."
+ },
+ "421": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`max(nums).bit_length()`",
+       "Number of bits of the largest value",
+       "Only that many bit positions matter"
+      ],
+      [
+       "`x >> bit`",
+       "Number x with the lowest `bit` bits removed: its prefix",
+       "Leading bits of x"
+      ],
+      [
+       "`{x >> bit for x in nums}`",
+       "Set of all prefixes at this level",
+       "Set comprehension; O(1) membership"
+      ],
+      [
+       "`(ans | 1) ^ p in prefixes`",
+       "Is there another prefix q with `p ^ q` equal to the wished prefix `ans | 1`?",
+       "Since `p ^ q = c` means `q = c ^ p`"
+      ],
+      [
+       "`ans <<= 1`, `ans |= any(…)`",
+       "Extend the answer by one bit",
+       "Greedy: keep a 1 in this bit if any pair can achieve it"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,10,5,25,2,8]` → 28 (25 ^ 5):"
+    ],
+    "table": {
+     "head": [
+      "bit",
+      "Prefixes",
+      "Wished prefix (ans|1)",
+      "Achievable?",
+      "ans"
+     ],
+     "rows": [
+      [
+       "4",
+       "[0, 1]",
+       "1",
+       "yes",
+       "1"
+      ],
+      [
+       "3",
+       "[0, 1, 3]",
+       "3",
+       "yes",
+       "3"
+      ],
+      [
+       "2",
+       "[0, 1, 2, 6]",
+       "7",
+       "yes",
+       "7"
+      ],
+      [
+       "1",
+       "[1, 2, 4, 5, 12]",
+       "15",
+       "no",
+       "14"
+      ],
+      [
+       "0",
+       "[2, 3, 5, 8, 10, 25]",
+       "29",
+       "no",
+       "28"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a greedy bit-by-bit search?",
+    "p": [
+     "A larger XOR is decided by its highest differing bit first, so the best answer takes a 1 in the top bit if any pair allows it, then the next bit, and so on. At each step the question 'can two numbers have prefixes whose XOR equals this wished prefix?' is a lookup in a set of prefixes (a hash version of a binary trie), since a ^ b = c is the same as b = a ^ c."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(32·n): one pass over the numbers per bit.",
+     "Space: O(n) for the prefix set."
+    ]
+   }
+  ],
+  "takeaway": "Greedy on bits from the top: build the answer prefix and test achievability with a set of prefixes (a ^ b = c ⇔ b = a ^ c)."
+ },
+ "520": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`word.isupper()`",
+       "True if all cased letters are uppercase (and there is at least one)",
+       "Case 1: all capitals"
+      ],
+      [
+       "`word.islower()`",
+       "True if all cased letters are lowercase",
+       "Case 2: no capitals"
+      ],
+      [
+       "`word.istitle()`",
+       "True if each word starts with a capital followed only by lowercase",
+       "Case 3: only the first letter is a capital"
+      ],
+      [
+       "`or`",
+       "Any of the three is enough",
+       "Short-circuits at the first True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "word",
+      "isupper",
+      "islower",
+      "istitle",
+      "Result"
+     ],
+     "rows": [
+      [
+       "USA",
+       "True",
+       "False",
+       "False",
+       "True"
+      ],
+      [
+       "leetcode",
+       "False",
+       "True",
+       "False",
+       "True"
+      ],
+      [
+       "Google",
+       "False",
+       "False",
+       "True",
+       "True"
+      ],
+      [
+       "FlaG",
+       "False",
+       "False",
+       "False",
+       "False"
+      ],
+      [
+       "g",
+       "False",
+       "True",
+       "False",
+       "True"
+      ],
+      [
+       "Go",
+       "False",
+       "False",
+       "True",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A subtle point about `istitle`",
+    "p": [
+     "`'Go'.istitle()` is True, `'FlaG'.istitle()` is False (a capital appears after a lowercase letter). For single-character words, `'g'` is lower and `'G'` is upper, so every one-letter word passes. The three built-in tests encode exactly the three allowed patterns, so no loop is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Three string methods encode the three valid capital patterns: isupper, islower, istitle."
+ },
+ "676": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`defaultdict(set)`",
+       "Pattern → set of letters that fill the `*`",
+       "Created on first use"
+      ],
+      [
+       "`w[:i] + '*' + w[i+1:]`",
+       "The word with letter i replaced by a wildcard",
+       "One wildcard pattern per position"
+      ],
+      [
+       "`self.pat.get(pattern)`",
+       "Letters seen at this wildcard position, or `None`",
+       "`get` avoids creating empty entries when searching"
+      ],
+      [
+       "`len(letters) > 1 or c not in letters`",
+       "Another letter exists at that position, or the only letter differs from c",
+       "Ensures the match differs from the query in EXACTLY this one letter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Dictionary `[hello, leetcode]`:"
+    ],
+    "table": {
+     "head": [
+      "search(word)",
+      "Result",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "hello",
+       "False",
+       "no position works"
+      ],
+      [
+       "hhllo",
+       "True",
+       "position 1: pattern 'h*llo' has letters ['e']"
+      ],
+      [
+       "hell",
+       "False",
+       "no position works"
+      ],
+      [
+       "leetcoded",
+       "False",
+       "no position works"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store a set of letters and not just True?",
+    "p": [
+     "`search('hello')` must be False even though the pattern `hell*` exists: the only letter in that bucket is `o`, the query's own letter, so 'changing' it changes nothing. If another word, like `hella`, also filled the pattern, the set would have two letters and `hello` would match `hella`. The set lets us tell 'a different letter exists' from 'only myself'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: buildDict O(total length); search O(L²) (L patterns, each built as an O(L) string).",
+     "Space: O(total length of words)."
+    ]
+   }
+  ],
+  "takeaway": "Wildcard patterns map to the set of letters that fill the wildcard; a search succeeds if some position has a letter other than the query's."
+ },
+ "838": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`force[i]`",
+       "Net push on domino i: rightward strength minus leftward strength",
+       "Positive → falls right, negative → falls left, zero → stays"
+      ],
+      [
+       "`f = n` on `'R'`",
+       "Maximum rightward force right after an R",
+       "Stronger than any decayed value, since f decays by 1 per cell"
+      ],
+      [
+       "`f = max(f - 1, 0)` on `'.'`",
+       "The force weakens with distance",
+       "Nearer pushes dominate"
+      ],
+      [
+       "`f = 0` on `'L'` (left-to-right pass)",
+       "An L blocks rightward force",
+       "Force cannot pass an L"
+      ],
+      [
+       "second pass from the right",
+       "Same for leftward force",
+       "Subtracted so the sign tells the winner"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`.L.R...LR..L..` → `LL.RR.LLRRLL..`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "right force →",
+      "left force ←",
+      "net",
+      "result"
+     ],
+     "rows": [
+      [
+       "0",
+       ".",
+       "0",
+       "13",
+       "-13",
+       "L"
+      ],
+      [
+       "1",
+       "L",
+       "0",
+       "14",
+       "-14",
+       "L"
+      ],
+      [
+       "2",
+       ".",
+       "0",
+       "0",
+       "0",
+       "."
+      ],
+      [
+       "3",
+       "R",
+       "14",
+       "0",
+       "14",
+       "R"
+      ],
+      [
+       "4",
+       ".",
+       "13",
+       "11",
+       "2",
+       "R"
+      ],
+      [
+       "5",
+       ".",
+       "12",
+       "12",
+       "0",
+       "."
+      ],
+      [
+       "6",
+       ".",
+       "11",
+       "13",
+       "-2",
+       "L"
+      ],
+      [
+       "7",
+       "L",
+       "0",
+       "14",
+       "-14",
+       "L"
+      ],
+      [
+       "8",
+       "R",
+       "14",
+       "0",
+       "14",
+       "R"
+      ],
+      [
+       "9",
+       ".",
+       "13",
+       "12",
+       "1",
+       "R"
+      ],
+      [
+       "10",
+       ".",
+       "12",
+       "13",
+       "-1",
+       "L"
+      ],
+      [
+       "11",
+       "L",
+       "0",
+       "14",
+       "-14",
+       "L"
+      ],
+      [
+       "12",
+       ".",
+       "0",
+       "0",
+       "0",
+       "."
+      ],
+      [
+       "13",
+       ".",
+       "0",
+       "0",
+       "0",
+       "."
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the forces model the problem?",
+    "p": [
+     "A domino falls toward the NEAREST push that reaches it. Right force at a cell is n minus the distance to the nearest R on its left (if no L is between), and left force is n minus the distance to the nearest L on its right. The larger one wins; equal means the pushes reach it at the same time and cancel. That's why the net sign gives the answer in two linear passes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two passes computing decaying right and left forces; the sign of their difference gives each domino's final state."
+ },
+ "898": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "Set of OR values of all subarrays ENDING at the current index",
+       "State carried from index to index"
+      ],
+      [
+       "`{x | y for y in cur} | {x}`",
+       "Extend each previous subarray by x, plus the new subarray `[x]`",
+       "Set comprehension then union"
+      ],
+      [
+       "`res |= cur`",
+       "Add them to the global set of distinct values",
+       "In-place union"
+      ],
+      [
+       "`len(res)`",
+       "Number of distinct OR values",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2]` → 3 (values 1, 2, 3):"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "cur (ORs of subarrays ending here)",
+      "res (all distinct ORs)"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1]",
+       "[1]"
+      ],
+      [
+       "1",
+       "[1]",
+       "[1]"
+      ],
+      [
+       "2",
+       "[2, 3]",
+       "[1, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `cur` small?",
+    "p": [
+     "OR can only add bits as a subarray grows to the left, so the OR values of subarrays ending at an index form a chain where each value is a superset of the previous one. With at most 30 bits, the chain has at most about 30 distinct values. So each step costs O(30), not O(n), giving O(n·30) instead of O(n²)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · log(max)): `cur` has at most ~30 distinct values.",
+     "Space: O(n · log(max)) for `res` in the worst case."
+    ]
+   }
+  ],
+  "takeaway": "Keep the set of ORs of subarrays ending at each index; it stays tiny because OR only adds bits."
+ },
+ "997": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`score = [0] * (n + 1)`",
+       "One counter per person (index 0 unused)",
+       "Labels start at 1"
+      ],
+      [
+       "`score[a] -= 1`",
+       "a trusts someone: out-degree",
+       "The judge trusts nobody, so never decreases"
+      ],
+      [
+       "`score[b] += 1`",
+       "b is trusted: in-degree",
+       "The judge is trusted by all n−1 others"
+      ],
+      [
+       "`score[i] == n - 1`",
+       "Trusted by everyone else and trusts nobody",
+       "`+1` from each of n−1 people with no `−1` equals n−1; anyone who trusts someone has a lower score"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, trust `[[1,3],[2,3]]` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Trust",
+      "score[0..3]"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, 0, 0, 0]"
+      ],
+      [
+       "1 trusts 3",
+       "[0, -1, 0, 1]"
+      ],
+      [
+       "2 trusts 3",
+       "[0, -1, -1, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a single balance number?",
+    "p": [
+     "The judge needs in-degree n−1 and out-degree 0. For anyone else, out-degree ≥ 1 reduces their score, so their in-degree minus out-degree is at most n−2. Only the judge can reach exactly n−1, so one number per person suffices instead of two arrays."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + t) for t trust pairs.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Degree balance: in-degree minus out-degree equals n − 1 only for the judge."
+ },
+ "1009": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`n.bit_length()`",
+       "Number of bits needed for n",
+       "5 (101) → 3"
+      ],
+      [
+       "`1 << k`",
+       "1 followed by k zeros",
+       "`1 << 3 = 1000`"
+      ],
+      [
+       "`(1 << k) - 1`",
+       "k ones",
+       "A mask with the same width as n: `111`"
+      ],
+      [
+       "`n ^ mask`",
+       "XOR flips every bit that is 1 in the mask",
+       "Bitwise complement limited to n's width"
+      ],
+      [
+       "`if n == 0: return 1`",
+       "bit_length(0) is 0, the mask would be 0",
+       "The complement of the one-digit '0' is '1'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "n = 5",
+       "101"
+      ],
+      [
+       "bit_length",
+       "3"
+      ],
+      [
+       "mask = (1 << 3) − 1",
+       "111"
+      ],
+      [
+       "n ^ mask",
+       "10 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not `~n`?",
+    "p": [
+     "In Python `~n` is `−n−1` (an infinite string of leading ones in two's complement), so `~5 = -6`. The problem wants only the bits of n without leading zeros flipped. XOR with a mask of exactly that many ones does it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Complement within n's bit width: XOR with an all-ones mask of length bit_length."
+ },
+ "1255": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`avail = Counter(letters)`",
+       "Remaining count of each available letter",
+       "Shared by all chosen words"
+      ],
+      [
+       "`go(i)`",
+       "Best score using words `i…` with the letters currently available",
+       "Include-or-skip recursion over words"
+      ],
+      [
+       "`all(avail[c] >= n for c, n in need.items())`",
+       "Can word i still be spelled?",
+       "Check every letter's remaining stock"
+      ],
+      [
+       "`avail[c] -= n` … `avail[c] += n`",
+       "Take the letters, recurse, give them back",
+       "Backtracking: undo after the recursive call"
+      ],
+      [
+       "`value(w)`",
+       "Sum of letter scores",
+       "`score[ord(c) - 97]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "words `['dog','cat','dad','good']`, letters `a a c d d d g o o`, answer 23 (choose `dad` and `good`):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Letters needed",
+      "Value",
+      "Spellable alone?"
+     ],
+     "rows": [
+      [
+       "dog",
+       "{'d': 1, 'o': 1, 'g': 1}",
+       "10",
+       "True"
+      ],
+      [
+       "cat",
+       "{'c': 1, 'a': 1, 't': 1}",
+       "10",
+       "False"
+      ],
+      [
+       "dad",
+       "{'d': 2, 'a': 1}",
+       "11",
+       "True"
+      ],
+      [
+       "good",
+       "{'g': 1, 'o': 2, 'd': 1}",
+       "12",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why take or skip each word?",
+    "p": [
+     "Each word is either in the chosen set or not, and the choice affects the remaining letter budget for later words. Branching on both options explores all 2ⁿ subsets, but infeasible branches are cut as soon as a word can't be spelled. Restoring the counts after the call lets the sibling branch start from the same stock."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ · L) in the worst case.",
+     "Space: O(n) recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking over subsets of words with a shared letter budget: take the letters, recurse, restore them."
+ },
+ "1300": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`total(v)`",
+       "Array sum after capping every value at v",
+       "`sum(min(x, v) for x in arr)`"
+      ],
+      [
+       "`lo, hi = 0, max(arr)`",
+       "Range of useful caps",
+       "A cap above the maximum changes nothing"
+      ],
+      [
+       "`total(mid) >= target`",
+       "Capping at mid already reaches the target",
+       "Find the smallest v with total(v) ≥ target"
+      ],
+      [
+       "final comparison with `lo - 1`",
+       "The closest sum is either at the first v reaching the target or just below it",
+       "`<=` makes the smaller v win on ties"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,9,3]`, `target = 10`: the first cap with total ≥ 10 is lo = 4 (total 11); the answer is 3:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "total(mid)",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "9",
+       "4",
+       "11",
+       "≥ target → hi = mid"
+      ],
+      [
+       "0",
+       "4",
+       "2",
+       "6",
+       "< target → lo = mid+1"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "9",
+       "< target → lo = mid+1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check lo − 1?",
+    "p": [
+     "`total(v)` is non-decreasing in v. The first v with `total(v) ≥ target` may overshoot by more than `v−1` undershoots, so both candidates are compared: here `total(3) = 9` (distance 1) versus `total(4) = 11` (distance 1), and ties prefer the smaller value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search for the smallest cap whose capped sum reaches the target, then compare it with the cap just below."
+ },
+ "1387": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`power(x)`",
+       "Steps to reach 1 by x/2 (even) or 3x+1 (odd) — the Collatz process",
+       "Recursion on the next value"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Memoise `power`",
+       "Collatz paths merge; later numbers reuse results (LRU = Least Recently Used cache, unlimited here)"
+      ],
+      [
+       "`key=lambda x: (power(x), x)`",
+       "Sort by power, then by the number itself",
+       "Tuples compare field by field"
+      ],
+      [
+       "`[k - 1]`",
+       "1-based k to 0-based index",
+       "The k-th item"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`lo = 12, hi = 15, k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "power(x)"
+     ],
+     "rows": [
+      [
+       "12",
+       "9"
+      ],
+      [
+       "13",
+       "9"
+      ],
+      [
+       "14",
+       "17"
+      ],
+      [
+       "15",
+       "17"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Sorted by (power, value): [12, 13, 14, 15]. The 2nd is 13."
+    ]
+   },
+   {
+    "h": "Why memoise?",
+    "p": [
+     "The Collatz sequences of different numbers join quickly (many reach the same intermediate values), so caching `power` avoids recomputing shared tails. The recursion depth stays small for the problem's range."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort plus the cost of computing powers (each value computed once).",
+     "Space: O(n) for the cache."
+    ]
+   }
+  ],
+  "takeaway": "Sort by a compound key (Collatz step count, value) and pick the k-th; memoise the step counts."
+ },
+ "1396": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.inn`",
+       "customer id → (start station, check-in time)",
+       "Pending trips"
+      ],
+      [
+       "`self.inn.pop(id)`",
+       "Read and delete the check-in",
+       "A customer can't check out twice"
+      ],
+      [
+       "`defaultdict(lambda: [0, 0])`",
+       "Route → `[total time, trip count]`, created on first use",
+       "The lambda gives each key its own fresh list"
+      ],
+      [
+       "`r[0] += t - t0; r[1] += 1`",
+       "Add this trip's duration and count",
+       "Running totals instead of storing every trip"
+      ],
+      [
+       "`total / cnt`",
+       "Average time of the route",
+       "Division only at query time"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Checked-in customers",
+      "Route totals [time, trips]"
+     ],
+     "rows": [
+      [
+       "checkIn(45,'Leyton',3)",
+       "—",
+       "{45: ('Leyton', 3)}",
+       "{}"
+      ],
+      [
+       "checkIn(32,'Paradise',8)",
+       "—",
+       "{45: ('Leyton', 3), 32: ('Paradise', 8)}",
+       "{}"
+      ],
+      [
+       "checkIn(27,'Leyton',10)",
+       "—",
+       "{45: ('Leyton', 3), 32: ('Paradise', 8), 27: ('Leyton', 10)}",
+       "{}"
+      ],
+      [
+       "checkOut(45,'Waterloo',15)",
+       "—",
+       "{32: ('Paradise', 8), 27: ('Leyton', 10)}",
+       "{('Leyton', 'Waterloo'): [12, 1]}"
+      ],
+      [
+       "checkOut(27,'Waterloo',20)",
+       "—",
+       "{32: ('Paradise', 8)}",
+       "{('Leyton', 'Waterloo'): [22, 2]}"
+      ],
+      [
+       "checkOut(32,'Cambridge',22)",
+       "—",
+       "{}",
+       "{('Leyton', 'Waterloo'): [22, 2], ('Paradise', 'Cambridge'): [14, 1]}"
+      ],
+      [
+       "getAverageTime('Paradise','Cambridge')",
+       "14.0",
+       "{}",
+       "{('Leyton', 'Waterloo'): [22, 2], ('Paradise', 'Cambridge'): [14, 1]}"
+      ],
+      [
+       "getAverageTime('Leyton','Waterloo')",
+       "11.0",
+       "{}",
+       "{('Leyton', 'Waterloo'): [22, 2], ('Paradise', 'Cambridge'): [14, 1]}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep totals instead of a list of trips?",
+    "p": [
+     "The average only needs the sum and the count, so each trip updates two numbers and the list is never stored."
+    ],
+    "table": {
+     "head": [
+      "Design",
+      "getAverageTime",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "List of durations per route",
+       "O(trips)",
+       "O(trips)"
+      ],
+      [
+       "Running total and count (this code)",
+       "O(1)",
+       "O(routes)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call.",
+     "Space: O(customers in transit + routes)."
+    ]
+   }
+  ],
+  "takeaway": "Hash maps: pending check-ins by customer, and per-route running totals for O(1) averages."
+ },
+ "1408": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`w in o`",
+       "Substring test",
+       "Python's `in` on strings"
+      ],
+      [
+       "`w != o`",
+       "Skip comparing a word with itself",
+       "Otherwise every word would be a substring of itself"
+      ],
+      [
+       "`any(… for o in words)`",
+       "True if some other word contains w",
+       "Short-circuits at the first match"
+      ],
+      [
+       "list comprehension with a condition",
+       "Keep the matching words",
+       "Single expression"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['mass','as','hero','superhero']`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Contained in another word?",
+      "Kept"
+     ],
+     "rows": [
+      [
+       "mass",
+       "none",
+       "False"
+      ],
+      [
+       "as",
+       "mass",
+       "True"
+      ],
+      [
+       "hero",
+       "superhero",
+       "True"
+      ],
+      [
+       "superhero",
+       "none",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A subtle point: duplicates",
+    "p": [
+     "`w != o` compares values, so if the list contained the same word twice, neither copy would be skipped against the other: `'as'` and `'as'` are equal strings, so `w != o` is False for the pair and they do not count as contained in each other. (The problem states words are unique, so this doesn't arise.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² · L).",
+     "Space: O(1) extra besides the output."
+    ]
+   }
+  ],
+  "takeaway": "For each word check whether any different word contains it as a substring."
+ },
+ "1504": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`h[j]`",
+       "Number of consecutive 1s ending at row i in column j",
+       "Column heights, as in the 'largest rectangle in a histogram' idea"
+      ],
+      [
+       "`low = min(low, h[k])` for k from j down to 0",
+       "Minimum height among columns k…j",
+       "Height of the tallest rectangle whose right edge is column j and left edge k"
+      ],
+      [
+       "`total += low`",
+       "Number of all-ones submatrices with bottom-right corner (i, j) and left edge k",
+       "Heights 1…low, each a different rectangle"
+      ],
+      [
+       "`if low == 0: break`",
+       "A zero column blocks any wider rectangle",
+       "Stop scanning left"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,0,1],[1,1,0],[1,1,0]]` → 13. After each row: heights, submatrices counted per right-edge column, row total, running total:"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Heights h",
+      "Counted per column j",
+      "Row total",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1, 0, 1]",
+       "[1, 0, 1]",
+       "2",
+       "2"
+      ],
+      [
+       "1",
+       "[2, 1, 0]",
+       "[2, 2, 0]",
+       "4",
+       "6"
+      ],
+      [
+       "2",
+       "[3, 2, 0]",
+       "[3, 4, 0]",
+       "7",
+       "13"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `low` count rectangles?",
+    "p": [
+     "Fix the bottom-right corner at (i, j) and a left column k. All columns k…j have height at least `low`, so rectangles of height 1, 2, …, low (each ending at row i) are all-ones: `low` rectangles. Summing over k counts every submatrix exactly once, by its bottom-right corner and left edge."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n²): each row scans left from every column.",
+     "Space: O(n) for the heights."
+    ]
+   }
+  ],
+  "takeaway": "Column heights per row; for each bottom-right corner, the running minimum of heights to the left counts all rectangles ending there."
+ },
+ "1579": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`pa`, `pb`",
+       "Two Union-Find structures: Alice's and Bob's connectivity",
+       "Each person has their own graph"
+      ],
+      [
+       "`find` with path halving",
+       "Root of a node's group",
+       "`p[x] = p[p[x]]` flattens paths"
+      ],
+      [
+       "`union(p, a, b)` returns `True` if it merged two groups",
+       "False means a and b were already connected: the edge is redundant for that person",
+       "Spanning-forest construction"
+      ],
+      [
+       "`t == 3` edges first",
+       "Shared edges serve both people with one edge",
+       "A type-3 edge is better than a type-1 plus a type-2 edge"
+      ],
+      [
+       "`len({find(p, i) …}) == 1`",
+       "One group for all nodes",
+       "Fully traversable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 4, edges `[[3, 1, 2], [3, 2, 3], [1, 1, 3], [1, 2, 4], [1, 1, 2], [2, 3, 4]]` ([type, u, v]) → remove 2 edges. The code keeps 4 of 6:"
+    ],
+    "table": {
+     "head": [
+      "Edge",
+      "Effect",
+      "Verdict",
+      "Edges kept so far"
+     ],
+     "rows": [
+      [
+       "type 3: 1–2",
+       "Alice joins: True, Bob joins: True",
+       "kept",
+       "1"
+      ],
+      [
+       "type 3: 2–3",
+       "Alice joins: True, Bob joins: True",
+       "kept",
+       "2"
+      ],
+      [
+       "type 1 (Alice): 1–3",
+       "joins: False",
+       "removable",
+       "2"
+      ],
+      [
+       "type 1 (Alice): 2–4",
+       "joins: True",
+       "kept",
+       "3"
+      ],
+      [
+       "type 1 (Alice): 1–2",
+       "joins: False",
+       "removable",
+       "3"
+      ],
+      [
+       "type 2 (Bob): 3–4",
+       "joins: True",
+       "kept",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why process shared edges first?",
+    "p": [
+     "A shared edge connects both Alice and Bob using a single edge, so using it saves one edge relative to adding a type-1 and a type-2 edge for the same link. Taking all useful type-3 edges first, then filling in with single-person edges, minimises the edges kept (a greedy argument like Kruskal's algorithm). If either person ends up with more than one component, the answer is −1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E · α(n)): near-constant Union-Find operations per edge.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two Union-Finds: use shared edges first, then each person's own edges; edges that merge nothing can be removed."
+ },
+ "1588": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(i + 1) * (n - i)`",
+       "Number of subarrays containing element i",
+       "i+1 choices for the left end, n−i choices for the right end"
+      ],
+      [
+       "`(… + 1) // 2`",
+       "How many of them have ODD length",
+       "Counts alternate odd/even; rounding up covers the case where the total is odd"
+      ],
+      [
+       "`x * odd_count`",
+       "Contribution of element i to the answer",
+       "Each such subarray contributes x once"
+      ],
+      [
+       "`total +=`",
+       "Sum over elements",
+       "Contribution technique"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,4,2,5,3]` → 58:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "Subarrays containing i",
+      "…of odd length",
+      "Contribution",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "5",
+       "3",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "4",
+       "8",
+       "4",
+       "16",
+       "19"
+      ],
+      [
+       "2",
+       "2",
+       "9",
+       "5",
+       "10",
+       "29"
+      ],
+      [
+       "3",
+       "5",
+       "8",
+       "4",
+       "20",
+       "49"
+      ],
+      [
+       "4",
+       "3",
+       "5",
+       "3",
+       "9",
+       "58"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `(count + 1) // 2` odd-length ones?",
+    "p": [
+     "For an element with `a = i+1` choices on the left (including 0 extra elements) and `b = n−i` on the right, a subarray's length is `a' + b' − 1` for chosen `a'` and `b'`. It is odd when `a'` and `b'` have the same parity. The number of such pairs is `ceil(a·b / 2)` when a·b is odd and `a·b / 2` otherwise, which equals `(a·b + 1) // 2` in both cases. This replaces the O(n²) enumeration of subarrays."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Contribution counting: element i appears in (i+1)(n−i) subarrays and exactly (that + 1)//2 of them have odd length."
+ },
+ "1600": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`defaultdict(list)` children",
+       "Parent → children in birth order",
+       "Lists keep birth order"
+      ],
+      [
+       "`dead` set",
+       "People who died",
+       "Dead people are skipped in the output but their descendants stay"
+      ],
+      [
+       "`dfs(p)`",
+       "Preorder traversal: person, then each child's subtree",
+       "Exactly the inheritance order"
+      ],
+      [
+       "`if p not in self.dead: order.append(p)`",
+       "Append only the living",
+       "Check the person, but still visit the children"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "king's children: andy, bob, catherine; andy→matthew; bob→alex, asha:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns"
+     ],
+     "rows": [
+      [
+       "birth('king', 'andy')",
+       "—"
+      ],
+      [
+       "birth('king', 'bob')",
+       "—"
+      ],
+      [
+       "birth('king', 'catherine')",
+       "—"
+      ],
+      [
+       "birth('andy', 'matthew')",
+       "—"
+      ],
+      [
+       "birth('bob', 'alex')",
+       "—"
+      ],
+      [
+       "birth('bob', 'asha')",
+       "—"
+      ],
+      [
+       "getInheritanceOrder()",
+       "['king', 'andy', 'matthew', 'bob', 'alex', 'asha', 'catherine']"
+      ],
+      [
+       "death('bob',)",
+       "—"
+      ],
+      [
+       "getInheritanceOrder()",
+       "['king', 'andy', 'matthew', 'alex', 'asha', 'catherine']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why preorder and why not delete dead people from the tree?",
+    "p": [
+     "The rule 'person first, then each child's whole family in birth order' is a preorder walk. A dead person's descendants still inherit, so the node must stay in the tree. Marking death in a set (O(1)) is cheaper than restructuring, and the walk simply skips the dead name when printing but still visits their children (as the example shows when `bob` dies)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `birth`, `death` O(1); `getInheritanceOrder` O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Store the family tree with children lists and a dead set; the order is a preorder traversal that skips dead names but not their descendants."
+ },
+ "1603": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.slots = [0, big, medium, small]`",
+       "Remaining spots by car type, with a dummy entry at index 0",
+       "The car type (1, 2, 3) is the index, so no mapping is needed"
+      ],
+      [
+       "`self.slots[carType] > 0`",
+       "Is a spot of this size free?",
+       "Only the car's own size counts"
+      ],
+      [
+       "`self.slots[carType] -= 1`",
+       "Take a spot",
+       "Counter decrement"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ParkingSystem(1, 1, 0)`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Free [big, medium, small]"
+     ],
+     "rows": [
+      [
+       "addCar(1)",
+       "True",
+       "[0, 1, 0]"
+      ],
+      [
+       "addCar(2)",
+       "True",
+       "[0, 0, 0]"
+      ],
+      [
+       "addCar(3)",
+       "False",
+       "[0, 0, 0]"
+      ],
+      [
+       "addCar(1)",
+       "False",
+       "[0, 0, 0]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a list indexed by type?",
+    "p": [
+     "Indexing by the car type makes the lookup O(1) with no branching on the type. Padding index 0 with a dummy value aligns indexes 1–3 with the problem's numbering."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Three counters indexed by car type; park if the counter for that size is above zero."
+ },
+ "1606": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`free`",
+       "Sorted list of free server numbers",
+       "`insort` keeps it sorted"
+      ],
+      [
+       "`busy` min-heap of `(finish time, server)`",
+       "Servers currently handling a request, earliest finishing first",
+       "Heap: pop all servers done by time `a`"
+      ],
+      [
+       "`insort(free, s)`",
+       "Insert into a sorted list",
+       "From `bisect`"
+      ],
+      [
+       "`bisect_left(free, i % k)`",
+       "First free server number ≥ the preferred one",
+       "Binary search for 'next free server after i mod k'"
+      ],
+      [
+       "`if j == len(free): j = 0`",
+       "Wrap around to the smallest free server",
+       "Circular search"
+      ],
+      [
+       "`cnt[s] += 1`",
+       "Requests handled per server",
+       "Final counts decide the busiest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "k = 3, arrival `[1,2,3,4,5]`, load `[5,2,3,3,3]` → busiest [1]:"
+    ],
+    "table": {
+     "head": [
+      "Request i",
+      "Arrival",
+      "Load",
+      "Servers freed",
+      "Assigned",
+      "Free list",
+      "Handled counts"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "5",
+       "[]",
+       "server 0 (wanted 0)",
+       "[1, 2]",
+       "[1, 0, 0]"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "[]",
+       "server 1 (wanted 1)",
+       "[2]",
+       "[1, 1, 0]"
+      ],
+      [
+       "2",
+       "3",
+       "3",
+       "[]",
+       "server 2 (wanted 2)",
+       "[]",
+       "[1, 1, 1]"
+      ],
+      [
+       "3",
+       "4",
+       "3",
+       "[1]",
+       "server 1 (wanted 0)",
+       "[]",
+       "[1, 2, 1]"
+      ],
+      [
+       "4",
+       "5",
+       "3",
+       "[]",
+       "all busy → dropped",
+       "[]",
+       "[1, 2, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a sorted free list plus a heap of busy servers?",
+    "p": [
+     "Scanning all k servers for each request would cost O(k) per request; this pair lets both steps use logarithmic searches (a balanced tree would make the insertion logarithmic too)."
+    ],
+    "table": {
+     "head": [
+      "Need",
+      "Structure",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "Release servers whose request is done",
+       "Min-heap by finish time",
+       "O(log k)"
+      ],
+      [
+       "Find the next free server after i mod k, with wrap-around",
+       "Sorted list + binary search",
+       "O(log k) search, O(k) insertion into a list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: About O(n log k) (list insertion is O(k) in the worst case).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Heap of busy servers by finish time plus a sorted free list; binary search for the first free server at or after i mod k, wrapping around."
+ }
+}
