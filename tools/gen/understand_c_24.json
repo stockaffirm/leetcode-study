@@ -1,0 +1,1844 @@
+{
+ "3107": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "After sorting, the median is the middle element `nums[len // 2]` (for an even length this is the UPPER median, as the problem defines)",
+       "Median questions"
+      ],
+      [
+       "`abs(nums[m] - k)`",
+       "Moving the median element itself to `k`",
+       "The median must equal `k`"
+      ],
+      [
+       "`max(0, nums[i] - k)` for `i < m`",
+       "Elements left of the median must stay ≤ the median; any that are larger than `k` have to be lowered to `k`",
+       "Keep the order consistent with the new median"
+      ],
+      [
+       "`max(0, k - nums[i])` for `i > m`",
+       "Elements right of the median must stay ≥ `k`; any smaller ones are raised to `k`",
+       "Mirror case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,5,6,8,5]` sorts to `[2,5,5,6,8]`, `k = 4`, median position 2:"
+    ],
+    "table": {
+     "head": [
+      "Element",
+      "Cost",
+      "Total"
+     ],
+     "rows": [
+      [
+       "median position 2: nums[2] = 5",
+       "1",
+       "1"
+      ],
+      [
+       "left nums[0] = 2 must be ≤ 4",
+       "0",
+       "1"
+      ],
+      [
+       "left nums[1] = 5 must be ≤ 4",
+       "1",
+       "2"
+      ],
+      [
+       "right nums[3] = 6 must be ≥ 4",
+       "0",
+       "2"
+      ],
+      [
+       "right nums[4] = 8 must be ≥ 4",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do only the elements on the wrong side need fixing?",
+    "p": [
+     "Once the middle element becomes `k`, the sorted order is preserved as long as everything to its left is ≤ `k` and everything to its right is ≥ `k`. Elements that already satisfy that cost nothing, and the cheapest repair for a violator is to move it exactly to `k`."
+    ],
+    "table": {
+     "head": [
+      "Side",
+      "Violation",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "left of median",
+       "value > k",
+       "value − k"
+      ],
+      [
+       "right of median",
+       "value < k",
+       "k − value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) besides the sort."
+    ]
+   }
+  ],
+  "takeaway": "Make the median equal to k: sort, change the middle element to k, and clamp any elements that fall on the wrong side of k."
+ },
+ "3113": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st` of `[value, count]`",
+       "A monotonic (non-increasing) stack of values, each with how many times it has appeared as the potential LEFT boundary",
+       "Monotonic stack with counts"
+      ],
+      [
+       "`while st and st[-1][0] < x: st.pop()`",
+       "Smaller values can never again be the maximum of a subarray that reaches `x` or beyond, so drop them",
+       "Remove dominated values"
+      ],
+      [
+       "`st[-1][0] == x: st[-1][1] += 1`",
+       "An earlier equal value: the number of valid left boundaries grows by one",
+       "Count equal maxima"
+      ],
+      [
+       "`ans += st[-1][1]`",
+       "The count on top is the number of subarrays ending at this element whose boundary elements are both the maximum (including the one-element subarray)",
+       "Count by right end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,4,3,3,2]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Stack (value, count)",
+      "Subarrays ending here",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "[[1, 1]]",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "[[4, 1]]",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "[[4, 1], [3, 1]]",
+       "1",
+       "3"
+      ],
+      [
+       "3",
+       "[[4, 1], [3, 2]]",
+       "2",
+       "5"
+      ],
+      [
+       "2",
+       "[[4, 1], [3, 2], [2, 1]]",
+       "1",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a count work?",
+    "p": [
+     "A subarray qualifies when its first and last elements equal the subarray's maximum. For a fixed right end `x`, valid left ends are the earlier positions holding the same value `x` with nothing larger between them. The stack keeps exactly those equal values grouped into one count, and larger values clear the smaller ones away. A brute-force check agreed on random arrays."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all subarrays with a max",
+       "O(n²)"
+      ],
+      [
+       "monotonic stack with counts (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Subarrays with maximum at both ends: a non-increasing monotonic stack of (value, count); each element adds the count of equal earlier maxima to the answer."
+ },
+ "3125": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n.bit_length()`",
+       "Number of bits in the binary form of `n` (for 7 = `111` it is 3)",
+       "Highest set bit position + 1"
+      ],
+      [
+       "`1 << (bit_length - 1)`",
+       "The highest power of two not exceeding `n`",
+       "Isolate the top bit"
+      ],
+      [
+       "`… - 1`",
+       "One less than that power of two: a number with all lower bits set",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Values of `n` and the answer (the largest `x ≤ n` such that `x & (x+1) & … & n == 0`):"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Binary of n",
+      "Highest power of two ≤ n",
+      "Answer (that − 1)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "10",
+       "2",
+       "1"
+      ],
+      [
+       "4",
+       "100",
+       "4",
+       "3"
+      ],
+      [
+       "7",
+       "111",
+       "4",
+       "3"
+      ],
+      [
+       "10",
+       "1010",
+       "8",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer one less than the top power of two?",
+    "p": [
+     "If `x` is below the top bit of `n` and `x + 1 ... n` includes the power of two `P = 2^(bit_length−1)` itself, the AND of the range contains `P`, which has a 1 only in the top bit, and numbers below `P` have 0 there: the AND clears everything once the range crosses `P`. The largest `x` that still makes the range cross `P` is `P − 1`. Checked against brute force for every `n < 200`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every x",
+       "O(n²)"
+      ],
+      [
+       "highest bit minus one (this code)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Largest x whose AND with the rest up to n is zero: it is the highest power of two not above n, minus one."
+ },
+ "3155": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(count, upgrade, sell, money)`",
+       "Each data centre is independent: iterate its four numbers together",
+       "Parallel arrays"
+      ],
+      [
+       "the budget inequality",
+       "If we upgrade `x` servers and sell the other `c − x`, we need `u·x ≤ money + s·(c − x)`",
+       "Selling the rest funds the upgrades"
+      ],
+      [
+       "`x · (u + s) ≤ c · s + money`",
+       "Rearranged inequality: solve for `x`",
+       "Isolate the unknown"
+      ],
+      [
+       "`(c * s + m) // (u + s)`",
+       "The largest integer `x` satisfying it (floor division)",
+       "Integer solution of a linear inequality"
+      ],
+      [
+       "`min(c, …)`",
+       "Cannot upgrade more servers than exist",
+       "Cap by the available servers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Two data centres:"
+    ],
+    "table": {
+     "head": [
+      "Data centre",
+      "Largest x",
+      "Upgradable"
+     ],
+     "rows": [
+      [
+       "4 servers, upgrade 3, sell 4, money 8",
+       "(4·4 + 8) // (3 + 4) = 3",
+       "3"
+      ],
+      [
+       "3 servers, upgrade 5, sell 2, money 9",
+       "(3·2 + 9) // (5 + 2) = 2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sell everything not upgraded?",
+    "p": [
+     "Selling a server only adds money, and a server that isn't upgraded has no other use, so the best plan sells all of them. Then the number of upgrades is limited only by the money: the inequality above. The formula was checked against a brute force over `x`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try each x per centre",
+       "O(c)"
+      ],
+      [
+       "closed form (this code)",
+       "O(1) per centre"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the answer."
+    ]
+   }
+  ],
+  "takeaway": "Upgradable servers: selling every non-upgraded server funds upgrades, so x ≤ (c·sell + money) / (upgrade + sell), capped at c."
+ },
+ "3161": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`obs` (a sorted list) with `bisect_left`/`bisect_right`",
+       "Positions of obstacles in sorted order (position 0 is a sentinel); binary search finds neighbours of a position",
+       "Predecessor / successor in a sorted list"
+      ],
+      [
+       "segment tree `tree` (a max tree) `update`/`query`",
+       "`tree[pos]` stores the GAP between the obstacle at `pos` and the previous obstacle; the tree answers 'largest gap among obstacles at positions 0..last' in O(log n)",
+       "Range maximum query with point updates"
+      ],
+      [
+       "type 1: `update(x, x - prev)` and `update(next, next - x)`",
+       "A new obstacle at `x` splits the gap of the next obstacle: its own gap becomes `x − prev`, and the next obstacle's gap shrinks to `next − x`",
+       "Insertion changes two gaps"
+      ],
+      [
+       "type 2: `last = obs[bisect_right(obs, x) - 1]`",
+       "The last obstacle at or before `x`",
+       "The range ends at `x`"
+      ],
+      [
+       "`max(query(0..last), x - last)`",
+       "Largest gap between obstacles up to `last`, or the open stretch from `last` to `x`",
+       "The final stretch isn't an obstacle gap yet"
+      ],
+      [
+       "`best >= sz`",
+       "A block of size `sz` fits in `[0, x]` iff some gap is at least `sz`",
+       "Answer for the query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Queries `[1,2]`, `[2,3,3]`, `[2,3,1]`, `[2,2,2]` (place obstacle at 2; can a size-3, size-1, size-2 block fit within `[0, x]`):"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Obstacles",
+      "Result"
+     ],
+     "rows": [
+      [
+       "place obstacle at 2",
+       "[0, 2]",
+       "-"
+      ],
+      [
+       "can a block of size 3 fit in [0, 3]?",
+       "[0, 2]",
+       "gaps [2, 1] → False"
+      ],
+      [
+       "can a block of size 1 fit in [0, 3]?",
+       "[0, 2]",
+       "gaps [2, 1] → True"
+      ],
+      [
+       "can a block of size 2 fit in [0, 2]?",
+       "[0, 2]",
+       "gaps [2, 0] → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a segment tree?",
+    "p": [
+     "Placing obstacles changes gaps; asking about the largest gap in a prefix needs a range maximum that supports updates. A plain array would make each query O(n). The tree gives O(log n) for both. The code was checked against a brute force on random query sequences."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Per query"
+     ],
+     "rows": [
+      [
+       "recompute gaps",
+       "O(n)"
+      ],
+      [
+       "segment tree + sorted obstacles (this code)",
+       "O(log n) plus the list insertion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q log q) overall (list insertion is O(q) per insert in the worst case).",
+     "Space: O(max x)."
+    ]
+   }
+  ],
+  "takeaway": "Block placement: keep sorted obstacles, store each obstacle's gap to its predecessor in a segment tree, and answer a query with the largest gap in the prefix (or the final open stretch)."
+ },
+ "3167": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ch = compressed[i]`",
+       "A letter, followed by its count",
+       "Parse `letter + digits` tokens"
+      ],
+      [
+       "`while j < len and compressed[j].isdigit()`",
+       "The count can have several digits (`c10`), so scan to the end of the digits",
+       "Variable-length number"
+      ],
+      [
+       "`cnt[ch] += int(compressed[i:j])`",
+       "Add the count to that letter's total (the same letter can appear several times)",
+       "Merge repeated letters"
+      ],
+      [
+       "`sorted(cnt)`",
+       "The result lists letters alphabetically",
+       "Output order"
+      ],
+      [
+       "`''.join(c + str(cnt[c]) …)`",
+       "Rebuild `letter + total`",
+       "Format the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"a3c9b2c1\"`:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Count text",
+      "Totals so far"
+     ],
+     "rows": [
+      [
+       "a",
+       "3",
+       "{'a': 3}"
+      ],
+      [
+       "c",
+       "9",
+       "{'a': 3, 'c': 9}"
+      ],
+      [
+       "b",
+       "2",
+       "{'a': 3, 'c': 9, 'b': 2}"
+      ],
+      [
+       "c",
+       "1",
+       "{'a': 3, 'c': 10, 'b': 2}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The letters sorted are `a`, `b`, `c` with totals 3, 2, 10: `a3b2c10`."
+    ]
+   },
+   {
+    "h": "Why parse digits with a loop?",
+    "p": [
+     "Counts may have more than one digit, so you can't just read the next character. Scanning until the first non-digit finds the whole number, and slicing converts it with `int`."
+    ],
+    "table": {
+     "head": [
+      "Compressed",
+      "Parsed tokens"
+     ],
+     "rows": [
+      [
+       "`a3c9b2c1`",
+       "a:3, c:9, b:2, c:1"
+      ],
+      [
+       "`c10a1`",
+       "c:10, a:1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 log 26).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Better compression: parse letter-count tokens (multi-digit counts), add counts per letter in a Counter, and output the letters alphabetically."
+ },
+ "3170": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`heappush(heap, (c, -i))`",
+       "A min-heap keyed by the letter, then by NEGATIVE index so that among equal letters the one with the LARGEST index comes out first",
+       "Tie-break by 'latest' with negation"
+      ],
+      [
+       "on `*`: `heappop`",
+       "Remove the smallest letter among those before the star; the star removes it",
+       "Each star removes the smallest letter to its left"
+      ],
+      [
+       "`gone`",
+       "Indices already removed (we only mark them, and rebuild the string at the end)",
+       "Lazy removal"
+      ],
+      [
+       "why rightmost on ties",
+       "Removing a LATER copy of a letter keeps earlier copies in front, which makes the remaining string lexicographically smaller",
+       "Greedy tie-break"
+      ],
+      [
+       "final join skipping stars and `gone`",
+       "Build the result once",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"aaba*\"`:"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Char",
+      "Action",
+      "Removed indices"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "push (letter, −index)",
+       "[]"
+      ],
+      [
+       "1",
+       "a",
+       "push (letter, −index)",
+       "[]"
+      ],
+      [
+       "2",
+       "b",
+       "push (letter, −index)",
+       "[]"
+      ],
+      [
+       "3",
+       "a",
+       "push (letter, −index)",
+       "[]"
+      ],
+      [
+       "4",
+       "*",
+       "remove the smallest letter, rightmost on ties → index 3 ('a')",
+       "[3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why remove the rightmost smallest letter?",
+    "p": [
+     "The problem says each star deletes the smallest letter to its left; when several copies tie, the choice is ours. Deleting the rightmost copy leaves the other copies closer to the front, and for equal letters that gives the smallest remaining string. The result was checked against a brute force over all tie choices."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every tie choice",
+       "exponential"
+      ],
+      [
+       "heap with (letter, −index) (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Remove stars lexicographically smallest: a min-heap of (letter, −index); each star pops the smallest letter, preferring the rightmost on ties."
+ },
+ "3173": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(nums, nums[1:])`",
+       "Pairs each element with the next one",
+       "Adjacent pairs"
+      ],
+      [
+       "`a | b`",
+       "Bitwise OR: a bit is 1 if it is 1 in either number",
+       "Combining bit flags"
+      ],
+      [
+       "list comprehension",
+       "Builds the result of length `n − 1`",
+       "One value per pair"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1, 3, 7, 15]`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "a (binary)",
+      "b (binary)",
+      "a | b"
+     ],
+     "rows": [
+      [
+       "1, 3",
+       "1",
+       "11",
+       "11 = 3"
+      ],
+      [
+       "3, 7",
+       "11",
+       "111",
+       "111 = 7"
+      ],
+      [
+       "7, 15",
+       "111",
+       "1111",
+       "1111 = 15"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `zip(nums, nums[1:])`?",
+    "p": [
+     "`nums[1:]` is the array shifted by one, so zipping aligns each element with its right neighbour. `zip` stops at the shorter list, which gives exactly `n − 1` pairs, with no index arithmetic."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Note"
+     ],
+     "rows": [
+      [
+       "`zip(nums, nums[1:])` (this code)",
+       "no indices, copies the list once"
+      ],
+      [
+       "`for i in range(len(nums) - 1)`",
+       "same result, explicit indices"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "OR of adjacent elements: zip the array with itself shifted by one and OR each pair."
+ },
+ "3176": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Longest good subsequence ENDING at index `i` that has at most `j` places where adjacent chosen elements differ",
+       "DP over (end index, allowed changes)"
+      ],
+      [
+       "`[[1] * (k + 1) …]`",
+       "A single element is a subsequence of length 1 with 0 changes",
+       "Base case"
+      ],
+      [
+       "`nums[p] == nums[i]`",
+       "Extend a subsequence ending at `p` with the same value: no new change used",
+       "Same value: stay at `j`"
+      ],
+      [
+       "`elif j > 0: dp[p][j - 1] + 1`",
+       "Extend with a different value: one change is used, so look at `j − 1`",
+       "Different value: consume one change"
+      ],
+      [
+       "`best = max(best, dp[i][j])`",
+       "Longest over all end points",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,1,1,3]`, `k = 2`: the table `dp[i][j]` for `j = 0, 1, 2`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "j = 0",
+      "j = 1",
+      "j = 2"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "2",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "3",
+       "3",
+       "4"
+      ],
+      [
+       "4",
+       "3",
+       "1",
+       "4",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The longest good subsequence has length 4 (for example `1, 2, 1, 1`, which has two places where adjacent chosen elements differ)."
+    ]
+   },
+   {
+    "h": "Why is the DP O(n² k)?",
+    "p": [
+     "For each of the `n` end points and each of `k + 1` change budgets, we scan all earlier positions `p`. That is fine for this problem's small `n` (up to 500). The harder version (3177) speeds the inner scan up with a dictionary of best lengths per value."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all subsequences",
+       "O(2ⁿ)"
+      ],
+      [
+       "DP over (end, changes) (this code)",
+       "O(n² · k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² · k).",
+     "Space: O(n · k)."
+    ]
+   }
+  ],
+  "takeaway": "Longest good subsequence with at most k changes: DP on (end index, changes used), extending from earlier positions with the same value for free or a different value at the cost of one change."
+ },
+ "3191": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums = nums[:]`",
+       "Work on a copy so the caller's list is not changed",
+       "Copy before mutating"
+      ],
+      [
+       "`for i in range(len(nums) - 2)`",
+       "Scan left to right; a window of three starting at `i` needs `i + 2` to exist",
+       "Windows of size 3"
+      ],
+      [
+       "`if nums[i] == 0`",
+       "The leftmost zero can ONLY be fixed by a flip that starts at `i` (earlier flips are already decided)",
+       "Greedy: fix the first unfixed element"
+      ],
+      [
+       "`nums[j] ^= 1` for three cells",
+       "XOR with 1 flips a bit",
+       "Toggle"
+      ],
+      [
+       "`ops if nums[-1] == nums[-2] == 1 else -1`",
+       "The last two elements can't be the start of a window; if they are not both 1 afterwards, it is impossible",
+       "Final check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [0,1,1,1,0,0]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Action",
+      "Array",
+      "Flips"
+     ],
+     "rows": [
+      [
+       "0",
+       "flip 0..2",
+       "[1, 0, 0, 1, 0, 0]",
+       "1"
+      ],
+      [
+       "1",
+       "flip 1..3",
+       "[1, 1, 1, 0, 0, 0]",
+       "2"
+      ],
+      [
+       "3",
+       "flip 3..5",
+       "[1, 1, 1, 1, 1, 1]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the leftmost-zero greedy forced?",
+    "p": [
+     "Position `i` can only be changed by flips that start at `i − 2`, `i − 1` or `i`. Flips starting before `i` have already been decided, so if `nums[i]` is still 0, the flip starting at `i` is the only remaining way to fix it. So each decision is forced and the count is minimal. A brute force over all flip subsets agreed on random arrays."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all flip subsets",
+       "O(2ⁿ)"
+      ],
+      [
+       "greedy left to right (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the copy."
+    ]
+   }
+  ],
+  "takeaway": "Binary array to all ones with 3-element flips: scan left to right and flip a window whenever the leftmost element is 0; if the last two are not 1, it is impossible."
+ },
+ "3197": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`area(r1, r2, c1, c2)`",
+       "Area of the smallest rectangle that covers every 1 inside the given sub-grid (0 if it has no 1s)",
+       "Bounding box of the ones in a region"
+      ],
+      [
+       "three vertical cuts, three horizontal cuts",
+       "Split the grid into 3 strips: two cut lines in the same direction",
+       "Partition shape 1 and 2"
+      ],
+      [
+       "one vertical cut + one horizontal cut on a side",
+       "Split once vertically, then split one of the two halves horizontally: four orientations in total",
+       "The remaining partition shapes (an L-shaped arrangement of 3 rectangles)"
+      ],
+      [
+       "`best = min(...)`",
+       "The smallest total area over all ways to cut the grid into 3 non-empty parts",
+       "Minimum over all partitions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,0,1],[1,1,1]]`: the best split uses three vertical strips."
+    ],
+    "table": {
+     "head": [
+      "Partition",
+      "Strip areas (bounding boxes of the 1s)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "columns 0 | 1 | 2",
+       "2 + 1 + 2",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these six shapes?",
+    "p": [
+     "Three non-overlapping rectangles that cover a rectangular region and are each a bounding box can be arranged only as three parallel strips (rows or columns) or as one strip plus a perpendicular split of the remainder. The code tries every cut position for each shape. It was checked against a brute force over all triples of disjoint rectangles on random small grids."
+    ],
+    "table": {
+     "head": [
+      "Shape",
+      "Cuts"
+     ],
+     "rows": [
+      [
+       "3 vertical strips",
+       "2 column cuts"
+      ],
+      [
+       "3 horizontal strips",
+       "2 row cuts"
+      ],
+      [
+       "vertical cut, then split one side horizontally",
+       "1 column + 1 row cut, two orientations"
+      ],
+      [
+       "horizontal cut, then split one side vertically",
+       "1 row + 1 column cut, two orientations"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((m + n)² · m · n) in the worst case, because each `area` call scans its region.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Cover all ones with three rectangles: try every way to cut the grid into three parts (three strips, or a strip plus a perpendicular split) and sum the bounding-box areas."
+ },
+ "3200": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`build(a, b)`",
+       "Height of the triangle if the first row (1 ball) is colour A and rows alternate: odd rows use colour A, even rows use colour B",
+       "The colour of row 1 can be either, so try both"
+      ],
+      [
+       "`row`",
+       "Row number = number of balls in that row (1, 2, 3, …)",
+       "Row `r` has exactly `r` balls"
+      ],
+      [
+       "`if a < row: break`",
+       "Not enough balls of the required colour: stop; the height is `row − 1`",
+       "Stop when a row can't be completed"
+      ],
+      [
+       "`a -= row`",
+       "Spend the balls",
+       "Consume"
+      ],
+      [
+       "`max(build(red, blue), build(blue, red))`",
+       "Best of the two starting colours",
+       "Try both"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`red = 2`, `blue = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Start colour",
+      "Rows built",
+      "Height"
+     ],
+     "rows": [
+      [
+       "red first",
+       "['row 1: red', 'row 2: blue']",
+       "2"
+      ],
+      [
+       "blue first",
+       "['row 1: red', 'row 2: blue', 'row 3: red']",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why simulate?",
+    "p": [
+     "Rows alternate colours, so odd rows draw from one colour and even rows from the other. A simple loop that subtracts `row` from the right colour until it runs out finds the height in O(√n). Either starting colour may be better, hence the two calls."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate both starts (this code)",
+       "O(√(red + blue))"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(√(red + blue)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum triangle height: simulate rows (row r needs r balls of alternating colours) for both starting colours and take the larger height."
+ },
+ "3203": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`far(src)` (Breadth-First Search, BFS)",
+       "Returns the node farthest from `src` and its distance; BFS processes nodes in order of distance, so the last node dequeued is the farthest",
+       "Farthest node in an unweighted tree"
+      ],
+      [
+       "`a, _ = far(0)`; `b, d = far(a)`",
+       "Two BFS passes: the farthest node from any start is an end of a diameter; the farthest node from THAT end gives the diameter length `d`",
+       "Tree diameter in two BFS runs"
+      ],
+      [
+       "`(d1 + 1) // 2`",
+       "The radius of a tree with diameter `d`: the best centre is `⌈d/2⌉` away from the farthest node",
+       "Connect the centres of the two trees"
+      ],
+      [
+       "`(d1+1)//2 + (d2+1)//2 + 1`",
+       "Longest path through the new edge when joined at both centres: radius + 1 + radius",
+       "The merged tree's path crossing the bridge"
+      ],
+      [
+       "`max(d1, d2, …)`",
+       "The new diameter is the largest of the old diameters and the path across the bridge",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree 1 is a star with centre 0 and three leaves (diameter 2); tree 2 is a single edge (diameter 1)."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Tree 1",
+      "Tree 2"
+     ],
+     "rows": [
+      [
+       "diameter",
+       "2",
+       "1"
+      ],
+      [
+       "radius (d + 1) // 2",
+       "1",
+       "1"
+      ],
+      [
+       "path across the bridge",
+       "",
+       "3"
+      ],
+      [
+       "answer = max of all three",
+       "",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why connect the centres?",
+    "p": [
+     "After adding one edge between the two trees, the longest path either stays inside one tree or crosses the new edge. A path across has length (distance from the chosen node in tree 1 to its farthest node) + 1 + (the same in tree 2). The distance to the farthest node is minimised by the tree's centre, equal to ⌈d/2⌉. A brute force over every possible connecting pair agreed on random trees."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every pair of connecting nodes",
+       "O(n·m·(n + m))"
+      ],
+      [
+       "diameters + radii (this code)",
+       "O(n + m)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum diameter after merging two trees: connect their centres; the answer is max(d1, d2, ⌈d1/2⌉ + ⌈d2/2⌉ + 1), with diameters from two BFS runs."
+ },
+ "3341": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`moveTime[a][b]`",
+       "The earliest second at which you may START moving into room `(a, b)`",
+       "Rooms open at given times"
+      ],
+      [
+       "`max(t, moveTime[a][b]) + 1`",
+       "Wait until the room opens if needed, then spend 1 second moving in",
+       "Arrival time = wait + 1"
+      ],
+      [
+       "`heap` of `(time, i, j)`",
+       "Min-heap by arrival time: Dijkstra's algorithm (shortest paths with non-negative costs)",
+       "Earliest-arrival search"
+      ],
+      [
+       "`if t > dist[i][j]: continue`",
+       "Stale heap entry",
+       "Lazy deletion"
+      ],
+      [
+       "`if nt < dist[a][b]`",
+       "Only keep improvements",
+       "Relaxation"
+      ],
+      [
+       "return `t` at the last room",
+       "The first time the destination is popped, it has the earliest arrival",
+       "Dijkstra's finality"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`moveTime = [[0,4],[4,4]]`:"
+    ],
+    "table": {
+     "head": [
+      "Room popped",
+      "Time",
+      "Rooms improved (→ arrival time)"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "['(1,0) → 5', '(0,1) → 5']"
+      ],
+      [
+       "(0,1)",
+       "5",
+       "['(1,1) → 6']"
+      ],
+      [
+       "(1,0)",
+       "5",
+       "-"
+      ],
+      [
+       "(1,1)",
+       "6",
+       "destination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Dijkstra and not BFS (Breadth-First Search)?",
+    "p": [
+     "Edge costs depend on time: entering a room costs `max(t, open time) + 1 − t`, which varies. Plain BFS assumes every edge costs 1. Arrival times are non-decreasing along a path, so Dijkstra's greedy choice (always expand the earliest arrival) stays correct."
+    ],
+    "table": {
+     "head": [
+      "Graph",
+      "Algorithm"
+     ],
+     "rows": [
+      [
+       "equal edge costs",
+       "BFS"
+      ],
+      [
+       "time-dependent but non-decreasing arrival (this problem)",
+       "Dijkstra"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n log(m·n)).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Earliest arrival to the last room: Dijkstra where the cost of stepping into a room is max(current time, room opening time) + 1."
+ },
+ "3356": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ok(k)`",
+       "Using only the first `k` queries, can every `nums[i]` be reduced to 0?",
+       "Feasibility check"
+      ],
+      [
+       "`diff[l] += v; diff[r + 1] -= v`",
+       "Difference array: add `v` of available decrement to every index in `[l, r]` in O(1)",
+       "Range add"
+      ],
+      [
+       "`cur += diff[i]; if cur < nums[i]: return False`",
+       "The total decrement available at `i` (each query may decrement by UP TO its value, any amount) must be at least `nums[i]`",
+       "Capacity at each position"
+      ],
+      [
+       "`if not ok(len(queries)): return -1`",
+       "If even all queries are not enough, impossible",
+       "Impossible case"
+      ],
+      [
+       "binary search on `k`",
+       "More queries only add capacity, so `ok` is False…False True…True",
+       "Smallest feasible k"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,0,2]`, `queries = [[0,2,1],[0,2,1],[1,1,3]]`. `cover` is the decrement capacity at each index using the first `mid` queries:"
+    ],
+    "table": {
+     "head": [
+      "Range [lo, hi]",
+      "mid",
+      "Capacity per index",
+      "Feasible?",
+      "Move"
+     ],
+     "rows": [
+      [
+       "[0, 3]",
+       "1",
+       "[1]",
+       "False",
+       "lo = mid + 1"
+      ],
+      [
+       "[2, 3]",
+       "2",
+       "[2, 2, 2]",
+       "True",
+       "hi = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we treat each query as capacity?",
+    "p": [
+     "A query may subtract any amount from 0 up to `v` at each index in its range, independently per index. So the maximum total decrement at an index is the sum of `v` over the queries covering it, and the array can be zeroed exactly when that sum is at least the element. No scheduling is needed."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try k = 1, 2, … and re-check",
+       "O(q · (n + q))"
+      ],
+      [
+       "binary search on k (this code)",
+       "O((n + q) log q)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Zero array transformation II: binary search the number of queries; feasibility uses a difference array of total decrement capacity per index."
+ },
+ "3371": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "array structure",
+       "`n − 2` special numbers, one number that is their SUM, and one outlier",
+       "Total = (special sum) + (sum element) + outlier = 2 · (sum element) + outlier"
+      ],
+      [
+       "`o = total - 2 * s`",
+       "If `s` is the sum element, the outlier must be `total − 2s`",
+       "Solve for the outlier"
+      ],
+      [
+       "`o in cnt`",
+       "The candidate outlier must actually be in the array",
+       "Membership via the Counter"
+      ],
+      [
+       "`o != s or cnt[s] > 1`",
+       "If the outlier equals the sum element's value, the value must appear at least twice (they are different positions)",
+       "Distinct indices"
+      ],
+      [
+       "`best = max(best, o)`",
+       "Several candidates may work; the answer is the LARGEST outlier",
+       "Maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,5,10]`, total 20:"
+    ],
+    "table": {
+     "head": [
+      "Candidate sum element s",
+      "Outlier = total − 2s",
+      "Valid?"
+     ],
+     "rows": [
+      [
+       "2",
+       "20 − 2·2 = 16",
+       "no"
+      ],
+      [
+       "3",
+       "20 − 2·3 = 14",
+       "no"
+      ],
+      [
+       "5",
+       "20 − 2·5 = 10",
+       "valid outlier"
+      ],
+      [
+       "10",
+       "20 − 2·10 = 0",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "With `s = 5` the outlier is `20 − 10 = 10`, which is in the array: the special numbers are `2` and `3` (sum 5). The answer is 10. Checked against a brute force over all choices of sum element and outlier."
+    ]
+   },
+   {
+    "h": "Why a Counter?",
+    "p": [
+     "We need O(1) membership and a way to know whether a value occurs twice. A Counter provides both, so each candidate sum element is tested in O(1), for O(n) overall."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every (sum, outlier) pair",
+       "O(n²)"
+      ],
+      [
+       "Counter lookup (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Largest outlier: with total T and sum element s, the outlier is T − 2s; check it exists (as a different element) with a Counter and keep the maximum."
+ },
+ "3389": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`c[i]`",
+       "How many times letter `i` (a = 0 … z = 25) occurs",
+       "Frequency array"
+      ],
+      [
+       "target frequency `f`",
+       "In a good string every letter that appears has the SAME count `f`; try each `f` from 1 to `n`",
+       "Fix the target, then optimise"
+      ],
+      [
+       "`dp[carry]` over letters",
+       "Minimum operations after processing the letters so far, where `carry` extra characters are being passed on to the NEXT letter by changing them into it (a change costs 1, while delete + insert would cost 2)",
+       "Pass-the-surplus DP over the alphabet"
+      ],
+      [
+       "`t = c[i] + x`",
+       "Count of letter `i` including the `x` characters carried in from the previous letter",
+       "Effective count"
+      ],
+      [
+       "`t >= f`: `ex = t - f`",
+       "Too many: delete the extra, or pass up to `min(ex, need)` of them forward (`need` = how many the next letter lacks)",
+       "Surplus moves forward or is deleted"
+      ],
+      [
+       "`t < f`: cost `f - t`",
+       "Too few: insert the missing ones",
+       "Insertions"
+      ],
+      [
+       "delete everything: cost `t` (or carry some forward)",
+       "A letter may also end with count 0",
+       "The letter disappears from the string"
+      ],
+      [
+       "`dp.get(0, …)` after letter `z`",
+       "Nothing can be carried past `z` (it has no next letter)",
+       "End condition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"aaabc\"` (`a`: 3, `b`: 1, `c`: 1). The cost for each target frequency `f`:"
+    ],
+    "table": {
+     "head": [
+      "Target frequency f",
+      "Minimum operations"
+     ],
+     "rows": [
+      [
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "2"
+      ],
+      [
+       "4",
+       "3"
+      ],
+      [
+       "5",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "The best target is `f = 1` with cost 2: for `\"aaabc\"` the cheapest fix is to delete two `a`s (giving `abc`, each letter once). The DP was checked against a breadth-first search over operation sequences on small strings."
+   },
+   {
+    "h": "Why DP over the alphabet?",
+    "p": [
+     "A change moves a character to the NEXT letter, so surplus characters can only flow forward through the alphabet. That makes the problem a left-to-right DP where the state is how many characters are passed on. Without it, every combination of insert, delete and change would have to be tried."
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Effect",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "delete",
+       "one fewer character",
+       "1"
+      ],
+      [
+       "insert",
+       "one more character",
+       "1"
+      ],
+      [
+       "change to the next letter",
+       "moves one character forward",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · 26 · states) — roughly O(26 · n²) in the worst case.",
+     "Space: O(n) per DP layer."
+    ]
+   }
+  ],
+  "takeaway": "Make character frequencies equal: for each target frequency run a left-to-right DP over the alphabet, where surplus characters are deleted or passed (changed) to the next letter."
+ }
+}

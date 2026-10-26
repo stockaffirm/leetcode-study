@@ -1,0 +1,1992 @@
+{
+ "60": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "k -= 1",
+       "Converts the 1-based rank to 0-based, so that rank 0 is the first permutation",
+       "Off-by-one guard"
+      ],
+      [
+       "factorial(i - 1)",
+       "(i\u22121)! = how many permutations share each choice of the next digit",
+       "Counting blocks of permutations"
+      ],
+      [
+       "idx, k = divmod(k, f)",
+       "Quotient = which block (which remaining digit), remainder = rank inside that block",
+       "Factorial number system"
+      ],
+      [
+       "digits.pop(idx)",
+       "Removes and returns the chosen digit so it can't be used again",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `k = 3` (the 3rd permutation, so 0-based k = 2):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "(i\u22121)!",
+      "digit index",
+      "digit chosen",
+      "digits left",
+      "built so far"
+     ],
+     "rows": [
+      [
+       "3",
+       "2",
+       "1",
+       "2",
+       "[1, 3]",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "0",
+       "1",
+       "[3]",
+       "21"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "3",
+       "[]",
+       "213"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `213`."
+    ]
+   },
+   {
+    "h": "Why not generate permutations?",
+    "p": [
+     "There are n! permutations; generating them to reach the k-th costs O(n!). Each position's choice is determined by integer division by (i\u22121)!, so the answer is built in O(n\u00b2) (the `pop` shifts a list of at most n items)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Factorial number system: divmod k by (i\u22121)! to pick each digit from the remaining list."
+ },
+ "279": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i]",
+       "Fewest perfect squares that sum to i",
+       "Coin-change style DP (Dynamic Programming)"
+      ],
+      [
+       "j * j <= i",
+       "Try every square not exceeding i as the last square used",
+       "Squares act as the coins"
+      ],
+      [
+       "dp[i - j*j] + 1",
+       "Best for the remainder plus this one square",
+       ""
+      ],
+      [
+       "dp[0] = 0",
+       "Zero squares make 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 12`: the best last square for each i and the resulting count:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "last square used",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "3"
+      ],
+      [
+       "4",
+       "4",
+       "1"
+      ],
+      [
+       "5",
+       "1",
+       "2"
+      ],
+      [
+       "6",
+       "1",
+       "3"
+      ],
+      [
+       "7",
+       "1",
+       "4"
+      ],
+      [
+       "8",
+       "4",
+       "2"
+      ],
+      [
+       "9",
+       "9",
+       "1"
+      ],
+      [
+       "10",
+       "1",
+       "2"
+      ],
+      [
+       "11",
+       "1",
+       "3"
+      ],
+      [
+       "12",
+       "4",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "`dp[12] = 3` (4 + 4 + 4)."
+    ]
+   },
+   {
+    "h": "Why DP and not greedy?",
+    "p": [
+     "Taking the largest square first fails: 12 = 9 + 1 + 1 + 1 uses 4 squares, while 4 + 4 + 4 uses 3. DP tries all squares, so it finds the true minimum. (Lagrange's four-square theorem says the answer is never more than 4.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u221an).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Coin change with square numbers as coins: dp[i] = 1 + min over squares j\u00b2 \u2264 i of dp[i \u2212 j\u00b2]."
+ },
+ "315": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "rank = {value: 1..m}",
+       "Compresses the values to ranks 1..m so the tree is small",
+       "Coordinate compression"
+      ],
+      [
+       "tree (Fenwick tree / Binary Indexed Tree)",
+       "Array where tree[i] stores a count over a range of ranks; supports prefix counts and point updates in O(log m)",
+       "Counting items below a value dynamically"
+      ],
+      [
+       "i += i & -i",
+       "Moves to the next tree node responsible for index i (adds the lowest set bit)",
+       "Fenwick update"
+      ],
+      [
+       "i -= i & -i",
+       "Removes the lowest set bit: jumps to the previous block when summing a prefix",
+       "Fenwick query"
+      ],
+      [
+       "reversed(nums) and res[::-1]",
+       "Scans from the right so the tree holds exactly the elements to the right of the current one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,2,6,1]`, processed from the right (ranks: 1\u21921, 2\u21922, 5\u21923, 6\u21924):"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "rank",
+      "smaller values already inserted",
+      "tree after"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "0",
+       "[0, 1, 1, 0, 1]"
+      ],
+      [
+       "6",
+       "4",
+       "1",
+       "[0, 1, 1, 0, 2]"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "[0, 1, 2, 0, 3]"
+      ],
+      [
+       "5",
+       "3",
+       "2",
+       "[0, 1, 2, 1, 4]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Reversing the collected counts gives `[2, 1, 1, 0]`."
+    ]
+   },
+   {
+    "h": "Why a Fenwick tree?",
+    "p": [
+     "For each x we need the number of already-seen (right-hand) values below it. A plain list would cost O(n) per query, O(n\u00b2) total; the Fenwick tree answers prefix counts and inserts in O(log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Scan right to left with a Fenwick tree over compressed ranks; query the count of smaller values, then insert."
+ },
+ "342": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "n > 0",
+       "Excludes zero and negatives",
+       ""
+      ],
+      [
+       "n & (n - 1) == 0",
+       "Exactly one bit is set: n is a power of two",
+       "Power-of-two test"
+      ],
+      [
+       "n & 0x55555555 != 0",
+       "0x55555555 is the bit pattern `0101\u202601`: it has 1s only at even bit positions (0, 2, 4, \u2026), where powers of four have their single 1",
+       "Masking the allowed bit positions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "n",
+      "binary",
+      "power of two?",
+      "bit at an even position?",
+      "power of four?"
+     ],
+     "rows": [
+      [
+       "16",
+       "10000",
+       "True",
+       "True",
+       "True"
+      ],
+      [
+       "8",
+       "1000",
+       "True",
+       "False",
+       "False"
+      ],
+      [
+       "64",
+       "1000000",
+       "True",
+       "True",
+       "True"
+      ],
+      [
+       "5",
+       "101",
+       "False",
+       "True",
+       "False"
+      ],
+      [
+       "1",
+       "1",
+       "True",
+       "True",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the mask?",
+    "p": [
+     "Powers of two have one set bit at any position, but powers of four have it only at an even position (1, 4, 16, 64, \u2026). 8 = `1000` has its bit at position 3, so the mask test fails and it is correctly rejected."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Power of two (n & (n\u22121) == 0) whose single bit is at an even position (mask 0x55555555)."
+ },
+ "390": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "head",
+       "The first remaining number",
+       "Tracking one end of an arithmetic progression"
+      ],
+      [
+       "step",
+       "Gap between neighbouring remaining numbers (doubles each round)",
+       ""
+      ],
+      [
+       "left or remaining % 2 == 1: head += step",
+       "The first element is removed when sweeping from the left, or when sweeping from the right with an odd count",
+       "Parity case analysis"
+      ],
+      [
+       "remaining //= 2",
+       "Half the numbers are removed each round",
+       ""
+      ],
+      [
+       "left = not left",
+       "Directions alternate",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 9`:"
+    ],
+    "table": {
+     "head": [
+      "numbers remaining (start of round)",
+      "head",
+      "step",
+      "direction"
+     ],
+     "rows": [
+      [
+       "9",
+       "1",
+       "1",
+       "left"
+      ],
+      [
+       "4",
+       "2",
+       "2",
+       "right"
+      ],
+      [
+       "2",
+       "2",
+       "4",
+       "left"
+      ],
+      [
+       "1",
+       "6",
+       "8",
+       "right"
+      ]
+     ]
+    },
+    "bullets": [
+     "Last remaining: 6."
+    ]
+   },
+   {
+    "h": "Why only track the head?",
+    "p": [
+     "After each round the remaining numbers form an arithmetic progression with a known step and count. Only the first element changes in a way that depends on the direction and parity, so (head, step, count) is enough: no list is ever built."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Track (head, step, count) of the surviving arithmetic progression; no simulation of the list."
+ },
+ "396": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "f = \u03a3 i\u00b7nums[i]",
+       "F(0): the weighted sum with the original positions",
+       ""
+      ],
+      [
+       "f += total - n * nums[n - k]",
+       "F(k) = F(k\u22121) + (sum of all) \u2212 n \u00b7 (the element that wraps from the end to the front)",
+       "Updating a sum in O(1) instead of recomputing"
+      ],
+      [
+       "best = max(best, f)",
+       "Largest F(k) seen",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,6]`:"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "F(k)",
+      "best so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "25",
+       "25"
+      ],
+      [
+       "1",
+       "16",
+       "25"
+      ],
+      [
+       "2",
+       "23",
+       "25"
+      ],
+      [
+       "3",
+       "26",
+       "26"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 26."
+    ]
+   },
+   {
+    "h": "Why does the recurrence hold?",
+    "p": [
+     "Rotating right by one shifts every element's index up by 1 (adding the sum of all elements to F) except the last element, which jumps from index n\u22121 to 0: it changes its contribution from (n\u22121)\u00b7x to 0, i.e. subtracts n\u00b7x in total once the +x is included. That gives F(k) = F(k\u22121) + total \u2212 n \u00b7 nums[n\u2212k]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) instead of O(n\u00b2).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "F(k) = F(k\u22121) + sum(nums) \u2212 n \u00b7 (the element that wraps around)."
+ },
+ "459": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "s + s",
+       "The string doubled",
+       "Rotation trick"
+      ],
+      [
+       "[1:-1]",
+       "Drops the first and last character, removing the two trivial occurrences of s at positions 0 and len(s)",
+       "Slicing"
+      ],
+      [
+       "s in \u2026",
+       "Substring test: s appears in the middle part only if s is built from a repeated block",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "(s + s)[1:-1]",
+      "s found inside?"
+     ],
+     "rows": [
+      [
+       "abab",
+       "bababa",
+       "True"
+      ],
+      [
+       "aba",
+       "baab",
+       "False"
+      ],
+      [
+       "abcabcabc",
+       "bcabcabcabcabcab",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does it work?",
+    "p": [
+     "If s is made of a block repeated, rotating s by the block length gives s again, so s occurs inside s + s at an offset strictly between 0 and len(s). If s is not periodic, the only occurrences of s in s + s are at offsets 0 and len(s), which the slice removes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) with a linear substring search (Python's `in` is fast in practice and worst-case near-linear).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "A string is periodic iff it occurs inside (s + s) with the first and last characters removed."
+ },
+ "507": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = 1",
+       "1 divides every number; the number itself is excluded (a perfect number equals the sum of its proper divisors)",
+       ""
+      ],
+      [
+       "while d * d <= num",
+       "Only checks divisors up to \u221anum; each divisor d pairs with num // d",
+       "Divisor pairs"
+      ],
+      [
+       "if d != num // d",
+       "A square root would be counted twice; add it only once",
+       ""
+      ],
+      [
+       "num <= 1 \u2192 False",
+       "1 has no proper divisors that sum to it",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 28`: divisor pairs found:"
+    ],
+    "table": {
+     "head": [
+      "d",
+      "num // d",
+      "running total"
+     ],
+     "rows": [
+      [
+       "2",
+       "14",
+       "17"
+      ],
+      [
+       "4",
+       "7",
+       "28"
+      ]
+     ]
+    },
+    "bullets": [
+     "1 + 2 + 14 + 4 + 7 = 28, which equals 28: perfect."
+    ]
+   },
+   {
+    "h": "Why stop at the square root?",
+    "p": [
+     "Every divisor d \u2264 \u221anum has a partner num // d \u2265 \u221anum. Looping to \u221anum finds both, in O(\u221anum) instead of O(num)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(\u221an).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sum proper divisors by pairs (d, n/d) up to \u221an and compare with n."
+ },
+ "513": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque([root])",
+       "BFS (Breadth-First Search) queue",
+       ""
+      ],
+      [
+       "append right child before left",
+       "Reverses the usual order so that, within each level, the leftmost node is processed last",
+       "Order trick to avoid level bookkeeping"
+      ],
+      [
+       "node = q.popleft() (keep the last)",
+       "After the loop, `node` is the very last node dequeued: the leftmost node of the deepest level",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[2,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "node dequeued",
+      "queue (front \u2192 back) after dequeue"
+     ],
+     "rows": [
+      [
+       "2",
+       "[]"
+      ],
+      [
+       "3",
+       "[1]"
+      ],
+      [
+       "1",
+       "[]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The last node dequeued is 1: the bottom-left value."
+    ]
+   },
+   {
+    "h": "Why right-to-left?",
+    "p": [
+     "BFS visits levels from top to bottom. Pushing the right child first makes each level come out right-to-left, so the last node of the last level is its leftmost one. No level counters or depth tracking are needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w), w = maximum width."
+    ]
+   }
+  ],
+  "takeaway": "Right-to-left BFS: the last dequeued node is the bottom-left one."
+ },
+ "561": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(nums)",
+       "Ascending order",
+       ""
+      ],
+      [
+       "[::2]",
+       "Every second element starting at index 0: the smaller element of each adjacent pair",
+       "Extended slicing"
+      ],
+      [
+       "sum(...)",
+       "Total of the minimums",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,4,3,2]` sorted: `[1, 2, 3, 4]`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "min",
+      "chosen by [::2]"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "1",
+       "1"
+      ],
+      [
+       "(3, 4)",
+       "3",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Sum = 4."
+    ]
+   },
+   {
+    "h": "Why pair neighbours?",
+    "p": [
+     "Each pair contributes its smaller element, so the larger one is wasted. To waste as little as possible, the numbers wasted should be as small as possible, which means pairing each number with its closest neighbour in sorted order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Sort and sum every other element: pair up neighbours to waste the least."
+ },
+ "837": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[s]",
+       "Probability of ever reaching exactly score s",
+       "Probability DP (Dynamic Programming)"
+      ],
+      [
+       "window",
+       "Sum of dp[t] over the last maxPts scores t < k: only those can still draw a card",
+       "Sliding window sum"
+      ],
+      [
+       "dp[s] = window / maxPts",
+       "From each previous score t (which can still draw) each card value has probability 1/maxPts",
+       ""
+      ],
+      [
+       "if s < k: window += dp[s]",
+       "Scores below k can draw again, so they join the window",
+       ""
+      ],
+      [
+       "window -= dp[s - maxPts]",
+       "Scores more than maxPts back can't reach s: they leave the window",
+       ""
+      ],
+      [
+       "sum(dp[k:])",
+       "The game stops at any score \u2265 k; the answer is the chance of stopping at a score \u2264 n",
+       ""
+      ],
+      [
+       "n >= k + maxPts - 1 \u2192 1.0",
+       "The final score can't exceed k \u2212 1 + maxPts, so n at least that is always safe",
+       "Early exit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "For `(6, 1, 10)` Alice draws once; scores 1\u20136 satisfy \u2264 6 out of 10 equally likely values: 0.6."
+    ],
+    "table": {
+     "head": [
+      "(n, k, maxPts)",
+      "probability"
+     ],
+     "rows": [
+      [
+       "(6, 1, 10)",
+       "0.6"
+      ],
+      [
+       "(10, 1, 10)",
+       "1.0"
+      ],
+      [
+       "(21, 17, 10)",
+       "0.73278"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a sliding window?",
+    "p": [
+     "dp[s] needs the sum of up to maxPts previous probabilities. Recomputing the sum for each s costs O(maxPts); keeping a running window makes each step O(1), so the DP is O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Probability DP with a sliding-window sum over the last maxPts scores that can still draw."
+ },
+ "885": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dirs = [(0,1),(1,0),(0,-1),(-1,0)]",
+       "East, south, west, north: clockwise",
+       "Direction vectors"
+      ],
+      [
+       "length",
+       "Steps in the current side; it grows by 1 after every two sides: 1, 1, 2, 2, 3, 3, \u2026",
+       "Spiral side lengths"
+      ],
+      [
+       "for _ in range(2)",
+       "Two sides per length",
+       ""
+      ],
+      [
+       "if 0 <= r < rows and 0 <= c < cols: append",
+       "The spiral may leave the grid; only in-grid cells are recorded, but the walk continues",
+       "Walking outside while filtering"
+      ],
+      [
+       "d += 1",
+       "Turn clockwise",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`rows = 1, cols = 4`, start (0, 0): the walk goes east, south (outside), west (outside), north, east \u2026"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "cell visited (in grid)"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0, 0]"
+      ],
+      [
+       "1",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "[0, 2]"
+      ],
+      [
+       "3",
+       "[0, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Output: `[[0, 0], [0, 1], [0, 2], [0, 3]]`."
+    ]
+   },
+   {
+    "h": "Why keep walking outside?",
+    "p": [
+     "The spiral is defined on the infinite plane; the grid just clips it. Stopping at the border would miss cells reached only after going around, so the walk continues until all rows \u00d7 cols cells are found."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((max(rows, cols))\u00b2) steps, since the spiral may extend that far.",
+     "Space: O(rows \u00d7 cols) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Walk a growing clockwise spiral (lengths 1,1,2,2,3,3\u2026) and record only the in-grid cells."
+ },
+ "942": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo, hi = 0, len(s)",
+       "The smallest and largest numbers not yet used",
+       "Two-ended greedy"
+      ],
+      [
+       "'I' \u2192 append lo",
+       "An increase is guaranteed if the current value is the smallest remaining: everything after it is larger",
+       ""
+      ],
+      [
+       "'D' \u2192 append hi",
+       "A decrease is guaranteed if the current value is the largest remaining",
+       ""
+      ],
+      [
+       "res.append(lo)",
+       "One number is left at the end (lo == hi)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"IDID\"` needs 5 numbers 0..4:"
+    ],
+    "table": {
+     "head": [
+      "character",
+      "choice",
+      "result so far"
+     ],
+     "rows": [
+      [
+       "I",
+       "'I': take smallest 0",
+       "[0]"
+      ],
+      [
+       "D",
+       "'D': take largest 4",
+       "[0, 4]"
+      ],
+      [
+       "I",
+       "'I': take smallest 1",
+       "[0, 4, 1]"
+      ],
+      [
+       "D",
+       "'D': take largest 3",
+       "[0, 4, 1, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "After the loop `lo == hi == 2`, appended last: `[0, 4, 1, 3, 2]`."
+    ]
+   },
+   {
+    "h": "Why does the greedy always work?",
+    "p": [
+     "Taking the smallest remaining for 'I' guarantees the next number is larger, whatever it is; taking the largest for 'D' guarantees the next is smaller. The remaining pool is always a contiguous range [lo, hi], so the invariant holds at every step."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers on the unused range: 'I' takes the smallest left, 'D' takes the largest left."
+ },
+ "1002": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(words[0])",
+       "Letter counts of the first word",
+       "Multiset"
+      ],
+      [
+       "common &= Counter(w)",
+       "Counter intersection: keeps each letter with the MINIMUM of the two counts, dropping letters with 0",
+       "Multiset intersection"
+      ],
+      [
+       "common.elements()",
+       "Expands counts back into repeated letters (a letter with count 2 is yielded twice)",
+       ""
+      ],
+      [
+       "sorted(...)",
+       "Alphabetical order for a deterministic result",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"bella\",\"label\",\"roller\"]`:"
+    ],
+    "table": {
+     "head": [
+      "after word",
+      "common letters and counts"
+     ],
+     "rows": [
+      [
+       "bella",
+       "{'b': 1, 'e': 1, 'l': 2, 'a': 1}"
+      ],
+      [
+       "label",
+       "{'b': 1, 'e': 1, 'l': 2, 'a': 1}"
+      ],
+      [
+       "roller",
+       "{'e': 1, 'l': 2}"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `['e', 'l', 'l']`."
+    ]
+   },
+   {
+    "h": "Why intersection takes the minimum?",
+    "p": [
+     "A letter is common to all words as many times as it appears in the word with the fewest copies. Intersecting counters one word at a time keeps the running minimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Counter intersection (&=) keeps the minimum count of each letter across all words."
+ },
+ "1014": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "values[i] + i",
+       "The left half of the score: score = (values[i] + i) + (values[j] \u2212 j) for i < j",
+       "Splitting an expression into a left and right part"
+      ],
+      [
+       "best_left",
+       "Largest values[i] + i among positions before j",
+       "Running maximum of the left part"
+      ],
+      [
+       "best_left + values[j] - j",
+       "Best score for pairs ending at j",
+       ""
+      ],
+      [
+       "best_left = max(best_left, values[j] + j)",
+       "Updated after scoring j, so i < j always holds",
+       "Order of update"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[8,1,5,2,6]`:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "values[j]",
+      "best (values[i] + i) so far",
+      "score for j",
+      "answer so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "8",
+       "8",
+       "8"
+      ],
+      [
+       "2",
+       "5",
+       "8",
+       "11",
+       "11"
+      ],
+      [
+       "3",
+       "2",
+       "8",
+       "7",
+       "11"
+      ],
+      [
+       "4",
+       "6",
+       "8",
+       "10",
+       "11"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 11."
+    ]
+   },
+   {
+    "h": "Why can the pair be split?",
+    "p": [
+     "The score values[i] + values[j] + i \u2212 j separates into a part depending only on i and a part depending only on j. Maximising over i for each j therefore needs just the running maximum of the i-part."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Score = (values[i] + i) + (values[j] \u2212 j): keep the running maximum of the first part."
+ },
+ "1089": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "arr.count(0)",
+       "Number of zeros: the extra length the duplicated array would have",
+       ""
+      ],
+      [
+       "i = n - 1; j = n + zeros - 1",
+       "`i` reads the original from the end; `j` writes into a virtual longer array",
+       "Two pointers working backwards"
+      ],
+      [
+       "if j < n: arr[j] = arr[i]",
+       "Only writes that land inside the real array are performed",
+       "Virtual array bigger than the real one"
+      ],
+      [
+       "if arr[i] == 0: write a second 0",
+       "A zero is duplicated: it takes two slots",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,2,3,0,4,5,0]` has three zeros, so the virtual length is 11; the array after each step (pointers shown are the positions just handled):"
+    ],
+    "table": {
+     "head": [
+      "read index i",
+      "write index j",
+      "array"
+     ],
+     "rows": [
+      [
+       "7",
+       "9",
+       "[1, 0, 2, 3, 0, 4, 5, 0]"
+      ],
+      [
+       "6",
+       "8",
+       "[1, 0, 2, 3, 0, 4, 5, 0]"
+      ],
+      [
+       "5",
+       "7",
+       "[1, 0, 2, 3, 0, 4, 5, 4]"
+      ],
+      [
+       "4",
+       "5",
+       "[1, 0, 2, 3, 0, 0, 0, 4]"
+      ],
+      [
+       "3",
+       "4",
+       "[1, 0, 2, 3, 3, 0, 0, 4]"
+      ],
+      [
+       "2",
+       "3",
+       "[1, 0, 2, 2, 3, 0, 0, 4]"
+      ],
+      [
+       "1",
+       "1",
+       "[1, 0, 0, 2, 3, 0, 0, 4]"
+      ],
+      [
+       "0",
+       "0",
+       "[1, 0, 0, 2, 3, 0, 0, 4]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final array: `[1, 0, 0, 2, 3, 0, 0, 4]`."
+    ]
+   },
+   {
+    "h": "Why fill from the back?",
+    "p": [
+     "Writing from the front would overwrite elements not yet read. Going backwards, the write position is always at or beyond the read position, so unread elements are never destroyed. That makes the O(1)-space in-place version possible."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count zeros, then copy from the end into a virtual longer array, writing only positions < n."
+ },
+ "1104": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "label.bit_length()",
+       "Number of bits of the label = its level (level k holds labels 2^(k\u22121) .. 2^k \u2212 1)",
+       "Level of a binary-heap label"
+      ],
+      [
+       "lo, hi = 1 << (level - 1), (1 << level) - 1",
+       "Smallest and largest label in the level",
+       ""
+      ],
+      [
+       "lo + hi - label",
+       "Mirrors the label inside its level: the label at the same position in the normal left-to-right order",
+       "Undoing the zigzag"
+      ],
+      [
+       "(\u2026) // 2",
+       "Parent in a normal heap numbering",
+       ""
+      ],
+      [
+       "path[::-1]",
+       "Collected from the node up to the root, so reverse",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`label = 14` (level 4):"
+    ],
+    "table": {
+     "head": [
+      "level",
+      "label",
+      "level range",
+      "mirror lo + hi \u2212 label",
+      "parent label"
+     ],
+     "rows": [
+      [
+       "4",
+       "14",
+       "[8,15]",
+       "9",
+       "4"
+      ],
+      [
+       "3",
+       "4",
+       "[4,7]",
+       "7",
+       "3"
+      ],
+      [
+       "2",
+       "3",
+       "[2,3]",
+       "2",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "[1,1]",
+       "1",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Path from the root: `[1, 3, 4, 14]`."
+    ]
+   },
+   {
+    "h": "Why mirror first?",
+    "p": [
+     "In a normal complete binary tree the parent of label x is x // 2. In the zigzag tree every second level is reversed, so the label at a position in a reversed level corresponds to the mirrored value lo + hi \u2212 x in the normal tree; the parent in the normal tree gives the parent's position in the level above (also reversed if that level is reversed, which the next iteration handles by mirroring again)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n).",
+     "Space: O(log n)."
+    ]
+   }
+  ],
+  "takeaway": "Mirror the label within its level (lo + hi \u2212 label) and halve it to get the zigzag parent."
+ },
+ "1323": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str(num)",
+       "The number as a string of digits",
+       ""
+      ],
+      [
+       "replace('6', '9', 1)",
+       "Replaces only the FIRST '6' (the third argument is the maximum number of replacements)",
+       ""
+      ],
+      [
+       "int(\u2026)",
+       "Back to an integer",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`9669`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "value"
+     ],
+     "rows": [
+      [
+       "str",
+       "9669"
+      ],
+      [
+       "replace first 6 with 9",
+       "9969"
+      ],
+      [
+       "int",
+       "9969"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the first 6?",
+    "p": [
+     "The leftmost digit has the highest place value. Changing the leftmost 6 to 9 raises the number the most; changing a later 6 increases it by less. If there is no 6 the string is unchanged."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Replace the first (leftmost) 6 with 9: str.replace with count 1."
+ },
+ "1365": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(nums)",
+       "A sorted copy",
+       ""
+      ],
+      [
+       "bisect_left(s, x)",
+       "Binary search for the FIRST position where x could be inserted: equals the number of elements strictly smaller than x",
+       "Counting smaller elements in a sorted list"
+      ],
+      [
+       "[... for x in nums]",
+       "Answers in the original order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[8,1,2,2,3]`, sorted `[1, 2, 2, 3, 8]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "bisect_left(sorted, x)",
+      "meaning"
+     ],
+     "rows": [
+      [
+       "8",
+       "4",
+       "4 numbers are smaller"
+      ],
+      [
+       "1",
+       "0",
+       "0 numbers are smaller"
+      ],
+      [
+       "2",
+       "1",
+       "1 numbers are smaller"
+      ],
+      [
+       "2",
+       "1",
+       "1 numbers are smaller"
+      ],
+      [
+       "3",
+       "3",
+       "3 numbers are smaller"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[4, 0, 1, 1, 3]`."
+    ]
+   },
+   {
+    "h": "Why `bisect_left` and not `bisect_right`?",
+    "p": [
+     "With duplicates, `bisect_right` would also count equal values. `bisect_left` returns the index of the first occurrence, which is exactly the count of strictly smaller values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort once; the count of strictly smaller numbers is bisect_left's index."
+ },
+ "1506": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total += node.val",
+       "Add every node's value once",
+       ""
+      ],
+      [
+       "total -= child.val",
+       "Subtract every node's value once for each parent: every non-root node is a child of exactly one node",
+       "Cancellation"
+      ],
+      [
+       "node.val == total",
+       "What remains is the root's value (it is never subtracted); values are unique, so it identifies the node",
+       "XOR/sum trick for the unique unpaired element"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Nodes given in shuffled order (root value 1; node 1 has children 3, 2, 4 and node 3 has children 5, 6):"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "its children",
+      "running total"
+     ],
+     "rows": [
+      [
+       "5",
+       "[]",
+       "5"
+      ],
+      [
+       "3",
+       "[5, 6]",
+       "-3"
+      ],
+      [
+       "6",
+       "[]",
+       "3"
+      ],
+      [
+       "2",
+       "[]",
+       "5"
+      ],
+      [
+       "4",
+       "[]",
+       "9"
+      ],
+      [
+       "1",
+       "[3, 2, 4]",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "The total ends at 1, the root's value."
+    ]
+   },
+   {
+    "h": "Why this is O(1) space",
+    "p": [
+     "A set of children would take O(n) space. The sum cancels every non-root value (added as a node and subtracted as a child), leaving the root. (XOR works the same way and avoids overflow concerns.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sum of all node values minus the sum of all children's values leaves the root's value."
+ },
+ "1512": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(nums).values()",
+       "How many times each distinct value occurs",
+       ""
+      ],
+      [
+       "c * (c - 1) // 2",
+       "Number of ways to choose 2 equal items among c copies: combinations C(c, 2)",
+       "Counting pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,1,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "copies c",
+      "pairs c(c\u22121)/2"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "2",
+       "1",
+       "0"
+      ],
+      [
+       "3",
+       "2",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 3 + 0 + 1 = 4."
+    ]
+   },
+   {
+    "h": "Why a formula instead of a double loop?",
+    "p": [
+     "Every pair of indices with equal values counts once. A double loop is O(n\u00b2); counting occurrences and using C(c, 2) is O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count occurrences and add C(c, 2) for each value."
+ },
+ "1653": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bees",
+       "Number of 'b's seen so far",
+       ""
+      ],
+      [
+       "res",
+       "Minimum deletions to make the prefix seen so far balanced (no 'b' before an 'a')",
+       "One-pass DP (Dynamic Programming)"
+      ],
+      [
+       "res = min(res + 1, bees)",
+       "For a new 'a': either delete this 'a' (res + 1), or delete all earlier 'b's (bees)",
+       "Two options per step"
+      ],
+      [
+       "c == 'b': bees += 1",
+       "A new 'b' never conflicts with earlier letters, so res is unchanged",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aababbab\"`:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "b's seen",
+      "min deletions",
+      "step"
+     ],
+     "rows": [
+      [
+       "a",
+       "0",
+       "0",
+       "a: min(res + 1, bees) \u2192 0"
+      ],
+      [
+       "a",
+       "0",
+       "0",
+       "a: min(res + 1, bees) \u2192 0"
+      ],
+      [
+       "b",
+       "1",
+       "0",
+       "b: keep so far (bees + 1)"
+      ],
+      [
+       "a",
+       "1",
+       "1",
+       "a: min(res + 1, bees) \u2192 1"
+      ],
+      [
+       "b",
+       "2",
+       "1",
+       "b: keep so far (bees + 1)"
+      ],
+      [
+       "b",
+       "3",
+       "1",
+       "b: keep so far (bees + 1)"
+      ],
+      [
+       "a",
+       "3",
+       "2",
+       "a: min(res + 1, bees) \u2192 2"
+      ],
+      [
+       "b",
+       "4",
+       "2",
+       "b: keep so far (bees + 1)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why do those two options suffice?",
+    "p": [
+     "A balanced string is a's followed by b's. When an 'a' arrives after some b's, the string is unbalanced unless that 'a' is deleted, or every earlier 'b' is deleted (then all letters before it are a's). The cheaper option wins."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "One pass: on 'a', res = min(res + 1, b's so far); on 'b', just count it."
+ }
+}

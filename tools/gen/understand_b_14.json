@@ -1,0 +1,2149 @@
+{
+ "1405": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(-n, ch)` tuples in a heap",
+       "Max-heap on remaining counts (negated)",
+       "`heapq` is a min-heap, so the largest pile has the smallest negative value"
+      ],
+      [
+       "`heappop` / `heappush`",
+       "Take or put back a pile",
+       "Priority-queue operations, O(log 3) here"
+      ],
+      [
+       "`res[-1] == res[-2] == ch`",
+       "The last two letters are already `ch`",
+       "Adding `ch` again would make three in a row"
+      ],
+      [
+       "`n + 1` (n is negative)",
+       "Remaining count after using one letter",
+       "Zero means the pile is empty and is not pushed back"
+      ],
+      [
+       "`if not heap: break`",
+       "No other letter available",
+       "Cannot continue without a third repeat"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = 1, b = 1, c = 7` → `ccaccbcc`:"
+    ],
+    "table": {
+     "head": [
+      "Heap top",
+      "Decision",
+      "String so far"
+     ],
+     "rows": [
+      [
+       "top = c×7",
+       "append c",
+       "c"
+      ],
+      [
+       "top = c×6",
+       "append c",
+       "cc"
+      ],
+      [
+       "top = c×5",
+       "would make ccc → use a instead",
+       "cca"
+      ],
+      [
+       "top = c×5",
+       "append c",
+       "ccac"
+      ],
+      [
+       "top = c×4",
+       "append c",
+       "ccacc"
+      ],
+      [
+       "top = c×3",
+       "would make ccc → use b instead",
+       "ccaccb"
+      ],
+      [
+       "top = c×3",
+       "append c",
+       "ccaccbc"
+      ],
+      [
+       "top = c×2",
+       "append c",
+       "ccaccbcc"
+      ],
+      [
+       "top = c×1",
+       "three in a row and nothing else left",
+       "stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why use the biggest pile and the second biggest only when blocked?",
+    "p": [
+     "Using the most plentiful letter whenever allowed keeps the piles balanced, so the largest pile is less likely to be left over and unusable. When the largest letter would form three in a row, the code spends one of the next biggest letter as a separator and puts the largest back. Stopping when no separator exists leaves the unavoidable leftover."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) steps, each with O(log 3) heap work.",
+     "Space: O(1): a heap of at most 3 entries (plus the output)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with a max-heap: always take the biggest pile unless that makes three equal letters in a row, then insert the second biggest."
+ },
+ "1411": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abc`",
+       "Number of valid rows using all three colours, like R-Y-G",
+       "A row of 3 cells with different neighbours is either ABC (3 colours) or ABA (2 colours)"
+      ],
+      [
+       "`aba`",
+       "Number of valid rows with the pattern A-B-A",
+       "Same first and last colour"
+      ],
+      [
+       "`abc, aba = 6, 6`",
+       "One row: 3·2·1 = 6 of each pattern",
+       "Base case"
+      ],
+      [
+       "`2*abc + 2*aba`",
+       "New ABC rows reachable from an ABC row (2 ways) and from an ABA row (2 ways)",
+       "Transition counts, derived by checking compatible next rows"
+      ],
+      [
+       "`2*abc + 3*aba`",
+       "New ABA rows: 2 from ABC and 3 from ABA",
+       "Same idea"
+      ],
+      [
+       "`% MOD`",
+       "Keep numbers small",
+       "Results grow exponentially"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The counts for the first rows; `n = 2` gives 54:"
+    ],
+    "table": {
+     "head": [
+      "Rows n",
+      "abc",
+      "aba",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "6",
+       "6",
+       "12"
+      ],
+      [
+       "2",
+       "24",
+       "30",
+       "54"
+      ],
+      [
+       "3",
+       "108",
+       "138",
+       "246"
+      ],
+      [
+       "4",
+       "492",
+       "630",
+       "1122"
+      ],
+      [
+       "5",
+       "2244",
+       "2874",
+       "5118"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only two kinds of row?",
+    "p": [
+     "Each row has the shape ABC or ABA (no neighbours equal), and by colour symmetry the number of ways to continue depends only on the shape, not on which colours are used. That reduces the 12 possible rows to 2 states with fixed transition counts. The recurrence matches a brute-force count over all 12 rows for n = 1 to 7: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Row-shape DP: classify rows as ABC or ABA and use fixed transition counts between the two shapes."
+ },
+ "1423": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`w = n - k`",
+       "Size of the block of cards LEFT UNTAKEN",
+       "Taking k from the ends leaves one contiguous block of n−k cards in the middle"
+      ],
+      [
+       "`sum(cardPoints[:w])`",
+       "Sum of the first window",
+       "Starting window"
+      ],
+      [
+       "`cur += cardPoints[i] - cardPoints[i - w]`",
+       "Slide by adding the entering card and subtracting the leaving one",
+       "O(1) per step"
+      ],
+      [
+       "`best = min(best, cur)`",
+       "Smallest window sum",
+       "Leaving the smallest middle block maximises what we take"
+      ],
+      [
+       "`total - best`",
+       "Total minus the untaken block",
+       "The points we take"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5,6,1]`, `k = 3`, window size 4; the answer is 22 − 10 = 12:"
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Cards",
+      "Sum",
+      "Smallest so far"
+     ],
+     "rows": [
+      [
+       "cp[0:4]",
+       "[1, 2, 3, 4]",
+       "10",
+       "10"
+      ],
+      [
+       "slide to cp[1:5]",
+       "[2, 3, 4, 5]",
+       "14",
+       "10"
+      ],
+      [
+       "slide to cp[2:6]",
+       "[3, 4, 5, 6]",
+       "18",
+       "10"
+      ],
+      [
+       "slide to cp[3:7]",
+       "[4, 5, 6, 1]",
+       "16",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why look at the middle instead of the ends?",
+    "p": [
+     "Picking k cards from the two ends in any combination (j from the left, k−j from the right) always leaves a contiguous block of n−k cards. Maximising the picked sum equals minimising that block. A sliding window over all n−k+1 positions covers every combination in O(n) instead of trying each split with its own sum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Invert the problem: the cards you leave form a contiguous window of size n − k; find the window with the minimum sum."
+ },
+ "1429": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → how many times it has arrived",
+       "Duplicate detection"
+      ],
+      [
+       "`deque(nums)`",
+       "Values in arrival order",
+       "FIFO (First In, First Out) queue; `popleft` is O(1)"
+      ],
+      [
+       "`while self.q and self.cnt[self.q[0]] > 1: popleft()`",
+       "Drop front values that are no longer unique",
+       "Lazy removal: clean up only when the answer is requested"
+      ],
+      [
+       "`self.q[0] if self.q else -1`",
+       "First remaining value, or −1",
+       "The front is the first unique value"
+      ],
+      [
+       "`add`",
+       "Count and append",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Start `[2,3,5]`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Queue",
+      "Counts"
+     ],
+     "rows": [
+      [
+       "showFirstUnique()",
+       "2",
+       "[2, 3, 5]",
+       "{2: 1, 3: 1, 5: 1}"
+      ],
+      [
+       "add(5)",
+       "—",
+       "[2, 3, 5, 5]",
+       "{2: 1, 3: 1, 5: 2}"
+      ],
+      [
+       "showFirstUnique()",
+       "2",
+       "[2, 3, 5, 5]",
+       "{2: 1, 3: 1, 5: 2}"
+      ],
+      [
+       "add(2)",
+       "—",
+       "[2, 3, 5, 5, 2]",
+       "{2: 2, 3: 1, 5: 2}"
+      ],
+      [
+       "showFirstUnique()",
+       "3",
+       "[3, 5, 5, 2]",
+       "{2: 2, 3: 1, 5: 2}"
+      ],
+      [
+       "add(3)",
+       "—",
+       "[3, 5, 5, 2, 3]",
+       "{2: 2, 3: 2, 5: 2}"
+      ],
+      [
+       "showFirstUnique()",
+       "-1",
+       "[]",
+       "{2: 2, 3: 2, 5: 2}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy removal?",
+    "p": [
+     "A value stops being unique at the moment a duplicate arrives, but it may be anywhere in the queue. Instead of searching for it, we leave it and discard it only if it reaches the front. Since a value never becomes unique again, each queue entry is popped at most once, so `showFirstUnique` is O(1) amortised."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: `add`: O(1). `showFirstUnique`: O(1) amortised.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Queue plus counts with lazy removal: skip non-unique values only when they reach the front."
+ },
+ "1438": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`mx` deque",
+       "Decreasing values: its front is the window maximum",
+       "Monotonic deque; pops smaller values from the back when a bigger one arrives"
+      ],
+      [
+       "`mn` deque",
+       "Increasing values: its front is the window minimum",
+       "Same idea mirrored"
+      ],
+      [
+       "`mx[0] - mn[0] > limit`",
+       "Window violates the limit",
+       "Shrink from the left"
+      ],
+      [
+       "`if mx[0] == nums[left]: popleft()`",
+       "The leaving element is the current max/min",
+       "Only then does the front change"
+      ],
+      [
+       "`right - left + 1`",
+       "Window length",
+       "Candidate answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[8,2,4,7]`, `limit = 4` → 2:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "x",
+      "max deque",
+      "min deque",
+      "Shrink",
+      "Window",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "8",
+       "[8]",
+       "[8]",
+       "—",
+       "[8]",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "[2]",
+       "[2]",
+       "drop 8",
+       "[2]",
+       "1"
+      ],
+      [
+       "2",
+       "4",
+       "[4]",
+       "[2, 4]",
+       "—",
+       "[2, 4]",
+       "2"
+      ],
+      [
+       "3",
+       "7",
+       "[7]",
+       "[4, 7]",
+       "drop 2",
+       "[4, 7]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two deques instead of calling max()/min() on the window?",
+    "p": [
+     "Each element is appended and popped at most once from each deque, so maintaining the window max and min takes O(n) in total."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Cost per step"
+     ],
+     "rows": [
+      [
+       "`max(window) - min(window)`",
+       "O(window)"
+      ],
+      [
+       "Two monotonic deques (this code)",
+       "O(1) amortised"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with two monotonic deques for the window maximum and minimum; shrink while max − min exceeds the limit."
+ },
+ "1453": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`d2 > 4 * r * r`",
+       "Two points farther apart than the diameter",
+       "No circle of radius r can hold both"
+      ],
+      [
+       "`h = sqrt(r*r - d2/4)`",
+       "Distance from the chord's midpoint to a circle centre",
+       "Pythagoras: half the chord is √d2/2, radius r is the hypotenuse"
+      ],
+      [
+       "`(-dy, dx) / d`",
+       "Unit vector perpendicular to the chord",
+       "Direction in which the centre lies from the midpoint"
+      ],
+      [
+       "`for sgn in (1, -1)`",
+       "Both circles of radius r through the two points",
+       "One on each side of the chord"
+      ],
+      [
+       "`<= r*r + 1e-7`",
+       "Inside or on the circle, with a small tolerance",
+       "Floating-point error would otherwise lose points exactly on the boundary"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "darts `[[-2, 0], [2, 0], [0, 2], [0, -2]]`, `r = 2` → 4. Candidate centres from each pair:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Squared distance",
+      "Circle centre",
+      "Darts inside",
+      "best"
+     ],
+     "rows": [
+      [
+       "[-2, 0],[2, 0]",
+       "16",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[-2, 0],[2, 0]",
+       "16",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[-2, 0],[0, 2]",
+       "8",
+       "center (-2.00, 2.00)",
+       "2",
+       "4"
+      ],
+      [
+       "[-2, 0],[0, 2]",
+       "8",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[-2, 0],[0, -2]",
+       "8",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[-2, 0],[0, -2]",
+       "8",
+       "center (-2.00, -2.00)",
+       "2",
+       "4"
+      ],
+      [
+       "[2, 0],[0, 2]",
+       "8",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[2, 0],[0, 2]",
+       "8",
+       "center (2.00, 2.00)",
+       "2",
+       "4"
+      ],
+      [
+       "[2, 0],[0, -2]",
+       "8",
+       "center (2.00, -2.00)",
+       "2",
+       "4"
+      ],
+      [
+       "[2, 0],[0, -2]",
+       "8",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[0, 2],[0, -2]",
+       "16",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ],
+      [
+       "[0, 2],[0, -2]",
+       "16",
+       "center (0.00, 0.00)",
+       "4",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only circles through two darts?",
+    "p": [
+     "Take an optimal circle and slide it until two of its covered darts lie on its boundary, without losing any dart. So some optimal board has two darts on its edge; every such circle is one of the two circles of radius r through some pair. Testing those O(n²) circles against all n darts gives O(n³). A single dart (best = 1) covers the case with no pair."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Optimal circle can be shifted until two darts are on its edge: test the two radius-r circles through every pair and count points inside."
+ },
+ "1456": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`vowels = set('aeiou')`",
+       "Set of vowel characters",
+       "O(1) membership test"
+      ],
+      [
+       "`sum(c in vowels for c in s[:k])`",
+       "Vowels in the first window",
+       "`True` counts as 1"
+      ],
+      [
+       "`(s[i] in vowels) - (s[i-k] in vowels)`",
+       "+1 if the entering letter is a vowel, −1 if the leaving one is",
+       "Booleans subtract as 0/1: slide in O(1)"
+      ],
+      [
+       "`best = max(best, cnt)`",
+       "Largest count",
+       "Running maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abciiidef'`, `k = 3` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Window",
+      "Vowels",
+      "best"
+     ],
+     "rows": [
+      [
+       "s[0:3]",
+       "abc",
+       "1",
+       "1"
+      ],
+      [
+       "+i −a",
+       "bci",
+       "1",
+       "1"
+      ],
+      [
+       "+i −b",
+       "cii",
+       "2",
+       "2"
+      ],
+      [
+       "+i −c",
+       "iii",
+       "3",
+       "3"
+      ],
+      [
+       "+d −i",
+       "iid",
+       "2",
+       "3"
+      ],
+      [
+       "+e −i",
+       "ide",
+       "2",
+       "3"
+      ],
+      [
+       "+f −i",
+       "def",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not recount each window?",
+    "p": [
+     "Counting each window costs O(k), so all windows cost O(n·k). Sliding changes the count by at most one in and one out, so the total is O(n). The same idea applies to any additive statistic of a fixed-size window."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size sliding window: update the vowel count by adding the entering letter and subtracting the leaving one."
+ },
+ "1462": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`reach[i][j]`",
+       "Is course i a (direct or indirect) prerequisite of j?",
+       "Boolean reachability matrix"
+      ],
+      [
+       "`for k … for i … for j …`",
+       "Floyd–Warshall order: the middle node k is the OUTER loop",
+       "After processing k, paths may use intermediate courses 0…k"
+      ],
+      [
+       "`if reach[i][k]` before the inner loop",
+       "Skip i when it cannot reach k",
+       "Saves the whole inner loop"
+      ],
+      [
+       "`reach[k][j]` → `reach[i][j] = True`",
+       "i reaches k and k reaches j, so i reaches j",
+       "Transitive closure step"
+      ],
+      [
+       "`[reach[u][v] for u, v in queries]`",
+       "Answer each query by lookup",
+       "O(1) per query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "3 courses, prerequisites `[[0,1],[1,2]]`; rows of the matrix are separated by `/` (row i lists which courses i reaches):"
+    ],
+    "table": {
+     "head": [
+      "Stage",
+      "reach (rows)"
+     ],
+     "rows": [
+      [
+       "direct edges",
+       "010 / 001 / 000"
+      ],
+      [
+       "after k = 0",
+       "010 / 001 / 000"
+      ],
+      [
+       "after k = 1",
+       "011 / 001 / 000"
+      ],
+      [
+       "after k = 2",
+       "011 / 001 / 000"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Queries",
+    "p": [
+     "`[0,2]` → True (0 → 1 → 2), `[2,0]` → False."
+    ]
+   },
+   {
+    "h": "Why must k be the outer loop?",
+    "p": [
+     "If k were inner, the algorithm would add paths through a single intermediate course at most once per pair and miss longer chains. With k outermost, after round k the matrix correctly answers reachability using only intermediates from {0..k}, and the final round covers all courses."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³) to build, O(1) per query.",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Transitive closure with Floyd–Warshall: with the middle node as the outer loop, i reaches j if i reaches k and k reaches j."
+ },
+ "1480": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`accumulate(nums)`",
+       "Iterator of running sums (from `itertools`)",
+       "Running totals without a manual loop"
+      ],
+      [
+       "`list(...)`",
+       "Materialise the iterator",
+       "The function must return a list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "running sum"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "3",
+       "6"
+      ],
+      [
+       "3",
+       "4",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "What accumulate does with other functions",
+    "p": [
+     "`accumulate(iterable, func)` applies `func` cumulatively, so `accumulate(nums, max)` gives a running maximum and `accumulate(nums, min)` a running minimum. The default function is addition. The result `[1,3,6,10]` here is also the prefix-sum array used for fast range-sum queries: sum(nums[l..r]) = prefix[r] − prefix[l−1]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Running sum = prefix sums: itertools.accumulate does it in one line."
+ },
+ "1483": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.up[j][v]`",
+       "The 2^j-th ancestor of node v (−1 if none)",
+       "Binary lifting table"
+      ],
+      [
+       "`up[j] = [prev[prev[v]] …]`",
+       "2^j ancestor = 2^(j−1) ancestor of the 2^(j−1) ancestor",
+       "Doubling: build each level from the previous one"
+      ],
+      [
+       "`(k >> j) & 1`",
+       "Is bit j of k set?",
+       "Decompose k into powers of two"
+      ],
+      [
+       "`node = self.up[j][node]`",
+       "Jump 2^j ancestors up",
+       "k jumps of sizes given by k's binary digits"
+      ],
+      [
+       "`if k >> len(self.up): return -1`",
+       "k needs a bit beyond the table's levels",
+       "k is larger than any possible depth"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The table",
+    "p": [
+     "parents `[-1,0,0,1,1,2,2]`: row j lists the 2^j-th ancestor of nodes 0…6:"
+    ],
+    "table": {
+     "head": [
+      "j (2^j)",
+      "v=0",
+      "v=1",
+      "v=2",
+      "v=3",
+      "v=4",
+      "v=5",
+      "v=6"
+     ],
+     "rows": [
+      [
+       "0 (1)",
+       "-1",
+       "0",
+       "0",
+       "1",
+       "1",
+       "2",
+       "2"
+      ],
+      [
+       "1 (2)",
+       "-1",
+       "-1",
+       "-1",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "2 (4)",
+       "-1",
+       "-1",
+       "-1",
+       "-1",
+       "-1",
+       "-1",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Queries",
+    "table": {
+     "head": [
+      "getKthAncestor(node, k)",
+      "k in binary",
+      "Jumps",
+      "Result"
+     ],
+     "rows": [
+      [
+       "(3, 1)",
+       "1",
+       "bit 0 set → jump 2^0 to 1",
+       "1"
+      ],
+      [
+       "(5, 2)",
+       "10",
+       "bit 1 set → jump 2^1 to 0",
+       "0"
+      ],
+      [
+       "(6, 3)",
+       "11",
+       "bit 0 set → jump 2^0 to 2; bit 1 set → jump 2^1 to -1",
+       "-1"
+      ],
+      [
+       "(6, 1)",
+       "1",
+       "bit 0 set → jump 2^0 to 2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary lifting?",
+    "p": [
+     "Any k is a sum of powers of two, so at most log₂ k jumps via the table reach the answer. It trades memory for query speed, which is worth it with many queries."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Query",
+      "Preprocessing"
+     ],
+     "rows": [
+      [
+       "Walk up k parents",
+       "O(k)",
+       "O(n)"
+      ],
+      [
+       "Binary lifting (this code)",
+       "O(log n)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Query O(log n); constructor O(n log n).",
+     "Space: O(n log n) for the table."
+    ]
+   }
+  ],
+  "takeaway": "Binary lifting: store 2^j-th ancestors and answer k-th ancestor queries by jumping along the set bits of k."
+ },
+ "1498": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Sort ascending",
+       "The subsequence's min and max are then its first and last chosen elements; order in the original array is irrelevant for the condition"
+      ],
+      [
+       "`l, r`",
+       "Two pointers: smallest and largest candidate",
+       "Like the two-sum two-pointer technique"
+      ],
+      [
+       "`pow2[r - l]`",
+       "2^(r−l) subsets of the elements strictly between l and r",
+       "With `nums[l]` as the minimum, any subset of the other elements up to index r is valid"
+      ],
+      [
+       "`% MOD`",
+       "Result modulo 1,000,000,007",
+       "The count can be huge"
+      ],
+      [
+       "precomputed `pow2`",
+       "Powers of two modulo MOD",
+       "Avoids repeated exponentiation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,5,6,7]`, `target = 9` → 4:"
+    ],
+    "table": {
+     "head": [
+      "l",
+      "r",
+      "Check",
+      "Action",
+      "Count"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "3+7 = 10 > 9",
+       "r −= 1",
+       "0"
+      ],
+      [
+       "0",
+       "2",
+       "3+6 = 9 ≤ 9",
+       "+2^2 = 4",
+       "4"
+      ],
+      [
+       "1",
+       "2",
+       "5+6 = 11 > 9",
+       "r −= 1",
+       "4"
+      ],
+      [
+       "1",
+       "1",
+       "5+5 = 10 > 9",
+       "r −= 1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why add 2^(r−l)?",
+    "p": [
+     "If `nums[l] + nums[r] ≤ target`, then `nums[l]` as minimum with any element up to index r as maximum also satisfies it (the others are not larger). The elements at positions l+1 … r can each be in or out of the subsequence, giving 2^(r−l) subsequences that start with `nums[l]`. Then l moves on, since all subsequences with minimum `nums[l]` have been counted."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then two pointers: if min+max ≤ target, all subsets of the elements between contribute 2^(r−l)."
+ },
+ "1507": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`date.split()`",
+       "Split on whitespace into three parts",
+       "`['20th', 'Oct', '2052']`"
+      ],
+      [
+       "`months.index(m) + 1`",
+       "Position of the month name in the list, 1-based",
+       "Name → number"
+      ],
+      [
+       "`d[:-2]`",
+       "Day without the 2-letter suffix (`st`, `nd`, `rd`, `th`)",
+       "Slicing off the last two characters"
+      ],
+      [
+       "`'%s-%02d-%02d' % (…)`",
+       "Format with zero padding",
+       "`%02d` pads single digits with a leading 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "split",
+       "['20th', 'Oct', '2052']"
+      ],
+      [
+       "day without suffix",
+       "20"
+      ],
+      [
+       "month index + 1",
+       "10"
+      ],
+      [
+       "formatted",
+       "2052-10-20"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `%02d` and not just `str`?",
+    "p": [
+     "Both the month and the day must have two digits (`2052-06-08`, not `2052-6-8`). `%02d` pads numbers below 10 with a zero, which `str()` does not do. The suffix is always two characters, so slicing `[:-2]` works for 1st, 2nd, 3rd and every other day."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Split, convert the month name via list.index, strip the two-letter day suffix, and format with %02d."
+ },
+ "1513": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`run`",
+       "Length of the current block of 1s ending here",
+       "Reset to 0 on a '0'"
+      ],
+      [
+       "`run = run + 1 if c == '1' else 0`",
+       "Extend or reset",
+       "Conditional expression"
+      ],
+      [
+       "`total += run`",
+       "Add the number of all-1 substrings ENDING at this position",
+       "There are exactly `run` of them"
+      ],
+      [
+       "`% (10**9 + 7)`",
+       "Modulo at the end",
+       "Python integers are unbounded, so one final modulo is enough"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'0110111'` → 9:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "run",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "0",
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "1",
+       "4"
+      ],
+      [
+       "1",
+       "2",
+       "6"
+      ],
+      [
+       "1",
+       "3",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does adding `run` count every substring once?",
+    "p": [
+     "Every all-1 substring has a unique end position. At a position where the current run of 1s has length L, the substrings ending here that are all 1s start at any of the L positions of the run. So each position contributes L, and the sum over positions equals the number of substrings (a run of length L contributes L(L+1)/2 in total, e.g. 3 gives 1+2+3 = 6)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "For each position add the length of the current run of 1s: those are the all-1 substrings ending there."
+ },
+ "1519": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`g[a].append(b); g[b].append(a)`",
+       "Undirected adjacency lists",
+       "Edges are given without direction"
+      ],
+      [
+       "`dfs(u, p)`",
+       "Counts of each letter in u's subtree; `p` is the parent",
+       "Avoids walking back to the parent"
+      ],
+      [
+       "`cnt = [0] * 26`",
+       "Letter counts for the subtree",
+       "One slot per lowercase letter"
+      ],
+      [
+       "`ord(labels[u]) - 97`",
+       "Letter to index 0–25",
+       "`ord('a') = 97`"
+      ],
+      [
+       "`for i in range(26): cnt[i] += sub[i]`",
+       "Merge a child's counts",
+       "Subtree counts are sums over children"
+      ],
+      [
+       "`ans[u] = cnt[ord(labels[u]) - 97]`",
+       "Count of u's own letter in its subtree",
+       "The required answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "labels `abaedcd`, edges `[[0, 1], [0, 2], [1, 4], [1, 5], [2, 3], [2, 6]]` → `[2, 1, 1, 1, 1, 1, 1]`. Post-order results:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Label",
+      "Letters in subtree",
+      "ans[node]"
+     ],
+     "rows": [
+      [
+       "4",
+       "d",
+       "{'d': 1}",
+       "1"
+      ],
+      [
+       "5",
+       "c",
+       "{'c': 1}",
+       "1"
+      ],
+      [
+       "1",
+       "b",
+       "{'b': 1, 'c': 1, 'd': 1}",
+       "1"
+      ],
+      [
+       "3",
+       "e",
+       "{'e': 1}",
+       "1"
+      ],
+      [
+       "6",
+       "d",
+       "{'d': 1}",
+       "1"
+      ],
+      [
+       "2",
+       "a",
+       "{'a': 1, 'd': 1, 'e': 1}",
+       "1"
+      ],
+      [
+       "0",
+       "a",
+       "{'a': 2, 'b': 1, 'c': 1, 'd': 2, 'e': 1}",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why return a count array instead of a single number?",
+    "p": [
+     "A node needs to know how many of its OWN letter are below it, but the parent needs counts of ITS letter, which can be any letter. Returning all 26 counts lets every ancestor read what it needs. The cost is 26 operations per merge, so O(26·n) overall, which is fine."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26·n).",
+     "Space: O(26·n) in the worst case for stored arrays along the recursion plus the graph."
+    ]
+   }
+  ],
+  "takeaway": "Post-order DFS (Depth-First Search) returning a 26-letter count array per subtree and merging children into the parent."
+ },
+ "1522": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`depth(n)`",
+       "Number of nodes on the longest downward path from n",
+       "Height measured in nodes, so a leaf returns 1"
+      ],
+      [
+       "`top1`, `top2`",
+       "The two largest child depths",
+       "The longest path bending at n uses the two deepest branches"
+      ],
+      [
+       "`d > top1` → `top1, top2 = d, top1`",
+       "New deepest child; the old deepest becomes second",
+       "Maintain the top two without sorting"
+      ],
+      [
+       "`best = max(best, top1 + top2)`",
+       "Longest path whose highest node is n, in edges",
+       "Each child depth counts the edge down to it plus the nodes below"
+      ],
+      [
+       "`return top1 + 1`",
+       "Depth contributed to the parent",
+       "Extends the deepest branch by n"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree: 1 with children 3 (children 5, 6), 2, 4 → diameter 3. Post-order:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "top1",
+      "top2",
+      "top1 + top2 (path through node)",
+      "best",
+      "Returned depth"
+     ],
+     "rows": [
+      [
+       "5",
+       "0",
+       "0",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "6",
+       "0",
+       "0",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "0",
+       "2",
+       "1"
+      ],
+      [
+       "4",
+       "0",
+       "0",
+       "0",
+       "2",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "3",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two depths?",
+    "p": [
+     "A longest path has a highest node, where it goes down into at most two different child branches. Taking the two deepest branches at every node and keeping the maximum over all nodes finds the diameter. With binary trees this is `left + right`; for N-ary trees we need the top two among many children."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) (each node's children are scanned once).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Diameter by tree DP: at each node add the two deepest child depths; return the deepest plus one."
+ },
+ "1531": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`go(i, left)`",
+       "Minimal encoded length of `s[i:]` with at most `left` deletions remaining",
+       "Memoised state (suffix, deletions left)"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Cache results by arguments",
+       "LRU (Least Recently Used) cache with no size limit; plain memoisation"
+      ],
+      [
+       "`go(i + 1, left - 1)`",
+       "Delete `s[i]`",
+       "One choice at position i"
+      ],
+      [
+       "inner `for j in range(i, n)`",
+       "Keep `s[i]` and extend a block that merges every copy of `s[i]` up to j, deleting the other letters in between",
+       "`same` copies stay, `diff` other letters must be deleted"
+      ],
+      [
+       "`1 if same == 1 else 1 + len(str(same))`",
+       "Encoded length of a run: letter alone, or letter plus digits of the count",
+       "`a` → 1, `a2` → 2, `a10` → 3"
+      ],
+      [
+       "`if diff > left: break`",
+       "Not enough deletions left",
+       "Stop extending"
+      ],
+      [
+       "`i >= n - left`",
+       "Everything remaining can be deleted",
+       "Base case: cost 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aaabcccd'` (encoded without deletions as `a3bc3d`):"
+    ],
+    "table": {
+     "head": [
+      "k (deletions)",
+      "Minimal encoded length",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "0",
+       "6",
+       "a3 b c3 d = 6"
+      ],
+      [
+       "1",
+       "5",
+       "delete b or d"
+      ],
+      [
+       "2",
+       "4",
+       "delete b and d: `a3c3`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why delete letters between copies of s[i]?",
+    "p": [
+     "To merge two separated runs of the same letter (like the `a`s around a deleted `b` in `aabaa`), the letters between them must be deleted. The inner loop tries every end j, counting `same` letters kept and `diff` letters deleted, so every way of merging a block starting at i is considered. The memoised function visits 29 states for `k = 2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²·k): n·k states, each with an O(n) loop.",
+     "Space: O(n·k)."
+    ]
+   }
+  ],
+  "takeaway": "Memoised DP over (position, deletions left): delete the letter, or keep it and merge a block by deleting the other letters inside it."
+ },
+ "1489": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`order`",
+       "Edge indexes sorted by weight",
+       "Kruskal's algorithm processes the cheapest edges first"
+      ],
+      [
+       "`mst(skip=i)`",
+       "Weight of the minimum spanning tree (MST) without edge i",
+       "If it becomes larger (or disconnected), the edge is critical"
+      ],
+      [
+       "`mst(force=i)`",
+       "MST weight when edge i is included first",
+       "If it still equals the base weight, some MST uses edge i"
+      ],
+      [
+       "`find` with path halving + `parent[ra] = rb`",
+       "Union-Find (disjoint set)",
+       "Detect cycles in Kruskal's algorithm"
+      ],
+      [
+       "`used == n - 1`",
+       "A spanning tree has n−1 edges",
+       "Otherwise the graph is disconnected: infinite weight"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 5 with edges `[from, to, weight]`; base MST weight = 7. Weights of the MST when edge i is skipped / forced:"
+    ],
+    "table": {
+     "head": [
+      "Edge i",
+      "Edge",
+      "MST skipping i",
+      "MST forcing i",
+      "Class"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0, 1, 1]",
+       "8",
+       "7",
+       "critical"
+      ],
+      [
+       "1",
+       "[1, 2, 1]",
+       "8",
+       "7",
+       "critical"
+      ],
+      [
+       "2",
+       "[2, 3, 2]",
+       "7",
+       "7",
+       "pseudo-critical"
+      ],
+      [
+       "3",
+       "[0, 3, 2]",
+       "7",
+       "7",
+       "pseudo-critical"
+      ],
+      [
+       "4",
+       "[0, 4, 3]",
+       "7",
+       "7",
+       "pseudo-critical"
+      ],
+      [
+       "5",
+       "[3, 4, 3]",
+       "7",
+       "7",
+       "pseudo-critical"
+      ],
+      [
+       "6",
+       "[1, 4, 6]",
+       "7",
+       "10",
+       "neither"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Critical: [0, 1]; pseudo-critical: [2, 3, 4, 5]."
+    ]
+   },
+   {
+    "h": "Why these two tests?",
+    "bullets": [
+     "Critical: if removing the edge makes the best tree heavier (or impossible), every minimum tree must contain it.",
+     "Pseudo-critical: not critical, but forcing it in still reaches the base weight, so some MST contains it (just not all).",
+     "Neither: forcing it makes the tree heavier, so no MST uses it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E² α(n)): about two Kruskal runs per edge, with near-constant Union-Find operations.",
+     "Space: O(n + E)."
+    ]
+   }
+  ],
+  "takeaway": "Re-run Kruskal for each edge, once skipping it (critical if the MST gets heavier) and once forcing it (pseudo-critical if the weight stays the same)."
+ },
+ "1552": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`position.sort()`",
+       "Baskets in order",
+       "Greedy placement works left to right"
+      ],
+      [
+       "`can(d)`",
+       "Can m balls be placed with every gap ≥ d?",
+       "Feasibility test: place a ball whenever the gap from the last ball is at least d"
+      ],
+      [
+       "`lo, hi = 1, position[-1] - position[0]`",
+       "Range of possible answers",
+       "The minimum gap is at least 1 and at most the total span"
+      ],
+      [
+       "`mid = (lo + hi + 1) // 2`",
+       "Upper middle",
+       "Needed because the branch `lo = mid` would loop forever with the lower middle"
+      ],
+      [
+       "`lo = mid` / `hi = mid - 1`",
+       "Keep the largest feasible distance",
+       "Binary search on the answer: 'can' is true for small d and false for large d"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,7]`, `m = 3` → 3:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "can(mid)?",
+      "Update"
+     ],
+     "rows": [
+      [
+       "1",
+       "6",
+       "4",
+       "False",
+       "hi = mid − 1"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "True",
+       "lo = mid"
+      ],
+      [
+       "2",
+       "3",
+       "3",
+       "True",
+       "lo = mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary search on the distance?",
+    "p": [
+     "Feasibility is monotone: if balls fit with minimum gap d, they also fit with any smaller gap. So the largest feasible d can be found by binary search over d, with a greedy O(n) check each time. The greedy check is right because placing each ball as far left as allowed leaves the most room for later balls."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log R) where R = max position − min position.",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the answer with a greedy feasibility check: place a ball whenever the gap from the previous one is at least d."
+ },
+ "1564": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`accumulate(warehouse, min)`",
+       "Running minimum of room heights",
+       "Room j can only be reached through rooms 0…j−1, so the tallest box that can reach it is limited by the lowest room so far"
+      ],
+      [
+       "`sorted(…)`",
+       "Capacities in ascending order",
+       "Match small boxes with small capacities"
+      ],
+      [
+       "`boxes.sort()`",
+       "Boxes ascending",
+       "Greedy matching"
+      ],
+      [
+       "`boxes[j] <= cap` → `j += 1`",
+       "The smallest unplaced box fits this room",
+       "Two-pointer matching; `j` counts boxes placed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "boxes `[4,3,4,1]`, warehouse `[5,3,3,4,1]`: capacities `[5,3,3,3,1]` sorted `[1, 3, 3, 3, 5]`, boxes sorted `[1, 3, 4, 4]` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Capacity",
+      "Smallest unplaced box",
+      "Result"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "fits → j += 1"
+      ],
+      [
+       "3",
+       "3",
+       "fits → j += 1"
+      ],
+      [
+       "3",
+       "4",
+       "no"
+      ],
+      [
+       "3",
+       "4",
+       "no"
+      ],
+      [
+       "5",
+       "4",
+       "fits → j += 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the capacity depend on the minimum so far?",
+    "p": [
+     "Boxes enter from the left, so a box that reaches room j must pass every room before it. If room 1 has height 3, nothing taller than 3 gets beyond it, so rooms behind it have capacity at most 3 even if they are taller. The prefix minimum is exactly that limit."
+    ]
+   },
+   {
+    "h": "Why match smallest boxes with smallest capacities?",
+    "p": [
+     "Any placement can be rearranged so that the smallest used boxes go into the smallest rooms without losing boxes. The greedy pointer pass does this in O(n) after sorting, using each room at most once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + m log m).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix minimum gives each room's effective height; sort rooms and boxes and match greedily."
+ },
+ "1570": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`{i: x for i, x in enumerate(nums) if x}`",
+       "Dict of index → value for non-zero entries only",
+       "Dict comprehension; the `if x` filter drops zeros"
+      ],
+      [
+       "`if len(a) > len(b): a, b = b, a`",
+       "Make `a` the smaller dict",
+       "Iterate over the sparser vector"
+      ],
+      [
+       "`i in b`",
+       "Is the same position non-zero in the other vector?",
+       "O(1) dict lookup"
+      ],
+      [
+       "`sum(x * b[i] for … )`",
+       "Sum of products at shared positions",
+       "Zero entries contribute nothing, so they can be skipped"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,0,2,3]` · `[0,3,0,4,0]` = 8:"
+    ],
+    "table": {
+     "head": [
+      "Vector",
+      "Stored non-zeros"
+     ],
+     "rows": [
+      [
+       "v1",
+       "{0: 1, 3: 2, 4: 3}"
+      ],
+      [
+       "v2",
+       "{1: 3, 3: 4}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why swap so that we loop over the smaller dict?",
+    "p": [
+     "The work is the number of lookups, equal to the size of the dictionary we iterate over. Iterating over the smaller one makes the cost O(min(a, b)) instead of O(a). Only index 3 is shared here: 2 × 4 = 8."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Constructor O(n); dot product O(min(non-zeros of the two vectors)).",
+     "Space: O(non-zeros)."
+    ]
+   }
+  ],
+  "takeaway": "Store a sparse vector as a dict of its non-zeros and multiply only the indexes present in both, iterating over the smaller one."
+ }
+}
