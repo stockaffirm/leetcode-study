@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3516","title":"Find Closest Person","level":"Easy","topic":"Math / Bit Manipulation","question":"Persons 1 and 2 are on a number line at x and y and both walk toward person 3 at z at the same speed. Return 1 if person 1 arrives first, 2 if person 2 does, and 0 if they arrive together. Example: x=2, y=7, z=4 → 1.","why":"x=2, y=7, z=4 → |2−4| = 2, |7−4| = 3 → person 1 arrives first.","idea":"Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).","input":"x = 2, y = 7, z = 4","output":"1","notes":[],"best":"Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).","variants":[{"name":"Compare two distances","code":"class Solution:\n    def findClosest(self, x, y, z):\n        a, b = abs(x - z), abs(y - z)\n        return 1 if a < b else 2 if b < a else 0","time":"O(1)","space":"O(1)","explain":"Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":2,"y":7,"z":4}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":7,"z":4,"a":2,"b":3}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":7,"z":4,"a":2,"b":3},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":2,"y":5,"z":3}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":5,"z":3,"a":1,"b":2}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":5,"z":3,"a":1,"b":2},"ret":1}],"trunc":false}},{"name":"Sort by distance","tag":"Alternative","code":"class Solution:\n    def findClosest(self, x, y, z):\n        d = sorted([(abs(x - z), 1), (abs(y - z), 2)])\n        return 0 if d[0][0] == d[1][0] else d[0][1]","time":"O(1)","space":"O(1)","explain":"Rank the two distances.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":2,"y":7,"z":4}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":7,"z":4,"d":["l",[["l",[2,1],1],["l",[3,2],1]],0]}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":7,"z":4,"d":["l",[["l",[2,1],1],["l",[3,2],1]],0]},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":2,"y":5,"z":3}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":5,"z":3,"d":["l",[["l",[1,1],1],["l",[2,2],1]],0]}},{"l":4,"d":1,"f":1,"v":{"x":2,"y":5,"z":3,"d":["l",[["l",[1,1],1],["l",[2,2],1]],0]},"ret":1}],"trunc":false}}],"ex2":{"input":"person 1","output":"1","why":"Person 1 is closer than person 2."}};
+window.PROBLEM = {
+ "id": "3516",
+ "title": "Find Closest Person",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "x=2, y=7, z=4 → |2−4| = 2, |7−4| = 3 → person 1 arrives first.",
+ "idea": "Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).",
+ "input": "x = 2, y = 7, z = 4",
+ "output": "1",
+ "notes": [],
+ "best": "Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).",
+ "variants": [
+  {
+   "name": "Compare two distances",
+   "code": "class Solution:\n    def findClosest(self, x, y, z):\n        a, b = abs(x - z), abs(y - z)\n        return 1 if a < b else 2 if b < a else 0",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Person 1 needs |x − z| steps and person 2 needs |y − z|. Return 1, 2 or 0 (tie).",
+   "frames": []
+  }
+ ]
+};

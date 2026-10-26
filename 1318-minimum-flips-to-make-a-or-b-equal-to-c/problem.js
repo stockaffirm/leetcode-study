@@ -1,1 +1,229 @@
-window.PROBLEM = {"id":"1318","title":"Minimum Flips to Make a OR b Equal to c","level":"Medium","topic":"Bit Manipulation","question":"You are given three positive whole numbers a, b and c. In binary (digits 0 and 1), 'a OR b' is made digit by digit: a result digit is 1 if at least one of the two digits above it is 1, otherwise 0. You may flip single binary digits of a and of b (0↔1). Return the FEWEST flips that make (a OR b) equal to c. Example: a=2 (010), b=6 (110) give 110 when OR-ed, but c=5 is 101 → 3 flips are needed.","input":"a=2 (010), b=6 (110), c=5 (101)","output":"3","notes":["c bit 0: flip every 1 in a and b.","c bit 1: flip one only if both are 0."],"best":"Check each bit: c-bit 0 needs both zero; c-bit 1 needs at least one.","variants":[{"name":"Bit by bit","code":"class Solution:\n    def minFlips(self, a, b, c):\n        flips = 0\n        for i in range(32):\n            x, y, z = (a >> i) & 1, (b >> i) & 1, (c >> i) & 1\n            if z == 0: flips += x + y\n            else: flips += 1 if x + y == 0 else 0\n        return flips","time":"O(1)","space":"O(1)","explain":"Decide bit by bit.","frames":[{"title":"Bits","description":"Compare bit by bit, right to left.","codeLines":[2],"facts":{},"rows":[{"name":"a","cells":["0","1","0"],"hot":[],"marks":{}},{"name":"b","cells":["1","1","0"],"hot":[],"marks":{}},{"name":"c","cells":["1","0","1"],"hot":[],"marks":{}}]},{"title":"Bit 0","description":"a=0, b=0, c=1 → need a 1 → 1 flip.","codeLines":[7],"facts":{"flips":1},"rows":[{"name":"a","cells":["0","1","0"],"hot":[2],"marks":{}},{"name":"b","cells":["1","1","0"],"hot":[2],"marks":{}},{"name":"c","cells":["1","0","1"],"hot":[2],"marks":{}}]},{"title":"Bit 1","description":"a=1, b=1, c=0 → both must be 0 → 2 flips.","codeLines":[6],"facts":{"flips":3},"rows":[{"name":"a","cells":["0","1","0"],"hot":[1],"marks":{}},{"name":"b","cells":["1","1","0"],"hot":[1],"marks":{}},{"name":"c","cells":["1","0","1"],"hot":[1],"marks":{}}]},{"title":"Bit 2","description":"a=0, b=1, c=1 → already OK.","codeLines":[7],"facts":{"flips":3},"rows":[{"name":"a","cells":["0","1","0"],"hot":[0],"marks":{}},{"name":"b","cells":["1","1","0"],"hot":[0],"marks":{}},{"name":"c","cells":["1","0","1"],"hot":[0],"marks":{}}]},{"title":"Return","description":"3 flips.","codeLines":[8],"facts":{},"rows":[{"name":"answer","cells":["3"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":2,"b":6,"c":5}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0,"i":0,"x":0,"y":0,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0,"i":0,"x":0,"y":0,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":1,"i":0,"x":0,"y":0,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":1,"i":1,"x":0,"y":0,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":1,"i":1,"x":1,"y":1,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":1,"x":1,"y":1,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":2,"x":1,"y":1,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":2,"x":0,"y":1,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":2,"x":0,"y":1,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":2,"x":0,"y":1,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":3,"x":0,"y":1,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":3,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":3,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":4,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":4,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":4,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":5,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":5,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":5,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":6,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":6,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":6,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":7,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":7,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":7,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":8,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":8,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":8,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":9,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":9,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":9,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":10,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":10,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":10,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":11,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":11,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":11,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":12,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":12,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":12,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":13,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":13,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":13,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":14,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":14,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":14,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":15,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":15,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":15,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":16,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":16,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":16,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":17,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":17,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":17,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":18,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":18,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":18,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":19,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":19,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":19,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":20,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":20,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":20,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":21,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":21,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":21,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":22,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":22,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":22,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":23,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":23,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":23,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":24,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":24,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":24,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":25,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":25,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":25,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":26,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":26,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":26,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":27,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":27,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":27,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":28,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":28,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":28,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":29,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":29,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":29,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":30,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":30,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":30,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":31,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":31,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":31,"x":0,"y":0,"z":0}},{"l":8,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":31,"x":0,"y":0,"z":0}},{"l":8,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":3,"i":31,"x":0,"y":0,"z":0},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":1,"b":2,"c":3}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":0,"x":1,"y":0,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":0,"x":1,"y":0,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":0,"x":1,"y":0,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":1,"x":1,"y":0,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":1,"x":0,"y":1,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":1,"x":0,"y":1,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":1,"x":0,"y":1,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":2,"x":0,"y":1,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":2,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":2,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":3,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":3,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":3,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":4,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":4,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":4,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":5,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":5,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":5,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":6,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":6,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":6,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":7,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":7,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":7,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":8,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":8,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":8,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":9,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":9,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":9,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":10,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":10,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":10,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":11,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":11,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":11,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":12,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":12,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":12,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":13,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":13,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":13,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":14,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":14,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":14,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":15,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":15,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":15,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":16,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":16,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":16,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":17,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":17,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":17,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":18,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":18,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":18,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":19,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":19,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":19,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":20,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":20,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":20,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":21,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":21,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":21,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":22,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":22,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":22,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":23,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":23,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":23,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":24,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":24,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":24,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":25,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":25,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":25,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":26,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":26,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":26,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":27,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":27,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":27,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":28,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":28,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":28,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":29,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":29,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":29,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":30,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":30,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":30,"x":0,"y":0,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":31,"x":0,"y":0,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":31,"x":0,"y":0,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":31,"x":0,"y":0,"z":0}},{"l":8,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":31,"x":0,"y":0,"z":0}},{"l":8,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"i":31,"x":0,"y":0,"z":0},"ret":0}],"trunc":false}},{"name":"XOR trick","tag":"Alternative","code":"class Solution:\n    def minFlips(self, a, b, c):\n        diff = (a | b) ^ c\n        return bin(diff).count('1') + bin(a & b & diff).count('1')","time":"O(1)","space":"O(1)","explain":"Bits where (a|b) differs from c need one flip, plus one more where a and b are both 1 but c is 0.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":2,"b":6,"c":5}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"diff":3}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"diff":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":1,"b":2,"c":3}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"diff":0}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"diff":0},"ret":0}],"trunc":false}},{"name":"Shift until empty","tag":"Alternative","code":"class Solution:\n    def minFlips(self, a, b, c):\n        flips = 0\n        while a or b or c:\n            x, y, z = a & 1, b & 1, c & 1\n            if (x | y) != z: flips += 2 if x == 1 and y == 1 else 1\n            a >>= 1; b >>= 1; c >>= 1\n        return flips","time":"O(log n)","space":"O(1)","explain":"Check the lowest bit of each number, then shift right.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":2,"b":6,"c":5}},{"l":4,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0}},{"l":5,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0}},{"l":6,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":0,"x":0,"y":0,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":2,"b":6,"c":5,"flips":1,"x":0,"y":0,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":3,"c":2,"flips":1,"x":0,"y":0,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":3,"c":2,"flips":1,"x":0,"y":0,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":3,"c":2,"flips":1,"x":1,"y":1,"z":0}},{"l":7,"d":1,"f":1,"v":{"a":1,"b":3,"c":2,"flips":3,"x":1,"y":1,"z":0}},{"l":4,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":3,"x":1,"y":1,"z":0}},{"l":5,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":3,"x":1,"y":1,"z":0}},{"l":6,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":3,"x":0,"y":1,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":3,"x":0,"y":1,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":3,"x":0,"y":1,"z":1}},{"l":8,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":3,"x":0,"y":1,"z":1}},{"l":8,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":3,"x":0,"y":1,"z":1},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":1,"b":2,"c":3}},{"l":4,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0}},{"l":5,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0}},{"l":6,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"x":1,"y":0,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":1,"b":2,"c":3,"flips":0,"x":1,"y":0,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":0,"x":1,"y":0,"z":1}},{"l":5,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":0,"x":1,"y":0,"z":1}},{"l":6,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":0,"x":0,"y":1,"z":1}},{"l":7,"d":1,"f":1,"v":{"a":0,"b":1,"c":1,"flips":0,"x":0,"y":1,"z":1}},{"l":4,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":0,"x":0,"y":1,"z":1}},{"l":8,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":0,"x":0,"y":1,"z":1}},{"l":8,"d":1,"f":1,"v":{"a":0,"b":0,"c":0,"flips":0,"x":0,"y":1,"z":1},"ret":0}],"trunc":false}}],"why":"2 = 010, 6 = 110, 5 = 101. Bit by bit you need 3 flips in total.","idea":"Check each bit position on its own.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`(a >> i) & 1`","Bit i of a","Shift right by i, then mask the lowest bit"],["`z == 0`","Target bit is 0","Both a's and b's bits must be 0 (OR is 0 only if both are 0)"],["`flips += x + y`","One flip for each of them that is 1","Counts the 1s that must be cleared"],["`z == 1` and `x + y == 0`","Target bit is 1 but both are 0","Flipping one of them (cost 1) is enough"],["`range(32)`","All 32 bit positions","Covers every bit of the inputs"]]}},{"h":"Walk through an example","p":["`a = 2` (010), `b = 6` (110), `c = 5` (101) → 3 flips. First four bits (higher bits are all 0 and need nothing):"],"table":{"head":["Bit i","a","b","c","Rule","Flips","Total"],"rows":[["0","0","0","1","need 1: at least one must be 1","1","1"],["1","1","1","0","need 0: clear every 1","2","3"],["2","0","1","1","need 1: at least one must be 1","0","3"],["3","0","0","0","need 0: clear every 1","0","3"]]}},{"h":"Why are the bits independent?","p":["OR works bit by bit, and a flip changes only one bit, so each bit position can be solved separately and the costs added. When the target is 0 every 1 must go (two 1s cost two flips); when the target is 1 and one of x, y is already 1, nothing is needed."]},{"h":"Time and space","bullets":["Time: O(1): 32 iterations.","Space: O(1)."]}],"takeaway":"Solve each bit independently: target 0 clears every 1 among a and b, target 1 needs one flip only if both are 0."},"statement":"Given three positive integers `a`, `b` and `c`, you may flip single bits in the binary representation of `a` and `b` (changing a `0` bit to `1` or a `1` bit to `0`). Return the minimum number of bit flips so that `a OR b == c`, where OR is the bitwise operation that yields a `1` in each position where at least one input has a `1`.\n\nExample 1:\n\n```\nInput: a = 2, b = 6, c = 5\nOutput: 3\n```\n\nExample 2:\n\n```\nInput: a = 4, b = 2, c = 7\nOutput: 1\n```\n\nConstraints:\n\n* `1 <= a <= 10^9`\n* `1 <= b <= 10^9`\n* `1 <= c <= 10^9`","ex2":{"input":"1,2,3","output":"0","why":"1 OR 2 already equals 3 → 0 flips."}};
+window.PROBLEM = {
+ "id": "1318",
+ "title": "Minimum Flips to Make a OR b Equal to c",
+ "level": "Medium",
+ "topic": "Bit Manipulation",
+ "question": "Fewest bit flips in a and/or b so that (a OR b) == c.",
+ "input": "a=2 (010), b=6 (110), c=5 (101)",
+ "output": "3",
+ "notes": [
+  "c bit 0: flip every 1 in a and b.",
+  "c bit 1: flip one only if both are 0."
+ ],
+ "best": "Check each bit: c-bit 0 needs both zero; c-bit 1 needs at least one.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def minFlips(self, a, b, c):\n        flips = 0\n        for i in range(32):\n            x, y, z = (a >> i) & 1, (b >> i) & 1, (c >> i) & 1\n            if z == 0: flips += x + y\n            else: flips += 1 if x + y == 0 else 0\n        return flips",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Decide bit by bit.",
+   "frames": [
+    {
+     "title": "Bits",
+     "description": "Compare bit by bit, right to left.",
+     "codeLines": [
+      2
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "0",
+        "1",
+        "0"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "1",
+        "0"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "c",
+       "cells": [
+        "1",
+        "0",
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Bit 0",
+     "description": "a=0, b=0, c=1 → need a 1 → 1 flip.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "flips": 1
+     },
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "0",
+        "1",
+        "0"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "1",
+        "0"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "c",
+       "cells": [
+        "1",
+        "0",
+        "1"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Bit 1",
+     "description": "a=1, b=1, c=0 → both must be 0 → 2 flips.",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "flips": 3
+     },
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "0",
+        "1",
+        "0"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "1",
+        "0"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "c",
+       "cells": [
+        "1",
+        "0",
+        "1"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Bit 2",
+     "description": "a=0, b=1, c=1 → already OK.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "flips": 3
+     },
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "0",
+        "1",
+        "0"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "1",
+        "0"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "c",
+       "cells": [
+        "1",
+        "0",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "3 flips.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

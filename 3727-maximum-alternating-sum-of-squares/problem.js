@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3727","title":"Maximum Alternating Sum of Squares","level":"Medium","topic":"Greedy","question":"Rearrange nums to maximise the alternating score arr[0]² − arr[1]² + arr[2]² − arr[3]² + …. Return that maximum. Example: [1,2,3] → 12.","why":"[1,2,3] → squares 9, 4, 1: 2 plus slots, 1 minus → 9 + 4 − 1 = 12.","idea":"Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.","input":"nums = [1,2,3]","output":"12","notes":[],"best":"Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.","variants":[{"name":"Largest squares on the plus positions","code":"class Solution:\n    def maxAlternatingSum(self, nums):\n        sq = sorted((x * x for x in nums), reverse=True)\n        plus = (len(sq) + 1) // 2\n        return sum(sq[:plus]) - sum(sq[plus:])","time":"O(n log n)","space":"O(n)","explain":"Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[9,4,1],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[9,4,1],0],"plus":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[9,4,1],0],"plus":2},"ret":12}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[9,9,4,4,1,1],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[9,9,4,4,1,1],0],"plus":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[9,9,4,4,1,1],0],"plus":3},"ret":16}],"trunc":false}},{"name":"Pick the plus squares with a heap","tag":"Alternative","code":"class Solution:\n    def maxAlternatingSum(self, nums):\n        sq = sorted(x * x for x in nums)\n        minus = len(sq) // 2\n        return sum(sq[minus:]) - sum(sq[:minus])","time":"O(n log n)","space":"O(n)","explain":"Take the largest squares for plus slots, the smallest for minus.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[1,4,9],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[1,4,9],0],"minus":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3],0],"sq":["l",[1,4,9],0],"minus":1},"ret":12}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[1,1,4,4,9,9],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[1,1,4,4,9,9],0],"minus":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,-1,2,-2,3,-3],0],"sq":["l",[1,1,4,4,9,9],0],"minus":3},"ret":16}],"trunc":false}}],"ex2":{"input":"signs","output":"16","why":"Signs do not matter."}};
+window.PROBLEM = {
+ "id": "3727",
+ "title": "Maximum Alternating Sum of Squares",
+ "level": "Medium",
+ "topic": "Greedy",
+ "question": "",
+ "why": "[1,2,3] → squares 9, 4, 1: 2 plus slots, 1 minus → 9 + 4 − 1 = 12.",
+ "idea": "Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.",
+ "input": "nums = [1,2,3]",
+ "output": "12",
+ "notes": [],
+ "best": "Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.",
+ "variants": [
+  {
+   "name": "Largest squares on the plus positions",
+   "code": "class Solution:\n    def maxAlternatingSum(self, nums):\n        sq = sorted((x * x for x in nums), reverse=True)\n        plus = (len(sq) + 1) // 2\n        return sum(sq[:plus]) - sum(sq[plus:])",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Only the squares matter. In the alternating sum, ceil(n/2) values are added and floor(n/2) subtracted. Put the largest squares on the plus positions: sort the squares in descending order and add the first ceil(n/2), subtract the rest.",
+   "frames": []
+  }
+ ]
+};

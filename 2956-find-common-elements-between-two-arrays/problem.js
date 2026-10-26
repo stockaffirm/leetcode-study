@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2956","title":"Find Common Elements Between Two Arrays","level":"Easy","topic":"Hash Map / Set","question":"Return [a, b]: a is how many indices of nums1 hold a value that appears somewhere in nums2, and b is how many indices of nums2 hold a value that appears in nums1. Example: [4,3,2,3,1], [2,2,5,2,3,6] → [3,4].","why":"nums1 [4,3,2,3,1], nums2 [2,2,5,2,3,6] → [3, 4].","idea":"answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.","input":"nums1 = [4,3,2,3,1], nums2 = [2,2,5,2,3,6]","output":"[3, 4]","notes":[],"best":"answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.","variants":[{"name":"Count elements present in the other array","code":"class Solution:\n    def findIntersectionValues(self, nums1, nums2):\n        s1, s2 = set(nums1), set(nums2)\n        return [sum(x in s2 for x in nums1), sum(x in s1 for x in nums2)]","time":"O(n + m)","space":"O(n + m)","explain":"answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0],"s1":["S",[1,2,3,4]],"s2":["S",[2,3,5,6]]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0],"s1":["S",[1,2,3,4]],"s2":["S",[2,3,5,6]]},"ret":["l",[3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0],"s1":["S",[2,3,4]],"s2":["S",[1,5]]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0],"s1":["S",[2,3,4]],"s2":["S",[1,5]]},"ret":["l",[0,0],0]}],"trunc":false}},{"name":"Counters","tag":"Alternative","code":"class Solution:\n    def findIntersectionValues(self, nums1, nums2):\n        c1, c2 = Counter(nums1), Counter(nums2)\n        return [sum(c for v, c in c1.items() if v in c2), sum(c for v, c in c2.items() if v in c1)]","time":"O(n + m)","space":"O(n + m)","explain":"Use two Counters and add the matching counts.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0],"c1":["d",[[4,1],[3,2],[2,1],[1,1]]],"c2":["d",[[2,3],[5,1],[3,1],[6,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[4,3,2,3,1],0],"nums2":["l",[2,2,5,2,3,6],0],"c1":["d",[[4,1],[3,2],[2,1],[1,1]]],"c2":["d",[[2,3],[5,1],[3,1],[6,1]]]},"ret":["l",[3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0],"c1":["d",[[3,2],[4,1],[2,1]]],"c2":["d",[[1,1],[5,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums1":["l",[3,4,2,3],0],"nums2":["l",[1,5],0],"c1":["d",[[3,2],[4,1],[2,1]]],"c2":["d",[[1,1],[5,1]]]},"ret":["l",[0,0],0]}],"trunc":false}}],"ex2":{"input":"nothing shared","output":"[0, 0]","why":"No value is shared."}};
+window.PROBLEM = {
+ "id": "2956",
+ "title": "Find Common Elements Between Two Arrays",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "nums1 [4,3,2,3,1], nums2 [2,2,5,2,3,6] → [3, 4].",
+ "idea": "answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.",
+ "input": "nums1 = [4,3,2,3,1], nums2 = [2,2,5,2,3,6]",
+ "output": "[3, 4]",
+ "notes": [],
+ "best": "answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.",
+ "variants": [
+  {
+   "name": "Count elements present in the other array",
+   "code": "class Solution:\n    def findIntersectionValues(self, nums1, nums2):\n        s1, s2 = set(nums1), set(nums2)\n        return [sum(x in s2 for x in nums1), sum(x in s1 for x in nums2)]",
+   "time": "O(n + m)",
+   "space": "O(n + m)",
+   "explain": "answer1 is the number of indices in nums1 whose value occurs in nums2; answer2 likewise for nums2 in nums1. Use sets for membership.",
+   "frames": []
+  }
+ ]
+};

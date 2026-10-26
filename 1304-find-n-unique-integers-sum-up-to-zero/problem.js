@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1304","title":"Find N Unique Integers Sum up to Zero","level":"Easy","topic":"Array / String","question":"Return n distinct integers that add up to 0 (this solution returns the symmetric list). Example: 5 → [-4,-2,0,2,4].","why":"n=5 → [-4,-2,0,2,4].","idea":"Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.","input":"n = 5","output":"[-4, -2, 0, 2, 4]","notes":[],"best":"Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.","variants":[{"name":"Symmetric values around zero","code":"class Solution:\n    def sumZero(self, n):\n        return [2 * i - (n - 1) for i in range(n)]","time":"O(n)","space":"O(n)","explain":"Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":3,"d":1,"f":1,"v":{"n":5},"ret":["l",[-4,-2,0,2,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1}},{"l":3,"d":1,"f":1,"v":{"n":1},"ret":["l",[0],0]}],"trunc":false}},{"name":"Compute with a comprehension of pairs","tag":"Alternative","code":"class Solution:\n    def sumZero(self, n):\n        return list(range(-(n - 1), n, 2))","time":"O(n)","space":"O(n)","explain":"The same symmetric list built by indexing arithmetic.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":3,"d":1,"f":1,"v":{"n":5},"ret":["l",[-4,-2,0,2,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1}},{"l":3,"d":1,"f":1,"v":{"n":1},"ret":["l",[0],0]}],"trunc":false}}],"ex2":{"input":"n = 1","output":"[0]","why":"[0]."}};
+window.PROBLEM = {
+ "id": "1304",
+ "title": "Find N Unique Integers Sum up to Zero",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "n=5 → [-4,-2,0,2,4].",
+ "idea": "Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.",
+ "input": "n = 5",
+ "output": "[-4, -2, 0, 2, 4]",
+ "notes": [],
+ "best": "Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.",
+ "variants": [
+  {
+   "name": "Symmetric values around zero",
+   "code": "class Solution:\n    def sumZero(self, n):\n        return [2 * i - (n - 1) for i in range(n)]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Use the values 2i − (n − 1) for i = 0 … n−1: they are distinct, symmetric around 0, and sum to zero.",
+   "frames": []
+  }
+ ]
+};

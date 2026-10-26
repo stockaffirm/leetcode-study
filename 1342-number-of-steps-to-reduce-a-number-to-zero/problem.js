@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1342","title":"Number of Steps to Reduce a Number to Zero","level":"Easy","topic":"Math / Bit Manipulation","question":"Starting from a number, if it is even divide it by 2, otherwise subtract 1. Return the steps to reach 0. Example: 14 → 6.","why":"14 → 7 → 6 → 3 → 2 → 1 → 0: 6 steps.","idea":"Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.","input":"num = 14","output":"6","notes":[],"best":"Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.","variants":[{"name":"Bit length plus set bits","code":"class Solution:\n    def numberOfSteps(self, num):\n        return 0 if num == 0 else num.bit_length() - 1 + bin(num).count('1')","time":"O(1)","space":"O(1)","explain":"Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":14}},{"l":3,"d":1,"f":1,"v":{"num":14},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":8}},{"l":3,"d":1,"f":1,"v":{"num":8},"ret":4}],"trunc":false}},{"name":"Simulate","tag":"Brute force","code":"class Solution:\n    def numberOfSteps(self, num):\n        steps = 0\n        while num:\n            num = num // 2 if num % 2 == 0 else num - 1\n            steps += 1\n        return steps","time":"O(log n)","space":"O(1)","explain":"Halve even numbers and subtract 1 from odd ones.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":14}},{"l":4,"d":1,"f":1,"v":{"num":14,"steps":0}},{"l":5,"d":1,"f":1,"v":{"num":14,"steps":0}},{"l":6,"d":1,"f":1,"v":{"num":7,"steps":0}},{"l":4,"d":1,"f":1,"v":{"num":7,"steps":1}},{"l":5,"d":1,"f":1,"v":{"num":7,"steps":1}},{"l":6,"d":1,"f":1,"v":{"num":6,"steps":1}},{"l":4,"d":1,"f":1,"v":{"num":6,"steps":2}},{"l":5,"d":1,"f":1,"v":{"num":6,"steps":2}},{"l":6,"d":1,"f":1,"v":{"num":3,"steps":2}},{"l":4,"d":1,"f":1,"v":{"num":3,"steps":3}},{"l":5,"d":1,"f":1,"v":{"num":3,"steps":3}},{"l":6,"d":1,"f":1,"v":{"num":2,"steps":3}},{"l":4,"d":1,"f":1,"v":{"num":2,"steps":4}},{"l":5,"d":1,"f":1,"v":{"num":2,"steps":4}},{"l":6,"d":1,"f":1,"v":{"num":1,"steps":4}},{"l":4,"d":1,"f":1,"v":{"num":1,"steps":5}},{"l":5,"d":1,"f":1,"v":{"num":1,"steps":5}},{"l":6,"d":1,"f":1,"v":{"num":0,"steps":5}},{"l":4,"d":1,"f":1,"v":{"num":0,"steps":6}},{"l":7,"d":1,"f":1,"v":{"num":0,"steps":6}},{"l":7,"d":1,"f":1,"v":{"num":0,"steps":6},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":8}},{"l":4,"d":1,"f":1,"v":{"num":8,"steps":0}},{"l":5,"d":1,"f":1,"v":{"num":8,"steps":0}},{"l":6,"d":1,"f":1,"v":{"num":4,"steps":0}},{"l":4,"d":1,"f":1,"v":{"num":4,"steps":1}},{"l":5,"d":1,"f":1,"v":{"num":4,"steps":1}},{"l":6,"d":1,"f":1,"v":{"num":2,"steps":1}},{"l":4,"d":1,"f":1,"v":{"num":2,"steps":2}},{"l":5,"d":1,"f":1,"v":{"num":2,"steps":2}},{"l":6,"d":1,"f":1,"v":{"num":1,"steps":2}},{"l":4,"d":1,"f":1,"v":{"num":1,"steps":3}},{"l":5,"d":1,"f":1,"v":{"num":1,"steps":3}},{"l":6,"d":1,"f":1,"v":{"num":0,"steps":3}},{"l":4,"d":1,"f":1,"v":{"num":0,"steps":4}},{"l":7,"d":1,"f":1,"v":{"num":0,"steps":4}},{"l":7,"d":1,"f":1,"v":{"num":0,"steps":4},"ret":4}],"trunc":false}}],"ex2":{"input":"power of two","output":"4","why":"Another sample input."}};
+window.PROBLEM = {
+ "id": "1342",
+ "title": "Number of Steps to Reduce a Number to Zero",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "14 → 7 → 6 → 3 → 2 → 1 → 0: 6 steps.",
+ "idea": "Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.",
+ "input": "num = 14",
+ "output": "6",
+ "notes": [],
+ "best": "Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.",
+ "variants": [
+  {
+   "name": "Bit length plus set bits",
+   "code": "class Solution:\n    def numberOfSteps(self, num):\n        return 0 if num == 0 else num.bit_length() - 1 + bin(num).count('1')",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Each 1 bit costs one subtraction and each shift costs one division. The answer is bit_length − 1 + popcount (for n > 0), 0 for n = 0.",
+   "frames": []
+  }
+ ]
+};

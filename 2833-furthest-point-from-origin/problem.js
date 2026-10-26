@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2833","title":"Furthest Point From Origin","level":"Easy","topic":"Greedy","question":"Start at 0 on a line. Each character of moves is 'L' (move left), 'R' (move right) or '_' (either). Return the greatest distance from the origin you can end at. Example: 'L_RL__R' → 3.","why":"'L_RL__R': 3 L's and 2 R's net −1, plus 2 underscores → 3.","idea":"Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.","input":"moves = \"L_RL__R\"","output":"3","notes":[],"best":"Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.","variants":[{"name":"Send every '_' the same direction","code":"class Solution:\n    def furthestDistanceFromOrigin(self, moves):\n        return abs(moves.count('L') - moves.count('R')) + moves.count('_')","time":"O(n)","space":"O(1)","explain":"Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"moves":["s","L_RL__R"]}},{"l":3,"d":1,"f":1,"v":{"moves":["s","L_RL__R"]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"moves":["s","_______"]}},{"l":3,"d":1,"f":1,"v":{"moves":["s","_______"]},"ret":7}],"trunc":false}},{"name":"Try both directions","tag":"Alternative","code":"class Solution:\n    def furthestDistanceFromOrigin(self, moves):\n        left = moves.count('L') + moves.count('_') - moves.count('R')\n        right = moves.count('R') + moves.count('_') - moves.count('L')\n        return max(abs(left), abs(right))","time":"O(n)","space":"O(1)","explain":"Send every underscore left, then right, and take the larger distance.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"moves":["s","L_RL__R"]}},{"l":4,"d":1,"f":1,"v":{"moves":["s","L_RL__R"],"left":3}},{"l":5,"d":1,"f":1,"v":{"moves":["s","L_RL__R"],"left":3,"right":3}},{"l":5,"d":1,"f":1,"v":{"moves":["s","L_RL__R"],"left":3,"right":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"moves":["s","_______"]}},{"l":4,"d":1,"f":1,"v":{"moves":["s","_______"],"left":7}},{"l":5,"d":1,"f":1,"v":{"moves":["s","_______"],"left":7,"right":7}},{"l":5,"d":1,"f":1,"v":{"moves":["s","_______"],"left":7,"right":7},"ret":7}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`moves.count('L')`","Number of left moves","`str.count` counts non-overlapping occurrences"],["`abs(L - R)`","Net displacement from the fixed moves","Left and right moves cancel"],["`+ moves.count('_')`","Every wildcard adds one step in the direction already ahead","Send all '_' the same way"]]}},{"h":"Walk through an example","p":["`'L_RL__R'`:"],"table":{"head":["Quantity","Value"],"rows":[["count('L')","2"],["count('R')","2"],["count('_')","3"],["|L − R| + _","3"]]}},{"h":"Why no simulation?","p":["Moves commute: only the totals matter, not the order. The farthest end point sends every '_' in the direction of the larger fixed total. If L and R tie, all '_' go either way for the same distance. Hence distance = |L − R| + number of '_'."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1)."]}],"takeaway":"Moves commute: the farthest distance is |L − R| plus all the wildcards, sent in the dominant direction."},"ex2":{"input":"all underscores","output":"7","why":"All free moves."}};
+window.PROBLEM = {
+ "id": "2833",
+ "title": "Furthest Point From Origin",
+ "level": "Easy",
+ "topic": "Greedy",
+ "question": "",
+ "why": "'L_RL__R': 3 L's and 2 R's net −1, plus 2 underscores → 3.",
+ "idea": "Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.",
+ "input": "moves = \"L_RL__R\"",
+ "output": "3",
+ "notes": [],
+ "best": "Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.",
+ "variants": [
+  {
+   "name": "Send every '_' the same direction",
+   "code": "class Solution:\n    def furthestDistanceFromOrigin(self, moves):\n        return abs(moves.count('L') - moves.count('R')) + moves.count('_')",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Each '_' can go either way, so send all of them in the direction of the majority. The answer is |#L − #R| + #_.",
+   "frames": []
+  }
+ ]
+};

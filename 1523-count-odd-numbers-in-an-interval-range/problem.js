@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1523","title":"Count Odd Numbers in an Interval Range","level":"Easy","topic":"Math / Bit Manipulation","question":"Return how many odd numbers there are between low and high inclusive. Example: 3 and 7 → 3.","why":"low 3, high 7 → 3, 5, 7 → 3.","idea":"The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.","input":"low = 3, high = 7","output":"3","notes":[],"best":"The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.","variants":[{"name":"Counting formula","code":"class Solution:\n    def countOdds(self, low, high):\n        return (high + 1) // 2 - low // 2","time":"O(1)","space":"O(1)","explain":"The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"low":3,"high":7}},{"l":3,"d":1,"f":1,"v":{"low":3,"high":7},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"low":8,"high":10}},{"l":3,"d":1,"f":1,"v":{"low":8,"high":10},"ret":1}],"trunc":false}},{"name":"Count odds by length","tag":"Alternative","code":"class Solution:\n    def countOdds(self, low, high):\n        length = high - low + 1\n        return length // 2 + (1 if length % 2 and low % 2 else 0)","time":"O(1)","space":"O(1)","explain":"Half of the numbers, rounded up when the range starts on an odd number.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"low":3,"high":7}},{"l":4,"d":1,"f":1,"v":{"low":3,"high":7,"length":5}},{"l":4,"d":1,"f":1,"v":{"low":3,"high":7,"length":5},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"low":8,"high":10}},{"l":4,"d":1,"f":1,"v":{"low":8,"high":10,"length":3}},{"l":4,"d":1,"f":1,"v":{"low":8,"high":10,"length":3},"ret":1}],"trunc":false}}],"ex2":{"input":"even start","output":"1","why":"The range starts on an even number."}};
+window.PROBLEM = {
+ "id": "1523",
+ "title": "Count Odd Numbers in an Interval Range",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "low 3, high 7 → 3, 5, 7 → 3.",
+ "idea": "The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.",
+ "input": "low = 3, high = 7",
+ "output": "3",
+ "notes": [],
+ "best": "The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.",
+ "variants": [
+  {
+   "name": "Counting formula",
+   "code": "class Solution:\n    def countOdds(self, low, high):\n        return (high + 1) // 2 - low // 2",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "The number of odd numbers in [1, x] is (x + 1) // 2, so the count in [low, high] is (high + 1) // 2 − low // 2.",
+   "frames": []
+  }
+ ]
+};

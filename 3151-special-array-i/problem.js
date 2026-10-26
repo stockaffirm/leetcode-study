@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3151","title":"Special Array I","level":"Easy","topic":"Array / String","question":"An array is special if every two adjacent elements have different parity (one even, one odd). Return true if it is. Example: [2,1,4] → true.","why":"[2,1,4] alternates even/odd → true; [4,3,1,6] has 3,1 both odd → false.","idea":"An array is special if every two adjacent elements have different parity.","input":"nums = [2,1,4]","output":"true","notes":[],"best":"An array is special if every two adjacent elements have different parity.","variants":[{"name":"Neighbours must alternate parity","code":"class Solution:\n    def isArraySpecial(self, nums):\n        return all((a + b) % 2 == 1 for a, b in zip(nums, nums[1:]))","time":"O(n)","space":"O(1)","explain":"An array is special if every two adjacent elements have different parity.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0]},"ret":false}],"trunc":false}},{"name":"Compare parity explicitly","tag":"Alternative","code":"class Solution:\n    def isArraySpecial(self, nums):\n        for i in range(len(nums) - 1):\n            if nums[i] % 2 == nums[i + 1] % 2:\n                return False\n        return True","time":"O(n)","space":"O(1)","explain":"Loop with an index.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":0}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":1}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,1,4],0],"i":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0],"i":0}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,3,1,6],0],"i":1},"ret":false}],"trunc":false}}],"ex2":{"input":"not special","output":"False","why":"3 and 1 are both odd."}};
+window.PROBLEM = {
+ "id": "3151",
+ "title": "Special Array I",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "[2,1,4] alternates even/odd → true; [4,3,1,6] has 3,1 both odd → false.",
+ "idea": "An array is special if every two adjacent elements have different parity.",
+ "input": "nums = [2,1,4]",
+ "output": "true",
+ "notes": [],
+ "best": "An array is special if every two adjacent elements have different parity.",
+ "variants": [
+  {
+   "name": "Neighbours must alternate parity",
+   "code": "class Solution:\n    def isArraySpecial(self, nums):\n        return all((a + b) % 2 == 1 for a, b in zip(nums, nums[1:]))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "An array is special if every two adjacent elements have different parity.",
+   "frames": []
+  }
+ ]
+};

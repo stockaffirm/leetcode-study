@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1464","title":"Maximum Product of Two Elements in an Array","level":"Easy","topic":"Array / String","question":"Choose two different indices and return the maximum value of (nums[i] − 1) × (nums[j] − 1). Example: [3,4,5,2] → 12.","why":"[3,4,5,2] → (5−1)(4−1) = 12.","idea":"The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.","input":"nums = [3,4,5,2]","output":"12","notes":[],"best":"The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.","variants":[{"name":"(largest − 1)(second largest − 1)","code":"class Solution:\n    def maxProduct(self, nums):\n        a, b = sorted(nums)[-2:]\n        return (a - 1) * (b - 1)","time":"O(n log n)","space":"O(1)","explain":"The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":4,"b":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":4,"b":5},"ret":12}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":5},"ret":16}],"trunc":false}},{"name":"Scan for the two largest","tag":"Alternative","code":"class Solution:\n    def maxProduct(self, nums):\n        a = b = 0\n        for x in nums:\n            if x > a:\n                a, b = x, a\n            elif x > b:\n                b = x\n        return (a - 1) * (b - 1)","time":"O(n)","space":"O(1)","explain":"Track the largest and second largest in one pass.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":0,"b":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":0,"b":0,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":0,"b":0,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":3,"b":0,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":3,"b":0,"x":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":3,"b":0,"x":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":4,"b":3,"x":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":4,"b":3,"x":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":4,"b":3,"x":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":2}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":2}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[3,4,5,2],0],"a":5,"b":4,"x":2},"ret":12}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":0,"b":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":0,"b":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":0,"b":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":1,"b":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":1,"b":0,"x":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":1,"b":0,"x":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":1,"x":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":1,"x":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":1,"x":4}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":1,"x":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":4,"x":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":4,"x":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":4,"x":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":4,"x":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":5,"x":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":5,"x":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[1,5,4,5],0],"a":5,"b":5,"x":5},"ret":16}],"trunc":false}}],"ex2":{"input":"duplicates","output":"16","why":"16."}};
+window.PROBLEM = {
+ "id": "1464",
+ "title": "Maximum Product of Two Elements in an Array",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "[3,4,5,2] → (5−1)(4−1) = 12.",
+ "idea": "The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.",
+ "input": "nums = [3,4,5,2]",
+ "output": "12",
+ "notes": [],
+ "best": "The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.",
+ "variants": [
+  {
+   "name": "(largest − 1)(second largest − 1)",
+   "code": "class Solution:\n    def maxProduct(self, nums):\n        a, b = sorted(nums)[-2:]\n        return (a - 1) * (b - 1)",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "The product (nums[i]−1)(nums[j]−1) is largest for the two largest numbers.",
+   "frames": []
+  }
+ ]
+};

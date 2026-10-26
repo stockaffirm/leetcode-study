@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2138","title":"Divide a String Into Groups of Size k","level":"Easy","topic":"Array / String","question":"Split a string into groups of k characters; if the last group is shorter, pad it with the fill character. Return the groups. Example: 'abcdefghij', k=3, fill 'x' → ['abc','def','ghi','jxx'].","why":"'abcdefghij', k=3, fill 'x' → ['abc','def','ghi','jxx'].","idea":"Cut the string into pieces of length k; pad the last piece with the fill character.","input":"s = \"abcdefghij\", k = 3, fill = \"x\"","output":"['abc', 'def', 'ghi', 'jxx']","notes":[],"best":"Cut the string into pieces of length k; pad the last piece with the fill character.","variants":[{"name":"Slice and pad the last group","code":"class Solution:\n    def divideString(self, s, k, fill):\n        s += fill * (-len(s) % k)\n        return [s[i:i + k] for i in range(0, len(s), k)]","time":"O(n)","space":"O(n)","explain":"Cut the string into pieces of length k; pad the last piece with the fill character.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghij"],"k":3,"fill":["s","x"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefghijxx"],"k":3,"fill":["s","x"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefghijxx"],"k":3,"fill":["s","x"]},"ret":["l",[["s","abc"],["s","def"],["s","ghi"],["s","jxx"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghi"],"k":3,"fill":["s","x"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefghi"],"k":3,"fill":["s","x"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abcdefghi"],"k":3,"fill":["s","x"]},"ret":["l",[["s","abc"],["s","def"],["s","ghi"]],0]}],"trunc":false}},{"name":"Pad with ljust","tag":"Alternative","code":"class Solution:\n    def divideString(self, s, k, fill):\n        return [s[i:i + k].ljust(k, fill) for i in range(0, len(s), k)]","time":"O(n)","space":"O(n)","explain":"Use slicing and ljust for the last group.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghij"],"k":3,"fill":["s","x"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghij"],"k":3,"fill":["s","x"]},"ret":["l",[["s","abc"],["s","def"],["s","ghi"],["s","jxx"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghi"],"k":3,"fill":["s","x"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abcdefghi"],"k":3,"fill":["s","x"]},"ret":["l",[["s","abc"],["s","def"],["s","ghi"]],0]}],"trunc":false}}],"ex2":{"input":"exact fit","output":"['abc', 'def', 'ghi']","why":"No padding needed."}};
+window.PROBLEM = {
+ "id": "2138",
+ "title": "Divide a String Into Groups of Size k",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'abcdefghij', k=3, fill 'x' → ['abc','def','ghi','jxx'].",
+ "idea": "Cut the string into pieces of length k; pad the last piece with the fill character.",
+ "input": "s = \"abcdefghij\", k = 3, fill = \"x\"",
+ "output": "['abc', 'def', 'ghi', 'jxx']",
+ "notes": [],
+ "best": "Cut the string into pieces of length k; pad the last piece with the fill character.",
+ "variants": [
+  {
+   "name": "Slice and pad the last group",
+   "code": "class Solution:\n    def divideString(self, s, k, fill):\n        s += fill * (-len(s) % k)\n        return [s[i:i + k] for i in range(0, len(s), k)]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Cut the string into pieces of length k; pad the last piece with the fill character.",
+   "frames": []
+  }
+ ]
+};

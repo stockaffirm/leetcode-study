@@ -1,1 +1,376 @@
-window.PROBLEM = {"id":"11","title":"Container With Most Water","level":"Medium","topic":"Two Pointers","question":"height[i] is the height of a vertical line standing at position i on the x-axis (line i goes from (i,0) up to (i,height[i])). Choose any two lines; together with the x-axis they form a container. Water level is limited by the SHORTER of the two lines, and the container's width is the distance between their positions, so the water held = min(height[i], height[j]) × (j − i). Return the largest amount of water any pair can hold. The container can't be tilted. Example: lines at positions 1 and 8 (heights 8 and 7) hold min(8,7) × 7 = 49.","input":"[1, 8, 6, 2, 5, 4, 8, 3, 7]","output":"49","notes":["Area = min(height) × width.","Width shrinks every step, so only a taller short-wall can improve."],"best":"Two pointers: moving the taller wall can never help, so move the shorter one.","variants":[{"name":"Two pointers (move the shorter wall)","code":"class Solution:\n    def maxArea(self, height):\n        l, r = 0, len(height) - 1\n        best = 0\n        while l < r:\n            best = max(best, min(height[l], height[r]) * (r - l))\n            if height[l] < height[r]: l += 1\n            else: r -= 1\n        return best","time":"O(n)","space":"O(1)","explain":"Always move the shorter wall inward.","frames":[{"title":"Input","description":"Start with the widest container.","codeLines":[3],"facts":{},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[0,8],"marks":{"0":"l","8":"r"}}]},{"title":"l=0, r=8","description":"area = 1 × 8 = 8. Move the shorter wall.","codeLines":[6,7],"facts":{"area":8,"best":8},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[0,8],"marks":{"0":"l","8":"r"}}]},{"title":"l=1, r=8","description":"area = 7 × 7 = 49. Move the shorter wall.","codeLines":[6,7],"facts":{"area":49,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,8],"marks":{"1":"l","8":"r"}}]},{"title":"l=1, r=7","description":"area = 3 × 6 = 18. Move the shorter wall.","codeLines":[6,7],"facts":{"area":18,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,7],"marks":{"1":"l","7":"r"}}]},{"title":"l=1, r=6","description":"area = 8 × 5 = 40. Move the shorter wall.","codeLines":[6,7],"facts":{"area":40,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,6],"marks":{"1":"l","6":"r"}}]},{"title":"l=1, r=5","description":"area = 4 × 4 = 16. Move the shorter wall.","codeLines":[6,7],"facts":{"area":16,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,5],"marks":{"1":"l","5":"r"}}]},{"title":"l=1, r=4","description":"area = 5 × 3 = 15. Move the shorter wall.","codeLines":[6,7],"facts":{"area":15,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,4],"marks":{"1":"l","4":"r"}}]},{"title":"l=1, r=3","description":"area = 2 × 2 = 4. Move the shorter wall.","codeLines":[6,7],"facts":{"area":4,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,3],"marks":{"1":"l","3":"r"}}]},{"title":"l=1, r=2","description":"area = 6 × 1 = 6. Move the shorter wall.","codeLines":[6,7],"facts":{"area":6,"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,2],"marks":{"1":"l","2":"r"}}]},{"title":"Return","description":"Pointers met.","codeLines":[9],"facts":{"best":49},"rows":[{"name":"height","cells":["1","8","6","2","5","4","8","3","7"],"hot":[1,8],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0]}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":0,"r":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":0,"r":8,"best":0}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":0,"r":8,"best":0}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":0,"r":8,"best":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":8,"best":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":8,"best":8}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":8,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":8,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":7,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":7,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":7,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":7,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":6,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":6,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":6,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":6,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":5,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":5,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":5,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":5,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":4,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":4,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":4,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":4,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":3,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":3,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":3,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":3,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":2,"best":49}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":2,"best":49}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":2,"best":49}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":2,"best":49}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":1,"best":49}},{"l":9,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":1,"best":49}},{"l":9,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"l":1,"r":1,"best":49},"ret":49}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"height":["l",[1,1],0]}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":1}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":1,"best":0}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":1,"best":0}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":1,"best":1}},{"l":8,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":1,"best":1}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":0,"best":1}},{"l":9,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":0,"best":1}},{"l":9,"d":1,"f":1,"v":{"height":["l",[1,1],0],"l":0,"r":0,"best":1},"ret":1}],"trunc":false}},{"name":"Brute force","tag":"Brute force","code":"class Solution:\n    def maxArea(self, height):\n        best = 0\n        for i in range(len(height)):\n            for j in range(i + 1, len(height)):\n                best = max(best, min(height[i], height[j]) * (j - i))\n        return best","time":"O(n²)","space":"O(1)","explain":"Try every pair of walls.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0]}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":0}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":0,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":1,"i":0,"j":1}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":1,"i":0,"j":2}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":2,"i":0,"j":2}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":2,"i":0,"j":3}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":3,"i":0,"j":3}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":3,"i":0,"j":4}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":4,"i":0,"j":4}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":4,"i":0,"j":5}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":5,"i":0,"j":5}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":5,"i":0,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":6,"i":0,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":6,"i":0,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":7,"i":0,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":7,"i":0,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":0,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":0,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":3}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":3}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":8,"i":1,"j":4}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":15,"i":1,"j":4}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":15,"i":1,"j":5}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":16,"i":1,"j":5}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":16,"i":1,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":40,"i":1,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":40,"i":1,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":40,"i":1,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":40,"i":1,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":1,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":1,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":3}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":4}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":4}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":5}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":5}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":2,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":4}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":4}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":5}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":5}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":3,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":5}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":5}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":4,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":6}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":6}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":5,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":7}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":7}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":6,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":7,"j":8}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":7,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":7,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":7,"j":8}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":8,"j":8}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":8,"j":8}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":8,"j":8}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,8,6,2,5,4,8,3,7],0],"best":49,"i":8,"j":8},"ret":49}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"height":["l",[1,1],0]}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":0}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":0,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":1,"j":1}},{"l":4,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"height":["l",[1,1],0],"best":1,"i":1,"j":1},"ret":1}],"trunc":false}}],"why":"Walls of height 8 (position 1) and 7 (position 8): width is 7, height is the shorter wall 7 → 7×7 = 49.","idea":"Start with the widest pair. Always move the shorter wall inward, because moving the taller one can't help.","understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`l, r = 0, len(height) - 1`","Two pointers starting at the widest possible container","Opposite-end two pointers on a sequence where width shrinks as you move"],["`min(height[l], height[r]) * (r - l)`","Water held = shorter wall × distance between walls","The limiting side decides the value"],["`max(best, …)`","Keeps the running maximum","Arg-max over candidates"],["`if height[l] < height[r]: l += 1`","Moves the pointer at the shorter wall inward","Greedy discard: that wall can never do better with a smaller width"]]}},{"h":"Walk through an example","p":["`height = [1,8,6,2,5,4,8,3,7]`. Each row is one loop iteration, before the pointer moves."],"table":{"head":["l","r","height[l]","height[r]","area","best","move"],"rows":[["0","8","1","7","8","8","l += 1"],["1","8","8","7","49","49","r -= 1"],["1","7","8","3","18","49","r -= 1"],["1","6","8","8","40","49","r -= 1"],["1","5","8","4","16","49","r -= 1"],["1","4","8","5","15","49","r -= 1"],["1","3","8","2","4","49","r -= 1"],["1","2","8","6","6","49","r -= 1"]]}},{"h":"Why move the shorter wall?","p":["Area is capped by the shorter wall. If we move the taller wall inward, the width shrinks and the cap is still the same shorter wall, so the area can only get worse or stay equal. Moving the shorter wall is the only move that could find something better, so every discarded pair is provably not the optimum."],"table":{"head":["Move","Width","Height cap","Can the area improve?"],"rows":[["Move the taller wall","smaller","same shorter wall","No"],["Move the shorter wall","smaller","may rise","Yes"]]}},{"h":"Why `<` and the else branch moves `r`?","p":["When the walls are equal, moving either is safe: both are capped by this height and any better container needs a taller wall on both sides. The code moves `r`, which is fine."]},{"h":"Time and space","bullets":["Time: O(n), the pointers together cross the array once.","Space: O(1)."]}],"takeaway":"Two pointers from both ends, always discard the shorter wall: a greedy argument that turns an O(n²) brute force into O(n)."},"statement":"The array `height` describes vertical lines drawn at positions `0, 1, 2, ...`, where line `i` has height `height[i]`. Choose two lines to act as the walls of a tank (the floor is the x-axis). The tank holds water up to the height of the shorter wall, across a width equal to the distance between the walls. Return the largest amount of water any pair can hold. The tank may not be tilted.\n\nExample 1:\n\n```\nInput: height = [1,2,1]\nOutput: 2\n```\n\nExample 2:\n\n```\nInput: height = [4,3,2,1,4]\nOutput: 16\n```\n\nConstraints:\n\n* `n == height.length`\n* `2 <= n <= 10^5`\n* `0 <= height[i] <= 10^4`","ex2":{"input":"[1,1]","output":"1","why":"Only two walls of height 1, one unit apart → area 1."}};
+window.PROBLEM = {
+ "id": "11",
+ "title": "Container With Most Water",
+ "level": "Medium",
+ "topic": "Two Pointers",
+ "question": "Pick two lines that, with the x-axis, hold the most water.",
+ "input": "[1, 8, 6, 2, 5, 4, 8, 3, 7]",
+ "output": "49",
+ "notes": [
+  "Area = min(height) × width.",
+  "Width shrinks every step, so only a taller short-wall can improve."
+ ],
+ "best": "Two pointers: moving the taller wall can never help, so move the shorter one.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def maxArea(self, height):\n        l, r = 0, len(height) - 1\n        best = 0\n        while l < r:\n            best = max(best, min(height[l], height[r]) * (r - l))\n            if height[l] < height[r]: l += 1\n            else: r -= 1\n        return best",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Always move the shorter wall inward.",
+   "frames": [
+    {
+     "title": "Input",
+     "description": "Start with the widest container.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        0,
+        8
+       ],
+       "marks": {
+        "0": "l",
+        "8": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=0, r=8",
+     "description": "area = 1 × 8 = 8. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 8,
+      "best": 8
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        0,
+        8
+       ],
+       "marks": {
+        "0": "l",
+        "8": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=8",
+     "description": "area = 7 × 7 = 49. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 49,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        8
+       ],
+       "marks": {
+        "1": "l",
+        "8": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=7",
+     "description": "area = 3 × 6 = 18. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 18,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        7
+       ],
+       "marks": {
+        "1": "l",
+        "7": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=6",
+     "description": "area = 8 × 5 = 40. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 40,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        6
+       ],
+       "marks": {
+        "1": "l",
+        "6": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=5",
+     "description": "area = 4 × 4 = 16. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 16,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        5
+       ],
+       "marks": {
+        "1": "l",
+        "5": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=4",
+     "description": "area = 5 × 3 = 15. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 15,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        4
+       ],
+       "marks": {
+        "1": "l",
+        "4": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=3",
+     "description": "area = 2 × 2 = 4. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 4,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        3
+       ],
+       "marks": {
+        "1": "l",
+        "3": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "l=1, r=2",
+     "description": "area = 6 × 1 = 6. Move the shorter wall.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {
+      "area": 6,
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        2
+       ],
+       "marks": {
+        "1": "l",
+        "2": "r"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Pointers met.",
+     "codeLines": [
+      9
+     ],
+     "facts": {
+      "best": 49
+     },
+     "rows": [
+      {
+       "name": "height",
+       "cells": [
+        "1",
+        "8",
+        "6",
+        "2",
+        "5",
+        "4",
+        "8",
+        "3",
+        "7"
+       ],
+       "hot": [
+        1,
+        8
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

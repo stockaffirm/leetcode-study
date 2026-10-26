@@ -1,1 +1,127 @@
-window.PROBLEM = {"id":"2130","title":"Maximum Twin Sum of a Linked List","level":"Medium","topic":"Linked List","question":"In a linked list with an even number of nodes n, the node at index i (from 0) and the node at index n−1−i are twins, for 0 ≤ i < n/2. The twin sum is the sum of the two values. Return the maximum twin sum. Example: 4→2→2→3 → twins are (4,3) and (2,2), sums 7 and 4, so the answer is 7.","input":"4 → 2 → 2 → 3","output":"7","notes":["Twins: index i and n-1-i.","Only n/2 pairs to check."],"best":"Array copy is simplest; reversing the second half gives O(1) space.","variants":[{"name":"Array copy + pairs","code":"class Solution:\n    def pairSum(self, head):\n        vals = []\n        while head:\n            vals.append(head.val); head = head.next\n        return max(vals[i] + vals[-1 - i] for i in range(len(vals) // 2))","time":"O(n)","space":"O(n)","explain":"Copy to an array, then pair ends inward.","frames":[{"title":"List","description":"Walk the list and copy values.","codeLines":[3,4],"facts":{},"rows":[{"name":"vals","cells":["4","2","2","3"],"hot":[],"marks":{},"kind":"list"}]},{"title":"Pair 0","description":"4 + 3 = 7","codeLines":[6],"facts":{"sum":7},"rows":[{"name":"vals","cells":["4","2","2","3"],"hot":[0,3],"marks":{"0":"i","3":"twin"}}]},{"title":"Pair 1","description":"2 + 2 = 4","codeLines":[6],"facts":{"sum":4,"max":7},"rows":[{"name":"vals","cells":["4","2","2","3"],"hot":[1,2],"marks":{"1":"i","2":"twin"}}]},{"title":"Return","description":"Largest twin sum = 7.","codeLines":[6],"facts":{},"rows":[{"name":"answer","cells":["7"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"vals":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"vals":["l",[],0]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[2,2,3],-1],"vals":["l",[4],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[2,2,3],-1],"vals":["l",[4],0]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[2,3],-1],"vals":["l",[4,2],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[2,3],-1],"vals":["l",[4,2],0]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[3],-1],"vals":["l",[4,2,2],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[3],-1],"vals":["l",[4,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"head":null,"vals":["l",[4,2,2,3],0]}},{"l":6,"d":1,"f":1,"v":{"head":null,"vals":["l",[4,2,2,3],0]}},{"l":6,"d":1,"f":1,"v":{"head":null,"vals":["l",[4,2,2,3],0]},"ret":7}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,100000],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"vals":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"vals":["l",[],0]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[100000],-1],"vals":["l",[1],0]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[100000],-1],"vals":["l",[1],0]}},{"l":4,"d":1,"f":1,"v":{"head":null,"vals":["l",[1,100000],0]}},{"l":6,"d":1,"f":1,"v":{"head":null,"vals":["l",[1,100000],0]}},{"l":6,"d":1,"f":1,"v":{"head":null,"vals":["l",[1,100000],0]},"ret":100001}],"trunc":false}},{"name":"Reverse the second half","tag":"Optimal space","code":"class Solution:\n    def pairSum(self, head):\n        slow = fast = head\n        while fast and fast.next: slow, fast = slow.next, fast.next.next\n        prev = None\n        while slow:\n            nxt = slow.next; slow.next = prev; prev = slow; slow = nxt\n        best, a, b = 0, head, prev\n        while b:\n            best = max(best, a.val + b.val); a, b = a.next, b.next\n        return best","time":"O(n)","space":"O(1)","explain":"Reverse the back half in place, then walk both halves together.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[4,2,2,3],-1],"fast":["L",[4,2,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[2,2,3],-1],"fast":["L",[2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[2,3],-1],"fast":null}},{"l":5,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[2,3],-1],"fast":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[2,3],-1],"fast":null,"prev":null}},{"l":7,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"slow":["L",[2,3],-1],"fast":null,"prev":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":["L",[3],-1],"fast":null,"prev":["L",[2],-1],"nxt":["L",[3],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":["L",[3],-1],"fast":null,"prev":["L",[2],-1],"nxt":["L",[3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null}},{"l":8,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null}},{"l":9,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":0,"a":["L",[4,2,2],-1],"b":["L",[3,2],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":0,"a":["L",[4,2,2],-1],"b":["L",[3,2],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":7,"a":["L",[2,2],-1],"b":["L",[2],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":7,"a":["L",[2,2],-1],"b":["L",[2],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":7,"a":["L",[2],-1],"b":null}},{"l":11,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":7,"a":["L",[2],-1],"b":null}},{"l":11,"d":1,"f":1,"v":{"head":["L",[4,2,2],-1],"slow":null,"fast":null,"prev":["L",[3,2],-1],"nxt":null,"best":7,"a":["L",[2],-1],"b":null},"ret":7}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,100000],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":["L",[1,100000],-1],"fast":["L",[1,100000],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":["L",[100000],-1],"fast":null}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":["L",[100000],-1],"fast":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":["L",[100000],-1],"fast":null,"prev":null}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":["L",[100000],-1],"fast":null,"prev":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null,"best":0,"a":["L",[1,100000],-1],"b":["L",[100000],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null,"best":0,"a":["L",[1,100000],-1],"b":["L",[100000],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null,"best":100001,"a":["L",[100000],-1],"b":null}},{"l":11,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null,"best":100001,"a":["L",[100000],-1],"b":null}},{"l":11,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"slow":null,"fast":null,"prev":["L",[100000],-1],"nxt":null,"best":100001,"a":["L",[100000],-1],"b":null},"ret":100001}],"trunc":false}},{"name":"Stack for the first half","tag":"Alternative","code":"class Solution:\n    def pairSum(self, head):\n        st, slow, fast = [], head, head\n        while fast and fast.next:\n            st.append(slow.val); slow = slow.next; fast = fast.next.next\n        best = 0\n        while slow:\n            best = max(best, st.pop() + slow.val); slow = slow.next\n        return best","time":"O(n)","space":"O(n)","explain":"Push the first half, then pop while walking the second half.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[],0],"slow":["L",[4,2,2,3],-1],"fast":["L",[4,2,2,3],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[],0],"slow":["L",[4,2,2,3],-1],"fast":["L",[4,2,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4],0],"slow":["L",[2,2,3],-1],"fast":["L",[2,3],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4],0],"slow":["L",[2,2,3],-1],"fast":["L",[2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4,2],0],"slow":["L",[2,3],-1],"fast":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4,2],0],"slow":["L",[2,3],-1],"fast":null}},{"l":7,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4,2],0],"slow":["L",[2,3],-1],"fast":null,"best":0}},{"l":8,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4,2],0],"slow":["L",[2,3],-1],"fast":null,"best":0}},{"l":7,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4],0],"slow":["L",[3],-1],"fast":null,"best":4}},{"l":8,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[4],0],"slow":["L",[3],-1],"fast":null,"best":4}},{"l":7,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[],0],"slow":null,"fast":null,"best":7}},{"l":9,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[],0],"slow":null,"fast":null,"best":7}},{"l":9,"d":1,"f":1,"v":{"head":["L",[4,2,2,3],-1],"st":["l",[],0],"slow":null,"fast":null,"best":7},"ret":7}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,100000],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[],0],"slow":["L",[1,100000],-1],"fast":["L",[1,100000],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[],0],"slow":["L",[1,100000],-1],"fast":["L",[1,100000],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[1],0],"slow":["L",[100000],-1],"fast":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[1],0],"slow":["L",[100000],-1],"fast":null}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[1],0],"slow":["L",[100000],-1],"fast":null,"best":0}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[1],0],"slow":["L",[100000],-1],"fast":null,"best":0}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[],0],"slow":null,"fast":null,"best":100001}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[],0],"slow":null,"fast":null,"best":100001}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,100000],-1],"st":["l",[],0],"slow":null,"fast":null,"best":100001},"ret":100001}],"trunc":false}}],"why":"4→2→2→3: twins are (4,3) = 7 and (2,2) = 4. The biggest is 7.","idea":"Copy the values to an array and pair them from both ends.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["vals = [] … append","Copies the list's values into an array so we can index from both ends","Linked list → array"],["vals[-1 - i]","The mirror element of vals[i] from the end (index −1 is the last)",""],["range(len(vals) // 2)","Only the first half; each twin pair is visited once",""]]}},{"h":"Walk through an example","p":["`4 → 2 → 2 → 3`: node i and node n−1−i are twins."],"table":{"head":["i","vals[i]","vals[-1 - i]","twin sum"],"rows":[["0","4","3","7"],["1","2","2","4"]]},"bullets":["Maximum: 7."]},{"h":"Why an array and not pointers?","p":["A singly linked list can't be walked from the end. Copying to an array costs O(n) space but is simple. The O(1)-space alternative reverses the second half in place (after finding the middle with slow/fast pointers) and walks both halves together."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n)."]}],"takeaway":"Copy values to a list and pair index i with n−1−i; the O(1)-space version reverses the second half."},"statement":"In a linked list of even length `n`, the node at 0-based index `i` and the node at index `n - 1 - i` are twins for `0 <= i <= n / 2 - 1`. The twin sum of a pair of twins is the sum of their values. Given the head of such a list, return the maximum twin sum.\n\nExample 1:\n\n```\nInput: head = [4,2,2,3]\nOutput: 7\n```\n\nExample 2:\n\n```\nInput: head = [1,100000]\nOutput: 100001\n```\n\nConstraints:\n\n* The number of nodes in the list is an even integer in the range `[2, 10^5]`\n* `1 <= Node.val <= 10^5`","ex2":{"input":"[1,100000]","output":"100001","why":"With only two nodes they are twins of each other."}};
+window.PROBLEM = {
+ "id": "2130",
+ "title": "Maximum Twin Sum of a Linked List",
+ "level": "Medium",
+ "topic": "Linked List",
+ "question": "Node i pairs with node n-1-i (its twin). Find the largest twin sum.",
+ "input": "4 → 2 → 2 → 3",
+ "output": "7",
+ "notes": [
+  "Twins: index i and n-1-i.",
+  "Only n/2 pairs to check."
+ ],
+ "best": "Array copy is simplest; reversing the second half gives O(1) space.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def pairSum(self, head):\n        vals = []\n        while head:\n            vals.append(head.val); head = head.next\n        return max(vals[i] + vals[-1 - i] for i in range(len(vals) // 2))",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Copy to an array, then pair ends inward.",
+   "frames": [
+    {
+     "title": "List",
+     "description": "Walk the list and copy values.",
+     "codeLines": [
+      3,
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "vals",
+       "cells": [
+        "4",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Pair 0",
+     "description": "4 + 3 = 7",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "sum": 7
+     },
+     "rows": [
+      {
+       "name": "vals",
+       "cells": [
+        "4",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        0,
+        3
+       ],
+       "marks": {
+        "0": "i",
+        "3": "twin"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Pair 1",
+     "description": "2 + 2 = 4",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "sum": 4,
+      "max": 7
+     },
+     "rows": [
+      {
+       "name": "vals",
+       "cells": [
+        "4",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        1,
+        2
+       ],
+       "marks": {
+        "1": "i",
+        "2": "twin"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Largest twin sum = 7.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "7"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

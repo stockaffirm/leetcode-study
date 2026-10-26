@@ -1,1 +1,225 @@
-window.PROBLEM = {"id":"74","title":"Search a 2D Matrix","level":"Medium","topic":"Binary Search","question":"You have a grid of numbers where every row is sorted from left to right and the first number of each row is larger than the last number of the previous row. Return true if target is somewhere in the grid. Aim for O(log(m·n)) (very fast: the work shrinks to a tiny fraction of the grid size) time. Example: [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target=3 → true.","why":"Target 3 is in the first row → True.","idea":"Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).","input":"[[1,3,5,7],[10,11,16,20],[23,30,34,60]], target=3","output":"True","notes":[],"best":"Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).","variants":[{"name":"Binary search on the flattened grid","code":"class Solution:\n    def searchMatrix(self, matrix, target):\n        m, n = len(matrix), len(matrix[0])\n        lo, hi = 0, m * n - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            v = matrix[mid // n][mid % n]\n            if v == target: return True\n            if v < target: lo = mid + 1\n            else: hi = mid - 1\n        return False","time":"O(log mn)","space":"O(1)","explain":"Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).","frames":[{"title":"Grid","description":"Treat it like one list of 12 numbers.","codeLines":[4],"facts":{},"rows":[{"name":"matrix","cells":[["1","3","5","7"],["10","11","16","20"],["23","30","34","60"]],"hot":[],"marks":{},"kind":"grid"}]},{"title":"mid = 5","description":"Value 11 > 3 → search the left part.","codeLines":[7,10],"facts":{"lo":0,"hi":11},"rows":[{"name":"matrix","cells":[["1","3","5","7"],["10","11","16","20"],["23","30","34","60"]],"hot":["1,1"],"marks":{},"kind":"grid"}]},{"title":"mid = 2","description":"Value 5 > 3 → left again.","codeLines":[10],"facts":{"lo":0,"hi":4},"rows":[{"name":"matrix","cells":[["1","3","5","7"],["10","11","16","20"],["23","30","34","60"]],"hot":["0,2"],"marks":{},"kind":"grid"}]},{"title":"mid = 0","description":"Value 1 < 3 → right.","codeLines":[9],"facts":{"lo":0,"hi":1},"rows":[{"name":"matrix","cells":[["1","3","5","7"],["10","11","16","20"],["23","30","34","60"]],"hot":["0,0"],"marks":{},"kind":"grid"}]},{"title":"mid = 1","description":"Value 3 = target → True.","codeLines":[8],"facts":{"lo":1,"hi":1},"rows":[{"name":"matrix","cells":[["1","3","5","7"],["10","11","16","20"],["23","30","34","60"]],"hot":["0,1"],"marks":{},"kind":"grid"}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11,"mid":5}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11,"mid":5,"v":11}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11,"mid":5,"v":11}},{"l":10,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":11,"mid":5,"v":11}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":5,"v":11}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":5,"v":11}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":2,"v":11}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":2,"v":5}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":2,"v":5}},{"l":10,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":4,"mid":2,"v":5}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":1,"mid":2,"v":5}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":1,"mid":2,"v":5}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":1,"mid":0,"v":5}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":1,"mid":0,"v":1}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":0,"hi":1,"mid":0,"v":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":1,"hi":1,"mid":0,"v":1}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":1,"hi":1,"mid":0,"v":1}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":1,"hi":1,"mid":1,"v":1}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":1,"hi":1,"mid":1,"v":3}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"m":3,"n":4,"lo":1,"hi":1,"mid":1,"v":3},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":0,"hi":11}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":0,"hi":11}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":0,"hi":11,"mid":5}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":0,"hi":11,"mid":5,"v":11}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":0,"hi":11,"mid":5,"v":11}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":5,"v":11}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":5,"v":11}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":8,"v":11}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":8,"v":23}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":8,"v":23}},{"l":10,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":11,"mid":8,"v":23}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":8,"v":23}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":8,"v":23}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":6,"v":23}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":6,"v":16}},{"l":9,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":6,"v":16}},{"l":10,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":7,"mid":6,"v":16}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":5,"mid":6,"v":16}},{"l":11,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":5,"mid":6,"v":16}},{"l":11,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"m":3,"n":4,"lo":6,"hi":5,"mid":6,"v":16},"ret":false}],"trunc":false}},{"name":"Staircase from the top-right","tag":"Alternative","code":"class Solution:\n    def searchMatrix(self, matrix, target):\n        r, c = 0, len(matrix[0]) - 1\n        while r < len(matrix) and c >= 0:\n            if matrix[r][c] == target: return True\n            if matrix[r][c] > target: c -= 1\n            else: r += 1\n        return False","time":"O(m+n)","space":"O(1)","explain":"Go left if too big, down if too small.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":3}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":3}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":2}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":2}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":2}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"r":0,"c":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":0,"c":3}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":0,"c":3}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":0,"c":3}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":0,"c":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":3}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":3}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":2}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":2}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":2}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":1}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":1}},{"l":7,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":1,"c":1}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":1}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":1}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":0}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":0}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":0}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":-1}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":-1}},{"l":8,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"r":2,"c":-1},"ret":false}],"trunc":false}},{"name":"Find the row, then the column","tag":"Alternative","code":"class Solution:\n    def searchMatrix(self, matrix, target):\n        rows = [row[0] for row in matrix]; i = bisect_right(rows, target) - 1\n        if i < 0: return False\n        j = bisect_left(matrix[i], target)\n        return j < len(matrix[i]) and matrix[i][j] == target","time":"O(log m + log n)","space":"O(m)","explain":"Binary search the first column to pick a row, then binary search that row.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"rows":["l",[1,10,23],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"rows":["l",[1,10,23],0],"i":0}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"rows":["l",[1,10,23],0],"i":0,"j":1}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":3,"rows":["l",[1,10,23],0],"i":0,"j":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13}},{"l":4,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"rows":["l",[1,10,23],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"rows":["l",[1,10,23],0],"i":1}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"rows":["l",[1,10,23],0],"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"matrix":["l",[["l",[1,3,5,7],0],["l",[10,11,16,20],0],["l",[23,30,34,60],0]],0],"target":13,"rows":["l",[1,10,23],0],"i":1,"j":2},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`lo, hi = 0, m * n - 1`","Binary-search range over the flattened matrix as if it were one sorted list of m·n items","Rows are sorted and each row starts after the previous ends, so row-major order is globally sorted"],["`mid // n`","Row index of flat position `mid`","Converting a flat index to 2D"],["`mid % n`","Column index of flat position `mid`","Same; `divmod(mid, n)` does both at once"],["`while lo <= hi`","Closed range `[lo, hi]`; both ends are still candidates","Exact-match binary search (use `lo < hi` for lower-bound style)"],["`lo = mid + 1` / `hi = mid - 1`","Discard `mid` since it was already compared","With a closed range both bounds move past `mid`"]]}},{"h":"Walk through an example","p":["`target = 3` in a 3×4 matrix, flat indices 0..11."],"table":{"head":["Range [lo, hi]","mid","(row, col)","value","decision"],"rows":[["[0, 11]","5","(1, 1)","11","too big → hi = mid - 1"],["[0, 4]","2","(0, 2)","5","too big → hi = mid - 1"],["[0, 1]","0","(0, 0)","1","too small → lo = mid + 1"],["[1, 1]","1","(0, 1)","3","found"]]}},{"h":"Why not search row then column?","p":["Two binary searches (find the row, then search in it) also work and give O(log m + log n). Mapping to one flat index gives O(log(m·n)), the same cost with less code, and no row-finding edge cases. The trick only works because the matrix is sorted globally, not just per row; for the 'rows and columns sorted separately' version (problem 240) you need a staircase walk."],"table":{"head":["Matrix property","Technique","Time"],"rows":[["Rows sorted and each row's first > previous row's last (this problem)","Binary search on flat index","O(log mn)"],["Rows and columns sorted independently","Staircase from a corner","O(m + n)"]]}},{"h":"Time and space","bullets":["Time: O(log(m·n)).","Space: O(1)."]}],"takeaway":"A fully sorted 2D matrix is a sorted 1D array in disguise: binary search the flat index and recover (row, col) with `//` and `%`."},"statement":"An `m x n` integer matrix has rows sorted in non-decreasing order, and the first value of each row is larger than the last value of the previous row. Return `true` if `target` occurs in the matrix, otherwise `false`. The solution should run in `O(log(m * n))` time.\n\nExample 1:\n\n```\nInput: matrix = [[1,3],[5,7]], target = 5\nOutput: true\n```\n\nExample 2:\n\n```\nInput: matrix = [[1,3],[5,7]], target = 4\nOutput: false\n```\n\nConstraints:\n\n* `m == matrix.length`\n* `n == matrix[i].length`\n* `1 <= m, n <= 100`\n* `-10^4 <= matrix[i][j], target <= 10^4`","ex2":{"input":"[[1,3,5,7],[10,11,16,20],[23,30,34,60]],13","output":"False","why":"13 is not in the matrix → False."}};
+window.PROBLEM = {
+ "id": "74",
+ "title": "Search a 2D Matrix",
+ "level": "Medium",
+ "topic": "Binary Search",
+ "question": "A grid where each row is sorted and each row starts bigger than the previous row ends. Is the target in it?",
+ "why": "Target 3 is in the first row → True.",
+ "idea": "Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).",
+ "input": "[[1,3,5,7],[10,11,16,20],[23,30,34,60]], target=3",
+ "output": "True",
+ "notes": [],
+ "best": "Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def searchMatrix(self, matrix, target):\n        m, n = len(matrix), len(matrix[0])\n        lo, hi = 0, m * n - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            v = matrix[mid // n][mid % n]\n            if v == target: return True\n            if v < target: lo = mid + 1\n            else: hi = mid - 1\n        return False",
+   "time": "O(log mn)",
+   "space": "O(1)",
+   "explain": "Pretend the grid is one long sorted list and binary search it (index → row = i ÷ n, column = i mod n).",
+   "frames": [
+    {
+     "title": "Grid",
+     "description": "Treat it like one list of 12 numbers.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "matrix",
+       "cells": [
+        [
+         "1",
+         "3",
+         "5",
+         "7"
+        ],
+        [
+         "10",
+         "11",
+         "16",
+         "20"
+        ],
+        [
+         "23",
+         "30",
+         "34",
+         "60"
+        ]
+       ],
+       "hot": [],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    },
+    {
+     "title": "mid = 5",
+     "description": "Value 11 > 3 → search the left part.",
+     "codeLines": [
+      7,
+      10
+     ],
+     "facts": {
+      "lo": 0,
+      "hi": 11
+     },
+     "rows": [
+      {
+       "name": "matrix",
+       "cells": [
+        [
+         "1",
+         "3",
+         "5",
+         "7"
+        ],
+        [
+         "10",
+         "11",
+         "16",
+         "20"
+        ],
+        [
+         "23",
+         "30",
+         "34",
+         "60"
+        ]
+       ],
+       "hot": [
+        "1,1"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    },
+    {
+     "title": "mid = 2",
+     "description": "Value 5 > 3 → left again.",
+     "codeLines": [
+      10
+     ],
+     "facts": {
+      "lo": 0,
+      "hi": 4
+     },
+     "rows": [
+      {
+       "name": "matrix",
+       "cells": [
+        [
+         "1",
+         "3",
+         "5",
+         "7"
+        ],
+        [
+         "10",
+         "11",
+         "16",
+         "20"
+        ],
+        [
+         "23",
+         "30",
+         "34",
+         "60"
+        ]
+       ],
+       "hot": [
+        "0,2"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    },
+    {
+     "title": "mid = 0",
+     "description": "Value 1 < 3 → right.",
+     "codeLines": [
+      9
+     ],
+     "facts": {
+      "lo": 0,
+      "hi": 1
+     },
+     "rows": [
+      {
+       "name": "matrix",
+       "cells": [
+        [
+         "1",
+         "3",
+         "5",
+         "7"
+        ],
+        [
+         "10",
+         "11",
+         "16",
+         "20"
+        ],
+        [
+         "23",
+         "30",
+         "34",
+         "60"
+        ]
+       ],
+       "hot": [
+        "0,0"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    },
+    {
+     "title": "mid = 1",
+     "description": "Value 3 = target → True.",
+     "codeLines": [
+      8
+     ],
+     "facts": {
+      "lo": 1,
+      "hi": 1
+     },
+     "rows": [
+      {
+       "name": "matrix",
+       "cells": [
+        [
+         "1",
+         "3",
+         "5",
+         "7"
+        ],
+        [
+         "10",
+         "11",
+         "16",
+         "20"
+        ],
+        [
+         "23",
+         "30",
+         "34",
+         "60"
+        ]
+       ],
+       "hot": [
+        "0,1"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

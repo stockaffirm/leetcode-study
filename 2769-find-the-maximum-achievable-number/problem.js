@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2769","title":"Find the Maximum Achievable Number","level":"Easy","topic":"Math / Bit Manipulation","question":"Starting from any integer x, one operation increases or decreases x by 1 AND simultaneously increases or decreases num by 1. Return the maximum achievable x such that x becomes equal to num after at most t operations. Example: num=4, t=1 → 6.","why":"num=4, t=1 → x can be 6.","idea":"Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.","input":"num = 4, t = 1","output":"6","notes":[],"best":"Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.","variants":[{"name":"num + 2t","code":"class Solution:\n    def theMaximumAchievableX(self, num, t):\n        return num + 2 * t","time":"O(1)","space":"O(1)","explain":"Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":4,"t":1}},{"l":3,"d":1,"f":1,"v":{"num":4,"t":1},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":3,"t":2}},{"l":3,"d":1,"f":1,"v":{"num":3,"t":2},"ret":7}],"trunc":false}},{"name":"Simulate the operations","tag":"Brute force","code":"class Solution:\n    def theMaximumAchievableX(self, num, t):\n        x = num\n        for _ in range(t):\n            x += 2\n        return x","time":"O(t)","space":"O(1)","explain":"Raise x and num apart by one each operation.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":4,"t":1}},{"l":4,"d":1,"f":1,"v":{"num":4,"t":1,"x":4}},{"l":5,"d":1,"f":1,"v":{"num":4,"t":1,"x":4,"_":0}},{"l":4,"d":1,"f":1,"v":{"num":4,"t":1,"x":6,"_":0}},{"l":6,"d":1,"f":1,"v":{"num":4,"t":1,"x":6,"_":0}},{"l":6,"d":1,"f":1,"v":{"num":4,"t":1,"x":6,"_":0},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":3,"t":2}},{"l":4,"d":1,"f":1,"v":{"num":3,"t":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"num":3,"t":2,"x":3,"_":0}},{"l":4,"d":1,"f":1,"v":{"num":3,"t":2,"x":5,"_":0}},{"l":5,"d":1,"f":1,"v":{"num":3,"t":2,"x":5,"_":1}},{"l":4,"d":1,"f":1,"v":{"num":3,"t":2,"x":7,"_":1}},{"l":6,"d":1,"f":1,"v":{"num":3,"t":2,"x":7,"_":1}},{"l":6,"d":1,"f":1,"v":{"num":3,"t":2,"x":7,"_":1},"ret":7}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["num + 2 * t","Each operation changes x and num by 1 each in opposite or same directions; to maximise x, increase x by 1 and decrease num by 1 per step, closing the gap by 2","A closed-form invariant"]]}},{"h":"Walk through an example","p":["`num = 4`, `t = 1`:"],"table":{"head":["step","x","num"],"rows":[["start","6","4"],["after one operation (x −1, num +1)","5","5"]]},"bullets":["Starting from x = 6 and num = 4, one operation (x decreases by 1, num increases by 1) makes them equal at 5. So 6 is achievable, and nothing larger is."]},{"h":"Why num + 2t?","p":["x must end equal to num after at most t operations. One operation can decrease x by 1 and increase num by 1, which closes a gap of 2. Starting from the largest x whose gap to num is 2t, t operations make them equal."]},{"h":"Time and space","bullets":["Time: O(1).","Space: O(1)."]}],"takeaway":"Each operation closes a gap of 2, so the largest x is num + 2t."},"ex2":{"input":"t = 2","output":"7","why":"7."}};
+window.PROBLEM = {
+ "id": "2769",
+ "title": "Find the Maximum Achievable Number",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "num=4, t=1 → x can be 6.",
+ "idea": "Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.",
+ "input": "num = 4, t = 1",
+ "output": "6",
+ "notes": [],
+ "best": "Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.",
+ "variants": [
+  {
+   "name": "num + 2t",
+   "code": "class Solution:\n    def theMaximumAchievableX(self, num, t):\n        return num + 2 * t",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Each operation moves x and num towards each other by 1 each, closing a gap of 2 per operation. So the largest achievable x is num + 2t.",
+   "frames": []
+  }
+ ]
+};

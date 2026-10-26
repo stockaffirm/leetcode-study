@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2119","title":"A Number After a Double Reversal","level":"Easy","topic":"Math / Bit Manipulation","question":"Reverse the digits of num to get reversed1, then reverse reversed1 to get reversed2. Return whether reversed2 equals num. Example: 526 → true; 1800 → false.","why":"526 → 625 → 526: true; 1800 → 81 → 18: false.","idea":"Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.","input":"num = 526","output":"true","notes":[],"best":"Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.","variants":[{"name":"Only trailing zeros are lost","code":"class Solution:\n    def isSameAfterReversals(self, num):\n        return num == 0 or num % 10 != 0","time":"O(1)","space":"O(1)","explain":"Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":526}},{"l":3,"d":1,"f":1,"v":{"num":526},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":1800}},{"l":3,"d":1,"f":1,"v":{"num":1800},"ret":false}],"trunc":false}},{"name":"Do the reversals","tag":"Brute force","code":"class Solution:\n    def isSameAfterReversals(self, num):\n        once = int(str(num)[::-1])\n        twice = int(str(once)[::-1])\n        return twice == num","time":"O(log n)","space":"O(log n)","explain":"Reverse the digits twice as strings and compare.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":526}},{"l":4,"d":1,"f":1,"v":{"num":526,"once":625}},{"l":5,"d":1,"f":1,"v":{"num":526,"once":625,"twice":526}},{"l":5,"d":1,"f":1,"v":{"num":526,"once":625,"twice":526},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"num":1800}},{"l":4,"d":1,"f":1,"v":{"num":1800,"once":81}},{"l":5,"d":1,"f":1,"v":{"num":1800,"once":81,"twice":18}},{"l":5,"d":1,"f":1,"v":{"num":1800,"once":81,"twice":18},"ret":false}],"trunc":false}}],"ex2":{"input":"trailing zeros","output":"False","why":"The trailing zeros are lost."}};
+window.PROBLEM = {
+ "id": "2119",
+ "title": "A Number After a Double Reversal",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "526 → 625 → 526: true; 1800 → 81 → 18: false.",
+ "idea": "Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.",
+ "input": "num = 526",
+ "output": "true",
+ "notes": [],
+ "best": "Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.",
+ "variants": [
+  {
+   "name": "Only trailing zeros are lost",
+   "code": "class Solution:\n    def isSameAfterReversals(self, num):\n        return num == 0 or num % 10 != 0",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Reversing drops trailing zeros (they become leading zeros). So the number comes back unchanged exactly when it is 0 or does not end in 0.",
+   "frames": []
+  }
+ ]
+};

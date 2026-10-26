@@ -1,1 +1,233 @@
-window.PROBLEM = {"id":"190","title":"Reverse Bits","level":"Easy","topic":"Bit Manipulation","question":"Write a non-negative whole number as 32 binary digits (bits, each 0 or 1), reverse the order of those 32 digits, and return the number that the reversed digits make. Example (shown with only 8 digits to keep it short): 00001011 reversed is 11010000. The real task uses 32 digits, e.g. 00000010100101000001111010011100 → 00111001011110000010100101000000.","why":"(Shown with 8 bits.) 00001011 reversed is 11010000.","idea":"Repeat: take the last bit of n and push it onto the end of the result.","input":"00001011 (shown as 8 bits)","output":"11010000","notes":[],"best":"Repeat: take the last bit of n and push it onto the end of the result.","variants":[{"name":"Shift bits one by one","code":"class Solution:\n    def reverseBits(self, n):\n        res = 0\n        for _ in range(32):\n            res = (res << 1) | (n & 1)\n            n >>= 1\n        return res","time":"O(1)","space":"O(1)","explain":"Repeat: take the last bit of n and push it onto the end of the result.","frames":[{"title":"Start","description":"n = 00001011, result = 0.","codeLines":[3],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","1","0","1","1"],"hot":[],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","0","0"],"hot":[],"marks":{}}]},{"title":"Step 1","description":"Last bit of n is 1 → result gets 1.","codeLines":[5],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","1","0","1"],"hot":[7],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","0","1"],"hot":[7],"marks":{}}],"sub":[{"description":"n[4] = 0","codeLines":[5],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","1","1"],"hot":[4],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","0","1"],"hot":[7],"marks":{}}]},{"description":"n[5] = 1","codeLines":[5],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","1","1","1"],"hot":[5],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","0","1"],"hot":[7],"marks":{}}]},{"description":"n[6] = 0. Last bit of n is 1 → result gets 1.","codeLines":[5],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","1","0","1"],"hot":[6],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","0","1"],"hot":[7],"marks":{}}]}]},{"title":"Step 2","description":"Last bit 1 → result 11.","codeLines":[6],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","1","0"],"hot":[7],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","1","1"],"hot":[6,7],"marks":{}}],"sub":[{"description":"n[5] = 0","codeLines":[6],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","0","1"],"hot":[5],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","1","1"],"hot":[6,7],"marks":{}}]},{"description":"n[6] = 1","codeLines":[6],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","1","1"],"hot":[6],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","1","1"],"hot":[6,7],"marks":{}}]},{"description":"n[7] = 0. Last bit 1 → result 11.","codeLines":[6],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","1","0"],"hot":[7],"marks":{}},{"name":"result","cells":["0","0","0","0","0","0","1","1"],"hot":[6,7],"marks":{}}]}]},{"title":"Step 3","description":"Last bit 0 → result 110.","codeLines":[5],"facts":{},"rows":[{"name":"n","cells":["0","0","0","0","0","0","0","1"],"hot":[7],"marks":{}},{"name":"result","cells":["0","0","0","0","0","1","1","0"],"hot":[5,6,7],"marks":{}}]},{"title":"Finish","description":"After all bits: 11010000.","codeLines":[7],"facts":{},"rows":[{"name":"result","cells":["1","1","0","1","0","0","0","0"],"hot":[0,1,2,3,4,5,6,7],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":11}},{"l":4,"d":1,"f":1,"v":{"n":11,"res":0}},{"l":5,"d":1,"f":1,"v":{"n":11,"res":0,"_":0}},{"l":6,"d":1,"f":1,"v":{"n":11,"res":1,"_":0}},{"l":4,"d":1,"f":1,"v":{"n":5,"res":1,"_":0}},{"l":5,"d":1,"f":1,"v":{"n":5,"res":1,"_":1}},{"l":6,"d":1,"f":1,"v":{"n":5,"res":3,"_":1}},{"l":4,"d":1,"f":1,"v":{"n":2,"res":3,"_":1}},{"l":5,"d":1,"f":1,"v":{"n":2,"res":3,"_":2}},{"l":6,"d":1,"f":1,"v":{"n":2,"res":6,"_":2}},{"l":4,"d":1,"f":1,"v":{"n":1,"res":6,"_":2}},{"l":5,"d":1,"f":1,"v":{"n":1,"res":6,"_":3}},{"l":6,"d":1,"f":1,"v":{"n":1,"res":13,"_":3}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":13,"_":3}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":13,"_":4}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":26,"_":4}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":26,"_":4}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":26,"_":5}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":52,"_":5}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":52,"_":5}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":52,"_":6}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":104,"_":6}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":104,"_":6}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":104,"_":7}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":208,"_":7}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":208,"_":7}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":208,"_":8}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":416,"_":8}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":416,"_":8}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":416,"_":9}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":832,"_":9}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":832,"_":9}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":832,"_":10}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":1664,"_":10}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":1664,"_":10}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":1664,"_":11}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":3328,"_":11}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":3328,"_":11}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":3328,"_":12}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":6656,"_":12}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":6656,"_":12}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":6656,"_":13}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":13312,"_":13}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":13312,"_":13}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":13312,"_":14}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":26624,"_":14}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":26624,"_":14}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":26624,"_":15}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":53248,"_":15}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":53248,"_":15}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":53248,"_":16}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":106496,"_":16}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":106496,"_":16}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":106496,"_":17}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":212992,"_":17}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":212992,"_":17}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":212992,"_":18}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":425984,"_":18}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":425984,"_":18}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":425984,"_":19}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":851968,"_":19}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":851968,"_":19}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":851968,"_":20}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":1703936,"_":20}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":1703936,"_":20}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":1703936,"_":21}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":3407872,"_":21}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":3407872,"_":21}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":3407872,"_":22}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":6815744,"_":22}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":6815744,"_":22}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":6815744,"_":23}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":13631488,"_":23}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":13631488,"_":23}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":13631488,"_":24}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":27262976,"_":24}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":27262976,"_":24}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":27262976,"_":25}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":54525952,"_":25}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":54525952,"_":25}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":54525952,"_":26}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":109051904,"_":26}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":109051904,"_":26}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":109051904,"_":27}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":218103808,"_":27}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":218103808,"_":27}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":218103808,"_":28}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":436207616,"_":28}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":436207616,"_":28}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":436207616,"_":29}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":872415232,"_":29}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":872415232,"_":29}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":872415232,"_":30}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":1744830464,"_":30}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":1744830464,"_":30}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":1744830464,"_":31}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":3489660928,"_":31}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":3489660928,"_":31}},{"l":7,"d":1,"f":1,"v":{"n":0,"res":3489660928,"_":31}},{"l":7,"d":1,"f":1,"v":{"n":0,"res":3489660928,"_":31},"ret":3489660928}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":0}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":0}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":0}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":1}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":1}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":1}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":2}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":2}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":2}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":3}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":3}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":3}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":4}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":4}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":4}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":5}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":5}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":5}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":6}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":6}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":6}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":7}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":7}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":7}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":8}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":8}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":8}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":9}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":9}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":9}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":10}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":10}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":10}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":11}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":11}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":11}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":12}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":12}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":12}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":13}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":13}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":13}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":14}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":14}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":14}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":15}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":15}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":15}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":16}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":16}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":16}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":17}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":17}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":17}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":18}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":18}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":18}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":19}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":19}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":19}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":20}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":20}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":20}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":21}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":21}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":21}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":22}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":22}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":22}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":23}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":23}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":23}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":24}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":24}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":24}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":25}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":25}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":25}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":26}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":26}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":26}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":27}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":27}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":27}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":28}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":28}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":28}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":29}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":29}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":29}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":30}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":30}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":30}},{"l":5,"d":1,"f":1,"v":{"n":0,"res":0,"_":31}},{"l":6,"d":1,"f":1,"v":{"n":0,"res":0,"_":31}},{"l":4,"d":1,"f":1,"v":{"n":0,"res":0,"_":31}},{"l":7,"d":1,"f":1,"v":{"n":0,"res":0,"_":31}},{"l":7,"d":1,"f":1,"v":{"n":0,"res":0,"_":31},"ret":0}],"trunc":false}},{"name":"String reverse","tag":"Pythonic","code":"class Solution:\n    def reverseBits(self, n):\n        return int(format(n, '032b')[::-1], 2)","time":"O(1)","space":"O(1)","explain":"Write the 32 bits as text, reverse, parse.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":11}},{"l":3,"d":1,"f":1,"v":{"n":11},"ret":3489660928}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":3,"d":1,"f":1,"v":{"n":0},"ret":0}],"trunc":false}},{"name":"Swap bit groups (divide and conquer)","tag":"Alternative","code":"class Solution:\n    def reverseBits(self, n):\n        n = (n >> 16) | ((n << 16) & 0xFFFFFFFF)\n        n = ((n & 0xFF00FF00) >> 8) | ((n & 0x00FF00FF) << 8)\n        n = ((n & 0xF0F0F0F0) >> 4) | ((n & 0x0F0F0F0F) << 4)\n        n = ((n & 0xCCCCCCCC) >> 2) | ((n & 0x33333333) << 2)\n        n = ((n & 0xAAAAAAAA) >> 1) | ((n & 0x55555555) << 1)\n        return n","time":"O(1)","space":"O(1)","explain":"Swap halves, then bytes, nibbles, pairs and single bits with masks.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":11}},{"l":4,"d":1,"f":1,"v":{"n":720896}},{"l":5,"d":1,"f":1,"v":{"n":184549376}},{"l":6,"d":1,"f":1,"v":{"n":2952790016}},{"l":7,"d":1,"f":1,"v":{"n":3758096384}},{"l":8,"d":1,"f":1,"v":{"n":3489660928}},{"l":8,"d":1,"f":1,"v":{"n":3489660928},"ret":3489660928}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":4,"d":1,"f":1,"v":{"n":0}},{"l":5,"d":1,"f":1,"v":{"n":0}},{"l":6,"d":1,"f":1,"v":{"n":0}},{"l":7,"d":1,"f":1,"v":{"n":0}},{"l":8,"d":1,"f":1,"v":{"n":0}},{"l":8,"d":1,"f":1,"v":{"n":0},"ret":0}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`n & 1`","Lowest bit of n (0 or 1)","Extract one bit; `& 1` masks everything else"],["`res << 1`","Shift result left by one bit (×2)","Make room at the right end for the next bit"],["`(res << 1) | (n & 1)`","Append the extracted bit to `res`","`|` sets the new lowest bit"],["`n >>= 1`","Shift n right (drop the bit just used)","Expose the next bit"],["`for _ in range(32)`","Always 32 iterations","Leading zeros of `n` must also move to the other end"]]}},{"h":"Walk through an example","p":["`n = 11` (binary `1011`, i.e. `00…01011` in 32 bits). Selected iterations show how bits move from the low end of `n` to `res`:"],"table":{"head":["Iteration","res (binary)","n after (binary)"],"rows":[["1","1","101"],["2","11","10"],["3","110","1"],["4","1101","0"],["31","1101000000000000000000000000000","0"],["32","11010000000000000000000000000000","0"]]}},{"h":"Why exactly 32 iterations rather than 'while n'?","p":["With `while n`, a number like 11 would stop after 4 bits and leave the reversed bits at the wrong place. Running all 32 pushes the leading zeros through too, so the lowest bit of `n` ends up as the highest bit of `res`. For 11 the final result is 3489660928, which is `11010000000000000000000000000000` in 32 bits."]},{"h":"Time and space","bullets":["Time: O(1) — 32 iterations regardless of n.","Space: O(1)."]}],"takeaway":"Reverse bits by popping the lowest bit of n (n & 1) and pushing it onto res (res << 1 | bit), 32 times."},"statement":"Reverse the bits of a 32-bit unsigned integer: write it as 32 binary digits, reverse their order, and return the integer represented by the reversed digits. In the examples the input is shown in binary.\n\nExample 1:\n\n```\nInput: n = 00000000000000000000000000001101\nOutput: 2952790016 (10110000000000000000000000000000)\n```\n\nExample 2:\n\n```\nInput: n = 00000000000000000000000000000001\nOutput: 2147483648 (10000000000000000000000000000000)\n```\n\nConstraints:\n\n* The input is a binary string of length `32`.","ex2":{"input":"0","output":"0","why":"Zero reversed is still zero."}};
+window.PROBLEM = {
+ "id": "190",
+ "title": "Reverse Bits",
+ "level": "Easy",
+ "topic": "Bit Manipulation",
+ "question": "Reverse the 32 bits of a number.",
+ "why": "(Shown with 8 bits.) 00001011 reversed is 11010000.",
+ "idea": "Repeat: take the last bit of n and push it onto the end of the result.",
+ "input": "00001011 (shown as 8 bits)",
+ "output": "11010000",
+ "notes": [],
+ "best": "Repeat: take the last bit of n and push it onto the end of the result.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def reverseBits(self, n):\n        res = 0\n        for _ in range(32):\n            res = (res << 1) | (n & 1)\n            n >>= 1\n        return res",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Repeat: take the last bit of n and push it onto the end of the result.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "n = 00001011, result = 0.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "n",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1",
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "result",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Step 1",
+     "description": "Last bit of n is 1 → result gets 1.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "n",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "1"
+       ],
+       "hot": [
+        7
+       ],
+       "marks": {}
+      },
+      {
+       "name": "result",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+       ],
+       "hot": [
+        7
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Step 2",
+     "description": "Last bit 1 → result 11.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "n",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0"
+       ],
+       "hot": [
+        7
+       ],
+       "marks": {}
+      },
+      {
+       "name": "result",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1"
+       ],
+       "hot": [
+        6,
+        7
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Step 3",
+     "description": "Last bit 0 → result 110.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "n",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1"
+       ],
+       "hot": [
+        7
+       ],
+       "marks": {}
+      },
+      {
+       "name": "result",
+       "cells": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "1",
+        "1",
+        "0"
+       ],
+       "hot": [
+        5,
+        6,
+        7
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Finish",
+     "description": "After all bits: 11010000.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "result",
+       "cells": [
+        "1",
+        "1",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0"
+       ],
+       "hot": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

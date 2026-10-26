@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2001","title":"Number of Pairs of Interchangeable Rectangles","level":"Medium","topic":"Hash Map / Set","question":"Two rectangles are interchangeable if their width/height ratios are equal. Return the number of pairs (i < j) of interchangeable rectangles. Example: [[4,8],[3,6],[10,20],[15,30]] → 6.","why":"[[4,8],[3,6],[10,20],[15,30]] → all have ratio 1:2 → 6 pairs.","idea":"Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.","input":"rectangles = [[4,8],[3,6],[10,20],[15,30]]","output":"6","notes":[],"best":"Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.","variants":[{"name":"Group by reduced width / height ratio","code":"class Solution:\n    def interchangeableRectangles(self, rectangles):\n        cnt = Counter((w // gcd(w, h), h // gcd(w, h)) for w, h in rectangles)\n        return sum(c * (c - 1) // 2 for c in cnt.values())","time":"O(n log V)","space":"O(n)","explain":"Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0],"cnt":["d",[[["l",[1,2],1],4]]]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0],"cnt":["d",[[["l",[1,2],1],4]]]},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0],"cnt":["d",[[["l",[4,5],1],1],[["l",[7,8],1],1]]]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0],"cnt":["d",[[["l",[4,5],1],1],[["l",[7,8],1],1]]]},"ret":0}],"trunc":false}},{"name":"Compare every pair","tag":"Brute force","code":"class Solution:\n    def interchangeableRectangles(self, rectangles):\n        n = len(rectangles)\n        return sum(1 for i in range(n) for j in range(i + 1, n)\n                   if rectangles[i][0] * rectangles[j][1] == rectangles[j][0] * rectangles[i][1])","time":"O(n²)","space":"O(1)","explain":"Cross-multiply to compare ratios.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0],"n":4}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,8],0],["l",[3,6],0],["l",[10,20],0],["l",[15,30],0]],0],"n":4},"ret":6}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0]}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0],"n":2}},{"l":4,"d":1,"f":1,"v":{"rectangles":["l",[["l",[4,5],0],["l",[7,8],0]],0],"n":2},"ret":0}],"trunc":false}}],"ex2":{"input":"no pairs","output":"0","why":"Different ratios."}};
+window.PROBLEM = {
+ "id": "2001",
+ "title": "Number of Pairs of Interchangeable Rectangles",
+ "level": "Medium",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "[[4,8],[3,6],[10,20],[15,30]] → all have ratio 1:2 → 6 pairs.",
+ "idea": "Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.",
+ "input": "rectangles = [[4,8],[3,6],[10,20],[15,30]]",
+ "output": "6",
+ "notes": [],
+ "best": "Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.",
+ "variants": [
+  {
+   "name": "Group by reduced width / height ratio",
+   "code": "class Solution:\n    def interchangeableRectangles(self, rectangles):\n        cnt = Counter((w // gcd(w, h), h // gcd(w, h)) for w, h in rectangles)\n        return sum(c * (c - 1) // 2 for c in cnt.values())",
+   "time": "O(n log V)",
+   "space": "O(n)",
+   "explain": "Two rectangles are interchangeable when width/height is the same. Reduce each (w, h) by their gcd to get a canonical ratio and count; a group of c rectangles gives c(c−1)/2 pairs.",
+   "frames": []
+  }
+ ]
+};

@@ -1,1 +1,218 @@
-window.PROBLEM = {"id":"735","title":"Asteroid Collision","level":"Medium","topic":"Stack","question":"asteroids is a list of integers. The absolute value is an asteroid's size; the sign is its direction (positive = moving right, negative = moving left); all move at the same speed. When two asteroids meet, the smaller explodes; if equal in size both explode; asteroids moving in the same direction never meet. Return the asteroids left after all collisions. Example: [5,10,-5,-12] → -5 hits 10 and explodes; -12 destroys both 10 and 5 → [-12].","input":"[5, 10, -5, -12]","output":"[-12]","notes":["Collision needs stack top > 0 and new a < 0.","while/else: else runs only if no break."],"best":"Stack of survivors; collisions only happen at the top.","variants":[{"name":"Stack of survivors","code":"class Solution:\n    def asteroidCollision(self, asteroids):\n        stack = []\n        for a in asteroids:\n            while stack and a < 0 < stack[-1]:\n                if stack[-1] < -a:\n                    stack.pop(); continue\n                if stack[-1] == -a: stack.pop()\n                break\n            else:\n                stack.append(a)\n        return stack","time":"O(n)","space":"O(n)","explain":"Only a left-mover meeting a right-mover on top collides.","frames":[{"title":"Input","description":"5 and 10 go right; -5 and -12 go left.","codeLines":[3],"facts":{},"rows":[{"name":"asteroids","cells":["5","10","-5","-12"],"hot":[],"marks":{}},{"name":"stack","cells":["·"],"hot":[],"marks":{}}]},{"title":"a = 5","description":"No collision. Push 5.","codeLines":[5,11],"facts":{},"rows":[{"name":"asteroids","cells":["5","10","-5","-12"],"hot":[0],"marks":{"0":"a"}},{"name":"stack","cells":["5"],"hot":[0],"marks":{}}]},{"title":"a = 10","description":"No collision. Push 10.","codeLines":[5,11],"facts":{},"rows":[{"name":"asteroids","cells":["5","10","-5","-12"],"hot":[1],"marks":{"1":"a"}},{"name":"stack","cells":["5","10"],"hot":[1],"marks":{}}]},{"title":"a = -5","description":"New -5 destroyed. ","codeLines":[5,11],"facts":{},"rows":[{"name":"asteroids","cells":["5","10","-5","-12"],"hot":[2],"marks":{"2":"a"}},{"name":"stack","cells":["5","10"],"hot":[],"marks":{}}]},{"title":"a = -12","description":"Top 10 destroyed. Top 5 destroyed. Push -12.","codeLines":[5,11],"facts":{},"rows":[{"name":"asteroids","cells":["5","10","-5","-12"],"hot":[3],"marks":{"3":"a"}},{"name":"stack","cells":["-12"],"hot":[0],"marks":{}}]},{"title":"Return","description":"Survivors.","codeLines":[12],"facts":{},"rows":[{"name":"answer","cells":["-12"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0]}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[],0],"a":5}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[],0],"a":5}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":5}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":10}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":10}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":10}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-5}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-5}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-5}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-5}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-12}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-12}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5,10],0],"a":-12}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":-12}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":-12}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[5],0],"a":-12}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[],0],"a":-12}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[],0],"a":-12}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[-12],0],"a":-12}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[-12],0],"a":-12}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"stack":["l",[-12],0],"a":-12},"ret":["l",[-12],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0]}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":8}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":8}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[8],0],"a":8}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[8],0],"a":-8}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[8],0],"a":-8}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[8],0],"a":-8}},{"l":9,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":-8}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":-8}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":-8}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"stack":["l",[],0],"a":-8},"ret":["l",[],0]}],"trunc":false}},{"name":"Repeat until nothing collides","tag":"Brute force","code":"class Solution:\n    def asteroidCollision(self, asteroids):\n        a = list(asteroids); changed = True\n        while changed:\n            changed = False\n            for i in range(len(a) - 1):\n                if a[i] > 0 and a[i + 1] < 0:\n                    if a[i] > -a[i + 1]: a.pop(i + 1)\n                    elif a[i] < -a[i + 1]: a.pop(i)\n                    else: a.pop(i); a.pop(i)\n                    changed = True\n                    break\n        return a","time":"O(n²)","space":"O(n)","explain":"Find a right-mover followed by a left-mover, resolve it, and rescan.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0]}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":true}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":true}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":false}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":false,"i":0}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":false,"i":0}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":false,"i":1}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-5,-12],0],"changed":false,"i":1}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":1}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":true,"i":1}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":true,"i":1}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":true,"i":1}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":1}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":0}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":0}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":1}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":1}},{"l":9,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,10,-12],0],"changed":false,"i":1}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":false,"i":1}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":true,"i":1}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":true,"i":1}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":true,"i":1}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":false,"i":1}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":false,"i":0}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":false,"i":0}},{"l":9,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[5,-12],0],"changed":false,"i":0}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":false,"i":0}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":true,"i":0}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":true,"i":0}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":true,"i":0}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":false,"i":0}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":false,"i":0}},{"l":13,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":false,"i":0}},{"l":13,"d":1,"f":1,"v":{"asteroids":["l",[5,10,-5,-12],0],"a":["l",[-12],0],"changed":false,"i":0},"ret":["l",[-12],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0]}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":true}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":true}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":false}},{"l":7,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":false,"i":0}},{"l":8,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":false,"i":0}},{"l":9,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":false,"i":0}},{"l":10,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[8,-8],0],"changed":false,"i":0}},{"l":11,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":false,"i":0}},{"l":12,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":true,"i":0}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":true,"i":0}},{"l":5,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":true,"i":0}},{"l":6,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":false,"i":0}},{"l":4,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":false,"i":0}},{"l":13,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":false,"i":0}},{"l":13,"d":1,"f":1,"v":{"asteroids":["l",[8,-8],0],"a":["l",[],0],"changed":false,"i":0},"ret":["l",[],0]}],"trunc":false}}],"why":"[5,10,-5,-12]: -5 hits 10 and explodes. -12 hits 10, then 5, and destroys both. Only -12 is left.","idea":"Keep a stack of survivors. Collisions only happen with the top of the stack.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["stack","Asteroids that survive so far, in order",""],["a < 0 < stack[-1]","Chained comparison: a collision happens only when the new asteroid moves left and the top moves right","Detecting a collision"],["stack[-1] < -a: pop; continue","The top is smaller, so it explodes; check the next one","Repeated collisions"],["stack[-1] == -a: pop; break","Equal sizes: both explode",""],["while … else: append","The `else` of a `while` runs when the loop ends WITHOUT `break`; the asteroid survives and is pushed","Python's while/else"]]}},{"h":"Walk through an example","p":["`[5, 10, -5, -12]`:"],"table":{"head":["asteroid","event","stack"],"rows":[["5","pushed","[5]"],["10","pushed","[5, 10]"],["-5","destroyed by 10","[5, 10]"],["-12","destroys 10, destroys 5, pushed","[-12]"]]}},{"h":"Why `while … else` and why a stack?","p":["The new asteroid may destroy several in a row, so a loop is needed, and `break` signals that it was destroyed (or both were). If it exits normally, nothing is left to hit and it is pushed. The stack holds the right-moving asteroids that could still collide with future left-movers, and the most recent one collides first."]},{"h":"Time and space","bullets":["Time: O(n), each asteroid is pushed and popped at most once.","Space: O(n)."]}],"takeaway":"Stack of survivors: a left-mover pops smaller right-movers; Python's while/else pushes it only if it was never stopped."},"statement":"Asteroids move along a line. In the array `asteroids`, the absolute value is the size and the sign is the direction (positive moves right, negative moves left). All move at the same speed. When two collide the smaller one explodes; if they are the same size both explode. Asteroids moving the same way never meet. Return the asteroids that remain after all collisions.\n\nExample 1:\n\n```\nInput: asteroids = [5,10,-5]\nOutput: [5,10]\n```\n\nExample 2:\n\n```\nInput: asteroids = [10,2,-5]\nOutput: [10]\n```\n\nConstraints:\n\n* `2 <= asteroids.length <= 10^4`\n* `-1000 <= asteroids[i] <= 1000`\n* `asteroids[i] != 0`","ex2":{"input":"[8,-8]","output":"[]","why":"Equal sizes meeting head-on: both explode → nothing left."}};
+window.PROBLEM = {
+ "id": "735",
+ "title": "Asteroid Collision",
+ "level": "Medium",
+ "topic": "Stack",
+ "question": "Positive moves right, negative moves left. Smaller explodes; equal both explode. Final state?",
+ "input": "[5, 10, -5, -12]",
+ "output": "[-12]",
+ "notes": [
+  "Collision needs stack top > 0 and new a < 0.",
+  "while/else: else runs only if no break."
+ ],
+ "best": "Stack of survivors; collisions only happen at the top.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def asteroidCollision(self, asteroids):\n        stack = []\n        for a in asteroids:\n            while stack and a < 0 < stack[-1]:\n                if stack[-1] < -a:\n                    stack.pop(); continue\n                if stack[-1] == -a: stack.pop()\n                break\n            else:\n                stack.append(a)\n        return stack",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Only a left-mover meeting a right-mover on top collides.",
+   "frames": [
+    {
+     "title": "Input",
+     "description": "5 and 10 go right; -5 and -12 go left.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "asteroids",
+       "cells": [
+        "5",
+        "10",
+        "-5",
+        "-12"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "a = 5",
+     "description": "No collision. Push 5.",
+     "codeLines": [
+      5,
+      11
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "asteroids",
+       "cells": [
+        "5",
+        "10",
+        "-5",
+        "-12"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "0": "a"
+       }
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "a = 10",
+     "description": "No collision. Push 10.",
+     "codeLines": [
+      5,
+      11
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "asteroids",
+       "cells": [
+        "5",
+        "10",
+        "-5",
+        "-12"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {
+        "1": "a"
+       }
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "5",
+        "10"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "a = -5",
+     "description": "New -5 destroyed. ",
+     "codeLines": [
+      5,
+      11
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "asteroids",
+       "cells": [
+        "5",
+        "10",
+        "-5",
+        "-12"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "2": "a"
+       }
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "5",
+        "10"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "a = -12",
+     "description": "Top 10 destroyed. Top 5 destroyed. Push -12.",
+     "codeLines": [
+      5,
+      11
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "asteroids",
+       "cells": [
+        "5",
+        "10",
+        "-5",
+        "-12"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "a"
+       }
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "-12"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Survivors.",
+     "codeLines": [
+      12
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "-12"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

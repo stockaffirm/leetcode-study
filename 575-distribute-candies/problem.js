@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"575","title":"Distribute Candies","level":"Easy","topic":"Hash Map / Set","question":"Alice may eat n/2 of her n candies. Return the maximum number of different kinds she can eat. Example: [1,1,2,2,3,3] → 3.","why":"[1,1,2,2,3,3]: 3 kinds, may eat 3 candies → 3.","idea":"Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).","input":"candyType = [1,1,2,2,3,3]","output":"3","notes":[],"best":"Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).","variants":[{"name":"min(n/2, number of kinds)","code":"class Solution:\n    def distributeCandies(self, candyType):\n        return min(len(set(candyType)), len(candyType) // 2)","time":"O(n)","space":"O(n)","explain":"Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0]}},{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0]}},{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0]},"ret":2}],"trunc":false}},{"name":"Sort and count changes","tag":"Alternative","code":"class Solution:\n    def distributeCandies(self, candyType):\n        s = sorted(candyType)\n        kinds = 1 + sum(a != b for a, b in zip(s, s[1:]))\n        return min(kinds, len(s) // 2)","time":"O(n log n)","space":"O(1)","explain":"Count distinct values in sorted order.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0]}},{"l":4,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0],"s":["l",[1,1,2,2,3,3],0]}},{"l":5,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0],"s":["l",[1,1,2,2,3,3],0],"kinds":3}},{"l":5,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,2,3,3],0],"s":["l",[1,1,2,2,3,3],0],"kinds":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0],"s":["l",[1,1,2,3],0]}},{"l":5,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0],"s":["l",[1,1,2,3],0],"kinds":3}},{"l":5,"d":1,"f":1,"v":{"candyType":["l",[1,1,2,3],0],"s":["l",[1,1,2,3],0],"kinds":3},"ret":2}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`set(candyType)`","The distinct candy types","Count unique items"],["`len(candyType) // 2`","She may eat only half of the candies","The budget"],["`min(types, budget)`","She can't eat more types than exist, and can't eat more candies than allowed","Two upper bounds; the smaller one is achievable"]]}},{"h":"Walk through an example","p":["`candyType = [1,1,2,2,3,3]`:"],"table":{"head":["Quantity","Value"],"rows":[["distinct types","3"],["allowed to eat","3"],["answer = min","3"]]}},{"h":"Why is the minimum always achievable?","p":["If there are at least as many types as the allowed number of candies, she eats one of each of `n/2` different types. Otherwise she can take one of every type and fill the rest with duplicates. Either way she reaches the smaller of the two bounds."],"table":{"head":["Case","Answer"],"rows":[["types ≥ n/2","n/2"],["types < n/2","types"]]}},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n) for the set."]}],"takeaway":"Distribute candies: the answer is the smaller of the number of distinct types and half the number of candies."},"ex2":{"input":"limited by n/2","output":"2","why":"2."}};
+window.PROBLEM = {
+ "id": "575",
+ "title": "Distribute Candies",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "[1,1,2,2,3,3]: 3 kinds, may eat 3 candies → 3.",
+ "idea": "Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).",
+ "input": "candyType = [1,1,2,2,3,3]",
+ "output": "3",
+ "notes": [],
+ "best": "Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).",
+ "variants": [
+  {
+   "name": "min(n/2, number of kinds)",
+   "code": "class Solution:\n    def distributeCandies(self, candyType):\n        return min(len(set(candyType)), len(candyType) // 2)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Alice can eat n/2 candies. She gets the most types by eating different ones: min(number of distinct types, n/2).",
+   "frames": []
+  }
+ ]
+};

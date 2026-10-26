@@ -1,1 +1,307 @@
-window.PROBLEM = {"id":"112","title":"Path Sum","level":"Easy","topic":"Binary Tree - General","question":"Given the root of a binary tree and a number targetSum, return true if some path from the ROOT down to a LEAF (a node with no children) has values that add up to targetSum. Example: [5,4,8,11,null,13,4,7,2], target=22 → 5 + 4 + 11 + 2 = 22 → true. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)","why":"Target 22: 5 → 4 → 11 → 2 = 22 → True.","idea":"Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.","input":"[5,4,8,11,null,13,4,7,2], target=22","output":"True","notes":[],"best":"Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.","variants":[{"name":"Recursive remainder","code":"class Solution:\n    def hasPathSum(self, root, target):\n        if not root: return False\n        if not root.left and not root.right: return root.val == target\n        return self.hasPathSum(root.left, target - root.val) or self.hasPathSum(root.right, target - root.val)","time":"O(n)","space":"O(h)","explain":"Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.","frames":[{"title":"Tree","description":"Target = 22.","codeLines":[2],"facts":{"target":22},"rows":[{"name":"level 0","cells":["5"],"hot":[],"marks":{}},{"name":"level 1","cells":["4","8"],"hot":[],"marks":{}},{"name":"level 2","cells":["11","·","13","4"],"hot":[],"marks":{}},{"name":"level 3","cells":["7","2","·","·","·","·","·","·"],"hot":[],"marks":{}}]},{"title":"At 5","description":"Remaining 22 − 5 = 17.","codeLines":[5],"facts":{"remaining":17},"rows":[{"name":"level 0","cells":["5"],"hot":[0],"marks":{}},{"name":"level 1","cells":["4","8"],"hot":[],"marks":{}},{"name":"level 2","cells":["11","·","13","4"],"hot":[],"marks":{}},{"name":"level 3","cells":["7","2","·","·","·","·","·","·"],"hot":[],"marks":{}}]},{"title":"At 4","description":"17 − 4 = 13.","codeLines":[5],"facts":{"remaining":13},"rows":[{"name":"level 0","cells":["5"],"hot":[],"marks":{}},{"name":"level 1","cells":["4","8"],"hot":[0],"marks":{}},{"name":"level 2","cells":["11","·","13","4"],"hot":[],"marks":{}},{"name":"level 3","cells":["7","2","·","·","·","·","·","·"],"hot":[],"marks":{}}]},{"title":"At 11","description":"13 − 11 = 2.","codeLines":[5],"facts":{"remaining":2},"rows":[{"name":"level 0","cells":["5"],"hot":[],"marks":{}},{"name":"level 1","cells":["4","8"],"hot":[],"marks":{}},{"name":"level 2","cells":["11","·","13","4"],"hot":[0],"marks":{}},{"name":"level 3","cells":["7","2","·","·","·","·","·","·"],"hot":[],"marks":{}}]},{"title":"Leaf 2","description":"Leaf value 2 == remaining 2 → True.","codeLines":[4],"facts":{"remaining":2},"rows":[{"name":"level 0","cells":["5"],"hot":[],"marks":{}},{"name":"level 1","cells":["4","8"],"hot":[],"marks":{}},{"name":"level 2","cells":["11","·","13","4"],"hot":[],"marks":{}},{"name":"level 3","cells":["7","2","·","·","·","·","·","·"],"hot":[1],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22}},{"l":3,"d":2,"f":2,"v":{"root":["T",[[4],[11,null],[7,2,null,null]]],"target":17}},{"l":4,"d":2,"f":2,"v":{"root":["T",[[4],[11,null],[7,2,null,null]]],"target":17}},{"l":5,"d":2,"f":2,"v":{"root":["T",[[4],[11,null],[7,2,null,null]]],"target":17}},{"l":3,"d":3,"f":3,"v":{"root":["T",[[11],[7,2]]],"target":13}},{"l":4,"d":3,"f":3,"v":{"root":["T",[[11],[7,2]]],"target":13}},{"l":5,"d":3,"f":3,"v":{"root":["T",[[11],[7,2]]],"target":13}},{"l":3,"d":4,"f":4,"v":{"root":["T",[[7]]],"target":2}},{"l":4,"d":4,"f":4,"v":{"root":["T",[[7]]],"target":2}},{"l":4,"d":4,"f":4,"v":{"root":["T",[[7]]],"target":2},"ret":false},{"l":3,"d":4,"f":5,"v":{"root":["T",[[2]]],"target":2}},{"l":4,"d":4,"f":5,"v":{"root":["T",[[2]]],"target":2}},{"l":4,"d":4,"f":5,"v":{"root":["T",[[2]]],"target":2},"ret":true},{"l":5,"d":3,"f":3,"v":{"root":["T",[[11],[7,2]]],"target":13},"ret":true},{"l":5,"d":2,"f":2,"v":{"root":["T",[[4],[11,null],[7,2,null,null]]],"target":17},"ret":true},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5}},{"l":3,"d":2,"f":2,"v":{"root":["T",[[2]]],"target":4}},{"l":4,"d":2,"f":2,"v":{"root":["T",[[2]]],"target":4}},{"l":4,"d":2,"f":2,"v":{"root":["T",[[2]]],"target":4},"ret":false},{"l":3,"d":2,"f":3,"v":{"root":["T",[[3]]],"target":4}},{"l":4,"d":2,"f":3,"v":{"root":["T",[[3]]],"target":4}},{"l":4,"d":2,"f":3,"v":{"root":["T",[[3]]],"target":4},"ret":false},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5},"ret":false}],"trunc":false}},{"name":"Iterative DFS","tag":"Alternative","code":"class Solution:\n    def hasPathSum(self, root, target):\n        if not root: return False\n        st = [(root, root.val)]\n        while st:\n            n, s = st.pop()\n            if not n.left and not n.right and s == target: return True\n            if n.right: st.append((n.right, s + n.right.val))\n            if n.left: st.append((n.left, s + n.left.val))\n        return False","time":"O(n)","space":"O(h)","explain":"Stack of (node, sum so far).","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],5],1]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],5],1]],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[],0],"n":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"s":5}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[],0],"n":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"s":5}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"s":5}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[4],[11,null],[7,2,null,null]]],9],1]],0],"n":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"s":5}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[4],[11,null],[7,2,null,null]]],9],1]],0],"n":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"s":5}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[4],[11,null],[7,2,null,null]]],"s":9}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[4],[11,null],[7,2,null,null]]],"s":9}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[4],[11,null],[7,2,null,null]]],"s":9}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[11],[7,2]]],20],1]],0],"n":["T",[[4],[11,null],[7,2,null,null]]],"s":9}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[11],[7,2]]],20],1]],0],"n":["T",[[4],[11,null],[7,2,null,null]]],"s":9}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[11],[7,2]]],"s":20}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[11],[7,2]]],"s":20}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[11],[7,2]]],"s":20}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1],["l",[["T",[[7]]],27],1]],0],"n":["T",[[11],[7,2]]],"s":20}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1],["l",[["T",[[7]]],27],1]],0],"n":["T",[[11],[7,2]]],"s":20}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[7]]],"s":27}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[7]]],"s":27}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[7]]],"s":27}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[7]]],"s":27}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1],["l",[["T",[[2]]],22],1]],0],"n":["T",[[7]]],"s":27}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[2]]],"s":22}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[5],[4,8],[11,null,13,4],[7,2,null,null,null,null,null,null]]],"target":22,"st":["l",[["l",[["T",[[8],[13,4]]],13],1]],0],"n":["T",[[2]]],"s":22},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[1],[2,3]]],1],1]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[1],[2,3]]],1],1]],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[1],[2,3]]],"s":1}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[1],[2,3]]],"s":1}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[1],[2,3]]],"s":1}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1],["l",[["T",[[2]]],3],1]],0],"n":["T",[[1],[2,3]]],"s":1}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1],["l",[["T",[[2]]],3],1]],0],"n":["T",[[1],[2,3]]],"s":1}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[2]]],"s":3}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[2]]],"s":3}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[2]]],"s":3}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[2]]],"s":3}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[["l",[["T",[[3]]],4],1]],0],"n":["T",[[2]]],"s":3}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3]]],"target":5,"st":["l",[],0],"n":["T",[[3]]],"s":4},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`not root`","Empty tree/child","An empty tree has no path, so `False`"],["`not root.left and not root.right`","Leaf test: no children","The problem requires the path to end at a leaf"],["`target - root.val`","Remaining sum needed below this node","Carry a shrinking target instead of an accumulated sum"],["`A or B`","Short-circuit: B is skipped when A is True","Stop searching as soon as one valid path is found"]]}},{"h":"Walk through an example","p":["Tree `[5,4,8,11,null,13,4,7,2]`, target 22. The calls in order (depth, node, remaining target). The search stops at the first True, so the right subtrees are never visited:"],"table":{"head":["Depth","Node","Target left","Outcome"],"rows":[["0","5","22","not a leaf → try children with target − val = 17"],["1","4","17","not a leaf → try children with target − val = 13"],["2","11","13","not a leaf → try children with target − val = 2"],["3","7","2","leaf: 7 == 2 → False"],["3","2","2","leaf: 2 == 2 → True"]]}},{"h":"Why must the leaf test come before comparing values?","p":["`[1,2]` with target 1: the root's value matches the target, but the root has a child, so 1 is not a root-to-leaf path. Without the leaf check, the code would return `True` wrongly. Here, the root is not a leaf, so the search continues to its child 2 with target 0: leaf `2 != 0`, giving False."]},{"h":"Why subtract instead of summing up?","p":["Passing `target - root.val` down means every call has only two pieces of state (node, remaining) and the check at the leaf is a simple equality, with no accumulator to undo on return."]},{"h":"Time and space","bullets":["Time: O(n) — every node visited at most once.","Space: O(h) recursion depth (O(n) for a chain)."]}],"takeaway":"Root-to-leaf path sum by recursion: subtract the node from the target on the way down and test equality at a leaf."},"statement":"Given a binary tree and an integer `targetSum`, return `true` if there is a path from the root down to some leaf whose node values add up to `targetSum`, and `false` otherwise. A leaf is a node with no children. Trees are written level by level in the examples, with `null` for a missing child.\n\nExample 1:\n\n```\nInput: root = [1,2,3], targetSum = 4\nOutput: true\n```\n\nExample 2:\n\n```\nInput: root = [1,2], targetSum = 1\nOutput: false\n```\n\nConstraints:\n\n* The number of nodes is in the range `[0, 5000]`.\n* `-1000 <= Node.val <= 1000`\n* `-1000 <= targetSum <= 1000`","ex2":{"input":"[1,2,3],5","output":"False","why":"Paths sum to 3 and 4 only → False."}};
+window.PROBLEM = {
+ "id": "112",
+ "title": "Path Sum",
+ "level": "Easy",
+ "topic": "Binary Tree - General",
+ "question": "Is there a root-to-leaf path whose values add up to the target?",
+ "why": "Target 22: 5 → 4 → 11 → 2 = 22 → True.",
+ "idea": "Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.",
+ "input": "[5,4,8,11,null,13,4,7,2], target=22",
+ "output": "True",
+ "notes": [],
+ "best": "Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def hasPathSum(self, root, target):\n        if not root: return False\n        if not root.left and not root.right: return root.val == target\n        return self.hasPathSum(root.left, target - root.val) or self.hasPathSum(root.right, target - root.val)",
+   "time": "O(n)",
+   "space": "O(h)",
+   "explain": "Subtract each node's value from the target as you go down; at a leaf the remainder must be 0.",
+   "frames": [
+    {
+     "title": "Tree",
+     "description": "Target = 22.",
+     "codeLines": [
+      2
+     ],
+     "facts": {
+      "target": 22
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "5"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "4",
+        "8"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "11",
+        "·",
+        "13",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 3",
+       "cells": [
+        "7",
+        "2",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "At 5",
+     "description": "Remaining 22 − 5 = 17.",
+     "codeLines": [
+      5
+     ],
+     "facts": {
+      "remaining": 17
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "4",
+        "8"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "11",
+        "·",
+        "13",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 3",
+       "cells": [
+        "7",
+        "2",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "At 4",
+     "description": "17 − 4 = 13.",
+     "codeLines": [
+      5
+     ],
+     "facts": {
+      "remaining": 13
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "5"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "4",
+        "8"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "11",
+        "·",
+        "13",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 3",
+       "cells": [
+        "7",
+        "2",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "At 11",
+     "description": "13 − 11 = 2.",
+     "codeLines": [
+      5
+     ],
+     "facts": {
+      "remaining": 2
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "5"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "4",
+        "8"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "11",
+        "·",
+        "13",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 3",
+       "cells": [
+        "7",
+        "2",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Leaf 2",
+     "description": "Leaf value 2 == remaining 2 → True.",
+     "codeLines": [
+      4
+     ],
+     "facts": {
+      "remaining": 2
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "5"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "4",
+        "8"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "11",
+        "·",
+        "13",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 3",
+       "cells": [
+        "7",
+        "2",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·",
+        "·"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

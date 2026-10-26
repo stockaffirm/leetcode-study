@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3487","title":"Maximum Unique Subarray Sum After Deletion","level":"Easy","topic":"Greedy","question":"You may delete any elements; then pick a non-empty subarray whose elements are all distinct and maximise its sum. Return that maximum. Example: [1,1,0,1,1] → 1.","why":"[1,1,0,1,1] → keep one 1 → 1.","idea":"After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.","input":"nums = [1,1,0,1,1]","output":"1","notes":[],"best":"After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.","variants":[{"name":"Sum of distinct positive values","code":"class Solution:\n    def maxSum(self, nums):\n        pos = {x for x in nums if x > 0}\n        return sum(pos) if pos else max(nums)","time":"O(n)","space":"O(n)","explain":"After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0],"pos":["S",[1]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0],"pos":["S",[1]]},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[-100],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[-100],0],"pos":["S",[]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[-100],0],"pos":["S",[]]},"ret":-100}],"trunc":false}},{"name":"Sort and unique","tag":"Alternative","code":"class Solution:\n    def maxSum(self, nums):\n        vals = sorted(set(nums))\n        pos = [v for v in vals if v > 0]\n        return sum(pos) if pos else vals[-1]","time":"O(n log n)","space":"O(n)","explain":"Use sorted(set()) and take positives.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0],"vals":["l",[0,1],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0],"vals":["l",[0,1],0],"pos":["l",[1],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,0,1,1],0],"vals":["l",[0,1],0],"pos":["l",[1],0]},"ret":1}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[-100],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[-100],0],"vals":["l",[-100],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[-100],0],"vals":["l",[-100],0],"pos":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[-100],0],"vals":["l",[-100],0],"pos":["l",[],0]},"ret":-100}],"trunc":false}}],"ex2":{"input":"all negative","output":"-100","why":"Only a negative."}};
+window.PROBLEM = {
+ "id": "3487",
+ "title": "Maximum Unique Subarray Sum After Deletion",
+ "level": "Easy",
+ "topic": "Greedy",
+ "question": "",
+ "why": "[1,1,0,1,1] → keep one 1 → 1.",
+ "idea": "After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.",
+ "input": "nums = [1,1,0,1,1]",
+ "output": "1",
+ "notes": [],
+ "best": "After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.",
+ "variants": [
+  {
+   "name": "Sum of distinct positive values",
+   "code": "class Solution:\n    def maxSum(self, nums):\n        pos = {x for x in nums if x > 0}\n        return sum(pos) if pos else max(nums)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "After deleting arbitrary elements you want a subarray with distinct values and the largest sum. Because you may delete anything, take each distinct positive value once; if no positive value exists the best is the largest element.",
+   "frames": []
+  }
+ ]
+};

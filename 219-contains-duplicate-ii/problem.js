@@ -1,1 +1,114 @@
-window.PROBLEM = {"id":"219","title":"Contains Duplicate II","level":"Easy","topic":"Hashmap","question":"Given a list of numbers nums and a number k, return true if the list contains two EQUAL numbers whose positions are at most k apart. Example: nums=[1,2,3,1], k=3 → the two 1s are at positions 0 and 3, which is 3 apart → true.","why":"[1,2,3,1], k = 3: the two 1s are 3 apart → True.","idea":"Remember each number's last position in a dictionary.","input":"[1,2,3,1], k=3","output":"True","notes":[],"best":"Remember each number's last position in a dictionary.","variants":[{"name":"Last-seen map","code":"class Solution:\n    def containsNearbyDuplicate(self, nums, k):\n        last = {}\n        for i, x in enumerate(nums):\n            if x in last and i - last[x] <= k: return True\n            last[x] = i\n        return False","time":"O(n)","space":"O(n)","explain":"Remember each number's last position in a dictionary.","frames":[{"title":"Start","description":"Track the last index of each value.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[],"marks":{}}]},{"title":"1, 2, 3","description":"All new → record positions.","codeLines":[6],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[0,1,2],"marks":{}},{"name":"last","cells":["1→0","2→1","3→2"],"hot":[],"marks":{}}],"sub":[{"description":"last[0] = 1→0","codeLines":[6],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[0,1,2],"marks":{}},{"name":"last","cells":["1→0","·","·"],"hot":[0],"marks":{}}]},{"description":"last[1] = 2→1","codeLines":[6],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[0,1,2],"marks":{}},{"name":"last","cells":["1→0","2→1","·"],"hot":[1],"marks":{}}]},{"description":"last[2] = 3→2. All new → record positions.","codeLines":[6],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[0,1,2],"marks":{}},{"name":"last","cells":["1→0","2→1","3→2"],"hot":[2],"marks":{}}]}]},{"title":"Second 1","description":"Last seen at 0; distance 3 − 0 = 3 ≤ k → True.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["1","2","3","1"],"hot":[0,3],"marks":{}},{"name":"last","cells":["1→0","2→1","3→2"],"hot":[],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[]],"i":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[]],"i":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0]]],"i":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0]]],"i":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0]]],"i":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1]]],"i":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1]]],"i":2,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1]]],"i":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1],[3,2]]],"i":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1],[3,2]]],"i":3,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"last":["d",[[1,0],[2,1],[3,2]]],"i":3,"x":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[]],"i":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[]],"i":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0]]],"i":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0]]],"i":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0]]],"i":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1]]],"i":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1]]],"i":2,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1]]],"i":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1],[3,2]]],"i":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1],[3,2]]],"i":3,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,0],[2,1],[3,2]]],"i":3,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,1],[3,2]]],"i":3,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,1],[3,2]]],"i":4,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,1],[3,2]]],"i":4,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,2]]],"i":4,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,2]]],"i":5,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,2]]],"i":5,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,5]]],"i":5,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,5]]],"i":5,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"last":["d",[[1,3],[2,4],[3,5]]],"i":5,"x":3},"ret":false}],"trunc":false}},{"name":"Sliding window set","tag":"Alternative","code":"class Solution:\n    def containsNearbyDuplicate(self, nums, k):\n        win = set()\n        for i, x in enumerate(nums):\n            if x in win: return True\n            win.add(x)\n            if len(win) > k: win.remove(nums[i - k])\n        return False","time":"O(n)","space":"O(k)","explain":"Keep only the last k numbers in a set.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[]],"i":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[]],"i":0,"x":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1]],"i":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1]],"i":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1]],"i":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1]],"i":1,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2]],"i":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2]],"i":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2]],"i":2,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2]],"i":2,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2,3]],"i":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2,3]],"i":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2,3]],"i":3,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"win":["S",[1,2,3]],"i":3,"x":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[]],"i":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[]],"i":0,"x":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1]],"i":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1]],"i":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1]],"i":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1]],"i":1,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":2,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":2,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2,3]],"i":2,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":3,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":3,"x":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2,3]],"i":3,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,3]],"i":3,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,3]],"i":4,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,3]],"i":4,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2,3]],"i":4,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":4,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":5,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2]],"i":5,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[1,2,3]],"i":5,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":5,"x":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":5,"x":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"win":["S",[2,3]],"i":5,"x":3},"ret":false}],"trunc":false}},{"name":"Brute force","tag":"Brute force","code":"class Solution:\n    def containsNearbyDuplicate(self, nums, k):\n        for i in range(len(nums)):\n            for j in range(i + 1, min(len(nums), i + k + 1)):\n                if nums[i] == nums[j]: return True\n        return False","time":"O(n·k)","space":"O(1)","explain":"Compare each number with the next k numbers.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1],0],"k":3,"i":0,"j":3},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0,"j":2}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":0,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":3}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":1,"j":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":4}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":2,"j":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":5}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":3,"j":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":4,"j":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":4,"j":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":4,"j":5}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":4,"j":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":5,"j":5}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":5,"j":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":5,"j":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,2,3,1,2,3],0],"k":2,"i":5,"j":5},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["last = {}","Dict value → most recent index where it occurred","Remembering the last position of each item"],["x in last and i - last[x] <= k","Seen before, and close enough",""],["last[x] = i","Always overwrites with the newest index, so later checks measure the smallest possible gap",""],["enumerate(nums)","Index and value together",""]]}},{"h":"Walk through an example","p":["`nums = [1,2,3,1]`, `k = 3`:"],"table":{"head":["i","x","last index","gap","result"],"rows":[["0","1","–","–","no"],["1","2","–","–","no"],["2","3","–","–","no"],["3","1","0","3","True"]]}},{"h":"Why only the latest index per value?","p":["For a repeated value, the closest earlier equal element is the most recent one. If the most recent occurrence is farther than k, every older one is farther still, so remembering older indices adds nothing."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n) for the dict. A fixed-size sliding window set of size k reaches O(k) space."]}],"takeaway":"Hash map of last-seen index: the nearest previous duplicate decides whether a close pair exists."},"statement":"Given an integer array `nums` and an integer `k`, return `true` if two different indexes `i` and `j` exist with `nums[i] == nums[j]` and `abs(i - j) <= k`.\n\nExample 1:\n\n```\nInput: nums = [1,0,1,1], k = 1\nOutput: true\n```\n\nExample 2:\n\n```\nInput: nums = [1,2,1], k = 1\nOutput: false\n```\n\nConstraints:\n\n* `1 <= nums.length <= 10^5`\n* `-10^9 <= nums[i] <= 10^9`\n* `0 <= k <= 10^5`","ex2":{"input":"[1,2,3,1,2,3],2","output":"False","why":"Equal numbers are 3 apart, more than k = 2 → False."}};
+window.PROBLEM = {
+ "id": "219",
+ "title": "Contains Duplicate II",
+ "level": "Easy",
+ "topic": "Hashmap",
+ "question": "Are there two equal numbers whose positions differ by at most k?",
+ "why": "[1,2,3,1], k = 3: the two 1s are 3 apart → True.",
+ "idea": "Remember each number's last position in a dictionary.",
+ "input": "[1,2,3,1], k=3",
+ "output": "True",
+ "notes": [],
+ "best": "Remember each number's last position in a dictionary.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def containsNearbyDuplicate(self, nums, k):\n        last = {}\n        for i, x in enumerate(nums):\n            if x in last and i - last[x] <= k: return True\n            last[x] = i\n        return False",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Remember each number's last position in a dictionary.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Track the last index of each value.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "1, 2, 3",
+     "description": "All new → record positions.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "1"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "last",
+       "cells": [
+        "1→0",
+        "2→1",
+        "3→2"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Second 1",
+     "description": "Last seen at 0; distance 3 − 0 = 3 ≤ k → True.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "1"
+       ],
+       "hot": [
+        0,
+        3
+       ],
+       "marks": {}
+      },
+      {
+       "name": "last",
+       "cells": [
+        "1→0",
+        "2→1",
+        "3→2"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

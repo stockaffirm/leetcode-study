@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3731","title":"Find Missing Elements","level":"Easy","topic":"Hash Map / Set","question":"Return all integers between the smallest and largest element of nums that are missing from nums, in increasing order. Example: [1,4,2,5] → [3].","why":"[1,4,2,5] → 3 is missing.","idea":"The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).","input":"nums = [1,4,2,5]","output":"[3]","notes":[],"best":"The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).","variants":[{"name":"Numbers between min and max that are absent","code":"class Solution:\n    def findMissingElements(self, nums):\n        s = set(nums)\n        return [x for x in range(min(nums), max(nums) + 1) if x not in s]","time":"O(range)","space":"O(n)","explain":"The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"s":["S",[1,2,4,5]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"s":["S",[1,2,4,5]]},"ret":["l",[3],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"s":["S",[7,8,9]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"s":["S",[7,8,9]]},"ret":["l",[],0]}],"trunc":false}},{"name":"Sorted scan","tag":"Alternative","code":"class Solution:\n    def findMissingElements(self, nums):\n        a = sorted(set(nums))\n        res = []\n        for x, y in zip(a, a[1:]):\n            res.extend(range(x + 1, y))\n        return res","time":"O(n log n)","space":"O(n)","explain":"Sort and list the gaps.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[],0]}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[],0],"x":1,"y":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[],0],"x":1,"y":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[],0],"x":2,"y":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[3],0],"x":2,"y":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[3],0],"x":4,"y":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[3],0],"x":4,"y":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[3],0],"x":4,"y":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,4,2,5],0],"a":["l",[1,2,4,5],0],"res":["l",[3],0],"x":4,"y":5},"ret":["l",[3],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0]}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":7,"y":8}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":7,"y":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":8,"y":9}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":8,"y":9}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":8,"y":9}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[7,8,9],0],"a":["l",[7,8,9],0],"res":["l",[],0],"x":8,"y":9},"ret":["l",[],0]}],"trunc":false}}],"ex2":{"input":"consecutive","output":"[]","why":"Nothing missing."}};
+window.PROBLEM = {
+ "id": "3731",
+ "title": "Find Missing Elements",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "[1,4,2,5] → 3 is missing.",
+ "idea": "The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).",
+ "input": "nums = [1,4,2,5]",
+ "output": "[3]",
+ "notes": [],
+ "best": "The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).",
+ "variants": [
+  {
+   "name": "Numbers between min and max that are absent",
+   "code": "class Solution:\n    def findMissingElements(self, nums):\n        s = set(nums)\n        return [x for x in range(min(nums), max(nums) + 1) if x not in s]",
+   "time": "O(range)",
+   "space": "O(n)",
+   "explain": "The range is from the smallest to the largest element of nums; return the integers in that range that are not in the array (ascending).",
+   "frames": []
+  }
+ ]
+};

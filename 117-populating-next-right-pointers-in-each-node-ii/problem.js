@@ -1,1 +1,223 @@
-window.PROBLEM = {"id":"117","title":"Populating Next Right Pointers in Each Node II","level":"Medium","topic":"Binary Tree - General","question":"Every node of a binary tree has an extra pointer called next. Fill it so each node's next points to the node immediately to its RIGHT on the same level, or to nothing if it is the last one on its level. Example: [1,2,3,4,5,null,7] → 1→nothing; 2→3→nothing; 4→5→7→nothing. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)","why":"Tree [1,2,3,4,5,null,7]: 2→3, 4→5→7, others end.","idea":"Go level by level; link neighbours in each level.","input":"[1,2,3,4,5,null,7]","output":"1→∅, 2→3→∅, 4→5→7→∅","notes":[],"best":"Go level by level; link neighbours in each level.","variants":[{"name":"Level by level with a list","code":"class Solution:\n    def connect(self, root):\n        level = [root] if root else []\n        while level:\n            for a, b in zip(level, level[1:]): a.next = b\n            level = [c for n in level for c in (n.left, n.right) if c]\n        return root","time":"O(n)","space":"O(w)","explain":"Go level by level; link neighbours in each level.","frames":[{"title":"Tree","description":"Link neighbours on each level.","codeLines":[2],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["4","5","·","7"],"hot":[],"marks":{}}]},{"title":"Level 0","description":"Just 1 → nothing to link.","codeLines":[3],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[0],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["4","5","·","7"],"hot":[],"marks":{}}]},{"title":"Level 1","description":"2 → 3","codeLines":[5],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[0,1],"marks":{}},{"name":"level 2","cells":["4","5","·","7"],"hot":[],"marks":{}}]},{"title":"Level 2","description":"4 → 5 → 7","codeLines":[5],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["4","5","·","7"],"hot":[0,1,3],"marks":{}}]},{"title":"Return","description":"All levels linked.","codeLines":[7],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["4","5","·","7"],"hot":[],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"a":["T",[[2],[4,5]]],"b":["T",[[3],[null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"a":["T",[[2],[4,5]]],"b":["T",[[3],[null,7]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"a":["T",[[2],[4,5]]],"b":["T",[[3],[null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"a":["T",[[2],[4,5]]],"b":["T",[[3],[null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"a":["T",[[4]]],"b":["T",[[5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"a":["T",[[5]]],"b":["T",[[7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"a":["T",[[5]]],"b":["T",[[7]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[],0],"a":["T",[[5]]],"b":["T",[[7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[],0],"a":["T",[[5]]],"b":["T",[[7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"level":["l",[],0],"a":["T",[[5]]],"b":["T",[[7]]]},"ret":["T",[[1],[2,3],[4,5,null,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"a":["T",[[2],[4,null]]],"b":["T",[[3],[null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"a":["T",[[2],[4,null]]],"b":["T",[[3],[null,5]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[4]]],["T",[[5]]]],0],"a":["T",[[2],[4,null]]],"b":["T",[[3],[null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[4]]],["T",[[5]]]],0],"a":["T",[[2],[4,null]]],"b":["T",[[3],[null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[4]]],["T",[[5]]]],0],"a":["T",[[4]]],"b":["T",[[5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[["T",[[4]]],["T",[[5]]]],0],"a":["T",[[4]]],"b":["T",[[5]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[],0],"a":["T",[[4]]],"b":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[],0],"a":["T",[[4]]],"b":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"level":["l",[],0],"a":["T",[[4]]],"b":["T",[[5]]]},"ret":["T",[[1],[2,3],[4,null,null,5]]]}],"trunc":false}},{"name":"Walk the previous level's next pointers","tag":"Optimal space","code":"class Solution:\n    def connect(self, root):\n        head = root\n        while head:\n            dummy = TreeNode(); tail = dummy; cur = head\n            while cur:\n                if cur.left: tail.next = cur.left; tail = tail.next\n                if cur.right: tail.next = cur.right; tail = tail.next\n                cur = cur.next\n            head = dummy.next\n        return root","time":"O(n)","space":"O(1)","explain":"Use the already-built next links of one level to connect the level below.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[2],[4,5]]],"cur":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,7]]],"cur":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,7]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[1],[2,3],[4,5,null,7]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,7]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,7]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,7]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[2],[4,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[2],[4,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[2],[4,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":["T",[[2],[4,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":["T",[[3],[null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":["T",[[3],[null,7]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":["T",[[3],[null,7]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[7]]],"cur":["T",[[3],[null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[7]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[2],[4,5]]],"dummy":["T",[[0]]],"tail":["T",[[7]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[7]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[7]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[7]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[7]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null},"ret":["T",[[1],[2,3],[4,5,null,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[2],[4,null]]],"cur":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,5]]],"cur":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,5]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[1],[2,3],[4,null,null,5]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,5]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,5]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[3],[null,5]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[2],[4,null]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[2],[4,null]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[2],[4,null]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[2],[4,null]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[3],[null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[3],[null,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[4]]],"cur":["T",[[3],[null,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":["T",[[3],[null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[2],[4,null]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[5]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":["T",[[5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":["T",[[4]]],"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"head":null,"dummy":["T",[[0]]],"tail":["T",[[0]]],"cur":null},"ret":["T",[[1],[2,3],[4,null,null,5]]]}],"trunc":false}},{"name":"BFS with a queue","tag":"Alternative","code":"class Solution:\n    def connect(self, root):\n        if not root: return root\n        q = deque([root])\n        while q:\n            prev = None\n            for _ in range(len(q)):\n                n = q.popleft()\n                if prev: prev.next = n\n                prev = n\n                if n.left: q.append(n.left)\n                if n.right: q.append(n.right)\n        return root","time":"O(n)","space":"O(w)","explain":"Link each node to the previous one dequeued on its level.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0],"prev":null}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[1],[2,3],[4,5,null,7]]]],0],"prev":null,"_":0}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[1],[2,3],[4,5,null,7]]],"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]]],0],"prev":["T",[[1],[2,3],[4,5,null,7]]],"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"prev":["T",[[1],[2,3],[4,5,null,7]]],"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"prev":["T",[[1],[2,3],[4,5,null,7]]],"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"prev":["T",[[1],[2,3],[4,5,null,7]]],"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[2],[4,5]]],["T",[[3],[null,7]]]],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,5,null,7]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]]],0],"prev":null,"_":0,"n":["T",[[2],[4,5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]]],0],"prev":null,"_":0,"n":["T",[[2],[4,5]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]]],0],"prev":["T",[[2],[4,5]]],"_":0,"n":["T",[[2],[4,5]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]],["T",[[4]]]],0],"prev":["T",[[2],[4,5]]],"_":0,"n":["T",[[2],[4,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]],["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[2],[4,5]]],"_":0,"n":["T",[[2],[4,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[3],[null,7]]],["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[2],[4,5]]],"_":1,"n":["T",[[2],[4,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[2],[4,5]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[2],[4,5]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[3],[null,7]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[3],[null,7]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[3],[null,7]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[3],[null,7]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[3],[null,7]]],"_":1,"n":["T",[[3],[null,7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"prev":null,"_":1,"n":["T",[[3],[null,7]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[4]]],["T",[[5]]],["T",[[7]]]],0],"prev":null,"_":0,"n":["T",[[3],[null,7]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":null,"_":0,"n":["T",[[4]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":null,"_":0,"n":["T",[[4]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[5]]],["T",[[7]]]],0],"prev":["T",[[4]]],"_":1,"n":["T",[[4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[4]]],"_":1,"n":["T",[[5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[4]]],"_":1,"n":["T",[[5]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[["T",[[7]]]],0],"prev":["T",[[5]]],"_":2,"n":["T",[[5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[5]]],"_":2,"n":["T",[[7]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[5]]],"_":2,"n":["T",[[7]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]}},{"l":13,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]}},{"l":13,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,5,null,7]]],"q":["l",[],0],"prev":["T",[[7]]],"_":2,"n":["T",[[7]]]},"ret":["T",[[1],[2,3],[4,5,null,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0],"prev":null}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[1],[2,3],[4,null,null,5]]]],0],"prev":null,"_":0}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[1],[2,3],[4,null,null,5]]],"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]]],0],"prev":["T",[[1],[2,3],[4,null,null,5]]],"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"prev":["T",[[1],[2,3],[4,null,null,5]]],"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"prev":["T",[[1],[2,3],[4,null,null,5]]],"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"prev":["T",[[1],[2,3],[4,null,null,5]]],"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[2],[4,null]]],["T",[[3],[null,5]]]],0],"prev":null,"_":0,"n":["T",[[1],[2,3],[4,null,null,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]]],0],"prev":null,"_":0,"n":["T",[[2],[4,null]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]]],0],"prev":null,"_":0,"n":["T",[[2],[4,null]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]]],0],"prev":["T",[[2],[4,null]]],"_":0,"n":["T",[[2],[4,null]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]],["T",[[4]]]],0],"prev":["T",[[2],[4,null]]],"_":0,"n":["T",[[2],[4,null]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]],["T",[[4]]]],0],"prev":["T",[[2],[4,null]]],"_":0,"n":["T",[[2],[4,null]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[3],[null,5]]],["T",[[4]]]],0],"prev":["T",[[2],[4,null]]],"_":1,"n":["T",[[2],[4,null]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]]],0],"prev":["T",[[2],[4,null]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]]],0],"prev":["T",[[2],[4,null]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]]],0],"prev":["T",[[3],[null,5]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]]],0],"prev":["T",[[3],[null,5]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[3],[null,5]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[3],[null,5]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":["T",[[3],[null,5]]],"_":1,"n":["T",[[3],[null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":null,"_":1,"n":["T",[[3],[null,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[4]]],["T",[[5]]]],0],"prev":null,"_":0,"n":["T",[[3],[null,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":null,"_":0,"n":["T",[[4]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":null,"_":0,"n":["T",[[4]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":["T",[[4]]],"_":0,"n":["T",[[4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[["T",[[5]]]],0],"prev":["T",[[4]]],"_":1,"n":["T",[[4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[4]]],"_":1,"n":["T",[[5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[4]]],"_":1,"n":["T",[[5]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":12,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":13,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]}},{"l":13,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[4,null,null,5]]],"q":["l",[],0],"prev":["T",[[5]]],"_":1,"n":["T",[[5]]]},"ret":["T",[[1],[2,3],[4,null,null,5]]]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["level = [root] if root else []","The nodes of the current depth, in left-to-right order","Level-order without a queue"],["zip(level, level[1:])","Pairs each node with its right neighbour; stops automatically before the last node","Adjacent pairs in a list"],["a.next = b","Links the neighbours",""],["[c for n in level for c in (n.left, n.right) if c]","Nested comprehension: for each node, its non-null children, left first, giving the next level","Building the next level in order"]]}},{"h":"Walk through an example","p":["Tree `[1,2,3,4,5,null,7]`:"],"table":{"head":["current level","links made","next level"],"rows":[["[1]","none","[2, 3]"],["[2, 3]","2→3","[4, 5, 7]"],["[4, 5, 7]","4→5, 5→7","[]"]]}},{"h":"Why does this work when the tree is not perfect?","p":["A perfect tree lets you use `node.left.next = node.right` and `node.right.next = node.next.left`. In a general tree some children are missing, so those shortcuts break. Building the whole next level as a plain list and linking neighbours does not care which children exist; null children are filtered by `if c`."]},{"h":"Time and space","bullets":["Time: O(n), each node appears in one level list.","Space: O(w) for the level lists, not O(1). A pointer-only solution that walks the already-built `next` chain gets O(1) extra space, which is the follow-up interviewers ask."]}],"takeaway":"Level lists make 'next right' trivial for any tree shape; the O(1)-space follow-up walks the next-pointers of the level above."},"statement":"Given any binary tree where each node has an unset `next` pointer, set every `next` pointer to the node immediately to its right on the same level, or leave it unset if the node is the last one on its level. Return the root. Examples show the tree level by level, where `#` marks the end of each level after following `next` pointers.\n\nExample 1:\n\n```\nInput: root = [1,2,3,4,null,5]\nOutput: [1,#,2,3,#,4,5,#]\n```\n\nExample 2:\n\n```\nInput: root = []\nOutput: []\n```\n\nConstraints:\n\n* The number of nodes is in the range `[0, 6000]`.\n* `-100 <= Node.val <= 100`","ex2":{"input":"[1,2,3,4,null,null,5]","output":"[[[1, None]], [[2, 3], [3, None]], [[4, 5], [5, None]]]","why":"Level 3 links 4 → 5 even though they have different parents."}};
+window.PROBLEM = {
+ "id": "117",
+ "title": "Populating Next Right Pointers in Each Node II",
+ "level": "Medium",
+ "topic": "Binary Tree - General",
+ "question": "Connect each node's 'next' pointer to the node on its right on the same level (or nothing if it's the last).",
+ "why": "Tree [1,2,3,4,5,null,7]: 2→3, 4→5→7, others end.",
+ "idea": "Go level by level; link neighbours in each level.",
+ "input": "[1,2,3,4,5,null,7]",
+ "output": "1→∅, 2→3→∅, 4→5→7→∅",
+ "notes": [],
+ "best": "Go level by level; link neighbours in each level.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def connect(self, root):\n        level = [root] if root else []\n        while level:\n            for a, b in zip(level, level[1:]): a.next = b\n            level = [c for n in level for c in (n.left, n.right) if c]\n        return root",
+   "time": "O(n)",
+   "space": "O(w)",
+   "explain": "Go level by level; link neighbours in each level.",
+   "frames": [
+    {
+     "title": "Tree",
+     "description": "Link neighbours on each level.",
+     "codeLines": [
+      2
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "4",
+        "5",
+        "·",
+        "7"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 0",
+     "description": "Just 1 → nothing to link.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "4",
+        "5",
+        "·",
+        "7"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 1",
+     "description": "2 → 3",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "4",
+        "5",
+        "·",
+        "7"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 2",
+     "description": "4 → 5 → 7",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "4",
+        "5",
+        "·",
+        "7"
+       ],
+       "hot": [
+        0,
+        1,
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "All levels linked.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "4",
+        "5",
+        "·",
+        "7"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

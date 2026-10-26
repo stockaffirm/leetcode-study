@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2124","title":"Check if All A's Appears Before All B's","level":"Easy","topic":"Array / String","question":"A string contains only 'a' and 'b'. Return whether every 'a' appears before every 'b'. Example: 'aaabbb' → true.","why":"'aaabbb' → true; 'abab' → false.","idea":"All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.","input":"s = \"aaabbb\"","output":"true","notes":[],"best":"All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.","variants":[{"name":"No 'ba' anywhere","code":"class Solution:\n    def checkString(self, s):\n        return 'ba' not in s","time":"O(n)","space":"O(1)","explain":"All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aaabbb"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","aaabbb"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]},"ret":false}],"trunc":false}},{"name":"Compare last a and first b","tag":"Alternative","code":"class Solution:\n    def checkString(self, s):\n        last_a = s.rfind('a')\n        first_b = s.find('b')\n        return last_a == -1 or first_b == -1 or last_a < first_b","time":"O(n)","space":"O(1)","explain":"The last 'a' must be before the first 'b'.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aaabbb"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aaabbb"],"last_a":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","aaabbb"],"last_a":2,"first_b":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","aaabbb"],"last_a":2,"first_b":3},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abab"],"last_a":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","abab"],"last_a":2,"first_b":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","abab"],"last_a":2,"first_b":1},"ret":false}],"trunc":false}}],"ex2":{"input":"b before a","output":"False","why":"A 'b' is followed by an 'a'."}};
+window.PROBLEM = {
+ "id": "2124",
+ "title": "Check if All A's Appears Before All B's",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'aaabbb' → true; 'abab' → false.",
+ "idea": "All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.",
+ "input": "s = \"aaabbb\"",
+ "output": "true",
+ "notes": [],
+ "best": "All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.",
+ "variants": [
+  {
+   "name": "No 'ba' anywhere",
+   "code": "class Solution:\n    def checkString(self, s):\n        return 'ba' not in s",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "All a's come before all b's exactly when the string never has a 'b' directly followed (at any distance) by an 'a'; checking for the substring 'ba' is enough.",
+   "frames": []
+  }
+ ]
+};

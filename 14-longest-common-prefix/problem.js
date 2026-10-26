@@ -1,1 +1,126 @@
-window.PROBLEM = {"id":"14","title":"Longest Common Prefix","level":"Easy","topic":"Array / String","question":"Given a list of words strs, return the longest beginning (prefix) that ALL the words share. If they share nothing, return an empty string. Example: ['flower','flow','flight'] all start with 'fl' → 'fl'.","why":"flower, flow, flight all start with 'fl'.","idea":"Start with the first word as the prefix and shorten it until each other word starts with it.","input":"[\"flower\",\"flow\",\"flight\"]","output":"\"fl\"","notes":[],"best":"Start with the first word as the prefix and shorten it until each other word starts with it.","variants":[{"name":"Shrink the prefix","code":"class Solution:\n    def longestCommonPrefix(self, strs):\n        prefix = strs[0]\n        for s in strs[1:]:\n            while not s.startswith(prefix):\n                prefix = prefix[:-1]\n        return prefix","time":"O(total chars)","space":"O(1)","explain":"Start with the first word as the prefix and shorten it until each other word starts with it.","frames":[{"title":"Start","description":"prefix = 'flower'.","codeLines":[3],"facts":{},"rows":[{"name":"prefix","cells":["f","l","o","w","e","r"],"hot":[0,1,2,3,4,5],"marks":{}}]},{"title":"Check 'flow'","description":"'flow' doesn't start with 'flower' → trim to 'flowe', 'flow'.","codeLines":[5,6],"facts":{},"rows":[{"name":"prefix","cells":["f","l","o","w"],"hot":[0,1,2,3],"marks":{}}]},{"title":"Check 'flight'","description":"'flight' doesn't start with 'flow', 'flo' → trim to 'fl'.","codeLines":[5,6],"facts":{},"rows":[{"name":"prefix","cells":["f","l"],"hot":[0,1],"marks":{}}]},{"title":"Return","description":"'fl'","codeLines":[7],"facts":{},"rows":[{"name":"answer","cells":["f","l"],"hot":[0,1],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flower"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flower"],"s":["s","flow"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flower"],"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flowe"],"s":["s","flow"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flowe"],"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flow"],"s":["s","flow"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flow"],"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flow"],"s":["s","flight"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flow"],"s":["s","flight"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flo"],"s":["s","flight"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","flo"],"s":["s","flight"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","fl"],"s":["s","flight"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","fl"],"s":["s","flight"]}},{"l":7,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","fl"],"s":["s","flight"]}},{"l":7,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"prefix":["s","fl"],"s":["s","flight"]},"ret":["s","fl"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","dog"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","dog"],"s":["s","racecar"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","dog"],"s":["s","racecar"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","do"],"s":["s","racecar"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","do"],"s":["s","racecar"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","d"],"s":["s","racecar"]}},{"l":6,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s","d"],"s":["s","racecar"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","racecar"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","racecar"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","car"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","car"]}},{"l":7,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","car"]}},{"l":7,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"prefix":["s",""],"s":["s","car"]},"ret":["s",""]}],"trunc":false}},{"name":"Vertical scanning","tag":"Alternative","code":"class Solution:\n    def longestCommonPrefix(self, strs):\n        for i in range(len(strs[0])):\n            for s in strs[1:]:\n                if i == len(s) or s[i] != strs[0][i]: return strs[0][:i]\n        return strs[0]","time":"O(S)","space":"O(1)","explain":"Compare column by column across all words.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0,"s":["s","flow"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0,"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0,"s":["s","flight"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0,"s":["s","flight"]}},{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":0,"s":["s","flight"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flight"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flow"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flight"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flight"]}},{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":1,"s":["s","flight"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":2,"s":["s","flight"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":2,"s":["s","flow"]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":2,"s":["s","flow"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":2,"s":["s","flight"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0],"i":2,"s":["s","flight"]},"ret":["s","fl"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"i":0,"s":["s","racecar"]}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0],"i":0,"s":["s","racecar"]},"ret":["s",""]}],"trunc":false}},{"name":"Sort and compare first / last","tag":"Alternative","code":"class Solution:\n    def longestCommonPrefix(self, strs):\n        strs = sorted(strs); a, b = strs[0], strs[-1]; i = 0\n        while i < min(len(a), len(b)) and a[i] == b[i]: i += 1\n        return a[:i]","time":"O(n log n)","space":"O(1)","explain":"The prefix common to everyone is common to the smallest and largest word.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","flower"],["s","flow"],["s","flight"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flight"],["s","flow"],["s","flower"]],0],"a":["s","flight"],"b":["s","flower"],"i":0}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flight"],["s","flow"],["s","flower"]],0],"a":["s","flight"],"b":["s","flower"],"i":1}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","flight"],["s","flow"],["s","flower"]],0],"a":["s","flight"],"b":["s","flower"],"i":2}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flight"],["s","flow"],["s","flower"]],0],"a":["s","flight"],"b":["s","flower"],"i":2}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","flight"],["s","flow"],["s","flower"]],0],"a":["s","flight"],"b":["s","flower"],"i":2},"ret":["s","fl"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"strs":["l",[["s","dog"],["s","racecar"],["s","car"]],0]}},{"l":4,"d":1,"f":1,"v":{"strs":["l",[["s","car"],["s","dog"],["s","racecar"]],0],"a":["s","car"],"b":["s","racecar"],"i":0}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","car"],["s","dog"],["s","racecar"]],0],"a":["s","car"],"b":["s","racecar"],"i":0}},{"l":5,"d":1,"f":1,"v":{"strs":["l",[["s","car"],["s","dog"],["s","racecar"]],0],"a":["s","car"],"b":["s","racecar"],"i":0},"ret":["s",""]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`prefix = strs[0]`","Starts with the whole first string as the candidate prefix","The answer can be at most as long as any single string"],["`s.startswith(prefix)`","True if `s` begins with `prefix`","Prefix tests; cleaner and faster than slicing and comparing yourself"],["`prefix[:-1]`","Drops the last character","Shrinking a candidate one character at a time"],["`strs[1:]`","Every string except the first (copies the list, O(k) extra)","Iterating from the second item; use `islice` or an index if the copy matters"]]}},{"h":"Walk through an example","p":["`strs = [\"flower\", \"flow\", \"flight\"]` with the prefix starting as `\"flower\"`."],"table":{"head":["String s","Prefix after trimming"],"rows":[["flow","flow"],["flight","fl"]]}},{"h":"Why `while`, not `if`?","p":["One string can force many trims. Against `\"flow\"` the prefix `\"flower\"` loses two characters (`r`, then `e`); an `if` would remove only one and keep a wrong prefix."]},{"h":"Why does this always terminate?","p":["`\"\".startswith` of anything is true, since every string starts with the empty string. So the `while` stops at worst when the prefix is empty, and there is no infinite loop or index error. If a string shares nothing, the final answer is `\"\"`."]},{"h":"Time and space","bullets":["Time: O(n · m²) as a worst-case bound for n strings of length m (each of up to m trims re-runs a `startswith` costing up to m); in practice close to O(total characters) because `startswith` fails fast.","Space: O(1) extra (slicing creates short-lived strings)."]}],"takeaway":"Horizontal scanning: let the first string be the candidate and shrink it until every other string starts with it."},"statement":"Given an array of strings, return the longest string that every one of them starts with. If they have no common beginning, return an empty string.\n\nExample 1:\n\n```\nInput: strs = [\"interview\",\"internet\",\"interval\"]\nOutput: \"inter\"\n```\n\nExample 2:\n\n```\nInput: strs = [\"cat\",\"dog\",\"bird\"]\nOutput: \"\"\n```\n\nConstraints:\n\n* `1 <= strs.length <= 200`\n* `0 <= strs[i].length <= 200`\n* `strs[i]` consists of lower-case English letters only.","ex2":{"input":"['dog','racecar','car']","output":"''","why":"The words share no starting letters → empty string."}};
+window.PROBLEM = {
+ "id": "14",
+ "title": "Longest Common Prefix",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Find the longest beginning shared by all the words.",
+ "why": "flower, flow, flight all start with 'fl'.",
+ "idea": "Start with the first word as the prefix and shorten it until each other word starts with it.",
+ "input": "[\"flower\",\"flow\",\"flight\"]",
+ "output": "\"fl\"",
+ "notes": [],
+ "best": "Start with the first word as the prefix and shorten it until each other word starts with it.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def longestCommonPrefix(self, strs):\n        prefix = strs[0]\n        for s in strs[1:]:\n            while not s.startswith(prefix):\n                prefix = prefix[:-1]\n        return prefix",
+   "time": "O(total chars)",
+   "space": "O(1)",
+   "explain": "Start with the first word as the prefix and shorten it until each other word starts with it.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "prefix = 'flower'.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "prefix",
+       "cells": [
+        "f",
+        "l",
+        "o",
+        "w",
+        "e",
+        "r"
+       ],
+       "hot": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Check 'flow'",
+     "description": "'flow' doesn't start with 'flower' → trim to 'flowe', 'flow'.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "prefix",
+       "cells": [
+        "f",
+        "l",
+        "o",
+        "w"
+       ],
+       "hot": [
+        0,
+        1,
+        2,
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Check 'flight'",
+     "description": "'flight' doesn't start with 'flow', 'flo' → trim to 'fl'.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "prefix",
+       "cells": [
+        "f",
+        "l"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "'fl'",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "f",
+        "l"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"459","title":"Repeated Substring Pattern","level":"Easy","topic":"Array / String","question":"Return true if s can be built by repeating one of its substrings two or more times. Example: 'abab' → true.","why":"'abab' = 'ab' twice → true.","idea":"A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.","input":"s = \"abab\"","output":"true","notes":[],"best":"A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.","variants":[{"name":"Find s inside s + s without the ends","code":"class Solution:\n    def repeatedSubstringPattern(self, s):\n        return s in (s + s)[1:-1]","time":"O(n)","space":"O(n)","explain":"A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aba"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","aba"]},"ret":false}],"trunc":false}},{"name":"Try every block length","tag":"Brute force","code":"class Solution:\n    def repeatedSubstringPattern(self, s):\n        n = len(s)\n        return any(n % k == 0 and s[:k] * (n // k) == s for k in range(1, n // 2 + 1))","time":"O(n²)","space":"O(n)","explain":"For each divisor length repeat the prefix and compare.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abab"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abab"],"n":4}},{"l":4,"d":1,"f":1,"v":{"s":["s","abab"],"n":4},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aba"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aba"],"n":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","aba"],"n":3},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["s + s","The string doubled","Rotation trick"],["[1:-1]","Drops the first and last character, removing the two trivial occurrences of s at positions 0 and len(s)","Slicing"],["s in …","Substring test: s appears in the middle part only if s is built from a repeated block",""]]}},{"h":"Walk through examples","table":{"head":["s","(s + s)[1:-1]","s found inside?"],"rows":[["abab","bababa","True"],["aba","baab","False"],["abcabcabc","bcabcabcabcabcab","True"]]}},{"h":"Why does it work?","p":["If s is made of a block repeated, rotating s by the block length gives s again, so s occurs inside s + s at an offset strictly between 0 and len(s). If s is not periodic, the only occurrences of s in s + s are at offsets 0 and len(s), which the slice removes."]},{"h":"Time and space","bullets":["Time: O(n) with a linear substring search (Python's `in` is fast in practice and worst-case near-linear).","Space: O(n)."]}],"takeaway":"A string is periodic iff it occurs inside (s + s) with the first and last characters removed."},"ex2":{"input":"no pattern","output":"False","why":"Not a repetition."}};
+window.PROBLEM = {
+ "id": "459",
+ "title": "Repeated Substring Pattern",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'abab' = 'ab' twice → true.",
+ "idea": "A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.",
+ "input": "s = \"abab\"",
+ "output": "true",
+ "notes": [],
+ "best": "A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.",
+ "variants": [
+  {
+   "name": "Find s inside s + s without the ends",
+   "code": "class Solution:\n    def repeatedSubstringPattern(self, s):\n        return s in (s + s)[1:-1]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "A string is a repetition of a block exactly when it appears inside (s + s) with the first and last character removed.",
+   "frames": []
+  }
+ ]
+};

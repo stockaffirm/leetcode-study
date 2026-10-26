@@ -1,1 +1,131 @@
-window.PROBLEM = {"id":"1","title":"Two Sum","level":"Easy","topic":"Hashmap","question":"Given a list of numbers nums and a number target, find the two numbers that add up to target and return their positions (counting from 0). Exactly one answer exists, and you can't use the same position twice. Example: nums=[2,7,11,15], target=9 → 2 + 7 = 9 → positions [0,1].","why":"[2,7,11,15], target 9: 2 + 7 = 9 → positions 0 and 1.","idea":"For each number, check if (target − number) was already seen, using a dictionary.","input":"[2,7,11,15], target=9","output":"[0, 1]","notes":[],"best":"For each number, check if (target − number) was already seen, using a dictionary.","variants":[{"name":"Hash map","code":"class Solution:\n    def twoSum(self, nums, target):\n        seen = {}\n        for i, x in enumerate(nums):\n            if target - x in seen: return [seen[target - x], i]\n            seen[x] = i","time":"O(n)","space":"O(n)","explain":"For each number, check if (target − number) was already seen, using a dictionary.","frames":[{"title":"Start","description":"seen is empty.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["2","7","11","15"],"hot":[],"marks":{}}]},{"title":"x = 2","description":"Need 7 — not seen yet. Remember 2.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["2","7","11","15"],"hot":[0],"marks":{}},{"name":"seen","cells":["2→0"],"hot":[],"marks":{}}]},{"title":"x = 7","description":"Need 2 — seen at index 0!","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["2","7","11","15"],"hot":[0,1],"marks":{}},{"name":"seen","cells":["2→0"],"hot":[],"marks":{}}]},{"title":"Return","description":"[0, 1]","codeLines":[5],"facts":{},"rows":[{"name":"answer","cells":["0","1"],"hot":[0,1],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[]],"i":0,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[]],"i":0,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[[2,0]]],"i":0,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[[2,0]]],"i":1,"x":7}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"seen":["d",[[2,0]]],"i":1,"x":7},"ret":["l",[0,1],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[]],"i":0,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[]],"i":0,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0]]],"i":0,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0]]],"i":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0]]],"i":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0],[2,1]]],"i":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0],[2,1]]],"i":2,"x":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"seen":["d",[[3,0],[2,1]]],"i":2,"x":4},"ret":["l",[1,2],0]}],"trunc":false}},{"name":"Brute force","tag":"Brute force","code":"class Solution:\n    def twoSum(self, nums, target):\n        for i in range(len(nums)):\n            for j in range(i + 1, len(nums)):\n                if nums[i] + nums[j] == target: return [i, j]","time":"O(n²)","space":"O(1)","explain":"Try every pair.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"i":0,"j":1},"ret":["l",[0,1],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0,"j":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0,"j":2}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":0,"j":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"i":1,"j":2},"ret":["l",[1,2],0]}],"trunc":false}},{"name":"Sort + two pointers","tag":"Alternative","code":"class Solution:\n    def twoSum(self, nums, target):\n        pairs = sorted(enumerate(nums), key=lambda p: p[1]); l, r = 0, len(nums) - 1\n        while l < r:\n            s = pairs[l][1] + pairs[r][1]\n            if s == target: return sorted([pairs[l][0], pairs[r][0]])\n            if s < target: l += 1\n            else: r -= 1","time":"O(n log n)","space":"O(n)","explain":"Sort (value, index) pairs and squeeze from both ends.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":3,"s":17}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":3,"s":17}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":3,"s":17}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":2,"s":17}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":2,"s":17}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":2,"s":13}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":2,"s":13}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":2,"s":13}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":1,"s":13}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":1,"s":13}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":1,"s":9}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,7,11,15],0],"target":9,"pairs":["l",[["l",[0,2],1],["l",[1,7],1],["l",[2,11],1],["l",[3,15],1]],0],"l":0,"r":1,"s":9},"ret":["l",[0,1],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"pairs":["l",[["l",[1,2],1],["l",[0,3],1],["l",[2,4],1]],0],"l":0,"r":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"pairs":["l",[["l",[1,2],1],["l",[0,3],1],["l",[2,4],1]],0],"l":0,"r":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"pairs":["l",[["l",[1,2],1],["l",[0,3],1],["l",[2,4],1]],0],"l":0,"r":2,"s":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,4],0],"target":6,"pairs":["l",[["l",[1,2],1],["l",[0,3],1],["l",[2,4],1]],0],"l":0,"r":2,"s":6},"ret":["l",[1,2],0]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`seen = {}`","Empty dict: key → value with O(1) average lookup","Whenever you ask 'have I seen X before?' or need value → position"],["`enumerate(nums)`","Yields `(index, value)` pairs in one pass","You need both the position and the item, without `range(len(...))`"],["`target - x in seen`","Hash lookup of the complement (average O(1))","Replaces an inner loop that would scan every earlier number"],["`seen[x] = i`","Stores value → its index","You must return positions, not values"]]}},{"h":"Walk through an example","p":["`nums = [2,7,11,15]`, `target = 9`. For each `x` we look for `target - x` among numbers already stored."],"table":{"head":["i","x","Need (9 − x)","In seen?","seen after this step"],"rows":[["0","2","7","no","{2: 0}"],["1","7","2","yes → return [0, 1]","{2: 0}"]]}},{"h":"Why check first, store after?","p":["The lookup happens before `seen[x] = i`, so a number can never pair with itself. With `nums = [3,3]`, `target = 6`: at `i=0`, `seen` is empty, so we store `3→0`; at `i=1`, the complement `3` is found at index 0, giving `[0,1]`. If we stored first, `[3,2,4]` with target 6 would wrongly return `[0,0]`."]},{"h":"Why a dict instead of a nested loop?","p":["You pay O(n) memory to turn the inner scan into a single lookup."],"table":{"head":["Approach","Lookup of complement","Total time","Extra space"],"rows":[["Nested loops","scan the rest: O(n)","O(n²)","O(1)"],["Dict `seen`","hash lookup: O(1) average","O(n)","O(n)"]]}},{"h":"Time and space","bullets":["Time: O(n) — one pass, each dict operation is O(1) on average.","Space: O(n) — the dict can hold every number before the match is found."]}],"takeaway":"Complement lookup in a hash map: when you need a pair satisfying a sum, remember what you have seen and ask 'is my partner already there?' in O(1) instead of rescanning."},"statement":"You are handed a list of integers `nums` and an integer `target`. Locate the two entries whose sum equals `target` and report their indexes (starting from 0). Precisely one valid pair is guaranteed, and the same entry may not be used twice. The indexes may be given in any order.\n\nExample 1:\n\n```\nInput: nums = [2,7,11,15], target = 9\nOutput: [0,1]\n```\n\nExample 2:\n\n```\nInput: nums = [3,2,4], target = 6\nOutput: [1,2]\n```\n\nConstraints:\n\n* `2 <= nums.length <= 10^4`\n* `-10^9 <= nums[i] <= 10^9`\n* `-10^9 <= target <= 10^9`\n* Exactly one valid answer exists.","ex2":{"input":"[3,2,4],6","output":"[1, 2]","why":"3 + 3 would reuse the same element; the answer is 2 + 4 at indexes 1 and 2."}};
+window.PROBLEM = {
+ "id": "1",
+ "title": "Two Sum",
+ "level": "Easy",
+ "topic": "Hashmap",
+ "question": "Find two numbers in the list that add up to the target and return their positions.",
+ "why": "[2,7,11,15], target 9: 2 + 7 = 9 → positions 0 and 1.",
+ "idea": "For each number, check if (target − number) was already seen, using a dictionary.",
+ "input": "[2,7,11,15], target=9",
+ "output": "[0, 1]",
+ "notes": [],
+ "best": "For each number, check if (target − number) was already seen, using a dictionary.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def twoSum(self, nums, target):\n        seen = {}\n        for i, x in enumerate(nums):\n            if target - x in seen: return [seen[target - x], i]\n            seen[x] = i",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "For each number, check if (target − number) was already seen, using a dictionary.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "seen is empty.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "7",
+        "11",
+        "15"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Need 7 — not seen yet. Remember 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "7",
+        "11",
+        "15"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "seen",
+       "cells": [
+        "2→0"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "x = 7",
+     "description": "Need 2 — seen at index 0!",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "7",
+        "11",
+        "15"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "seen",
+       "cells": [
+        "2→0"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "[0, 1]",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "0",
+        "1"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

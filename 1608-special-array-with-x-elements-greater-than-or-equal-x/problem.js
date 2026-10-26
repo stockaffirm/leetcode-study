@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1608","title":"Special Array With X Elements Greater Than or Equal X","level":"Easy","topic":"Sorting","question":"nums is special if there is a number x such that exactly x elements of nums are greater than or equal to x. Return x or −1. Example: [3,5] → 2.","why":"[3,5]: exactly 2 numbers are ≥ 2 → x = 2.","idea":"Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.","input":"nums = [3,5]","output":"2","notes":[],"best":"Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.","variants":[{"name":"Sort descending and find x","code":"class Solution:\n    def specialArray(self, nums):\n        nums = sorted(nums, reverse=True)\n        for x in range(1, len(nums) + 1):\n            if nums[x - 1] >= x and (x == len(nums) or nums[x] < x):\n                return x\n        return -1","time":"O(n log n)","space":"O(n)","explain":"Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[5,3],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[5,3],0],"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[5,3],0],"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[5,3],0],"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[5,3],0],"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[5,3],0],"x":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2},"ret":-1}],"trunc":false}},{"name":"Count for every x","tag":"Brute force","code":"class Solution:\n    def specialArray(self, nums):\n        for x in range(len(nums) + 1):\n            if sum(v >= x for v in nums) == x:\n                return x\n        return -1","time":"O(n²)","space":"O(1)","explain":"Try x = 0…n and count the numbers ≥ x.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":0}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":1}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,5],0],"x":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":0}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":1}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0],0],"x":2},"ret":-1}],"trunc":false}}],"ex2":{"input":"no x","output":"-1","why":"-1."}};
+window.PROBLEM = {
+ "id": "1608",
+ "title": "Special Array With X Elements Greater Than or Equal X",
+ "level": "Easy",
+ "topic": "Sorting",
+ "question": "",
+ "why": "[3,5]: exactly 2 numbers are ≥ 2 → x = 2.",
+ "idea": "Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.",
+ "input": "nums = [3,5]",
+ "output": "2",
+ "notes": [],
+ "best": "Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.",
+ "variants": [
+  {
+   "name": "Sort descending and find x",
+   "code": "class Solution:\n    def specialArray(self, nums):\n        nums = sorted(nums, reverse=True)\n        for x in range(1, len(nums) + 1):\n            if nums[x - 1] >= x and (x == len(nums) or nums[x] < x):\n                return x\n        return -1",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Sort descending. If the i-th number (0-based) is ≥ i+1 and the next one is < i+1, then exactly i+1 numbers are ≥ i+1. Check each candidate x directly: count the numbers ≥ x for x = 1…n.",
+   "frames": []
+  }
+ ]
+};

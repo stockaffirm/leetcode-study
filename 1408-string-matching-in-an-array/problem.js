@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1408","title":"String Matching in an Array","level":"Easy","topic":"Array / String","question":"Return all words that are a substring of another word in the array. Example: ['mass','as','hero','superhero'] → ['as','hero'].","why":"['mass','as','hero','superhero'] → 'as' is in 'mass' and 'hero' is in 'superhero'.","idea":"For every word check whether it occurs inside any other word.","input":"words = [\"mass\",\"as\",\"hero\",\"superhero\"]","output":"['as', 'hero']","notes":[],"best":"For every word check whether it occurs inside any other word.","variants":[{"name":"A word contained in another word","code":"class Solution:\n    def stringMatching(self, words):\n        return [w for w in words if any(w != o and w in o for o in words)]","time":"O(n²·L)","space":"O(1)","explain":"For every word check whether it occurs inside any other word.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","mass"],["s","as"],["s","hero"],["s","superhero"]],0]}},{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","mass"],["s","as"],["s","hero"],["s","superhero"]],0]},"ret":["l",[["s","as"],["s","hero"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","leetcode"],["s","et"],["s","code"]],0]}},{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","leetcode"],["s","et"],["s","code"]],0]},"ret":["l",[["s","et"],["s","code"]],0]}],"trunc":false}},{"name":"Join all words and count occurrences","tag":"Alternative","code":"class Solution:\n    def stringMatching(self, words):\n        big = ' '.join(words)\n        return [w for w in words if big.count(w) > 1]","time":"O(n·L)","space":"O(n·L)","explain":"A word is a substring of another if it occurs more than once in the joined string.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","mass"],["s","as"],["s","hero"],["s","superhero"]],0]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","mass"],["s","as"],["s","hero"],["s","superhero"]],0],"big":["s","mass as hero superhero"]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","mass"],["s","as"],["s","hero"],["s","superhero"]],0],"big":["s","mass as hero superhero"]},"ret":["l",[["s","as"],["s","hero"]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"words":["l",[["s","leetcode"],["s","et"],["s","code"]],0]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","leetcode"],["s","et"],["s","code"]],0],"big":["s","leetcode et code"]}},{"l":4,"d":1,"f":1,"v":{"words":["l",[["s","leetcode"],["s","et"],["s","code"]],0],"big":["s","leetcode et code"]},"ret":["l",[["s","et"],["s","code"]],0]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`w in o`","Substring test","Python's `in` on strings"],["`w != o`","Skip comparing a word with itself","Otherwise every word would be a substring of itself"],["`any(… for o in words)`","True if some other word contains w","Short-circuits at the first match"],["list comprehension with a condition","Keep the matching words","Single expression"]]}},{"h":"Walk through an example","p":["`['mass','as','hero','superhero']`:"],"table":{"head":["Word","Contained in another word?","Kept"],"rows":[["mass","none","False"],["as","mass","True"],["hero","superhero","True"],["superhero","none","False"]]}},{"h":"A subtle point: duplicates","p":["`w != o` compares values, so if the list contained the same word twice, neither copy would be skipped against the other: `'as'` and `'as'` are equal strings, so `w != o` is False for the pair and they do not count as contained in each other. (The problem states words are unique, so this doesn't arise.)"]},{"h":"Time and space","bullets":["Time: O(n² · L).","Space: O(1) extra besides the output."]}],"takeaway":"For each word check whether any different word contains it as a substring."},"ex2":{"input":"inside","output":"['et', 'code']","why":"'et' and 'code'."}};
+window.PROBLEM = {
+ "id": "1408",
+ "title": "String Matching in an Array",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "['mass','as','hero','superhero'] → 'as' is in 'mass' and 'hero' is in 'superhero'.",
+ "idea": "For every word check whether it occurs inside any other word.",
+ "input": "words = [\"mass\",\"as\",\"hero\",\"superhero\"]",
+ "output": "['as', 'hero']",
+ "notes": [],
+ "best": "For every word check whether it occurs inside any other word.",
+ "variants": [
+  {
+   "name": "A word contained in another word",
+   "code": "class Solution:\n    def stringMatching(self, words):\n        return [w for w in words if any(w != o and w in o for o in words)]",
+   "time": "O(n²·L)",
+   "space": "O(1)",
+   "explain": "For every word check whether it occurs inside any other word.",
+   "frames": []
+  }
+ ]
+};

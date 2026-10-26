@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1929","title":"Concatenation of Array","level":"Easy","topic":"Array / String","question":"Return an array that is the given array written twice, one copy after the other. Example: [1,2,1] → [1,2,1,1,2,1].","why":"[1,2,1] followed by [1,2,1] is [1,2,1,1,2,1].","idea":"The answer is the array joined with itself.","input":"nums = [1,2,1]","output":"[1,2,1,1,2,1]","notes":[],"best":"The answer is the array joined with itself.","variants":[{"name":"Write the array twice","code":"class Solution:\n    def getConcatenation(self, nums):\n        return nums + nums","time":"O(n)","space":"O(n)","explain":"The answer is the array joined with itself.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,1],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,1],0]},"ret":["l",[1,2,1,1,2,1],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,2,1],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,2,1],0]},"ret":["l",[1,3,2,1,1,3,2,1],0]}],"trunc":false}},{"name":"Index with modulo","tag":"Alternative","code":"class Solution:\n    def getConcatenation(self, nums):\n        n = len(nums)\n        return [nums[i % n] for i in range(2 * n)]","time":"O(n)","space":"O(n)","explain":"Build 2n entries by reading the array with i % n.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,1],0],"n":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,1],0],"n":3},"ret":["l",[1,2,1,1,2,1],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,2,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,2,1],0],"n":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,2,1],0],"n":4},"ret":["l",[1,3,2,1,1,3,2,1],0]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["nums + nums","List concatenation creates a new list with both copies in order",""]]}},{"h":"Walk through an example","p":["`[1,2,1]`:"],"table":{"head":["expression","result"],"rows":[["nums","[1, 2, 1]"],["nums + nums","[1, 2, 1, 1, 2, 1]"]]}},{"h":"`+` versus `+=`","p":["`nums + nums` builds a new list and leaves the original unchanged. `nums += nums` would extend the original in place (still correct here, but it mutates the caller's list). The problem asks for a new array, so `+` is the safe choice."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n)."]}],"takeaway":"Concatenate the list with itself using + to get a new array."},"statement":"Given an integer array `nums` of length `n`, build an array `ans` of length `2n` where `ans[i] == nums[i]` and `ans[i + n] == nums[i]` for `0 <= i < n`. In other words, `ans` is `nums` written twice in a row. Return `ans`.\n\nExample 1:\n\n```\nInput: nums = [1,2,1]\nOutput: [1,2,1,1,2,1]\n```\n\nExample 2:\n\n```\nInput: nums = [1,3,2,1]\nOutput: [1,3,2,1,1,3,2,1]\n```\n\nConstraints:\n\n* `n == nums.length`\n* `1 <= n <= 1000`\n* `1 <= nums[i] <= 1000`","ex2":{"input":"four numbers","output":"[1, 3, 2, 1, 1, 3, 2, 1]","why":"The array twice."}};
+window.PROBLEM = {
+ "id": "1929",
+ "title": "Concatenation of Array",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "[1,2,1] followed by [1,2,1] is [1,2,1,1,2,1].",
+ "idea": "The answer is the array joined with itself.",
+ "input": "nums = [1,2,1]",
+ "output": "[1,2,1,1,2,1]",
+ "notes": [],
+ "best": "The answer is the array joined with itself.",
+ "variants": [
+  {
+   "name": "Write the array twice",
+   "code": "class Solution:\n    def getConcatenation(self, nums):\n        return nums + nums",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "The answer is the array joined with itself.",
+   "frames": []
+  }
+ ]
+};

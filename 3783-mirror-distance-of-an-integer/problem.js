@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3783","title":"Mirror Distance of an Integer","level":"Easy","topic":"Math / Bit Manipulation","question":"The mirror distance of n is |n − reverse(n)|, where reverse writes the digits backwards. Return it. Example: 25 → 27.","why":"n=25 → reverse 52 → distance 27.","idea":"Reverse the digits of n and return the absolute difference with n.","input":"n = 25","output":"27","notes":[],"best":"Reverse the digits of n and return the absolute difference with n.","variants":[{"name":"|n − reverse(n)|","code":"class Solution:\n    def mirrorDistance(self, n):\n        return abs(n - int(str(n)[::-1]))","time":"O(d)","space":"O(d)","explain":"Reverse the digits of n and return the absolute difference with n.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":25}},{"l":3,"d":1,"f":1,"v":{"n":25},"ret":27}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":10}},{"l":3,"d":1,"f":1,"v":{"n":10},"ret":9}],"trunc":false}},{"name":"Reverse by arithmetic","tag":"Alternative","code":"class Solution:\n    def mirrorDistance(self, n):\n        r, x = 0, n\n        while x:\n            x, d = divmod(x, 10)\n            r = r * 10 + d\n        return abs(n - r)","time":"O(d)","space":"O(1)","explain":"Reverse the digits with divmod.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":25}},{"l":4,"d":1,"f":1,"v":{"n":25,"r":0,"x":25}},{"l":5,"d":1,"f":1,"v":{"n":25,"r":0,"x":25}},{"l":6,"d":1,"f":1,"v":{"n":25,"r":0,"x":2,"d":5}},{"l":4,"d":1,"f":1,"v":{"n":25,"r":5,"x":2,"d":5}},{"l":5,"d":1,"f":1,"v":{"n":25,"r":5,"x":2,"d":5}},{"l":6,"d":1,"f":1,"v":{"n":25,"r":5,"x":0,"d":2}},{"l":4,"d":1,"f":1,"v":{"n":25,"r":52,"x":0,"d":2}},{"l":7,"d":1,"f":1,"v":{"n":25,"r":52,"x":0,"d":2}},{"l":7,"d":1,"f":1,"v":{"n":25,"r":52,"x":0,"d":2},"ret":27}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":10}},{"l":4,"d":1,"f":1,"v":{"n":10,"r":0,"x":10}},{"l":5,"d":1,"f":1,"v":{"n":10,"r":0,"x":10}},{"l":6,"d":1,"f":1,"v":{"n":10,"r":0,"x":1,"d":0}},{"l":4,"d":1,"f":1,"v":{"n":10,"r":0,"x":1,"d":0}},{"l":5,"d":1,"f":1,"v":{"n":10,"r":0,"x":1,"d":0}},{"l":6,"d":1,"f":1,"v":{"n":10,"r":0,"x":0,"d":1}},{"l":4,"d":1,"f":1,"v":{"n":10,"r":1,"x":0,"d":1}},{"l":7,"d":1,"f":1,"v":{"n":10,"r":1,"x":0,"d":1}},{"l":7,"d":1,"f":1,"v":{"n":10,"r":1,"x":0,"d":1},"ret":9}],"trunc":false}}],"ex2":{"input":"trailing zero","output":"9","why":"10 − 1 = 9."}};
+window.PROBLEM = {
+ "id": "3783",
+ "title": "Mirror Distance of an Integer",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "n=25 → reverse 52 → distance 27.",
+ "idea": "Reverse the digits of n and return the absolute difference with n.",
+ "input": "n = 25",
+ "output": "27",
+ "notes": [],
+ "best": "Reverse the digits of n and return the absolute difference with n.",
+ "variants": [
+  {
+   "name": "|n − reverse(n)|",
+   "code": "class Solution:\n    def mirrorDistance(self, n):\n        return abs(n - int(str(n)[::-1]))",
+   "time": "O(d)",
+   "space": "O(d)",
+   "explain": "Reverse the digits of n and return the absolute difference with n.",
+   "frames": []
+  }
+ ]
+};

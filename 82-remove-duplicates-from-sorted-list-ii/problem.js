@@ -1,1 +1,160 @@
-window.PROBLEM = {"id":"82","title":"Remove Duplicates from Sorted List II","level":"Medium","topic":"Linked List","question":"You have a sorted linked list. Delete EVERY value that appears more than once — not just the extra copies, but all of them — so only values that appeared exactly once remain. Return the list. Example: 1→2→3→3→4→4→5 → 1→2→5.","why":"1→2→3→3→4→4→5 → 1→2→5.","idea":"Use a previous pointer; when a value repeats, skip all its copies.","input":"1→2→3→3→4→4→5","output":"1→2→5","notes":[],"best":"Use a previous pointer; when a value repeats, skip all its copies.","variants":[{"name":"Dummy + skip duplicates","code":"class Solution:\n    def deleteDuplicates(self, head):\n        dummy = prev = ListNode(0, head); cur = head\n        while cur:\n            if cur.next and cur.val == cur.next.val:\n                while cur.next and cur.val == cur.next.val: cur = cur.next\n                prev.next = cur.next\n            else: prev = prev.next\n            cur = cur.next\n        return dummy.next","time":"O(n)","space":"O(1)","explain":"Use a previous pointer; when a value repeats, skip all its copies.","frames":[{"title":"Start","description":"Walk with prev and cur.","codeLines":[3],"facts":{},"rows":[{"name":"list","cells":["1","2","3","3","4","4","5"],"hot":[0],"marks":{"0":"cur"},"kind":"list"}]},{"title":"1, 2","description":"Unique → prev moves along.","codeLines":[8],"facts":{},"rows":[{"name":"list","cells":["1","2","3","3","4","4","5"],"hot":[1],"marks":{},"kind":"list"}]},{"title":"3, 3","description":"Repeat → skip both 3s.","codeLines":[6,7],"facts":{},"rows":[{"name":"list","cells":["1","2","3","3","4","4","5"],"hot":[2,3],"marks":{},"kind":"list"}],"sub":[{"description":"cur = 3 and the next node is also 3 → a duplicate!","codeLines":[5],"facts":{},"rows":[{"name":"list","cells":["1","2","3","3","4","4","5"],"hot":[2,3],"marks":{"1":"prev","2":"cur"},"kind":"list"}]},{"description":"move cur forward while the next value is the same → cur is the second 3","codeLines":[6],"facts":{},"rows":[{"name":"list","cells":["1","2","3","3","4","4","5"],"hot":[2,3],"marks":{"1":"prev","3":"cur"},"kind":"list"}]},{"description":"prev.next = cur.next → both 3s are skipped","codeLines":[7],"facts":{},"rows":[{"name":"list","cells":["1","2","4","4","5"],"hot":[1],"marks":{"1":"prev"},"kind":"list"}]}]},{"title":"4, 4","description":"Repeat → skip both 4s.","codeLines":[7],"facts":{},"rows":[{"name":"list","cells":["1","2","4","4","5"],"hot":[2,3],"marks":{},"kind":"list"}],"sub":[{"description":"cur = 4 and the next node is also 4 → duplicate","codeLines":[5],"facts":{},"rows":[{"name":"list","cells":["1","2","4","4","5"],"hot":[2,3],"marks":{"1":"prev","2":"cur"},"kind":"list"}]},{"description":"cur moves to the second 4","codeLines":[6],"facts":{},"rows":[{"name":"list","cells":["1","2","4","4","5"],"hot":[2,3],"marks":{"1":"prev","3":"cur"},"kind":"list"}]},{"description":"prev.next = cur.next → both 4s are skipped","codeLines":[7],"facts":{},"rows":[{"name":"list","cells":["1","2","5"],"hot":[1],"marks":{"1":"prev"},"kind":"list"}]}]},{"title":"Return","description":"5 is unique and stays.","codeLines":[10],"facts":{},"rows":[{"name":"list","cells":["1","2","5"],"hot":[0,1,2],"marks":{},"kind":"list"}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[0,1,2,3,3,4,4,5],-1],"cur":["L",[1,2,3,3,4,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[0,1,2,3,3,4,4,5],-1],"cur":["L",[1,2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[0,1,2,3,3,4,4,5],-1],"cur":["L",[1,2,3,3,4,4,5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[1,2,3,3,4,4,5],-1],"cur":["L",[1,2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[1,2,3,3,4,4,5],-1],"cur":["L",[2,3,3,4,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[1,2,3,3,4,4,5],-1],"cur":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[1,2,3,3,4,4,5],-1],"cur":["L",[2,3,3,4,4,5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[3,3,4,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"prev":["L",[2,3,3,4,4,5],-1],"cur":["L",[3,4,4,5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[4,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,4,4,5],-1],"dummy":["L",[0,1,2,4,4,5],-1],"prev":["L",[2,4,4,5],-1],"cur":["L",[4,5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[2,5],-1],"cur":["L",[4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[2,5],-1],"cur":["L",[5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[2,5],-1],"cur":["L",[5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[2,5],-1],"cur":["L",[5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[5],-1],"cur":["L",[5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[5],-1],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[5],-1],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"dummy":["L",[0,1,2,5],-1],"prev":["L",[5],-1],"cur":null},"ret":["L",[1,2,5],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,1,1,2,3],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,2,3],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,1,1,1,2,3],-1],"prev":["L",[0,1,1,1,2,3],-1],"cur":["L",[1,2,3],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[0,2,3],-1],"cur":["L",[1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[0,2,3],-1],"cur":["L",[2,3],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[0,2,3],-1],"cur":["L",[2,3],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[0,2,3],-1],"cur":["L",[2,3],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[2,3],-1],"cur":["L",[2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[2,3],-1],"cur":["L",[3],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[2,3],-1],"cur":["L",[3],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[2,3],-1],"cur":["L",[3],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[3],-1],"cur":["L",[3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[3],-1],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[3],-1],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"dummy":["L",[0,2,3],-1],"prev":["L",[3],-1],"cur":null},"ret":["L",[2,3],-1]}],"trunc":false}},{"name":"Count values, keep the unique ones","tag":"Alternative","code":"class Solution:\n    def deleteDuplicates(self, head):\n        cnt = Counter(); cur = head\n        while cur: cnt[cur.val] += 1; cur = cur.next\n        dummy = tail = ListNode(); cur = head\n        while cur:\n            if cnt[cur.val] == 1: tail.next = cur; tail = cur\n            cur = cur.next\n        tail.next = None\n        return dummy.next","time":"O(n)","space":"O(n)","explain":"Count each value first, then relink only nodes whose count is 1.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[]],"cur":["L",[1,2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1]]],"cur":["L",[2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1]]],"cur":["L",[3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,1]]],"cur":["L",[3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2]]],"cur":["L",[4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,1]]],"cur":["L",[4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2]]],"cur":["L",[5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[1,2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[1,2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[1,2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[1,2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[2,3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[3,4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[4,5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[5],-1],"dummy":["L",[0,1,2,3,3,4,4,5],-1],"tail":["L",[2,3,3,4,4,5],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":["L",[5],-1],"dummy":["L",[0,1,2,5],-1],"tail":["L",[5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null,"dummy":["L",[0,1,2,5],-1],"tail":["L",[5],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null,"dummy":["L",[0,1,2,5],-1],"tail":["L",[5],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null,"dummy":["L",[0,1,2,5],-1],"tail":["L",[5],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1],"cnt":["d",[[1,1],[2,1],[3,2],[4,2],[5,1]]],"cur":null,"dummy":["L",[0,1,2,5],-1],"tail":["L",[5],-1]},"ret":["L",[1,2,5],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[]],"cur":["L",[1,1,1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,1]]],"cur":["L",[1,1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,2]]],"cur":["L",[1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3]]],"cur":["L",[2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1]]],"cur":["L",[3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[1,2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[2,3],-1],"dummy":["L",[0],-1],"tail":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[2,3],-1],"dummy":["L",[0,2,3],-1],"tail":["L",[2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[3],-1],"dummy":["L",[0,2,3],-1],"tail":["L",[2,3],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[3],-1],"dummy":["L",[0,2,3],-1],"tail":["L",[2,3],-1]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":["L",[3],-1],"dummy":["L",[0,2,3],-1],"tail":["L",[3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null,"dummy":["L",[0,2,3],-1],"tail":["L",[3],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null,"dummy":["L",[0,2,3],-1],"tail":["L",[3],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null,"dummy":["L",[0,2,3],-1],"tail":["L",[3],-1]}},{"l":10,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1],"cnt":["d",[[1,3],[2,1],[3,1]]],"cur":null,"dummy":["L",[0,2,3],-1],"tail":["L",[3],-1]},"ret":["L",[2,3],-1]}],"trunc":false}},{"name":"Recursion","tag":"Alternative","code":"class Solution:\n    def deleteDuplicates(self, head):\n        if not head or not head.next: return head\n        if head.val != head.next.val:\n            head.next = self.deleteDuplicates(head.next); return head\n        while head.next and head.val == head.next.val: head = head.next\n        return self.deleteDuplicates(head.next)","time":"O(n)","space":"O(n)","explain":"If the head repeats, skip the whole run; otherwise keep it and recurse.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,3,4,4,5],-1]}},{"l":3,"d":2,"f":2,"v":{"head":["L",[2,3,3,4,4,5],-1]}},{"l":4,"d":2,"f":2,"v":{"head":["L",[2,3,3,4,4,5],-1]}},{"l":5,"d":2,"f":2,"v":{"head":["L",[2,3,3,4,4,5],-1]}},{"l":3,"d":3,"f":3,"v":{"head":["L",[3,3,4,4,5],-1]}},{"l":4,"d":3,"f":3,"v":{"head":["L",[3,3,4,4,5],-1]}},{"l":6,"d":3,"f":3,"v":{"head":["L",[3,3,4,4,5],-1]}},{"l":6,"d":3,"f":3,"v":{"head":["L",[3,4,4,5],-1]}},{"l":7,"d":3,"f":3,"v":{"head":["L",[3,4,4,5],-1]}},{"l":3,"d":4,"f":4,"v":{"head":["L",[4,4,5],-1]}},{"l":4,"d":4,"f":4,"v":{"head":["L",[4,4,5],-1]}},{"l":6,"d":4,"f":4,"v":{"head":["L",[4,4,5],-1]}},{"l":6,"d":4,"f":4,"v":{"head":["L",[4,5],-1]}},{"l":7,"d":4,"f":4,"v":{"head":["L",[4,5],-1]}},{"l":3,"d":5,"f":5,"v":{"head":["L",[5],-1]}},{"l":3,"d":5,"f":5,"v":{"head":["L",[5],-1]},"ret":["L",[5],-1]},{"l":7,"d":4,"f":4,"v":{"head":["L",[4,5],-1]},"ret":["L",[5],-1]},{"l":7,"d":3,"f":3,"v":{"head":["L",[3,4,4,5],-1]},"ret":["L",[5],-1]},{"l":5,"d":2,"f":2,"v":{"head":["L",[2,5],-1]},"ret":["L",[2,5],-1]},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,5],-1]},"ret":["L",[1,2,5],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,1,2,3],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3],-1]}},{"l":3,"d":2,"f":2,"v":{"head":["L",[2,3],-1]}},{"l":4,"d":2,"f":2,"v":{"head":["L",[2,3],-1]}},{"l":5,"d":2,"f":2,"v":{"head":["L",[2,3],-1]}},{"l":3,"d":3,"f":3,"v":{"head":["L",[3],-1]}},{"l":3,"d":3,"f":3,"v":{"head":["L",[3],-1]},"ret":["L",[3],-1]},{"l":5,"d":2,"f":2,"v":{"head":["L",[2,3],-1]},"ret":["L",[2,3],-1]},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3],-1]},"ret":["L",[2,3],-1]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`dummy = prev = ListNode(0, head)`","A fake head before the real one; `prev` is the last node kept","The head itself may be deleted, so you need a stable node in front"],["`cur.next and cur.val == cur.next.val`","Next node exists and has the same value","Duplicate check; the first test avoids `None.val`"],["inner `while … cur = cur.next`","Moves `cur` to the last node of the duplicate run","Skip every copy, including the first"],["`prev.next = cur.next`","Unlinks the entire run","Splice out nodes by repointing one link"],["`else: prev = prev.next`","Advances the kept-tail pointer","Only when the current node survives"]]}},{"h":"Walk through an example","p":["`1→2→3→3→4→4→5`. Each row is one outer-loop pass; the last column shows the list reachable from `dummy`:"],"table":{"head":["Pass","Decision","List after the pass"],"rows":[["1","1 is unique → prev moves to 1","1→2→3→3→4→4→5"],["2","2 is unique → prev moves to 2","1→2→3→3→4→4→5"],["3","skip all 3s → prev.next = 4","1→2→4→4→5"],["4","skip all 4s → prev.next = 5","1→2→5"],["5","5 is unique → prev moves to 5","1→2→5"]]}},{"h":"Why does `prev` move only in the `else` branch?","p":["`prev` must always point at the last node known to stay in the answer. After removing a duplicate run we don't yet know whether the next node is unique (it might start another run), so `prev` stays put and `prev.next` is re-pointed instead. The `cur = cur.next` at the bottom of the loop then moves on to the first node after the run."]},{"h":"Why a dummy node?","p":["For `1→1→2`, the head `1` must be removed. With `prev = dummy`, the same `prev.next = cur.next` code removes it and `dummy.next` becomes the new head `2`."]},{"h":"Time and space","bullets":["Time: O(n) — each node is visited a constant number of times.","Space: O(1) — pointers only."]}],"takeaway":"Dummy head plus a `prev` pointer that trails the last kept node lets you delete whole runs of duplicates in one pass."},"statement":"Given the head of a sorted linked list, delete every value that occurs more than once, leaving only the values that appear exactly once. Return the resulting list (still sorted).\n\nExample 1:\n\n```\nInput: head = [1,1,2,3,3,4]\nOutput: [2,4]\n```\n\nExample 2:\n\n```\nInput: head = [5,5,5]\nOutput: []\n```\n\nConstraints:\n\n* The number of nodes is in the range `[0, 300]`.\n* `-100 <= Node.val <= 100`\n* The list is sorted in ascending order.","ex2":{"input":"[1,1,1,2,3]","output":"2 → 3","why":"Every 1 is a duplicate and is removed entirely."}};
+window.PROBLEM = {
+ "id": "82",
+ "title": "Remove Duplicates from Sorted List II",
+ "level": "Medium",
+ "topic": "Linked List",
+ "question": "In a sorted linked list, delete EVERY value that appears more than once (not just the extras).",
+ "why": "1→2→3→3→4→4→5 → 1→2→5.",
+ "idea": "Use a previous pointer; when a value repeats, skip all its copies.",
+ "input": "1→2→3→3→4→4→5",
+ "output": "1→2→5",
+ "notes": [],
+ "best": "Use a previous pointer; when a value repeats, skip all its copies.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def deleteDuplicates(self, head):\n        dummy = prev = ListNode(0, head); cur = head\n        while cur:\n            if cur.next and cur.val == cur.next.val:\n                while cur.next and cur.val == cur.next.val: cur = cur.next\n                prev.next = cur.next\n            else: prev = prev.next\n            cur = cur.next\n        return dummy.next",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Use a previous pointer; when a value repeats, skip all its copies.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Walk with prev and cur.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "list",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "3",
+        "4",
+        "4",
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "0": "cur"
+       },
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "1, 2",
+     "description": "Unique → prev moves along.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "list",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "3",
+        "4",
+        "4",
+        "5"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "3, 3",
+     "description": "Repeat → skip both 3s.",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "list",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "3",
+        "4",
+        "4",
+        "5"
+       ],
+       "hot": [
+        2,
+        3
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "4, 4",
+     "description": "Repeat → skip both 4s.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "list",
+       "cells": [
+        "1",
+        "2",
+        "4",
+        "4",
+        "5"
+       ],
+       "hot": [
+        2,
+        3
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "5 is unique and stays.",
+     "codeLines": [
+      10
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "list",
+       "cells": [
+        "1",
+        "2",
+        "5"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

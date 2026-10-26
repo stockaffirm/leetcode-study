@@ -1,1 +1,267 @@
-window.PROBLEM = {"id":"206","title":"Reverse Linked List","level":"Easy","topic":"Linked List","question":"Given the head of a singly linked list, reverse the list (every node's next pointer is turned around) and return the new head. Example: 1→2→3→4→5 becomes 5→4→3→2→1.","input":"1 → 2 → 3 → 4 → 5","output":"5 → 4 → 3 → 2 → 1","notes":["Save next before overwriting curr.next.","prev is the new head at the end."],"best":"Iterative three-pointer reversal in O(1) space.","variants":[{"name":"Iterative pointer flip","code":"class Solution:\n    def reverseList(self, head):\n        prev, curr = None, head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev, curr = curr, nxt\n        return prev","time":"O(n)","space":"O(1)","explain":"Flip one pointer per step.","frames":[{"title":"Start","description":"prev = None, curr = 1.","codeLines":[3],"facts":{},"rows":[{"name":"reversed","cells":["·"],"hot":[],"marks":{}},{"name":"remaining","cells":["1","2","3","4","5"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Flip 1","description":"Point node 1 back at the reversed part.","codeLines":[5,6,3],"facts":{},"rows":[{"name":"reversed","cells":["1"],"hot":[0],"marks":{},"kind":"list"},{"name":"remaining","cells":["2","3","4","5"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Flip 2","description":"Point node 2 back at the reversed part.","codeLines":[5,6,3],"facts":{},"rows":[{"name":"reversed","cells":["2","1"],"hot":[0],"marks":{},"kind":"list"},{"name":"remaining","cells":["3","4","5"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Flip 3","description":"Point node 3 back at the reversed part.","codeLines":[5,6,3],"facts":{},"rows":[{"name":"reversed","cells":["3","2","1"],"hot":[0],"marks":{},"kind":"list"},{"name":"remaining","cells":["4","5"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Flip 4","description":"Point node 4 back at the reversed part.","codeLines":[5,6,3],"facts":{},"rows":[{"name":"reversed","cells":["4","3","2","1"],"hot":[0],"marks":{},"kind":"list"},{"name":"remaining","cells":["5"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Flip 5","description":"Point node 5 back at the reversed part.","codeLines":[5,6,3],"facts":{},"rows":[{"name":"reversed","cells":["5","4","3","2","1"],"hot":[0],"marks":{},"kind":"list"},{"name":"remaining","cells":["·"],"hot":[],"marks":{},"kind":"list"}]},{"title":"Return","description":"prev is the new head.","codeLines":[8],"facts":{},"rows":[{"name":"result","cells":["5","4","3","2","1"],"hot":[0],"marks":{},"kind":"list"}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"prev":null,"curr":["L",[1,2,3,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"prev":null,"curr":["L",[1,2,3,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"prev":null,"curr":["L",[1,2,3,4,5],-1],"nxt":["L",[2,3,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":null,"curr":["L",[1],-1],"nxt":["L",[2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[1],-1],"curr":["L",[2,3,4,5],-1],"nxt":["L",[2,3,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[1],-1],"curr":["L",[2,3,4,5],-1],"nxt":["L",[2,3,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[1],-1],"curr":["L",[2,3,4,5],-1],"nxt":["L",[3,4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[1],-1],"curr":["L",[2,1],-1],"nxt":["L",[3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[2,1],-1],"curr":["L",[3,4,5],-1],"nxt":["L",[3,4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[2,1],-1],"curr":["L",[3,4,5],-1],"nxt":["L",[3,4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[2,1],-1],"curr":["L",[3,4,5],-1],"nxt":["L",[4,5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[2,1],-1],"curr":["L",[3,2,1],-1],"nxt":["L",[4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[3,2,1],-1],"curr":["L",[4,5],-1],"nxt":["L",[4,5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[3,2,1],-1],"curr":["L",[4,5],-1],"nxt":["L",[4,5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[3,2,1],-1],"curr":["L",[4,5],-1],"nxt":["L",[5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[3,2,1],-1],"curr":["L",[4,3,2,1],-1],"nxt":["L",[5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[4,3,2,1],-1],"curr":["L",[5],-1],"nxt":["L",[5],-1]}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[4,3,2,1],-1],"curr":["L",[5],-1],"nxt":["L",[5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[4,3,2,1],-1],"curr":["L",[5],-1],"nxt":null}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[4,3,2,1],-1],"curr":["L",[5,4,3,2,1],-1],"nxt":null}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[5,4,3,2,1],-1],"curr":null,"nxt":null}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[5,4,3,2,1],-1],"curr":null,"nxt":null}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1],-1],"prev":["L",[5,4,3,2,1],-1],"curr":null,"nxt":null},"ret":["L",[5,4,3,2,1],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":null}},{"l":4,"d":1,"f":1,"v":{"head":null,"prev":null,"curr":null}},{"l":8,"d":1,"f":1,"v":{"head":null,"prev":null,"curr":null}},{"l":8,"d":1,"f":1,"v":{"head":null,"prev":null,"curr":null},"ret":null}],"trunc":false}},{"name":"Recursion","tag":"Alternative","code":"class Solution:\n    def reverseList(self, head):\n        if not head or not head.next: return head\n        p = self.reverseList(head.next)\n        head.next.next = head; head.next = None\n        return p","time":"O(n)","space":"O(n)","explain":"Reverse the rest, then hook the current node behind it.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1]}},{"l":3,"d":2,"f":2,"v":{"head":["L",[2,3,4,5],-1]}},{"l":4,"d":2,"f":2,"v":{"head":["L",[2,3,4,5],-1]}},{"l":3,"d":3,"f":3,"v":{"head":["L",[3,4,5],-1]}},{"l":4,"d":3,"f":3,"v":{"head":["L",[3,4,5],-1]}},{"l":3,"d":4,"f":4,"v":{"head":["L",[4,5],-1]}},{"l":4,"d":4,"f":4,"v":{"head":["L",[4,5],-1]}},{"l":3,"d":5,"f":5,"v":{"head":["L",[5],-1]}},{"l":3,"d":5,"f":5,"v":{"head":["L",[5],-1]},"ret":["L",[5],-1]},{"l":5,"d":4,"f":4,"v":{"head":["L",[4,5],-1],"p":["L",[5],-1]}},{"l":6,"d":4,"f":4,"v":{"head":["L",[4],-1],"p":["L",[5,4],-1]}},{"l":6,"d":4,"f":4,"v":{"head":["L",[4],-1],"p":["L",[5,4],-1]},"ret":["L",[5,4],-1]},{"l":5,"d":3,"f":3,"v":{"head":["L",[3,4],-1],"p":["L",[5,4],-1]}},{"l":6,"d":3,"f":3,"v":{"head":["L",[3],-1],"p":["L",[5,4,3],-1]}},{"l":6,"d":3,"f":3,"v":{"head":["L",[3],-1],"p":["L",[5,4,3],-1]},"ret":["L",[5,4,3],-1]},{"l":5,"d":2,"f":2,"v":{"head":["L",[2,3],-1],"p":["L",[5,4,3],-1]}},{"l":6,"d":2,"f":2,"v":{"head":["L",[2],-1],"p":["L",[5,4,3,2],-1]}},{"l":6,"d":2,"f":2,"v":{"head":["L",[2],-1],"p":["L",[5,4,3,2],-1]},"ret":["L",[5,4,3,2],-1]},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2],-1],"p":["L",[5,4,3,2],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"p":["L",[5,4,3,2,1],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1],-1],"p":["L",[5,4,3,2,1],-1]},"ret":["L",[5,4,3,2,1],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":null}},{"l":3,"d":1,"f":1,"v":{"head":null},"ret":null}],"trunc":false}},{"name":"Stack","tag":"Alternative","code":"class Solution:\n    def reverseList(self, head):\n        st, cur = [], head\n        while cur: st.append(cur); cur = cur.next\n        dummy = cur = ListNode()\n        while st:\n            node = st.pop(); cur.next = node; cur = node\n        cur.next = None\n        return dummy.next","time":"O(n)","space":"O(n)","explain":"Push every node, then pop them to rebuild in reverse.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[],0],"cur":["L",[1,2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1]],0],"cur":["L",[2,3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1]],0],"cur":["L",[3,4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1]],0],"cur":["L",[4,5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1]],0],"cur":["L",[5],-1]}},{"l":4,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1],["L",[5],-1]],0],"cur":null}},{"l":5,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1],["L",[5],-1]],0],"cur":null}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1],["L",[5],-1]],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1],["L",[5],-1]],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1]],0],"cur":["L",[5],-1],"dummy":["L",[0,5],-1],"node":["L",[5],-1]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],-1],"st":["l",[["L",[1,2,3,4,5],-1],["L",[2,3,4,5],-1],["L",[3,4,5],-1],["L",[4,5],-1]],0],"cur":["L",[5],-1],"dummy":["L",[0,5],-1],"node":["L",[5],-1]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],3],"st":["l",[["L",[1,2,3,4,5],3],["L",[2,3,4,5],2],["L",[3,4,5],1]],0],"cur":["L",[4,5],0],"dummy":["L",[0,5,4],1],"node":["L",[4,5],0]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,4,5],3],"st":["l",[["L",[1,2,3,4,5],3],["L",[2,3,4,5],2],["L",[3,4,5],1]],0],"cur":["L",[4,5],0],"dummy":["L",[0,5,4],1],"node":["L",[4,5],0]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3,4],2],"st":["l",[["L",[1,2,3,4],2],["L",[2,3,4],1]],0],"cur":["L",[3,4],0],"dummy":["L",[0,5,4,3],2],"node":["L",[3,4],0]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3,4],2],"st":["l",[["L",[1,2,3,4],2],["L",[2,3,4],1]],0],"cur":["L",[3,4],0],"dummy":["L",[0,5,4,3],2],"node":["L",[3,4],0]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2,3],1],"st":["l",[["L",[1,2,3],1]],0],"cur":["L",[2,3],0],"dummy":["L",[0,5,4,3,2],3],"node":["L",[2,3],0]}},{"l":7,"d":1,"f":1,"v":{"head":["L",[1,2,3],1],"st":["l",[["L",[1,2,3],1]],0],"cur":["L",[2,3],0],"dummy":["L",[0,5,4,3,2],3],"node":["L",[2,3],0]}},{"l":6,"d":1,"f":1,"v":{"head":["L",[1,2],0],"st":["l",[],0],"cur":["L",[1,2],0],"dummy":["L",[0,5,4,3,2,1],4],"node":["L",[1,2],0]}},{"l":8,"d":1,"f":1,"v":{"head":["L",[1,2],0],"st":["l",[],0],"cur":["L",[1,2],0],"dummy":["L",[0,5,4,3,2,1],4],"node":["L",[1,2],0]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1],-1],"st":["l",[],0],"cur":["L",[1],-1],"dummy":["L",[0,5,4,3,2,1],-1],"node":["L",[1],-1]}},{"l":9,"d":1,"f":1,"v":{"head":["L",[1],-1],"st":["l",[],0],"cur":["L",[1],-1],"dummy":["L",[0,5,4,3,2,1],-1],"node":["L",[1],-1]},"ret":["L",[5,4,3,2,1],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":null}},{"l":4,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":null}},{"l":5,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":null}},{"l":6,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]}},{"l":9,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]}},{"l":9,"d":1,"f":1,"v":{"head":null,"st":["l",[],0],"cur":["L",[0],-1],"dummy":["L",[0],-1]},"ret":null}],"trunc":false}}],"why":"1→2→3→4→5 becomes 5→4→3→2→1.","idea":"Walk along the list and flip each arrow to point backwards.","understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`prev, curr = None, head`","`prev` is the already reversed part (starts empty); `curr` is the next node to process","Iterative in-place reversal"],["`nxt = curr.next`","Save the rest of the list before cutting the link","Overwriting `.next` would lose the remainder"],["`curr.next = prev`","Point the node backwards","The actual reversal step"],["`prev, curr = curr, nxt`","Advance both pointers (simultaneous assignment)","Moving a window of two pointers"],["`return prev`","When `curr` is `None`, `prev` is the new head","The old tail"]]}},{"h":"Walk through an example","p":["`1→2→3→4→5`. Each iteration flips one arrow and moves forward."],"table":{"head":["Node processed","Saved","Rewire","Pointers after"],"rows":[["1","nxt = 2","1.next = None","prev = 1, curr = 2"],["2","nxt = 3","2.next = 1","prev = 2, curr = 3"],["3","nxt = 4","3.next = 2","prev = 3, curr = 4"],["4","nxt = 5","4.next = 3","prev = 4, curr = 5"],["5","nxt = None","5.next = 4","prev = 5, curr = None"]]}},{"h":"Why must `nxt` be saved first?","p":["After `curr.next = prev` the original forward link is gone. If you did not store `curr.next` beforehand you would have no way to reach the rest of the list."]},{"h":"Recursive version","p":["You can reverse recursively (reverse the rest, then make `head.next.next = head`), but it uses O(n) stack. The iterative version is O(1) space and is the expected answer."],"table":{"head":["Version","Time","Space"],"rows":[["Iterative (this code)","O(n)","O(1)"],["Recursive","O(n)","O(n) call stack"]]}},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1)."]}],"takeaway":"Reverse a linked list in place with three pointers: save next, flip the arrow, step forward; the old tail is the new head."},"statement":"Reverse a singly linked list and return the head of the reversed list.\n\nExample 1:\n\n```\nInput: head = [1,2]\nOutput: [2,1]\n```\n\nExample 2:\n\n```\nInput: head = []\nOutput: []\n```\n\nConstraints:\n\n* The number of nodes is in the range `[0, 5000]`.\n* `-5000 <= Node.val <= 5000`","ex2":{"input":"[]","output":"None","why":"An empty list has nothing to reverse → None."}};
+window.PROBLEM = {
+ "id": "206",
+ "title": "Reverse Linked List",
+ "level": "Easy",
+ "topic": "Linked List",
+ "question": "Reverse a singly linked list.",
+ "input": "1 → 2 → 3 → 4 → 5",
+ "output": "5 → 4 → 3 → 2 → 1",
+ "notes": [
+  "Save next before overwriting curr.next.",
+  "prev is the new head at the end."
+ ],
+ "best": "Iterative three-pointer reversal in O(1) space.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def reverseList(self, head):\n        prev, curr = None, head\n        while curr:\n            nxt = curr.next\n            curr.next = prev\n            prev, curr = curr, nxt\n        return prev",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Flip one pointer per step.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "prev = None, curr = 1.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Flip 1",
+     "description": "Point node 1 back at the reversed part.",
+     "codeLines": [
+      5,
+      6,
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "2",
+        "3",
+        "4",
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Flip 2",
+     "description": "Point node 2 back at the reversed part.",
+     "codeLines": [
+      5,
+      6,
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "2",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "3",
+        "4",
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Flip 3",
+     "description": "Point node 3 back at the reversed part.",
+     "codeLines": [
+      5,
+      6,
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "4",
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Flip 4",
+     "description": "Point node 4 back at the reversed part.",
+     "codeLines": [
+      5,
+      6,
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "4",
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "5"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Flip 5",
+     "description": "Point node 5 back at the reversed part.",
+     "codeLines": [
+      5,
+      6,
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "reversed",
+       "cells": [
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "remaining",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "prev is the new head.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "result",
+       "cells": [
+        "5",
+        "4",
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

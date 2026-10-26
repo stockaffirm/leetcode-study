@@ -1,1 +1,130 @@
-window.PROBLEM = {"id":"502","title":"IPO","level":"Hard","topic":"Heap","question":"You can do at most k projects. You start with w capital. Project i needs at least capital[i] to start and then adds profits[i] to your capital when finished. Pick up to k projects to END with the maximum capital. Example: k=2, w=0, profits=[1,2,3], capital=[0,1,1] → do project 0 (capital becomes 1), then project 2 (profit 3) → 4.","why":"k=2, w=0, profits [1,2,3], capital [0,1,1] → do project 0 (+1 → w=1), then project 2 (+3 → w=4).","idea":"Each round, among projects you can afford, take the most profitable one (max-heap).","input":"k=2, w=0, profits=[1,2,3], capital=[0,1,1]","output":"4","notes":[],"best":"Each round, among projects you can afford, take the most profitable one (max-heap).","variants":[{"name":"Max-heap of affordable profits","code":"class Solution:\n    def findMaximizedCapital(self, k, w, profits, capital):\n        projects = sorted(zip(capital, profits)); heap = []; i = 0\n        for _ in range(k):\n            while i < len(projects) and projects[i][0] <= w:\n                heappush(heap, -projects[i][1]); i += 1\n            if not heap: break\n            w -= heappop(heap)\n        return w","time":"O(n log n)","space":"O(n)","explain":"Each round, among projects you can afford, take the most profitable one (max-heap).","frames":[{"title":"Sort by cost","description":"(capital, profit): (0,1), (1,2), (1,3).","codeLines":[3],"facts":{},"rows":[{"name":"projects","cells":["(0,1)","(1,2)","(1,3)"],"hot":[],"marks":{}},{"name":"capital w","cells":["0"],"hot":[],"marks":{}}]},{"title":"Round 1","description":"Only (0,1) is affordable → profit 1 → w = 1.","codeLines":[5,8],"facts":{},"rows":[{"name":"affordable profits","cells":["1"],"hot":[0],"marks":{}},{"name":"capital w","cells":["1"],"hot":[],"marks":{}}]},{"title":"Round 2","description":"Now (1,2) and (1,3) are affordable → take the best profit 3 → w = 4.","codeLines":[8],"facts":{},"rows":[{"name":"affordable profits","cells":["3","2"],"hot":[0],"marks":{}},{"name":"capital w","cells":["4"],"hot":[],"marks":{}}]},{"title":"Return","description":"k = 2 rounds done → 4.","codeLines":[9],"facts":{},"rows":[{"name":"answer","cells":["4"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":0,"_":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":0,"_":0}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-1],0],"i":1,"_":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-1],0],"i":1,"_":0}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-1],0],"i":1,"_":0}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":1,"_":0}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":1,"_":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[],0],"i":1,"_":1}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-2],0],"i":2,"_":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-2],0],"i":2,"_":1}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-3,-2],0],"i":3,"_":1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-3,-2],0],"i":3,"_":1}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-3,-2],0],"i":3,"_":1}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-2],0],"i":3,"_":1}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-2],0],"i":3,"_":1}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"heap":["l",[-2],0],"i":3,"_":1},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"heap":["l",[],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"heap":["l",[],0],"i":0,"_":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"heap":["l",[],0],"i":0,"_":0}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"heap":["l",[],0],"i":0,"_":0}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"heap":["l",[],0],"i":0,"_":0},"ret":0}],"trunc":false}},{"name":"Scan for the best affordable project","tag":"Brute force","code":"class Solution:\n    def findMaximizedCapital(self, k, w, profits, capital):\n        used = [False] * len(profits)\n        for _ in range(k):\n            best = -1\n            for i in range(len(profits)):\n                if not used[i] and capital[i] <= w and (best == -1 or profits[i] > profits[best]): best = i\n            if best == -1: break\n            used[best] = True; w += profits[best]\n        return w","time":"O(k·n)","space":"O(n)","explain":"Each round linearly search for the most profitable project you can afford.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0]}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":-1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":-1,"i":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":2}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":2}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":2}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[false,false,false],0],"_":0,"best":0,"i":2}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":0,"best":0,"i":2}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":0,"i":2}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":-1,"i":2}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":-1,"i":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":-1,"i":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":-1,"i":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":1,"i":1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":1,"i":2}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":2,"i":2}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":2,"i":2}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,false],0],"_":1,"best":2,"i":2}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,true],0],"_":1,"best":2,"i":2}},{"l":10,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,true],0],"_":1,"best":2,"i":2}},{"l":10,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"used":["l",[true,false,true],0],"_":1,"best":2,"i":2},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0]}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":1}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":1}},{"l":10,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":1}},{"l":10,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"used":["l",[false,false],0],"_":0,"best":-1,"i":1},"ret":0}],"trunc":false}},{"name":"Min-heap by capital + max-heap by profit","tag":"Alternative","code":"class Solution:\n    def findMaximizedCapital(self, k, w, profits, capital):\n        projects = list(zip(capital, profits)); heapify(projects); avail = []\n        for _ in range(k):\n            while projects and projects[0][0] <= w:\n                c, p = heappop(projects); heappush(avail, -p)\n            if not avail: break\n            w += -heappop(avail)\n        return w","time":"O(n log n)","space":"O(n)","explain":"Move newly affordable projects from one heap to the other.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0],"_":0}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[0,1],1],["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0],"_":0}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[-1],0],"_":0,"c":0,"p":1}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[-1],0],"_":0,"c":0,"p":1}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[-1],0],"_":0,"c":0,"p":1}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0],"_":0,"c":0,"p":1}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0],"_":1,"c":0,"p":1}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,2],1],["l",[1,3],1]],0],"avail":["l",[],0],"_":1,"c":0,"p":1}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,3],1]],0],"avail":["l",[-2],0],"_":1,"c":1,"p":2}},{"l":6,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[["l",[1,3],1]],0],"avail":["l",[-2],0],"_":1,"c":1,"p":2}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-3,-2],0],"_":1,"c":1,"p":3}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-3,-2],0],"_":1,"c":1,"p":3}},{"l":8,"d":1,"f":1,"v":{"k":2,"w":1,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-3,-2],0],"_":1,"c":1,"p":3}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-2],0],"_":1,"c":1,"p":3}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-2],0],"_":1,"c":1,"p":3}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":4,"profits":["l",[1,2,3],0],"capital":["l",[0,1,1],0],"projects":["l",[],0],"avail":["l",[-2],0],"_":1,"c":1,"p":3},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0]}},{"l":4,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"avail":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"avail":["l",[],0],"_":0}},{"l":7,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"avail":["l",[],0],"_":0}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"avail":["l",[],0],"_":0}},{"l":9,"d":1,"f":1,"v":{"k":2,"w":0,"profits":["l",[1,2],0],"capital":["l",[1,1],0],"projects":["l",[["l",[1,1],1],["l",[1,2],1]],0],"avail":["l",[],0],"_":0},"ret":0}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`sorted(zip(capital, profits))`","Projects as (capital needed, profit) sorted by capital","Cheapest-to-start first, so affordable ones form a prefix"],["`projects[i][0] <= w`","Project is affordable with current capital w","Move every newly affordable project into the heap"],["`heappush(heap, -profit)`","Max-heap of profits (stored negated)","`heapq` is a min-heap; negation makes the biggest profit pop first"],["`w -= heappop(heap)`","Take the most profitable project; subtracting a negative adds profit","Greedy choice each round"],["`if not heap: break`","Nothing affordable","Stop early, fewer than k projects"]]}},{"h":"Walk through an example","p":["`k = 2`, `w = 0`, profits `[1,2,3]`, capital `[0,1,1]` (sorted projects: (0,1), (1,2), (1,3)):"],"table":{"head":["Round","Newly affordable (capital, profit)","Pick","Capital w"],"rows":[["1","[(0, 1)]","take profit 1","1"],["2","[(1, 2), (1, 3)]","take profit 3","4"]]}},{"h":"Why greedy by profit among affordable projects?","p":["Capital only grows, so a project that is affordable now stays affordable later. Taking the largest profit now never prevents any future option and gives the most capital for unlocking the next projects. The heap holds all currently affordable profits so the best one is available in O(log n)."]},{"h":"Time and space","bullets":["Time: O(n log n): sorting plus each project pushed and popped at most once.","Space: O(n)."]}],"takeaway":"Greedy with a max-heap: unlock every project you can afford, take the most profitable, repeat up to k times."},"statement":"You start with `w` units of capital and may complete at most `k` distinct projects. Project `i` needs at least `capital[i]` in hand to start, and when finished it adds `profits[i]` to your capital. Each project can be done only once. Choose projects to finish with the largest possible capital and return that final amount.\n\nExample 1:\n\n```\nInput: k = 2, w = 0, profits = [1,2,3], capital = [0,1,1]\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]\nOutput: 6\n```\n\nConstraints:\n\n* `1 <= k <= 10^5`\n* `0 <= w <= 10^9`\n* `n == profits.length == capital.length`, `1 <= n <= 10^5`\n* `0 <= profits[i] <= 10^4`, `0 <= capital[i] <= 10^9`","ex2":{"input":"2,0,[1,2],[1,1]","output":"0","why":"Every project needs capital 1 but we have 0 → we can't start any."}};
+window.PROBLEM = {
+ "id": "502",
+ "title": "IPO",
+ "level": "Hard",
+ "topic": "Heap",
+ "question": "You start with capital w and can do at most k projects. Each project needs some minimum capital and gives a profit (added to your capital). Maximise final capital.",
+ "why": "k=2, w=0, profits [1,2,3], capital [0,1,1] → do project 0 (+1 → w=1), then project 2 (+3 → w=4).",
+ "idea": "Each round, among projects you can afford, take the most profitable one (max-heap).",
+ "input": "k=2, w=0, profits=[1,2,3], capital=[0,1,1]",
+ "output": "4",
+ "notes": [],
+ "best": "Each round, among projects you can afford, take the most profitable one (max-heap).",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def findMaximizedCapital(self, k, w, profits, capital):\n        projects = sorted(zip(capital, profits)); heap = []; i = 0\n        for _ in range(k):\n            while i < len(projects) and projects[i][0] <= w:\n                heappush(heap, -projects[i][1]); i += 1\n            if not heap: break\n            w -= heappop(heap)\n        return w",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Each round, among projects you can afford, take the most profitable one (max-heap).",
+   "frames": [
+    {
+     "title": "Sort by cost",
+     "description": "(capital, profit): (0,1), (1,2), (1,3).",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "projects",
+       "cells": [
+        "(0,1)",
+        "(1,2)",
+        "(1,3)"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "capital w",
+       "cells": [
+        "0"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Round 1",
+     "description": "Only (0,1) is affordable → profit 1 → w = 1.",
+     "codeLines": [
+      5,
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "affordable profits",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "capital w",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Round 2",
+     "description": "Now (1,2) and (1,3) are affordable → take the best profit 3 → w = 4.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "affordable profits",
+       "cells": [
+        "3",
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "capital w",
+       "cells": [
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "k = 2 rounds done → 4.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

@@ -1,1 +1,140 @@
-window.PROBLEM = {"id":"1207","title":"Unique Number of Occurrences","level":"Easy","topic":"Hash Map / Set","question":"Given a list arr, count how many times each distinct value occurs. Return true if all of those counts are different from one another, otherwise false. Example: [1,2,2,1,1,3] → 1 occurs 3 times, 2 occurs 2 times, 3 occurs once → counts 3,2,1 are all different → true.","input":"[1,2,2,1,1,3]","output":"True","notes":["If counts are unique, the set keeps the same size.","Counter is a dict of value → frequency."],"best":"Counter + set of counts; compare sizes.","variants":[{"name":"Counter + set","code":"class Solution:\n    def uniqueOccurrences(self, arr):\n        count = Counter(arr)\n        return len(set(count.values())) == len(count)","time":"O(n)","space":"O(n)","explain":"Count, then check the counts are all distinct.","frames":[{"title":"Input","description":"Count each value.","codeLines":[2],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[],"marks":{}}]},{"title":"Counter","description":"1→3, 2→2, 3→1","codeLines":[3],"facts":{},"rows":[{"name":"value","cells":["1","2","3"],"hot":[],"marks":{}},{"name":"count","cells":["3","2","1"],"hot":[0,1,2],"marks":{}}],"sub":[{"description":"see 1 → count of 1 is now 1","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[0],"marks":{}},{"name":"counts","cells":["1→1"],"hot":[0],"marks":{}}]},{"description":"see 2 → count of 2 is now 1","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[1],"marks":{}},{"name":"counts","cells":["1→1","2→1"],"hot":[1],"marks":{}}]},{"description":"see 2 → count of 2 is now 2","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[2],"marks":{}},{"name":"counts","cells":["1→1","2→2"],"hot":[1],"marks":{}}]},{"description":"see 1 → count of 1 is now 2","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[3],"marks":{}},{"name":"counts","cells":["1→2","2→2"],"hot":[0],"marks":{}}]},{"description":"see 1 → count of 1 is now 3","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[4],"marks":{}},{"name":"counts","cells":["1→3","2→2"],"hot":[0],"marks":{}}]},{"description":"see 3 → count of 3 is now 1","codeLines":[3],"facts":{},"rows":[{"name":"arr","cells":["1","2","2","1","1","3"],"hot":[5],"marks":{}},{"name":"counts","cells":["1→3","2→2","3→1"],"hot":[2],"marks":{}}]}]},{"title":"Set of counts","description":"{3,2,1} has 3 items, same as the 3 values.","codeLines":[4],"facts":{},"rows":[{"name":"counts","cells":["3","2","1"],"hot":[0,1,2],"marks":{}},{"name":"set","cells":["3","2","1"],"hot":[0,1,2],"marks":{}}]},{"title":"Return","description":"All counts are different.","codeLines":[4],"facts":{},"rows":[{"name":"answer","cells":["True"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"count":["d",[[1,3],[2,2],[3,1]]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"count":["d",[[1,3],[2,2],[3,1]]]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"count":["d",[[1,1],[2,1]]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"count":["d",[[1,1],[2,1]]]},"ret":false}],"trunc":false}},{"name":"Dictionary + seen set","tag":"Alternative","code":"class Solution:\n    def uniqueOccurrences(self, arr):\n        counts = {}\n        for x in arr: counts[x] = counts.get(x, 0) + 1\n        seen = set()\n        for c in counts.values():\n            if c in seen: return False\n            seen.add(c)\n        return True","time":"O(n)","space":"O(n)","explain":"Count, then reject the first repeated count.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,1]]],"x":1}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,1],[2,1]]],"x":2}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,1],[2,2]]],"x":2}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,2],[2,2]]],"x":1}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2]]],"x":1}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[]]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[]],"c":3}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[]],"c":3}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[3]],"c":3}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[3]],"c":2}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[3]],"c":2}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[2,3]],"c":2}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[2,3]],"c":1}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[2,3]],"c":1}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[1,2,3]],"c":1}},{"l":9,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[1,2,3]],"c":1}},{"l":9,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0],"counts":["d",[[1,3],[2,2],[3,1]]],"x":3,"seen":["S",[1,2,3]],"c":1},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[]]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1]]],"x":1}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[]]}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[]],"c":1}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[]],"c":1}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[1]],"c":1}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[1]],"c":1}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"counts":["d",[[1,1],[2,1]]],"x":2,"seen":["S",[1]],"c":1},"ret":false}],"trunc":false}},{"name":"Sort and count runs","tag":"Alternative","code":"class Solution:\n    def uniqueOccurrences(self, arr):\n        arr = sorted(arr); runs = []; i = 0\n        while i < len(arr):\n            j = i\n            while j < len(arr) and arr[j] == arr[i]: j += 1\n            runs.append(j - i); i = j\n        return len(runs) == len(set(runs))","time":"O(n log n)","space":"O(n)","explain":"After sorting, equal numbers sit together, so run lengths are the counts.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2,2,1,1,3],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0,"j":0}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0,"j":1}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0,"j":2}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0,"j":3}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[],0],"i":0,"j":3}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":3}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":3}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":3}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":4}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":5}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3],0],"i":3,"j":5}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2],0],"i":5,"j":5}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2],0],"i":5,"j":5}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2],0],"i":5,"j":5}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2],0],"i":5,"j":6}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2],0],"i":5,"j":6}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2,1],0],"i":6,"j":6}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2,1],0],"i":6,"j":6}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,1,1,2,2,3],0],"runs":["l",[3,2,1],0],"i":6,"j":6},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"arr":["l",[1,2],0]}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[],0],"i":0}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[],0],"i":0,"j":0}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[],0],"i":0,"j":1}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[],0],"i":0,"j":1}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1],0],"i":1,"j":1}},{"l":5,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1],0],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1],0],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1],0],"i":1,"j":2}},{"l":7,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1],0],"i":1,"j":2}},{"l":4,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1,1],0],"i":2,"j":2}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1,1],0],"i":2,"j":2}},{"l":8,"d":1,"f":1,"v":{"arr":["l",[1,2],0],"runs":["l",[1,1],0],"i":2,"j":2},"ret":false}],"trunc":false}}],"why":"1 appears 3 times, 2 appears 2 times, 3 appears once. The counts 3, 2, 1 are all different → True.","idea":"Use a Counter, then check that the counts contain no duplicates.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`Counter(arr)`","Value → number of occurrences","Count frequencies"],["`count.values()`","The occurrence counts","Only the counts matter now"],["`set(count.values())`","Distinct counts","Duplicates collapse"],["`len(set(…)) == len(count)`","As many distinct counts as distinct values","True when no two values share a count"]]}},{"h":"Walk through an example","p":["`[1,2,2,1,1,3]`:"],"table":{"head":["Step","Value"],"rows":[["`Counter(arr)`","{1: 3, 2: 2, 3: 1}"],["`count.values()`","[3, 2, 1]"],["`set(count.values())`","{1, 2, 3}"],["`len(set) == len(count)`","3 == 3 → True"]]}},{"h":"Why compare lengths?","p":["If two values had the same count, the set of counts would be smaller than the dictionary of values (a set removes duplicates). Equal sizes mean every count is unique. For `[1,2]` the counts are `[1,1]`, the set is `{1}` (size 1) versus 2 values, so the answer is False."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n)."]}],"takeaway":"Counter then set: all counts are unique exactly when the set of counts is as large as the Counter."},"statement":"Given an integer array `arr`, count how many times each distinct value appears. Return `true` if no two distinct values have the same count, otherwise return `false`.\n\nExample 1:\n\n```\nInput: arr = [1,2,2,1,1,3]\nOutput: true\n```\n\nExample 2:\n\n```\nInput: arr = [1,2]\nOutput: false\n```\n\nConstraints:\n\n* `1 <= arr.length <= 1000`\n* `-1000 <= arr[i] <= 1000`","ex2":{"input":"[1,2]","output":"False","why":"Both numbers occur exactly once — the counts are not unique → False."}};
+window.PROBLEM = {
+ "id": "1207",
+ "title": "Unique Number of Occurrences",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "Is every value's occurrence count different?",
+ "input": "[1,2,2,1,1,3]",
+ "output": "True",
+ "notes": [
+  "If counts are unique, the set keeps the same size.",
+  "Counter is a dict of value → frequency."
+ ],
+ "best": "Counter + set of counts; compare sizes.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def uniqueOccurrences(self, arr):\n        count = Counter(arr)\n        return len(set(count.values())) == len(count)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Count, then check the counts are all distinct.",
+   "frames": [
+    {
+     "title": "Input",
+     "description": "Count each value.",
+     "codeLines": [
+      2
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "arr",
+       "cells": [
+        "1",
+        "2",
+        "2",
+        "1",
+        "1",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Counter",
+     "description": "1→3, 2→2, 3→1",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "value",
+       "cells": [
+        "1",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "count",
+       "cells": [
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Set of counts",
+     "description": "{3,2,1} has 3 items, same as the 3 values.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "counts",
+       "cells": [
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "set",
+       "cells": [
+        "3",
+        "2",
+        "1"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "All counts are different.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "True"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

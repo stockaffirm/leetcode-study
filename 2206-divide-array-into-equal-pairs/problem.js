@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2206","title":"Divide Array Into Equal Pairs","level":"Easy","topic":"Hash Map / Set","question":"Return whether nums (length 2n) can be split into n pairs of equal numbers. Example: [3,2,3,2,2,2] → true.","why":"[3,2,3,2,2,2] → 3 appears twice, 2 four times → true.","idea":"The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.","input":"nums = [3,2,3,2,2,2]","output":"true","notes":[],"best":"The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.","variants":[{"name":"Every value must appear an even number of times","code":"class Solution:\n    def divideArray(self, nums):\n        return all(c % 2 == 0 for c in Counter(nums).values())","time":"O(n)","space":"O(n)","explain":"The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3,2,2,2],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3,2,2,2],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]},"ret":false}],"trunc":false}},{"name":"Sort and compare pairs","tag":"Alternative","code":"class Solution:\n    def divideArray(self, nums):\n        s = sorted(nums)\n        return all(s[i] == s[i + 1] for i in range(0, len(s), 2))","time":"O(n log n)","space":"O(n)","explain":"After sorting, equal values must pair up.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3,2,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3,2,2,2],0],"s":["l",[2,2,2,2,3,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3,2,2,2],0],"s":["l",[2,2,2,2,3,3],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0],"s":["l",[1,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0],"s":["l",[1,2,3,4],0]},"ret":false}],"trunc":false}}],"ex2":{"input":"all different","output":"False","why":"All different: impossible."}};
+window.PROBLEM = {
+ "id": "2206",
+ "title": "Divide Array Into Equal Pairs",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "[3,2,3,2,2,2] → 3 appears twice, 2 four times → true.",
+ "idea": "The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.",
+ "input": "nums = [3,2,3,2,2,2]",
+ "output": "true",
+ "notes": [],
+ "best": "The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.",
+ "variants": [
+  {
+   "name": "Every value must appear an even number of times",
+   "code": "class Solution:\n    def divideArray(self, nums):\n        return all(c % 2 == 0 for c in Counter(nums).values())",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "The array can be split into pairs of equal numbers exactly when every value occurs an even number of times.",
+   "frames": []
+  }
+ ]
+};

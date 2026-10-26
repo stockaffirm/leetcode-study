@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3110","title":"Score of a String","level":"Easy","topic":"Array / String","question":"The score of a string is the sum of the absolute differences between the ASCII (American Standard Code for Information Interchange) codes of neighbouring characters. Return it. Example: 'hello' → 13.","why":"'hello' → |h−e| + |e−l| + |l−l| + |l−o| = 13.","idea":"Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.","input":"s = \"hello\"","output":"13","notes":[],"best":"Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.","variants":[{"name":"Sum of neighbouring ASCII differences","code":"class Solution:\n    def scoreOfString(self, s):\n        return sum(abs(ord(a) - ord(b)) for a, b in zip(s, s[1:]))","time":"O(n)","space":"O(1)","explain":"Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","hello"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","hello"]},"ret":13}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","zaz"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","zaz"]},"ret":50}],"trunc":false}},{"name":"Index loop","tag":"Alternative","code":"class Solution:\n    def scoreOfString(self, s):\n        total = 0\n        for i in range(len(s) - 1):\n            total += abs(ord(s[i]) - ord(s[i + 1]))\n        return total","time":"O(n)","space":"O(1)","explain":"Loop over neighbouring positions.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","hello"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","hello"],"total":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","hello"],"total":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"s":["s","hello"],"total":3,"i":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","hello"],"total":3,"i":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","hello"],"total":10,"i":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","hello"],"total":10,"i":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","hello"],"total":10,"i":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","hello"],"total":10,"i":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","hello"],"total":13,"i":3}},{"l":6,"d":1,"f":1,"v":{"s":["s","hello"],"total":13,"i":3}},{"l":6,"d":1,"f":1,"v":{"s":["s","hello"],"total":13,"i":3},"ret":13}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","zaz"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","zaz"],"total":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","zaz"],"total":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"s":["s","zaz"],"total":25,"i":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","zaz"],"total":25,"i":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","zaz"],"total":50,"i":1}},{"l":6,"d":1,"f":1,"v":{"s":["s","zaz"],"total":50,"i":1}},{"l":6,"d":1,"f":1,"v":{"s":["s","zaz"],"total":50,"i":1},"ret":50}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`zip(s, s[1:])`","Adjacent character pairs","Neighbour comparison"],["`ord(a) - ord(b)`","Difference of character codes","Alphabet distance"],["`abs(...)`, `sum(...)`","Absolute differences added up","Score"]]}},{"h":"Walk through an example","p":["`\"hello\"`:"],"table":{"head":["Pair","Code difference","Absolute"],"rows":[["he","3","3"],["el","-7","7"],["ll","0","0"],["lo","-3","3"]]}},{"h":"Result","p":["3 + 7 + 0 + 3 = 13."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1) with a generator expression."]}],"takeaway":"Score of a string: sum of absolute differences between the codes of adjacent characters."},"ex2":{"input":"wrap","output":"50","why":"25 + 25 = 50."}};
+window.PROBLEM = {
+ "id": "3110",
+ "title": "Score of a String",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'hello' → |h−e| + |e−l| + |l−l| + |l−o| = 13.",
+ "idea": "Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.",
+ "input": "s = \"hello\"",
+ "output": "13",
+ "notes": [],
+ "best": "Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.",
+ "variants": [
+  {
+   "name": "Sum of neighbouring ASCII differences",
+   "code": "class Solution:\n    def scoreOfString(self, s):\n        return sum(abs(ord(a) - ord(b)) for a, b in zip(s, s[1:]))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Add up the absolute difference of the ASCII (American Standard Code for Information Interchange) codes of every two neighbouring characters.",
+   "frames": []
+  }
+ ]
+};

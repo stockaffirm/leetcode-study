@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2144","title":"Minimum Cost of Buying Candies With Discount","level":"Easy","topic":"Greedy","question":"When you buy two candies you get a third one free (its cost may not exceed the cheaper of the two). Return the minimum cost to buy all candies. Example: [6,5,7,9,2,2] → 23.","why":"[6,5,7,9,2,2] → pay 9 + 7 + 5 + 2? → every third from the top is free: total 23.","idea":"When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.","input":"cost = [6,5,7,9,2,2]","output":"23","notes":[],"best":"When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.","variants":[{"name":"Sort descending; every third candy is free","code":"class Solution:\n    def minimumCost(self, cost):\n        cost = sorted(cost, reverse=True)\n        return sum(c for i, c in enumerate(cost) if i % 3 != 2)","time":"O(n log n)","space":"O(n)","explain":"When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"cost":["l",[6,5,7,9,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0]},"ret":23}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"cost":["l",[5,5],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[5,5],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[5,5],0]},"ret":10}],"trunc":false}},{"name":"Loop in triples","tag":"Alternative","code":"class Solution:\n    def minimumCost(self, cost):\n        cost = sorted(cost, reverse=True)\n        total = 0\n        for i in range(0, len(cost), 3):\n            total += sum(cost[i:i + 2])\n        return total","time":"O(n log n)","space":"O(n)","explain":"Pay for the two biggest of each group of three.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"cost":["l",[6,5,7,9,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0]}},{"l":5,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":0}},{"l":6,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":16,"i":0}},{"l":6,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":16,"i":3}},{"l":5,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":23,"i":3}},{"l":7,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":23,"i":3}},{"l":7,"d":1,"f":1,"v":{"cost":["l",[9,7,6,5,2,2],0],"total":23,"i":3},"ret":23}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"cost":["l",[5,5],0]}},{"l":4,"d":1,"f":1,"v":{"cost":["l",[5,5],0]}},{"l":5,"d":1,"f":1,"v":{"cost":["l",[5,5],0],"total":0}},{"l":6,"d":1,"f":1,"v":{"cost":["l",[5,5],0],"total":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"cost":["l",[5,5],0],"total":10,"i":0}},{"l":7,"d":1,"f":1,"v":{"cost":["l",[5,5],0],"total":10,"i":0}},{"l":7,"d":1,"f":1,"v":{"cost":["l",[5,5],0],"total":10,"i":0},"ret":10}],"trunc":false}}],"ex2":{"input":"two candies","output":"10","why":"No free candy."}};
+window.PROBLEM = {
+ "id": "2144",
+ "title": "Minimum Cost of Buying Candies With Discount",
+ "level": "Easy",
+ "topic": "Greedy",
+ "question": "",
+ "why": "[6,5,7,9,2,2] → pay 9 + 7 + 5 + 2? → every third from the top is free: total 23.",
+ "idea": "When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.",
+ "input": "cost = [6,5,7,9,2,2]",
+ "output": "23",
+ "notes": [],
+ "best": "When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.",
+ "variants": [
+  {
+   "name": "Sort descending; every third candy is free",
+   "code": "class Solution:\n    def minimumCost(self, cost):\n        cost = sorted(cost, reverse=True)\n        return sum(c for i, c in enumerate(cost) if i % 3 != 2)",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "When you buy two candies you get the cheapest of the next ones free (not more expensive than either). Sort the costs descending and skip every third.",
+   "frames": []
+  }
+ ]
+};

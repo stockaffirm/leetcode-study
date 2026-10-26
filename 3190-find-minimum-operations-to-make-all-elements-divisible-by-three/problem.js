@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3190","title":"Find Minimum Operations to Make All Elements Divisible by Three","level":"Easy","topic":"Math / Bit Manipulation","question":"In one operation add or subtract 1 from an element. Return the minimum operations to make all elements divisible by 3. Example: [1,2,3,4] → 3.","why":"[1,2,3,4] → 1, 2 and 4 are one step from a multiple of 3 → 3.","idea":"Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.","input":"nums = [1,2,3,4]","output":"3","notes":[],"best":"Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.","variants":[{"name":"Each non-multiple needs exactly one step","code":"class Solution:\n    def minimumOperations(self, nums):\n        return sum(x % 3 != 0 for x in nums)","time":"O(n)","space":"O(1)","explain":"Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,6,9],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,6,9],0]},"ret":0}],"trunc":false}},{"name":"Remainder cost","tag":"Alternative","code":"class Solution:\n    def minimumOperations(self, nums):\n        return sum(min(x % 3, 3 - x % 3) for x in nums)","time":"O(n)","space":"O(1)","explain":"Each remainder costs min(r, 3 − r) = 1.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,4],0]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,6,9],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,6,9],0]},"ret":0}],"trunc":false}}],"ex2":{"input":"none","output":"0","why":"Already divisible."}};
+window.PROBLEM = {
+ "id": "3190",
+ "title": "Find Minimum Operations to Make All Elements Divisible by Three",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "[1,2,3,4] → 1, 2 and 4 are one step from a multiple of 3 → 3.",
+ "idea": "Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.",
+ "input": "nums = [1,2,3,4]",
+ "output": "3",
+ "notes": [],
+ "best": "Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.",
+ "variants": [
+  {
+   "name": "Each non-multiple needs exactly one step",
+   "code": "class Solution:\n    def minimumOperations(self, nums):\n        return sum(x % 3 != 0 for x in nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Adding or subtracting 1 turns any number that is not a multiple of 3 into one, so the answer is the number of elements with a non-zero remainder.",
+   "frames": []
+  }
+ ]
+};

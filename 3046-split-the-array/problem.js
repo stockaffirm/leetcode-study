@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3046","title":"Split the Array","level":"Easy","topic":"Hash Map / Set","question":"nums has even length. Split it into two parts of equal length so that each part contains only distinct elements. Return true if that is possible. Example: [1,1,2,2,3,4] → true.","why":"[1,1,2,2,3,4] can be split into [1,2,3] and [1,2,4] → true.","idea":"Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.","input":"nums = [1,1,2,2,3,4]","output":"true","notes":[],"best":"Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.","variants":[{"name":"No value may appear more than twice","code":"class Solution:\n    def isPossibleToSplit(self, nums):\n        return max(Counter(nums).values()) <= 2","time":"O(n)","space":"O(n)","explain":"Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,4],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,4],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1],0]},"ret":false}],"trunc":false}},{"name":"Sort and compare i and i+2","tag":"Alternative","code":"class Solution:\n    def isPossibleToSplit(self, nums):\n        nums = sorted(nums)\n        return all(nums[i] != nums[i + 2] for i in range(len(nums) - 2))","time":"O(n log n)","space":"O(1)","explain":"After sorting, a value appearing three times shows up as nums[i] == nums[i+2].","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,4],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,4],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1],0]},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`Counter(nums)`","Count of each value","Frequency table"],["`max(….values())`","Highest frequency","The most repeated value"],["`<= 2`","No value appears more than twice","Two parts can hold at most one copy each"]]}},{"h":"Walk through an example","p":["`[1,1,2,2,3,4]` → True (highest count 2):"],"table":{"head":["Value","Count"],"rows":[["1","2"],["2","2"],["3","1"],["4","1"]]}},{"h":"Why is the frequency bound enough?","p":["Each part must contain distinct elements, so a value can appear at most once in each of the two parts, i.e. at most twice overall. If every value appears at most twice, put one copy of each repeated value in each part and fill the rest evenly: both parts have n/2 distinct elements (the lengths work out because the total is even)."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n)."]}],"takeaway":"Splitting into two parts of distinct elements is possible iff no value appears more than twice."},"statement":"You are given an integer array `nums` of even length. Split it into two arrays `nums1` and `nums2` of equal length such that each of them contains only distinct elements (no value repeated inside the same array). Return `true` if such a split is possible, and `false` otherwise.\n\nExample 1:\n\n```\nInput: nums = [1,1,2,2,3,4]\nOutput: true\n```\n\nExample 2:\n\n```\nInput: nums = [1,1,1,1]\nOutput: false\n```\n\nConstraints:\n\n* `1 <= nums.length <= 100`\n* `nums.length % 2 == 0`\n* `1 <= nums[i] <= 100`","ex2":{"input":"too many repeats","output":"False","why":"1 appears four times."}};
+window.PROBLEM = {
+ "id": "3046",
+ "title": "Split the Array",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "[1,1,2,2,3,4] can be split into [1,2,3] and [1,2,4] → true.",
+ "idea": "Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.",
+ "input": "nums = [1,1,2,2,3,4]",
+ "output": "true",
+ "notes": [],
+ "best": "Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.",
+ "variants": [
+  {
+   "name": "No value may appear more than twice",
+   "code": "class Solution:\n    def isPossibleToSplit(self, nums):\n        return max(Counter(nums).values()) <= 2",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Both halves need distinct values, so each value can appear at most twice (once in each half). With an even length, that condition is also enough.",
+   "frames": []
+  }
+ ]
+};

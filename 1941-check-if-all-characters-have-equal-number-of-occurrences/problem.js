@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1941","title":"Check if All Characters Have Equal Number of Occurrences","level":"Easy","topic":"Hash Map / Set","question":"Return true if all characters of s occur the same number of times. Example: 'abacbc' → true.","why":"'abacbc' → a,b,c each 2 times → true.","idea":"Count the letters and check that the set of counts has exactly one value.","input":"s = \"abacbc\"","output":"true","notes":[],"best":"Count the letters and check that the set of counts has exactly one value.","variants":[{"name":"All counts are equal","code":"class Solution:\n    def areOccurrencesEqual(self, s):\n        return len(set(Counter(s).values())) == 1","time":"O(n)","space":"O(1)","explain":"Count the letters and check that the set of counts has exactly one value.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abacbc"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abacbc"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aaabb"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","aaabb"]},"ret":false}],"trunc":false}},{"name":"Compare to the first count","tag":"Alternative","code":"class Solution:\n    def areOccurrencesEqual(self, s):\n        counts = list(Counter(s).values())\n        return all(c == counts[0] for c in counts)","time":"O(n)","space":"O(1)","explain":"Every count must equal the first one.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abacbc"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abacbc"],"counts":["l",[2,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abacbc"],"counts":["l",[2,2,2],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aaabb"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aaabb"],"counts":["l",[3,2],0]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aaabb"],"counts":["l",[3,2],0]},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["Counter(s)","Frequency of every character",""],["set(counter.values())","The distinct frequencies; if all frequencies are equal, the set has exactly one element","Set to test 'all the same'"],["len(...) == 1","True when every character appears the same number of times",""]]}},{"h":"Walk through examples","table":{"head":["s","frequencies","distinct frequencies","result"],"rows":[["abacbc","{'a': 2, 'b': 2, 'c': 2}","{2}","True"],["aaabb","{'a': 3, 'b': 2}","{2, 3}","False"]]}},{"h":"Why a set of the counts?","p":["We don't care which characters have which count, only whether all counts are identical. Collapsing the counts into a set removes duplicates, so one remaining element means they all agree."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(26) for lowercase letters."]}],"takeaway":"Count characters, then check that the set of counts has exactly one value."},"ex2":{"input":"unequal","output":"False","why":"3 versus 2."}};
+window.PROBLEM = {
+ "id": "1941",
+ "title": "Check if All Characters Have Equal Number of Occurrences",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "",
+ "why": "'abacbc' → a,b,c each 2 times → true.",
+ "idea": "Count the letters and check that the set of counts has exactly one value.",
+ "input": "s = \"abacbc\"",
+ "output": "true",
+ "notes": [],
+ "best": "Count the letters and check that the set of counts has exactly one value.",
+ "variants": [
+  {
+   "name": "All counts are equal",
+   "code": "class Solution:\n    def areOccurrencesEqual(self, s):\n        return len(set(Counter(s).values())) == 1",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Count the letters and check that the set of counts has exactly one value.",
+   "frames": []
+  }
+ ]
+};

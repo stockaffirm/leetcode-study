@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1980","title":"Find Unique Binary String","level":"Medium","topic":"Math / Bit Manipulation","question":"Given n distinct binary strings of length n, return any binary string of length n that is not in the list (this solution flips the diagonal bits). Example: ['01','10'] → '11'.","why":"['01','10'] → flip the diagonal bits to get '11', which differs from both.","idea":"Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.","input":"nums = [\"01\",\"10\"]","output":"\"11\"","notes":[],"best":"Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.","variants":[{"name":"Cantor's diagonal","code":"class Solution:\n    def findDifferentBinaryString(self, nums):\n        return ''.join('1' if nums[i][i] == '0' else '0' for i in range(len(nums)))","time":"O(n)","space":"O(n)","explain":"Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","01"],["s","10"]],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","01"],["s","10"]],0]},"ret":["s","11"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","111"],["s","011"],["s","001"]],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","111"],["s","011"],["s","001"]],0]},"ret":["s","000"]}],"trunc":false}},{"name":"Flip the diagonal with arithmetic","tag":"Alternative","code":"class Solution:\n    def findDifferentBinaryString(self, nums):\n        return ''.join(str(1 - int(s[i])) for i, s in enumerate(nums))","time":"O(n)","space":"O(n)","explain":"Same diagonal idea, flipping each bit as 1 − bit.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","01"],["s","10"]],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","01"],["s","10"]],0]},"ret":["s","11"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","111"],["s","011"],["s","001"]],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[["s","111"],["s","011"],["s","001"]],0]},"ret":["s","000"]}],"trunc":false}}],"ex2":{"input":"length three","output":"'000'","why":"Three strings of length three."}};
+window.PROBLEM = {
+ "id": "1980",
+ "title": "Find Unique Binary String",
+ "level": "Medium",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "['01','10'] → flip the diagonal bits to get '11', which differs from both.",
+ "idea": "Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.",
+ "input": "nums = [\"01\",\"10\"]",
+ "output": "\"11\"",
+ "notes": [],
+ "best": "Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.",
+ "variants": [
+  {
+   "name": "Cantor's diagonal",
+   "code": "class Solution:\n    def findDifferentBinaryString(self, nums):\n        return ''.join('1' if nums[i][i] == '0' else '0' for i in range(len(nums)))",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Build a string whose i-th character is the opposite of the i-th character of the i-th given string. It differs from each given string in at least one position.",
+   "frames": []
+  }
+ ]
+};

@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"1108","title":"Defanging an IP Address","level":"Easy","topic":"Array / String","question":"Replace every '.' of an IP address by '[.]'. Example: '1.1.1.1' → '1[.]1[.]1[.]1'.","why":"'1.1.1.1' becomes '1[.]1[.]1[.]1'.","idea":"Replace every '.' by '[.]'.","input":"address = \"1.1.1.1\"","output":"\"1[.]1[.]1[.]1\"","notes":[],"best":"Replace every '.' by '[.]'.","variants":[{"name":"Replace each dot","code":"class Solution:\n    def defangIPaddr(self, address):\n        return address.replace(\".\", \"[.]\")","time":"O(n)","space":"O(n)","explain":"Replace every '.' by '[.]'.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"address":["s","1.1.1.1"]}},{"l":3,"d":1,"f":1,"v":{"address":["s","1.1.1.1"]},"ret":["s","1[.]1[.]1[.]1"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"address":["s","255.100.50.0"]}},{"l":3,"d":1,"f":1,"v":{"address":["s","255.100.50.0"]},"ret":["s","255[.]100[.]50[.]0"]}],"trunc":false}},{"name":"Split and join","tag":"Alternative","code":"class Solution:\n    def defangIPaddr(self, address):\n        return \"[.]\".join(address.split(\".\"))","time":"O(n)","space":"O(n)","explain":"Cut the address at the dots and join the parts with '[.]'.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"address":["s","1.1.1.1"]}},{"l":3,"d":1,"f":1,"v":{"address":["s","1.1.1.1"]},"ret":["s","1[.]1[.]1[.]1"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"address":["s","255.100.50.0"]}},{"l":3,"d":1,"f":1,"v":{"address":["s","255.100.50.0"]},"ret":["s","255[.]100[.]50[.]0"]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`address.replace('.', '[.]')`","Returns a new string with every occurrence of the first argument replaced","Strings are immutable in Python, so replace returns a copy"]]}},{"h":"Walk through an example","table":{"head":["Input","Output"],"rows":[["1.1.1.1","1[.]1[.]1[.]1"],["255.100.50.0","255[.]100[.]50[.]0"]]}},{"h":"Why not a manual loop?","p":["A loop that builds a list of characters and joins them does the same job in more code. `str.replace` scans once, handles all occurrences (unlike `.replace(old, new, 1)`) and needs no special case for the first or last dot."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n) for the new string."]}],"takeaway":"str.replace substitutes every occurrence in one pass, returning a new string."},"statement":"Given an IPv4 address as a string, return a \"defanged\" version of it, in which every period `\".\"` is replaced by `\"[.]\"`.\n\nExample 1:\n\n```\nInput: address = \"1.1.1.1\"\nOutput: \"1[.]1[.]1[.]1\"\n```\n\nExample 2:\n\n```\nInput: address = \"255.100.50.0\"\nOutput: \"255[.]100[.]50[.]0\"\n```\n\nConstraints:\n\n* The given `address` is a valid IPv4 address","ex2":{"input":"bigger numbers","output":"'255[.]100[.]50[.]0'","why":"Every dot is replaced."}};
+window.PROBLEM = {
+ "id": "1108",
+ "title": "Defanging an IP Address",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'1.1.1.1' becomes '1[.]1[.]1[.]1'.",
+ "idea": "Replace every '.' by '[.]'.",
+ "input": "address = \"1.1.1.1\"",
+ "output": "\"1[.]1[.]1[.]1\"",
+ "notes": [],
+ "best": "Replace every '.' by '[.]'.",
+ "variants": [
+  {
+   "name": "Replace each dot",
+   "code": "class Solution:\n    def defangIPaddr(self, address):\n        return address.replace(\".\", \"[.]\")",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Replace every '.' by '[.]'.",
+   "frames": []
+  }
+ ]
+};

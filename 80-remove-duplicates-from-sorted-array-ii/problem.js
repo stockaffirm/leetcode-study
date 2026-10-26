@@ -1,1 +1,244 @@
-window.PROBLEM = {"id":"80","title":"Remove Duplicates from Sorted Array II","level":"Medium","topic":"Array / String","question":"Same as the previous problem, but each number may stay up to TWICE. You have a sorted list; remove extra copies by changing the list itself, so no number appears more than two times, and return the new length k (the first k slots hold the result). Example: [1,1,1,2,2,3] → k=5 and the list starts [1,1,2,2,3].","why":"[1,1,1,2,2,3] → 1,1,2,2,3 → length 5.","idea":"Keep x if fewer than 2 are kept, or if it differs from the value two places back.","input":"[1,1,1,2,2,3]","output":"5 → [1,1,2,2,3,_]","notes":[],"best":"Keep x if fewer than 2 are kept, or if it differs from the value two places back.","variants":[{"name":"Read / write pointers (≤ 2 copies)","code":"class Solution:\n    def removeDuplicates(self, nums):\n        k = 0\n        for x in nums:\n            if k < 2 or x != nums[k - 2]:\n                nums[k] = x; k += 1\n        return k","time":"O(n)","space":"O(1)","explain":"Keep x if fewer than 2 are kept, or if it differs from the value two places back.","frames":[{"title":"Start","description":"Allow up to two copies.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["1","1","1","2","2","3"],"hot":[],"marks":{"0":"k"}}]},{"title":"x = 1","description":"Fewer than 2 copies kept → keep.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["1","1","1","2","2","3"],"hot":[0],"marks":{"0":"read","1":"k"}}]},{"title":"x = 1","description":"Fewer than 2 copies kept → keep.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["1","1","1","2","2","3"],"hot":[1],"marks":{"1":"read","2":"k"}}]},{"title":"x = 1","description":"Already two copies of 1 → skip.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["1","1","1","2","2","3"],"hot":[],"marks":{"2":"k,read"}}]},{"title":"x = 2","description":"Fewer than 2 copies kept → keep.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["1","1","2","2","2","3"],"hot":[2],"marks":{"3":"k,read"}}]},{"title":"x = 2","description":"Fewer than 2 copies kept → keep.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["1","1","2","2","2","3"],"hot":[3],"marks":{"4":"k,read"}}]},{"title":"x = 3","description":"Fewer than 2 copies kept → keep.","codeLines":[5,6],"facts":{},"rows":[{"name":"nums","cells":["1","1","2","2","3","3"],"hot":[4],"marks":{"5":"k,read"}}]},{"title":"Return","description":"Length 5.","codeLines":[7],"facts":{},"rows":[{"name":"nums","cells":["1","1","2","2","3"],"hot":[0,1,2,3,4],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"x":3},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"x":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"x":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"x":3},"ret":7}],"trunc":false}},{"name":"Run counter","tag":"Alternative","code":"class Solution:\n    def removeDuplicates(self, nums):\n        k = count = 0\n        for i in range(len(nums)):\n            if i == 0 or nums[i] != nums[i - 1]: count = 1\n            else: count += 1\n            if count <= 2:\n                nums[k] = nums[i]; k += 1\n        return k","time":"O(n)","space":"O(1)","explain":"Count the current run and keep an element only while the count ≤ 2.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"count":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"count":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"count":1,"i":0}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":0,"count":1,"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"count":1,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"count":1,"i":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"count":1,"i":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"count":2,"i":1}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":1,"count":2,"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":2,"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":2,"i":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":3,"i":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":3,"i":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":3,"i":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":1,"i":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,3],0],"k":2,"count":1,"i":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"count":1,"i":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"count":1,"i":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"count":1,"i":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"count":2,"i":4}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":3,"count":2,"i":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"count":2,"i":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"count":2,"i":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"count":1,"i":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,2,3],0],"k":4,"count":1,"i":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"count":1,"i":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"count":1,"i":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[1,1,2,2,3,3],0],"k":5,"count":1,"i":5},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"count":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"count":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"count":1,"i":0}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":0,"count":1,"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"count":1,"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"count":1,"i":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"count":1,"i":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"count":2,"i":1}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":1,"count":2,"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"count":2,"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"count":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"count":1,"i":2}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":2,"count":1,"i":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"count":1,"i":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"count":1,"i":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"count":1,"i":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"count":2,"i":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":3,"count":2,"i":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":2,"i":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":2,"i":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":2,"i":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":3,"i":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":3,"i":4}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":3,"i":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":3,"i":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":4,"i":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":4,"i":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":4,"i":6}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":1,"i":6}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,1,1,2,3,3],0],"k":4,"count":1,"i":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"count":1,"i":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"count":1,"i":7}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"count":1,"i":7}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,1,2,3,3],0],"k":5,"count":1,"i":7}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"count":1,"i":7}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"count":1,"i":8}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"count":1,"i":8}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"count":2,"i":8}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,2,3,3],0],"k":6,"count":2,"i":8}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"count":2,"i":8}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"count":2,"i":8}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[0,0,1,1,2,3,3,3,3],0],"k":7,"count":2,"i":8},"ret":7}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`k`","Length of the kept prefix and the next write position","Slow pointer of the slow/fast in-place filter"],["`for x in nums`","Fast pointer: reads each original element","Safe because writes at `k` never get ahead of the reader"],["`k < 2`","The first two elements are always allowed","No earlier element to compare against"],["`x != nums[k - 2]`","If `x` equals the element two places back in the kept array, then keeping it would make three equal values in a row (sorted order)","Generalises to 'at most m copies': compare with `nums[k - m]`"],["`nums[k] = x; k += 1`","Keep `x`","Overwrite in place, O(1) extra space"]]}},{"h":"Walk through an example","p":["`nums = [1,1,1,2,2,3]` (at most two of each value)."],"table":{"head":["x","check","action","k","kept prefix"],"rows":[["1","k < 2","write at 0","1","[1]"],["1","k < 2","write at 1","2","[1, 1]"],["1","1 == nums[0]=1","skip","2","[1, 1]"],["2","2 != nums[0]=1","write at 2","3","[1, 1, 2]"],["2","2 != nums[1]=1","write at 3","4","[1, 1, 2, 2]"],["3","3 != nums[2]=2","write at 4","5","[1, 1, 2, 2, 3]"]]}},{"h":"Why compare with `nums[k-2]` and not `nums[i-2]`?","p":["The input is being overwritten while we read it, so `nums[i-2]` may no longer be the original value. `nums[k-2]` is always inside the already-built result, where everything is final and sorted, so it is the right reference."]},{"h":"Time and space","bullets":["Time: O(n), one pass.","Space: O(1), in place; elements past index `k` are leftovers."]}],"takeaway":"Slow/fast in-place filter on sorted data: keep x unless it equals the element two slots back in the kept prefix."},"statement":"A sorted (non-decreasing) integer array `nums` may hold many copies of the same value. Edit it in place so that every value appears at most twice, keeping the order, and return the new length `k`. The first `k` entries must hold the result; anything after them is ignored.\n\nExample 1:\n\n```\nInput: nums = [0,0,0,1,1,2]\nOutput: 5, nums = [0,0,1,1,2,_]\n```\n\nExample 2:\n\n```\nInput: nums = [4,4,4,4]\nOutput: 2, nums = [4,4,_,_]\n```\n\nConstraints:\n\n* `1 <= nums.length <= 3 * 10^4`\n* `-10^4 <= nums[i] <= 10^4`\n* `nums` is sorted in non-decreasing order.","ex2":{"input":"[0,0,1,1,1,1,2,3,3]","output":"[7, [0, 0, 1, 1, 2, 3, 3]]","why":"The extra 1s beyond two copies are dropped."}};
+window.PROBLEM = {
+ "id": "80",
+ "title": "Remove Duplicates from Sorted Array II",
+ "level": "Medium",
+ "topic": "Array / String",
+ "question": "Sorted list. Allow each value at most TWICE. Remove extras in place and return the new length.",
+ "why": "[1,1,1,2,2,3] → 1,1,2,2,3 → length 5.",
+ "idea": "Keep x if fewer than 2 are kept, or if it differs from the value two places back.",
+ "input": "[1,1,1,2,2,3]",
+ "output": "5 → [1,1,2,2,3,_]",
+ "notes": [],
+ "best": "Keep x if fewer than 2 are kept, or if it differs from the value two places back.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def removeDuplicates(self, nums):\n        k = 0\n        for x in nums:\n            if k < 2 or x != nums[k - 2]:\n                nums[k] = x; k += 1\n        return k",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Keep x if fewer than 2 are kept, or if it differs from the value two places back.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Allow up to two copies.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "k"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Fewer than 2 copies kept → keep.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "0": "read",
+        "1": "k"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Fewer than 2 copies kept → keep.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {
+        "1": "read",
+        "2": "k"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Already two copies of 1 → skip.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "1",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {
+        "2": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Fewer than 2 copies kept → keep.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "3": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Fewer than 2 copies kept → keep.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "4": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 3",
+     "description": "Fewer than 2 copies kept → keep.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {
+        "5": "k,read"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Length 5.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "2",
+        "3"
+       ],
+       "hot": [
+        0,
+        1,
+        2,
+        3,
+        4
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

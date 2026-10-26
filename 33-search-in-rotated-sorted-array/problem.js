@@ -1,1 +1,138 @@
-window.PROBLEM = {"id":"33","title":"Search in Rotated Sorted Array","level":"Medium","topic":"Binary Search","question":"A sorted list of different numbers was rotated at some point (e.g. [0,1,2,4,5,6,7] became [4,5,6,7,0,1,2]). Given the rotated list and a target, return the position of the target or −1 if it isn't there. Aim for O(log n) (very fast: the work is halved at every step) time. Example: [4,5,6,7,0,1,2], target=0 → position 4.","why":"target 0 in [4,5,6,7,0,1,2] → index 4.","idea":"One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.","input":"[4,5,6,7,0,1,2], target=0","output":"4","notes":[],"best":"One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.","variants":[{"name":"One-pass binary search","code":"class Solution:\n    def search(self, nums, target):\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target: return mid\n            if nums[lo] <= nums[mid]:\n                if nums[lo] <= target < nums[mid]: hi = mid - 1\n                else: lo = mid + 1\n            else:\n                if nums[mid] < target <= nums[hi]: lo = mid + 1\n                else: hi = mid - 1\n        return -1","time":"O(log n)","space":"O(1)","explain":"One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.","frames":[{"title":"Start","description":"Whole array.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["4","5","6","7","0","1","2"],"hot":[],"marks":{"0":"lo","6":"hi"}}]},{"title":"mid = 3","description":"nums[mid] = 7. Left half is sorted but target isn't in it → go right.","codeLines":[7],"facts":{},"rows":[{"name":"nums","cells":["4","5","6","7","0","1","2"],"hot":[3],"marks":{"3":"mid","4":"lo","6":"hi"}}]},{"title":"mid = 5","description":"nums[mid] = 1. Left half is sorted and holds the target.","codeLines":[7],"facts":{},"rows":[{"name":"nums","cells":["4","5","6","7","0","1","2"],"hot":[5],"marks":{"4":"lo,hi","5":"mid"}}]},{"title":"mid = 4","description":"Found 0 at index 4.","codeLines":[6],"facts":{},"rows":[{"name":"nums","cells":["4","5","6","7","0","1","2"],"hot":[4],"marks":{"4":"lo,hi,mid"}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":6}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":6}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":6}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":6,"hi":6,"mid":6}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":7,"hi":6,"mid":6}},{"l":13,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":7,"hi":6,"mid":6}},{"l":13,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":7,"hi":6,"mid":6},"ret":-1}],"trunc":false}},{"name":"Find the pivot, then search","tag":"Alternative","code":"class Solution:\n    def search(self, nums, target):\n        lo, hi = 0, len(nums) - 1\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if nums[mid] > nums[hi]: lo = mid + 1\n            else: hi = mid\n        pivot = lo; n = len(nums); lo, hi = 0, n - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2; real = (mid + pivot) % n\n            if nums[real] == target: return real\n            if nums[real] < target: lo = mid + 1\n            else: hi = mid - 1\n        return -1","time":"O(log n)","space":"O(1)","explain":"Locate the smallest element, then binary-search with a rotated index.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":6,"mid":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":5,"mid":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":5,"mid":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":5,"mid":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":5,"mid":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":4,"hi":4,"mid":4}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":4,"pivot":4,"n":7}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":4,"pivot":4,"n":7}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":12,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":13,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":2,"mid":3,"pivot":4,"n":7,"real":0}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":2,"mid":3,"pivot":4,"n":7,"real":0}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":12,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":13,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":0,"mid":1,"pivot":4,"n":7,"real":5}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":0,"mid":1,"pivot":4,"n":7,"real":5}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":0,"mid":0,"pivot":4,"n":7,"real":4}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0,"lo":0,"hi":0,"mid":0,"pivot":4,"n":7,"real":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":6,"mid":5}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":5,"mid":5}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":5,"mid":5}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":5,"mid":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":5,"mid":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":4,"hi":4,"mid":4}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":4,"pivot":4,"n":7}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":4,"pivot":4,"n":7}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":12,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":13,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":6,"mid":3,"pivot":4,"n":7,"real":0}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":2,"mid":3,"pivot":4,"n":7,"real":0}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":2,"mid":3,"pivot":4,"n":7,"real":0}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":12,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":0,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":2,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":10,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":2,"hi":2,"mid":1,"pivot":4,"n":7,"real":5}},{"l":11,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":2,"hi":2,"mid":2,"pivot":4,"n":7,"real":6}},{"l":12,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":2,"hi":2,"mid":2,"pivot":4,"n":7,"real":6}},{"l":9,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":3,"hi":2,"mid":2,"pivot":4,"n":7,"real":6}},{"l":14,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":3,"hi":2,"mid":2,"pivot":4,"n":7,"real":6}},{"l":14,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3,"lo":3,"hi":2,"mid":2,"pivot":4,"n":7,"real":6},"ret":-1}],"trunc":false}},{"name":"Linear scan","tag":"Brute force","code":"class Solution:\n    def search(self, nums, target):\n        return nums.index(target) if target in nums else -1","time":"O(n)","space":"O(1)","explain":"Just look for the target.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":0},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,5,6,7,0,1,2],0],"target":3},"ret":-1}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["lo, hi = 0, len(nums) - 1","Inclusive search bounds","Binary search with `while lo <= hi`"],["mid = (lo + hi) // 2","Middle index (floor)","Halving a range; Python ints don't overflow"],["nums[lo] <= nums[mid]","Tests which half is sorted. `<=` matters when lo == mid","Binary search on a rotated array"],["nums[lo] <= target < nums[mid]","Range test: is the target inside the sorted half?","Deciding which half to keep"]]}},{"h":"Walk through an example","p":["`nums = [4,5,6,7,0,1,2]`, `target = 0`:"],"table":{"head":["lo","hi","mid","nums[mid]","sorted half","decision"],"rows":[["0","6","3","7","left sorted","otherwise → lo = mid+1"],["4","6","5","1","left sorted","target in [nums[lo], nums[mid]) → hi = mid-1"],["4","4","4","0","–","found, return mid"]]}},{"h":"Why check which half is sorted first?","p":["After rotation, comparing the target with `nums[mid]` alone says nothing about the side. But one half is always fully sorted, and in a sorted half a range check (`nums[lo] <= target < nums[mid]`) is reliable. If the target is not in the sorted half it must be in the other, so one comparison always eliminates half the array.","Why `<=` in `nums[lo] <= nums[mid]`? When `lo == mid` (a one- or two-element range) the left 'half' is a single element, which is sorted; using `<` would send that case to the right-half branch and mis-handle it."]},{"h":"Time and space","bullets":["Time: O(log n) because every iteration halves the range.","Space: O(1).","Distinct values are required: with duplicates `nums[lo] <= nums[mid]` can't tell which half is sorted (that is problem 81)."]}],"takeaway":"Modified binary search: at each step one half is sorted, so test whether the target lies in it and discard the other half."},"statement":"An array of distinct integers, originally sorted ascending, has been rotated at an unknown pivot (for example `[0,1,2,4,5,6,7]` could become `[4,5,6,7,0,1,2]`). Given the rotated array and a `target`, return the index of `target`, or `-1` if it is absent. The solution should run in `O(log n)` time.\n\nExample 1:\n\n```\nInput: nums = [6,7,0,1,2,4,5], target = 2\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: nums = [6,7,0,1,2,4,5], target = 3\nOutput: -1\n```\n\nConstraints:\n\n* `1 <= nums.length <= 5000`\n* `-10^4 <= nums[i] <= 10^4`\n* All values of `nums` are unique.\n* `nums` is an ascending array that has been rotated.\n* `-10^4 <= target <= 10^4`","ex2":{"input":"[4,5,6,7,0,1,2],3","output":"-1","why":"3 is not in the array → -1."}};
+window.PROBLEM = {
+ "id": "33",
+ "title": "Search in Rotated Sorted Array",
+ "level": "Medium",
+ "topic": "Binary Search",
+ "question": "A sorted list was rotated (e.g. [0,1,2,4,5,6,7] became [4,5,6,7,0,1,2]). Find the target's index in O(log n).",
+ "why": "target 0 in [4,5,6,7,0,1,2] → index 4.",
+ "idea": "One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.",
+ "input": "[4,5,6,7,0,1,2], target=0",
+ "output": "4",
+ "notes": [],
+ "best": "One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.",
+ "variants": [
+  {
+   "name": "Solution",
+   "code": "class Solution:\n    def search(self, nums, target):\n        lo, hi = 0, len(nums) - 1\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if nums[mid] == target: return mid\n            if nums[lo] <= nums[mid]:\n                if nums[lo] <= target < nums[mid]: hi = mid - 1\n                else: lo = mid + 1\n            else:\n                if nums[mid] < target <= nums[hi]: lo = mid + 1\n                else: hi = mid - 1\n        return -1",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "One half is always sorted. Check whether the target lies in the sorted half; if yes search there, else the other half.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Whole array.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "0",
+        "1",
+        "2"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "lo",
+        "6": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 3",
+     "description": "nums[mid] = 7. Left half is sorted but target isn't in it → go right.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "0",
+        "1",
+        "2"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "mid",
+        "4": "lo",
+        "6": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 5",
+     "description": "nums[mid] = 1. Left half is sorted and holds the target.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "0",
+        "1",
+        "2"
+       ],
+       "hot": [
+        5
+       ],
+       "marks": {
+        "4": "lo,hi",
+        "5": "mid"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 4",
+     "description": "Found 0 at index 4.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "4",
+        "5",
+        "6",
+        "7",
+        "0",
+        "1",
+        "2"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {
+        "4": "lo,hi,mid"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ ]
+};

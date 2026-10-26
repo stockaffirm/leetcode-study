@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2236","title":"Root Equals Sum of Children","level":"Easy","topic":"Binary Tree","question":"A binary tree has exactly three nodes: a root with a left and right child. Return whether the root's value equals the sum of its children's values. Example: [10,4,6] → true.","why":"[10,4,6] → 10 == 4 + 6 → true.","idea":"The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.","input":"root = [10,4,6]","output":"true","notes":[],"best":"The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.","variants":[{"name":"Compare the root with its two children","code":"class Solution:\n    def checkTree(self, root):\n        return root.val == root.left.val + root.right.val","time":"O(1)","space":"O(1)","explain":"The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[10],[4,6]]]}},{"l":3,"d":1,"f":1,"v":{"root":["T",[[10],[4,6]]]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[5],[3,1]]]}},{"l":3,"d":1,"f":1,"v":{"root":["T",[[5],[3,1]]]},"ret":false}],"trunc":false}},{"name":"Compare with a sum variable","tag":"Alternative","code":"class Solution:\n    def checkTree(self, root):\n        children = root.left.val + root.right.val\n        return children == root.val","time":"O(1)","space":"O(1)","explain":"Same check, written step by step.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[10],[4,6]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[10],[4,6]]],"children":10}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[10],[4,6]]],"children":10},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[5],[3,1]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[5],[3,1]]],"children":4}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[5],[3,1]]],"children":4},"ret":false}],"trunc":false}}],"ex2":{"input":"not equal","output":"False","why":"3 + 1 is not 5."}};
+window.PROBLEM = {
+ "id": "2236",
+ "title": "Root Equals Sum of Children",
+ "level": "Easy",
+ "topic": "Binary Tree",
+ "question": "",
+ "why": "[10,4,6] → 10 == 4 + 6 → true.",
+ "idea": "The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.",
+ "input": "root = [10,4,6]",
+ "output": "true",
+ "notes": [],
+ "best": "The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.",
+ "variants": [
+  {
+   "name": "Compare the root with its two children",
+   "code": "class Solution:\n    def checkTree(self, root):\n        return root.val == root.left.val + root.right.val",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "The tree has exactly three nodes. Compare the root value with the sum of the left and right child values.",
+   "frames": []
+  }
+ ]
+};

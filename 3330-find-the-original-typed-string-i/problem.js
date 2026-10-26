@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"3330","title":"Find the Original Typed String I","level":"Easy","topic":"Array / String","question":"Alice may have pressed a key too long at most once, producing a run of repeated letters. Given the final string, return how many original strings she could have intended. Example: 'abbcccc' → 5.","why":"'abbcccc': the typing could have been the word itself or one run shortened (b, c×3) → 5.","idea":"Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.","input":"word = \"abbcccc\"","output":"5","notes":[],"best":"Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.","variants":[{"name":"1 + number of equal neighbours","code":"class Solution:\n    def possibleStringCount(self, word):\n        return 1 + sum(a == b for a, b in zip(word, word[1:]))","time":"O(n)","space":"O(1)","explain":"Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"word":["s","abbcccc"]}},{"l":3,"d":1,"f":1,"v":{"word":["s","abbcccc"]},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"word":["s","abcd"]}},{"l":3,"d":1,"f":1,"v":{"word":["s","abcd"]},"ret":1}],"trunc":false}},{"name":"groupby runs","tag":"Alternative","code":"class Solution:\n    def possibleStringCount(self, word):\n        return 1 + sum(len(list(g)) - 1 for _, g in groupby(word))","time":"O(n)","space":"O(1)","explain":"Each run of length L contributes L − 1 alternatives.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"word":["s","abbcccc"]}},{"l":3,"d":1,"f":1,"v":{"word":["s","abbcccc"]},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"word":["s","abcd"]}},{"l":3,"d":1,"f":1,"v":{"word":["s","abcd"]},"ret":1}],"trunc":false}}],"ex2":{"input":"no repeats","output":"1","why":"No repeated keys."}};
+window.PROBLEM = {
+ "id": "3330",
+ "title": "Find the Original Typed String I",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "",
+ "why": "'abbcccc': the typing could have been the word itself or one run shortened (b, c×3) → 5.",
+ "idea": "Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.",
+ "input": "word = \"abbcccc\"",
+ "output": "5",
+ "notes": [],
+ "best": "Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.",
+ "variants": [
+  {
+   "name": "1 + number of equal neighbours",
+   "code": "class Solution:\n    def possibleStringCount(self, word):\n        return 1 + sum(a == b for a, b in zip(word, word[1:]))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Alice may have held a key too long at most once, so exactly one run could have lost extra letters. Count the original word plus, for each pair of equal neighbouring letters, one possibility.",
+   "frames": []
+  }
+ ]
+};

@@ -97,7 +97,7 @@
   function render(){
     const slug = decodeURIComponent(location.hash.slice(1));
     if(slug && S.user && (S.admin || S.access === "approved")) return renderItem(slug);
-    app.innerHTML = head() + (S.err ? `<p class="msg err">${esc(S.err)}</p>` : "") + ((S.admin || S.access === "approved") ? `<p class="lead">Interview notes for senior and Principal-level system design. Mark Read once you have studied it, Said aloud once you can explain it without notes.</p><div id="list"></div>` + (S.admin ? adminPanel() : "") : gate());
+    app.innerHTML = head() + (S.err ? `<p class="msg err">${esc(S.err)}</p>` : "") + ((S.admin || S.access === "approved") ? `<p class="lead">Interview notes for senior and Principal-level system design. Mark Read once you have studied it, Said aloud once you can explain it without notes.</p>` + (S.admin ? adminPanel() : "") + `<div id="list"></div>` : gate());
     renderList(); wire();
   }
   window.addEventListener("hashchange", render);

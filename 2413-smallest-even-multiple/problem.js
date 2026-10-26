@@ -1,1 +1,23 @@
-window.PROBLEM = {"id":"2413","title":"Smallest Even Multiple","level":"Easy","topic":"Math / Bit Manipulation","question":"Return the smallest positive integer that is a multiple of both 2 and n. Example: 5 → 10.","why":"5 → 10; 6 → 6.","idea":"The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.","input":"n = 5","output":"10","notes":[],"best":"The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.","variants":[{"name":"n if even, else 2n","code":"class Solution:\n    def smallestEvenMultiple(self, n):\n        return n if n % 2 == 0 else 2 * n","time":"O(1)","space":"O(1)","explain":"The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":3,"d":1,"f":1,"v":{"n":5},"ret":10}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":6}},{"l":3,"d":1,"f":1,"v":{"n":6},"ret":6}],"trunc":false}},{"name":"lcm","tag":"Alternative","code":"class Solution:\n    def smallestEvenMultiple(self, n):\n        return 2 * n // gcd(2, n)","time":"O(log)","space":"O(1)","explain":"The answer is lcm(2, n).","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":3,"d":1,"f":1,"v":{"n":5},"ret":10}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":6}},{"l":3,"d":1,"f":1,"v":{"n":6},"ret":6}],"trunc":false}}],"ex2":{"input":"already even","output":"6","why":"6."}};
+window.PROBLEM = {
+ "id": "2413",
+ "title": "Smallest Even Multiple",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "",
+ "why": "5 → 10; 6 → 6.",
+ "idea": "The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.",
+ "input": "n = 5",
+ "output": "10",
+ "notes": [],
+ "best": "The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.",
+ "variants": [
+  {
+   "name": "n if even, else 2n",
+   "code": "class Solution:\n    def smallestEvenMultiple(self, n):\n        return n if n % 2 == 0 else 2 * n",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "The smallest positive number divisible by both 2 and n is n when n is even and 2n otherwise.",
+   "frames": []
+  }
+ ]
+};
