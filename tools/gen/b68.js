@@ -444,7 +444,7 @@ class Solution:
 `)});
 lite({id:911,slug:"online-election",title:"Online Election",level:"Medium",topic:DS,name:"Leader timeline + binary search",
 w:"votes at times [0,5,10,15,20] for persons [0,1,1,0,0]: at t=3 the leader is 0, at t=12 it is 1.",k:"Process the votes once in time order, tracking counts and the current leader (ties go to the most recent voter). Store the leader after each vote. A query q(t) binary searches the last vote time ≤ t and returns the stored leader.",
-i:"TopVotedCandidate([0,1,1,0,0,1,0], [0,5,10,15,20,25,30]); q(3); q(12); q(25); q(15); q(24); q(8)",o:"[None, 0, 1, 1, 0, 0, 1]",time:"O(log n) per query",space:"O(n)",
+i:"TopVotedCandidate([0,1,1,0,0,1,0], [0,5,10,15,20,25,30]); q(3); q(12); q(25); q(15); q(24); q(8)",o:"[0, 1, 1, 0, 0, 1]",time:"O(log n) per query",space:"O(n)",
 code:C(`
 class TopVotedCandidate:
     def __init__(self, persons, times):
