@@ -1,0 +1,1888 @@
+{
+ "1609": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque([root])`",
+       "BFS (Breadth-First Search) queue",
+       "Level-by-level traversal"
+      ],
+      [
+       "`for _ in range(len(q))`",
+       "Process exactly one level",
+       "`len(q)` is evaluated once at loop start"
+      ],
+      [
+       "`level % 2`",
+       "Even levels need odd values in increasing order; odd levels need even values in decreasing order",
+       "Parity of the level selects the rule"
+      ],
+      [
+       "`prev`",
+       "Previous value on the same level",
+       "Reset to `None` at the start of each level; enables the strict-order check"
+      ],
+      [
+       "`v % 2 == 0` / `v % 2 == 1`",
+       "Wrong parity for this level",
+       "Immediate `False`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,10,4,3,null,7,9,12,8,6,null,null,2]` → True:"
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Values (left to right)",
+      "Rule",
+      "Check"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1]",
+       "odd, increasing",
+       "ok"
+      ],
+      [
+       "1",
+       "[10, 4]",
+       "even, decreasing",
+       "ok"
+      ],
+      [
+       "2",
+       "[3, 7, 9]",
+       "odd, increasing",
+       "ok"
+      ],
+      [
+       "3",
+       "[12, 8, 6, 2]",
+       "even, decreasing",
+       "ok"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case: `[5,4,2,3,3,7]`",
+    "p": [
+     "Result False: level 2 holds `3, 3, 7`, not strictly increasing."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Values (left to right)",
+      "Rule",
+      "Check"
+     ],
+     "rows": [
+      [
+       "0",
+       "[5]",
+       "odd, increasing",
+       "ok"
+      ],
+      [
+       "1",
+       "[4, 2]",
+       "even, decreasing",
+       "ok"
+      ],
+      [
+       "2",
+       "[3, 3]",
+       "odd, increasing",
+       "3 violates (odd, strictly increasing)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `prev` reset at each level?",
+    "p": [
+     "The ordering rule applies within a level only, left to right. Resetting `prev = None` at the start of each level stops the last value of one level from being compared with the first of the next. Strictness (`<=` / `>=` as violations) forbids equal neighbours."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(w), where w is the widest level."
+    ]
+   }
+  ],
+  "takeaway": "Level-order BFS (Breadth-First Search): check each level's parity and its strict order, resetting the previous value per level."
+ },
+ "1627": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`parent` list",
+       "Union-Find (disjoint set) forest",
+       "Each city starts alone"
+      ],
+      [
+       "`for z in range(threshold + 1, n + 1)`",
+       "Every possible common divisor above the threshold",
+       "Two cities are connected if they share a divisor z > threshold"
+      ],
+      [
+       "`range(2 * z, n + 1, z)`",
+       "The multiples of z up to n (excluding z itself)",
+       "All of them are divisible by z, so they connect to z"
+      ],
+      [
+       "`parent[find(m)] = find(z)`",
+       "Union m's group with z's group",
+       "Joins the group roots"
+      ],
+      [
+       "`find(a) == find(b)`",
+       "Same group?",
+       "Answer each query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 6, threshold = 2, queries `[[1,4],[2,5],[3,6]]` → [False, False, True]. Only z = 3 has a multiple within n (6); group roots after each z:"
+    ],
+    "table": {
+     "head": [
+      "z",
+      "Multiples of z joined to z",
+      "Root of each city 1…6"
+     ],
+     "rows": [
+      [
+       "3",
+       "[6]",
+       "{1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 3}"
+      ],
+      [
+       "4",
+       "none",
+       "{1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 3}"
+      ],
+      [
+       "5",
+       "none",
+       "{1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 3}"
+      ],
+      [
+       "6",
+       "none",
+       "{1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 3}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why loop over divisors instead of pairs of cities?",
+    "p": [
+     "Any two cities sharing a divisor z > threshold are both multiples of z, so they all end up in z's group. Linking every multiple of z to z itself connects all of them transitively, using n/z unions instead of (n/z)² pairs."
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Pairs checked"
+     ],
+     "rows": [
+      [
+       "Compute gcd for every pair",
+       "O(n²) pairs"
+      ],
+      [
+       "Union multiples of each z (this code)",
+       "about n·(1 + 1/2 + 1/3 + …) = O(n log n) unions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n · α(n)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find over divisors: for each z above the threshold, union all multiples of z with z."
+ },
+ "1636": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Value → frequency",
+       "Needed as the sort key"
+      ],
+      [
+       "`sorted(nums, key=…)`",
+       "Sorts a copy of the list by the key function",
+       "Decorate-sort: each element's key is computed once"
+      ],
+      [
+       "`(cnt[x], -x)`",
+       "Tuple key: frequency first, then NEGATED value",
+       "Ascending frequency; for equal frequency the larger value (more negative key) comes first"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2,2,2,3]` → [3, 1, 1, 2, 2, 2]:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Frequency",
+      "Sort key"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "(2, -1)"
+      ],
+      [
+       "2",
+       "3",
+       "(3, -2)"
+      ],
+      [
+       "3",
+       "1",
+       "(1, -3)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the minus sign?",
+    "p": [
+     "`sorted` is ascending for both parts of the tuple. We want frequency ascending but value DESCENDING among ties, so the value is negated: a larger x gives a smaller key and comes first. Tuples are compared element by element, so the second part matters only when the frequencies are equal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort with a tuple key: (frequency ascending, negated value so larger values come first on ties)."
+ },
+ "1639": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cnt[j] = Counter(w[j] for w in words)`",
+       "How many words have each letter in column j",
+       "Which letter choices exist at position j"
+      ],
+      [
+       "`dp[t]`",
+       "Ways to form the first t letters of the target using columns processed so far",
+       "dp[0] = 1: the empty prefix"
+      ],
+      [
+       "`dp[t - 1] * cnt[j][target[t-1]]`",
+       "Use column j for target letter t−1: any of the words with that letter in column j",
+       "Multiplication counts the independent word choices"
+      ],
+      [
+       "`for t in range(T, 0, -1)`",
+       "t goes DOWN",
+       "dp[t−1] must still hold the value from before column j, so one column is used at most once per target position"
+      ],
+      [
+       "`% MOD`",
+       "Keep numbers small",
+       "The count is huge"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "words `['acca','bbbb','caca']`, target `'aba'` → 6:"
+    ],
+    "table": {
+     "head": [
+      "After",
+      "Letter counts in the column",
+      "dp[0..3]"
+     ],
+     "rows": [
+      [
+       "start",
+       "—",
+       "[1, 0, 0, 0]"
+      ],
+      [
+       "column 0",
+       "{'a': 1, 'b': 1, 'c': 1}",
+       "[1, 1, 0, 0]"
+      ],
+      [
+       "column 1",
+       "{'c': 1, 'b': 1, 'a': 1}",
+       "[1, 2, 1, 0]"
+      ],
+      [
+       "column 2",
+       "{'c': 2, 'b': 1}",
+       "[1, 2, 3, 0]"
+      ],
+      [
+       "column 3",
+       "{'a': 2, 'b': 1}",
+       "[1, 4, 5, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why process columns left to right and t downwards?",
+    "p": [
+     "Chosen positions must increase strictly, so once a column j is used for one target letter it cannot supply the next. Sweeping j from left to right and t from T down to 1 uses the old `dp[t-1]` (before column j), exactly like a 0/1 knapsack, so each column contributes to at most one target letter in any sequence."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L·T + total length of words) with per-column Counters.",
+     "Space: O(L·26 + T)."
+    ]
+   }
+  ],
+  "takeaway": "Column-by-column DP: dp[t] += dp[t−1] × (words having target[t−1] in this column), iterating t downward."
+ },
+ "1642": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`d = heights[i+1] - heights[i]`",
+       "Climb needed to go from building i to i+1",
+       "Positive means a climb costs something"
+      ],
+      [
+       "`heappush(heap, d)`",
+       "Tentatively give this climb a LADDER",
+       "Min-heap of the climbs currently covered by ladders"
+      ],
+      [
+       "`len(heap) > ladders`",
+       "More climbs than ladders",
+       "The smallest of them must be paid with bricks instead"
+      ],
+      [
+       "`bricks -= heappop(heap)`",
+       "Convert the smallest ladder climb into a brick climb",
+       "Ladders should cover the biggest climbs"
+      ],
+      [
+       "`bricks < 0: return i`",
+       "Cannot afford building i+1",
+       "Furthest reached is i"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "heights `[4,2,7,6,9,14,12]`, bricks 5, ladders 1 → furthest building 4:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Climb d",
+      "Action",
+      "Bricks left",
+      "Heap (ladder climbs)"
+     ],
+     "rows": [
+      [
+       "0",
+       "-2",
+       "not higher → free",
+       "5",
+       "[]"
+      ],
+      [
+       "1",
+       "5",
+       "climb 5: push",
+       "5",
+       "[5]"
+      ],
+      [
+       "2",
+       "-1",
+       "not higher → free",
+       "5",
+       "[5]"
+      ],
+      [
+       "3",
+       "3",
+       "climb 3: push; heap larger than ladders → pay 3 bricks",
+       "2",
+       "[5]"
+      ],
+      [
+       "4",
+       "5",
+       "climb 5: push; heap larger than ladders → pay 5 bricks",
+       "-3",
+       "[5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why decide lazily?",
+    "p": [
+     "At the time of a climb we don't know which later climbs will be larger. So every climb is first given a ladder, and when we run out of ladders the smallest climb covered so far is switched to bricks. This keeps the ladders on the biggest climbs seen so far, which minimises the bricks spent for any prefix. The first prefix where bricks go negative marks the limit."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log L) with L ladders.",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Min-heap of ladder climbs: use a ladder for every climb first, then pay the smallest with bricks when ladders run out."
+ },
+ "1648": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(inventory, reverse=True) + [0]`",
+       "Stock levels from highest to lowest, with a final 0",
+       "Sell down level by level; the sentinel 0 is the last floor"
+      ],
+      [
+       "`w`",
+       "Number of colours currently at the top level",
+       "The top group grows as we pass each lower level (`w += 1`)"
+      ],
+      [
+       "`cnt = w * (hi - lo)`",
+       "Balls sold when all w top colours drop from `hi` to `lo`",
+       "w colours × (hi−lo) steps"
+      ],
+      [
+       "`w * (hi + lo + 1) * (hi - lo) // 2`",
+       "Total value of those sales (arithmetic series hi, hi−1, …, lo+1 per colour)",
+       "(first + last) × count / 2, times w colours"
+      ],
+      [
+       "`divmod(orders, w)`",
+       "Full levels and leftover balls when orders run out mid-way",
+       "Sell `full` complete levels for all w colours, then `rem` balls at the next level"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,5]`, `orders = 4` → 14:"
+    ],
+    "table": {
+     "head": [
+      "Level range",
+      "w (colours on top)",
+      "Balls to drop one level group",
+      "Action",
+      "Orders left"
+     ],
+     "rows": [
+      [
+       "levels 5→2",
+       "1",
+       "3",
+       "sell all: +12",
+       "1"
+      ],
+      [
+       "levels 2→0",
+       "2",
+       "4",
+       "partial: 0 full levels + 1 balls at 2 → +2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sell the highest values first, in groups?",
+    "p": [
+     "Each sale yields the current maximum stock, so greedily selling the best available ball each time is optimal. Doing it one ball at a time would take `orders` steps (up to 10⁹). Selling whole levels at once, with arithmetic-series sums, handles huge orders in O(n log n). Checking the formula against a one-ball-at-a-time greedy on 200 random small inputs: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting; the loop is O(n).",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Greedy by levels: sell down the highest stock levels together, using arithmetic-series sums, and handle the partial last level with divmod."
+ },
+ "1657": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(word)`",
+       "Letter → count",
+       "Frequencies of letters"
+      ],
+      [
+       "`set(c1) == set(c2)`",
+       "Both words use exactly the same set of letters",
+       "Operation 2 only swaps existing letters, so no letter can be created or removed"
+      ],
+      [
+       "`sorted(c1.values()) == sorted(c2.values())`",
+       "The multisets of frequencies are equal",
+       "Operation 2 permutes frequencies among letters; operation 1 permutes positions freely"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'cabbba'` and `'abbccc'` are close:"
+    ],
+    "table": {
+     "head": [
+      "Check",
+      "word1",
+      "word2",
+      "Equal?"
+     ],
+     "rows": [
+      [
+       "letters",
+       "['a', 'b', 'c']",
+       "['a', 'b', 'c']",
+       "True"
+      ],
+      [
+       "frequencies sorted",
+       "[1, 2, 3]",
+       "[1, 2, 3]",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these two conditions are enough",
+    "p": [
+     "Operation 1 lets us arrange the letters in any order, so positions don't matter. Operation 2 swaps the roles of two letters, so it can give any frequency to any letter as long as the multiset of frequencies matches and the set of letters is the same. Hence the words are close exactly when both conditions hold. For example `'abc'` vs `'aab'` fails the letters check even though frequencies sorted `[1,1,1]` vs `[1,2]` also differ."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log k) where k ≤ 26.",
+     "Space: O(1) (at most 26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Two strings are close iff they have the same letter set and the same multiset of letter frequencies."
+ },
+ "1669": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`before = list1; for _ in range(a - 1): before = before.next`",
+       "Node just BEFORE position a",
+       "Walk a−1 steps from the head (position 0) to position a−1"
+      ],
+      [
+       "`for _ in range(b - a + 2): after = after.next`",
+       "Node just AFTER position b",
+       "From `before` it is (b − a + 2) steps ahead: positions a … b are b−a+1 nodes, plus one more"
+      ],
+      [
+       "`before.next = list2`",
+       "Link the front part to list2",
+       "Skips the removed nodes"
+      ],
+      [
+       "`while tail.next: tail = tail.next`",
+       "Walk to the end of list2",
+       "Need list2's last node to reconnect"
+      ],
+      [
+       "`tail.next = after`",
+       "Link list2's tail to the remaining part",
+       "Completes the splice"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "list1 `10→1→13→6→9→5`, a = 3, b = 4, list2 `1000000→1000001→1000002`: `before` is the node 13... position 2 holds 13; `after` is 5. Result: 10→1→13→1000000→1000001→1000002→5."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "before (position a−1 = 2)",
+       "13"
+      ],
+      [
+       "removed nodes (positions 3 and 4)",
+       "6, 9"
+      ],
+      [
+       "after (position b+1 = 5)",
+       "5"
+      ],
+      [
+       "final list",
+       "10→1→13→1000000→1000001→1000002→5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no dummy node?",
+    "p": [
+     "The problem guarantees `1 ≤ a ≤ b < len(list1) − 1`, so positions a and b are never the head or the tail. That means `before` always exists (a ≥ 1) and `after` always exists (b is not the last node), so plain pointer walking is safe."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m): one walk over list1 and one over list2.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Find the node before position a and the node after position b, then splice list2 in and reconnect its tail."
+ },
+ "1672": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sum(row)`",
+       "Total of one customer's balances",
+       "Row sum"
+      ],
+      [
+       "`max(generator)`",
+       "Largest value produced by the generator",
+       "No intermediate list is built"
+      ],
+      [
+       "generator expression `(sum(row) for row in accounts)`",
+       "Lazily yields each sum",
+       "Memory-friendly alternative to a list comprehension"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3],[3,2,1],[1,5]]`:"
+    ],
+    "table": {
+     "head": [
+      "Customer",
+      "Balances",
+      "Wealth"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1, 2, 3]",
+       "6"
+      ],
+      [
+       "1",
+       "[3, 2, 1]",
+       "6"
+      ],
+      [
+       "2",
+       "[1, 5]",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a generator and not a list?",
+    "p": [
+     "`max(sum(row) for row in accounts)` consumes the sums one at a time, so only the current best is kept (O(1) extra memory). `max([sum(row) for row in accounts])` would first build a list of all sums."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) for m customers and n banks.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Row sums with a generator inside max(): the richest customer is the row with the largest sum."
+ },
+ "1696": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i]`",
+       "Best score of a path that ends at index i",
+       "DP (Dynamic Programming): `dp[i] = nums[i] + max(dp[i-k … i-1])`"
+      ],
+      [
+       "`dq` of indexes",
+       "Candidates for the best predecessor, with decreasing dp values",
+       "Monotonic deque (sliding-window maximum)"
+      ],
+      [
+       "`while dq[0] < i - k: popleft()`",
+       "Drop indexes that are out of jump range",
+       "The window is the last k indexes"
+      ],
+      [
+       "`dp[dq[0]]`",
+       "The window's best dp value",
+       "Front of the deque"
+      ],
+      [
+       "`while dp[dq[-1]] <= dp[i]: pop()`",
+       "Remove candidates that are no better and older",
+       "They can never beat the newer, larger one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,-1,-2,4,-7,3]`, `k = 2` → 7:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "Deque events",
+      "dp[i]",
+      "Deque after"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "—",
+       "1",
+       "[0]"
+      ],
+      [
+       "1",
+       "-1",
+       "—",
+       "0",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "-2",
+       "—",
+       "-1",
+       "[0, 1, 2]"
+      ],
+      [
+       "3",
+       "4",
+       "drop index 0 (too far); pop index 2 (dp ≤ 4); pop index 1 (dp ≤ 4)",
+       "4",
+       "[3]"
+      ],
+      [
+       "4",
+       "-7",
+       "—",
+       "-3",
+       "[3, 4]"
+      ],
+      [
+       "5",
+       "3",
+       "pop index 4 (dp ≤ 7); pop index 3 (dp ≤ 7)",
+       "7",
+       "[5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a deque and not max() over k values?",
+    "p": [
+     "Each index enters and leaves the deque once. The front is always the largest dp in the window because smaller, older candidates are removed whenever a larger newer one appears."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "max over the last k dp values",
+       "O(n·k)"
+      ],
+      [
+       "Monotonic deque (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "DP with a sliding-window maximum: keep a monotonic deque of the best predecessor indexes within the last k positions."
+ },
+ "1705": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`[day + days[day], apples[day]]`",
+       "A batch: expiry day (first day it is rotten) and apples left",
+       "Lists in the heap are mutable, so the count can be reduced in place"
+      ],
+      [
+       "`heap[0]`",
+       "The batch that expires soonest",
+       "Eat from the batch that will rot first"
+      ],
+      [
+       "`heap[0][0] <= day`",
+       "Batch is already rotten",
+       "Remove it"
+      ],
+      [
+       "`heap[0][1] -= 1`",
+       "Eat one apple (modifies the batch in place)",
+       "The expiry key doesn't change, so the heap stays valid"
+      ],
+      [
+       "`while day < len(apples) or heap`",
+       "Keep going after the harvest ends while apples remain",
+       "You may eat after day n−1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "apples `[1,2,3,5,2]`, days `[3,2,1,4,2]` → 7:"
+    ],
+    "table": {
+     "head": [
+      "Day",
+      "Events",
+      "Eaten so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "harvest 1 apples rotting after day 2; eat 1 from batch expiring 3",
+       "1"
+      ],
+      [
+       "1",
+       "harvest 2 apples rotting after day 2; eat 1 from batch expiring 3",
+       "2"
+      ],
+      [
+       "2",
+       "harvest 3 apples rotting after day 2; eat 1 from batch expiring 3",
+       "3"
+      ],
+      [
+       "3",
+       "harvest 5 apples rotting after day 6; discard rotten batch [3, 3]; eat 1 from batch expiring 7",
+       "4"
+      ],
+      [
+       "4",
+       "harvest 2 apples rotting after day 5; eat 1 from batch expiring 6",
+       "5"
+      ],
+      [
+       "5",
+       "eat 1 from batch expiring 6",
+       "6"
+      ],
+      [
+       "6",
+       "eat 1 from batch expiring 7",
+       "7"
+      ],
+      [
+       "7",
+       "discard rotten batch [7, 3]",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why eat the earliest-expiring apple?",
+    "p": [
+     "One apple per day, so each day only one choice matters. Eating from the batch that rots soonest never wastes an apple that could have been saved, while apples with later expiry can wait (exchange argument). The min-heap on expiry finds that batch in O(log n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + T) log n), where T is the extra days after harvesting stops.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with a min-heap on expiry day: each day eat from the batch that rots first."
+ },
+ "1723": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`jobs.sort(reverse=True)`",
+       "Biggest jobs first",
+       "Big jobs fail early, pruning more of the search"
+      ],
+      [
+       "`loads[w]`",
+       "Current total time of worker w",
+       "Partial assignment"
+      ],
+      [
+       "`loads[w] + jobs[i] >= best`",
+       "This placement cannot beat the best answer found",
+       "Branch-and-bound pruning"
+      ],
+      [
+       "`loads[w] in seen` (`seen = set()` per job)",
+       "Skip a worker whose current load equals one already tried for this job",
+       "Workers with equal loads are interchangeable, so trying one is enough (symmetry breaking)"
+      ],
+      [
+       "`loads[w] += …` then `-=`",
+       "Place the job, recurse, undo",
+       "Backtracking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "jobs `[1,2,4,7,8]` (sorted `[8, 7, 4, 2, 1]`), `k = 2` → 11. The recursion makes 26 calls to `go`. Complete assignments that improved the best:"
+    ],
+    "table": {
+     "head": [
+      "Final loads",
+      "Max load (new best)"
+     ],
+     "rows": [
+      [
+       "[21, 1]",
+       "21"
+      ],
+      [
+       "[20, 2]",
+       "20"
+      ],
+      [
+       "[19, 3]",
+       "19"
+      ],
+      [
+       "[18, 4]",
+       "18"
+      ],
+      [
+       "[17, 5]",
+       "17"
+      ],
+      [
+       "[16, 6]",
+       "16"
+      ],
+      [
+       "[15, 7]",
+       "15"
+      ],
+      [
+       "[14, 8]",
+       "14"
+      ],
+      [
+       "[13, 9]",
+       "13"
+      ],
+      [
+       "[12, 10]",
+       "12"
+      ],
+      [
+       "[11, 11]",
+       "11"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do both pruning rules matter?",
+    "p": [
+     "Without pruning the search tries k^n assignments. The bound `>= best` discards any partial assignment already as bad as the best known. The equal-load check removes mirrored duplicates: giving a job to either of two empty workers produces equivalent states. Together with processing large jobs first, they make the search fast for n ≤ 12."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k^n) worst case, far less with pruning.",
+     "Space: O(n + k)."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking with pruning: sort jobs descending, skip placements that can't beat the best, and skip workers with identical loads."
+ },
+ "1726": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cnt[nums[i] * nums[j]] += 1`",
+       "Number of pairs with each product",
+       "All pairs i < j"
+      ],
+      [
+       "`c * (c - 1) // 2`",
+       "Ways to choose 2 of the c pairs with the same product",
+       "Combinations C(c, 2)"
+      ],
+      [
+       "`8 *`",
+       "Each choice of two pairs gives 8 ordered tuples",
+       "Swap within each pair (2·2) and swap the two pairs (2) = 8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,4,6]` → 8:"
+    ],
+    "table": {
+     "head": [
+      "Product",
+      "Pairs with this product",
+      "Count c",
+      "C(c, 2)"
+     ],
+     "rows": [
+      [
+       "6",
+       "[(2, 3)]",
+       "1",
+       "0"
+      ],
+      [
+       "8",
+       "[(2, 4)]",
+       "1",
+       "0"
+      ],
+      [
+       "12",
+       "[(2, 6), (3, 4)]",
+       "2",
+       "1"
+      ],
+      [
+       "18",
+       "[(3, 6)]",
+       "1",
+       "0"
+      ],
+      [
+       "24",
+       "[(4, 6)]",
+       "1",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the count of pairs give the tuples?",
+    "p": [
+     "A tuple (a, b, c, d) with a·b = c·d is two disjoint pairs {a, b} and {c, d} with the same product. All numbers are distinct, so two different pairs with the same product can't share an element (if they shared x, the other elements would be equal). Each unordered choice of two such pairs yields 8 ordered tuples, hence `8 * C(c, 2)` per product value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²) for the product counter."
+    ]
+   }
+  ],
+  "takeaway": "Group pairs by product; each choice of two pairs with the same product gives 8 ordered tuples."
+ },
+ "1732": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`alt += g`",
+       "Running altitude after each change",
+       "Prefix sum"
+      ],
+      [
+       "`best = max(best, alt)`",
+       "Highest altitude seen",
+       "Starts at 0 because the biker begins at altitude 0 (a point on the route)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`gain = [-5,1,5,0,-7]` → 1 (altitudes 0, −5, −4, 1, 1, −6):"
+    ],
+    "table": {
+     "head": [
+      "gain",
+      "Altitude",
+      "Highest so far"
+     ],
+     "rows": [
+      [
+       "-5",
+       "-5",
+       "0"
+      ],
+      [
+       "1",
+       "-4",
+       "0"
+      ],
+      [
+       "5",
+       "1",
+       "1"
+      ],
+      [
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "-7",
+       "-6",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why start `best` at 0?",
+    "p": [
+     "The starting point counts as a point on the route. If every gain were negative, the highest altitude would still be the starting 0. Initialising `best` with 0 handles this without a special case."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Running sum with a running maximum, starting from the initial altitude 0."
+ },
+ "1750": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`l, r`",
+       "Two pointers at the ends",
+       "Strip equal characters from both sides"
+      ],
+      [
+       "`s[l] == s[r]`",
+       "Both ends hold the same letter",
+       "Required to delete a prefix and a suffix of that letter"
+      ],
+      [
+       "`while l <= r and s[l] == c: l += 1`",
+       "Remove the whole run of c at the front",
+       "Taking the maximal run gives the shortest result"
+      ],
+      [
+       "`while r >= l and s[r] == c: r -= 1`",
+       "Remove the whole run at the back",
+       "Stops before crossing `l`"
+      ],
+      [
+       "`r - l + 1`",
+       "Remaining length",
+       "Zero if everything was removed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aabccabba'` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Prefix removed",
+      "Suffix removed",
+      "Remaining",
+      "Length"
+     ],
+     "rows": [
+      [
+       "'a'",
+       "s[0:2] = 'aa'",
+       "s[8:9] = 'a'",
+       "bccabb",
+       "6"
+      ],
+      [
+       "'b'",
+       "s[2:3] = 'b'",
+       "s[6:8] = 'bb'",
+       "cca",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why take the maximal runs and why `l <= r` in the first inner loop?",
+    "p": [
+     "Removing more matching characters never hurts: the remaining string is shorter and the process can continue with whatever is exposed. The `l <= r` guard matters for a string like `'aaa'`: the front loop consumes all of it, and the back loop (guarded by `r >= l`) then does nothing, giving length 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers: while both ends hold the same letter, strip that letter's entire run from both sides."
+ },
+ "1762": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(len(h) - 1, -1, -1)`",
+       "Indexes from right to left",
+       "Start at the ocean side"
+      ],
+      [
+       "`tallest`",
+       "Tallest building seen so far to the right",
+       "One number suffices"
+      ],
+      [
+       "`heights[i] > tallest`",
+       "Strictly taller than all to its right",
+       "Has an ocean view"
+      ],
+      [
+       "`res[::-1]`",
+       "Reverse the list",
+       "The scan produced indexes in decreasing order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,2,3,1]` → [0, 2, 3]:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "height",
+      "Decision",
+      "tallest after"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "taller than everything to the right → view",
+       "1"
+      ],
+      [
+       "2",
+       "3",
+       "taller than everything to the right → view",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "blocked",
+       "3"
+      ],
+      [
+       "0",
+       "4",
+       "taller than everything to the right → view",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan from the right?",
+    "p": [
+     "A building has a view exactly when it is strictly taller than every building to its right. Scanning from the right, the running maximum IS the tallest building to the right of the current one, so the test is a single comparison, with no stack or nested loop."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Scan from the ocean side keeping the tallest height so far; a strictly taller building has a view."
+ },
+ "1768": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`max(len(word1), len(word2))`",
+       "Length of the longer word",
+       "One loop covers both words"
+      ],
+      [
+       "`if i < len(word1)`",
+       "Guard: word1 still has a letter at index i",
+       "Short word is skipped once exhausted"
+      ],
+      [
+       "`res.append(...)`",
+       "Collect letters in a list",
+       "Appending to a list is O(1), joining once is O(n)"
+      ],
+      [
+       "`''.join(res)`",
+       "Concatenate",
+       "Single pass instead of repeated string `+=`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abc'` and `'pq'` → `apbqc`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "word1[i]",
+      "word2[i]",
+      "Result so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "p",
+       "ap"
+      ],
+      [
+       "1",
+       "b",
+       "q",
+       "apbq"
+      ],
+      [
+       "2",
+       "c",
+       "—",
+       "apbqc"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two guards instead of zip?",
+    "p": [
+     "`zip` stops at the shorter word, so the leftover letters of the longer word would need separate handling. Looping to the longer length with an `if i < len(...)` guard on each word automatically appends the tail of the longer word one letter at a time."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "One loop to the longer length with a guard per word handles the leftover tail automatically."
+ },
+ "1771": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s = word1 + word2`",
+       "Concatenation",
+       "A palindrome from both words is a palindromic subsequence of the concatenation that uses letters from both parts"
+      ],
+      [
+       "`dp[i][j]`",
+       "Longest palindromic subsequence of `s[i..j]`",
+       "Interval DP (Dynamic Programming)"
+      ],
+      [
+       "`s[i] == s[j]` → `dp[i+1][j-1] + 2`",
+       "Matching ends extend the inner palindrome",
+       "Standard longest-palindromic-subsequence recurrence"
+      ],
+      [
+       "`i < a <= j`",
+       "`i` lies in word1 and `j` in word2 (a = len(word1))",
+       "The matching pair (i, j) uses one letter from each word"
+      ],
+      [
+       "`best = max(best, dp[i][j])`",
+       "Only count palindromes whose OUTERMOST pair straddles the boundary",
+       "Guarantees both subsequences are non-empty"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'cacb'` + `'cbba'` → 5. The improving matches with the outer pair crossing the boundary (index 4):"
+    ],
+    "table": {
+     "head": [
+      "Outer pair",
+      "Palindrome length"
+     ],
+     "rows": [
+      [
+       "i=3 (b), j=5 (b)",
+       "3"
+      ],
+      [
+       "i=1 (a), j=7 (a)",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the crossing condition suffice?",
+    "p": [
+     "A palindrome built from a subsequence of word1 followed by a subsequence of word2 has its first letter from word1 and its last from word2 (both non-empty). Those two letters form the outermost matching pair, which is exactly a pair (i, j) with i in word1 and j in word2 and s[i] == s[j]. The inside can come from anywhere between them, which `dp[i+1][j-1]` handles."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m)²).",
+     "Space: O((n + m)²)."
+    ]
+   }
+  ],
+  "takeaway": "Longest palindromic subsequence DP on word1+word2, recording only the matches whose outer pair spans the boundary."
+ },
+ "1801": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`buys` heap of `(-price, amount)`",
+       "Max-heap on buy price (negated)",
+       "The best buyer is the one offering the HIGHEST price"
+      ],
+      [
+       "`sells` heap of `(price, amount)`",
+       "Min-heap on sell price",
+       "The best seller is the one asking the LOWEST price"
+      ],
+      [
+       "`sells[0][0] <= price`",
+       "The cheapest sell order is acceptable to a new buy",
+       "Match while prices cross"
+      ],
+      [
+       "`take = min(a, amount)`",
+       "Quantity matched in this trade",
+       "Partial fills are possible"
+      ],
+      [
+       "`heappush(sells, (p, a - take))`",
+       "Put the unfilled remainder back",
+       "The order stays in the backlog with fewer units"
+      ],
+      [
+       "`-buys[0][0] >= price`",
+       "The best buy price (undo the negation) meets a new sell",
+       "Same idea for a sell order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "orders `[[10,5,0],[15,2,1],[25,1,1],[30,4,0]]` ([price, amount, type]) → backlog total 6:"
+    ],
+    "table": {
+     "head": [
+      "Order",
+      "Trades",
+      "Buy backlog (price, amount)",
+      "Sell backlog (price, amount)"
+     ],
+     "rows": [
+      [
+       "[10, 5, 'buy']",
+       "none",
+       "[(10, 5)]",
+       "[]"
+      ],
+      [
+       "[15, 2, 'sell']",
+       "none",
+       "[(10, 5)]",
+       "[(15, 2)]"
+      ],
+      [
+       "[25, 1, 'sell']",
+       "none",
+       "[(10, 5)]",
+       "[(15, 2), (25, 1)]"
+      ],
+      [
+       "[30, 4, 'buy']",
+       "2 @ 15; 1 @ 25",
+       "[(10, 5), (30, 1)]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two heaps?",
+    "p": [
+     "A buy order needs the lowest-priced sell, and a sell order needs the highest-priced buy. A min-heap of sells and a max-heap of buys give exactly those in O(log n). Matching consumes orders from the heap tops, so the match order follows the price priority described in the problem."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n): every order is pushed and popped at most a constant number of times (partial fills re-push the remainder once per match).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Order book with two heaps: a min-heap of sells and a max-heap of buys; match while the best prices cross and push back remainders."
+ },
+ "1813": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sentence.split()`",
+       "List of words",
+       "Compare whole words, not characters"
+      ],
+      [
+       "`if len(a) > len(b): swap`",
+       "Make `a` the shorter sentence",
+       "The insertion goes into the shorter one"
+      ],
+      [
+       "`while i < len(a) and a[i] == b[i]`",
+       "Count matching words from the front",
+       "Common prefix of words"
+      ],
+      [
+       "`a[-1 - j] == b[-1 - j]`",
+       "Compare words from the back using negative indexes",
+       "Common suffix of words"
+      ],
+      [
+       "`j < len(a) - i`",
+       "The suffix must not overlap the matched prefix",
+       "Words already matched at the front can't be counted twice"
+      ],
+      [
+       "`i + j == len(a)`",
+       "Prefix + suffix cover all of the shorter sentence",
+       "Then the rest of the longer sentence is the inserted part"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'My name is Haley'` and `'My Haley'`: shorter = `['My', 'Haley']`, longer = `['My', 'name', 'is', 'Haley']`."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "matching words at the front (i)",
+       "1"
+      ],
+      [
+       "matching words at the back (j)",
+       "1"
+      ],
+      [
+       "i + j",
+       "2"
+      ],
+      [
+       "len(shorter)",
+       "2"
+      ],
+      [
+       "similar?",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does matching front and back work?",
+    "p": [
+     "Inserting a sentence at one position in the shorter sentence means the shorter sentence's words split into a prefix and a suffix that both appear in the longer sentence, at its start and end. So the shorter one is similar to the longer one exactly when its words can be covered by a matching prefix plus a matching suffix. The `j < len(a) - i` guard avoids double-counting words when prefix and suffix would overlap."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m) words.",
+     "Space: O(n + m) for the word lists."
+    ]
+   }
+  ],
+  "takeaway": "Compare words from both ends: the shorter sentence must be fully covered by a matching prefix plus a matching suffix."
+ }
+}

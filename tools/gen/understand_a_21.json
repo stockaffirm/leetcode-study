@@ -1,0 +1,2343 @@
+{
+ "2580": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(ranges)",
+       "Sort by start; overlapping ranges become neighbours",
+       "Merge-intervals sweep"
+      ],
+      [
+       "s > end",
+       "A gap before this range: a new connected group starts",
+       ""
+      ],
+      [
+       "end = max(end, e)",
+       "Extends the current merged block",
+       ""
+      ],
+      [
+       "pow(2, comps, 10**9 + 7)",
+       "Each merged block goes to group 1 or 2 independently: 2^comps ways, computed with modular exponentiation",
+       "Fast power with a modulus"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[6,10],[5,15]]`:"
+    ],
+    "table": {
+     "head": [
+      "range",
+      "event",
+      "end of block",
+      "components"
+     ],
+     "rows": [
+      [
+       "[5,15]",
+       "starts a new component",
+       "15",
+       "1"
+      ],
+      [
+       "[6,10]",
+       "overlaps \u2192 same component",
+       "15",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2^1 = 2."
+    ]
+   },
+   {
+    "h": "Why powers of two?",
+    "p": [
+     "Overlapping ranges must be in the same group, so each connected block of overlapping ranges is placed entirely in group 1 or group 2: two choices per block, multiplied across blocks."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "Count merged overlapping blocks; the answer is 2^blocks (mod 10\u2079+7)."
+ },
+ "2583": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "deque / for _ in range(len(q))",
+       "BFS (Breadth-First Search) one level per pass",
+       "Level sums"
+      ],
+      [
+       "sums.append(total)",
+       "One sum per level",
+       ""
+      ],
+      [
+       "sorted(sums, reverse=True)[k - 1]",
+       "The k-th largest sum: sort descending, take index k \u2212 1",
+       "k-th largest by sorting"
+      ],
+      [
+       "len(sums) < k \u2192 -1",
+       "Fewer levels than k",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[5,8,9,2,1,3,7,4,6]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "level",
+      "level sum"
+     ],
+     "rows": [
+      [
+       "1",
+       "5"
+      ],
+      [
+       "2",
+       "17"
+      ],
+      [
+       "3",
+       "13"
+      ],
+      [
+       "4",
+       "10"
+      ]
+     ]
+    },
+    "bullets": [
+     "Sorted descending: `[17, 13, 10, 5]`; the 2nd is 13."
+    ]
+   },
+   {
+    "h": "Sorting versus a heap",
+    "p": [
+     "Sorting all level sums costs O(L log L) for L levels. A min-heap of size k would be O(L log k), but L is at most n, so sorting is simple and fast enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + L log L).",
+     "Space: O(w) for the queue plus O(L) for sums."
+    ]
+   }
+  ],
+  "takeaway": "BFS level sums, sort descending, take the k-th."
+ },
+ "2586": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "words[left:right + 1]",
+       "Slice of the inclusive range",
+       ""
+      ],
+      [
+       "w[0] in 'aeiou' and w[-1] in 'aeiou'",
+       "First and last characters are vowels (substring membership in a short string)",
+       ""
+      ],
+      [
+       "sum(bool \u2026)",
+       "Counts the words passing the test (True is 1)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"are\",\"amy\",\"u\"]`, range [0, 2]:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "first",
+      "last",
+      "counts?"
+     ],
+     "rows": [
+      [
+       "are",
+       "a",
+       "e",
+       "True"
+      ],
+      [
+       "amy",
+       "a",
+       "y",
+       "False"
+      ],
+      [
+       "u",
+       "u",
+       "u",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why `w[-1]`?",
+    "p": [
+     "Negative indexes count from the end, so `w[-1]` is the last character regardless of length, and it also works for one-letter words like `u`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(range length).",
+     "Space: O(range length) for the slice."
+    ]
+   }
+  ],
+  "takeaway": "Count words in [left, right] whose first and last letters are vowels."
+ },
+ "2592": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums = sorted(nums)",
+       "Ascending order; the permutation is built by matching each position with a larger value",
+       ""
+      ],
+      [
+       "i",
+       "Index of the smallest element not yet matched with a bigger one; also the greatness so far",
+       "Two pointers over the same sorted array"
+      ],
+      [
+       "x > nums[i]: i += 1",
+       "The current value can be placed in front of the unmatched element nums[i], beating it",
+       "Greedy matching"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sorted `[1,1,1,2,3,3,5]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "event",
+      "i (greatness)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 does not beat nums[0]=1",
+       "0"
+      ],
+      [
+       "1",
+       "1 does not beat nums[0]=1",
+       "0"
+      ],
+      [
+       "1",
+       "1 does not beat nums[0]=1",
+       "0"
+      ],
+      [
+       "2",
+       "2 beats nums[0]=1: i = 1",
+       "1"
+      ],
+      [
+       "3",
+       "3 beats nums[1]=1: i = 2",
+       "2"
+      ],
+      [
+       "3",
+       "3 beats nums[2]=1: i = 3",
+       "3"
+      ],
+      [
+       "5",
+       "5 beats nums[3]=2: i = 4",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why match the smallest unmatched?",
+    "p": [
+     "Greatness counts positions where the permuted value exceeds the original. Using each value only to beat the smallest value it can beat saves the larger values for beating larger ones, which maximises the number of pairs (like the 'assign cookies' greedy)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort and run two pointers: each value beats the smallest unmatched one if it is strictly bigger."
+ },
+ "2598": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x % value",
+       "Remainder class of x (Python's % is non-negative for a positive divisor, so negatives work)",
+       "Adding or subtracting `value` keeps the remainder"
+      ],
+      [
+       "Counter(...)",
+       "How many numbers belong to each remainder class",
+       ""
+      ],
+      [
+       "cnt[mex % value] > 0",
+       "To make the number `mex`, we need some element of remainder `mex % value`, each used once",
+       "Matching targets to resources"
+      ],
+      [
+       "cnt[...] -= 1; mex += 1",
+       "Use up one element and move to the next target",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,-10,7,13,6,8]`, `value = 5`: remainders `{1: 2, 0: 1, 2: 1, 3: 2}`. Making 0, 1, 2, ...:"
+    ],
+    "table": {
+     "head": [
+      "target number",
+      "remainder needed",
+      "action"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "count of remainder 0 used"
+      ],
+      [
+       "1",
+       "1",
+       "count of remainder 1 used"
+      ],
+      [
+       "2",
+       "2",
+       "count of remainder 2 used"
+      ],
+      [
+       "3",
+       "3",
+       "count of remainder 3 used"
+      ]
+     ]
+    },
+    "bullets": [
+     "Remainder 4 is exhausted at target 4: the smallest missing value is 4."
+    ]
+   },
+   {
+    "h": "Why remainders?",
+    "p": [
+     "Each operation adds or subtracts `value`, so an element can become any number with the same remainder (that is non-negative). A target m can be formed if some unused element has remainder m mod value, so only the counts per remainder matter."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(value)."
+    ]
+   }
+  ],
+  "takeaway": "Count elements per remainder mod value; build 0, 1, 2, \u2026 consuming one element of the matching remainder each time."
+ },
+ "2604": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted hens and grains",
+       "Process hens left to right; grains on the left of a hen are handled first",
+       ""
+      ],
+      [
+       "ok(t)",
+       "Can all grains be eaten within time t? Greedy: each hen covers the leftmost uneaten grains it can reach",
+       "Feasibility check for the binary search"
+      ],
+      [
+       "d = h - grains[j]",
+       "Distance to the leftmost uneaten grain, when it is to the left of the hen",
+       ""
+      ],
+      [
+       "max(t - 2*d, (t - d) // 2)",
+       "After going left by d, the hen can either return and go right (cost 2d to come back to its start, leaving t \u2212 2d to go right) or go right first and come back (the right trip costs (t \u2212 d)/2 out and back); take the better",
+       "Go-left-then-right trade-off"
+      ],
+      [
+       "while grains[j] <= reach: j += 1",
+       "Marks every grain within the hen's coverage as eaten",
+       ""
+      ],
+      [
+       "binary search on t",
+       "A larger time never hurts, so feasibility is monotone",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Hens `[3,6,7]`, grains `[2,4,7,9]`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "all eaten within mid?"
+     ],
+     "rows": [
+      [
+       "0",
+       "14",
+       "7",
+       "True"
+      ],
+      [
+       "0",
+       "7",
+       "3",
+       "True"
+      ],
+      [
+       "0",
+       "3",
+       "1",
+       "False"
+      ],
+      [
+       "2",
+       "3",
+       "2",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Minimum time: 2."
+    ]
+   },
+   {
+    "h": "Why must the leftmost grain be covered first?",
+    "p": [
+     "The leftmost uneaten grain can only be reached by the current hen or hens further right. Letting the current hen cover it, extending as far right as its remaining time allows, is optimal by an exchange argument, and processing hens left to right never wastes coverage."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) log(range)).",
+     "Space: O(1) besides the sorts."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on time; greedy per hen from the left, considering 'left first then right' versus 'right first then left'."
+ },
+ "2640": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mx = max(mx, x)",
+       "Running maximum, so conversion value of position i is x + (max of prefix)",
+       ""
+      ],
+      [
+       "total += x + mx",
+       "The score of prefix i is the sum of conversion values up to i, kept as a running total",
+       "Prefix sum of a derived array"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,7,5,10]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "prefix max",
+      "conversion x + max",
+      "prefix score"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "4",
+       "4"
+      ],
+      [
+       "3",
+       "3",
+       "6",
+       "10"
+      ],
+      [
+       "7",
+       "7",
+       "14",
+       "24"
+      ],
+      [
+       "5",
+       "7",
+       "12",
+       "36"
+      ],
+      [
+       "10",
+       "10",
+       "20",
+       "56"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[4, 10, 24, 36, 56]`."
+    ]
+   },
+   {
+    "h": "Why a running total?",
+    "p": [
+     "The score of the prefix ending at i equals the previous prefix's score plus the new conversion value. Keeping the running total avoids recomputing sums."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Running maximum and running total: score[i] = score[i\u22121] + nums[i] + max(nums[:i+1])."
+ },
+ "2643": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "max(range(len(mat)), key=lambda i: (sum(mat[i]), -i))",
+       "Chooses the row index with the most ones; the key is a tuple (ones, \u2212index), so ties are broken in favour of the smaller index",
+       "Tuple key for tie-breaking"
+      ],
+      [
+       "sum(mat[i])",
+       "Number of ones in a 0/1 row",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1],[1,0]]`:"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "ones",
+      "key (ones, \u2212index)"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "(1, 0)"
+      ],
+      [
+       "1",
+       "1",
+       "(1, -1)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Both rows have one 1; the key (1, 0) is larger than (1, \u22121), so row 0 wins: `[0, 1]`."
+    ]
+   },
+   {
+    "h": "Why \u2212i in the key?",
+    "p": [
+     "`max` picks the largest key. For equal counts it must pick the smallest index, which is the largest \u2212i."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "max() with key (ones, \u2212index): the most ones, ties go to the smaller row index."
+ },
+ "2661": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "where[mat[i][j]] = (i, j)",
+       "Value \u2192 its cell, built once so each painted number is located in O(1)",
+       "Inverse index"
+      ],
+      [
+       "rows[i], cols[j]",
+       "How many cells of each row / column are already painted",
+       "Counters per line"
+      ],
+      [
+       "rows[i] == n or cols[j] == m",
+       "A row (n cells) or a column (m cells) is completely painted",
+       ""
+      ],
+      [
+       "return k",
+       "Index of the first painting that completes a line",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,3,4,2]`, `mat = [[1,4],[2,3]]`:"
+    ],
+    "table": {
+     "head": [
+      "k",
+      "value painted",
+      "cell",
+      "row counts",
+      "column counts"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "(0,0)",
+       "[1, 0]",
+       "[1, 0]"
+      ],
+      [
+       "1",
+       "3",
+       "(1,1)",
+       "[1, 1]",
+       "[1, 1]"
+      ],
+      [
+       "2",
+       "4",
+       "(0,1)",
+       "[2, 1]",
+       "[1, 2]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The row/column completes at index 2."
+    ]
+   },
+   {
+    "h": "Why the dict?",
+    "p": [
+     "Searching the matrix for each value costs O(m\u00b7n) per painting. With the dict, each painting is O(1), so the whole process is O(m\u00b7n) to build and O(len(arr)) to simulate."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Map value \u2192 cell, count painted cells per row and column, stop when a count reaches the line length."
+ },
+ "2673": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for i in range(n // 2, 0, -1)",
+       "Internal nodes, bottom up (nodes are 1-indexed, stored at cost[i \u2212 1])",
+       "Heap-style tree stored in an array"
+      ],
+      [
+       "cost[2*i - 1], cost[2*i]",
+       "Costs of node i's left and right children (indices 2i and 2i + 1 in 1-indexed form)",
+       ""
+      ],
+      [
+       "ops += abs(l - r)",
+       "To equalise the two child paths, increment the smaller one by the difference",
+       "Fix the shallower side"
+      ],
+      [
+       "cost[i - 1] += max(l, r)",
+       "The node's accumulated path cost going down now equals the larger child's path cost",
+       "Bottom-up accumulation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 7`, `cost = [1,5,2,2,3,3,1]` (a perfect binary tree):"
+    ],
+    "table": {
+     "head": [
+      "node i",
+      "children path costs",
+      "increments needed",
+      "node's path cost",
+      "total increments"
+     ],
+     "rows": [
+      [
+       "3",
+       "3 vs 1",
+       "2",
+       "5",
+       "2"
+      ],
+      [
+       "2",
+       "2 vs 3",
+       "1",
+       "8",
+       "3"
+      ],
+      [
+       "1",
+       "8 vs 5",
+       "3",
+       "9",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 6."
+    ]
+   },
+   {
+    "h": "Why bottom-up?",
+    "p": [
+     "Making all root-to-leaf sums equal means, at every node, the two subtrees must have equal best path sums. Fixing the lowest nodes first and passing the larger path cost up keeps each decision local, and increasing the smaller side by exactly the difference is the cheapest way."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the copy."
+    ]
+   }
+  ],
+  "takeaway": "Bottom-up on the array-stored tree: add |left \u2212 right| to the answer and pass max(left, right) upward."
+ },
+ "2697": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a = list(s)",
+       "Mutable list of characters",
+       ""
+      ],
+      [
+       "i, j",
+       "Two pointers from both ends",
+       ""
+      ],
+      [
+       "a[i] = a[j] = min(a[i], a[j])",
+       "Chained assignment: both ends become the smaller character, the smallest change that makes them equal",
+       "Lexicographically smallest"
+      ],
+      [
+       "''.join(a)",
+       "Back to a string",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"egcfe\"`:"
+    ],
+    "table": {
+     "head": [
+      "pair of positions",
+      "string"
+     ],
+     "rows": [
+      [
+       "(0,4)",
+       "egcfe"
+      ],
+      [
+       "(1,3)",
+       "efcfe"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `efcfe`."
+    ]
+   },
+   {
+    "h": "Why min of the two?",
+    "p": [
+     "Every pair must become equal using the fewest operations, so one of the two characters is replaced. Choosing the smaller of the two gives the lexicographically smallest palindrome at each pair independently."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers: set both ends to the smaller character."
+ },
+ "2718": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "reversed(queries)",
+       "Processes the LAST query first: the last write to a cell is the one that remains",
+       "Reverse order for 'last writer wins'"
+      ],
+      [
+       "rows, cols (sets)",
+       "Rows / columns already fixed by a later query",
+       ""
+      ],
+      [
+       "idx not in rows",
+       "An earlier overwrite of the same row is completely hidden by the later one",
+       ""
+      ],
+      [
+       "val * (n - len(cols))",
+       "A row write contributes val to every cell NOT already covered by a later column write: n \u2212 (number of fixed columns) cells",
+       "Counting visible cells"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, processed from the last query to the first:"
+    ],
+    "table": {
+     "head": [
+      "query",
+      "visible cells",
+      "added",
+      "total"
+     ],
+     "rows": [
+      [
+       "col 0 := 4",
+       "4 \u00d7 3 free cells",
+       "12",
+       "12"
+      ],
+      [
+       "row 2 := 3",
+       "3 \u00d7 2 free cells",
+       "6",
+       "18"
+      ],
+      [
+       "col 2 := 2",
+       "2 \u00d7 2 free cells",
+       "4",
+       "22"
+      ],
+      [
+       "row 0 := 1",
+       "1 \u00d7 1 free cells",
+       "1",
+       "23"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final sum: 23."
+    ]
+   },
+   {
+    "h": "Why reverse?",
+    "p": [
+     "Each cell ends with the value of the last query touching its row or column. Going backwards, a query's visible cells are exactly those whose row and column weren't fixed by later queries. Each row/column counts once, so the work is O(q) instead of simulating the n\u00d7n matrix."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Process queries in reverse; each first-seen row/column adds val \u00d7 (cells not yet covered by the other direction)."
+ },
+ "2742": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[j]",
+       "Minimum money to get j walls painted, counting walls painted by the free painter too",
+       "0/1 knapsack (each wall is used once)"
+      ],
+      [
+       "j - t - 1",
+       "Hiring the paid painter for wall (cost c, time t) paints that wall, and the free painter paints t others meanwhile: t + 1 walls total",
+       "A wall that 'buys' t + 1 coverage"
+      ],
+      [
+       "dp[max(j - t - 1, 0)] + c",
+       "Cost of reaching coverage j by using this wall as paid; clamped at 0 because covering more than needed is fine",
+       "Clamping with max"
+      ],
+      [
+       "for j in range(n, 0, -1)",
+       "Descending order so each wall is used once",
+       "In-place 0/1 knapsack"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`cost = time = [1,2,3,2]`; dp[j] after each wall (index = walls covered 0..4):"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "dp"
+     ],
+     "rows": [
+      [
+       "start",
+       "[0, inf, inf, inf, inf]"
+      ],
+      [
+       "wall (cost 1, time 1)",
+       "[0, 1, 1, 'inf', 'inf']"
+      ],
+      [
+       "wall (cost 2, time 2)",
+       "[0, 1, 1, 2, 3]"
+      ],
+      [
+       "wall (cost 3, time 3)",
+       "[0, 1, 1, 2, 3]"
+      ],
+      [
+       "wall (cost 2, time 2)",
+       "[0, 1, 1, 2, 3]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer dp[4] = 3."
+    ]
+   },
+   {
+    "h": "Why is the free painter a coverage bonus?",
+    "p": [
+     "While the paid painter spends t time units on a wall, the free painter paints t other walls for free (one per unit). So hiring for one wall covers t + 1 walls. The task becomes: choose a subset of paid walls whose total coverage reaches n at minimum cost, a knapsack."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Knapsack where each paid wall covers time + 1 walls (itself plus the free painter's work)."
+ },
+ "2769": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "num + 2 * t",
+       "Each operation changes x and num by 1 each in opposite or same directions; to maximise x, increase x by 1 and decrease num by 1 per step, closing the gap by 2",
+       "A closed-form invariant"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 4`, `t = 1`:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "x",
+      "num"
+     ],
+     "rows": [
+      [
+       "start",
+       "6",
+       "4"
+      ],
+      [
+       "after one operation (x \u22121, num +1)",
+       "5",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Starting from x = 6 and num = 4, one operation (x decreases by 1, num increases by 1) makes them equal at 5. So 6 is achievable, and nothing larger is."
+    ]
+   },
+   {
+    "h": "Why num + 2t?",
+    "p": [
+     "x must end equal to num after at most t operations. One operation can decrease x by 1 and increase num by 1, which closes a gap of 2. Starting from the largest x whose gap to num is 2t, t operations make them equal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Each operation closes a gap of 2, so the largest x is num + 2t."
+ },
+ "2787": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[s]",
+       "Number of ways to write s as a sum of DISTINCT x-th powers, using the powers considered so far",
+       "Subset-sum counting"
+      ],
+      [
+       "dp = [1] + [0] * n",
+       "One way to make 0: the empty sum",
+       "Base case"
+      ],
+      [
+       "i ** x",
+       "The next allowed power; stops when it exceeds n",
+       ""
+      ],
+      [
+       "for s in range(n, p - 1, -1)",
+       "Descending, so each power is used at most once",
+       "0/1 knapsack ordering"
+      ],
+      [
+       "% MOD",
+       "Keeps counts bounded",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`, `x = 2` (squares 1, 4, 9); dp after each square:"
+    ],
+    "table": {
+     "head": [
+      "step",
+      "dp[0..10]"
+     ],
+     "rows": [
+      [
+       "start",
+       "[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "use 1^2 = 1",
+       "[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "use 2^2 = 4",
+       "[1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "use 3^2 = 9",
+       "[1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "dp[10] = 1: only 1 + 9 works."
+    ]
+   },
+   {
+    "h": "Why descending?",
+    "p": [
+     "Iterating s upward would let `dp[s - p]` already include the current power, using it twice. Going downward reads values from before this power was considered, so each power is used at most once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 n^(1/x)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "0/1 knapsack counting over the x-th powers \u2264 n."
+ },
+ "2799": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = len(set(nums))",
+       "Number of distinct values in the whole array: a complete subarray has this many",
+       ""
+      ],
+      [
+       "len(cnt) == total",
+       "The window currently contains all distinct values (is complete)",
+       "Sliding window with a distinct count"
+      ],
+      [
+       "shrink while complete",
+       "Moves `left` forward until the window is no longer complete; every start position before `left` gave a complete window ending at r",
+       ""
+      ],
+      [
+       "res += left",
+       "Number of start indexes 0..left\u22121 that make a complete subarray ending at r",
+       "Counting by right end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,1,2,2]`, 3 distinct values:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "value",
+      "left after shrinking",
+      "total complete subarrays so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "2",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why does `left` count the starts?",
+    "p": [
+     "After shrinking, the window [left, r] is the first incomplete one, which means [left \u2212 1, r] was complete and so is every window starting earlier (larger windows stay complete). That gives exactly `left` valid starts for this right end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(distinct)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window: after shrinking until incomplete, `left` equals the number of valid starts for the current right end."
+ },
+ "2817": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "insort(seen, nums[i - x])",
+       "Inserts the element that just became far enough (at distance \u2265 x) into a sorted list, keeping it sorted",
+       "Sorted list with binary insertion"
+      ],
+      [
+       "bisect_left(seen, nums[i])",
+       "Finds where nums[i] would fit; the closest values are at that index and the one before it",
+       "Nearest neighbour in a sorted list"
+      ],
+      [
+       "seen[j] - nums[i], nums[i] - seen[j - 1]",
+       "Differences with the successor and the predecessor",
+       ""
+      ],
+      [
+       "range(x, len(nums))",
+       "Only indexes with at least x earlier positions can pair",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,4]`, `x = 2`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "eligible values (sorted)",
+      "nearest values",
+      "best difference"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "[4]",
+       "[4]",
+       "2"
+      ],
+      [
+       "3",
+       "4",
+       "[3, 4]",
+       "[4, 3]",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 0."
+    ]
+   },
+   {
+    "h": "Why only the two nearest values?",
+    "p": [
+     "For a fixed nums[i] the closest eligible values on each side are its immediate neighbours in the sorted list. Further values are strictly farther, so checking successor and predecessor is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the searches plus O(n\u00b2) worst case for list insertion shifts.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maintain the eligible earlier values in a sorted list and bisect for the nearest on each side."
+ },
+ "2850": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "extra",
+       "One entry per surplus stone: a cell with k stones appears k \u2212 1 times",
+       "Expanding quantities into a list"
+      ],
+      [
+       "empty",
+       "The cells with 0 stones that need one",
+       ""
+      ],
+      [
+       "permutations(empty)",
+       "Every way of matching surplus stones to empty cells (from `itertools`)",
+       "Small assignment problem (at most 9 cells)"
+      ],
+      [
+       "|dx| + |dy|",
+       "Manhattan distance: the number of single-cell moves for a stone to travel",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Grid `[[1,1,0],[1,1,1],[1,2,1]]`: surplus stones at `[(2, 1)]`, empty cells at `[(0, 2)]`:"
+    ],
+    "table": {
+     "head": [
+      "matching of empties to surplus stones",
+      "total moves"
+     ],
+     "rows": [
+      [
+       "((0, 2),)",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Minimum: 3."
+    ]
+   },
+   {
+    "h": "Why can stones be moved independently?",
+    "p": [
+     "A move transfers one stone to a neighbour, and moving a stone along any shortest path costs its Manhattan distance, with no interference between stones. The total is the sum of the distances in the best one-to-one matching."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k! \u00b7 k) for k empty cells (k \u2264 8 here).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Match surplus stones to empty cells by trying every permutation, summing Manhattan distances."
+ },
+ "2856": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "max(Counter(nums).values())",
+       "Highest frequency of any value",
+       ""
+      ],
+      [
+       "2 * mf > n",
+       "One value is more than half the array: it can't all be paired with distinct values",
+       "Majority condition"
+      ],
+      [
+       "2 * mf - n",
+       "The leftover copies of that value after pairing each of the other n \u2212 mf elements with one copy",
+       ""
+      ],
+      [
+       "n % 2",
+       "Otherwise everything can be paired off, leaving 0 for even n and 1 for odd n",
+       "Parity"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "nums",
+      "n",
+      "max frequency",
+      "result"
+     ],
+     "rows": [
+      [
+       "[1, 3, 4, 9]",
+       "4",
+       "1",
+       "0"
+      ],
+      [
+       "[2, 3, 6, 9]",
+       "4",
+       "1",
+       "0"
+      ],
+      [
+       "[1, 1, 2]",
+       "3",
+       "2",
+       "1"
+      ],
+      [
+       "[1, 1, 1, 2]",
+       "4",
+       "3",
+       "2"
+      ],
+      [
+       "[7]",
+       "1",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does only the frequency matter?",
+    "p": [
+     "Removing a pair requires i < j with nums[i] < nums[j], i.e. two different values in sorted order. If no value is a majority we can always pair different values until at most one element remains (parity), and if a value is a majority, the best we can do is pair all other elements with its copies."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Majority argument: answer is 2\u00b7maxFreq \u2212 n if one value exceeds half the array, else n mod 2."
+ },
+ "2865": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for i in range(n)",
+       "Treat tower i as the peak of the mountain",
+       "Fix the peak"
+      ],
+      [
+       "cur = min(cur, h[j]) walking left",
+       "Heights must not increase going away from the peak: each tower is capped by its limit and by the previous tower",
+       "Running minimum"
+      ],
+      [
+       "same walking right",
+       "The right slope is built the same way",
+       ""
+      ],
+      [
+       "total",
+       "Sum of all heights for this peak",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`maxHeights = [5,3,4,1,1]`: heights chosen for each peak position:"
+    ],
+    "table": {
+     "head": [
+      "peak i",
+      "heights",
+      "sum",
+      "best so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "[5, 3, 3, 1, 1]",
+       "13",
+       "13"
+      ],
+      [
+       "1",
+       "[3, 3, 3, 1, 1]",
+       "11",
+       "13"
+      ],
+      [
+       "2",
+       "[3, 3, 4, 1, 1]",
+       "12",
+       "13"
+      ],
+      [
+       "3",
+       "[1, 1, 1, 1, 1]",
+       "5",
+       "13"
+      ],
+      [
+       "4",
+       "[1, 1, 1, 1, 1]",
+       "5",
+       "13"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 13."
+    ]
+   },
+   {
+    "h": "Why a running minimum?",
+    "p": [
+     "Moving away from the peak, a tower can be at most its own limit and at most the tower closer to the peak. Taking the smaller of those gives the tallest allowed height, and tallest is best for the sum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2) for n towers (the harder version II needs a monotonic stack for O(n)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Try each tower as the peak and extend both sides with a running minimum of the limits."
+ },
+ "2874": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "top",
+       "Largest nums[i] seen so far (the best i for a given later position)",
+       "Running maximum"
+      ],
+      [
+       "diff = max(diff, top - x)",
+       "Best (nums[i] \u2212 nums[j]) over pairs i < j seen so far",
+       "Best of the first two factors"
+      ],
+      [
+       "best = max(best, diff * x)",
+       "Use x as nums[k] with the best earlier difference",
+       "Chaining running maxima"
+      ],
+      [
+       "order of the three updates",
+       "best uses the diff built from earlier elements only; then diff uses the old top; then top is updated: each variable depends only on indexes strictly before the current one",
+       "Update order = index order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[12,6,1,2,7]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "max so far",
+      "best (nums[i] \u2212 nums[j])",
+      "best triplet value"
+     ],
+     "rows": [
+      [
+       "12",
+       "12",
+       "0",
+       "0"
+      ],
+      [
+       "6",
+       "12",
+       "6",
+       "0"
+      ],
+      [
+       "1",
+       "12",
+       "11",
+       "6"
+      ],
+      [
+       "2",
+       "12",
+       "11",
+       "22"
+      ],
+      [
+       "7",
+       "12",
+       "11",
+       "77"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 77 = (12 \u2212 1) \u00d7 7."
+    ]
+   },
+   {
+    "h": "Why three running values?",
+    "p": [
+     "A triplet value is (nums[i] \u2212 nums[j]) \u00b7 nums[k]. For a fixed k, the best choice is the maximum earlier difference (which in turn uses the maximum earlier nums[i]). Keeping the maximum prefix element, then the maximum difference, then the maximum product gives an O(n) solution."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Chain of running maxima: max prefix \u2192 max difference \u2192 max product, updated in that backwards order."
+ },
+ "2892": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "0 in nums \u2192 1",
+       "A zero absorbs everything into one element (product 0 \u2264 k)",
+       ""
+      ],
+      [
+       "cur",
+       "Product of the current group",
+       "Greedy grouping"
+      ],
+      [
+       "cur * x <= k",
+       "Merge x into the group while the product stays within k",
+       ""
+      ],
+      [
+       "groups += 1; cur = x",
+       "Otherwise close the group and start a new one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,3,7,3,5]`, `k = 20`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "group product",
+      "groups so far"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "6",
+       "1"
+      ],
+      [
+       "3",
+       "18",
+       "1"
+      ],
+      [
+       "7",
+       "7",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "3"
+      ],
+      [
+       "5",
+       "15",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why is greedy merging optimal?",
+    "p": [
+     "Merging as many consecutive elements as possible into the current group never makes later groups worse: a shorter group can only leave a worse start for the next. Since all numbers are \u2265 1, the product only grows, so the first violation is a forced cut."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy grouping while the running product \u2264 k; any zero collapses the array to 1."
+ },
+ "2907": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for j in range(n)",
+       "Treats each item as the MIDDLE of the triplet",
+       "Fix the middle"
+      ],
+      [
+       "max((\u2026 for i in range(j) if prices[i] < prices[j]), default=-1)",
+       "Best profit among earlier items with a smaller price; `default=-1` avoids an error on an empty generator",
+       "max with default"
+      ],
+      [
+       "right = \u2026 for k > j with prices[k] > prices[j]",
+       "Best profit among later items with a larger price",
+       ""
+      ],
+      [
+       "left > 0 and right > 0",
+       "Both neighbours must exist (profits are positive)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [10,2,3,4]`, `profits = [100,2,7,10]`:"
+    ],
+    "table": {
+     "head": [
+      "middle j",
+      "price",
+      "best left profit",
+      "best right profit",
+      "answer so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "10",
+       "-1",
+       "-1",
+       "-1"
+      ],
+      [
+       "1",
+       "2",
+       "-1",
+       "10",
+       "-1"
+      ],
+      [
+       "2",
+       "3",
+       "2",
+       "10",
+       "19"
+      ],
+      [
+       "3",
+       "4",
+       "7",
+       "-1",
+       "19"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 19 (2 + 7 + 10)."
+    ]
+   },
+   {
+    "h": "Why fix the middle?",
+    "p": [
+     "With the middle fixed, the left and right items are chosen independently, each as a simple maximum. This turns a triple loop into O(n\u00b2)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle item; best left (smaller price) + its profit + best right (larger price)."
+ },
+ "2931": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(v for row in values for v in row)",
+       "Flattens the matrix and sorts all items ascending",
+       "Nested generator + sort"
+      ],
+      [
+       "v * (i + 1)",
+       "The i-th purchase (day i + 1) multiplies its value by the day number",
+       ""
+      ],
+      [
+       "sum(...)",
+       "Total spending",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "All items sorted: `[1, 2, 3, 4, 5, 6, 7, 8, 9]`:"
+    ],
+    "table": {
+     "head": [
+      "day",
+      "item",
+      "value \u00d7 day"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "3",
+       "9"
+      ],
+      [
+       "4",
+       "4",
+       "16"
+      ],
+      [
+       "5",
+       "5",
+       "25"
+      ],
+      [
+       "6",
+       "6",
+       "36"
+      ],
+      [
+       "7",
+       "7",
+       "49"
+      ],
+      [
+       "8",
+       "8",
+       "64"
+      ],
+      [
+       "9",
+       "9",
+       "81"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 285."
+    ]
+   },
+   {
+    "h": "Why is ascending order right?",
+    "p": [
+     "Items in each row are non-increasing from left to right, and only the rightmost (cheapest) remaining item of a shop can be bought. Buying all items in globally ascending order respects that rule. By the rearrangement inequality, pairing the largest values with the largest day numbers maximises the total, and ascending order does exactly that."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log N) for N items.",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Buy in ascending order of value so the largest values get the largest day multipliers."
+ },
+ "2946": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "row[(j + k) % n]",
+       "The element that ends up at position j after shifting the row by k (the same pattern for even rows shifting left and odd rows shifting right: the equality check is symmetric)",
+       "Cyclic shift via modulo"
+      ],
+      [
+       "row[j] == row[(j + k) % n]",
+       "Position j keeps its value after the shift",
+       ""
+      ],
+      [
+       "all(...)",
+       "Every position in every row must keep its value",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,2,3],[4,5,6],[7,8,9]]`, `k = 4`: shifting by 4 equals shifting by 1 (mod 3), and the values differ:"
+    ],
+    "table": {
+     "head": [
+      "row",
+      "j",
+      "row[j]",
+      "row[(j + k) % n]",
+      "equal?"
+     ],
+     "rows": [
+      [
+       "[1, 2, 3]",
+       "0",
+       "1",
+       "2",
+       "False"
+      ],
+      [
+       "[1, 2, 3]",
+       "1",
+       "2",
+       "3",
+       "False"
+      ],
+      [
+       "[1, 2, 3]",
+       "2",
+       "3",
+       "1",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "The first comparison already fails, so the answer is False."
+    ]
+   },
+   {
+    "h": "Why compare with index (j + k) % n only?",
+    "p": [
+     "A row is unchanged by a cyclic shift of k iff every element equals the element k positions away (mod n). A left shift by k and a right shift by k give the same condition, because shifting right by k is the same as shifting left by n \u2212 k, and the row is unchanged under one exactly when it is under the other."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A row survives a cyclic shift iff row[j] == row[(j + k) % n] for all j."
+ },
+ "2958": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cnt[x] += 1",
+       "Counter of occurrences inside the window",
+       "Sliding window with frequency limits"
+      ],
+      [
+       "while cnt[x] > k",
+       "The newly added value x now appears too often; shrink from the left until it appears at most k times",
+       "Shrink to repair the violation"
+      ],
+      [
+       "cnt[nums[left]] -= 1",
+       "Remove the leftmost element from the counts",
+       ""
+      ],
+      [
+       "best = max(best, r - left + 1)",
+       "Longest valid window so far",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,1,2,3,1,2]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "value",
+      "left",
+      "window",
+      "best length"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "[1]",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "0",
+       "[1, 2]",
+       "2"
+      ],
+      [
+       "2",
+       "3",
+       "0",
+       "[1, 2, 3]",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "0",
+       "[1, 2, 3, 1]",
+       "4"
+      ],
+      [
+       "4",
+       "2",
+       "0",
+       "[1, 2, 3, 1, 2]",
+       "5"
+      ],
+      [
+       "5",
+       "3",
+       "0",
+       "[1, 2, 3, 1, 2, 3]",
+       "6"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "[2, 3, 1, 2, 3, 1]",
+       "6"
+      ],
+      [
+       "7",
+       "2",
+       "2",
+       "[3, 1, 2, 3, 1, 2]",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 6."
+    ]
+   },
+   {
+    "h": "Why only the new value can break the window?",
+    "p": [
+     "Before adding x, every value occurred at most k times. Only x's count changed, so only x can exceed k, and shrinking until cnt[x] \u2264 k restores validity. The `while` is needed because the leftmost elements may be other values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(distinct)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with a Counter: add on the right, shrink on the left until the new value's count is \u2264 k."
+ }
+}
