@@ -1,0 +1,1893 @@
+{
+ "2047": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sentence.split()`",
+       "Tokens separated by any run of spaces",
+       "Extra spaces vanish (no empty tokens)"
+      ],
+      [
+       "`c.isdigit()`",
+       "Digit test",
+       "Digits make the word invalid"
+      ],
+      [
+       "`hyphens > 1 or i == 0 or i == len(w) - 1`",
+       "More than one hyphen, or a hyphen at either end",
+       "Early rejection"
+      ],
+      [
+       "`w[i-1].isalpha() and w[i+1].isalpha()`",
+       "Letters on both sides of the hyphen",
+       "Neighbouring characters; safe because ends were rejected first"
+      ],
+      [
+       "`c in '!.,' and i != len(w) - 1`",
+       "Punctuation that is not the final character",
+       "Allowed only at the end"
+      ],
+      [
+       "`sum(ok(w) for w in …)`",
+       "Count the valid tokens",
+       "`True` counts as 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "Word",
+      "Valid?",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "cat",
+       "True",
+       "valid"
+      ],
+      [
+       "a-b",
+       "True",
+       "valid"
+      ],
+      [
+       "-ab",
+       "False",
+       "hyphen at an end"
+      ],
+      [
+       "ab-",
+       "False",
+       "hyphen at an end"
+      ],
+      [
+       "a--b",
+       "False",
+       "hyphen not between letters"
+      ],
+      [
+       "a1",
+       "False",
+       "contains a digit"
+      ],
+      [
+       "a!",
+       "True",
+       "valid"
+      ],
+      [
+       "a!b",
+       "False",
+       "punctuation not last"
+      ],
+      [
+       "!",
+       "True",
+       "valid"
+      ],
+      [
+       "e-!",
+       "False",
+       "hyphen not between letters"
+      ],
+      [
+       "a-!",
+       "False",
+       "hyphen not between letters"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check a hyphen's position before looking at its neighbours?",
+    "p": [
+     "For a hyphen at index 0, `w[i - 1]` would be `w[-1]` (the LAST character, because of Python's negative indexing) and for the last index `w[i + 1]` would raise `IndexError`. Rejecting hyphens at either end first makes the neighbour test safe. `-ab` and `ab-` are rejected for exactly that reason."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) over the characters of the sentence.",
+     "Space: O(n) for the token list."
+    ]
+   }
+  ],
+  "takeaway": "Validate each token with simple character rules; reject boundary hyphens before indexing their neighbours."
+ },
+ "2050": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`indeg[b] += 1`",
+       "Number of unfinished prerequisites",
+       "Kahn's topological sort (BFS, Breadth-First Search, by in-degree)"
+      ],
+      [
+       "`deque` of courses with `indeg == 0`",
+       "Courses ready to start now",
+       "Start immediately: no prerequisites"
+      ],
+      [
+       "`finish[v] = max(finish[v], finish[u] + time[v-1])`",
+       "A course can start only after ALL its prerequisites finish",
+       "Longest path to v so far, plus v's duration"
+      ],
+      [
+       "`indeg[v] -= 1` then `== 0` → enqueue",
+       "All prerequisites processed",
+       "v is ready"
+      ],
+      [
+       "`max(finish)`",
+       "The latest finishing time overall",
+       "Minimum total months"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, relations `[[1,3],[2,3]]`, time `[3,2,5]` → 8 (course 3 starts after both 1 and 2 end at months 3 and 2):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Info",
+      "finish[1..3]"
+     ],
+     "rows": [
+      [
+       "start",
+       "[1, 2]",
+       "[3, 2, 0]"
+      ],
+      [
+       "1 → 3",
+       "indeg[3] = 1",
+       "[3, 2, 8]"
+      ],
+      [
+       "2 → 3",
+       "indeg[3] = 0",
+       "[3, 2, 8]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why topological order with a max?",
+    "p": [
+     "Courses run in parallel, so the finish time of a course is its own duration plus the LATEST finish among its prerequisites. That's the longest path (critical path) in the DAG (Directed Acyclic Graph). Processing nodes in topological order guarantees every prerequisite's finish is final before a node uses it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + E).",
+     "Space: O(n + E)."
+    ]
+   }
+  ],
+  "takeaway": "Longest path in a DAG via Kahn's topological sort: finish[v] = time[v] + max finish of prerequisites."
+ },
+ "2062": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`for i … for j in range(i, n)`",
+       "Every start i and every end j",
+       "Extend a window to the right from each start"
+      ],
+      [
+       "`word[j] not in 'aeiou'`",
+       "A consonant ends the extension",
+       "A vowel substring can't contain a consonant, so no longer window from i is valid"
+      ],
+      [
+       "`seen = set()`",
+       "Vowels seen in this window",
+       "Reset for each start"
+      ],
+      [
+       "`len(seen) == 5`",
+       "All five vowels present",
+       "Count this substring (and every longer one that still has only vowels)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aeiouu'` → 2:"
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "End j",
+      "Substring",
+      "Verdict"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "aeiou",
+       "all 5 vowels → count"
+      ],
+      [
+       "0",
+       "5",
+       "aeiouu",
+       "all 5 vowels → count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `break` on a consonant?",
+    "p": [
+     "Once a consonant appears, every longer substring starting at i contains it. So the inner loop can stop, which also keeps the work to the length of each vowel run. For each start the count increases at every end position where the five vowels are all present, because a longer vowel-only substring still has them."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) worst case (a long vowel run).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "From each start extend through vowels only; count every end position where all five vowels have been seen."
+ },
+ "2068": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(word1)`",
+       "Letter counts of the first word",
+       "Frequency table"
+      ],
+      [
+       "`diff.subtract(Counter(word2))`",
+       "Subtract the second word's counts IN PLACE",
+       "Unlike the `-` operator on Counters, `subtract` keeps zero and negative values"
+      ],
+      [
+       "`abs(v) <= 3`",
+       "Difference within 3 either way",
+       "Absolute value handles both words having more"
+      ],
+      [
+       "`all(…)`",
+       "Every letter satisfies the bound",
+       "Short-circuits at the first violation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aaaa'` vs `'bccb'`:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Count in word1 − count in word2",
+      "|difference| ≤ 3?"
+     ],
+     "rows": [
+      [
+       "a",
+       "4",
+       "False"
+      ],
+      [
+       "b",
+       "-2",
+       "True"
+      ],
+      [
+       "c",
+       "-2",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `subtract` and not `Counter(w1) - Counter(w2)`?",
+    "p": [
+     "The `-` operator on two Counters keeps only POSITIVE results, discarding letters where word2 has more. Here we need the negative differences too (for example `b`: 0 − 2 = −2, `c`: 0 − 2 = −2), so `subtract` is the right tool."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(1) (at most 26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Counter.subtract keeps negative differences; check every letter's absolute difference is at most 3."
+ },
+ "2092": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`know`",
+       "Set of people who know the secret",
+       "Starts with 0 and firstPerson"
+      ],
+      [
+       "`by_time[t]`",
+       "Meetings grouped by time",
+       "Meetings at the same time form a graph where the secret can spread in any number of hops"
+      ],
+      [
+       "`sorted(by_time)`",
+       "Process times in increasing order",
+       "Secrets only move forward in time"
+      ],
+      [
+       "`deque(p for p in g if p in know)`",
+       "BFS (Breadth-First Search) sources: knowers who attend a meeting at this time",
+       "Only attendees can spread it now"
+      ],
+      [
+       "`know |= seen`",
+       "Add everyone reached",
+       "Union update"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 6, meetings `[[1,2,5],[2,3,8],[1,5,10]]`, firstPerson = 1 → [0, 1, 2, 3, 5]:"
+    ],
+    "table": {
+     "head": [
+      "Time",
+      "Meetings",
+      "Knowers present",
+      "Reached",
+      "Everyone who knows"
+     ],
+     "rows": [
+      [
+       "5",
+       "[(1, 2)]",
+       "[1]",
+       "[1, 2]",
+       "[0, 1, 2]"
+      ],
+      [
+       "8",
+       "[(2, 3)]",
+       "[2]",
+       "[2, 3]",
+       "[0, 1, 2, 3]"
+      ],
+      [
+       "10",
+       "[(1, 5)]",
+       "[1]",
+       "[1, 5]",
+       "[0, 1, 2, 3, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why group by time instead of processing meetings one by one?",
+    "p": [
+     "Meetings at the same instant can pass the secret along a chain (A tells B, B tells C at the same time), regardless of the order of the list. Building a graph of one time's meetings and flooding from the knowers captures all such chains. Later times start from the updated `know` set. A person who learned the secret at time 8 can't have shared it at time 5."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(M log M) for sorting times plus O(M) per grouped search.",
+     "Space: O(M)."
+    ]
+   }
+  ],
+  "takeaway": "Process meetings by time: build that time's graph and BFS (Breadth-First Search) from current knowers, since same-time chains are instantaneous."
+ },
+ "2095": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`if not head.next: return None`",
+       "Single node: it is the middle",
+       "Deleting it empties the list"
+      ],
+      [
+       "`slow, fast = head, head.next.next`",
+       "`fast` starts two nodes ahead",
+       "So that `slow` stops at the node BEFORE the middle"
+      ],
+      [
+       "`while fast and fast.next`",
+       "Move `fast` by 2 and `slow` by 1",
+       "Tortoise and hare"
+      ],
+      [
+       "`slow.next = slow.next.next`",
+       "Unlink the middle node",
+       "Singly linked delete needs its predecessor"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→3→4→7→1→2→6`: middle (index ⌊7/2⌋ = 3) is 7. Result: 1→3→4→1→2→6."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "slow at",
+      "fast at"
+     ],
+     "rows": [
+      [
+       "start",
+       "1",
+       "4"
+      ],
+      [
+       "step",
+       "3",
+       "1"
+      ],
+      [
+       "step",
+       "4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does fast start at head.next.next?",
+    "p": [
+     "If both started at the head, `slow` would end ON the middle node and we'd have no way to unlink it (no back pointer). Starting `fast` one step further ahead makes `slow` land on the predecessor of the middle. For 2 nodes: `fast` is `None`, so `slow` stays at the head and its next (the second node, the middle at index 1) is removed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Slow/fast pointers with fast starting two nodes ahead stop slow just before the middle node, ready to unlink it."
+ },
+ "2101": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(x1 - x2) ** 2 + (y1 - y2) ** 2 <= r1 * r1`",
+       "Squared distance ≤ squared radius",
+       "Compare squares: no `sqrt` and no float errors"
+      ],
+      [
+       "`g[i].append(j)`",
+       "Directed edge: bomb i triggers bomb j",
+       "The relation is NOT symmetric: depends on i's radius only"
+      ],
+      [
+       "`for s in range(n)`",
+       "Try each bomb as the first detonation",
+       "Reachability from every start"
+      ],
+      [
+       "`seen`, `st`",
+       "Iterative DFS (Depth-First Search) from s",
+       "Counts bombs reachable by chain reaction"
+      ],
+      [
+       "`max(best, len(seen))`",
+       "Largest chain",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[2,1,3],[6,1,4]]` → 2 (distance² = 16; bomb 0 radius² = 9 does not reach bomb 1; bomb 1 radius² = 16 reaches bomb 0):"
+    ],
+    "table": {
+     "head": [
+      "Start bomb",
+      "Bombs it triggers directly",
+      "All bombs exploding",
+      "Count"
+     ],
+     "rows": [
+      [
+       "0",
+       "[]",
+       "[0]",
+       "1"
+      ],
+      [
+       "1",
+       "[0]",
+       "[0, 1]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a directed graph?",
+    "p": [
+     "A big bomb can set off a small bomb that lies within its radius, while the small bomb's blast may not reach back. So edges are directed by the source bomb's radius. The answer is the largest set reachable from one start, found by a graph search from each node."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³): building the graph is O(n²), and a search from each of n starts costs up to O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Directed graph by blast radius, then a DFS (Depth-First Search) from each bomb to count the chain reaction."
+ },
+ "2116": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`n % 2`",
+       "Odd length",
+       "Can never be balanced"
+      ],
+      [
+       "`locked[i] == '0' or s[i] == '('` → `bal += 1`",
+       "Left-to-right pass: treat every free character as '(' (the best case for prefixes)",
+       "Optimistic count of openers"
+      ],
+      [
+       "`bal < 0`",
+       "More forced ')' than possible '(' so far",
+       "No assignment can fix this prefix"
+      ],
+      [
+       "reverse pass with `')'`",
+       "Treat every free character as ')'",
+       "Symmetric check: enough closers for every suffix"
+      ],
+      [
+       "two passes",
+       "Each pass checks one necessary condition",
+       "Together they are sufficient"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = '))()))'`, `locked = '010100'` → True. Left-to-right (balance never negative):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "s[i]",
+      "locked",
+      "Treated as",
+      "Balance"
+     ],
+     "rows": [
+      [
+       "0",
+       ")",
+       "0",
+       "free or '(' → treat as '('",
+       "1"
+      ],
+      [
+       "1",
+       ")",
+       "1",
+       "locked ')' → close",
+       "0"
+      ],
+      [
+       "2",
+       "(",
+       "0",
+       "free or '(' → treat as '('",
+       "1"
+      ],
+      [
+       "3",
+       ")",
+       "1",
+       "locked ')' → close",
+       "0"
+      ],
+      [
+       "4",
+       ")",
+       "0",
+       "free or '(' → treat as '('",
+       "1"
+      ],
+      [
+       "5",
+       ")",
+       "0",
+       "free or '(' → treat as '('",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Right-to-left pass",
+    "p": [
+     "Also never negative, and the length is even, so a valid assignment exists."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "s[i]",
+      "locked",
+      "Treated as",
+      "Balance"
+     ],
+     "rows": [
+      [
+       "5",
+       ")",
+       "0",
+       "free or ')' → treat as ')'",
+       "1"
+      ],
+      [
+       "4",
+       ")",
+       "0",
+       "free or ')' → treat as ')'",
+       "2"
+      ],
+      [
+       "3",
+       ")",
+       "1",
+       "free or ')' → treat as ')'",
+       "3"
+      ],
+      [
+       "2",
+       "(",
+       "0",
+       "free or ')' → treat as ')'",
+       "4"
+      ],
+      [
+       "1",
+       ")",
+       "1",
+       "free or ')' → treat as ')'",
+       "5"
+      ],
+      [
+       "0",
+       ")",
+       "0",
+       "free or ')' → treat as ')'",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why are both passes needed?",
+    "p": [
+     "The left-to-right pass proves every prefix can have at least as many '(' as ')' (turn all free characters into '('). That alone can still fail when too many '(' remain unclosed, which is detected by the mirrored pass (turn all free ones into ')' and scan from the right). Passing both, plus an even length, means a balanced assignment exists."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two greedy passes: treat free characters as '(' left-to-right and as ')' right-to-left; the balance must never go negative (and length must be even)."
+ },
+ "2056": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`rook`, `bishop` direction lists",
+       "Unit steps (dr, dc)",
+       "Piece types differ only in allowed directions; a queen has both lists"
+      ],
+      [
+       "`[(r, c)] * 8`",
+       "The 'stay' move: the position at each second t = 0…7",
+       "A move is stored as the piece's position at every second"
+      ],
+      [
+       "`(r + dr * min(t, k), …)`",
+       "Moving k squares: position at second t, stopping after k seconds",
+       "Each piece moves one square per second and stops at its destination"
+      ],
+      [
+       "bounds check then `break`",
+       "Stop extending in a direction when leaving the board",
+       "Collects all destinations along each ray"
+      ],
+      [
+       "`clash(a, b)`",
+       "Do two move-lists share a square at the same second?",
+       "`zip` aligns the two paths by time"
+      ],
+      [
+       "`go(i)` with `chosen`",
+       "Backtracking over pieces: choose one move for piece i, recurse, undo",
+       "Counts combinations where no pair ever collides"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "p": [
+     "Results computed by running the code. 'Options' is how many moves (including staying) each piece has:"
+    ],
+    "table": {
+     "head": [
+      "Pieces",
+      "Positions",
+      "Options per piece",
+      "Valid combinations"
+     ],
+     "rows": [
+      [
+       "['rook']",
+       "[[1, 1]]",
+       "[15]",
+       "15"
+      ],
+      [
+       "['queen']",
+       "[[1, 1]]",
+       "[22]",
+       "22"
+      ],
+      [
+       "['bishop']",
+       "[[4, 3]]",
+       "[12]",
+       "12"
+      ],
+      [
+       "['rook', 'rook']",
+       "[[1, 1], [8, 8]]",
+       "[15, 15]",
+       "223"
+      ],
+      [
+       "['queen', 'bishop']",
+       "[[5, 7], [3, 4]]",
+       "[24, 12]",
+       "281"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "What a move looks like",
+    "p": [
+     "A rook at (1,1) moving 2 squares right is stored as its position at each second 0…7: [(1, 1), (1, 2), (1, 3), (1, 3), (1, 3), (1, 3), (1, 3), (1, 3)]. Two pieces collide only if the lists have equal entries at the same index, which also covers a piece waiting at its destination (it keeps its last position for the remaining seconds). Swapping places (crossing in the middle of a second) is allowed and not detected because only whole-second positions are compared."
+    ]
+   },
+   {
+    "h": "Why is brute force fine?",
+    "p": [
+     "At most 4 pieces, and each piece has at most 29 moves (queen), so at most 29⁴ ≈ 700,000 combinations, and backtracking prunes a combination as soon as the newest piece collides with an already chosen one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: About O(moves^n · 8) for n ≤ 4 pieces.",
+     "Space: O(n · moves · 8) for the stored paths."
+    ]
+   }
+  ],
+  "takeaway": "Represent each move as the piece's position at every second; backtrack over pieces and prune on same-square-same-time clashes."
+ },
+ "2065": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`g[u].append((v, t))` both ways",
+       "Undirected weighted adjacency",
+       "(neighbour, travel time)"
+      ],
+      [
+       "`time + t <= maxTime`",
+       "Prune: only take an edge if there is time left",
+       "Bounds the DFS (Depth-First Search): each edge costs at least 10 time units in the original constraints, so paths are short"
+      ],
+      [
+       "`visits[v] == 0`",
+       "First time this path touches v",
+       "Only first visits add the node's value"
+      ],
+      [
+       "`visits[v] += 1` … `-= 1`",
+       "Count visits along the CURRENT path, then undo",
+       "Backtracking; allows revisiting nodes without double counting"
+      ],
+      [
+       "`if u == 0: best = max(best, quality)`",
+       "Only paths that are back at node 0 count",
+       "The path must start and end at 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "values `[0,32,10,43]`, edges `[[0,1,10],[1,2,15],[0,3,10]]`. Best quality for different time limits (computed): maxTime 49 → 75, 30 → 43, 20 → 43. Improving paths for 49 (as node sequences, time, quality):"
+    ],
+    "table": {
+     "head": [
+      "Path",
+      "Time",
+      "Quality"
+     ],
+     "rows": [
+      [
+       "[0, 1, 0]",
+       "20",
+       "32"
+      ],
+      [
+       "[0, 1, 0, 3, 0]",
+       "40",
+       "75"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why DFS with a time budget, and why visit counts rather than a boolean?",
+    "p": [
+     "The graph is tiny in degree (each node has at most 4 edges) and edges cost at least 10 with `maxTime ≤ 100`, so a path has at most 10 edges: DFS over all walks is feasible. A node may be visited several times on a walk (to get through) but its value must count once, so we keep a counter per node and add the value only when the counter goes 0 → 1; undoing the increment on return restores the state for other branches."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: Exponential in the number of edges on a walk (at most maxTime / minEdgeTime, about 10), roughly O(4^10).",
+     "Space: O(walk length + n)."
+    ]
+   }
+  ],
+  "takeaway": "DFS over walks bounded by maxTime; add a node's value only the first time it is visited on the current walk, and record the best when back at 0."
+ },
+ "2131": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(words)`",
+       "Word → count",
+       "Pair words with their reverses"
+      ],
+      [
+       "`w[::-1]`",
+       "The reversed word",
+       "A word and its reverse go on opposite sides of the palindrome"
+      ],
+      [
+       "`w < rev and rev in cnt`",
+       "Handle each pair of different words once, from the smaller one",
+       "Avoids counting both `lc` and `cl`"
+      ],
+      [
+       "`min(c, cnt[rev]) * 4`",
+       "Each (w, rev) pair adds two words = 4 letters",
+       "Number of usable pairs is the smaller count"
+      ],
+      [
+       "`w == rev` (e.g. `gg`)",
+       "Self-palindromic word: pair up copies, `c // 2` pairs",
+       "Each pair adds 4 letters"
+      ],
+      [
+       "`center`",
+       "Some self-palindromic word has a leftover copy",
+       "One such word can sit in the middle (+2 letters)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['lc','cl','gg']` → 6 (`lc` + `gg` + `cl`):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Count",
+      "Case",
+      "Contribution",
+      "Note"
+     ],
+     "rows": [
+      [
+       "lc",
+       "1",
+       "partner cl: handled from the other side",
+       "0",
+       "—"
+      ],
+      [
+       "cl",
+       "1",
+       "partner lc × 1",
+       "min × 4 = 4",
+       "—"
+      ],
+      [
+       "gg",
+       "1",
+       "palindromic word",
+       "0 pairs × 4 = 0",
+       "odd count → center candidate"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why at most one centre word?",
+    "p": [
+     "A palindrome has a single middle. Words like `gg` read the same reversed, so one unpaired copy can sit in the center and add 2 letters. Two leftover self-palindromic words can't both be central."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Pair each word with its reverse (4 letters per pair), pair up self-palindromic words, and add 2 if one is left over for the center."
+ },
+ "2134": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`w = sum(nums)`",
+       "Number of ones: the size of the block they must form",
+       "The final contiguous block has exactly w cells"
+      ],
+      [
+       "`t = nums + nums`",
+       "Doubled array",
+       "Unrolls the circle: every circular window is an ordinary window in `t`"
+      ],
+      [
+       "`t[:w].count(0)`",
+       "Zeros in the first window",
+       "Each zero inside a window is a position that must receive a 1: one swap per zero"
+      ],
+      [
+       "`zeros += (t[i] == 0) - (t[i - w] == 0)`",
+       "Slide: add the new cell's zero, drop the old cell's zero",
+       "Booleans subtract as 0/1; O(1) update"
+      ],
+      [
+       "`if w in (0, len(nums)): return 0`",
+       "All zeros or all ones",
+       "Nothing to group"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,0,1,1,0,0]` (w = 3 ones) → 1:"
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Cells",
+      "Zeros in window",
+      "best"
+     ],
+     "rows": [
+      [
+       "t[0:3]",
+       "[0, 1, 0]",
+       "2",
+       "2"
+      ],
+      [
+       "slide to t[1:4]",
+       "[1, 0, 1]",
+       "1",
+       "1"
+      ],
+      [
+       "slide to t[2:5]",
+       "[0, 1, 1]",
+       "1",
+       "1"
+      ],
+      [
+       "slide to t[3:6]",
+       "[1, 1, 0]",
+       "1",
+       "1"
+      ],
+      [
+       "slide to t[4:7]",
+       "[1, 0, 0]",
+       "2",
+       "1"
+      ],
+      [
+       "slide to t[5:8]",
+       "[0, 0, 0]",
+       "3",
+       "1"
+      ],
+      [
+       "slide to t[6:9]",
+       "[0, 0, 1]",
+       "2",
+       "1"
+      ],
+      [
+       "slide to t[7:10]",
+       "[0, 1, 0]",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the number of zeros in a window give the swaps?",
+    "p": [
+     "If the ones end up in a chosen window of length w, every 0 in that window must be swapped with a 1 outside it. The count of zeros inside equals the count of ones outside, so that many swaps are needed. We pick the window with the fewest zeros. Doubling the array handles windows that wrap around the circle's end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Window of size = number of ones over the doubled array: the zeros inside the best window equal the swaps needed."
+ },
+ "2143": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cur[d]`",
+       "Number of ways to choose a range ending at the previous index and picks with (sum from nums1 − sum from nums2) = d",
+       "Balance of the differences; the DP state"
+      ],
+      [
+       "`new[a] += 1`, `new[-b] += 1`",
+       "Start a new range at this index: pick nums1 (+a) or nums2 (−b)",
+       "A range of length 1"
+      ],
+      [
+       "`new[d + a]`, `new[d - b]`",
+       "Extend each earlier range by either pick",
+       "Adds a to the balance for nums1, subtracts b for nums2"
+      ],
+      [
+       "`res += cur[0]`",
+       "Ranges ending here that are balanced",
+       "Balance zero means the two sums are equal"
+      ],
+      [
+       "`defaultdict(int)`",
+       "Dict that treats missing balances as 0",
+       "Sparse DP table over balances"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,5]`, `nums2 = [2,6,3]` → 3. Balances after each index (`balance: ways`):"
+    ],
+    "table": {
+     "head": [
+      "(a, b)",
+      "cur (balance → ways)",
+      "Balanced ways ending here",
+      "Total"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "{-2: 1, 1: 1}",
+       "0",
+       "0"
+      ],
+      [
+       "(2, 6)",
+       "{-8: 1, -6: 1, -5: 1, 0: 1, 2: 1, 3: 1}",
+       "1",
+       "1"
+      ],
+      [
+       "(5, 3)",
+       "{-11: 1, -9: 1, -8: 1, -3: 3, -1: 2, 0: 2, 5: 2, 7: 1, 8: 1}",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why track the difference instead of both sums?",
+    "p": [
+     "Balanced means sum1 = sum2, which is the same as sum1 − sum2 = 0. Tracking only the difference needs one number per state instead of two. Every earlier state either extends with +a or −b, and the number of states is bounded by the total of the values (about 2·S)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · S) where S is the largest possible absolute difference (sum of the values).",
+     "Space: O(S)."
+    ]
+   }
+  ],
+  "takeaway": "DP over the difference sum1 − sum2: extend each balance by +a or −b, start new ranges, and count balance 0."
+ },
+ "2149": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`res = [0] * len(nums)`",
+       "Pre-sized output",
+       "We fill by index"
+      ],
+      [
+       "`p, n = 0, 1`",
+       "Next free even slot (for positives) and odd slot (for negatives)",
+       "Positives at even indexes, negatives at odd indexes"
+      ],
+      [
+       "`p += 2` / `n += 2`",
+       "Jump to the next slot of that parity",
+       "Interleaving by index arithmetic"
+      ],
+      [
+       "scan order",
+       "Each sign keeps its original order",
+       "Stable placement"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,1,-2,-5,2,-4]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Placement",
+      "res"
+     ],
+     "rows": [
+      [
+       "3",
+       "positive → res[0]",
+       "[3, 0, 0, 0, 0, 0]"
+      ],
+      [
+       "1",
+       "positive → res[2]",
+       "[3, 0, 1, 0, 0, 0]"
+      ],
+      [
+       "-2",
+       "negative → res[1]",
+       "[3, -2, 1, 0, 0, 0]"
+      ],
+      [
+       "-5",
+       "negative → res[3]",
+       "[3, -2, 1, -5, 0, 0]"
+      ],
+      [
+       "2",
+       "positive → res[4]",
+       "[3, -2, 1, -5, 2, 0]"
+      ],
+      [
+       "-4",
+       "negative → res[5]",
+       "[3, -2, 1, -5, 2, -4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two write pointers instead of splitting into two lists?",
+    "p": [
+     "Two lists would work too (collect positives, collect negatives, interleave) but need extra passes. Two write indexes place each number directly where it belongs in one pass; they never collide since there are equally many positives and negatives."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two write indexes (even for positives, odd for negatives) place each number in one pass, keeping order within each sign."
+ },
+ "2158": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nxt`",
+       "Dict: cell → next cell that might be unpainted (a union-find 'jump' pointer)",
+       "Painted unit cells point to the next unit"
+      ],
+      [
+       "`find(x)`",
+       "First unpainted unit cell at or after x",
+       "Follows `nxt` links to the end, then compresses the path"
+      ],
+      [
+       "`nxt[x] = x + 1`",
+       "Mark cell x as painted",
+       "It now jumps to x+1"
+      ],
+      [
+       "`while x < e`",
+       "Paint every unpainted cell inside [s, e)",
+       "Each cell is painted at most once overall"
+      ],
+      [
+       "`nxt[x], x = root, nxt[x]`",
+       "Path compression: point x at the root, move to its old parent",
+       "Tuple assignment evaluates the right side first"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,4],[4,7],[5,8]]` → [3, 3, 1]. The jump map after each day (unit cell → next candidate):"
+    ],
+    "table": {
+     "head": [
+      "Paint [start, end)",
+      "New cells painted",
+      "nxt after"
+     ],
+     "rows": [
+      [
+       "[1, 4)",
+       "3",
+       "{1: 2, 2: 3, 3: 4}"
+      ],
+      [
+       "[4, 7)",
+       "3",
+       "{1: 2, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7}"
+      ],
+      [
+       "[5, 8)",
+       "1",
+       "{1: 2, 2: 3, 3: 4, 4: 5, 5: 7, 6: 7, 7: 8}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a jump map?",
+    "p": [
+     "A naive solution marks each cell of the interval and re-scans already painted cells, which can be O(n) per day. The jump pointers let `find` skip a whole painted run in nearly constant time, so each cell is painted once and the total work is proportional to the painted area (times the inverse-Ackermann factor from path compression)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: About O(total painted length · α) plus the number of days.",
+     "Space: O(total painted length)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find style jump pointers: find the next unpainted cell, paint it, and link it onward so painted runs are skipped."
+ },
+ "2161": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`[x for x in nums if x < pivot]`",
+       "List comprehension with a filter: values below the pivot, in original order",
+       "Stable partition"
+      ],
+      [
+       "`… == pivot`",
+       "Values equal to the pivot",
+       "Middle group"
+      ],
+      [
+       "`… > pivot`",
+       "Values above the pivot",
+       "Last group"
+      ],
+      [
+       "`+` between lists",
+       "Concatenation",
+       "Joins the three groups in order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[9,12,5,10,14,3,10]`, pivot 10:"
+    ],
+    "table": {
+     "head": [
+      "Group",
+      "Elements (original order)"
+     ],
+     "rows": [
+      [
+       "< 10",
+       "[9, 5, 3]"
+      ],
+      [
+       "== 10",
+       "[10, 10]"
+      ],
+      [
+       "> 10",
+       "[12, 14]"
+      ],
+      [
+       "result",
+       "[9, 5, 3, 10, 10, 12, 14]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three passes instead of an in-place partition?",
+    "p": [
+     "An in-place swap-based partition (like quicksort's) doesn't preserve the relative order within groups. Building three lists with filters keeps each group's order (stability) at the cost of O(n) extra space and three scans."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stable three-way partition: three filtered list comprehensions concatenated."
+ },
+ "2191": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`str(x)`",
+       "Digits of x as characters",
+       "Convert to iterate digits"
+      ],
+      [
+       "`mapping[int(d)]`",
+       "Look up the new digit",
+       "The mapping list is indexed by digit"
+      ],
+      [
+       "`''.join(…)` then `int(…)`",
+       "Rebuild the number; `int` drops leading zeros",
+       "`'007'` becomes 7"
+      ],
+      [
+       "`sorted(nums, key=mapped)`",
+       "Sort by mapped value",
+       "Python's sort is STABLE: equal keys keep their original order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "mapping `[8,9,4,0,2,1,3,5,7,6]`, nums `[991,338,38]` → [338, 38, 991] (338 and 38 both map to 7; their original order is kept):"
+    ],
+    "table": {
+     "head": [
+      "Number",
+      "Digit by digit",
+      "Mapped value"
+     ],
+     "rows": [
+      [
+       "991",
+       "669",
+       "669"
+      ],
+      [
+       "338",
+       "007",
+       "7"
+      ],
+      [
+       "38",
+       "07",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does stability matter here?",
+    "p": [
+     "The problem requires that numbers with equal mapped values stay in their original relative order. `sorted` is stable, so no tie-breaking key is needed. Using the index as an extra key would also work but is unnecessary."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n·d) for d digits per number.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by a key function that maps each digit; Python's stable sort keeps the original order for equal mapped values."
+ },
+ "2197": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`gcd(a, b)`",
+       "Greatest common divisor (from `math`)",
+       "Two numbers are coprime iff the gcd is 1"
+      ],
+      [
+       "`lcm(a, b)`",
+       "Least common multiple: a·b / gcd",
+       "What non-coprime neighbours are replaced by"
+      ],
+      [
+       "`st[-1]`",
+       "The last number kept so far",
+       "The only neighbour a new number can interact with"
+      ],
+      [
+       "`while st and gcd(st[-1], x) > 1`",
+       "Keep merging while the top shares a factor with the (growing) x",
+       "After a merge x changes, and may now share factors with the next stack element"
+      ],
+      [
+       "`st.append(x)`",
+       "Push the merged value",
+       "Stack of numbers with no non-coprime neighbours"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[6,4,3,2,7,6,2]` → [12, 7, 6]:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Merges",
+      "Stack"
+     ],
+     "rows": [
+      [
+       "6",
+       "coprime with the top → push",
+       "[6]"
+      ],
+      [
+       "4",
+       "gcd(6, 4) = 2 > 1 → lcm = 12",
+       "[12]"
+      ],
+      [
+       "3",
+       "gcd(12, 3) = 3 > 1 → lcm = 12",
+       "[12]"
+      ],
+      [
+       "2",
+       "gcd(12, 2) = 2 > 1 → lcm = 12",
+       "[12]"
+      ],
+      [
+       "7",
+       "coprime with the top → push",
+       "[12, 7]"
+      ],
+      [
+       "6",
+       "coprime with the top → push",
+       "[12, 7, 6]"
+      ],
+      [
+       "2",
+       "gcd(6, 2) = 2 > 1 → lcm = 6",
+       "[12, 7, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a stack and why does the order of merges not matter?",
+    "p": [
+     "Merging only touches adjacent elements, and a merged number is compared again with the new top. A stack gives access to the left neighbour in O(1) and lets a merge cascade to the left (as with 6, 4, 3: 4 and 6 merge to 12, then 12 and 3 merge to 12). The final list is the same whichever adjacent non-coprime pair is merged first, so a left-to-right stack pass is valid."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log V): each push/pop pair costs a gcd (logarithmic in the values).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack with gcd/lcm: merge the incoming number with the top while they share a factor, then push."
+ },
+ "2200": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(max(0, j - k), min(n, j + k + 1))`",
+       "Indexes within k of j, clipped to the array",
+       "`max`/`min` stop the range at 0 and n−1"
+      ],
+      [
+       "`marked.update(range)`",
+       "Add all of them to a set",
+       "The set removes duplicates when ranges overlap"
+      ],
+      [
+       "`sorted(marked)`",
+       "Increasing order",
+       "Sets are unordered"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,4,9,1,3,9,5]`, `key = 9`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "Key at j",
+      "Indexes within k",
+      "Marked so far"
+     ],
+     "rows": [
+      [
+       "2",
+       "[1, 2, 3]",
+       "[1, 2, 3]"
+      ],
+      [
+       "5",
+       "[4, 5, 6]",
+       "[1, 2, 3, 4, 5, 6]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative without a set",
+    "p": [
+     "Because positions of the key are scanned left to right, a pointer can remember the last marked index and mark only new positions, giving a sorted result directly in O(n). The set version is simpler; the sort adds O(m log m) for m marked indexes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·k) worst case for marking plus sorting.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For every key position mark the clipped window j−k … j+k in a set, then sort."
+ },
+ "2215": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(nums)`",
+       "Distinct values",
+       "Removes duplicates and gives O(1) lookups"
+      ],
+      [
+       "`a - b`",
+       "Set difference: elements in a that are not in b",
+       "The numbers exclusive to nums1"
+      ],
+      [
+       "`list(…)`",
+       "Set to list",
+       "The result must be lists"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,3,3]`, `nums2 = [1,1,2,2]`:"
+    ],
+    "table": {
+     "head": [
+      "Expression",
+      "Value"
+     ],
+     "rows": [
+      [
+       "a = set(nums1)",
+       "{1, 2, 3}"
+      ],
+      [
+       "b = set(nums2)",
+       "{1, 2}"
+      ],
+      [
+       "a − b",
+       "{3}"
+      ],
+      [
+       "b − a",
+       "set()"
+      ],
+      [
+       "result",
+       "[[3], []]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sets?",
+    "p": [
+     "Sets remove duplicates automatically, which the problem requires (each number appears once), and the difference operator `-` does the exclusion in one expression instead of nested membership loops (which would be O(n·m) on lists)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Set difference in both directions gives the numbers exclusive to each list."
+ }
+}

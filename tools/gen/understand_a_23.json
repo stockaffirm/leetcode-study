@@ -1,0 +1,2324 @@
+{
+ "3342": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "heap of (time, row, col)",
+       "Dijkstra's algorithm: always expand the room reachable earliest (min-heap, a priority queue)",
+       "Shortest path with non-negative costs"
+      ],
+      [
+       "t > dist[i][j]: continue",
+       "Skips stale heap entries",
+       "Lazy deletion"
+      ],
+      [
+       "cost = 1 if (i + j) % 2 == 0 else 2",
+       "Move costs alternate 1, 2, 1, 2, \u2026 by the parity of the cell you leave from",
+       "Cost depends on the position (checkerboard parity)"
+      ],
+      [
+       "nt = max(t, moveTime[a][b]) + cost",
+       "You may enter the neighbour only at or after its opening time moveTime, so wait if needed, then pay the move cost",
+       "Waiting until a room opens"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`moveTime = [[0,4],[4,4]]`:"
+    ],
+    "table": {
+     "head": [
+      "room expanded",
+      "earliest time",
+      "note"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "step cost 1"
+      ],
+      [
+       "(0,1)",
+       "5",
+       "step cost 2"
+      ],
+      [
+       "(1,0)",
+       "5",
+       "step cost 2"
+      ],
+      [
+       "(1,1)",
+       "7",
+       "goal"
+      ]
+     ]
+    },
+    "bullets": [
+     "Time to reach the last room: 7."
+    ]
+   },
+   {
+    "h": "Why Dijkstra and not BFS (Breadth-First Search)?",
+    "p": [
+     "Edges have different costs (1 or 2) and arrival also depends on opening times, so plain BFS layers do not give the earliest time. Dijkstra's algorithm correctly handles it because waiting never makes a later arrival better (arrival times are monotone)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n log(m\u00b7n)).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Dijkstra over rooms: new time = max(current time, room opening time) + a move cost that alternates 1 and 2 by cell parity."
+ },
+ "3366": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(i, a, b)",
+       "Minimum sum of nums[i:] with `a` halving operations and `b` subtract-k operations still available",
+       "Memoized DP (Dynamic Programming) over (index, operations left)"
+      ],
+      [
+       "(x + 1) // 2",
+       "Halving rounded up (operation 1)",
+       "Integer ceiling"
+      ],
+      [
+       "x \u2212 k if x >= k",
+       "Operation 2: subtract k, only allowed if x \u2265 k",
+       ""
+      ],
+      [
+       "both: two orders",
+       "If both are applied to the same number the order matters: subtract then halve \u2192 (x \u2212 k + 1) // 2; halve then subtract \u2192 ceil(x / 2) \u2212 k (needs ceil(x/2) \u2265 k); take the better",
+       "Order-dependent operations"
+      ],
+      [
+       "@lru_cache(None)",
+       "Caches results per state",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,8,3,19,3]`, `k = 3`, `op1 = 1`, `op2 = 1`. Options for each number when used (halve / subtract):"
+    ],
+    "table": {
+     "head": [
+      "number x",
+      "halve",
+      "subtract k (if x \u2265 3)",
+      "both (best order)"
+     ],
+     "rows": [
+      [
+       "2",
+       "1",
+       "\u2013",
+       "\u2013"
+      ],
+      [
+       "8",
+       "4",
+       "5",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "0"
+      ],
+      [
+       "19",
+       "10",
+       "16",
+       "7"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "The search returns 23: spend the halving on 19 (\u2192 10) and the subtraction on 8 (\u2192 5): 2 + 5 + 3 + 10 + 3 = 23."
+    ]
+   },
+   {
+    "h": "Why a DP and not a greedy?",
+    "p": [
+     "The two operations interact: applying both to one number can beat applying each to a different one, and the best number for each operation depends on the other. Trying every choice per index with memoization is exact, in O(n \u00b7 op1 \u00b7 op2) states."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 op1 \u00b7 op2).",
+     "Space: O(n \u00b7 op1 \u00b7 op2)."
+    ]
+   }
+  ],
+  "takeaway": "Memoized DP over (index, halvings left, subtractions left), trying none / one / both operations on each element."
+ },
+ "3381": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pre",
+       "Prefix sum",
+       ""
+      ],
+      [
+       "j % k",
+       "A subarray (i, j] has length divisible by k iff i and j have the same remainder mod k",
+       "Remainder classes of indices"
+      ],
+      [
+       "best_prefix[r]",
+       "The smallest prefix sum seen at an index with remainder r (index 0 counts with prefix 0)",
+       "Min prefix per class"
+      ],
+      [
+       "pre \u2212 best_prefix[r]",
+       "Largest subarray sum ending at j with length divisible by k",
+       ""
+      ],
+      [
+       "update AFTER using",
+       "The prefix for the current j is added after computing, so a subarray never has length 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2]`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "prefix",
+      "j % k",
+      "candidate sum",
+      "best so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "3",
+       "0",
+       "3",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why the smallest prefix per remainder?",
+    "p": [
+     "For a fixed right end j, the subarray sum is pre[j] \u2212 pre[i] over earlier i with the same remainder; it is largest when pre[i] is smallest. Keeping the minimum per remainder class is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums grouped by index remainder mod k; subtract the smallest earlier prefix of the same remainder."
+ },
+ "3387": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g[a].append((b, r)); g[b].append((a, 1 / r))",
+       "A rate a\u2192b = r also gives b\u2192a = 1/r: edges in both directions",
+       "Currency graph"
+      ],
+      [
+       "val = {initial: 1.0}; DFS (Depth-First Search) with a stack",
+       "val[c] = how many units of c one unit of the start currency becomes on that day (a path product; consistent for any path because rates are consistent)",
+       "Propagating a ratio from a root"
+      ],
+      [
+       "r1[c] / r2[c]",
+       "Day 1 turns 1 unit into r1[c] units of c; day 2, one unit of the start currency would give r2[c] units of c, so the day-2 conversion from c back to the start gives 1 / r2[c] per unit",
+       "Convert forth on day 1 and back on day 2"
+      ],
+      [
+       "max(... for c in r1 if c in r2)",
+       "Pick the best intermediate currency c reachable on both days",
+       ""
+      ],
+      [
+       "round(..., 5)",
+       "Answer to 5 decimals",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Start with EUR. Day 1: EUR\u2192USD 2, USD\u2192JPY 3. Day 2: JPY\u2192USD 4, USD\u2192CHF 5, CHF\u2192EUR 6."
+    ],
+    "table": {
+     "head": [
+      "currency c",
+      "day-1 amount r1[c]",
+      "day-2 amount r2[c] (per 1 EUR)",
+      "final = r1 / r2"
+     ],
+     "rows": [
+      [
+       "EUR",
+       "1.0",
+       "1.0",
+       "1.0"
+      ],
+      [
+       "USD",
+       "2.0",
+       "0.03333333333333333",
+       "60.0"
+      ],
+      [
+       "JPY",
+       "6.0",
+       "0.008333333333333333",
+       "720.0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Best: 720.0 EUR (convert to JPY on day 1)."
+    ]
+   },
+   {
+    "h": "Why divide by r2?",
+    "p": [
+     "On day 2 the graph's rates describe how much of c one EUR buys (r2[c]). Going from c to EUR on day 2 therefore multiplies by 1 / r2[c], and the total is r1[c] / r2[c]. Every currency in both graphs is a candidate for the overnight holding."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Compute per-day currency ratios from the start, then maximise r1[c] / r2[c] over currencies c present on both days."
+ },
+ "3399": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "binary search on L",
+       "Smallest L such that every run of identical characters can be shortened to at most L using at most numOps flips; feasibility is monotone in L",
+       "Binary search on the answer"
+      ],
+      [
+       "groupby(s)",
+       "From `itertools`: yields each run of identical characters",
+       "Run-length grouping"
+      ],
+      [
+       "len(run) // (L + 1)",
+       "A run of length r needs floor(r / (L + 1)) flips to break it into pieces of length \u2264 L (flip every (L+1)-th character)",
+       "Breaking long runs"
+      ],
+      [
+       "L == 1 special case",
+       "Runs must all have length 1, i.e. the string must alternate; count mismatches with 0101\u2026 and with 1010\u2026 and take the cheaper",
+       "The special case: flips of a run can merge with neighbours when L = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"000001\"`, `numOps = 1`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "feasible?"
+     ],
+     "rows": [
+      [
+       "1",
+       "6",
+       "3",
+       "True"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "True"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why is L = 1 special?",
+    "p": [
+     "For L \u2265 2, flipping the middle of a long run does not merge it with a neighbouring run into something longer than L. For L = 1 the flips change the neighbours' runs too, so the problem becomes making the whole string alternating, which has just two target patterns."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) beyond the run iterator."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the longest allowed run L; each run costs floor(len / (L+1)) flips, and L = 1 means making the string alternate."
+ },
+ "3402": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "prev",
+       "The value of the cell above after any increments",
+       ""
+      ],
+      [
+       "need = max(0, prev + 1 - grid[i][j])",
+       "Increments needed so this cell is strictly greater than the one above",
+       "Smallest valid value is prev + 1"
+      ],
+      [
+       "prev = grid[i][j] + need",
+       "The new value of this cell becomes the cell above for the next row",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[3,2],[1,3],[3,4],[0,1]]`, column by column:"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "value",
+      "increments",
+      "new value",
+      "total operations"
+     ],
+     "rows": [
+      [
+       "(1,0)",
+       "1",
+       "3",
+       "4",
+       "3"
+      ],
+      [
+       "(2,0)",
+       "3",
+       "2",
+       "5",
+       "5"
+      ],
+      [
+       "(3,0)",
+       "0",
+       "6",
+       "6",
+       "11"
+      ],
+      [
+       "(1,1)",
+       "3",
+       "0",
+       "3",
+       "11"
+      ],
+      [
+       "(2,1)",
+       "4",
+       "0",
+       "4",
+       "11"
+      ],
+      [
+       "(3,1)",
+       "1",
+       "4",
+       "5",
+       "15"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 15."
+    ]
+   },
+   {
+    "h": "Why columns are independent",
+    "p": [
+     "The condition is only about vertical neighbours, so each column can be processed separately. Greedy: raise each cell only as much as needed, since a larger value would force bigger increments below."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Per column, raise each cell to just above the one before it and sum the increments."
+ },
+ "3405": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "comb(n \u2212 1, k)",
+       "Choose which k of the n \u2212 1 adjacent pairs are equal (`math.comb`, binomial coefficient)",
+       "Counting subsets"
+      ],
+      [
+       "m",
+       "The first element can be anything: m choices",
+       ""
+      ],
+      [
+       "pow(m \u2212 1, n \u2212 1 \u2212 k, MOD)",
+       "Each of the other n \u2212 1 \u2212 k adjacent pairs must differ, so the next element has m \u2212 1 choices; modular exponentiation",
+       "Fast power with a modulus"
+      ],
+      [
+       "% MOD at each product",
+       "Keeps the numbers small",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `m = 2`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "factor",
+      "value"
+     ],
+     "rows": [
+      [
+       "C(n \u2212 1, k) = C(2, 1)",
+       "2"
+      ],
+      [
+       "m",
+       "2"
+      ],
+      [
+       "(m \u2212 1)^(n \u2212 1 \u2212 k) = 1^1",
+       "1"
+      ],
+      [
+       "product",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 4."
+    ]
+   },
+   {
+    "h": "Why the product formula?",
+    "p": [
+     "Fix which adjacent pairs are equal (C(n\u22121, k) ways). Then walk left to right: the first element has m choices, an 'equal' pair gives 1 choice, and a 'different' pair gives m \u2212 1 choices. The choices are independent, so they multiply."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for comb, O(log n) for pow.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Closed form: C(n\u22121, k) \u00b7 m \u00b7 (m\u22121)^(n\u22121\u2212k), mod 10\u2079+7."
+ },
+ "3408": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.info[taskId] = (user, priority)",
+       "The CURRENT truth about each live task",
+       "Source of truth dict"
+      ],
+      [
+       "heappush(self.heap, (-priority, -taskId))",
+       "Max-heap by priority, then by task id, using negated values in Python's min-heap; every edit pushes a new entry and leaves the old one",
+       "Heap with lazy deletion"
+      ],
+      [
+       "rmv: del self.info[taskId]",
+       "Just forgets the task; its heap entries become stale",
+       ""
+      ],
+      [
+       "execTop: pop until valid",
+       "An entry is valid only if the task is still live AND its priority equals the stored one; stale entries are discarded",
+       "Lazy deletion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tasks `[user, taskId, priority]` = `[1,101,10] [2,102,20] [3,103,15]`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "live tasks"
+     ],
+     "rows": [
+      [
+       "add(4, 104, 5)",
+       "\u2013",
+       "{101: (1, 10), 102: (2, 20), 103: (3, 15), 104: (4, 5)}"
+      ],
+      [
+       "edit(102, 8)",
+       "\u2013",
+       "{101: (1, 10), 102: (2, 8), 103: (3, 15), 104: (4, 5)}"
+      ],
+      [
+       "execTop()",
+       "3",
+       "{101: (1, 10), 102: (2, 8), 104: (4, 5)}"
+      ],
+      [
+       "rmv(101,)",
+       "\u2013",
+       "{102: (2, 8), 104: (4, 5)}"
+      ],
+      [
+       "add(5, 105, 15)",
+       "\u2013",
+       "{102: (2, 8), 104: (4, 5), 105: (5, 15)}"
+      ],
+      [
+       "execTop()",
+       "5",
+       "{102: (2, 8), 104: (4, 5)}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "A binary heap cannot remove or change an arbitrary entry in O(log n). Pushing the new version and ignoring outdated versions on pop keeps every operation O(log n) amortized."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Each operation: O(log n) amortized.",
+     "Space: O(total operations)."
+    ]
+   }
+  ],
+  "takeaway": "Dict of live tasks plus a max-heap with lazy deletion of stale (outdated) entries."
+ },
+ "3438": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s)",
+       "How many times each digit appears in the whole string",
+       ""
+      ],
+      [
+       "a != b",
+       "The two adjacent digits must be different",
+       ""
+      ],
+      [
+       "cnt[a] == int(a)",
+       "A digit is valid if it appears exactly as many times as its own value",
+       "Digit as its own count"
+      ],
+      [
+       "return the first such pair",
+       "Scans left to right, so the first match is returned",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"2523533\"`: counts `{'2': 2, '5': 2, '3': 3}`:"
+    ],
+    "table": {
+     "head": [
+      "pair",
+      "count of first",
+      "count of second",
+      "valid?"
+     ],
+     "rows": [
+      [
+       "25",
+       "2",
+       "2",
+       "False"
+      ],
+      [
+       "52",
+       "2",
+       "2",
+       "False"
+      ],
+      [
+       "23",
+       "2",
+       "3",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: `23`."
+    ]
+   },
+   {
+    "h": "Why count first?",
+    "p": [
+     "The validity of a digit depends on its count in the WHOLE string, not just near the pair. One pass builds all counts, then a second pass finds the first adjacent pair that satisfies the rule."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(10)."
+    ]
+   }
+  ],
+  "takeaway": "Count all digits first, then scan adjacent pairs for different digits whose counts equal their values."
+ },
+ "3441": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "h[i][c][k]",
+       "Minimum cost to fix positions i+1.. (the rest of the caption) given that position i holds letter c in a run of current length k (k = 3 means 'at least 3')",
+       "DP (Dynamic Programming) from the right with a run-length state capped at 3"
+      ],
+      [
+       "abs(a[i+1] \u2212 c)",
+       "Cost of changing a letter to c: the distance in the alphabet (each step to the next or previous letter is one operation)",
+       ""
+      ],
+      [
+       "h[i+1][c][min(3, k+1)]",
+       "Continue the same letter: the run grows (capped at 3)",
+       ""
+      ],
+      [
+       "k == 3: switch to d \u2260 c with run 1",
+       "A run may only end once it has length \u2265 3, so changing to another letter is allowed only from k = 3",
+       "Good caption = every run has length \u2265 3"
+      ],
+      [
+       "reconstruction loop",
+       "After computing the minimum total, walks forward picking, at each position, the SMALLEST letter that still achieves the remaining cost: this gives the lexicographically smallest caption",
+       "Rebuilding the answer from a DP table"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`caption = \"cdcd\"`:"
+    ],
+    "table": {
+     "head": [
+      "quantity",
+      "value"
+     ],
+     "rows": [
+      [
+       "minimum total cost",
+       "2"
+      ],
+      [
+       "resulting caption",
+       "cccc"
+      ]
+     ]
+    },
+    "bullets": [
+     "A caption is good when every run of equal letters has length \u2265 3. For length 4 that forces one single run, so all letters must become the same; the cheapest, lexicographically smallest choice is `cccc` (cost 2)."
+    ]
+   },
+   {
+    "h": "Why track run length only up to 3?",
+    "p": [
+     "Once a run has reached length 3 it is allowed to end, and longer runs behave identically. So states 1, 2 and 3 (meaning 3 or more) capture everything the future needs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 26 \u00b7 26) for the DP.",
+     "Space: O(n \u00b7 26 \u00b7 4)."
+    ]
+   }
+  ],
+  "takeaway": "Right-to-left DP over (position, letter, run length capped at 3), then a forward pass choosing the smallest letter that keeps the optimum."
+ },
+ "3459": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dirs",
+       "The four diagonal directions in clockwise order; turning right by 90\u00b0 means d \u2192 (d + 1) % 4",
+       "Direction index"
+      ],
+      [
+       "go(i, j, d, turned)",
+       "Longest valid segment starting at (i, j), moving in direction d, with a flag for whether the single allowed clockwise turn was used",
+       "Memoized DFS (Depth-First Search) with a small state"
+      ],
+      [
+       "need = 0 if grid[i][j] == 2 else 2",
+       "The sequence must go 1, 2, 0, 2, 0, \u2026: after a 2 comes 0, after a 0 (or the starting 1) comes 2",
+       "Alternating pattern"
+      ],
+      [
+       "not turned: try direction (d + 1) % 4",
+       "At any cell you may turn once, then continue straight",
+       ""
+      ],
+      [
+       "@lru_cache(None)",
+       "Memoizes states (cell, direction, turned)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5\u00d75 grid from the problem. Start cells (value 1) and directions with a segment longer than 1:"
+    ],
+    "table": {
+     "head": [
+      "start",
+      "direction index",
+      "length"
+     ],
+     "rows": [
+      [
+       "(0,2)",
+       "0",
+       "5"
+      ],
+      [
+       "(0,2)",
+       "3",
+       "3"
+      ],
+      [
+       "(2,2)",
+       "0",
+       "3"
+      ],
+      [
+       "(2,2)",
+       "2",
+       "2"
+      ],
+      [
+       "(2,2)",
+       "3",
+       "3"
+      ],
+      [
+       "(2,3)",
+       "0",
+       "3"
+      ],
+      [
+       "(2,3)",
+       "1",
+       "4"
+      ],
+      [
+       "(2,3)",
+       "2",
+       "2"
+      ],
+      [
+       "(2,3)",
+       "3",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Longest V-shaped segment: 5."
+    ]
+   },
+   {
+    "h": "Why only 'turned' as extra state?",
+    "p": [
+     "Only one turn is allowed, so the state is just 'not yet turned' or 'already turned'. Together with the position and direction that gives 4\u00b72 states per cell, so memoization keeps it O(m\u00b7n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n\u00b78).",
+     "Space: O(m\u00b7n\u00b78)."
+    ]
+   }
+  ],
+  "takeaway": "Memoized DFS along diagonals: pattern 1,2,0,2,0\u2026, at most one clockwise turn."
+ },
+ "3474": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "w = [None] * (n + m \u2212 1)",
+       "The result has n + m \u2212 1 characters; None means 'not decided yet'",
+       ""
+      ],
+      [
+       "for 'T' at i: write str2 at i..i+m\u22121",
+       "Each 'T' forces the window to equal str2; conflicting forced letters mean the answer is the empty string",
+       "Applying equality constraints"
+      ],
+      [
+       "forced = [x is not None \u2026]",
+       "Remember which positions are fixed by 'T'",
+       ""
+      ],
+      [
+       "fill the rest with 'a'",
+       "The lexicographically smallest default",
+       ""
+      ],
+      [
+       "for 'F' where the window equals str2",
+       "A forbidden match appeared: change the LAST non-forced position of that window to 'b' (the rightmost position changes the string least), or fail if every position is forced",
+       "Greedy repair that keeps lexicographic order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`str1 = \"TFTF\"`, `str2 = \"ab\"`: the string has 5 characters. After forcing T windows (positions 0\u20131 and 2\u20133 are `ab`) and filling with `a`, the F windows are checked:"
+    ],
+    "table": {
+     "head": [
+      "step"
+     ],
+     "rows": [
+      [
+       "forced + default fill gives ababa"
+      ],
+      [
+       "F window at 1 is 'ba', not 'ab': fine"
+      ],
+      [
+       "F window at 3 is 'ba', not 'ab': fine"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `ababa`."
+    ]
+   },
+   {
+    "h": "Why change the rightmost free position?",
+    "p": [
+     "Changing an earlier letter would make the string lexicographically larger at an earlier index. Changing the rightmost unforced position of the offending window to 'b' (the next smallest letter after 'a') raises the string as late as possible. The change might create a new match in a later window, but later windows are checked afterwards in the same pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b7m).",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Force T windows to str2, fill free positions with 'a', then repair F windows that still equal str2 by bumping their rightmost free position to 'b'."
+ },
+ "3477": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "used",
+       "Which baskets already hold a fruit",
+       ""
+      ],
+      [
+       "for j, b in enumerate(baskets)",
+       "Scan baskets left to right: the problem requires the leftmost suitable basket",
+       "First-fit"
+      ],
+      [
+       "for \u2026 else",
+       "The `else` of a `for` runs only if the loop finished without `break`, i.e. no basket was found",
+       "Python's for/else"
+      ],
+      [
+       "unplaced += 1",
+       "Counts fruits that found no basket",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`fruits = [4,2,5]`, `baskets = [3,5,4]`:"
+    ],
+    "table": {
+     "head": [
+      "fruit",
+      "placement"
+     ],
+     "rows": [
+      [
+       "4",
+       "basket 1 (capacity 5)"
+      ],
+      [
+       "2",
+       "basket 0 (capacity 3)"
+      ],
+      [
+       "5",
+       "no basket: unplaced"
+      ]
+     ]
+    },
+    "bullets": [
+     "Unplaced fruits: 1."
+    ]
+   },
+   {
+    "h": "Why a simulation?",
+    "p": [
+     "The rule is exactly 'leftmost available basket with enough capacity', so following it directly is O(n\u00b2), fine for n \u2264 100. A segment tree over the baskets' capacities speeds the 'leftmost with capacity \u2265 f' query to O(log n) for larger inputs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "First-fit simulation with for/else counting fruits that find no basket."
+ },
+ "3480": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "groups[b].append(a)",
+       "For each conflicting pair (a < b), remember it at its right end b",
+       "Bucketing by right endpoint"
+      ],
+      [
+       "top1, top2",
+       "The largest and second-largest left endpoints among pairs with right end \u2264 r",
+       "Tracking the two biggest values"
+      ],
+      [
+       "r \u2212 top1",
+       "Number of valid subarrays ending at r: start must be greater than top1 (the closest conflicting left endpoint that blocks)",
+       "Counting by right end"
+      ],
+      [
+       "gain[top1] += top1 \u2212 top2",
+       "If the pair giving top1 were removed, starts could extend left down to top2 + 1: the gain credited to that pair (identified by its left endpoint top1)",
+       "Credit assignment to the blocking pair"
+      ],
+      [
+       "total + max(gain)",
+       "Best choice of one pair to remove",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, pairs `[[2,3],[1,4]]`:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "top1",
+      "top2",
+      "valid subarrays ending at r",
+      "running total",
+      "gain credited"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "0",
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "2",
+       "3",
+       "0"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "1",
+       "4",
+       "2"
+      ],
+      [
+       "4",
+       "2",
+       "1",
+       "2",
+       "6",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total without removals: 6; best removal adds 3; answer 9."
+    ]
+   },
+   {
+    "h": "Why top two?",
+    "p": [
+     "At each r only the strongest blocker (largest left endpoint, top1) restricts the starts. Removing that pair makes the next strongest (top2) the restriction, adding top1 \u2212 top2 valid starts. Pairs that never are the strongest blocker give no gain, so they need not be tracked."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + pairs).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sweep right ends keeping the two largest left endpoints; removing the pair behind top1 gains top1 \u2212 top2 starts at every r where it dominates."
+ },
+ "3507": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "any(a[i] > a[i+1] \u2026)",
+       "The array is not yet non-decreasing",
+       "Loop condition"
+      ],
+      [
+       "min(range(len(a) \u2212 1), key=lambda i: a[i] + a[i+1])",
+       "Index of the adjacent pair with the smallest sum; `min` returns the FIRST such index on ties, which is the required leftmost pair",
+       "min with a key function"
+      ],
+      [
+       "a[idx:idx+2] = [sum]",
+       "Slice assignment replacing two items by their sum",
+       "In-place merge"
+      ],
+      [
+       "ops += 1",
+       "Counts merges",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,2,3,1]`:"
+    ],
+    "table": {
+     "head": [
+      "action",
+      "array",
+      "merged value"
+     ],
+     "rows": [
+      [
+       "start",
+       "[5, 2, 3, 1]",
+       "\u2013"
+      ],
+      [
+       "merge at 2",
+       "[5, 2, 4]",
+       "4"
+      ],
+      [
+       "merge at 1",
+       "[5, 6]",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2 operations."
+    ]
+   },
+   {
+    "h": "Why a simulation?",
+    "p": [
+     "The rule fixes which pair to merge (smallest sum, leftmost on ties), so the process is deterministic. Each iteration is O(n) and there are at most n merges: O(n\u00b2), fine for n \u2264 50."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate: repeatedly merge the leftmost adjacent pair with the smallest sum until the array is sorted."
+ },
+ "3522": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen = set()",
+       "Indexes already executed: visiting one again would loop forever, so stop",
+       "Cycle detection"
+      ],
+      [
+       "0 <= i < n",
+       "Stop when the pointer leaves the array",
+       ""
+      ],
+      [
+       "'add': score += values[i]; i += 1",
+       "Add and move to the next instruction",
+       ""
+      ],
+      [
+       "'jump': i += values[i]",
+       "Move by the given offset (may be negative)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Instructions `jump, add, add, jump, add, jump`, values `[2,1,3,1,-2,-3]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "instruction",
+      "value",
+      "score",
+      "next i"
+     ],
+     "rows": [
+      [
+       "0",
+       "jump",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "2",
+       "add",
+       "3",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "jump",
+       "1",
+       "3",
+       "4"
+      ],
+      [
+       "4",
+       "add",
+       "-2",
+       "1",
+       "5"
+      ],
+      [
+       "5",
+       "jump",
+       "-3",
+       "1",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final score: 1."
+    ]
+   },
+   {
+    "h": "Why the set?",
+    "p": [
+     "Jumps can send you back to an instruction already executed, which would repeat forever. Remembering visited indexes ends the program when a cycle appears."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate with a visited set: stop when the index leaves the array or repeats."
+ },
+ "3528": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g[a].append((b, f))",
+       "Directed tree: one unit of type a equals f units of type b",
+       "Tree as adjacency list"
+      ],
+      [
+       "res[v] = res[u] * f % MOD",
+       "Units of v per unit of type 0 = (units of u per unit of 0) \u00d7 f, modulo 10\u2079+7",
+       "Multiplying ratios along the path"
+      ],
+      [
+       "BFS (Breadth-First Search) from 0",
+       "Visits each node after its parent, so res[u] is ready when needed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,1,2],[1,2,3]]`: 1 unit of type 0 is 2 of type 1, and 1 of type 1 is 3 of type 2."
+    ],
+    "table": {
+     "head": [
+      "edge",
+      "factor",
+      "res[v]"
+     ],
+     "rows": [
+      [
+       "0\u21921",
+       "2",
+       "2"
+      ],
+      [
+       "1\u21922",
+       "3",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[1, 2, 6]`."
+    ]
+   },
+   {
+    "h": "Why no cycles to worry about?",
+    "p": [
+     "There are n \u2212 1 conversions forming a tree rooted at type 0, so every type is reached exactly once and no visited set is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "BFS down the conversion tree, multiplying the factor along each edge (mod 10\u2079+7)."
+ },
+ "3540": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "F, B (prefix sums over the doubled arrays)",
+       "F[i] = total forward travel time to pass i houses; B similar for backward. Doubling the array handles wrap-around on a circle",
+       "Circular prefix sums"
+      ],
+      [
+       "f = F[q or q + n] \u2212 F[cur]",
+       "Forward time from house cur to house q (going around if q is behind)",
+       ""
+      ],
+      [
+       "b = B[\u2026] \u2212 B[q + 1]",
+       "Backward time from cur to q, using the backward edge costs",
+       ""
+      ],
+      [
+       "total += min(f, b)",
+       "Take the cheaper direction for each query",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`forward = [1,4,4]`, `backward = [4,1,2]`, start at house 0, visit queries `[1,2,0,2]` in order:"
+    ],
+    "table": {
+     "head": [
+      "leg",
+      "forward time",
+      "backward time",
+      "cheaper",
+      "total"
+     ],
+     "rows": [
+      [
+       "0 \u2192 1",
+       "1",
+       "6",
+       "1",
+       "1"
+      ],
+      [
+       "1 \u2192 2",
+       "4",
+       "5",
+       "4",
+       "5"
+      ],
+      [
+       "2 \u2192 0",
+       "4",
+       "3",
+       "3",
+       "8"
+      ],
+      [
+       "0 \u2192 2",
+       "5",
+       "4",
+       "4",
+       "12"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 12."
+    ]
+   },
+   {
+    "h": "Why doubled arrays?",
+    "p": [
+     "Going around a circle past the end needs sums that wrap. Extending the arrays to length 2n lets every range sum be a difference of two prefix values without special cases."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Circular travel with doubled prefix-sum arrays; each query takes the cheaper of the forward and backward routes."
+ },
+ "3552": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pos[letter]",
+       "All cells carrying each portal letter",
+       ""
+      ],
+      [
+       "dist[a][b] = d; q.appendleft((a, b))",
+       "Teleporting costs 0, so those cells go to the FRONT of the double-ended queue (deque), keeping distances in order",
+       "0-1 BFS (Breadth-First Search)"
+      ],
+      [
+       "q.append for a normal move",
+       "A normal move costs 1: add to the back",
+       ""
+      ],
+      [
+       "used",
+       "A portal letter is used at most once, since after the first use all its cells are already reached at that distance",
+       "Preventing repeated work"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"A..\",\".A.\",\"...\"]` has two portals 'A' at (0,0) and (1,1):"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "teleport"
+     ],
+     "rows": [
+      [
+       "(0,0) 'A'",
+       "teleport to (1,1) at distance 0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Distance to the bottom-right: 2."
+    ]
+   },
+   {
+    "h": "Why 0-1 BFS?",
+    "p": [
+     "Edges have weight 0 (teleports) or 1 (steps). A deque keeps the queue ordered by distance: 0-cost neighbours go to the front, 1-cost ones to the back, giving Dijkstra's answer in O(V + E)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "0-1 BFS: portals teleport at cost 0 (pushed to the front), steps cost 1 (back); each letter is used once."
+ },
+ "3627": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums.sort()",
+       "Ascending order",
+       ""
+      ],
+      [
+       "steps = len(nums) // 3",
+       "Each group of three uses three elements",
+       ""
+      ],
+      [
+       "nums[-2 - 2*i]",
+       "The second-largest remaining element: take the largest as the 'high', the next as the median, and discard a small one",
+       "Indexing from the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sorted `[1, 1, 2, 2, 3, 3]`, 2 groups:"
+    ],
+    "table": {
+     "head": [
+      "group i",
+      "index \u22122 \u2212 2i",
+      "median chosen"
+     ],
+     "rows": [
+      [
+       "0",
+       "-2",
+       "3"
+      ],
+      [
+       "1",
+       "-4",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Sum: 5."
+    ]
+   },
+   {
+    "h": "Why this pattern?",
+    "p": [
+     "Each group's median is the middle value of three elements. To make medians large, each group should use one very large element, one large median, and the smallest remaining as the low element. Taking, from the top, a pair (largest, second largest) and the smallest leftover gives the best medians: the second largest, fourth largest, and so on."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "Sort; the best medians are the 2nd, 4th, 6th, \u2026 largest values (one group per three elements)."
+ },
+ "3636": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "B = \u221an; blocks",
+       "Splits the array into about \u221an blocks of size \u221an (sqrt decomposition)",
+       "Range queries with precomputation per block range"
+      ],
+      [
+       "pos[x]",
+       "Sorted positions of every value, so a value's frequency in [l, r] is two binary searches: bisect_right(pos, r) \u2212 bisect_left(pos, l)",
+       "Range frequency of a value"
+      ],
+      [
+       "mode[bi][bj]",
+       "Precomputed most frequent value (smallest value on ties, via the key (count, \u2212value)) in whole blocks bi..bj",
+       "Table of answers for block ranges"
+      ],
+      [
+       "candidates",
+       "The majority-like value of a query is either the mode of the full blocks inside, or occurs in the partial blocks at the ends, so only those values need testing",
+       "Small candidate set"
+      ],
+      [
+       "max((freq, \u2212v))",
+       "Highest frequency, ties broken toward the smaller value",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,2,2,1,1]`:"
+    ],
+    "table": {
+     "head": [
+      "query",
+      "candidate values",
+      "winner",
+      "answer (\u22121 if below threshold)"
+     ],
+     "rows": [
+      [
+       "[0,5] threshold 4",
+       "[1, 2]",
+       "most frequent 1 \u00d74",
+       "1"
+      ],
+      [
+       "[0,3] threshold 3",
+       "[1, 2]",
+       "most frequent 1 \u00d72",
+       "-1"
+      ],
+      [
+       "[2,3] threshold 2",
+       "[2]",
+       "most frequent 2 \u00d72",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[1, -1, 2]`."
+    ]
+   },
+   {
+    "h": "Why sqrt decomposition?",
+    "p": [
+     "Counting each query by scanning costs O(n) per query. Precomputing the mode for every block range costs O(n \u221an) in total, and each query then tests O(\u221an) candidates, each with an O(log n) frequency lookup."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Preprocessing: O(n\u221an).",
+     "Per query: O(\u221an log n).",
+     "Space: O(n + (\u221an)\u00b2)."
+    ]
+   }
+  ],
+  "takeaway": "Square-root decomposition: precomputed block-range modes plus end-block candidates, with bisect for exact frequencies."
+ },
+ "3648": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "side = 2 * k + 1",
+       "A sensor covers a (2k + 1) \u00d7 (2k + 1) square around it",
+       ""
+      ],
+      [
+       "(n + side \u2212 1) // side",
+       "Ceiling division: how many squares of that side fit along n",
+       "Integer ceiling"
+      ],
+      [
+       "product of the two",
+       "Sensors needed across rows times across columns",
+       "Tiling a grid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `m = 5`, `k = 1` \u2192 side 3:"
+    ],
+    "table": {
+     "head": [
+      "dimension",
+      "ceil(size / side)"
+     ],
+     "rows": [
+      [
+       "rows",
+       "2"
+      ],
+      [
+       "columns",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2 \u00d7 2 = 4."
+    ]
+   },
+   {
+    "h": "Why tiling?",
+    "p": [
+     "Each sensor covers at most one square of side 2k+1, and the squares can be placed without overlap to cover the whole grid, so the minimum is the number of tiles needed along each axis, multiplied."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Tile the grid with (2k+1)\u00d7(2k+1) squares: ceil(n/side) \u00d7 ceil(m/side)."
+ },
+ "3651": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "walk(seed)",
+       "Grid DP (Dynamic Programming): min cost to each cell moving only right/down, where seed[i][j] is an alternative starting cost (arriving by teleport); cost of a cell is paid on entering it",
+       "Layered DP, one layer per teleport"
+      ],
+      [
+       "at[v] = min dp over cells with value v",
+       "Cheapest way to stand on any cell of value v",
+       ""
+      ],
+      [
+       "suffix[v]",
+       "Cheapest cost among cells with value \u2265 v: a teleport goes from a cell to any cell whose value is \u2264 the source, so a target of value w can be reached from any source with value \u2265 w",
+       "Suffix minimum over sorted values"
+      ],
+      [
+       "dp = walk(seed from suffix)",
+       "Next layer: arrive at any cell by teleport at the suffix cost (teleport is free), or by walking",
+       ""
+      ],
+      [
+       "for _ in range(k)",
+       "Allows up to k teleports, one layer each",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,3,3],[2,5,4],[4,3,5]]`, `k = 2`: cost to reach the bottom-right with more teleports allowed:"
+    ],
+    "table": {
+     "head": [
+      "teleports allowed",
+      "min cost to reach the end"
+     ],
+     "rows": [
+      [
+       "0 teleports",
+       "14"
+      ],
+      [
+       "1 teleports",
+       "7"
+      ],
+      [
+       "2 teleports",
+       "7"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 7."
+    ]
+   },
+   {
+    "h": "Why suffix minima?",
+    "p": [
+     "A teleport from cell u to cell v is allowed if grid[v] \u2264 grid[u]. For each target value w, the best source is the cheapest cell with value \u2265 w, which a suffix minimum over values sorted in descending order provides in O(1) after one pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k \u00b7 (m\u00b7n + V log V)) for V distinct values.",
+     "Space: O(m\u00b7n)."
+    ]
+   }
+  ],
+  "takeaway": "Layered grid DP: each teleport layer seeds every cell with the suffix-minimum cost over cells of larger or equal value."
+ },
+ "3885": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.cur",
+       "Current priority of every live event",
+       "Source of truth"
+      ],
+      [
+       "heap of (\u2212priority, id)",
+       "Min-heap with negated priority: the highest priority comes first, and among equal priorities the SMALLER id (as the tuple sorts ascending)",
+       "Max-heap via negation, tie-break by id"
+      ],
+      [
+       "heapify(self.heap)",
+       "Builds the heap from the initial list in O(n)",
+       ""
+      ],
+      [
+       "updatePriority: push a new entry",
+       "The old entry stays in the heap as a stale entry",
+       "Lazy deletion"
+      ],
+      [
+       "pollHighest: pop until current",
+       "An entry is valid only if cur[eid] equals its priority; valid ones are removed from the dict and returned",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`EventManager([[5,7],[2,7],[9,4]])`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "live events"
+     ],
+     "rows": [
+      [
+       "pollHighest()",
+       "2",
+       "{5: 7, 9: 4}"
+      ],
+      [
+       "updatePriority(9, 7)",
+       "\u2013",
+       "{5: 7, 9: 7}"
+      ],
+      [
+       "pollHighest()",
+       "5",
+       "{9: 7}"
+      ],
+      [
+       "pollHighest()",
+       "9",
+       "{}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "Changing the priority of an arbitrary heap entry is not supported. Pushing a fresh entry and discarding stale ones on pop keeps updates O(log n) and each stale entry is popped at most once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) amortized per operation.",
+     "Space: O(n + updates)."
+    ]
+   }
+  ],
+  "takeaway": "Max-heap with lazy deletion: keep current priorities in a dict and discard heap entries that no longer match."
+ },
+ "3891": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cost(i)",
+       "Increase needed so nums[i] is strictly greater than both neighbours: max(0, max(neighbours) + 1 \u2212 nums[i])",
+       "Making an index a local peak"
+      ],
+      [
+       "n odd: sum over i = 1, 3, 5, \u2026",
+       "With an odd length the maximum number of special (peak) indexes is (n \u2212 1)/2 and the only way is every second index",
+       "Fixed placement"
+      ],
+      [
+       "n even: pre[j] + suf[m \u2212 j]",
+       "With an even length one gap in the alternation is allowed: the first j peaks sit at odd positions from the left and the remaining peaks at positions counted from the right; the minimum over where the shift happens",
+       "Prefix and suffix sums combined at a split point"
+      ],
+      [
+       "min(\u2026)",
+       "The cheapest split",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,1,3]` (n = 4, even): costs of the left- and right-aligned options at each split:"
+    ],
+    "table": {
+     "head": [
+      "split j",
+      "left-aligned cost",
+      "right-aligned cost",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "0",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Minimum total increase: 2."
+    ]
+   },
+   {
+    "h": "Why a split for even n?",
+    "p": [
+     "To get the maximum count of peaks in an even-length array you can place peaks at odd indexes up to some point and then shift the pattern by one. Prefix sums for the left part and suffix sums for the right part give the cost of each split in O(1), and the best split is found in one pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Cost to make an index a peak; odd n sums fixed positions, even n minimises over a split of left- and right-aligned peaks."
+ },
+ "3915": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "peak[i], valley[i]",
+       "Best sum of an alternating subsequence ending at i where nums[i] is a high point (peak) / low point (valley)",
+       "DP (Dynamic Programming) with two states"
+      ],
+      [
+       "j = i \u2212 k; add j to the trees",
+       "Only elements at distance \u2265 k are eligible predecessors, so element i \u2212 k is inserted into the structures when i reaches it",
+       "Delayed insertion for a distance constraint"
+      ],
+      [
+       "low tree (indexed by rank)",
+       "A Fenwick tree (Binary Indexed Tree) for prefix MAXIMUM: best valley[j] among eligible j with a smaller value, because a peak must come after a valley of smaller value",
+       "Max over a value range"
+      ],
+      [
+       "high tree (indexed by m + 1 \u2212 rank)",
+       "The same trick with reversed ranks: best peak[j] among eligible j with a larger value, for a valley",
+       "Suffix max as a prefix max"
+      ],
+      [
+       "nums[i] + max(0, best)",
+       "Start a new subsequence (0) or extend the best compatible one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,4,2]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "value",
+      "best earlier valley (smaller)",
+      "best earlier peak (larger)",
+      "peak[i]",
+      "valley[i]",
+      "answer so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "\u2013",
+       "\u2013",
+       "5",
+       "5",
+       "5"
+      ],
+      [
+       "1",
+       "4",
+       "\u2013",
+       "\u2013",
+       "4",
+       "4",
+       "5"
+      ],
+      [
+       "2",
+       "2",
+       "\u2013",
+       "5",
+       "2",
+       "7",
+       "7"
+      ]
+     ]
+    },
+    "bullets": [
+     "The code returns 7."
+    ]
+   },
+   {
+    "h": "Why Fenwick trees with delayed insertion?",
+    "p": [
+     "The inner question is 'max over eligible earlier elements whose value is below / above nums[i]', a range maximum over values. A Fenwick tree stores maxima by value rank and answers in O(log n). The distance rule is handled by inserting element i \u2212 k only when i is reached."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two-state DP (peak / valley) with Fenwick trees for prefix maxima over value ranks; elements enter the trees k steps late."
+ }
+}

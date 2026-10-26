@@ -172,6 +172,12 @@ if __name__ == "__main__":
     for f in sorted(glob.glob('drivers_c*.py')):
         m = importlib.import_module(f[:-3]); D.update(m.D); D2.update(m.D2); XU |= getattr(m, 'UNORD', set()); XS |= getattr(m, 'SKIP', set())
     ex2 = {}
+    import hashlib, pickle, os
+    SRC = hashlib.md5(open(__file__, "rb").read()).hexdigest()
+    CACHE_F = "trace_cache.pkl"
+    try: cache = pickle.load(open(CACHE_F, "rb")) if os.path.exists(CACHE_F) else {}
+    except Exception: cache = {}
+    used = {}
     probs = json.load(open("problems.json")); out = {}; bad = []; results = {}; results2 = {}
     for pid, codes in probs.items():
         drv = D.get(int(pid))
@@ -181,9 +187,19 @@ if __name__ == "__main__":
         for vi, code in enumerate(codes):
             random.seed(1)
             try:
-                st, tr, rv = run(code, drv); res.append({"steps": st, "trunc": tr}); results.setdefault(pid, []).append(rv)
-                random.seed(1)
-                st2, tr2, rv2 = run(code, drv2); res[-1]["t2"] = {"steps": st2, "trunc": tr2}; results2.setdefault(pid, []).append(rv2)
+                key = hashlib.sha1(("\0".join([SRC, code, str(drv), str(drv2)])).encode()).hexdigest()
+                if key in cache:
+                    st, tr, rv, st2, tr2, rv2 = cache[key]
+                else:
+                    st, tr, rv = run(code, drv)
+                    random.seed(1)
+                    st2, tr2, rv2 = run(code, drv2)
+                    try: pickle.dumps((st, tr, rv, st2, tr2, rv2)); cache_ok = True
+                    except Exception: cache_ok = False
+                    if cache_ok: cache[key] = (st, tr, rv, st2, tr2, rv2)
+                used[key] = cache.get(key)
+                res.append({"steps": st, "trunc": tr}); results.setdefault(pid, []).append(rv)
+                res[-1]["t2"] = {"steps": st2, "trunc": tr2}; results2.setdefault(pid, []).append(rv2)
                 if vi == 0: ex2[pid] = {"input": (e2[2] if len(e2) > 2 else (pretty_args(drv2) or "")), "output": fmt(rv2), "why": e2[1]}
             except Exception as e:
                 bad.append("%s v%d: %s" % (pid, vi, repr(e)[:90])); res.append(None)
@@ -208,6 +224,9 @@ if __name__ == "__main__":
         base = json.dumps(canon(rs[0], int(pid) in UNORD), sort_keys=True, default=str)
         for vi, r in enumerate(rs[1:], 1):
             if json.dumps(canon(r, int(pid) in UNORD), sort_keys=True, default=str) != base: bad.append("%s v%d (edge case): result differs: %s vs %s" % (pid, vi, str(canon(r, int(pid) in UNORD))[:60], str(canon(rs[0], int(pid) in UNORD))[:60]))
+    try:
+        pickle.dump({k: v for k, v in used.items() if v is not None}, open(CACHE_F, "wb"), protocol=4)
+    except Exception as e: print("cache not saved:", e)
     json.dump(ex2, open("ex2.json", "w"), ensure_ascii=False)
     json.dump(out, open("traces.json", "w"), separators=(",", ":"))
     print("traced", len(out), "problems; failures:", len(bad))
