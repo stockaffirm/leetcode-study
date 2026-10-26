@@ -1,1 +1,143 @@
-window.PROBLEM = {"id":"9","title":"Palindrome Number","level":"Easy","topic":"Math","question":"Given a whole number x, return true if it reads the same forwards and backwards (a palindrome), such as 121. Negative numbers are never palindromes (−121 reads 121− backwards). Example: 121 → true; 10 → false.","why":"121 reads the same both ways → True. −121 isn't (the minus sign) → False.","idea":"Reverse only the second half of the digits and compare it with the first half.","input":"121","output":"True","notes":[],"best":"Reverse only the second half of the digits and compare it with the first half.","variants":[{"name":"Reverse half the digits","code":"class Solution:\n    def isPalindrome(self, x):\n        if x < 0 or (x % 10 == 0 and x != 0): return False\n        rev = 0\n        while x > rev:\n            rev = rev * 10 + x % 10; x //= 10\n        return x == rev or x == rev // 10","time":"O(log n)","space":"O(1)","explain":"Reverse only the second half of the digits and compare it with the first half.","frames":[{"title":"Start","description":"x = 121, rev = 0.","codeLines":[4],"facts":{},"rows":[{"name":"x","cells":["121"],"hot":[],"marks":{}},{"name":"rev","cells":["0"],"hot":[],"marks":{}}]},{"title":"Move a digit","description":"Take the last digit 1 → rev = 1, x = 12.","codeLines":[6],"facts":{},"rows":[{"name":"x","cells":["12"],"hot":[],"marks":{}},{"name":"rev","cells":["1"],"hot":[],"marks":{}}]},{"title":"Move a digit","description":"Take 2 → rev = 12, x = 1. Now x ≤ rev → stop.","codeLines":[5],"facts":{},"rows":[{"name":"x","cells":["1"],"hot":[],"marks":{}},{"name":"rev","cells":["12"],"hot":[],"marks":{}}]},{"title":"Compare","description":"x = 1 equals rev // 10 = 1 (middle digit ignored) → True.","codeLines":[7],"facts":{},"rows":[{"name":"answer","cells":["True"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":121}},{"l":4,"d":1,"f":1,"v":{"x":121}},{"l":5,"d":1,"f":1,"v":{"x":121,"rev":0}},{"l":6,"d":1,"f":1,"v":{"x":121,"rev":0}},{"l":5,"d":1,"f":1,"v":{"x":12,"rev":1}},{"l":6,"d":1,"f":1,"v":{"x":12,"rev":1}},{"l":5,"d":1,"f":1,"v":{"x":1,"rev":12}},{"l":7,"d":1,"f":1,"v":{"x":1,"rev":12}},{"l":7,"d":1,"f":1,"v":{"x":1,"rev":12},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":-121}},{"l":3,"d":1,"f":1,"v":{"x":-121},"ret":false}],"trunc":false}},{"name":"Convert to a string","tag":"Alternative","code":"class Solution:\n    def isPalindrome(self, x):\n        s = str(x)\n        return s == s[::-1]","time":"O(log n)","space":"O(log n)","explain":"A number is a palindrome if its text equals its reverse.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":121}},{"l":4,"d":1,"f":1,"v":{"x":121,"s":["s","121"]}},{"l":4,"d":1,"f":1,"v":{"x":121,"s":["s","121"]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":-121}},{"l":4,"d":1,"f":1,"v":{"x":-121,"s":["s","-121"]}},{"l":4,"d":1,"f":1,"v":{"x":-121,"s":["s","-121"]},"ret":false}],"trunc":false}},{"name":"Reverse the whole number","tag":"Alternative","code":"class Solution:\n    def isPalindrome(self, x):\n        if x < 0: return False\n        orig, rev = x, 0\n        while x:\n            rev = rev * 10 + x % 10; x //= 10\n        return orig == rev","time":"O(log n)","space":"O(1)","explain":"Build the reversed number digit by digit and compare.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":121}},{"l":4,"d":1,"f":1,"v":{"x":121}},{"l":5,"d":1,"f":1,"v":{"x":121,"orig":121,"rev":0}},{"l":6,"d":1,"f":1,"v":{"x":121,"orig":121,"rev":0}},{"l":5,"d":1,"f":1,"v":{"x":12,"orig":121,"rev":1}},{"l":6,"d":1,"f":1,"v":{"x":12,"orig":121,"rev":1}},{"l":5,"d":1,"f":1,"v":{"x":1,"orig":121,"rev":12}},{"l":6,"d":1,"f":1,"v":{"x":1,"orig":121,"rev":12}},{"l":5,"d":1,"f":1,"v":{"x":0,"orig":121,"rev":121}},{"l":7,"d":1,"f":1,"v":{"x":0,"orig":121,"rev":121}},{"l":7,"d":1,"f":1,"v":{"x":0,"orig":121,"rev":121},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":-121}},{"l":3,"d":1,"f":1,"v":{"x":-121},"ret":false}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["x % 10","The last digit of x","Peeling digits off the right end"],["x //= 10","Drops the last digit (integer division)","Shrinking a number one digit at a time"],["rev = rev * 10 + x % 10","Appends that digit to the end of rev","Building a reversed number without strings"],["rev // 10","Drops the middle digit of rev (odd-length case)","Comparing halves when length may be odd"]]}},{"h":"Walk through two examples","p":["The loop stops once the reversed half is at least as large as what remains of `x`, so only half the digits are reversed.","`x = 12321` (odd length):"],"table":{"head":["x after","rev after"],"rows":[["1232","1"],["123","12"],["12","123"]]},"bullets":["Stop: `x = 12`, `rev = 123`. Not equal, but `rev // 10 = 12 == x`, so the middle digit `3` is ignored: palindrome."]},{"h":"Even length","p":["`x = 1221`:"],"table":{"head":["x after","rev after"],"rows":[["122","1"],["12","12"]]},"bullets":["Stop: `x == rev == 12`: palindrome."]},{"h":"Why the early return for trailing zeros?","p":["A number ending in 0 can only be a palindrome if it is 0, because a palindrome would need to start with 0. Without the guard the loop wrongly accepts `10`: `x=10` gives `x=1, rev=0`, continues to `x=0, rev=1`, and then `x == rev // 10` is `0 == 0`. Running the code with the guard removed returns `True` for `10`."]},{"h":"Time and space","bullets":["Time: O(log10 n), one step per half of the digits.","Space: O(1). No string conversion, which is the point of this version."]}],"takeaway":"Reverse only the second half of the digits and compare with the first half; stopping at the midpoint avoids overflow and extra space."},"ex2":{"input":"-121","output":"False","why":"The minus sign makes it '-121' vs '121-' → False."},"statement":"Return `true` if the integer `x` is the same when its digits are read backwards, and `false` otherwise. Negative numbers never qualify because of the minus sign.\n\nExample 1:\n\n```\nInput: x = 1331\nOutput: true\n```\n\nExample 2:\n\n```\nInput: x = 120\nOutput: false\n```\n\nConstraints:\n\n* `-2^31 <= x <= 2^31 - 1`"};
+window.PROBLEM = {
+ "id": "9",
+ "title": "Palindrome Number",
+ "level": "Easy",
+ "topic": "Math",
+ "question": "Given a whole number x, return true if it reads the same forwards and backwards (a palindrome), such as 121. Negative numbers are never palindromes (−121 reads 121− backwards). Example: 121 → true; 10 → false.",
+ "why": "121 reads the same both ways → True. −121 isn't (the minus sign) → False.",
+ "idea": "Reverse only the second half of the digits and compare it with the first half.",
+ "input": "121",
+ "output": "True",
+ "notes": [],
+ "best": "Reverse only the second half of the digits and compare it with the first half.",
+ "variants": [
+  {
+   "name": "Reverse half the digits",
+   "code": "class Solution:\n    def isPalindrome(self, x):\n        if x < 0 or (x % 10 == 0 and x != 0): return False\n        rev = 0\n        while x > rev:\n            rev = rev * 10 + x % 10; x //= 10\n        return x == rev or x == rev // 10",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "Reverse only the second half of the digits and compare it with the first half.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "x = 121, rev = 0.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "x",
+       "cells": [
+        "121"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "rev",
+       "cells": [
+        "0"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Move a digit",
+     "description": "Take the last digit 1 → rev = 1, x = 12.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "x",
+       "cells": [
+        "12"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "rev",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Move a digit",
+     "description": "Take 2 → rev = 12, x = 1. Now x ≤ rev → stop.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "x",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "rev",
+       "cells": [
+        "12"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Compare",
+     "description": "x = 1 equals rev // 10 = 1 (middle digit ignored) → True.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "True"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Convert to a string",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def isPalindrome(self, x):\n        s = str(x)\n        return s == s[::-1]",
+   "time": "O(log n)",
+   "space": "O(log n)",
+   "explain": "A number is a palindrome if its text equals its reverse.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Reverse the whole number",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def isPalindrome(self, x):\n        if x < 0: return False\n        orig, rev = x, 0\n        while x:\n            rev = rev * 10 + x % 10; x //= 10\n        return orig == rev",
+   "time": "O(log n)",
+   "space": "O(1)",
+   "explain": "Build the reversed number digit by digit and compare.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

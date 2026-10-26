@@ -1,1 +1,228 @@
-window.PROBLEM = {"id":"134","title":"Gas Station","level":"Medium","topic":"Array / String","question":"Gas stations are placed around a circular road. gas[i] is the fuel you get at station i, and cost[i] is the fuel needed to drive from station i to the next one. You start with an empty tank at one station and drive around the circle in order. Return the index of the station where you can start and complete one full lap, or -1 if no start works (the answer is unique when it exists). Example: gas=[1,2,3,4,5], cost=[3,4,5,1,2] → start at station 3.","why":"gas [1,2,3,4,5], cost [3,4,5,1,2] → start at station 3.","idea":"If the tank goes negative, the start can't be anywhere before here — restart from the next station.","input":"gas=[1,2,3,4,5], cost=[3,4,5,1,2]","output":"3","notes":[],"best":"If the tank goes negative, the start can't be anywhere before here — restart from the next station.","variants":[{"name":"One pass with a restart","code":"class Solution:\n    def canCompleteCircuit(self, gas, cost):\n        if sum(gas) < sum(cost): return -1\n        tank = start = 0\n        for i in range(len(gas)):\n            tank += gas[i] - cost[i]\n            if tank < 0:\n                start, tank = i + 1, 0\n        return start","time":"O(n)","space":"O(1)","explain":"If the tank goes negative, the start can't be anywhere before here — restart from the next station.","frames":[{"title":"Net fuel","description":"gas − cost at each station.","codeLines":[3],"facts":{"total":"≥ 0 → possible"},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[],"marks":{}}]},{"title":"Station 0","description":"Tank negative → restart from station 1","codeLines":[6,8],"facts":{"tank":0},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[0],"marks":{"1":"start"}}]},{"title":"Station 1","description":"Tank negative → restart from station 2","codeLines":[6,8],"facts":{"tank":0},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[1],"marks":{"2":"start"}}]},{"title":"Station 2","description":"Tank negative → restart from station 3","codeLines":[6,8],"facts":{"tank":0},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[2],"marks":{"3":"start"}}]},{"title":"Station 3","description":"tank = 3","codeLines":[6],"facts":{"tank":3},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[3],"marks":{"3":"start"}}]},{"title":"Station 4","description":"tank = 6","codeLines":[6],"facts":{"tank":6},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[4],"marks":{"3":"start"}}]},{"title":"Return","description":"Start at station 3.","codeLines":[9],"facts":{},"rows":[{"name":"gas − cost","cells":["-2","-2","-2","3","3"],"hot":[3],"marks":{"3":"start"}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0]}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0]}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":0,"i":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":1,"i":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":1,"i":1}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":1,"i":1}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":1,"i":1}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":2,"i":1}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":2,"i":2}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":2,"i":2}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":-2,"start":2,"i":2}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":3,"i":2}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":0,"start":3,"i":3}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":3,"start":3,"i":3}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":3,"start":3,"i":3}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":3,"start":3,"i":4}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":6,"start":3,"i":4}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":6,"start":3,"i":4}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":6,"start":3,"i":4}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"tank":6,"start":3,"i":4},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0]}},{"l":3,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0]},"ret":-1}],"trunc":false}},{"name":"Try every start","tag":"Brute force","code":"class Solution:\n    def canCompleteCircuit(self, gas, cost):\n        n = len(gas)\n        for s in range(n):\n            tank, ok = 0, True\n            for k in range(n):\n                i = (s + k) % n; tank += gas[i] - cost[i]\n                if tank < 0: ok = False; break\n            if ok: return s\n        return -1","time":"O(n²)","space":"O(1)","explain":"Simulate the full lap from each station.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0]}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0,"tank":0,"ok":true}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0,"tank":0,"ok":true,"k":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0,"tank":-2,"ok":true,"k":0,"i":0}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0,"tank":-2,"ok":false,"k":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":0,"tank":-2,"ok":false,"k":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":-2,"ok":false,"k":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":0,"ok":true,"k":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":0,"ok":true,"k":0,"i":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":-2,"ok":true,"k":0,"i":1}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":-2,"ok":false,"k":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":1,"tank":-2,"ok":false,"k":0,"i":1}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":-2,"ok":false,"k":0,"i":1}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":0,"ok":true,"k":0,"i":1}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":0,"ok":true,"k":0,"i":1}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":-2,"ok":true,"k":0,"i":2}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":-2,"ok":false,"k":0,"i":2}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":2,"tank":-2,"ok":false,"k":0,"i":2}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":-2,"ok":false,"k":0,"i":2}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":0,"i":2}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":0,"i":2}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":3,"ok":true,"k":0,"i":3}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":3,"ok":true,"k":0,"i":3}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":3,"ok":true,"k":1,"i":3}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":6,"ok":true,"k":1,"i":4}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":6,"ok":true,"k":1,"i":4}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":6,"ok":true,"k":2,"i":4}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":4,"ok":true,"k":2,"i":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":4,"ok":true,"k":2,"i":0}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":4,"ok":true,"k":3,"i":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":2,"ok":true,"k":3,"i":1}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":2,"ok":true,"k":3,"i":1}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":2,"ok":true,"k":4,"i":1}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":4,"i":2}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":4,"i":2}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":4,"i":2}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[1,2,3,4,5],0],"cost":["l",[3,4,5,1,2],0],"n":5,"s":3,"tank":0,"ok":true,"k":4,"i":2},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0]}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0,"tank":0,"ok":true}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0,"tank":0,"ok":true,"k":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0,"tank":-1,"ok":true,"k":0,"i":0}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0,"tank":-1,"ok":false,"k":0,"i":0}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":0,"tank":-1,"ok":false,"k":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":-1,"ok":false,"k":0,"i":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":0,"ok":true,"k":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":0,"ok":true,"k":0,"i":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":-1,"ok":true,"k":0,"i":1}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":-1,"ok":false,"k":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":1,"tank":-1,"ok":false,"k":0,"i":1}},{"l":5,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":false,"k":0,"i":1}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":0,"ok":true,"k":0,"i":1}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":0,"ok":true,"k":0,"i":1}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":1,"ok":true,"k":0,"i":2}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":1,"ok":true,"k":0,"i":2}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":1,"ok":true,"k":1,"i":2}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":0,"ok":true,"k":1,"i":0}},{"l":6,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":0,"ok":true,"k":1,"i":0}},{"l":7,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":0,"ok":true,"k":2,"i":0}},{"l":8,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":true,"k":2,"i":1}},{"l":9,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":false,"k":2,"i":1}},{"l":4,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":false,"k":2,"i":1}},{"l":10,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":false,"k":2,"i":1}},{"l":10,"d":1,"f":1,"v":{"gas":["l",[2,3,4],0],"cost":["l",[3,4,3],0],"n":3,"s":2,"tank":-1,"ok":false,"k":2,"i":1},"ret":-1}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`sum(gas) < sum(cost)`","If total fuel is less than total cost, no start works","A global feasibility check that lets the loop find the answer without a second pass"],["`gas[i] - cost[i]`","Net fuel change at station i","Reduce two arrays to one array of gains"],["`tank`","Fuel left since the candidate start","Running balance"],["`tank < 0`","Cannot get from `start` to `i + 1`: abandon this start","Reset on failure"],["`start, tank = i + 1, 0`","Next station becomes the candidate; empty tank","Tuple assignment of two fields"]]}},{"h":"Walk through an example","p":["`gas = [1,2,3,4,5]`, `cost = [3,4,5,1,2]`: net gains are -2, -2, -2, +3, +3."],"table":{"head":["i","net","tank","start","note"],"rows":[["0","-2","0","1","tank < 0 → start = 1, tank = 0"],["1","-2","0","2","tank < 0 → start = 2, tank = 0"],["2","-2","0","3","tank < 0 → start = 3, tank = 0"],["3","3","3","3","ok"],["4","3","6","3","ok"]]}},{"h":"Why can we skip all stations between the old start and the failure?","p":["If we start at `s` and first run out of fuel at `i`, any station `k` between `s` and `i` fails earlier or at the same point: reaching `k` from `s` left us with a non-negative tank, so starting at `k` with an empty tank has at most that much fuel and fails at or before `i`. So the next candidate jumps to `i + 1`."]},{"h":"Why is the answer valid at the end?","p":["After the global check, total fuel ≥ total cost, so some start exists. The candidate from the last reset has a non-negative balance until the end of the array. The part before it has total net ≤ 0 (that is what the resets said), so the global sum ≥ 0 means the suffix sum covers it on the wrap-around: the circuit completes."]},{"h":"Time and space","bullets":["Time: O(n), one pass for sums and one for the scan.","Space: O(1)."]}],"takeaway":"Gas station greedy: if the total is non-negative a solution exists; reset the start to i+1 whenever the running tank goes negative."},"ex2":{"input":"[2,3,4],[3,4,3]","output":"-1","why":"Total gas (9) is less than total cost (10), so no start works → -1."},"statement":"Gas stations are arranged on a circular route. Station `i` provides `gas[i]` units of fuel, and driving from station `i` to station `i + 1` (wrapping around) costs `cost[i]`. You start with an empty tank at a station of your choice and travel clockwise. Return the index of the starting station from which you can complete the full circle, or `-1` if it is impossible. If a solution exists, it is guaranteed to be unique.\n\nExample 1:\n\n```\nInput: gas = [3,1,1], cost = [1,2,2]\nOutput: 0\n```\n\nExample 2:\n\n```\nInput: gas = [2,3,4], cost = [3,4,3]\nOutput: -1\n```\n\nConstraints:\n\n* `n == gas.length == cost.length`\n* `1 <= n <= 10^5`\n* `0 <= gas[i], cost[i] <= 10^4`"};
+window.PROBLEM = {
+ "id": "134",
+ "title": "Gas Station",
+ "level": "Medium",
+ "topic": "Array / String",
+ "question": "Gas stations are placed around a circular road. gas[i] is the fuel you get at station i, and cost[i] is the fuel needed to drive from station i to the next one. You start with an empty tank at one station and drive around the circle in order. Return the index of the station where you can start and complete one full lap, or -1 if no start works (the answer is unique when it exists). Example: gas=[1,2,3,4,5], cost=[3,4,5,1,2] → start at station 3.",
+ "why": "gas [1,2,3,4,5], cost [3,4,5,1,2] → start at station 3.",
+ "idea": "If the tank goes negative, the start can't be anywhere before here — restart from the next station.",
+ "input": "gas=[1,2,3,4,5], cost=[3,4,5,1,2]",
+ "output": "3",
+ "notes": [],
+ "best": "If the tank goes negative, the start can't be anywhere before here — restart from the next station.",
+ "variants": [
+  {
+   "name": "One pass with a restart",
+   "code": "class Solution:\n    def canCompleteCircuit(self, gas, cost):\n        if sum(gas) < sum(cost): return -1\n        tank = start = 0\n        for i in range(len(gas)):\n            tank += gas[i] - cost[i]\n            if tank < 0:\n                start, tank = i + 1, 0\n        return start",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "If the tank goes negative, the start can't be anywhere before here — restart from the next station.",
+   "frames": [
+    {
+     "title": "Net fuel",
+     "description": "gas − cost at each station.",
+     "codeLines": [
+      3
+     ],
+     "facts": {
+      "total": "≥ 0 → possible"
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Station 0",
+     "description": "Tank negative → restart from station 1",
+     "codeLines": [
+      6,
+      8
+     ],
+     "facts": {
+      "tank": 0
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "1": "start"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Station 1",
+     "description": "Tank negative → restart from station 2",
+     "codeLines": [
+      6,
+      8
+     ],
+     "facts": {
+      "tank": 0
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {
+        "2": "start"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Station 2",
+     "description": "Tank negative → restart from station 3",
+     "codeLines": [
+      6,
+      8
+     ],
+     "facts": {
+      "tank": 0
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "3": "start"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Station 3",
+     "description": "tank = 3",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "tank": 3
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "start"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Station 4",
+     "description": "tank = 6",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "tank": 6
+     },
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {
+        "3": "start"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Start at station 3.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "gas − cost",
+       "cells": [
+        "-2",
+        "-2",
+        "-2",
+        "3",
+        "3"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "start"
+       }
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Try every start",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def canCompleteCircuit(self, gas, cost):\n        n = len(gas)\n        for s in range(n):\n            tank, ok = 0, True\n            for k in range(n):\n                i = (s + k) % n; tank += gas[i] - cost[i]\n                if tank < 0: ok = False; break\n            if ok: return s\n        return -1",
+   "time": "O(n²)",
+   "space": "O(1)",
+   "explain": "Simulate the full lap from each station.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

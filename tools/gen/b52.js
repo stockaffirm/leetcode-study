@@ -739,7 +739,7 @@ class Solution:
         return nums[lo]
 `)});
 lite({id:2719,slug:"count-of-integers",title:"Count of Integers",level:"Hard",topic:DP,name:"Digit DP with a running digit sum",
-w:"Numbers 1…12 with digit sum between 1 and 8: only 9 (sum 9) is excluded → 11.",k:"Count numbers in [0, N] whose digit sum lies in [min_sum, max_sum] with a digit DP: state (position, sum so far, still tight to N). Answer = f(num2) − f(num1) + (1 if num1 itself qualifies), modulo 1e9+7.",
+w:"Numbers 1…12 with digit sum between 1 and 8: only 9 (sum 9) is excluded → 11.",k:"Count numbers in [0, N] whose digit sum lies in [min_sum, max_sum] with a digit DP (Dynamic Programming): state (position, sum so far, still tight to N). Answer = f(num2) − f(num1) + (1 if num1 itself qualifies), modulo 1e9+7.",
 i:"num1 = \"1\", num2 = \"12\", min_sum = 1, max_sum = 8",o:"11",time:"O(len · maxSum · 10)",space:"O(len · maxSum)",
 code:C(`
 class Solution:

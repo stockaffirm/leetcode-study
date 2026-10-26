@@ -137,7 +137,7 @@ class Solution:
             finish.append(t)
         return sum(f - a for f, (a, _) in zip(finish, customers)) / len(customers)
 `)});
-alt(3313,{name:"BFS from every node",tag:"Brute force",time:"O(n²)",space:"O(n)",explain:"Run a BFS from each node; the last node dequeued is the farthest one (ties resolved toward the later endpoint of the diameter).",code:C(`
+alt(3313,{name:"BFS from every node",tag:"Brute force",time:"O(n²)",space:"O(n)",explain:"Run a BFS (Breadth-First Search) from each node; the last node dequeued is the farthest one (ties resolved toward the later endpoint of the diameter).",code:C(`
 class Solution:
     def lastMarkedNodes(self, edges):
         n = len(edges) + 1

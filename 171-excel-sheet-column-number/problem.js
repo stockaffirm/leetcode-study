@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"171","title":"Excel Sheet Column Number","level":"Easy","topic":"Math / Bit Manipulation","question":"Spreadsheet columns are named A, B, …, Z, AA, AB, … Given a column title, return its column number. Example: 'A' → 1, 'AB' → 28, 'ZY' → 701.","why":"Convert a spreadsheet column title (A, B, …, Z, AA, AB, …) to its number.","idea":"It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.","input":"'AB'","output":"28","notes":[],"best":"It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.","variants":[{"name":"Base-26 conversion","code":"class Solution:\n    def titleToNumber(self, columnTitle):\n        n = 0\n        for ch in columnTitle: n = n * 26 + ord(ch) - 64\n        return n","time":"O(n)","space":"O(1)","explain":"It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","AB"]}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","AB"],"n":0}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","AB"],"n":1,"ch":["s","A"]}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","AB"],"n":28,"ch":["s","B"]}},{"l":5,"d":1,"f":1,"v":{"columnTitle":["s","AB"],"n":28,"ch":["s","B"]}},{"l":5,"d":1,"f":1,"v":{"columnTitle":["s","AB"],"n":28,"ch":["s","B"]},"ret":28}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","ZY"]}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","ZY"],"n":0}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","ZY"],"n":26,"ch":["s","Z"]}},{"l":4,"d":1,"f":1,"v":{"columnTitle":["s","ZY"],"n":701,"ch":["s","Y"]}},{"l":5,"d":1,"f":1,"v":{"columnTitle":["s","ZY"],"n":701,"ch":["s","Y"]}},{"l":5,"d":1,"f":1,"v":{"columnTitle":["s","ZY"],"n":701,"ch":["s","Y"]},"ret":701}],"trunc":false}},{"name":"reduce","tag":"Pythonic","code":"class Solution:\n    def titleToNumber(self, columnTitle):\n        return reduce(lambda a, ch: a * 26 + ord(ch) - 64, columnTitle, 0)","time":"O(n)","space":"O(1)","explain":"The same base-26 fold as one expression.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","AB"]}},{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","AB"]},"ret":28}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","ZY"]}},{"l":3,"d":1,"f":1,"v":{"columnTitle":["s","ZY"]},"ret":701}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["ord(ch)","Character code (A = 65)","Converting letters to numbers"],["ord(ch) - 64","Letter value with A = 1 … Z = 26","1-based digits; no zero digit in this system"],["n * 26 + digit","Horner's rule: shift left one base-26 place and add the next digit","Parsing a number in any base"]]}},{"h":"Walk through an example","p":["`\"AB\"`:"],"table":{"head":["ch","ord","digit","n after"],"rows":[["A","65","1","1"],["B","66","2","28"]]},"bullets":["`A` gives 1, then `1 * 26 + 2 = 28`."]},{"h":"Why `n * 26` at each step?","p":["Reading left to right, each new letter makes everything read so far one position more significant. Multiplying the running value by 26 and adding the new digit applies each place value once, with no need to compute 26^k or know the length in advance."]},{"h":"Time and space","bullets":["Time: O(L) for L letters.","Space: O(1).","This is the exact inverse of problem 168."]}],"takeaway":"Parse a bijective base-26 number with Horner's rule: n = n*26 + value."},"ex2":{"input":"ZY","output":"701","why":"26·26 + 25 = 701."},"statement":"Given a spreadsheet column label such as `\"A\"`, `\"Z\"`, `\"AA\"` or `\"AB\"`, return the corresponding column number (`A` = 1, `Z` = 26, `AA` = 27, ...).\n\nExample 1:\n\n```\nInput: columnTitle = \"Z\"\nOutput: 26\n```\n\nExample 2:\n\n```\nInput: columnTitle = \"AAA\"\nOutput: 703\n```\n\nConstraints:\n\n* `1 <= columnTitle.length <= 7`\n* `columnTitle` consists only of upper-case English letters.\n* `columnTitle` is in the range `[\"A\", \"FXSHRXW\"]`."};
+window.PROBLEM = {
+ "id": "171",
+ "title": "Excel Sheet Column Number",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "Spreadsheet columns are named A, B, …, Z, AA, AB, … Given a column title, return its column number. Example: 'A' → 1, 'AB' → 28, 'ZY' → 701.",
+ "why": "Convert a spreadsheet column title (A, B, …, Z, AA, AB, …) to its number.",
+ "idea": "It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.",
+ "input": "'AB'",
+ "output": "28",
+ "notes": [],
+ "best": "It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.",
+ "variants": [
+  {
+   "name": "Base-26 conversion",
+   "code": "class Solution:\n    def titleToNumber(self, columnTitle):\n        n = 0\n        for ch in columnTitle: n = n * 26 + ord(ch) - 64\n        return n",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "It is a base-26 number with digits A=1 … Z=26: result = result × 26 + digit.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "reduce",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def titleToNumber(self, columnTitle):\n        return reduce(lambda a, ch: a * 26 + ord(ch) - 64, columnTitle, 0)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "The same base-26 fold as one expression.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

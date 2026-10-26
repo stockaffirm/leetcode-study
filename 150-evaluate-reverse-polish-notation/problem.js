@@ -1,1 +1,269 @@
-window.PROBLEM = {"id":"150","title":"Evaluate Reverse Polish Notation","level":"Medium","topic":"Stack","question":"Evaluate an arithmetic expression written in Reverse Polish Notation: each operator (+ − × ÷) comes AFTER the two numbers it applies to. Given a list of tokens, return the result. Division rounds toward zero. Example: ['2','1','+','3','*'] means (2 + 1) × 3 = 9.","why":"['2','1','+','3','*'] = (2 + 1) × 3 = 9.","idea":"Push numbers; at an operator pop two, compute, push the result.","input":"[\"2\",\"1\",\"+\",\"3\",\"*\"]","output":"9","notes":[],"best":"Push numbers; at an operator pop two, compute, push the result.","variants":[{"name":"Stack of numbers","code":"class Solution:\n    def evalRPN(self, tokens):\n        st = []\n        for t in tokens:\n            if t in '+-*/':\n                b, a = st.pop(), st.pop()\n                st.append(int(a + b if t == '+' else a - b if t == '-' else a * b if t == '*' else a / b))\n            else: st.append(int(t))\n        return st[0]","time":"O(n)","space":"O(n)","explain":"Push numbers; at an operator pop two, compute, push the result.","frames":[{"title":"Start","description":"Empty stack.","codeLines":[3],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[],"marks":{}},{"name":"stack","cells":["·"],"hot":[],"marks":{}}]},{"title":"'2'","description":"Number → push.","codeLines":[8],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[0],"marks":{}},{"name":"stack","cells":["2"],"hot":[0],"marks":{}}]},{"title":"'1'","description":"Number → push.","codeLines":[8],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[1],"marks":{}},{"name":"stack","cells":["2","1"],"hot":[1],"marks":{}}]},{"title":"'+'","description":"2 + 1 = 3","codeLines":[6,7],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[2],"marks":{}},{"name":"stack","cells":["3"],"hot":[0],"marks":{}}]},{"title":"'3'","description":"Number → push.","codeLines":[8],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[3],"marks":{}},{"name":"stack","cells":["3","3"],"hot":[1],"marks":{}}]},{"title":"'*'","description":"3 * 3 = 9","codeLines":[6,7],"facts":{},"rows":[{"name":"tokens","cells":["2","1","+","3","*"],"hot":[4],"marks":{}},{"name":"stack","cells":["9"],"hot":[0],"marks":{}}]},{"title":"Return","description":"9","codeLines":[9],"facts":{},"rows":[{"name":"answer","cells":["9"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[],0],"t":["s","2"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[],0],"t":["s","2"]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2],0],"t":["s","2"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2],0],"t":["s","1"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2],0],"t":["s","1"]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2,1],0],"t":["s","1"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2,1],0],"t":["s","+"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[2,1],0],"t":["s","+"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[],0],"t":["s","+"],"b":1,"a":2}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3],0],"t":["s","+"],"b":1,"a":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3],0],"t":["s","3"],"b":1,"a":2}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3],0],"t":["s","3"],"b":1,"a":2}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3,3],0],"t":["s","3"],"b":1,"a":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3,3],0],"t":["s","*"],"b":1,"a":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[3,3],0],"t":["s","*"],"b":1,"a":2}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[],0],"t":["s","*"],"b":3,"a":3}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3},"ret":9}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[],0],"t":["s","4"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[],0],"t":["s","4"]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4],0],"t":["s","4"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4],0],"t":["s","13"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4],0],"t":["s","13"]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13],0],"t":["s","13"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13],0],"t":["s","5"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13],0],"t":["s","5"]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13,5],0],"t":["s","5"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13,5],0],"t":["s","/"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,13,5],0],"t":["s","/"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4],0],"t":["s","/"],"b":5,"a":13}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,2],0],"t":["s","/"],"b":5,"a":13}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,2],0],"t":["s","+"],"b":5,"a":13}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[4,2],0],"t":["s","+"],"b":5,"a":13}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[],0],"t":["s","+"],"b":2,"a":4}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4},"ret":6}],"trunc":false}},{"name":"Operator table","tag":"Alternative","code":"class Solution:\n    def evalRPN(self, tokens):\n        ops = {'+': lambda a, b: a + b, '-': lambda a, b: a - b, '*': lambda a, b: a * b, '/': lambda a, b: int(a / b)}\n        st = []\n        for t in tokens:\n            if t in ops:\n                b = st.pop(); a = st.pop(); st.append(ops[t](a, b))\n            else: st.append(int(t))\n        return st[0]","time":"O(n)","space":"O(n)","explain":"Look operators up in a dictionary of functions.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0],"t":["s","2"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0],"t":["s","2"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2],0],"t":["s","2"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2],0],"t":["s","1"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2],0],"t":["s","1"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2,1],0],"t":["s","1"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2,1],0],"t":["s","+"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[2,1],0],"t":["s","+"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3],0],"t":["s","+"],"b":1,"a":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3],0],"t":["s","3"],"b":1,"a":2}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3],0],"t":["s","3"],"b":1,"a":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3,3],0],"t":["s","3"],"b":1,"a":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3,3],0],"t":["s","*"],"b":1,"a":2}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[3,3],0],"t":["s","*"],"b":1,"a":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[9],0],"t":["s","*"],"b":3,"a":3},"ret":9}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0],"t":["s","4"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[],0],"t":["s","4"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4],0],"t":["s","4"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4],0],"t":["s","13"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4],0],"t":["s","13"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13],0],"t":["s","13"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13],0],"t":["s","5"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13],0],"t":["s","5"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13,5],0],"t":["s","5"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13,5],0],"t":["s","/"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,13,5],0],"t":["s","/"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,2],0],"t":["s","/"],"b":5,"a":13}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,2],0],"t":["s","+"],"b":5,"a":13}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[4,2],0],"t":["s","+"],"b":5,"a":13}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"ops":["d",[[["s","+"],["o","<function Solution.eval…"]],[["s","-"],["o","<function Solution.eval…"]],[["s","*"],["o","<function Solution.eval…"]],[["s","/"],["o","<function Solution.eval…"]]]],"st":["l",[6],0],"t":["s","+"],"b":2,"a":4},"ret":6}],"trunc":false}},{"name":"Reduce the token list in place","tag":"Brute force","code":"class Solution:\n    def evalRPN(self, tokens):\n        tokens = list(tokens)\n        while len(tokens) > 1:\n            for i, t in enumerate(tokens):\n                if t in ('+', '-', '*', '/'):\n                    a, b = int(tokens[i - 2]), int(tokens[i - 1])\n                    r = a + b if t == '+' else a - b if t == '-' else a * b if t == '*' else int(a / b)\n                    tokens[i - 2:i + 1] = [str(r)]\n                    break\n        return int(tokens[0])","time":"O(n²)","space":"O(n)","explain":"Find the first operator, replace it and its two operands by the result.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":0,"t":["s","2"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":0,"t":["s","2"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":1,"t":["s","1"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":1,"t":["s","1"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"],"a":2,"b":1}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","2"],["s","1"],["s","+"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"],"a":2,"b":1,"r":3}},{"l":10,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"],"a":2,"b":1,"r":3}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"],"a":2,"b":1,"r":3}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","+"],"a":2,"b":1,"r":3}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":0,"t":["s","3"],"a":2,"b":1,"r":3}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":0,"t":["s","3"],"a":2,"b":1,"r":3}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":1,"t":["s","3"],"a":2,"b":1,"r":3}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":1,"t":["s","3"],"a":2,"b":1,"r":3}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","*"],"a":2,"b":1,"r":3}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","*"],"a":2,"b":1,"r":3}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":3}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","3"],["s","3"],["s","*"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":9}},{"l":10,"d":1,"f":1,"v":{"tokens":["l",[["s","9"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":9}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","9"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":9}},{"l":11,"d":1,"f":1,"v":{"tokens":["l",[["s","9"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":9}},{"l":11,"d":1,"f":1,"v":{"tokens":["l",[["s","9"]],0],"i":2,"t":["s","*"],"a":3,"b":3,"r":9},"ret":9}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0]}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":0,"t":["s","4"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":0,"t":["s","4"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":1,"t":["s","13"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":1,"t":["s","13"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":2,"t":["s","5"]}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":2,"t":["s","5"]}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":3,"t":["s","/"]}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":3,"t":["s","/"]}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":3,"t":["s","/"],"a":13,"b":5}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","13"],["s","5"],["s","/"],["s","+"]],0],"i":3,"t":["s","/"],"a":13,"b":5,"r":2}},{"l":10,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":3,"t":["s","/"],"a":13,"b":5,"r":2}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":3,"t":["s","/"],"a":13,"b":5,"r":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":3,"t":["s","/"],"a":13,"b":5,"r":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":0,"t":["s","4"],"a":13,"b":5,"r":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":0,"t":["s","4"],"a":13,"b":5,"r":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":1,"t":["s","2"],"a":13,"b":5,"r":2}},{"l":5,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":1,"t":["s","2"],"a":13,"b":5,"r":2}},{"l":6,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":2,"t":["s","+"],"a":13,"b":5,"r":2}},{"l":7,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":2,"t":["s","+"],"a":13,"b":5,"r":2}},{"l":8,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":2}},{"l":9,"d":1,"f":1,"v":{"tokens":["l",[["s","4"],["s","2"],["s","+"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":6}},{"l":10,"d":1,"f":1,"v":{"tokens":["l",[["s","6"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":6}},{"l":4,"d":1,"f":1,"v":{"tokens":["l",[["s","6"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":6}},{"l":11,"d":1,"f":1,"v":{"tokens":["l",[["s","6"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":6}},{"l":11,"d":1,"f":1,"v":{"tokens":["l",[["s","6"]],0],"i":2,"t":["s","+"],"a":4,"b":2,"r":6},"ret":6}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["t in '+-*/'","Substring test: true for a one-character operator. Note that `'-3'` is not a substring of `'+-*/'`, so negative numbers are treated as numbers","Quick operator check"],["b, a = st.pop(), st.pop()","Pops the right operand first, then the left","Operand order matters for - and /"],["int(a / b)","True division then truncation toward zero, as the problem requires","Integer division that rounds toward 0"],["st.append(int(t))","Parses and pushes a number",""],["st[0]","The single value left at the end",""]]}},{"h":"Walk through an example","p":["`[\"2\",\"1\",\"+\",\"3\",\"*\"]` is `(2 + 1) * 3`:"],"table":{"head":["token","operands","calculation","stack"],"rows":[["2","number","push","[2]"],["1","number","push","[2, 1]"],["+","b=1, a=2","2 + 1 = 3","[3]"],["3","number","push","[3, 3]"],["*","b=3, a=3","3 * 3 = 9","[9]"]]}},{"h":"Why `int(a / b)` and not `a // b`?","p":["Floor division rounds toward negative infinity, but Reverse Polish evaluation here must truncate toward zero. The two differ whenever the result is negative and inexact."],"table":{"head":["Expression","Result for −7 and 2"],"rows":[["a // b (floor)","-4"],["int(a / b) (truncate)","-3"]]}},{"h":"Time and space","bullets":["Time: O(n), one pass.","Space: O(n) for the stack (the number of operands waiting for an operator)."]}],"takeaway":"A stack evaluates postfix: push numbers, and on an operator pop two operands (right first) and push the result."},"ex2":{"input":"['4','13','5','/','+']","output":"6","why":"13 / 5 = 2 (truncated), then 4 + 2 = 6."},"statement":"Evaluate an arithmetic expression given in Reverse Polish Notation (postfix): operands come first and each operator follows the two values it applies to. Valid operators are `+`, `-`, `*` and `/`. Division truncates toward zero. Return the integer value of the expression.\n\nExample 1:\n\n```\nInput: tokens = [\"4\",\"13\",\"5\",\"/\",\"+\"]\nOutput: 6\n```\n\nExample 2:\n\n```\nInput: tokens = [\"-7\",\"2\",\"/\",\"5\",\"*\"]\nOutput: -15\n```\n\nConstraints:\n\n* `1 <= tokens.length <= 10^4`\n* Each token is an operator (`+`, `-`, `*`, `/`) or an integer in the range `[-200, 200]`.\n* The expression is valid, never divides by zero, and every intermediate result fits in a 32-bit integer."};
+window.PROBLEM = {
+ "id": "150",
+ "title": "Evaluate Reverse Polish Notation",
+ "level": "Medium",
+ "topic": "Stack",
+ "question": "Evaluate an arithmetic expression written in Reverse Polish Notation: each operator (+ − × ÷) comes AFTER the two numbers it applies to. Given a list of tokens, return the result. Division rounds toward zero. Example: ['2','1','+','3','*'] means (2 + 1) × 3 = 9.",
+ "why": "['2','1','+','3','*'] = (2 + 1) × 3 = 9.",
+ "idea": "Push numbers; at an operator pop two, compute, push the result.",
+ "input": "[\"2\",\"1\",\"+\",\"3\",\"*\"]",
+ "output": "9",
+ "notes": [],
+ "best": "Push numbers; at an operator pop two, compute, push the result.",
+ "variants": [
+  {
+   "name": "Stack of numbers",
+   "code": "class Solution:\n    def evalRPN(self, tokens):\n        st = []\n        for t in tokens:\n            if t in '+-*/':\n                b, a = st.pop(), st.pop()\n                st.append(int(a + b if t == '+' else a - b if t == '-' else a * b if t == '*' else a / b))\n            else: st.append(int(t))\n        return st[0]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Push numbers; at an operator pop two, compute, push the result.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Empty stack.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "'2'",
+     "description": "Number → push.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "'1'",
+     "description": "Number → push.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "2",
+        "1"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "'+'",
+     "description": "2 + 1 = 3",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "3"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "'3'",
+     "description": "Number → push.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "3",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "'*'",
+     "description": "3 * 3 = 9",
+     "codeLines": [
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "tokens",
+       "cells": [
+        "2",
+        "1",
+        "+",
+        "3",
+        "*"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {}
+      },
+      {
+       "name": "stack",
+       "cells": [
+        "9"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "9",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "9"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Operator table",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def evalRPN(self, tokens):\n        ops = {'+': lambda a, b: a + b, '-': lambda a, b: a - b, '*': lambda a, b: a * b, '/': lambda a, b: int(a / b)}\n        st = []\n        for t in tokens:\n            if t in ops:\n                b = st.pop(); a = st.pop(); st.append(ops[t](a, b))\n            else: st.append(int(t))\n        return st[0]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Look operators up in a dictionary of functions.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Reduce the token list in place",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def evalRPN(self, tokens):\n        tokens = list(tokens)\n        while len(tokens) > 1:\n            for i, t in enumerate(tokens):\n                if t in ('+', '-', '*', '/'):\n                    a, b = int(tokens[i - 2]), int(tokens[i - 1])\n                    r = a + b if t == '+' else a - b if t == '-' else a * b if t == '*' else int(a / b)\n                    tokens[i - 2:i + 1] = [str(r)]\n                    break\n        return int(tokens[0])",
+   "time": "O(n²)",
+   "space": "O(n)",
+   "explain": "Find the first operator, replace it and its two operands by the result.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"461","title":"Hamming Distance","level":"Easy","topic":"Math / Bit Manipulation","question":"The Hamming distance of two integers is the number of bit positions at which they differ. Return it. Example: 1 (0001) and 4 (0100) → 2.","why":"1 = 0001 and 4 = 0100 differ in 2 bit positions.","idea":"x XOR y has a 1 exactly where the bits differ. Count the 1s.","input":"x = 1, y = 4","output":"2","notes":[],"best":"x XOR y has a 1 exactly where the bits differ. Count the 1s.","variants":[{"name":"XOR and count the ones","code":"class Solution:\n    def hammingDistance(self, x, y):\n        return bin(x ^ y).count(\"1\")","time":"O(1)","space":"O(1)","explain":"x XOR y has a 1 exactly where the bits differ. Count the 1s.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":1,"y":4}},{"l":3,"d":1,"f":1,"v":{"x":1,"y":4},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":3,"y":1}},{"l":3,"d":1,"f":1,"v":{"x":3,"y":1},"ret":1}],"trunc":false}},{"name":"Count bits with n & (n − 1)","tag":"Bit trick","code":"class Solution:\n    def hammingDistance(self, x, y):\n        z = x ^ y\n        cnt = 0\n        while z:\n            z &= z - 1\n            cnt += 1\n        return cnt","time":"O(bits)","space":"O(1)","explain":"x & (x − 1) removes the lowest set bit; count how many times you can do that.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":1,"y":4}},{"l":4,"d":1,"f":1,"v":{"x":1,"y":4,"z":5}},{"l":5,"d":1,"f":1,"v":{"x":1,"y":4,"z":5,"cnt":0}},{"l":6,"d":1,"f":1,"v":{"x":1,"y":4,"z":5,"cnt":0}},{"l":7,"d":1,"f":1,"v":{"x":1,"y":4,"z":4,"cnt":0}},{"l":5,"d":1,"f":1,"v":{"x":1,"y":4,"z":4,"cnt":1}},{"l":6,"d":1,"f":1,"v":{"x":1,"y":4,"z":4,"cnt":1}},{"l":7,"d":1,"f":1,"v":{"x":1,"y":4,"z":0,"cnt":1}},{"l":5,"d":1,"f":1,"v":{"x":1,"y":4,"z":0,"cnt":2}},{"l":8,"d":1,"f":1,"v":{"x":1,"y":4,"z":0,"cnt":2}},{"l":8,"d":1,"f":1,"v":{"x":1,"y":4,"z":0,"cnt":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":3,"y":1}},{"l":4,"d":1,"f":1,"v":{"x":3,"y":1,"z":2}},{"l":5,"d":1,"f":1,"v":{"x":3,"y":1,"z":2,"cnt":0}},{"l":6,"d":1,"f":1,"v":{"x":3,"y":1,"z":2,"cnt":0}},{"l":7,"d":1,"f":1,"v":{"x":3,"y":1,"z":0,"cnt":0}},{"l":5,"d":1,"f":1,"v":{"x":3,"y":1,"z":0,"cnt":1}},{"l":8,"d":1,"f":1,"v":{"x":3,"y":1,"z":0,"cnt":1}},{"l":8,"d":1,"f":1,"v":{"x":3,"y":1,"z":0,"cnt":1},"ret":1}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`x ^ y`","XOR: a bit is 1 exactly where x and y differ","Comparing two numbers bit by bit"],["`bin(...)`","Binary string like `'0b101'`","Quick way to see the bits (the prefix `0b` has no `1`s so counting is safe)"],["`.count('1')`","Number of 1 characters","Popcount"]]}},{"h":"Walk through an example","p":["`x = 1`, `y = 4`:"],"table":{"head":["Step","Value"],"rows":[["x in binary","001"],["y in binary","100"],["x ^ y","101"],["`bin(x ^ y)`","0b101"],["count of '1'","2"]]}},{"h":"Alternatives","p":["Interviewers often want the Kernighan loop (problem 191); the built-in form is fine when the language allows it."],"table":{"head":["Approach","Time"],"rows":[["`bin(x ^ y).count('1')` (this code)","O(log max(x, y))"],["Loop with `n &= n - 1` (Kernighan)","O(number of differing bits)"],["`(x ^ y).bit_count()` (Python 3.10+)","O(1) in practice"]]}},{"h":"Why XOR?","p":["Hamming distance is the number of positions where the bits differ. XOR yields 1 exactly there and 0 where they agree, so the distance is the popcount of the XOR."]},{"h":"Time and space","bullets":["Time: O(log max(x, y)), proportional to the number of bits.","Space: O(log max(x, y)) for the temporary string."]}],"takeaway":"Hamming distance = popcount of x XOR y."},"ex2":{"input":"one different bit","output":"1","why":"3 = 11 and 1 = 01 differ in one bit."},"statement":"The Hamming distance between two integers is the number of bit positions where their binary forms differ. Given `x` and `y`, return their Hamming distance.\n\nExample 1:\n\n```\nInput: x = 1, y = 4\nOutput: 2\n```\n\nExample 2:\n\n```\nInput: x = 3, y = 1\nOutput: 1\n```\n\nConstraints:\n\n* `0 <= x, y <= 2^31 - 1`"};
+window.PROBLEM = {
+ "id": "461",
+ "title": "Hamming Distance",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "The Hamming distance of two integers is the number of bit positions at which they differ. Return it. Example: 1 (0001) and 4 (0100) → 2.",
+ "why": "1 = 0001 and 4 = 0100 differ in 2 bit positions.",
+ "idea": "x XOR y has a 1 exactly where the bits differ. Count the 1s.",
+ "input": "x = 1, y = 4",
+ "output": "2",
+ "notes": [],
+ "best": "x XOR y has a 1 exactly where the bits differ. Count the 1s.",
+ "variants": [
+  {
+   "name": "XOR and count the ones",
+   "code": "class Solution:\n    def hammingDistance(self, x, y):\n        return bin(x ^ y).count(\"1\")",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "x XOR y has a 1 exactly where the bits differ. Count the 1s.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Count bits with n & (n − 1)",
+   "tag": "Bit trick",
+   "code": "class Solution:\n    def hammingDistance(self, x, y):\n        z = x ^ y\n        cnt = 0\n        while z:\n            z &= z - 1\n            cnt += 1\n        return cnt",
+   "time": "O(bits)",
+   "space": "O(1)",
+   "explain": "x & (x − 1) removes the lowest set bit; count how many times you can do that.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

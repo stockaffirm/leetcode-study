@@ -192,7 +192,7 @@ class Solution:
         return sum(a * b for a, b in zip(freq, nums)) % (10**9 + 7)
 `)});
 lite({id:851,slug:"loud-and-rich",title:"Loud and Rich",level:"Medium",topic:GR,name:"DFS over 'richer than' edges",
-w:"richer pairs [1,0],[2,1],[3,1],[3,7],[4,3],[5,3],[6,3] with the quiet values: person 0's answer is 5 (the quietest among everyone at least as rich).",k:"richer[a] = [x, y] means x has more money than y. For each person, the answer is the quietest person among those who have at least as much money, i.e. themselves and everyone reachable by walking up the 'richer' edges. DFS with memoisation from each person.",
+w:"richer pairs [1,0],[2,1],[3,1],[3,7],[4,3],[5,3],[6,3] with the quiet values: person 0's answer is 5 (the quietest among everyone at least as rich).",k:"richer[a] = [x, y] means x has more money than y. For each person, the answer is the quietest person among those who have at least as much money, i.e. themselves and everyone reachable by walking up the 'richer' edges. DFS (Depth-First Search) with memoisation from each person.",
 i:"richer = [[1,0],[2,1],[3,1],[3,7],[4,3],[5,3],[6,3]], quiet = [3,2,5,4,6,1,7,0]",o:"[5, 5, 2, 5, 4, 5, 6, 7]",time:"O(n + e)",space:"O(n + e)",
 code:C(`
 class Solution:

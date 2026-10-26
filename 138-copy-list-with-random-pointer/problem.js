@@ -1,1 +1,337 @@
-window.PROBLEM = {"id":"138","title":"Copy List with Random Pointer","level":"Medium","topic":"Linked List","question":"A linked list where every node has two pointers: next (the following node) and random (any node in the list, or nothing). Make a DEEP COPY: build brand-new nodes with the same values, where the next and random pointers of the copies point to other copies — never to the original nodes. Return the head of the copy.","why":"List A→B→C with random pointers; the copy has new nodes A'→B'→C' with matching pointers.","idea":"Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.","input":"A→B→C, A.random=C, B.random=A, C.random=B","output":"A'→B'→C' with the same random links","notes":[],"best":"Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.","variants":[{"name":"Copy map (old → new)","code":"class Solution:\n    def copyRandomList(self, head):\n        clone = {None: None}\n        cur = head\n        while cur:\n            clone[cur] = Node(cur.val); cur = cur.next\n        cur = head\n        while cur:\n            clone[cur].next = clone[cur.next]; clone[cur].random = clone[cur.random]; cur = cur.next\n        return clone[head]","time":"O(n)","space":"O(n)","explain":"Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.","frames":[{"title":"Original","description":"Three nodes with next and random pointers.","codeLines":[2],"facts":{},"rows":[{"name":"next","cells":["A","B","C"],"hot":[],"marks":{},"kind":"list"},{"name":"random","cells":["A→C","B→A","C→B"],"hot":[],"marks":{}}]},{"title":"Pass 1","description":"Create A', B', C' with no pointers yet; remember A→A', B→B', C→C'.","codeLines":[6],"facts":{},"rows":[{"name":"clone map","cells":["A→A'","B→B'","C→C'"],"hot":[0,1,2],"marks":{}}],"sub":[{"description":"clone map[0] = A→A'","codeLines":[6],"facts":{},"rows":[{"name":"clone map","cells":["A→A'","·","·"],"hot":[0],"marks":{}}]},{"description":"clone map[1] = B→B'","codeLines":[6],"facts":{},"rows":[{"name":"clone map","cells":["A→A'","B→B'","·"],"hot":[1],"marks":{}}]},{"description":"clone map[2] = C→C'. Create A', B', C' with no pointers yet; remember A→A', B→B', C→C'.","codeLines":[6],"facts":{},"rows":[{"name":"clone map","cells":["A→A'","B→B'","C→C'"],"hot":[2],"marks":{}}]}]},{"title":"Pass 2","description":"Set A'.next = clone[A.next] = B' and A'.random = clone[A.random] = C'. Same for the others.","codeLines":[9],"facts":{},"rows":[{"name":"copy next","cells":["A'","B'","C'"],"hot":[0,1,2],"marks":{},"kind":"list"},{"name":"copy random","cells":["A'→C'","B'→A'","C'→B'"],"hot":[0,1,2],"marks":{}}],"sub":[{"description":"copy random[0] = A'→C'","codeLines":[9],"facts":{},"rows":[{"name":"copy next","cells":["A'","B'","C'"],"hot":[0,1,2],"marks":{},"kind":"list"},{"name":"copy random","cells":["A'→C'","·","·"],"hot":[0],"marks":{}}]},{"description":"copy random[1] = B'→A'","codeLines":[9],"facts":{},"rows":[{"name":"copy next","cells":["A'","B'","C'"],"hot":[0,1,2],"marks":{},"kind":"list"},{"name":"copy random","cells":["A'→C'","B'→A'","·"],"hot":[1],"marks":{}}]},{"description":"copy random[2] = C'→B'. Set A'.next = clone[A.next] = B' and A'.random = clone[A.random] = C'. Same for the others.","codeLines":[9],"facts":{},"rows":[{"name":"copy next","cells":["A'","B'","C'"],"hot":[0,1,2],"marks":{},"kind":"list"},{"name":"copy random","cells":["A'→C'","B'→A'","C'→B'"],"hot":[2],"marks":{}}]}]},{"title":"Return","description":"clone[head] = A'.","codeLines":[10],"facts":{},"rows":[{"name":"copy","cells":["A'","B'","C'"],"hot":[0],"marks":{},"kind":"list"}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]],"cur":["o","Node('A')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]],"cur":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":["o","Node('B')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":["o","Node('B')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]]]],"cur":["o","Node('C')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]]]],"cur":["o","Node('C')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":null}},{"l":7,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":null}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('A')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('A')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('B')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('B')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('C')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":["o","Node('C')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]],"cur":null},"ret":["o","Node('A')"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]],"cur":["o","Node('A')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null]]],"cur":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":null}},{"l":7,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":null}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":["o","Node('A')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":["o","Node('A')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":null}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"clone":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]],"cur":null},"ret":["o","Node('A')"]}],"trunc":false}},{"name":"Interleave copies in the list","tag":"Optimal space","code":"class Solution:\n    def copyRandomList(self, head):\n        if not head: return None\n        cur = head\n        while cur:\n            copy = Node(cur.val); copy.next = cur.next; cur.next = copy; cur = copy.next\n        cur = head\n        while cur:\n            if cur.random: cur.next.random = cur.random.next\n            cur = cur.next.next\n        dummy = Node(0); tail = dummy; cur = head\n        while cur:\n            tail.next = cur.next; tail = tail.next\n            cur.next = cur.next.next; cur = cur.next\n        return dummy.next","time":"O(n)","space":"O(1)","explain":"Insert each copy right after its original, set random pointers, then unweave.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('A')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('B')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('B')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"]}},{"l":7,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"]}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"]}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"]}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"]}},{"l":11,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node(0)"]}},{"l":13,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node(0)"]}},{"l":14,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":13,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":14,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('B')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('B')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('B')"]}},{"l":13,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('B')"]}},{"l":14,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('C')"],"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('C')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('C')"]}},{"l":15,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('C')"]}},{"l":15,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('C')"],"dummy":["o","Node(0)"],"tail":["o","Node('C')"]},"ret":["o","Node('A')"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"]}},{"l":6,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"]}},{"l":5,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"]}},{"l":7,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"]}},{"l":10,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"]}},{"l":8,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"]}},{"l":11,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node(0)"]}},{"l":13,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node(0)"]}},{"l":14,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":["o","Node('A')"],"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":12,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":15,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]}},{"l":15,"d":1,"f":1,"v":{"head":["o","Node('A')"],"cur":null,"copy":["o","Node('A')"],"dummy":["o","Node(0)"],"tail":["o","Node('A')"]},"ret":["o","Node('A')"]}],"trunc":false}},{"name":"Recursion with a memo","tag":"Alternative","code":"class Solution:\n    def copyRandomList(self, head):\n        memo = {None: None}\n        def go(n):\n            if n not in memo:\n                memo[n] = Node(n.val)\n                memo[n].next = go(n.next); memo[n].random = go(n.random)\n            return memo[n]\n        return go(head)","time":"O(n)","space":"O(n)","explain":"Create each copy once and recurse into next and random.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":5,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":6,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":7,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":5,"d":3,"f":3,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":6,"d":3,"f":3,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":7,"d":3,"f":3,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]]]]}},{"l":5,"d":4,"f":4,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]]]]}},{"l":6,"d":4,"f":4,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]]]]}},{"l":7,"d":4,"f":4,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":5,"d":5,"f":5,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":5,"f":5,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":5,"f":5,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":null},{"l":5,"d":5,"f":6,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":5,"f":6,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":5,"f":6,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('B')"]},{"l":8,"d":4,"f":4,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":4,"f":4,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('C')"]},{"l":5,"d":4,"f":7,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":4,"f":7,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":4,"f":7,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('A')"]},{"l":8,"d":3,"f":3,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":3,"f":3,"v":{"n":["o","Node('B')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('B')"]},{"l":5,"d":3,"f":8,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":3,"f":8,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":3,"f":8,"v":{"n":["o","Node('C')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('C')"]},{"l":8,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]}},{"l":8,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('A')"]},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]],[["o","Node('B')"],["o","Node('B')"]],[["o","Node('C')"],["o","Node('C')"]]]]},"ret":["o","Node('A')"]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"head":["o","Node('A')"]}},{"l":4,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":5,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":6,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null]]]}},{"l":7,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":5,"d":3,"f":3,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":8,"d":3,"f":3,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":8,"d":3,"f":3,"v":{"n":null,"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]},"ret":null},{"l":5,"d":3,"f":4,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":8,"d":3,"f":4,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":8,"d":3,"f":4,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]},"ret":["o","Node('A')"]},{"l":8,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]}},{"l":8,"d":2,"f":2,"v":{"n":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]},"ret":["o","Node('A')"]},{"l":9,"d":1,"f":1,"v":{"head":["o","Node('A')"],"memo":["d",[[null,null],[["o","Node('A')"],["o","Node('A')"]]]]},"ret":["o","Node('A')"]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["clone = {None: None}","Dict from original node to its copy. Mapping None to None removes null checks later","Graph/list copying needs an old→new map"],["clone[cur] = Node(cur.val)","Creates the copy (nodes are hashable by identity)","Pass 1: make all nodes first"],["clone[cur].next = clone[cur.next]","Wires the copy's next to the copy of the original's next","Pass 2: wire links via the map"],["clone[cur].random = clone[cur.random]","Same for random; works even when random points forward or backward",""]]}},{"h":"Walk through an example","p":["`A→B→C` with `A.random=C`, `B.random=A`, `C.random=B`:"],"table":{"head":["step","effect","random"],"rows":[["pass 1: A","creates A'","–"],["pass 1: B","creates B'","–"],["pass 1: C","creates C'","–"],["pass 2: A","A'.next = B'","A'.random = C'"],["pass 2: B","B'.next = C'","B'.random = A'"],["pass 2: C","C'.next = None","C'.random = B'"]]}},{"h":"Why two passes?","p":["A random pointer may point to a node that has not been copied yet (here `A.random = C`). If one pass created and wired nodes together, `clone[C]` would not exist when `A` is wired. Creating all copies first guarantees that every lookup in the second pass succeeds."]},{"h":"Time and space","bullets":["Time: O(n), two passes.","Space: O(n) for the dict. The interleaving trick (insert each copy after its original, wire random, then split) reaches O(1) extra space."]}],"takeaway":"Deep copy with random pointers: first create every copy in a hash map, then wire next and random through the map."},"ex2":{"input":"one node, random → itself","output":"Node('A')","why":"A single node whose random pointer points to itself."},"statement":"A linked list has nodes with two pointers each: `next`, and `random`, which may point to any node in the list or be null. Create a deep copy of the list: brand-new nodes whose `next` and `random` pointers refer only to other new nodes, never to the original ones. Return the head of the copy. In the examples each node is written as `[val, randomIndex]`, where `randomIndex` is the position of its random target or `null`.\n\nExample 1:\n\n```\nInput: head = [[1,1],[2,0]]\nOutput: [[1,1],[2,0]]\n```\n\nExample 2:\n\n```\nInput: head = [[5,null]]\nOutput: [[5,null]]\n```\n\nConstraints:\n\n* `0 <= n <= 1000`\n* `-10^4 <= Node.val <= 10^4`\n* `Node.random` is `null` or points to some node in the list."};
+window.PROBLEM = {
+ "id": "138",
+ "title": "Copy List with Random Pointer",
+ "level": "Medium",
+ "topic": "Linked List",
+ "question": "A linked list where every node has two pointers: next (the following node) and random (any node in the list, or nothing). Make a DEEP COPY: build brand-new nodes with the same values, where the next and random pointers of the copies point to other copies — never to the original nodes. Return the head of the copy.",
+ "why": "List A→B→C with random pointers; the copy has new nodes A'→B'→C' with matching pointers.",
+ "idea": "Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.",
+ "input": "A→B→C, A.random=C, B.random=A, C.random=B",
+ "output": "A'→B'→C' with the same random links",
+ "notes": [],
+ "best": "Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.",
+ "variants": [
+  {
+   "name": "Copy map (old → new)",
+   "code": "class Solution:\n    def copyRandomList(self, head):\n        clone = {None: None}\n        cur = head\n        while cur:\n            clone[cur] = Node(cur.val); cur = cur.next\n        cur = head\n        while cur:\n            clone[cur].next = clone[cur.next]; clone[cur].random = clone[cur.random]; cur = cur.next\n        return clone[head]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Pass 1: make a copy of every node and remember old→new in a dictionary. Pass 2: wire up next and random using the dictionary.",
+   "frames": [
+    {
+     "title": "Original",
+     "description": "Three nodes with next and random pointers.",
+     "codeLines": [
+      2
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "next",
+       "cells": [
+        "A",
+        "B",
+        "C"
+       ],
+       "hot": [],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "random",
+       "cells": [
+        "A→C",
+        "B→A",
+        "C→B"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Pass 1",
+     "description": "Create A', B', C' with no pointers yet; remember A→A', B→B', C→C'.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "clone map",
+       "cells": [
+        "A→A'",
+        "B→B'",
+        "C→C'"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "clone map[0] = A→A'",
+       "codeLines": [
+        6
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "clone map",
+         "cells": [
+          "A→A'",
+          "·",
+          "·"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "clone map[1] = B→B'",
+       "codeLines": [
+        6
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "clone map",
+         "cells": [
+          "A→A'",
+          "B→B'",
+          "·"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "clone map[2] = C→C'. Create A', B', C' with no pointers yet; remember A→A', B→B', C→C'.",
+       "codeLines": [
+        6
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "clone map",
+         "cells": [
+          "A→A'",
+          "B→B'",
+          "C→C'"
+         ],
+         "hot": [
+          2
+         ],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Pass 2",
+     "description": "Set A'.next = clone[A.next] = B' and A'.random = clone[A.random] = C'. Same for the others.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "copy next",
+       "cells": [
+        "A'",
+        "B'",
+        "C'"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "copy random",
+       "cells": [
+        "A'→C'",
+        "B'→A'",
+        "C'→B'"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ],
+     "sub": [
+      {
+       "description": "copy random[0] = A'→C'",
+       "codeLines": [
+        9
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "copy next",
+         "cells": [
+          "A'",
+          "B'",
+          "C'"
+         ],
+         "hot": [
+          0,
+          1,
+          2
+         ],
+         "marks": {},
+         "kind": "list"
+        },
+        {
+         "name": "copy random",
+         "cells": [
+          "A'→C'",
+          "·",
+          "·"
+         ],
+         "hot": [
+          0
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "copy random[1] = B'→A'",
+       "codeLines": [
+        9
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "copy next",
+         "cells": [
+          "A'",
+          "B'",
+          "C'"
+         ],
+         "hot": [
+          0,
+          1,
+          2
+         ],
+         "marks": {},
+         "kind": "list"
+        },
+        {
+         "name": "copy random",
+         "cells": [
+          "A'→C'",
+          "B'→A'",
+          "·"
+         ],
+         "hot": [
+          1
+         ],
+         "marks": {}
+        }
+       ]
+      },
+      {
+       "description": "copy random[2] = C'→B'. Set A'.next = clone[A.next] = B' and A'.random = clone[A.random] = C'. Same for the others.",
+       "codeLines": [
+        9
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "copy next",
+         "cells": [
+          "A'",
+          "B'",
+          "C'"
+         ],
+         "hot": [
+          0,
+          1,
+          2
+         ],
+         "marks": {},
+         "kind": "list"
+        },
+        {
+         "name": "copy random",
+         "cells": [
+          "A'→C'",
+          "B'→A'",
+          "C'→B'"
+         ],
+         "hot": [
+          2
+         ],
+         "marks": {}
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "clone[head] = A'.",
+     "codeLines": [
+      10
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "copy",
+       "cells": [
+        "A'",
+        "B'",
+        "C'"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Interleave copies in the list",
+   "tag": "Optimal space",
+   "code": "class Solution:\n    def copyRandomList(self, head):\n        if not head: return None\n        cur = head\n        while cur:\n            copy = Node(cur.val); copy.next = cur.next; cur.next = copy; cur = copy.next\n        cur = head\n        while cur:\n            if cur.random: cur.next.random = cur.random.next\n            cur = cur.next.next\n        dummy = Node(0); tail = dummy; cur = head\n        while cur:\n            tail.next = cur.next; tail = tail.next\n            cur.next = cur.next.next; cur = cur.next\n        return dummy.next",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Insert each copy right after its original, set random pointers, then unweave.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Recursion with a memo",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def copyRandomList(self, head):\n        memo = {None: None}\n        def go(n):\n            if n not in memo:\n                memo[n] = Node(n.val)\n                memo[n].next = go(n.next); memo[n].random = go(n.random)\n            return memo[n]\n        return go(head)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Create each copy once and recurse into next and random.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

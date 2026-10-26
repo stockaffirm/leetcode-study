@@ -147,7 +147,7 @@ class Solution:
         return total / len(customers)
 `)});
 lite({id:3313,slug:"find-the-last-marked-nodes-in-tree",title:"Find the Last Marked Nodes in Tree",level:"Hard",topic:GR,name:"Farthest node is a diameter endpoint",
-w:"Path 0-1-2-3: starting at 0 the last marked node is 3; starting at 2 it is 0.",k:"Marking spreads one edge per second, so the last node marked is the farthest node from the start. In a tree the farthest node from any vertex is one of the two endpoints of the diameter. Find the endpoints A and B with two BFS runs, then for every node answer A if it is at least as far from A as from B, otherwise B.",
+w:"Path 0-1-2-3: starting at 0 the last marked node is 3; starting at 2 it is 0.",k:"Marking spreads one edge per second, so the last node marked is the farthest node from the start. In a tree the farthest node from any vertex is one of the two endpoints of the diameter. Find the endpoints A and B with two BFS (Breadth-First Search) runs, then for every node answer A if it is at least as far from A as from B, otherwise B.",
 i:"edges = [[0,1],[1,2],[2,3]]",o:"[3, 3, 0, 0]",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:
@@ -280,7 +280,7 @@ class Solution:
                 return g[0]
 `)});
 lite({id:1219,slug:"path-with-maximum-gold",title:"Path with Maximum Gold",level:"Medium",topic:BTK,name:"DFS from every gold cell",
-w:"[[0,6,0],[5,8,7],[0,9,0]]: path 9 → 8 → 7 collects 24.",k:"Start a DFS from every cell with gold. Collect the gold, mark the cell as 0 so it is not reused, try the four neighbours that still have gold, then restore the cell (backtrack). The answer is the best total over all starts.",
+w:"[[0,6,0],[5,8,7],[0,9,0]]: path 9 → 8 → 7 collects 24.",k:"Start a DFS (Depth-First Search) from every cell with gold. Collect the gold, mark the cell as 0 so it is not reused, try the four neighbours that still have gold, then restore the cell (backtrack). The answer is the best total over all starts.",
 i:"grid = [[0,6,0],[5,8,7],[0,9,0]]",o:"24",time:"O(m·n·3^g)",space:"O(g)",
 code:C(`
 class Solution:

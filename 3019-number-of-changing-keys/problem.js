@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"3019","title":"Number of Changing Keys","level":"Easy","topic":"Array / String","question":"You type a string s. Using a different key from the last character you typed counts as a key change; capital and small versions of the same letter are the same key (so 'a' then 'A' is NOT a change). Return the number of key changes. Example: 'aAbBcC' → a→b and b→c are changes → 2.","why":"Typing a string: a 'key change' happens when the next key is a different letter (capital and small letters are the same key). Count the changes.","idea":"Lowercase every letter and count neighbouring pairs that differ.","input":"\"aAbBcC\"","output":"2","notes":[],"best":"Lowercase every letter and count neighbouring pairs that differ.","variants":[{"name":"Compare neighbours ignoring case","code":"class Solution:\n    def countKeyChanges(self, s):\n        changes = 0\n        for i in range(1, len(s)):\n            if s[i].lower() != s[i - 1].lower(): changes += 1\n        return changes","time":"O(n)","space":"O(1)","explain":"Lowercase every letter and count neighbouring pairs that differ.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aAbBcC"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":0,"i":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":0,"i":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":1,"i":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":1,"i":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":1,"i":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":1,"i":4}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":2,"i":4}},{"l":5,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":2,"i":5}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":2,"i":5}},{"l":6,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":2,"i":5}},{"l":6,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"changes":2,"i":5},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":3}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":4}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":4}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":5}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":5}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":6}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":6}},{"l":5,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":7}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":7}},{"l":6,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":7}},{"l":6,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"changes":0,"i":7},"ret":0}],"trunc":false}},{"name":"Pairs of lowercase letters","tag":"Pythonic","code":"class Solution:\n    def countKeyChanges(self, s):\n        t = s.lower()\n        return sum(1 for a, b in zip(t, t[1:]) if a != b)","time":"O(n)","space":"O(n)","explain":"Lowercase the string and count neighbouring pairs that differ.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aAbBcC"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"t":["s","aabbcc"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aAbBcC"],"t":["s","aabbcc"]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"t":["s","aaaaaaaa"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","AaAaAaaA"],"t":["s","aaaaaaaa"]},"ret":0}],"trunc":false}}],"ex2":{"input":"\"AaAaAaaA\"","output":"0","why":"Capital and small letters are the same key, so no key is ever changed."},"statement":"You are given a string `s` typed by a user. A change of key is using a key different from the last used key. For example, typing `\"ab\"` has a change of key, while `\"bBBb\"` does not, since the shift or caps lock is ignored: a lowercase letter and its uppercase version count as the same key. Return the number of times the user had to change the key.\n\nExample 1:\n\n```\nInput: s = \"aAbBcC\"\nOutput: 2\n```\n\nExample 2:\n\n```\nInput: s = \"AaAaAaaA\"\nOutput: 0\n```\n\nConstraints:\n\n* `1 <= s.length <= 100`\n* `s` consists only of upper and lower case English letters."};
+window.PROBLEM = {
+ "id": "3019",
+ "title": "Number of Changing Keys",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "You type a string s. Using a different key from the last character you typed counts as a key change; capital and small versions of the same letter are the same key (so 'a' then 'A' is NOT a change). Return the number of key changes. Example: 'aAbBcC' → a→b and b→c are changes → 2.",
+ "why": "Typing a string: a 'key change' happens when the next key is a different letter (capital and small letters are the same key). Count the changes.",
+ "idea": "Lowercase every letter and count neighbouring pairs that differ.",
+ "input": "\"aAbBcC\"",
+ "output": "2",
+ "notes": [],
+ "best": "Lowercase every letter and count neighbouring pairs that differ.",
+ "variants": [
+  {
+   "name": "Compare neighbours ignoring case",
+   "code": "class Solution:\n    def countKeyChanges(self, s):\n        changes = 0\n        for i in range(1, len(s)):\n            if s[i].lower() != s[i - 1].lower(): changes += 1\n        return changes",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Lowercase every letter and count neighbouring pairs that differ.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Pairs of lowercase letters",
+   "tag": "Pythonic",
+   "code": "class Solution:\n    def countKeyChanges(self, s):\n        t = s.lower()\n        return sum(1 for a, b in zip(t, t[1:]) if a != b)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Lowercase the string and count neighbouring pairs that differ.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

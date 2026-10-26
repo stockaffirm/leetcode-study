@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2551","title":"Put Marbles in Bags","level":"Hard","topic":"Sorting","question":"weights[i] is the weight of marble i. Split the row into k non-empty bags of consecutive marbles; the cost of a bag is the weight of its first marble plus the weight of its last. The score is the total cost of all bags. Return the difference between the maximum and the minimum possible score. Example: [1,3,5,1], k=2 → 4.","why":"Split a row of marbles into k bags of consecutive marbles; a bag costs (first weight + last weight). Return the difference between the maximum and minimum total cost.","idea":"Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.","input":"weights [1,3,5,1], k=2","output":"4","notes":[],"best":"Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.","variants":[{"name":"Sum of the best and worst cut pairs","code":"class Solution:\n    def putMarbles(self, weights, k):\n        pairs = sorted(a + b for a, b in zip(weights, weights[1:]))\n        return sum(pairs[len(pairs) - (k - 1):]) - sum(pairs[:k - 1])","time":"O(n log n)","space":"O(n)","explain":"Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2,"pairs":["l",[4,6,8],0]}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2,"pairs":["l",[4,6,8],0]},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2,"pairs":["l",[4],0]}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2,"pairs":["l",[4],0]},"ret":0}],"trunc":false}},{"name":"Heap helpers","tag":"Alternative","code":"class Solution:\n    def putMarbles(self, weights, k):\n        pairs = [a + b for a, b in zip(weights, weights[1:])]\n        return sum(nlargest(k - 1, pairs)) - sum(nsmallest(k - 1, pairs))","time":"O(n log k)","space":"O(n)","explain":"nlargest and nsmallest of the pair sums.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2,"pairs":["l",[4,8,6],0]}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3,5,1],0],"k":2,"pairs":["l",[4,8,6],0]},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2,"pairs":["l",[4],0]}},{"l":4,"d":1,"f":1,"v":{"weights":["l",[1,3],0],"k":2,"pairs":["l",[4],0]},"ret":0}],"trunc":false}}],"ex2":{"input":"two marbles","output":"0","why":"Only one way to split: difference 0."},"statement":"You have `k` bags and a row of marbles with weights `weights`. The marbles must be split into the bags so that:\n\n* no bag is empty,\n* each bag holds a contiguous segment of the row (if marbles `i` and `j` are in the same bag, all marbles between them are too),\n* the cost of a bag holding marbles `i` through `j` is `weights[i] + weights[j]`.\n\nThe score of a distribution is the sum of the costs of all `k` bags. Return the difference between the maximum possible score and the minimum possible score.\n\nExample 1:\n\n```\nInput: weights = [1,3,5,1], k = 2\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: weights = [1,3], k = 2\nOutput: 0\n```\n\nConstraints:\n\n* `1 <= k <= weights.length <= 10^5`\n* `1 <= weights[i] <= 10^9`"};
+window.PROBLEM = {
+ "id": "2551",
+ "title": "Put Marbles in Bags",
+ "level": "Hard",
+ "topic": "Sorting",
+ "question": "weights[i] is the weight of marble i. Split the row into k non-empty bags of consecutive marbles; the cost of a bag is the weight of its first marble plus the weight of its last. The score is the total cost of all bags. Return the difference between the maximum and the minimum possible score. Example: [1,3,5,1], k=2 → 4.",
+ "why": "Split a row of marbles into k bags of consecutive marbles; a bag costs (first weight + last weight). Return the difference between the maximum and minimum total cost.",
+ "idea": "Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.",
+ "input": "weights [1,3,5,1], k=2",
+ "output": "4",
+ "notes": [],
+ "best": "Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.",
+ "variants": [
+  {
+   "name": "Sum of the best and worst cut pairs",
+   "code": "class Solution:\n    def putMarbles(self, weights, k):\n        pairs = sorted(a + b for a, b in zip(weights, weights[1:]))\n        return sum(pairs[len(pairs) - (k - 1):]) - sum(pairs[:k - 1])",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Each cut between positions i and i+1 adds weights[i] + weights[i+1]. Choosing which k−1 cuts to make: max total = sum of the k−1 largest pair sums, min = sum of the k−1 smallest; the difference is what we want.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Heap helpers",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def putMarbles(self, weights, k):\n        pairs = [a + b for a, b in zip(weights, weights[1:])]\n        return sum(nlargest(k - 1, pairs)) - sum(nsmallest(k - 1, pairs))",
+   "time": "O(n log k)",
+   "space": "O(n)",
+   "explain": "nlargest and nsmallest of the pair sums.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

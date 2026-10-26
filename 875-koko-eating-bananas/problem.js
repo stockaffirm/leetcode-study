@@ -1,1 +1,258 @@
-window.PROBLEM = {"id":"875","title":"Koko Eating Bananas","level":"Medium","topic":"Binary Search","question":"There are piles of bananas, piles[i] bananas in pile i, and h hours before the guards return. Koko picks a speed k (bananas per hour). Each hour she chooses one pile and eats up to k bananas from it (if the pile has fewer than k, she finishes it and wastes the rest of the hour). Return the smallest integer k that lets her eat all bananas within h hours. Example: piles=[3,6,7,11], h=8 → k=4 takes 1+2+2+3 = 8 hours.","input":"piles=[3,6,7,11], h=8","output":"4","notes":["hours(k) = Σ ceil(pile / k).","Feasibility is monotonic in k."],"best":"Binary search on the answer: faster speed always works if a slower one does.","variants":[{"name":"Binary search on speed","code":"class Solution:\n    def minEatingSpeed(self, piles, h):\n        lo, hi = 1, max(piles)\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if sum(ceil(p / mid) for p in piles) <= h: hi = mid\n            else: lo = mid + 1\n        return lo","time":"O(n log max)","space":"O(1)","explain":"Binary search the answer (speed), not an index.","frames":[{"title":"Speeds","description":"Speed is between 1 and the biggest pile (11).","codeLines":[3],"facts":{},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[],"marks":{"0":"lo","10":"hi"}}]},{"title":"mid = 6","description":"Hours needed = 6 ≤ 8 → try slower","codeLines":[5,6],"facts":{"hours":6},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[5],"marks":{"0":"lo","5":"mid","10":"hi"}}]},{"title":"mid = 3","description":"Hours needed = 10 > 8 → need faster","codeLines":[5,7],"facts":{"hours":10},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[2],"marks":{"0":"lo","2":"mid","5":"hi"}}]},{"title":"mid = 5","description":"Hours needed = 8 ≤ 8 → try slower","codeLines":[5,6],"facts":{"hours":8},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[4],"marks":{"3":"lo","4":"mid","5":"hi"}}]},{"title":"mid = 4","description":"Hours needed = 8 ≤ 8 → try slower","codeLines":[5,6],"facts":{"hours":8},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[3],"marks":{"3":"lo,mid","4":"hi"}}]},{"title":"Return","description":"Minimum speed = 4.","codeLines":[8],"facts":{},"rows":[{"name":"speed","cells":["1","2","3","4","5","6","7","8","9","10","11"],"hot":[3],"marks":{"3":"answer"}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11,"mid":6}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":6,"mid":6}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":6,"mid":6}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":6,"mid":3}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":6,"mid":5}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"mid":5}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"mid":5}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"mid":4}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":4,"mid":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"mid":15}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"mid":15}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"mid":15}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"mid":15}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"mid":23}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"mid":23}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"mid":23}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"mid":23}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"mid":27}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"mid":27}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"mid":27}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"mid":27}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"mid":29}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"mid":29}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"mid":29}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"mid":29}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"mid":29},"ret":30}],"trunc":false}},{"name":"Try every speed","tag":"Brute force","code":"class Solution:\n    def minEatingSpeed(self, piles, h):\n        for k in range(1, max(piles) + 1):\n            if sum((p + k - 1) // k for p in piles) <= h: return k","time":"O(n·max)","space":"O(1)","explain":"Check speeds 1, 2, 3 … until she finishes in time.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":1}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":1}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":2}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":2}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":3}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":3}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":4}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"k":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":1}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":1}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":2}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":2}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":3}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":3}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":4}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":4}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":5}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":5}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":6}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":6}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":7}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":7}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":8}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":8}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":9}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":9}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":10}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":10}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":11}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":11}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":12}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":12}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":13}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":13}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":14}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":14}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":15}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":15}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":16}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":16}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":17}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":17}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":18}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":18}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":19}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":19}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":20}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":20}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":21}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":21}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":22}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":22}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":23}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":23}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":24}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":24}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":25}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":25}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":26}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":26}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":27}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":27}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":28}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":28}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":29}},{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":29}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":30}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"k":30},"ret":30}],"trunc":false}},{"name":"Binary search (lo ≤ hi)","tag":"Alternative","code":"class Solution:\n    def minEatingSpeed(self, piles, h):\n        lo, hi, ans = 1, max(piles), max(piles)\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if sum((p + mid - 1) // mid for p in piles) <= h: ans = mid; hi = mid - 1\n            else: lo = mid + 1\n        return ans","time":"O(n log max)","space":"O(1)","explain":"Same idea with the inclusive-bounds template.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11,"ans":11}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11,"ans":11}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":11,"ans":11,"mid":6}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":5,"ans":6,"mid":6}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":5,"ans":6,"mid":6}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":5,"ans":6,"mid":3}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":1,"hi":5,"ans":6,"mid":3}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"ans":6,"mid":3}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"ans":6,"mid":3}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":5,"ans":6,"mid":4}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":3,"ans":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":3,"ans":4,"mid":4}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[3,6,7,11],0],"h":8,"lo":4,"hi":3,"ans":4,"mid":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"ans":30}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"ans":30}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"ans":30,"mid":15}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":1,"hi":30,"ans":30,"mid":15}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"ans":30,"mid":15}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"ans":30,"mid":15}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"ans":30,"mid":23}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":16,"hi":30,"ans":30,"mid":23}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"ans":30,"mid":23}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"ans":30,"mid":23}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"ans":30,"mid":27}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":24,"hi":30,"ans":30,"mid":27}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"ans":30,"mid":27}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"ans":30,"mid":27}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"ans":30,"mid":29}},{"l":7,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":28,"hi":30,"ans":30,"mid":29}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"ans":30,"mid":29}},{"l":5,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"ans":30,"mid":29}},{"l":6,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":30,"ans":30,"mid":30}},{"l":4,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":29,"ans":30,"mid":30}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":29,"ans":30,"mid":30}},{"l":8,"d":1,"f":1,"v":{"piles":["l",[30,11,23,4,20],0],"h":5,"lo":30,"hi":29,"ans":30,"mid":30},"ret":30}],"trunc":false}}],"why":"k = 4 needs 1+2+2+3 = 8 hours (allowed). k = 3 needs 10 hours (too slow) → 4.","idea":"Binary search on the speed.","understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`lo, hi = 1, max(piles)`","Speeds from 1 up to the biggest pile (more than that never helps: one pile per hour)","Bounds of the answer"],["`ceil(p / mid)`","Hours to finish a pile of `p` at speed `mid` (partial hours round up, since Koko can't switch piles mid-hour)","Ceiling division"],["`sum(...) <= h`","Feasible: all piles finish within `h` hours","The monotone check"],["`hi = mid`","`mid` works; the minimum speed is `mid` or smaller","Keep `mid`"],["`lo = mid + 1`","Too slow: need a faster speed","Discard `mid`"]]}},{"h":"Walk through an example","p":["`piles = [3,6,7,11]`, `h = 8`:"],"table":{"head":["Range [lo, hi]","Speed mid","Hours per pile","Decision"],"rows":[["[1, 11]","6","1 + 1 + 2 + 2 = 6","≤ h → hi = mid"],["[1, 6]","3","1 + 2 + 3 + 4 = 10","> h → lo = mid + 1"],["[4, 6]","5","1 + 2 + 2 + 3 = 8","≤ h → hi = mid"],["[4, 5]","4","1 + 2 + 2 + 3 = 8","≤ h → hi = mid"]]}},{"h":"Why binary search on the speed?","p":["If a speed `s` finishes in time, any faster speed does too, so feasibility is monotone: False…False True…True. Binary search finds the smallest True using O(log max) feasibility checks, each O(n)."],"table":{"head":["Approach","Time"],"rows":[["Try every speed 1..max","O(n · max)"],["Binary search on speed (this code)","O(n log max)"]]}},{"h":"A float pitfall","p":["`ceil(p / mid)` uses floating division; for huge piles integer arithmetic `(p + mid - 1) // mid` is safer because it avoids rounding error."]},{"h":"Time and space","bullets":["Time: O(n log max(piles)).","Space: O(1)."]}],"takeaway":"Koko bananas: binary search the eating speed with a monotone 'finishes in h hours?' check."},"ex2":{"input":"[30,11,23,4,20],5","output":"30","why":"With h equal to the number of piles she must finish a whole pile each hour."},"statement":"There are piles of bananas, `piles[i]` in pile `i`, and the guards return in `h` hours. Koko picks an eating speed `k` bananas per hour. Each hour she picks one pile and eats up to `k` bananas from it; if the pile has fewer than `k`, she eats them all and does nothing else that hour. Return the smallest integer `k` with which she can finish all the bananas within `h` hours.\n\nExample 1:\n\n```\nInput: piles = [3,6,7,11], h = 8\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: piles = [30,11,23,4,20], h = 6\nOutput: 23\n```\n\nConstraints:\n\n* `1 <= piles.length <= 10^4`\n* `piles.length <= h <= 10^9`\n* `1 <= piles[i] <= 10^9`"};
+window.PROBLEM = {
+ "id": "875",
+ "title": "Koko Eating Bananas",
+ "level": "Medium",
+ "topic": "Binary Search",
+ "question": "There are piles of bananas, piles[i] bananas in pile i, and h hours before the guards return. Koko picks a speed k (bananas per hour). Each hour she chooses one pile and eats up to k bananas from it (if the pile has fewer than k, she finishes it and wastes the rest of the hour). Return the smallest integer k that lets her eat all bananas within h hours. Example: piles=[3,6,7,11], h=8 → k=4 takes 1+2+2+3 = 8 hours.",
+ "input": "piles=[3,6,7,11], h=8",
+ "output": "4",
+ "notes": [
+  "hours(k) = Σ ceil(pile / k).",
+  "Feasibility is monotonic in k."
+ ],
+ "best": "Binary search on the answer: faster speed always works if a slower one does.",
+ "variants": [
+  {
+   "name": "Binary search on speed",
+   "code": "class Solution:\n    def minEatingSpeed(self, piles, h):\n        lo, hi = 1, max(piles)\n        while lo < hi:\n            mid = (lo + hi) // 2\n            if sum(ceil(p / mid) for p in piles) <= h: hi = mid\n            else: lo = mid + 1\n        return lo",
+   "time": "O(n log max)",
+   "space": "O(1)",
+   "explain": "Binary search the answer (speed), not an index.",
+   "frames": [
+    {
+     "title": "Speeds",
+     "description": "Speed is between 1 and the biggest pile (11).",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "lo",
+        "10": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 6",
+     "description": "Hours needed = 6 ≤ 8 → try slower",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "hours": 6
+     },
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [
+        5
+       ],
+       "marks": {
+        "0": "lo",
+        "5": "mid",
+        "10": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 3",
+     "description": "Hours needed = 10 > 8 → need faster",
+     "codeLines": [
+      5,
+      7
+     ],
+     "facts": {
+      "hours": 10
+     },
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "0": "lo",
+        "2": "mid",
+        "5": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 5",
+     "description": "Hours needed = 8 ≤ 8 → try slower",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "hours": 8
+     },
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {
+        "3": "lo",
+        "4": "mid",
+        "5": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 4",
+     "description": "Hours needed = 8 ≤ 8 → try slower",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "hours": 8
+     },
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "lo,mid",
+        "4": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "Minimum speed = 4.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "speed",
+       "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "answer"
+       }
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Try every speed",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def minEatingSpeed(self, piles, h):\n        for k in range(1, max(piles) + 1):\n            if sum((p + k - 1) // k for p in piles) <= h: return k",
+   "time": "O(n·max)",
+   "space": "O(1)",
+   "explain": "Check speeds 1, 2, 3 … until she finishes in time.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Binary search (lo ≤ hi)",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def minEatingSpeed(self, piles, h):\n        lo, hi, ans = 1, max(piles), max(piles)\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if sum((p + mid - 1) // mid for p in piles) <= h: ans = mid; hi = mid - 1\n            else: lo = mid + 1\n        return ans",
+   "time": "O(n log max)",
+   "space": "O(1)",
+   "explain": "Same idea with the inclusive-bounds template.",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "k = 4 needs 1+2+2+3 = 8 hours (allowed). k = 3 needs 10 hours (too slow) → 4.",
+ "idea": "Binary search on the speed."
+};

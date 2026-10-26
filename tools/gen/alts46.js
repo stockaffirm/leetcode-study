@@ -92,7 +92,7 @@ class Solution:
             return best
         return go(tuple(sorted(nums)))
 `)});
-alt(3015,{name:"BFS from every house",tag:"Alternative",time:"O(n²)",space:"O(n)",explain:"Run a BFS on the graph (line plus shortcut) from each house and count the distances.",code:C(`
+alt(3015,{name:"BFS from every house",tag:"Alternative",time:"O(n²)",space:"O(n)",explain:"Run a BFS (Breadth-First Search) on the graph (line plus shortcut) from each house and count the distances.",code:C(`
 class Solution:
     def countOfPairs(self, n, x, y):
         g = [[] for _ in range(n + 1)]

@@ -169,7 +169,7 @@ class Solution:
         return len(heap)
 `)});
 lite({id:2429,slug:"minimize-xor",title:"Minimize XOR",level:"Medium",topic:MB,name:"Copy num1's high bits, fill low bits",
-w:"num1=1 (0001), num2=12 (1100 has two 1s): x needs two set bits; 0011 = 3 gives XOR 2, the smallest.",k:"x must have as many set bits as num2. To make x XOR num1 small, match the highest set bits of num1 first; if bits are left over, set the lowest unset bits of x.",
+w:"num1=1 (0001), num2=12 (1100 has two 1s): x needs two set bits; 0011 = 3 gives XOR (exclusive OR) 2, the smallest.",k:"x must have as many set bits as num2. To make x XOR num1 small, match the highest set bits of num1 first; if bits are left over, set the lowest unset bits of x.",
 i:"num1 = 1, num2 = 12",o:"3",time:"O(log n)",space:"O(1)",
 code:C(`
 class Solution:
@@ -414,7 +414,7 @@ class Solution:
         return floor
 `)});
 lite({id:993,slug:"cousins-in-binary-tree",title:"Cousins in Binary Tree",level:"Easy",topic:BT,name:"Same depth, different parent",
-w:"[1,2,3,4]: 4's parent is 2, 3's parent is 1 and both are not at the same depth → false.",k:"Cousins have the same depth but different parents. Walk the tree (BFS or DFS) recording depth and parent of x and y, then compare.",
+w:"[1,2,3,4]: 4's parent is 2, 3's parent is 1 and both are not at the same depth → false.",k:"Cousins have the same depth but different parents. Walk the tree (BFS (Breadth-First Search) or DFS (Depth-First Search)) recording depth and parent of x and y, then compare.",
 i:"root = [1,2,3,4], x = 4, y = 3",o:"false",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:

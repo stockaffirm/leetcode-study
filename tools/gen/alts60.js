@@ -55,7 +55,7 @@ class Solution:
             return min(cost(i - 1, False), cost(i - 1, True)) + regular[i]
         return [min(cost(i, True), cost(i, False)) for i in range(n)]
 `)});
-alt(3186,{name:"Sorted values with a pointer",tag:"Alternative",time:"O(n log n)",space:"O(n)",explain:"Same DP with a moving pointer instead of bisect.",code:C(`
+alt(3186,{name:"Sorted values with a pointer",tag:"Alternative",time:"O(n log n)",space:"O(n)",explain:"Same DP (Dynamic Programming) with a moving pointer instead of bisect.",code:C(`
 class Solution:
     def maximumTotalDamage(self, power):
         cnt = Counter(power)

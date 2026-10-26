@@ -126,7 +126,7 @@ class Solution:
         return go(1, 0)
 `)});
 lite({id:3552,slug:"grid-teleportation-traversal",title:"Grid Teleportation Traversal",level:"Medium",topic:GR,name:"0-1 BFS: portals cost nothing, once per letter",
-w:"['A..','.A.','...']: step onto an A, jump free to the other A and walk the rest → 2 moves.",k:"Moves cost 1 and teleports cost 0, so use a 0-1 BFS with a deque. The first time any cell of letter c is reached, that is the cheapest moment to use portal c: push all other cells of c at the same distance to the front of the queue and mark c as used. Walk the four directions otherwise.",
+w:"['A..','.A.','...']: step onto an A, jump free to the other A and walk the rest → 2 moves.",k:"Moves cost 1 and teleports cost 0, so use a 0-1 BFS (Breadth-First Search) with a deque. The first time any cell of letter c is reached, that is the cheapest moment to use portal c: push all other cells of c at the same distance to the front of the queue and mark c as used. Walk the four directions otherwise.",
 i:"matrix = [\"A..\",\".A.\",\"...\"]",o:"2",time:"O(m·n)",space:"O(m·n)",
 code:C(`
 class Solution:
@@ -193,7 +193,7 @@ class Solution:
         return res
 `)});
 lite({id:3651,slug:"minimum-cost-path-with-teleportations",title:"Minimum Cost Path with Teleportations",level:"Hard",topic:DP,name:"Layered DP with a suffix minimum by value",
-w:"[[1,3,3],[2,5,4],[4,3,5]], k=2: walk down, right (cost 7), then teleport to the bottom-right (value 5 ≤ 5) → 7.",k:"Layer t = best cost to reach each cell using at most t teleports. Layer 0 is the usual right/down DP (cost = destination value). For the next layer, a cell can be entered for free from any cell with a value ≥ its own, so keep the cheapest previous-layer cost among cells with value ≥ v (a suffix minimum over values), then rerun the right/down DP seeded with those teleport costs.",
+w:"[[1,3,3],[2,5,4],[4,3,5]], k=2: walk down, right (cost 7), then teleport to the bottom-right (value 5 ≤ 5) → 7.",k:"Layer t = best cost to reach each cell using at most t teleports. Layer 0 is the usual right/down DP (cost = destination value). For the next layer, a cell can be entered for free from any cell with a value ≥ its own, so keep the cheapest previous-layer cost among cells with value ≥ v (a suffix minimum over values), then rerun the right/down DP (Dynamic Programming) seeded with those teleport costs.",
 i:"grid = [[1,3,3],[2,5,4],[4,3,5]], k = 2",o:"7",time:"O(k·m·n)",space:"O(m·n)",
 code:C(`
 class Solution:
@@ -291,7 +291,7 @@ class Solution:
         return True
 `)});
 lite({id:928,slug:"minimize-malware-spread-ii",title:"Minimize Malware Spread II",level:"Hard",topic:GR,name:"Remove each infected node, count the spread",
-w:"graph [[1,1,0],[1,1,0],[0,0,1]], initial [0,1]: removing node 0 leaves 1 infected; removing 1 leaves 1 → pick the smaller index 0.",k:"Removing a node deletes it and its edges. For each node in initial, delete it, spread the infection from the other initial nodes through the remaining graph with BFS and count infected nodes. Choose the removal with the fewest infected nodes (smallest index on ties). n ≤ 300 keeps this fast enough.",
+w:"graph [[1,1,0],[1,1,0],[0,0,1]], initial [0,1]: removing node 0 leaves 1 infected; removing 1 leaves 1 → pick the smaller index 0.",k:"Removing a node deletes it and its edges. For each node in initial, delete it, spread the infection from the other initial nodes through the remaining graph with BFS (Breadth-First Search) and count infected nodes. Choose the removal with the fewest infected nodes (smallest index on ties). n ≤ 300 keeps this fast enough.",
 i:"graph = [[1,1,0],[1,1,0],[0,0,1]], initial = [0,1]",o:"0",time:"O(k·n²)",space:"O(n)",
 code:C(`
 class Solution:
@@ -412,7 +412,7 @@ class Solution:
         return flips
 `)});
 lite({id:2583,slug:"kth-largest-sum-in-a-binary-tree",title:"Kth Largest Sum in a Binary Tree",level:"Medium",topic:BT,name:"Level sums, then sort",
-w:"[5,8,9,2,1,3,7,4,6] has level sums 5, 17, 13, 10; the 2nd largest is 13.",k:"Do a BFS and compute the sum of each level. If there are fewer than k levels return −1, otherwise sort the sums in descending order and take the k-th.",
+w:"[5,8,9,2,1,3,7,4,6] has level sums 5, 17, 13, 10; the 2nd largest is 13.",k:"Do a BFS (Breadth-First Search) and compute the sum of each level. If there are fewer than k levels return −1, otherwise sort the sums in descending order and take the k-th.",
 i:"root = [5,8,9,2,1,3,7,4,6], k = 2",o:"13",time:"O(n + h log h)",space:"O(n)",
 code:C(`
 class Solution:

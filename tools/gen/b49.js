@@ -430,7 +430,7 @@ class Solution:
         return dummy.next
 `)});
 lite({id:1312,slug:"minimum-insertion-steps-to-make-a-string-palindrome",title:"Minimum Insertion Steps to Make a String Palindrome",level:"Hard",topic:DP,name:"Length minus the longest palindromic subsequence",
-w:"'mbadm' → keep 'mam' (3) and insert the 2 others → 2 insertions.",k:"Characters of a longest palindromic subsequence already pair up; every other character needs a partner inserted. So the answer is n − LPS, and LPS is the longest common subsequence of s and its reverse.",
+w:"'mbadm' → keep 'mam' (3) and insert the 2 others → 2 insertions.",k:"Characters of a longest palindromic subsequence already pair up; every other character needs a partner inserted. So the answer is n − LPS (Longest Palindromic Subsequence), and LPS is the longest common subsequence of s and its reverse.",
 i:"s = \"mbadm\"",o:"2",time:"O(n²)",space:"O(n)",
 code:C(`
 class Solution:
@@ -540,7 +540,7 @@ class Solution:
         return l if mountain_arr.get(l) == target else -1
 `)});
 lite({id:260,slug:"single-number-iii",title:"Single Number III",level:"Medium",topic:MB,name:"XOR, then split by one differing bit",
-w:"[1,2,1,3,2,5]: pairs cancel, leaving 3 XOR 5 = 6; the lowest set bit separates them → [3,5].",k:"XOR of all numbers cancels the pairs and leaves a XOR b of the two singles. Any set bit of that value differs between a and b. Use the lowest set bit to split all numbers into two groups; XOR each group to get a and b.",
+w:"[1,2,1,3,2,5]: pairs cancel, leaving 3 XOR (exclusive OR) 5 = 6; the lowest set bit separates them → [3,5].",k:"XOR of all numbers cancels the pairs and leaves a XOR b of the two singles. Any set bit of that value differs between a and b. Use the lowest set bit to split all numbers into two groups; XOR each group to get a and b.",
 i:"nums = [1,2,1,3,2,5]",o:"[3, 5]",time:"O(n)",space:"O(1)",
 code:C(`
 class Solution:
@@ -556,7 +556,7 @@ class Solution:
         return [a, x ^ a]
 `)});
 lite({id:107,slug:"binary-tree-level-order-traversal-ii",title:"Binary Tree Level Order Traversal II",level:"Medium",topic:BT,name:"BFS levels, reversed",
-w:"[3,9,20,null,null,15,7] → levels [3],[9,20],[15,7] listed bottom-up: [[15,7],[9,20],[3]].",k:"Do an ordinary level-order BFS and reverse the list of levels at the end.",
+w:"[3,9,20,null,null,15,7] → levels [3],[9,20],[15,7] listed bottom-up: [[15,7],[9,20],[3]].",k:"Do an ordinary level-order BFS (Breadth-First Search) and reverse the list of levels at the end.",
 i:"root = [3,9,20,null,null,15,7]",o:"[[15, 7], [9, 20], [3]]",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:

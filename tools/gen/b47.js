@@ -4,7 +4,7 @@ const ARR="Array / String",HM="Hash Map / Set",STK="Stack / Monotonic Stack",BT=
 // ---- Salesforce (1/3)
 // ---- Salesforce (3/3)
 lite({id:1245,slug:"tree-diameter",title:"Tree Diameter",level:"Medium",topic:GR,name:"Two BFS runs find the longest path",
-w:"Star with centre 0 and leaves 1, 2: the longest path 1-0-2 has 2 edges.",k:"BFS from any node reaches the farthest node A; that A is one end of a longest path. BFS from A: the largest distance found is the diameter.",
+w:"Star with centre 0 and leaves 1, 2: the longest path 1-0-2 has 2 edges.",k:"BFS (Breadth-First Search) from any node reaches the farthest node A; that A is one end of a longest path. BFS from A: the largest distance found is the diameter.",
 i:"edges = [[0,1],[0,2]]",o:"2",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:
@@ -315,7 +315,7 @@ class Solution:
         return max(a, b)
 `)});
 lite({id:2204,slug:"distance-to-a-cycle-in-undirected-graph",title:"Distance to a Cycle in Undirected Graph",level:"Hard",topic:GR,name:"Peel leaves to find the cycle, then BFS",
-w:"Cycle 1-2-4-3 with branches 0 (off 1) and 5-6 (off 2): distances [1,0,0,0,0,1,2].",k:"The graph is connected with exactly one cycle. Repeatedly remove nodes of degree 1 (like topological sort); the nodes that never get removed are the cycle. Then run a multi-source BFS from all cycle nodes to get every node's distance.",
+w:"Cycle 1-2-4-3 with branches 0 (off 1) and 5-6 (off 2): distances [1,0,0,0,0,1,2].",k:"The graph is connected with exactly one cycle. Repeatedly remove nodes of degree 1 (like topological sort); the nodes that never get removed are the cycle. Then run a multi-source BFS (Breadth-First Search) from all cycle nodes to get every node's distance.",
 i:"n = 7, edges = [[1,2],[2,4],[4,3],[3,1],[0,1],[5,2],[6,5]]",o:"[1, 0, 0, 0, 0, 1, 2]",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:

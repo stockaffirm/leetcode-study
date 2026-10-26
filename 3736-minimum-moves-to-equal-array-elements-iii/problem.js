@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"3736","title":"Minimum Moves to Equal Array Elements III","level":"Easy","topic":"Math / Bit Manipulation","question":"In one move you add 1 to any single element. Return the minimum number of moves to make all elements equal. Example: [2,1,3] → 3.","why":"[2,1,3] → raise 2 by 1 and 1 by 2 → 3 moves.","idea":"Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.","input":"nums = [2,1,3]","output":"3","notes":[],"best":"Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.","variants":[{"name":"Raise everything to the maximum","code":"class Solution:\n    def minMoves(self, nums):\n        return max(nums) * len(nums) - sum(nums)","time":"O(n)","space":"O(1)","explain":"Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,3],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,3],0]},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,2,1],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,2,1],0]},"ret":6}],"trunc":false}},{"name":"Add up the gaps","tag":"Alternative","code":"class Solution:\n    def minMoves(self, nums):\n        m = max(nums)\n        return sum(m - x for x in nums)","time":"O(n)","space":"O(1)","explain":"Sum max − x for every element.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,1,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,1,3],0],"m":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,1,3],0],"m":3},"ret":3}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[4,3,2,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,3,2,1],0],"m":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[4,3,2,1],0],"m":4},"ret":6}],"trunc":false}}],"ex2":{"input":"decreasing","output":"6","why":"6 moves."},"statement":"You are given an integer array `nums`. In one move you can increase any single element by `1`. Return the minimum number of moves required to make all elements of `nums` equal.\n\nExample 1:\n\n```\nInput: nums = [2,1,3]\nOutput: 3\n```\n\nExample 2:\n\n```\nInput: nums = [4,4,5]\nOutput: 2\n```\n\nConstraints:\n\n* `1 <= nums.length <= 100`\n* `1 <= nums[i] <= 100`"};
+window.PROBLEM = {
+ "id": "3736",
+ "title": "Minimum Moves to Equal Array Elements III",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "In one move you add 1 to any single element. Return the minimum number of moves to make all elements equal. Example: [2,1,3] → 3.",
+ "why": "[2,1,3] → raise 2 by 1 and 1 by 2 → 3 moves.",
+ "idea": "Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.",
+ "input": "nums = [2,1,3]",
+ "output": "3",
+ "notes": [],
+ "best": "Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.",
+ "variants": [
+  {
+   "name": "Raise everything to the maximum",
+   "code": "class Solution:\n    def minMoves(self, nums):\n        return max(nums) * len(nums) - sum(nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Each move adds 1 to one element, so the common value is at least the maximum, and raising everything to the maximum is optimal. Moves = n × max − sum.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Add up the gaps",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def minMoves(self, nums):\n        m = max(nums)\n        return sum(m - x for x in nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Sum max − x for every element.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

@@ -1,1 +1,44 @@
-window.PROBLEM = {"id":"268","title":"Missing Number","level":"Easy","topic":"Math / Bit Manipulation","question":"A list nums contains n different numbers taken from the range 0 to n (that is n+1 possible values), so exactly one value in the range is missing. Return the missing number. Example: [3,0,1] (n = 3, range 0 to 3) → 2 is missing → 2.","why":"The list holds 0..n with one number missing. [3,0,1] → 2 is missing.","idea":"XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.","input":"[3, 0, 1]","output":"2","notes":[],"best":"XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.","variants":[{"name":"XOR of indexes and values","code":"class Solution:\n    def missingNumber(self, nums):\n        x = len(nums)\n        for i, v in enumerate(nums):\n            x ^= i ^ v\n        return x","time":"O(n)","space":"O(1)","explain":"XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":3,"i":0,"v":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":0,"i":0,"v":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":0,"i":1,"v":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":1,"i":1,"v":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":1,"i":2,"v":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":2,"i":2,"v":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":2,"i":2,"v":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"x":2,"i":2,"v":1},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":0,"v":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":0,"v":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":1,"v":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":1,"v":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":1,"v":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"x":2,"i":1,"v":1},"ret":2}],"trunc":false}},{"name":"Sum formula","tag":"Alternative","code":"class Solution:\n    def missingNumber(self, nums):\n        n = len(nums)\n        return n * (n + 1) // 2 - sum(nums)","time":"O(n)","space":"O(1)","explain":"The numbers 0..n add up to n(n+1)/2; subtract what is in the list.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"n":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"n":3},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"n":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"n":2},"ret":2}],"trunc":false}},{"name":"Set difference","tag":"Alternative","code":"class Solution:\n    def missingNumber(self, nums):\n        s = set(nums)\n        for i in range(len(nums) + 1):\n            if i not in s: return i","time":"O(n)","space":"O(n)","explain":"Find the one value in range(n+1) that is not in the set.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,0,1],0],"s":["S",[0,1,3]],"i":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1],0],"s":["S",[0,1]],"i":2},"ret":2}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`x = len(nums)`","Start with n, the one index that has no matching slot","The range is 0..n but the array has indices 0..n−1"],["`enumerate(nums)`","Index and value together","Both sets of numbers are XORed in"],["`x ^= i ^ v`","Folds index and value into the running XOR","`a ^ a = 0`, and XOR order doesn't matter"]]}},{"h":"Walk through an example","p":["`nums = [3,0,1]`, `n = 3`:"],"table":{"head":["Step","x after","i ^ v"],"rows":[["start","3",""],["i=0, v=3","0","0 ^ 3 = 3"],["i=1, v=0","1","1 ^ 0 = 1"],["i=2, v=1","2","2 ^ 1 = 3"]]}},{"h":"Why does this leave the missing number?","p":["Across the whole run, `x` XORs every number in `0..n` (the indices `0..n-1` plus `n`) and every array value. Each number present in the array appears twice and cancels, so what is left is the one number in `0..n` that appears only once (as an index/`n`): the missing value, 2."]},{"h":"Alternatives","table":{"head":["Approach","Time","Space","Note"],"rows":[["Sum formula `n(n+1)/2 − sum(nums)`","O(n)","O(1)","Simple; other languages must watch for overflow"],["XOR (this code)","O(n)","O(1)","No overflow possible"],["Set / sort","O(n) / O(n log n)","O(n) / O(1)","More work than needed"]]}},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1)."]}],"takeaway":"XOR every index and value with n: matching pairs cancel and the missing number remains."},"ex2":{"input":"[0, 1]","output":"2","why":"Numbers 0 and 1 are present, so the missing one is n = 2, the top of the range."},"statement":"An array `nums` holds `n` distinct numbers chosen from the range `[0, n]`. Exactly one number of that range is absent. Return it.\n\nExample 1:\n\n```\nInput: nums = [1,0]\nOutput: 2\n```\n\nExample 2:\n\n```\nInput: nums = [0,2,3,1,5]\nOutput: 4\n```\n\nConstraints:\n\n* `n == nums.length`\n* `1 <= n <= 10^4`\n* `0 <= nums[i] <= n`\n* All numbers of `nums` are unique."};
+window.PROBLEM = {
+ "id": "268",
+ "title": "Missing Number",
+ "level": "Easy",
+ "topic": "Math / Bit Manipulation",
+ "question": "A list nums contains n different numbers taken from the range 0 to n (that is n+1 possible values), so exactly one value in the range is missing. Return the missing number. Example: [3,0,1] (n = 3, range 0 to 3) → 2 is missing → 2.",
+ "why": "The list holds 0..n with one number missing. [3,0,1] → 2 is missing.",
+ "idea": "XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.",
+ "input": "[3, 0, 1]",
+ "output": "2",
+ "notes": [],
+ "best": "XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.",
+ "variants": [
+  {
+   "name": "XOR of indexes and values",
+   "code": "class Solution:\n    def missingNumber(self, nums):\n        x = len(nums)\n        for i, v in enumerate(nums):\n            x ^= i ^ v\n        return x",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "XOR cancels equal pairs. XOR every index 0..n with every value; everything cancels except the missing number.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Sum formula",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def missingNumber(self, nums):\n        n = len(nums)\n        return n * (n + 1) // 2 - sum(nums)",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "The numbers 0..n add up to n(n+1)/2; subtract what is in the list.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Set difference",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def missingNumber(self, nums):\n        s = set(nums)\n        for i in range(len(nums) + 1):\n            if i not in s: return i",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Find the one value in range(n+1) that is not in the set.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"3173","title":"Bitwise OR of Adjacent Elements","level":"Easy","topic":"Array / String","question":"Return an array of length n−1 whose i-th value is nums[i] OR nums[i+1]. Example: [1,3,7,15] → [3,7,15].","why":"[1,3,7,15] → 1|3=3, 3|7=7, 7|15=15 → [3,7,15].","idea":"The answer has n−1 entries: entry i is nums[i] OR nums[i+1].","input":"nums = [1,3,7,15]","output":"[3, 7, 15]","notes":[],"best":"The answer has n−1 entries: entry i is nums[i] OR nums[i+1].","variants":[{"name":"OR each neighbour pair","code":"class Solution:\n    def orArray(self, nums):\n        return [a | b for a, b in zip(nums, nums[1:])]","time":"O(n)","space":"O(n)","explain":"The answer has n−1 entries: entry i is nums[i] OR nums[i+1].","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0]},"ret":["l",[3,7,15],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2],0]},"ret":["l",[2],0]}],"trunc":false}},{"name":"Index loop","tag":"Alternative","code":"class Solution:\n    def orArray(self, nums):\n        res = []\n        for i in range(len(nums) - 1):\n            res.append(nums[i] | nums[i + 1])\n        return res","time":"O(n)","space":"O(n)","explain":"Plain loop over i from 0 to n−2.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3],0],"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3,7],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3,7],0],"i":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3,7,15],0],"i":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3,7,15],0],"i":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,3,7,15],0],"res":["l",[3,7,15],0],"i":2},"ret":["l",[3,7,15],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2],0],"res":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2],0],"res":["l",[],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2],0],"res":["l",[2],0],"i":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2],0],"res":["l",[2],0],"i":0}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2],0],"res":["l",[2],0],"i":0},"ret":["l",[2],0]}],"trunc":false}}],"ex2":{"input":"two elements","output":"[2]","why":"One pair."},"statement":"Given an array `nums` of length `n`, return an array `answer` of length `n - 1` such that `answer[i] = nums[i] | nums[i + 1]`, where `|` is the bitwise OR operator.\n\nExample 1:\n\n```\nInput: nums = [1,3,7,15]\nOutput: [3,7,15]\n```\n\nExample 2:\n\n```\nInput: nums = [8,4,2]\nOutput: [12,6]\n```\n\nConstraints:\n\n* `2 <= nums.length <= 100`\n* `0 <= nums[i] <= 100`"};
+window.PROBLEM = {
+ "id": "3173",
+ "title": "Bitwise OR of Adjacent Elements",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Return an array of length n−1 whose i-th value is nums[i] OR nums[i+1]. Example: [1,3,7,15] → [3,7,15].",
+ "why": "[1,3,7,15] → 1|3=3, 3|7=7, 7|15=15 → [3,7,15].",
+ "idea": "The answer has n−1 entries: entry i is nums[i] OR nums[i+1].",
+ "input": "nums = [1,3,7,15]",
+ "output": "[3, 7, 15]",
+ "notes": [],
+ "best": "The answer has n−1 entries: entry i is nums[i] OR nums[i+1].",
+ "variants": [
+  {
+   "name": "OR each neighbour pair",
+   "code": "class Solution:\n    def orArray(self, nums):\n        return [a | b for a, b in zip(nums, nums[1:])]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "The answer has n−1 entries: entry i is nums[i] OR nums[i+1].",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Index loop",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def orArray(self, nums):\n        res = []\n        for i in range(len(nums) - 1):\n            res.append(nums[i] | nums[i + 1])\n        return res",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Plain loop over i from 0 to n−2.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

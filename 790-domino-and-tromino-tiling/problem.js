@@ -1,1 +1,160 @@
-window.PROBLEM = {"id":"790","title":"Domino and Tromino Tiling","level":"Medium","topic":"DP - 1D","question":"You have two tile shapes: a domino (a 2×1 tile, placeable flat or upright) and an L-shaped tromino (3 cells, any rotation). Given n, return the number of ways to tile a 2 × n board completely, with no gaps or overlaps. Two tilings differ if some pair of neighbouring cells is covered by one tile in one tiling and by different tiles in the other. Because the answer grows huge, return the REMAINDER after dividing it by 1,000,000,007. Example: n=3 → 5 ways; n=5 → 24 ways.","input":"n = 5","output":"24","notes":["Trominoes must come in interlocking pairs.","The recurrence comes from counting boundary shapes."],"best":"Recurrence dp[n] = 2·dp[n-1] + dp[n-3] (found from the tromino patterns).","variants":[{"name":"Recurrence 2·dp[n-1] + dp[n-3]","code":"class Solution:\n    def numTilings(self, n):\n        dp = [1, 1, 2]\n        for i in range(3, n + 1):\n            dp.append((2 * dp[-1] + dp[-3]) % (10**9 + 7))\n        return dp[n]","time":"O(n)","space":"O(n)","explain":"dp[n] = 2·dp[n-1] + dp[n-3].","frames":[{"title":"Base","description":"dp[0]=1, dp[1]=1, dp[2]=2.","codeLines":[3],"facts":{},"rows":[{"name":"dp","cells":["1","1","2"],"hot":[0,1,2],"marks":{}}]},{"title":"dp[3]","description":"2×2 + 1 = 5","codeLines":[5],"facts":{},"rows":[{"name":"dp","cells":["1","1","2","5"],"hot":[3,2,0],"marks":{}}]},{"title":"dp[4]","description":"2×5 + 1 = 11","codeLines":[5],"facts":{},"rows":[{"name":"dp","cells":["1","1","2","5","11"],"hot":[4,3,1],"marks":{}}]},{"title":"dp[5]","description":"2×11 + 2 = 24","codeLines":[5],"facts":{},"rows":[{"name":"dp","cells":["1","1","2","5","11","24"],"hot":[5,4,2],"marks":{}}]},{"title":"Return","description":"24 tilings for n = 5.","codeLines":[6],"facts":{},"rows":[{"name":"answer","cells":["24"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2],0]}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2],0],"i":3}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5],0],"i":3}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5],0],"i":4}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11],0],"i":4}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11],0],"i":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5}},{"l":6,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5}},{"l":6,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5},"ret":24}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1}},{"l":4,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]}},{"l":6,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]}},{"l":6,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]},"ret":1}],"trunc":false}},{"name":"DP with a running sum","tag":"Alternative","code":"class Solution:\n    def numTilings(self, n):\n        dp = [1, 1, 2] + [0] * max(0, n - 2)\n        for i in range(3, n + 1):\n            dp[i] = dp[i-1] + dp[i-2] + 2 * sum(dp[:i-2])\n        return dp[n] % (10**9 + 7)","time":"O(n²)","space":"O(n)","explain":"dp[i] = dp[i-1] + dp[i-2] + 2·(sum of all dp up to i-3).","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,0,0,0],0]}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,0,0,0],0],"i":3}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,0,0],0],"i":3}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,0,0],0],"i":4}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,0],0],"i":4}},{"l":5,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,0],0],"i":5}},{"l":4,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5}},{"l":6,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5}},{"l":6,"d":1,"f":1,"v":{"n":5,"dp":["l",[1,1,2,5,11,24],0],"i":5},"ret":24}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":1}},{"l":4,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]}},{"l":6,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]}},{"l":6,"d":1,"f":1,"v":{"n":1,"dp":["l",[1,1,2],0]},"ret":1}],"trunc":false}}],"why":"For n = 5 there are 24 ways.","idea":"dp[n] = 2 × dp[n−1] + dp[n−3].","ex2":{"input":"1","output":"1","why":"A 2×1 board has exactly one tiling (a vertical domino)."},"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`dp = [1, 1, 2]`","`dp[i]` = ways to tile a 2 × i board; `dp[0] = 1` (the empty board), `dp[1] = 1`, `dp[2] = 2`","Base cases for the recurrence"],["`2 * dp[-1] + dp[-3]`","dp[i] = 2·dp[i−1] + dp[i−3]","The closed recurrence (derived below)"],["`dp[-1]`, `dp[-3]`","Last and third-last items of the list","The previous values, without index arithmetic"],["`% (10**9 + 7)`","Keep numbers small","The count grows quickly"]]}},{"h":"Walk through an example","p":["Values from the recurrence compared with an exhaustive count of tilings (brute force over a bitmask of covered cells):"],"table":{"head":["n","dp[n] (recurrence)","Brute force"],"rows":[["1","1","1"],["2","2","2"],["3","5","5"],["4","11","11"],["5","24","24"],["6","53","53"],["7","117","117"]]}},{"h":"Where does the recurrence come from?","bullets":["Let f(n) be the number of full tilings of 2×n and g(n) the number of tilings of a 'jagged' board (2×n with one extra cell sticking out in the next column).","A full tiling ends with a vertical domino (f(n−1)), two horizontal dominoes (f(n−2)), or one of two mirror-image trominoes completing a jagged board (2·g(n−1)): f(n) = f(n−1) + f(n−2) + 2·g(n−1).","A jagged board either ends with a horizontal domino on the long side (g(n−1)) or a tromino-plus-fill (f(n−2)): g(n) = g(n−1) + f(n−2).","Subtracting f(n−1) from f(n) and substituting g(n−1) − g(n−2) = f(n−3) gives f(n) − f(n−1) = f(n−1) + f(n−3), i.e. f(n) = 2·f(n−1) + f(n−3)."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(n) (could be O(1) keeping three values)."]}],"takeaway":"Tiling recurrence f(n) = 2·f(n−1) + f(n−3), obtained by tracking full and jagged boards and eliminating the jagged ones."},"statement":"You have two tile shapes: a domino (2 x 1, can be placed flat or upright) and an L-shaped tromino (three cells, in any rotation). Given `n`, return the number of ways to completely tile a `2 x n` board with them, with no gaps and no overlaps. Two tilings are different if some pair of side-adjacent cells is covered by one tile in one tiling but by two different tiles in the other. Return the answer modulo `10^9 + 7`.\n\nExample 1:\n\n```\nInput: n = 3\nOutput: 5\n```\n\nExample 2:\n\n```\nInput: n = 1\nOutput: 1\n```\n\nConstraints:\n\n* `1 <= n <= 1000`"};
+window.PROBLEM = {
+ "id": "790",
+ "title": "Domino and Tromino Tiling",
+ "level": "Medium",
+ "topic": "DP - 1D",
+ "question": "You have two tile shapes: a domino (a 2×1 tile, placeable flat or upright) and an L-shaped tromino (3 cells, any rotation). Given n, return the number of ways to tile a 2 × n board completely, with no gaps or overlaps. Two tilings differ if some pair of neighbouring cells is covered by one tile in one tiling and by different tiles in the other. Because the answer grows huge, return the REMAINDER after dividing it by 1,000,000,007. Example: n=3 → 5 ways; n=5 → 24 ways.",
+ "input": "n = 5",
+ "output": "24",
+ "notes": [
+  "Trominoes must come in interlocking pairs.",
+  "The recurrence comes from counting boundary shapes."
+ ],
+ "best": "Recurrence dp[n] = 2·dp[n-1] + dp[n-3] (found from the tromino patterns).",
+ "variants": [
+  {
+   "name": "Recurrence 2·dp[n-1] + dp[n-3]",
+   "code": "class Solution:\n    def numTilings(self, n):\n        dp = [1, 1, 2]\n        for i in range(3, n + 1):\n            dp.append((2 * dp[-1] + dp[-3]) % (10**9 + 7))\n        return dp[n]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "dp[n] = 2·dp[n-1] + dp[n-3].",
+   "frames": [
+    {
+     "title": "Base",
+     "description": "dp[0]=1, dp[1]=1, dp[2]=2.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "dp",
+       "cells": [
+        "1",
+        "1",
+        "2"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "dp[3]",
+     "description": "2×2 + 1 = 5",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "dp",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "5"
+       ],
+       "hot": [
+        3,
+        2,
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "dp[4]",
+     "description": "2×5 + 1 = 11",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "dp",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "5",
+        "11"
+       ],
+       "hot": [
+        4,
+        3,
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "dp[5]",
+     "description": "2×11 + 2 = 24",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "dp",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "5",
+        "11",
+        "24"
+       ],
+       "hot": [
+        5,
+        4,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "24 tilings for n = 5.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "24"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "DP with a running sum",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def numTilings(self, n):\n        dp = [1, 1, 2] + [0] * max(0, n - 2)\n        for i in range(3, n + 1):\n            dp[i] = dp[i-1] + dp[i-2] + 2 * sum(dp[:i-2])\n        return dp[n] % (10**9 + 7)",
+   "time": "O(n²)",
+   "space": "O(n)",
+   "explain": "dp[i] = dp[i-1] + dp[i-2] + 2·(sum of all dp up to i-3).",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "For n = 5 there are 24 ways.",
+ "idea": "dp[n] = 2 × dp[n−1] + dp[n−3]."
+};

@@ -237,7 +237,7 @@ class Solution:
             return b if z1 else -1
         return a if z2 else -1
 `)});
-alt(2204,{name:"Find the cycle with DFS",tag:"Alternative",time:"O(n)",space:"O(n)",explain:"DFS with parent tracking finds the back edge that closes the cycle; walk the parent chain to collect the cycle, then BFS outwards.",code:C(`
+alt(2204,{name:"Find the cycle with DFS",tag:"Alternative",time:"O(n)",space:"O(n)",explain:"DFS (Depth-First Search) with parent tracking finds the back edge that closes the cycle; walk the parent chain to collect the cycle, then BFS (Breadth-First Search) outwards.",code:C(`
 class Solution:
     def distanceToCycle(self, n, edges):
         g = [[] for _ in range(n)]

@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2914","title":"Minimum Number of Changes to Make Binary String Beautiful","level":"Medium","topic":"Greedy","question":"A binary string is beautiful if it can be split into even-length substrings that each contain only 0s or only 1s. You may flip characters. Return the minimum flips to make s beautiful. Example: '1001' → 2.","why":"'1001': pairs '10' and '01' both differ → 2 changes.","idea":"A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.","input":"s = \"1001\"","output":"2","notes":[],"best":"A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.","variants":[{"name":"Make every aligned pair equal","code":"class Solution:\n    def minChanges(self, s):\n        return sum(s[i] != s[i + 1] for i in range(0, len(s), 2))","time":"O(n)","space":"O(1)","explain":"A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","1001"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","1001"]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","10"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","10"]},"ret":1}],"trunc":false}},{"name":"Zip the pairs","tag":"Alternative","code":"class Solution:\n    def minChanges(self, s):\n        return sum(a != b for a, b in zip(s[::2], s[1::2]))","time":"O(n)","space":"O(n)","explain":"Pair even and odd positions with zip.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","1001"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","1001"]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","10"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","10"]},"ret":1}],"trunc":false}}],"ex2":{"input":"two chars","output":"1","why":"One flip."},"statement":"You are given a binary string `s` of even length. A string is beautiful if it can be partitioned into one or more substrings, each of even length and containing only `0`s or only `1`s. You may change any character of `s` to `0` or `1`. Return the minimum number of changes needed to make `s` beautiful.\n\nExample 1:\n\n```\nInput: s = \"1001\"\nOutput: 2\n```\n\nExample 2:\n\n```\nInput: s = \"10\"\nOutput: 1\n```\n\nConstraints:\n\n* `2 <= s.length <= 10^5`\n* `s` has an even length.\n* `s[i]` is either `'0'` or `'1'`."};
+window.PROBLEM = {
+ "id": "2914",
+ "title": "Minimum Number of Changes to Make Binary String Beautiful",
+ "level": "Medium",
+ "topic": "Greedy",
+ "question": "A binary string is beautiful if it can be split into even-length substrings that each contain only 0s or only 1s. You may flip characters. Return the minimum flips to make s beautiful. Example: '1001' → 2.",
+ "why": "'1001': pairs '10' and '01' both differ → 2 changes.",
+ "idea": "A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.",
+ "input": "s = \"1001\"",
+ "output": "2",
+ "notes": [],
+ "best": "A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.",
+ "variants": [
+  {
+   "name": "Make every aligned pair equal",
+   "code": "class Solution:\n    def minChanges(self, s):\n        return sum(s[i] != s[i + 1] for i in range(0, len(s), 2))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "A beautiful string can be cut into even-length blocks of equal bits; every block splits into aligned pairs of equal letters, and pairs are enough. So count aligned pairs (positions 2i, 2i+1) whose letters differ.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Zip the pairs",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def minChanges(self, s):\n        return sum(a != b for a, b in zip(s[::2], s[1::2]))",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Pair even and odd positions with zip.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

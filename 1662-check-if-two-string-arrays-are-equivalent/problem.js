@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1662","title":"Check If Two String Arrays are Equivalent","level":"Easy","topic":"Array / String","question":"Return true if two arrays of strings represent the same string when their elements are joined together. Example: ['ab','c'] and ['a','bc'] → true.","why":"['ab','c'] and ['a','bc'] both spell 'abc' → true.","idea":"Join each array into one string and compare.","input":"word1 = [\"ab\",\"c\"], word2 = [\"a\",\"bc\"]","output":"true","notes":[],"best":"Join each array into one string and compare.","variants":[{"name":"Join and compare","code":"class Solution:\n    def arrayStringsAreEqual(self, word1, word2):\n        return \"\".join(word1) == \"\".join(word2)","time":"O(n)","space":"O(n)","explain":"Join each array into one string and compare.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","ab"],["s","c"]],0],"word2":["l",[["s","a"],["s","bc"]],0]}},{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","ab"],["s","c"]],0],"word2":["l",[["s","a"],["s","bc"]],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","a"],["s","cb"]],0],"word2":["l",[["s","ab"],["s","c"]],0]}},{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","a"],["s","cb"]],0],"word2":["l",[["s","ab"],["s","c"]],0]},"ret":false}],"trunc":false}},{"name":"Compare letter by letter without joining","tag":"Alternative","code":"class Solution:\n    def arrayStringsAreEqual(self, word1, word2):\n        def chars(ws):\n            for w in ws:\n                yield from w\n        return all(x == y for x, y in zip_longest(chars(word1), chars(word2)))","time":"O(n)","space":"O(1)","explain":"Stream the letters of both arrays and compare them pairwise.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","ab"],["s","c"]],0],"word2":["l",[["s","a"],["s","bc"]],0]}},{"l":6,"d":1,"f":1,"v":{"word1":["l",[["s","ab"],["s","c"]],0],"word2":["l",[["s","a"],["s","bc"]],0]}},{"l":4,"d":2,"f":2,"v":{"ws":["l",[["s","ab"],["s","c"]],0]}},{"l":5,"d":2,"f":2,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]}},{"l":5,"d":2,"f":2,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]},"ret":["s","a"]},{"l":4,"d":2,"f":3,"v":{"ws":["l",[["s","a"],["s","bc"]],0]}},{"l":5,"d":2,"f":3,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","a"]}},{"l":5,"d":2,"f":3,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","a"]},"ret":["s","a"]},{"l":5,"d":2,"f":4,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]},"ret":["s","b"]},{"l":4,"d":2,"f":5,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","a"]}},{"l":5,"d":2,"f":5,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","bc"]}},{"l":5,"d":2,"f":5,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","bc"]},"ret":["s","b"]},{"l":4,"d":2,"f":6,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]}},{"l":5,"d":2,"f":6,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","c"]}},{"l":5,"d":2,"f":6,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","c"]},"ret":["s","c"]},{"l":5,"d":2,"f":7,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","bc"]},"ret":["s","c"]},{"l":4,"d":2,"f":8,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","c"]}},{"l":4,"d":2,"f":8,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","c"]},"ret":null},{"l":4,"d":2,"f":9,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","bc"]}},{"l":4,"d":2,"f":9,"v":{"ws":["l",[["s","a"],["s","bc"]],0],"w":["s","bc"]},"ret":null},{"l":6,"d":1,"f":1,"v":{"word1":["l",[["s","ab"],["s","c"]],0],"word2":["l",[["s","a"],["s","bc"]],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"word1":["l",[["s","a"],["s","cb"]],0],"word2":["l",[["s","ab"],["s","c"]],0]}},{"l":6,"d":1,"f":1,"v":{"word1":["l",[["s","a"],["s","cb"]],0],"word2":["l",[["s","ab"],["s","c"]],0]}},{"l":4,"d":2,"f":2,"v":{"ws":["l",[["s","a"],["s","cb"]],0]}},{"l":5,"d":2,"f":2,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","a"]}},{"l":5,"d":2,"f":2,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","a"]},"ret":["s","a"]},{"l":4,"d":2,"f":3,"v":{"ws":["l",[["s","ab"],["s","c"]],0]}},{"l":5,"d":2,"f":3,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]}},{"l":5,"d":2,"f":3,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]},"ret":["s","a"]},{"l":4,"d":2,"f":4,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","a"]}},{"l":5,"d":2,"f":4,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","cb"]}},{"l":5,"d":2,"f":4,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","cb"]},"ret":["s","c"]},{"l":5,"d":2,"f":5,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]},"ret":["s","b"]},{"l":5,"d":2,"f":6,"v":{"ws":["l",[["s","ab"],["s","c"]],0],"w":["s","ab"]},"ret":null},{"l":5,"d":2,"f":7,"v":{"ws":["l",[["s","a"],["s","cb"]],0],"w":["s","cb"]},"ret":null},{"l":6,"d":1,"f":1,"v":{"word1":["l",[["s","a"],["s","cb"]],0],"word2":["l",[["s","ab"],["s","c"]],0]},"ret":false}],"trunc":false}}],"ex2":{"input":"different letters","output":"False","why":"'acb' is not 'abc'."},"statement":"You are given two arrays of strings, `word1` and `word2`. Two arrays represent the same string if joining all the elements of each array in order (concatenation) gives equal strings. Return `true` if they do, otherwise `false`.\n\nExample 1:\n\n```\nInput: word1 = [\"ab\",\"c\"], word2 = [\"a\",\"bc\"]\nOutput: true\n```\n\nExample 2:\n\n```\nInput: word1 = [\"a\",\"cb\"], word2 = [\"ab\",\"c\"]\nOutput: false\n```\n\nConstraints:\n\n* `1 <= word1.length, word2.length <= 10^3`\n* `1 <= word1[i].length, word2[i].length <= 10^3`\n* `1 <= sum(word1[i].length), sum(word2[i].length) <= 10^3`\n* `word1[i]` and `word2[i]` consist of lowercase letters"};
+window.PROBLEM = {
+ "id": "1662",
+ "title": "Check If Two String Arrays are Equivalent",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "Return true if two arrays of strings represent the same string when their elements are joined together. Example: ['ab','c'] and ['a','bc'] → true.",
+ "why": "['ab','c'] and ['a','bc'] both spell 'abc' → true.",
+ "idea": "Join each array into one string and compare.",
+ "input": "word1 = [\"ab\",\"c\"], word2 = [\"a\",\"bc\"]",
+ "output": "true",
+ "notes": [],
+ "best": "Join each array into one string and compare.",
+ "variants": [
+  {
+   "name": "Join and compare",
+   "code": "class Solution:\n    def arrayStringsAreEqual(self, word1, word2):\n        return \"\".join(word1) == \"\".join(word2)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Join each array into one string and compare.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Compare letter by letter without joining",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def arrayStringsAreEqual(self, word1, word2):\n        def chars(ws):\n            for w in ws:\n                yield from w\n        return all(x == y for x, y in zip_longest(chars(word1), chars(word2)))",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Stream the letters of both arrays and compare them pairwise.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

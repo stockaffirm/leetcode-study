@@ -1,1 +1,149 @@
-window.PROBLEM = {"id":"1137","title":"N-th Tribonacci Number","level":"Easy","topic":"DP - 1D","question":"The Tribonacci sequence is defined by T0 = 0, T1 = 1, T2 = 1, and Tn = T(n−1) + T(n−2) + T(n−3) for n ≥ 3. Given n, return Tn. Example: n=4 → T3 = 0+1+1 = 2, T4 = 1+1+2 = 4.","input":"n = 4","output":"4","notes":["Only the previous three terms matter.","n = 1 and n = 2 both return 1."],"best":"Rolling three variables instead of an array.","variants":[{"name":"Rolling three values","code":"class Solution:\n    def tribonacci(self, n):\n        if n == 0: return 0\n        a, b, c = 0, 1, 1\n        for _ in range(n - 2):\n            a, b, c = b, c, a + b + c\n        return c","time":"O(n)","space":"O(1)","explain":"Keep only the last three values.","frames":[{"title":"Base","description":"T0=0, T1=1, T2=1.","codeLines":[4],"facts":{},"rows":[{"name":"T","cells":["0","1","1"],"hot":[0,1,2],"marks":{}}]},{"title":"Step 1","description":"T3 = 0 + 1 + 1 = 2.","codeLines":[6],"facts":{},"rows":[{"name":"T","cells":["0","1","1","2"],"hot":[3],"marks":{}}]},{"title":"Step 2","description":"T4 = 1 + 1 + 2 = 4.","codeLines":[6],"facts":{},"rows":[{"name":"T","cells":["0","1","1","2","4"],"hot":[4],"marks":{}}]},{"title":"Return","description":"T4 = 4","codeLines":[7],"facts":{},"rows":[{"name":"answer","cells":["4"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4}},{"l":4,"d":1,"f":1,"v":{"n":4}},{"l":5,"d":1,"f":1,"v":{"n":4,"a":0,"b":1,"c":1}},{"l":6,"d":1,"f":1,"v":{"n":4,"a":0,"b":1,"c":1,"_":0}},{"l":5,"d":1,"f":1,"v":{"n":4,"a":1,"b":1,"c":2,"_":0}},{"l":6,"d":1,"f":1,"v":{"n":4,"a":1,"b":1,"c":2,"_":1}},{"l":5,"d":1,"f":1,"v":{"n":4,"a":1,"b":2,"c":4,"_":1}},{"l":7,"d":1,"f":1,"v":{"n":4,"a":1,"b":2,"c":4,"_":1}},{"l":7,"d":1,"f":1,"v":{"n":4,"a":1,"b":2,"c":4,"_":1},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":3,"d":1,"f":1,"v":{"n":0},"ret":0}],"trunc":false}},{"name":"DP array","tag":"Alternative","code":"class Solution:\n    def tribonacci(self, n):\n        dp = [0, 1, 1] + [0] * max(0, n - 2)\n        for i in range(3, n + 1): dp[i] = dp[i-1] + dp[i-2] + dp[i-3]\n        return dp[n]","time":"O(n)","space":"O(n)","explain":"Fill a table where each entry is the sum of the previous three.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4}},{"l":4,"d":1,"f":1,"v":{"n":4,"dp":["l",[0,1,1,0,0],0]}},{"l":4,"d":1,"f":1,"v":{"n":4,"dp":["l",[0,1,1,2,0],0],"i":3}},{"l":4,"d":1,"f":1,"v":{"n":4,"dp":["l",[0,1,1,2,4],0],"i":4}},{"l":5,"d":1,"f":1,"v":{"n":4,"dp":["l",[0,1,1,2,4],0],"i":4}},{"l":5,"d":1,"f":1,"v":{"n":4,"dp":["l",[0,1,1,2,4],0],"i":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":4,"d":1,"f":1,"v":{"n":0,"dp":["l",[0,1,1],0]}},{"l":5,"d":1,"f":1,"v":{"n":0,"dp":["l",[0,1,1],0]}},{"l":5,"d":1,"f":1,"v":{"n":0,"dp":["l",[0,1,1],0]},"ret":0}],"trunc":false}},{"name":"Recursion + memo","tag":"Alternative","code":"class Solution:\n    def tribonacci(self, n):\n        memo = {0: 0, 1: 1, 2: 1}\n        def t(k):\n            if k not in memo: memo[k] = t(k - 1) + t(k - 2) + t(k - 3)\n            return memo[k]\n        return t(n)","time":"O(n)","space":"O(n)","explain":"Recurse top-down and remember answers already computed.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4}},{"l":4,"d":1,"f":1,"v":{"n":4,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":7,"d":1,"f":1,"v":{"n":4,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":5,"d":2,"f":2,"v":{"k":4,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":5,"d":3,"f":3,"v":{"k":3,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":5,"d":4,"f":4,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":4,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":4,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1]]]},"ret":1},{"l":5,"d":4,"f":5,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":5,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":5,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1]]]},"ret":1},{"l":5,"d":4,"f":6,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":6,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":4,"f":6,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]},"ret":0},{"l":6,"d":3,"f":3,"v":{"k":3,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]}},{"l":6,"d":3,"f":3,"v":{"k":3,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]},"ret":2},{"l":5,"d":3,"f":7,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]}},{"l":6,"d":3,"f":7,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]}},{"l":6,"d":3,"f":7,"v":{"k":2,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]},"ret":1},{"l":5,"d":3,"f":8,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]}},{"l":6,"d":3,"f":8,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]}},{"l":6,"d":3,"f":8,"v":{"k":1,"memo":["d",[[0,0],[1,1],[2,1],[3,2]]]},"ret":1},{"l":6,"d":2,"f":2,"v":{"k":4,"memo":["d",[[0,0],[1,1],[2,1],[3,2],[4,4]]]}},{"l":6,"d":2,"f":2,"v":{"k":4,"memo":["d",[[0,0],[1,1],[2,1],[3,2],[4,4]]]},"ret":4},{"l":7,"d":1,"f":1,"v":{"n":4,"memo":["d",[[0,0],[1,1],[2,1],[3,2],[4,4]]]},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":4,"d":1,"f":1,"v":{"n":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":7,"d":1,"f":1,"v":{"n":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":5,"d":2,"f":2,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":2,"f":2,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]}},{"l":6,"d":2,"f":2,"v":{"k":0,"memo":["d",[[0,0],[1,1],[2,1]]]},"ret":0},{"l":7,"d":1,"f":1,"v":{"n":0,"memo":["d",[[0,0],[1,1],[2,1]]]},"ret":0}],"trunc":false}},{"name":"Plain recursion","tag":"Brute force","code":"class Solution:\n    def tribonacci(self, n):\n        if n == 0: return 0\n        if n <= 2: return 1\n        return self.tribonacci(n - 1) + self.tribonacci(n - 2) + self.tribonacci(n - 3)","time":"O(3ⁿ)","space":"O(n)","explain":"Follow the definition directly — it recomputes the same values many times.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":4}},{"l":4,"d":1,"f":1,"v":{"n":4}},{"l":5,"d":1,"f":1,"v":{"n":4}},{"l":3,"d":2,"f":2,"v":{"n":3}},{"l":4,"d":2,"f":2,"v":{"n":3}},{"l":5,"d":2,"f":2,"v":{"n":3}},{"l":3,"d":3,"f":3,"v":{"n":2}},{"l":4,"d":3,"f":3,"v":{"n":2}},{"l":4,"d":3,"f":3,"v":{"n":2},"ret":1},{"l":3,"d":3,"f":4,"v":{"n":1}},{"l":4,"d":3,"f":4,"v":{"n":1}},{"l":4,"d":3,"f":4,"v":{"n":1},"ret":1},{"l":3,"d":3,"f":5,"v":{"n":0}},{"l":3,"d":3,"f":5,"v":{"n":0},"ret":0},{"l":5,"d":2,"f":2,"v":{"n":3},"ret":2},{"l":3,"d":2,"f":6,"v":{"n":2}},{"l":4,"d":2,"f":6,"v":{"n":2}},{"l":4,"d":2,"f":6,"v":{"n":2},"ret":1},{"l":3,"d":2,"f":7,"v":{"n":1}},{"l":4,"d":2,"f":7,"v":{"n":1}},{"l":4,"d":2,"f":7,"v":{"n":1},"ret":1},{"l":5,"d":1,"f":1,"v":{"n":4},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"n":0}},{"l":3,"d":1,"f":1,"v":{"n":0},"ret":0}],"trunc":false}}],"why":"The sequence goes 0, 1, 1, 2, 4. So T4 = 4.","idea":"Keep only the last 3 values.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["a, b, c = 0, 1, 1","T(0), T(1), T(2): the last three terms","Rolling window of previous values"],["a, b, c = b, c, a + b + c","Tuple assignment slides the window: new c is the sum of the old three",""],["range(n - 2)","Number of steps from T(2) to T(n); for n = 1 or 2 the range is empty and `c` = 1 is returned",""],["n == 0 → 0","T(0) is the one case where the answer is not `c`",""]]}},{"h":"Walk through an example","p":["`n = 4`; each row shows (a, b, c) = (T(k−2), T(k−1), T(k)):"],"table":{"head":["k","a","b","c = T(k)"],"rows":[["2","0","1","1"],["3","1","1","2"],["4","1","2","4"]]},"bullets":["T(4) = 4."]},{"h":"Why not recursion?","p":["The plain recursive definition recomputes the same terms and takes exponential time. Rolling three variables computes each term once with constant space."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1)."]}],"takeaway":"Rolling three variables: each new term is the sum of the previous three."},"ex2":{"input":"0","output":"0","why":"T0 is defined as 0."},"statement":"The Tribonacci sequence starts with `T0 = 0`, `T1 = 1`, `T2 = 1`, and every later term is the sum of the previous three: `Tn = T(n-1) + T(n-2) + T(n-3)` for `n >= 3`. Given `n`, return the value of `Tn`.\n\nExample 1:\n\n```\nInput: n = 4\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: n = 25\nOutput: 1389537\n```\n\nConstraints:\n\n* `0 <= n <= 37`\n* The answer is guaranteed to fit in a 32-bit signed integer (it is at most `2^31 - 1`)"};
+window.PROBLEM = {
+ "id": "1137",
+ "title": "N-th Tribonacci Number",
+ "level": "Easy",
+ "topic": "DP - 1D",
+ "question": "The Tribonacci sequence is defined by T0 = 0, T1 = 1, T2 = 1, and Tn = T(n−1) + T(n−2) + T(n−3) for n ≥ 3. Given n, return Tn. Example: n=4 → T3 = 0+1+1 = 2, T4 = 1+1+2 = 4.",
+ "input": "n = 4",
+ "output": "4",
+ "notes": [
+  "Only the previous three terms matter.",
+  "n = 1 and n = 2 both return 1."
+ ],
+ "best": "Rolling three variables instead of an array.",
+ "variants": [
+  {
+   "name": "Rolling three values",
+   "code": "class Solution:\n    def tribonacci(self, n):\n        if n == 0: return 0\n        a, b, c = 0, 1, 1\n        for _ in range(n - 2):\n            a, b, c = b, c, a + b + c\n        return c",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Keep only the last three values.",
+   "frames": [
+    {
+     "title": "Base",
+     "description": "T0=0, T1=1, T2=1.",
+     "codeLines": [
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "T",
+       "cells": [
+        "0",
+        "1",
+        "1"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Step 1",
+     "description": "T3 = 0 + 1 + 1 = 2.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "T",
+       "cells": [
+        "0",
+        "1",
+        "1",
+        "2"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Step 2",
+     "description": "T4 = 1 + 1 + 2 = 4.",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "T",
+       "cells": [
+        "0",
+        "1",
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "T4 = 4",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "DP array",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def tribonacci(self, n):\n        dp = [0, 1, 1] + [0] * max(0, n - 2)\n        for i in range(3, n + 1): dp[i] = dp[i-1] + dp[i-2] + dp[i-3]\n        return dp[n]",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Fill a table where each entry is the sum of the previous three.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Recursion + memo",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def tribonacci(self, n):\n        memo = {0: 0, 1: 1, 2: 1}\n        def t(k):\n            if k not in memo: memo[k] = t(k - 1) + t(k - 2) + t(k - 3)\n            return memo[k]\n        return t(n)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Recurse top-down and remember answers already computed.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Plain recursion",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def tribonacci(self, n):\n        if n == 0: return 0\n        if n <= 2: return 1\n        return self.tribonacci(n - 1) + self.tribonacci(n - 2) + self.tribonacci(n - 3)",
+   "time": "O(3ⁿ)",
+   "space": "O(n)",
+   "explain": "Follow the definition directly — it recomputes the same values many times.",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "The sequence goes 0, 1, 1, 2, 4. So T4 = 4.",
+ "idea": "Keep only the last 3 values."
+};

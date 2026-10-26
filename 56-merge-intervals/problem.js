@@ -1,1 +1,168 @@
-window.PROBLEM = {"id":"56","title":"Merge Intervals","level":"Medium","topic":"Intervals","question":"Given a list of intervals (each is [start, end]), merge all intervals that overlap and return the resulting non-overlapping intervals. Example: [[1,3],[2,6],[8,10],[15,18]] → [1,3] and [2,6] overlap and merge into [1,6] → [[1,6],[8,10],[15,18]].","why":"[1,3] and [2,6] overlap → [1,6]; [8,10] and [15,18] stand alone.","idea":"Sort by start. If the next one starts before the last one ends, extend the last one.","input":"[[1,3],[2,6],[8,10],[15,18]]","output":"[[1,6],[8,10],[15,18]]","notes":[],"best":"Sort by start. If the next one starts before the last one ends, extend the last one.","variants":[{"name":"Sort by start","code":"class Solution:\n    def merge(self, intervals):\n        intervals.sort()\n        res = [intervals[0]]\n        for s, e in intervals[1:]:\n            if s <= res[-1][1]: res[-1][1] = max(res[-1][1], e)\n            else: res.append([s, e])\n        return res","time":"O(n log n)","space":"O(n)","explain":"Sort by start. If the next one starts before the last one ends, extend the last one.","frames":[{"title":"Sorted","description":"Already sorted by start.","codeLines":[3],"facts":{},"rows":[{"name":"intervals","cells":["[1,3]","[2,6]","[8,10]","[15,18]"],"hot":[],"marks":{}},{"name":"res","cells":["[1,3]"],"hot":[0],"marks":{}}]},{"title":"[2,6]","description":"2 ≤ 3 → overlap → [1,6].","codeLines":[6],"facts":{},"rows":[{"name":"intervals","cells":["[1,3]","[2,6]","[8,10]","[15,18]"],"hot":[1],"marks":{}},{"name":"res","cells":["[1,6]"],"hot":[0],"marks":{}}]},{"title":"[8,10]","description":"8 > 6 → new interval.","codeLines":[7],"facts":{},"rows":[{"name":"intervals","cells":["[1,3]","[2,6]","[8,10]","[15,18]"],"hot":[2],"marks":{}},{"name":"res","cells":["[1,6]","[8,10]"],"hot":[1],"marks":{}}]},{"title":"[15,18]","description":"15 > 10 → new interval.","codeLines":[7],"facts":{},"rows":[{"name":"intervals","cells":["[1,3]","[2,6]","[8,10]","[15,18]"],"hot":[3],"marks":{}},{"name":"res","cells":["[1,6]","[8,10]","[15,18]"],"hot":[2],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,3],0]],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,3],0]],0],"s":2,"e":6}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0]],0],"s":2,"e":6}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0]],0],"s":8,"e":10}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0]],0],"s":8,"e":10}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0]],0],"s":8,"e":10}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0]],0],"s":15,"e":18}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0]],0],"s":15,"e":18}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"s":15,"e":18}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"s":15,"e":18}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"res":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"s":15,"e":18},"ret":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"res":["l",[["l",[1,4],0]],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"res":["l",[["l",[1,4],0]],0],"s":4,"e":5}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0],["l",[4,5],0]],0],"res":["l",[["l",[1,5],0]],0],"s":4,"e":5}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0],["l",[4,5],0]],0],"res":["l",[["l",[1,5],0]],0],"s":4,"e":5}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0],["l",[4,5],0]],0],"res":["l",[["l",[1,5],0]],0],"s":4,"e":5},"ret":["l",[["l",[1,5],0]],0]}],"trunc":false}},{"name":"Merge repeatedly (brute force)","tag":"Brute force","code":"class Solution:\n    def merge(self, intervals):\n        intervals = [list(x) for x in intervals]; changed = True\n        while changed:\n            changed = False\n            for i in range(len(intervals)):\n                for j in range(i + 1, len(intervals)):\n                    a, b = intervals[i], intervals[j]\n                    if a[0] <= b[1] and b[0] <= a[1]:\n                        intervals[i] = [min(a[0], b[0]), max(a[1], b[1])]; intervals.pop(j); changed = True; break\n                if changed: break\n        return sorted(intervals)","time":"O(n³)","space":"O(n)","explain":"Merge any overlapping pair and rescan until nothing overlaps.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":true}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":true}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1}},{"l":9,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":10,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,3],0],["l",[2,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,3],0],"b":["l",[2,6],0]}},{"l":9,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,6],0],"b":["l",[8,10],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,6],0],"b":["l",[8,10],0]}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":2,"a":["l",[1,6],0],"b":["l",[8,10],0]}},{"l":9,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":0,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[1,6],0],"b":["l",[15,18],0]}},{"l":9,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":1,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":12,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]}},{"l":12,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0],"changed":false,"i":2,"j":2,"a":["l",[8,10],0],"b":["l",[15,18],0]},"ret":["l",[["l",[1,6],0],["l",[8,10],0],["l",[15,18],0]],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":true}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":true}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":false}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":false,"i":0}},{"l":8,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":false,"i":0,"j":1}},{"l":9,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":10,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,4],0],["l",[4,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":5,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":true,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":7,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":11,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":6,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":4,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":12,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]}},{"l":12,"d":1,"f":1,"v":{"intervals":["l",[["l",[1,5],0]],0],"changed":false,"i":0,"j":1,"a":["l",[1,4],0],"b":["l",[4,5],0]},"ret":["l",[["l",[1,5],0]],0]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`intervals.sort()`","Sorts in place by start, then end (lists compare element by element)","Interval problems: sorting by start makes overlaps adjacent"],["`res = [intervals[0]]`","Output list seeded with the first interval","Comparing against `res[-1]` needs at least one entry"],["`res[-1][1]`","End of the last merged interval","The only end that can still overlap the next start"],["`s <= res[-1][1]`","Overlap (touching counts, `[1,2]` and `[2,3]` merge)","Use `<` if touching intervals should stay separate"],["`max(res[-1][1], e)`","The new end is the larger one: the next interval may sit entirely inside","`[1,10]` then `[2,3]` must stay `[1,10]`"]]}},{"h":"Walk through an example","p":["Sorted input `[[1,3],[2,6],[8,10],[15,18]]`."],"table":{"head":["Next","Last merged","Decision","res after"],"rows":[["[2,6]","[1,3]","overlap (2 ≤ 3): extend end to 6","[[1, 6]]"],["[8,10]","[1,6]","gap (8 > 6): new interval","[[1, 6], [8, 10]]"],["[15,18]","[8,10]","gap (15 > 10): new interval","[[1, 6], [8, 10], [15, 18]]"]]}},{"h":"Why sort by start?","p":["Once sorted, any interval that overlaps the current merged one must come right after it; later intervals start even further right. So one pass comparing only with `res[-1]` is enough, instead of comparing all pairs (O(n²))."]},{"h":"Why `max` for the end?","p":["Overlapping does not mean the new interval extends further. For `[1,10]` and `[2,3]` the new end 3 is smaller than 10; without `max` we would shrink the merged interval to `[1,3]`."]},{"h":"Time and space","bullets":["Time: O(n log n), dominated by the sort; the merge pass is O(n).","Space: O(n) for the output (plus sort overhead). Note it mutates the input intervals' ends because `res` holds the same list objects."]}],"takeaway":"Sort by start, then sweep: extend the last interval's end while the next start overlaps, otherwise open a new one."},"ex2":{"input":"[[1,4],[4,5]]","output":"[[1, 5]]","why":"Intervals that touch at 4 are merged."},"statement":"Given a list of intervals, where each interval is `[start, end]`, combine all intervals that overlap and return the resulting list of disjoint intervals that covers exactly the same ranges. Intervals that touch at an endpoint count as overlapping.\n\nExample 1:\n\n```\nInput: intervals = [[8,9],[1,3],[2,4]]\nOutput: [[1,4],[8,9]]\n```\n\nExample 2:\n\n```\nInput: intervals = [[1,4],[4,5]]\nOutput: [[1,5]]\n```\n\nConstraints:\n\n* `1 <= intervals.length <= 10^4`\n* `intervals[i].length == 2`\n* `0 <= start_i <= end_i <= 10^4`"};
+window.PROBLEM = {
+ "id": "56",
+ "title": "Merge Intervals",
+ "level": "Medium",
+ "topic": "Intervals",
+ "question": "Given a list of intervals (each is [start, end]), merge all intervals that overlap and return the resulting non-overlapping intervals. Example: [[1,3],[2,6],[8,10],[15,18]] → [1,3] and [2,6] overlap and merge into [1,6] → [[1,6],[8,10],[15,18]].",
+ "why": "[1,3] and [2,6] overlap → [1,6]; [8,10] and [15,18] stand alone.",
+ "idea": "Sort by start. If the next one starts before the last one ends, extend the last one.",
+ "input": "[[1,3],[2,6],[8,10],[15,18]]",
+ "output": "[[1,6],[8,10],[15,18]]",
+ "notes": [],
+ "best": "Sort by start. If the next one starts before the last one ends, extend the last one.",
+ "variants": [
+  {
+   "name": "Sort by start",
+   "code": "class Solution:\n    def merge(self, intervals):\n        intervals.sort()\n        res = [intervals[0]]\n        for s, e in intervals[1:]:\n            if s <= res[-1][1]: res[-1][1] = max(res[-1][1], e)\n            else: res.append([s, e])\n        return res",
+   "time": "O(n log n)",
+   "space": "O(n)",
+   "explain": "Sort by start. If the next one starts before the last one ends, extend the last one.",
+   "frames": [
+    {
+     "title": "Sorted",
+     "description": "Already sorted by start.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "intervals",
+       "cells": [
+        "[1,3]",
+        "[2,6]",
+        "[8,10]",
+        "[15,18]"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "[1,3]"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "[2,6]",
+     "description": "2 ≤ 3 → overlap → [1,6].",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "intervals",
+       "cells": [
+        "[1,3]",
+        "[2,6]",
+        "[8,10]",
+        "[15,18]"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "[1,6]"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "[8,10]",
+     "description": "8 > 6 → new interval.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "intervals",
+       "cells": [
+        "[1,3]",
+        "[2,6]",
+        "[8,10]",
+        "[15,18]"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "[1,6]",
+        "[8,10]"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "[15,18]",
+     "description": "15 > 10 → new interval.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "intervals",
+       "cells": [
+        "[1,3]",
+        "[2,6]",
+        "[8,10]",
+        "[15,18]"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      },
+      {
+       "name": "res",
+       "cells": [
+        "[1,6]",
+        "[8,10]",
+        "[15,18]"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Merge repeatedly (brute force)",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def merge(self, intervals):\n        intervals = [list(x) for x in intervals]; changed = True\n        while changed:\n            changed = False\n            for i in range(len(intervals)):\n                for j in range(i + 1, len(intervals)):\n                    a, b = intervals[i], intervals[j]\n                    if a[0] <= b[1] and b[0] <= a[1]:\n                        intervals[i] = [min(a[0], b[0]), max(a[1], b[1])]; intervals.pop(j); changed = True; break\n                if changed: break\n        return sorted(intervals)",
+   "time": "O(n³)",
+   "space": "O(n)",
+   "explain": "Merge any overlapping pair and rescan until nothing overlaps.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

@@ -39,7 +39,7 @@ class Solution:
             res += lo - i
         return res
 `)});
-alt(720,{name:"Trie of all words",tag:"Alternative",time:"O(total length)",space:"O(total length)",explain:"Insert all words into a trie, then DFS only through nodes that end a word; keep the deepest, alphabetically first.",code:C(`
+alt(720,{name:"Trie of all words",tag:"Alternative",time:"O(total length)",space:"O(total length)",explain:"Insert all words into a trie, then DFS (Depth-First Search) only through nodes that end a word; keep the deepest, alphabetically first.",code:C(`
 class Solution:
     def longestWord(self, words):
         trie = {}

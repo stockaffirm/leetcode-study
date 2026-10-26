@@ -1,1 +1,237 @@
-window.PROBLEM = {"id":"105","title":"Construct Binary Tree from Preorder and Inorder Traversal","level":"Medium","topic":"Binary Tree - General","question":"You are given two lists describing the same binary tree whose values are all different: preorder (visit a node first, then its whole left side, then its whole right side) and inorder (left side, then the node, then the right side). Rebuild the tree and return its root. Example: preorder=[3,9,20,15,7], inorder=[9,3,15,20,7] → root 3 with left child 9 and right child 20 (which has children 15 and 7).","why":"preorder [3,9,20,15,7], inorder [9,3,15,20,7] → root 3, left 9, right 20 with children 15 and 7.","idea":"The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.","input":"preorder=[3,9,20,15,7], inorder=[9,3,15,20,7]","output":"[3,9,20,null,null,15,7]","notes":[],"best":"The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.","variants":[{"name":"Index map recursion","code":"class Solution:\n    def buildTree(self, preorder, inorder):\n        pos = {v: i for i, v in enumerate(inorder)}\n        it = iter(preorder)\n        def build(lo, hi):\n            if lo > hi: return None\n            v = next(it); node = TreeNode(v)\n            m = pos[v]\n            node.left = build(lo, m - 1); node.right = build(m + 1, hi)\n            return node\n        return build(0, len(inorder) - 1)","time":"O(n)","space":"O(n)","explain":"The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.","frames":[{"title":"Inputs","description":"Preorder starts with the root.","codeLines":[3],"facts":{},"rows":[{"name":"preorder","cells":["3","9","20","15","7"],"hot":[0],"marks":{}},{"name":"inorder","cells":["9","3","15","20","7"],"hot":[],"marks":{}}]},{"title":"Root = 3","description":"In the inorder list, 9 is left of 3 and 15,20,7 are right of it.","codeLines":[7,8],"facts":{},"rows":[{"name":"preorder","cells":["3","9","20","15","7"],"hot":[0],"marks":{}},{"name":"inorder","cells":["9","3","15","20","7"],"hot":[1],"marks":{}}]},{"title":"Left: 9","description":"Next preorder value 9 — left subtree [9] is a single node.","codeLines":[9],"facts":{},"rows":[{"name":"preorder","cells":["3","9","20","15","7"],"hot":[1],"marks":{}},{"name":"inorder","cells":["9","3","15","20","7"],"hot":[0],"marks":{}}]},{"title":"Right: 20","description":"Next is 20; in inorder, 15 is left of 20 and 7 is right.","codeLines":[9],"facts":{},"rows":[{"name":"preorder","cells":["3","9","20","15","7"],"hot":[2],"marks":{}},{"name":"inorder","cells":["9","3","15","20","7"],"hot":[3],"marks":{}}]},{"title":"Leaves 15, 7","description":"Remaining preorder values become 20's children.","codeLines":[9],"facts":{},"rows":[{"name":"level 0","cells":["3"],"hot":[],"marks":{}},{"name":"level 1","cells":["9","20"],"hot":[],"marks":{}},{"name":"level 2","cells":["·","·","15","7"],"hot":[2,3],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]],"it":["o","<list_iterator object a…"]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]],"it":["o","<list_iterator object a…"]}},{"l":6,"d":2,"f":2,"v":{"lo":0,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":7,"d":2,"f":2,"v":{"lo":0,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":8,"d":2,"f":2,"v":{"lo":0,"hi":4,"v":3,"node":["T",[[3]]],"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":9,"d":2,"f":2,"v":{"lo":0,"hi":4,"v":3,"node":["T",[[3]]],"m":1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":3,"f":3,"v":{"lo":0,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":7,"d":3,"f":3,"v":{"lo":0,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":8,"d":3,"f":3,"v":{"lo":0,"hi":0,"v":9,"node":["T",[[9]]],"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":9,"d":3,"f":3,"v":{"lo":0,"hi":0,"v":9,"node":["T",[[9]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":4,"f":4,"v":{"lo":0,"hi":-1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":4,"f":4,"v":{"lo":0,"hi":-1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":6,"d":4,"f":5,"v":{"lo":1,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":4,"f":5,"v":{"lo":1,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":10,"d":3,"f":3,"v":{"lo":0,"hi":0,"v":9,"node":["T",[[9]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":10,"d":3,"f":3,"v":{"lo":0,"hi":0,"v":9,"node":["T",[[9]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":["T",[[9]]]},{"l":6,"d":3,"f":6,"v":{"lo":2,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":7,"d":3,"f":6,"v":{"lo":2,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":8,"d":3,"f":6,"v":{"lo":2,"hi":4,"v":20,"node":["T",[[20]]],"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":9,"d":3,"f":6,"v":{"lo":2,"hi":4,"v":20,"node":["T",[[20]]],"m":3,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":4,"f":7,"v":{"lo":2,"hi":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":7,"d":4,"f":7,"v":{"lo":2,"hi":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":8,"d":4,"f":7,"v":{"lo":2,"hi":2,"v":15,"node":["T",[[15]]],"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":9,"d":4,"f":7,"v":{"lo":2,"hi":2,"v":15,"node":["T",[[15]]],"m":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":8,"v":{"lo":2,"hi":1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":8,"v":{"lo":2,"hi":1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":6,"d":5,"f":9,"v":{"lo":3,"hi":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":9,"v":{"lo":3,"hi":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":10,"d":4,"f":7,"v":{"lo":2,"hi":2,"v":15,"node":["T",[[15]]],"m":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":10,"d":4,"f":7,"v":{"lo":2,"hi":2,"v":15,"node":["T",[[15]]],"m":2,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":["T",[[15]]]},{"l":6,"d":4,"f":10,"v":{"lo":4,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":7,"d":4,"f":10,"v":{"lo":4,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":8,"d":4,"f":10,"v":{"lo":4,"hi":4,"v":7,"node":["T",[[7]]],"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":9,"d":4,"f":10,"v":{"lo":4,"hi":4,"v":7,"node":["T",[[7]]],"m":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":11,"v":{"lo":4,"hi":3,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":11,"v":{"lo":4,"hi":3,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":6,"d":5,"f":12,"v":{"lo":5,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":6,"d":5,"f":12,"v":{"lo":5,"hi":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":null},{"l":10,"d":4,"f":10,"v":{"lo":4,"hi":4,"v":7,"node":["T",[[7]]],"m":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":10,"d":4,"f":10,"v":{"lo":4,"hi":4,"v":7,"node":["T",[[7]]],"m":4,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":["T",[[7]]]},{"l":10,"d":3,"f":6,"v":{"lo":2,"hi":4,"v":20,"node":["T",[[20],[15,7]]],"m":3,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":10,"d":3,"f":6,"v":{"lo":2,"hi":4,"v":20,"node":["T",[[20],[15,7]]],"m":3,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":["T",[[20],[15,7]]]},{"l":10,"d":2,"f":2,"v":{"lo":0,"hi":4,"v":3,"node":["T",[[3],[9,20],[null,null,15,7]]],"m":1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]}},{"l":10,"d":2,"f":2,"v":{"lo":0,"hi":4,"v":3,"node":["T",[[3],[9,20],[null,null,15,7]]],"m":1,"it":["o","<list_iterator object a…"],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]]},"ret":["T",[[3],[9,20],[null,null,15,7]]]},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"pos":["d",[[9,0],[3,1],[15,2],[20,3],[7,4]]],"it":["o","<list_iterator object a…"]},"ret":["T",[[3],[9,20],[null,null,15,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"pos":["d",[[-1,0]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"pos":["d",[[-1,0]]],"it":["o","<list_iterator object a…"]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"pos":["d",[[-1,0]]],"it":["o","<list_iterator object a…"]}},{"l":6,"d":2,"f":2,"v":{"lo":0,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":7,"d":2,"f":2,"v":{"lo":0,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":8,"d":2,"f":2,"v":{"lo":0,"hi":0,"v":-1,"node":["T",[[-1]]],"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":9,"d":2,"f":2,"v":{"lo":0,"hi":0,"v":-1,"node":["T",[[-1]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":6,"d":3,"f":3,"v":{"lo":0,"hi":-1,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":6,"d":3,"f":3,"v":{"lo":0,"hi":-1,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]},"ret":null},{"l":6,"d":3,"f":4,"v":{"lo":1,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":6,"d":3,"f":4,"v":{"lo":1,"hi":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]},"ret":null},{"l":10,"d":2,"f":2,"v":{"lo":0,"hi":0,"v":-1,"node":["T",[[-1]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]}},{"l":10,"d":2,"f":2,"v":{"lo":0,"hi":0,"v":-1,"node":["T",[[-1]]],"m":0,"it":["o","<list_iterator object a…"],"pos":["d",[[-1,0]]]},"ret":["T",[[-1]]]},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"pos":["d",[[-1,0]]],"it":["o","<list_iterator object a…"]},"ret":["T",[[-1]]]}],"trunc":false}},{"name":"Recursion with slicing","tag":"Alternative","code":"class Solution:\n    def buildTree(self, preorder, inorder):\n        if not preorder: return None\n        root = TreeNode(preorder[0]); m = inorder.index(preorder[0])\n        root.left = self.buildTree(preorder[1:m + 1], inorder[:m])\n        root.right = self.buildTree(preorder[m + 1:], inorder[m + 1:])\n        return root","time":"O(n²)","space":"O(n²)","explain":"Split both lists around the root with slices.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3]]],"m":1}},{"l":3,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0]}},{"l":4,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0]}},{"l":5,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0],"root":["T",[[9]]],"m":0}},{"l":3,"d":3,"f":3,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":3,"f":3,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":6,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0],"root":["T",[[9]]],"m":0}},{"l":3,"d":3,"f":4,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":3,"f":4,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":7,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0],"root":["T",[[9]]],"m":0}},{"l":7,"d":2,"f":2,"v":{"preorder":["l",[9],0],"inorder":["l",[9],0],"root":["T",[[9]]],"m":0},"ret":["T",[[9]]]},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"m":1}},{"l":3,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0]}},{"l":4,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0]}},{"l":5,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0],"root":["T",[[20]]],"m":1}},{"l":3,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0]}},{"l":4,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0]}},{"l":5,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0],"root":["T",[[15]]],"m":0}},{"l":3,"d":4,"f":7,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":4,"f":7,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":6,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0],"root":["T",[[15]]],"m":0}},{"l":3,"d":4,"f":8,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":4,"f":8,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":7,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0],"root":["T",[[15]]],"m":0}},{"l":7,"d":3,"f":6,"v":{"preorder":["l",[15],0],"inorder":["l",[15],0],"root":["T",[[15]]],"m":0},"ret":["T",[[15]]]},{"l":6,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0],"root":["T",[[20],[15,null]]],"m":1}},{"l":3,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0]}},{"l":4,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0]}},{"l":5,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0],"root":["T",[[7]]],"m":0}},{"l":3,"d":4,"f":10,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":4,"f":10,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":6,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0],"root":["T",[[7]]],"m":0}},{"l":3,"d":4,"f":11,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":4,"f":11,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":7,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0],"root":["T",[[7]]],"m":0}},{"l":7,"d":3,"f":9,"v":{"preorder":["l",[7],0],"inorder":["l",[7],0],"root":["T",[[7]]],"m":0},"ret":["T",[[7]]]},{"l":7,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0],"root":["T",[[20],[15,7]]],"m":1}},{"l":7,"d":2,"f":5,"v":{"preorder":["l",[20,15,7],0],"inorder":["l",[15,20,7],0],"root":["T",[[20],[15,7]]],"m":1},"ret":["T",[[20],[15,7]]]},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"m":1}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"m":1},"ret":["T",[[3],[9,20],[null,null,15,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"m":0}},{"l":3,"d":2,"f":2,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":2,"f":2,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"m":0}},{"l":3,"d":2,"f":3,"v":{"preorder":["l",[],0],"inorder":["l",[],0]}},{"l":3,"d":2,"f":3,"v":{"preorder":["l",[],0],"inorder":["l",[],0]},"ret":null},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"m":0}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"m":0},"ret":["T",[[-1]]]}],"trunc":false}},{"name":"Iterative with a stack","tag":"Alternative","code":"class Solution:\n    def buildTree(self, preorder, inorder):\n        if not preorder: return None\n        root = TreeNode(preorder[0]); st = [root]; j = 0\n        for v in preorder[1:]:\n            node = TreeNode(v)\n            if st[-1].val != inorder[j]:\n                st[-1].left = node\n            else:\n                parent = None\n                while st and st[-1].val == inorder[j]:\n                    parent = st.pop(); j += 1\n                parent.right = node\n            st.append(node)\n        return root","time":"O(n)","space":"O(h)","explain":"Walk the preorder; go left until the inorder pointer says the branch ended.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3]]],"st":["l",[["T",[[3]]]],0],"j":0}},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3]]],"st":["l",[["T",[[3]]]],0],"j":0,"v":9}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3]]],"st":["l",[["T",[[3]]]],0],"j":0,"v":9,"node":["T",[[9]]]}},{"l":8,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3]]],"st":["l",[["T",[[3]]]],0],"j":0,"v":9,"node":["T",[[9]]]}},{"l":14,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]]],0],"j":0,"v":9,"node":["T",[[9]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":9,"node":["T",[[9]]]}},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":20,"node":["T",[[9]]]}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":20,"node":["T",[[20]]]}},{"l":10,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":20,"node":["T",[[20]]]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":20,"node":["T",[[20]]],"parent":null}},{"l":12,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]],["T",[[9]]]],0],"j":0,"v":20,"node":["T",[[20]]],"parent":null}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]]],0],"j":1,"v":20,"node":["T",[[20]]],"parent":["T",[[9]]]}},{"l":12,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[["T",[[3],[9,null]]]],0],"j":1,"v":20,"node":["T",[[20]]],"parent":["T",[[9]]]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[],0],"j":2,"v":20,"node":["T",[[20]]],"parent":["T",[[3],[9,null]]]}},{"l":13,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,null]]],"st":["l",[],0],"j":2,"v":20,"node":["T",[[20]]],"parent":["T",[[3],[9,null]]]}},{"l":14,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20]]],"st":["l",[],0],"j":2,"v":20,"node":["T",[[20]]],"parent":["T",[[3],[9,20]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20]]],"st":["l",[["T",[[20]]]],0],"j":2,"v":20,"node":["T",[[20]]],"parent":["T",[[3],[9,20]]]}},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20]]],"st":["l",[["T",[[20]]]],0],"j":2,"v":15,"node":["T",[[20]]],"parent":["T",[[3],[9,20]]]}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20]]],"st":["l",[["T",[[20]]]],0],"j":2,"v":15,"node":["T",[[15]]],"parent":["T",[[3],[9,20]]]}},{"l":8,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20]]],"st":["l",[["T",[[20]]]],0],"j":2,"v":15,"node":["T",[[15]]],"parent":["T",[[3],[9,20]]]}},{"l":14,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]]],0],"j":2,"v":15,"node":["T",[[15]]],"parent":["T",[[3],[9,20],[null,null,15,null]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":15,"node":["T",[[15]]],"parent":["T",[[3],[9,20],[null,null,15,null]]]}},{"l":6,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":7,"node":["T",[[15]]],"parent":["T",[[3],[9,20],[null,null,15,null]]]}},{"l":7,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":7,"node":["T",[[7]]],"parent":["T",[[3],[9,20],[null,null,15,null]]]}},{"l":10,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":7,"node":["T",[[7]]],"parent":["T",[[3],[9,20],[null,null,15,null]]]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":7,"node":["T",[[7]]],"parent":null}},{"l":12,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]],["T",[[15]]]],0],"j":2,"v":7,"node":["T",[[7]]],"parent":null}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]]],0],"j":3,"v":7,"node":["T",[[7]]],"parent":["T",[[15]]]}},{"l":12,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[["T",[[20],[15,null]]]],0],"j":3,"v":7,"node":["T",[[7]]],"parent":["T",[[15]]]}},{"l":11,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,null]]]}},{"l":13,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,null]]],"st":["l",[],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,null]]]}},{"l":14,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"st":["l",[],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,7]]]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"st":["l",[["T",[[7]]]],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,7]]]}},{"l":15,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"st":["l",[["T",[[7]]]],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,7]]]}},{"l":15,"d":1,"f":1,"v":{"preorder":["l",[3,9,20,15,7],0],"inorder":["l",[9,3,15,20,7],0],"root":["T",[[3],[9,20],[null,null,15,7]]],"st":["l",[["T",[[7]]]],0],"j":4,"v":7,"node":["T",[[7]]],"parent":["T",[[20],[15,7]]]},"ret":["T",[[3],[9,20],[null,null,15,7]]]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0]}},{"l":4,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0]}},{"l":5,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"st":["l",[["T",[[-1]]]],0],"j":0}},{"l":15,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"st":["l",[["T",[[-1]]]],0],"j":0}},{"l":15,"d":1,"f":1,"v":{"preorder":["l",[-1],0],"inorder":["l",[-1],0],"root":["T",[[-1]]],"st":["l",[["T",[[-1]]]],0],"j":0},"ret":["T",[[-1]]]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["pos = {v: i for i, v in enumerate(inorder)}","Dict value → inorder index (values are unique)","Replace a linear search for the root with an O(1) lookup"],["it = iter(preorder); next(it)","A one-shot iterator: each `next` returns the next unused preorder value","Consuming a sequence in order across recursive calls without passing an index"],["build(lo, hi)","Builds the subtree whose nodes occupy inorder[lo..hi]","Describing a subtree by an inorder range"],["lo > hi","Empty range, so no node; return None","Recursion base case"]]}},{"h":"Walk through an example","p":["`preorder = [3,9,20,15,7]`, `inorder = [9,3,15,20,7]`. Each call takes the next preorder value as the root and splits its inorder range around it:"],"table":{"head":["root (next preorder)","inorder range","its inorder index","children ranges"],"rows":[["3","[0,4]","1","left [0,0], right [2,4]"],["9","[0,0]","0","left [0,-1], right [1,0]"],["20","[2,4]","3","left [2,2], right [4,4]"],["15","[2,2]","2","left [2,1], right [3,2]"],["7","[4,4]","4","left [4,3], right [5,4]"]]},"bullets":["Result: `3(9,20(15,7))`."]},{"h":"Why must left be built before right?","p":["Preorder is root, left subtree, right subtree. The shared iterator hands out values in that order, so `node.left = build(...)` has to run before `node.right = build(...)`; swapping them would give the right subtree the left subtree's values."]},{"h":"Time and space","bullets":["Time: O(n), each node is created once and the dict lookup is O(1) (a naive `inorder.index` would make it O(n²)).","Space: O(n) for the dict, plus O(h) recursion."]}],"takeaway":"Preorder gives roots in order, inorder tells how to split; a hash map plus a shared iterator makes it linear."},"ex2":{"input":"[-1],[-1]","output":"[-1]","why":"A single node."},"statement":"Two integer arrays describe the same binary tree: `preorder` (node, left subtree, right subtree) and `inorder` (left subtree, node, right subtree). Rebuild the tree and return its root. Trees are written level by level in the examples, with `null` for a missing child.\n\nExample 1:\n\n```\nInput: preorder = [1,2,3], inorder = [2,1,3]\nOutput: [1,2,3]\n```\n\nExample 2:\n\n```\nInput: preorder = [7], inorder = [7]\nOutput: [7]\n```\n\nConstraints:\n\n* `1 <= preorder.length <= 3000`\n* `inorder.length == preorder.length`\n* `-3000 <= preorder[i], inorder[i] <= 3000`\n* `preorder` and `inorder` consist of unique values.\n* Each value of `inorder` also appears in `preorder`, and both describe a valid tree."};
+window.PROBLEM = {
+ "id": "105",
+ "title": "Construct Binary Tree from Preorder and Inorder Traversal",
+ "level": "Medium",
+ "topic": "Binary Tree - General",
+ "question": "You are given two lists describing the same binary tree whose values are all different: preorder (visit a node first, then its whole left side, then its whole right side) and inorder (left side, then the node, then the right side). Rebuild the tree and return its root. Example: preorder=[3,9,20,15,7], inorder=[9,3,15,20,7] → root 3 with left child 9 and right child 20 (which has children 15 and 7).",
+ "why": "preorder [3,9,20,15,7], inorder [9,3,15,20,7] → root 3, left 9, right 20 with children 15 and 7.",
+ "idea": "The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.",
+ "input": "preorder=[3,9,20,15,7], inorder=[9,3,15,20,7]",
+ "output": "[3,9,20,null,null,15,7]",
+ "notes": [],
+ "best": "The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.",
+ "variants": [
+  {
+   "name": "Index map recursion",
+   "code": "class Solution:\n    def buildTree(self, preorder, inorder):\n        pos = {v: i for i, v in enumerate(inorder)}\n        it = iter(preorder)\n        def build(lo, hi):\n            if lo > hi: return None\n            v = next(it); node = TreeNode(v)\n            m = pos[v]\n            node.left = build(lo, m - 1); node.right = build(m + 1, hi)\n            return node\n        return build(0, len(inorder) - 1)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "The next preorder value is always a root. Find it in the inorder list: everything to its left is the left subtree.",
+   "frames": [
+    {
+     "title": "Inputs",
+     "description": "Preorder starts with the root.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "preorder",
+       "cells": [
+        "3",
+        "9",
+        "20",
+        "15",
+        "7"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "inorder",
+       "cells": [
+        "9",
+        "3",
+        "15",
+        "20",
+        "7"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Root = 3",
+     "description": "In the inorder list, 9 is left of 3 and 15,20,7 are right of it.",
+     "codeLines": [
+      7,
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "preorder",
+       "cells": [
+        "3",
+        "9",
+        "20",
+        "15",
+        "7"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "inorder",
+       "cells": [
+        "9",
+        "3",
+        "15",
+        "20",
+        "7"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Left: 9",
+     "description": "Next preorder value 9 — left subtree [9] is a single node.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "preorder",
+       "cells": [
+        "3",
+        "9",
+        "20",
+        "15",
+        "7"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "inorder",
+       "cells": [
+        "9",
+        "3",
+        "15",
+        "20",
+        "7"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Right: 20",
+     "description": "Next is 20; in inorder, 15 is left of 20 and 7 is right.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "preorder",
+       "cells": [
+        "3",
+        "9",
+        "20",
+        "15",
+        "7"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      },
+      {
+       "name": "inorder",
+       "cells": [
+        "9",
+        "3",
+        "15",
+        "20",
+        "7"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Leaves 15, 7",
+     "description": "Remaining preorder values become 20's children.",
+     "codeLines": [
+      9
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "9",
+        "20"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "·",
+        "·",
+        "15",
+        "7"
+       ],
+       "hot": [
+        2,
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Recursion with slicing",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def buildTree(self, preorder, inorder):\n        if not preorder: return None\n        root = TreeNode(preorder[0]); m = inorder.index(preorder[0])\n        root.left = self.buildTree(preorder[1:m + 1], inorder[:m])\n        root.right = self.buildTree(preorder[m + 1:], inorder[m + 1:])\n        return root",
+   "time": "O(n²)",
+   "space": "O(n²)",
+   "explain": "Split both lists around the root with slices.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Iterative with a stack",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def buildTree(self, preorder, inorder):\n        if not preorder: return None\n        root = TreeNode(preorder[0]); st = [root]; j = 0\n        for v in preorder[1:]:\n            node = TreeNode(v)\n            if st[-1].val != inorder[j]:\n                st[-1].left = node\n            else:\n                parent = None\n                while st and st[-1].val == inorder[j]:\n                    parent = st.pop(); j += 1\n                parent.right = node\n            st.append(node)\n        return root",
+   "time": "O(n)",
+   "space": "O(h)",
+   "explain": "Walk the preorder; go left until the inorder pointer says the branch ended.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

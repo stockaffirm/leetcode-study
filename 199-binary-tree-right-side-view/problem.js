@@ -1,1 +1,239 @@
-window.PROBLEM = {"id":"199","title":"Binary Tree Right Side View","level":"Medium","topic":"Binary Tree - BFS","question":"Imagine standing on the right side of a binary tree looking at it. Return the values of the nodes you can see, ordered from top to bottom — that is, the rightmost node on each level. Example: [1,2,3,null,5,null,4] → level 0 shows 1, level 1 shows 3, level 2 shows 4 → [1,3,4]. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)","input":"[1, 2, 3, null, 5, null, 4]","output":"[1, 3, 4]","notes":["size = len(q) freezes the level width.","w = widest level."],"best":"BFS by level; record the last node of each level.","variants":[{"name":"BFS (last of each level)","code":"class Solution:\n    def rightSideView(self, root):\n        res, q = [], deque([root])\n        while q:\n            size = len(q)\n            for i in range(size):\n                node = q.popleft()\n                if i == size - 1: res.append(node.val)\n                if node.left: q.append(node.left)\n                if node.right: q.append(node.right)\n        return res","time":"O(n)","space":"O(w)","explain":"Level by level; the last node of each level is visible.","frames":[{"title":"Tree","description":"BFS one level at a time.","codeLines":[3],"facts":{},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["·","5","·","4"],"hot":[],"marks":{}}]},{"title":"Level 0","description":"Only node 1 → visible.","codeLines":[8],"facts":{"queue":"[1]","res":"[1]"},"rows":[{"name":"level 0","cells":["1"],"hot":[0],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["·","5","·","4"],"hot":[],"marks":{}}]},{"title":"Level 1","description":"Nodes 2, 3. The last one (3) is visible.","codeLines":[8],"facts":{"queue":"[2,3]","res":"[1,3]"},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[1],"marks":{}},{"name":"level 2","cells":["·","5","·","4"],"hot":[],"marks":{}}]},{"title":"Level 2","description":"Nodes 5, 4. The last one (4) is visible.","codeLines":[8],"facts":{"queue":"[5,4]","res":"[1,3,4]"},"rows":[{"name":"level 0","cells":["1"],"hot":[],"marks":{}},{"name":"level 1","cells":["2","3"],"hot":[],"marks":{}},{"name":"level 2","cells":["·","5","·","4"],"hot":[3],"marks":{}}]},{"title":"Return","description":"[1, 3, 4]","codeLines":[11],"facts":{},"rows":[{"name":"res","cells":["1","3","4"],"hot":[0,1,2],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"q":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"q":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"q":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0],"size":1}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"q":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0],"size":1,"i":0}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]]],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0],"size":1,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0],"size":2,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0],"size":2,"i":0,"node":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[3],[null,4]]]],0],"size":2,"i":0,"node":["T",[[2],[null,5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[3],[null,4]]]],0],"size":2,"i":0,"node":["T",[[2],[null,5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[3],[null,4]]]],0],"size":2,"i":0,"node":["T",[[2],[null,5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[3],[null,4]]],["T",[[5]]]],0],"size":2,"i":0,"node":["T",[[2],[null,5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[3],[null,4]]],["T",[[5]]]],0],"size":2,"i":1,"node":["T",[[2],[null,5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"q":["l",[["T",[[5]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]],["T",[[4]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]],["T",[[4]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]],["T",[[4]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]],["T",[[4]]]],0],"size":2,"i":1,"node":["T",[[3],[null,4]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[5]]],["T",[[4]]]],0],"size":2,"i":0,"node":["T",[[3],[null,4]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[4]]]],0],"size":2,"i":0,"node":["T",[[5]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[4]]]],0],"size":2,"i":0,"node":["T",[[5]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[4]]]],0],"size":2,"i":0,"node":["T",[[5]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[4]]]],0],"size":2,"i":0,"node":["T",[[5]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[["T",[[4]]]],0],"size":2,"i":1,"node":["T",[[5]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"q":["l",[],0],"size":2,"i":1,"node":["T",[[4]]]},"ret":["l",[1,3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"q":["l",[["T",[[1],[null,3]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"q":["l",[["T",[[1],[null,3]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"q":["l",[["T",[[1],[null,3]]]],0],"size":1}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"q":["l",[["T",[[1],[null,3]]]],0],"size":1,"i":0}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[["T",[[3]]]],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[["T",[[3]]]],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[["T",[[3]]]],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[["T",[[3]]]],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[["T",[[3]]]],0],"size":1,"i":0,"node":["T",[[1],[null,3]]]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":10,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]}},{"l":11,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"q":["l",[],0],"size":1,"i":0,"node":["T",[[3]]]},"ret":["l",[1,3],0]}],"trunc":false}},{"name":"DFS, right side first","tag":"Alternative","code":"class Solution:\n    def rightSideView(self, root):\n        res = []\n        def go(n, d):\n            if not n: return\n            if d == len(res): res.append(n.val)\n            go(n.right, d + 1); go(n.left, d + 1)\n        go(root, 0)\n        return res","time":"O(n)","space":"O(h)","explain":"Visit right before left; the first node seen at each depth is visible.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0]}},{"l":5,"d":2,"f":2,"v":{"n":["T",[[1],[2,3],[null,5,null,4]]],"d":0,"res":["l",[],0]}},{"l":6,"d":2,"f":2,"v":{"n":["T",[[1],[2,3],[null,5,null,4]]],"d":0,"res":["l",[],0]}},{"l":7,"d":2,"f":2,"v":{"n":["T",[[1],[2,3],[null,5,null,4]]],"d":0,"res":["l",[1],0]}},{"l":5,"d":3,"f":3,"v":{"n":["T",[[3],[null,4]]],"d":1,"res":["l",[1],0]}},{"l":6,"d":3,"f":3,"v":{"n":["T",[[3],[null,4]]],"d":1,"res":["l",[1],0]}},{"l":7,"d":3,"f":3,"v":{"n":["T",[[3],[null,4]]],"d":1,"res":["l",[1,3],0]}},{"l":5,"d":4,"f":4,"v":{"n":["T",[[4]]],"d":2,"res":["l",[1,3],0]}},{"l":6,"d":4,"f":4,"v":{"n":["T",[[4]]],"d":2,"res":["l",[1,3],0]}},{"l":7,"d":4,"f":4,"v":{"n":["T",[[4]]],"d":2,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":5,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":5,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]},"ret":null},{"l":5,"d":5,"f":6,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":6,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]},"ret":null},{"l":7,"d":4,"f":4,"v":{"n":["T",[[4]]],"d":2,"res":["l",[1,3,4],0]},"ret":null},{"l":5,"d":4,"f":7,"v":{"n":null,"d":2,"res":["l",[1,3,4],0]}},{"l":5,"d":4,"f":7,"v":{"n":null,"d":2,"res":["l",[1,3,4],0]},"ret":null},{"l":7,"d":3,"f":3,"v":{"n":["T",[[3],[null,4]]],"d":1,"res":["l",[1,3,4],0]},"ret":null},{"l":5,"d":3,"f":8,"v":{"n":["T",[[2],[null,5]]],"d":1,"res":["l",[1,3,4],0]}},{"l":6,"d":3,"f":8,"v":{"n":["T",[[2],[null,5]]],"d":1,"res":["l",[1,3,4],0]}},{"l":7,"d":3,"f":8,"v":{"n":["T",[[2],[null,5]]],"d":1,"res":["l",[1,3,4],0]}},{"l":5,"d":4,"f":9,"v":{"n":["T",[[5]]],"d":2,"res":["l",[1,3,4],0]}},{"l":6,"d":4,"f":9,"v":{"n":["T",[[5]]],"d":2,"res":["l",[1,3,4],0]}},{"l":7,"d":4,"f":9,"v":{"n":["T",[[5]]],"d":2,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":10,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":10,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]},"ret":null},{"l":5,"d":5,"f":11,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]}},{"l":5,"d":5,"f":11,"v":{"n":null,"d":3,"res":["l",[1,3,4],0]},"ret":null},{"l":7,"d":4,"f":9,"v":{"n":["T",[[5]]],"d":2,"res":["l",[1,3,4],0]},"ret":null},{"l":5,"d":4,"f":12,"v":{"n":null,"d":2,"res":["l",[1,3,4],0]}},{"l":5,"d":4,"f":12,"v":{"n":null,"d":2,"res":["l",[1,3,4],0]},"ret":null},{"l":7,"d":3,"f":8,"v":{"n":["T",[[2],[null,5]]],"d":1,"res":["l",[1,3,4],0]},"ret":null},{"l":7,"d":2,"f":2,"v":{"n":["T",[[1],[2,3],[null,5,null,4]]],"d":0,"res":["l",[1,3,4],0]},"ret":null},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0]},"ret":["l",[1,3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0]}},{"l":8,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0]}},{"l":5,"d":2,"f":2,"v":{"n":["T",[[1],[null,3]]],"d":0,"res":["l",[],0]}},{"l":6,"d":2,"f":2,"v":{"n":["T",[[1],[null,3]]],"d":0,"res":["l",[],0]}},{"l":7,"d":2,"f":2,"v":{"n":["T",[[1],[null,3]]],"d":0,"res":["l",[1],0]}},{"l":5,"d":3,"f":3,"v":{"n":["T",[[3]]],"d":1,"res":["l",[1],0]}},{"l":6,"d":3,"f":3,"v":{"n":["T",[[3]]],"d":1,"res":["l",[1],0]}},{"l":7,"d":3,"f":3,"v":{"n":["T",[[3]]],"d":1,"res":["l",[1,3],0]}},{"l":5,"d":4,"f":4,"v":{"n":null,"d":2,"res":["l",[1,3],0]}},{"l":5,"d":4,"f":4,"v":{"n":null,"d":2,"res":["l",[1,3],0]},"ret":null},{"l":5,"d":4,"f":5,"v":{"n":null,"d":2,"res":["l",[1,3],0]}},{"l":5,"d":4,"f":5,"v":{"n":null,"d":2,"res":["l",[1,3],0]},"ret":null},{"l":7,"d":3,"f":3,"v":{"n":["T",[[3]]],"d":1,"res":["l",[1,3],0]},"ret":null},{"l":5,"d":3,"f":6,"v":{"n":null,"d":1,"res":["l",[1,3],0]}},{"l":5,"d":3,"f":6,"v":{"n":null,"d":1,"res":["l",[1,3],0]},"ret":null},{"l":7,"d":2,"f":2,"v":{"n":["T",[[1],[null,3]]],"d":0,"res":["l",[1,3],0]},"ret":null},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0]}},{"l":9,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0]},"ret":["l",[1,3],0]}],"trunc":false}},{"name":"Level lists","tag":"Alternative","code":"class Solution:\n    def rightSideView(self, root):\n        res, level = [], [root] if root else []\n        while level:\n            res.append(level[-1].val)\n            level = [c for n in level for c in (n.left, n.right) if c]\n        return res","time":"O(n)","space":"O(w)","explain":"Keep each level as a list and take its last element.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"level":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[],0],"level":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"level":["l",[["T",[[1],[2,3],[null,5,null,4]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"level":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1],0],"level":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"level":["l",[["T",[[2],[null,5]]],["T",[[3],[null,4]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"level":["l",[["T",[[5]]],["T",[[4]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3],0],"level":["l",[["T",[[5]]],["T",[[4]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"level":["l",[["T",[[5]]],["T",[[4]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"level":["l",[],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"level":["l",[],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[2,3],[null,5,null,4]]],"res":["l",[1,3,4],0],"level":["l",[],0]},"ret":["l",[1,3,4],0]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"level":["l",[["T",[[1],[null,3]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[],0],"level":["l",[["T",[[1],[null,3]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"level":["l",[["T",[[1],[null,3]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"level":["l",[["T",[[3]]]],0]}},{"l":5,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1],0],"level":["l",[["T",[[3]]]],0]}},{"l":6,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"level":["l",[["T",[[3]]]],0]}},{"l":4,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"level":["l",[],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"level":["l",[],0]}},{"l":7,"d":1,"f":1,"v":{"root":["T",[[1],[null,3]]],"res":["l",[1,3],0],"level":["l",[],0]},"ret":["l",[1,3],0]}],"trunc":false}}],"why":"Row 1: 1. Row 2: 3 hides 2. Row 3: 4 hides 5. → [1, 3, 4].","idea":"BFS level by level. Take the last node of each level.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`deque([root])`","BFS queue with the root","`popleft` is O(1)"],["`size = len(q)`","Number of nodes on the current level, frozen before the loop","Separates levels in a single queue"],["`for i in range(size)`","Processes exactly one level","Children appended meanwhile belong to the next level"],["`i == size - 1`","This is the last node of the level","The last one in left-to-right order is the rightmost, which is what you see"]]}},{"h":"Walk through an example","p":["Tree `[1,2,3,null,5,null,4]`:"],"table":{"head":["Level","Nodes (left→right)","Rightmost → res"],"rows":[["0","[1]","1"],["1","[2, 3]","3"],["2","[5, 4]","4"]]}},{"h":"Why 'last of each level' and not 'always go right'?","p":["Following only right children fails when a right subtree is shorter than the left one: in this tree, level 2 holds `5` (under 2) and `4` (under 3), and the view shows `4` because it is the rightmost; but in a tree where node 3 had no children, the view at that level would be `5`, found only by looking at the whole level."]},{"h":"A subtle edge case","p":["`deque([root])` with `root = None` creates a one-element queue holding `None`; `popleft()` returns `None` and `node.left` raises `AttributeError` (checked by running it). The problem statement allows an empty tree, so a guard like `deque([root] if root else [])` is safer than this code as written."]},{"h":"Time and space","bullets":["Time: O(n) — every node enqueued once.","Space: O(w) — the queue holds at most one level (the widest level)."]}],"takeaway":"Level-order BFS keeping only the last node of each level — the rightmost node visible from the right."},"ex2":{"input":"[1,null,3]","output":"[1, 3]","why":"The tree only has a right branch, so both nodes are visible."},"statement":"Picture yourself standing on the right-hand side of a binary tree. Return the values of the nodes you can see, from top to bottom (that is, the rightmost node of every level). Trees are written level by level in the examples, with `null` for a missing child.\n\nExample 1:\n\n```\nInput: root = [1,2,3,4]\nOutput: [1,3,4]\n```\n\nExample 2:\n\n```\nInput: root = []\nOutput: []\n```\n\nConstraints:\n\n* The number of nodes is in the range `[0, 100]`.\n* `-100 <= Node.val <= 100`"};
+window.PROBLEM = {
+ "id": "199",
+ "title": "Binary Tree Right Side View",
+ "level": "Medium",
+ "topic": "Binary Tree - BFS",
+ "question": "Imagine standing on the right side of a binary tree looking at it. Return the values of the nodes you can see, ordered from top to bottom — that is, the rightmost node on each level. Example: [1,2,3,null,5,null,4] → level 0 shows 1, level 1 shows 3, level 2 shows 4 → [1,3,4]. (A tree written as a list reads level by level, top to bottom and left to right; null means there is no node in that spot.)",
+ "input": "[1, 2, 3, null, 5, null, 4]",
+ "output": "[1, 3, 4]",
+ "notes": [
+  "size = len(q) freezes the level width.",
+  "w = widest level."
+ ],
+ "best": "BFS by level; record the last node of each level.",
+ "variants": [
+  {
+   "name": "BFS (last of each level)",
+   "code": "class Solution:\n    def rightSideView(self, root):\n        res, q = [], deque([root])\n        while q:\n            size = len(q)\n            for i in range(size):\n                node = q.popleft()\n                if i == size - 1: res.append(node.val)\n                if node.left: q.append(node.left)\n                if node.right: q.append(node.right)\n        return res",
+   "time": "O(n)",
+   "space": "O(w)",
+   "explain": "Level by level; the last node of each level is visible.",
+   "frames": [
+    {
+     "title": "Tree",
+     "description": "BFS one level at a time.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "·",
+        "5",
+        "·",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 0",
+     "description": "Only node 1 → visible.",
+     "codeLines": [
+      8
+     ],
+     "facts": {
+      "queue": "[1]",
+      "res": "[1]"
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "·",
+        "5",
+        "·",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 1",
+     "description": "Nodes 2, 3. The last one (3) is visible.",
+     "codeLines": [
+      8
+     ],
+     "facts": {
+      "queue": "[2,3]",
+      "res": "[1,3]"
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "·",
+        "5",
+        "·",
+        "4"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Level 2",
+     "description": "Nodes 5, 4. The last one (4) is visible.",
+     "codeLines": [
+      8
+     ],
+     "facts": {
+      "queue": "[5,4]",
+      "res": "[1,3,4]"
+     },
+     "rows": [
+      {
+       "name": "level 0",
+       "cells": [
+        "1"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 1",
+       "cells": [
+        "2",
+        "3"
+       ],
+       "hot": [],
+       "marks": {}
+      },
+      {
+       "name": "level 2",
+       "cells": [
+        "·",
+        "5",
+        "·",
+        "4"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "[1, 3, 4]",
+     "codeLines": [
+      11
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "res",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        0,
+        1,
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "DFS, right side first",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def rightSideView(self, root):\n        res = []\n        def go(n, d):\n            if not n: return\n            if d == len(res): res.append(n.val)\n            go(n.right, d + 1); go(n.left, d + 1)\n        go(root, 0)\n        return res",
+   "time": "O(n)",
+   "space": "O(h)",
+   "explain": "Visit right before left; the first node seen at each depth is visible.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Level lists",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def rightSideView(self, root):\n        res, level = [], [root] if root else []\n        while level:\n            res.append(level[-1].val)\n            level = [c for n in level for c in (n.left, n.right) if c]\n        return res",
+   "time": "O(n)",
+   "space": "O(w)",
+   "explain": "Keep each level as a list and take its last element.",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "Row 1: 1. Row 2: 3 hides 2. Row 3: 4 hides 5. → [1, 3, 4].",
+ "idea": "BFS level by level. Take the last node of each level."
+};

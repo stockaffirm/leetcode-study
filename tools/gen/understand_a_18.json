@@ -1,0 +1,1822 @@
+{
+ "2226": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(c // mid for c in candies)",
+       "Number of children who can get `mid` candies each, if every pile is split into piles of size mid (leftovers are wasted)",
+       "Counting how many pieces of a size fit"
+      ],
+      [
+       "mid = (lo + hi + 1) // 2",
+       "Upper middle, because `lo = mid` keeps mid and must make progress",
+       "Binary search for the largest feasible value"
+      ],
+      [
+       "lo, hi = 0, max(candies)",
+       "0 candies each is always possible; more than the biggest pile never is",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`candies = [5,8,6]`, `k = 3`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "children served",
+      "decision"
+     ],
+     "rows": [
+      [
+       "0",
+       "8",
+       "4",
+       "4",
+       "\u2265 k: lo = mid"
+      ],
+      [
+       "4",
+       "8",
+       "6",
+       "2",
+       "< k: hi = mid-1"
+      ],
+      [
+       "4",
+       "5",
+       "5",
+       "3",
+       "\u2265 k: lo = mid"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 5 candies each."
+    ]
+   },
+   {
+    "h": "Why can you binary search?",
+    "p": [
+     "If every child can get x candies, they can also get x \u2212 1, so feasibility is monotone and there is a largest feasible x. Each pile is split independently, so the count is just the sum of floors."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max(candies)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on candies per child; feasibility counts \u03a3 floor(pile / size) \u2265 k."
+ },
+ "2232": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "expression.split('+')",
+       "Left and right operands as strings",
+       ""
+      ],
+      [
+       "i in range(len(left))",
+       "The '(' goes before position i of the left number (i = 0 means right at the start)",
+       "Trying every placement"
+      ],
+      [
+       "j in range(1, len(right) + 1)",
+       "The ')' goes after j digits of the right number (at least 1, and up to all of them)",
+       ""
+      ],
+      [
+       "int(left[:i] or 1)",
+       "Digits outside the parenthesis multiply; an empty outside part counts as 1",
+       "Empty string \u2192 neutral element"
+      ],
+      [
+       "a * (b + c) * d",
+       "Value of the expression with those parentheses",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"247+38\"`: all placements and their values:"
+    ],
+    "table": {
+     "head": [
+      "with parentheses",
+      "a \u00d7 (b + c) \u00d7 d",
+      "value"
+     ],
+     "rows": [
+      [
+       "(247+3)8",
+       "1 \u00d7 (247+3) \u00d7 8",
+       "2000"
+      ],
+      [
+       "(247+38)",
+       "1 \u00d7 (247+38) \u00d7 1",
+       "285"
+      ],
+      [
+       "2(47+3)8",
+       "2 \u00d7 (47+3) \u00d7 8",
+       "800"
+      ],
+      [
+       "2(47+38)",
+       "2 \u00d7 (47+38) \u00d7 1",
+       "170"
+      ],
+      [
+       "24(7+3)8",
+       "24 \u00d7 (7+3) \u00d7 8",
+       "1920"
+      ],
+      [
+       "24(7+38)",
+       "24 \u00d7 (7+38) \u00d7 1",
+       "1080"
+      ]
+     ]
+    },
+    "bullets": [
+     "Smallest: `2(47+38)`."
+    ]
+   },
+   {
+    "h": "Why brute force is fine",
+    "p": [
+     "Each operand has at most 10 digits, so at most about 10 \u00d7 10 placements, each evaluated in O(1) with integer arithmetic."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L\u00b2) for operand length L (plus O(L) to build each string).",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Try every parenthesis placement and evaluate a \u00d7 (b + c) \u00d7 d, with an empty outside part as 1."
+ },
+ "2235": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "num1 + num2",
+       "Integer addition; Python ints have no overflow",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num1 = 12`, `num2 = 5`:"
+    ],
+    "table": {
+     "head": [
+      "expression",
+      "value"
+     ],
+     "rows": [
+      [
+       "12 + 5",
+       "17"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is there nothing more to it?",
+    "p": [
+     "The problem is intentionally trivial: it checks that you can write a method and return a value. In languages with fixed-width integers, the constraints (\u2212100 to 100) mean no overflow can occur either."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Return num1 + num2."
+ },
+ "2265": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(node) \u2192 (sum, count)",
+       "Post-order DFS (Depth-First Search) returning the subtree's sum and node count",
+       "Returning two numbers up the tree"
+      ],
+      [
+       "s // c",
+       "Integer average (rounded down), compared to the node's value",
+       "The problem defines the average as the floor"
+      ],
+      [
+       "nonlocal ans",
+       "Counter updated inside the recursion",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[4,8,5,0,1,null,6]`:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "subtree sum",
+      "count",
+      "average (floor)",
+      "equals node?"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1",
+       "0",
+       "yes"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1",
+       "yes"
+      ],
+      [
+       "8",
+       "9",
+       "3",
+       "3",
+       "no"
+      ],
+      [
+       "6",
+       "6",
+       "1",
+       "6",
+       "yes"
+      ],
+      [
+       "5",
+       "11",
+       "2",
+       "5",
+       "yes"
+      ],
+      [
+       "4",
+       "24",
+       "6",
+       "4",
+       "yes"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 5."
+    ]
+   },
+   {
+    "h": "Why compute sum and count together?",
+    "p": [
+     "A node's average needs the totals of its whole subtree. Returning (sum, count) from the children lets each node combine them in O(1), so the whole tree is O(n); recomputing a subtree sum per node would be O(n\u00b2)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Post-order DFS returning (sum, count); compare floor(sum/count) with the node value."
+ },
+ "2289": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st of (value, steps)",
+       "Monotonic stack of decreasing values; each value remembers how many rounds it survives before being removed",
+       "Monotonic stack with extra data"
+      ],
+      [
+       "st[-1][0] <= x: pop",
+       "Elements on the stack that are \u2264 x sit between x and the nearest larger element on its left; each of them is deleted (by a larger left neighbour) before x can be, so x pops them",
+       ""
+      ],
+      [
+       "steps = max(steps, popped steps)",
+       "x is removed after the longest chain of removals among the elements it 'absorbs'",
+       ""
+      ],
+      [
+       "steps + 1 if st else 0",
+       "If a larger element remains on the left, x will be deleted one step after the last of those finishes; if none, x never gets removed (0)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,3,4,4,7,3,6,11,8,5,11]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "steps until x is removed",
+      "stack (value, steps)",
+      "answer so far"
+     ],
+     "rows": [
+      [
+       "5",
+       "0",
+       "[(5, 0)]",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "[(5, 0), (3, 1)]",
+       "1"
+      ],
+      [
+       "4",
+       "2",
+       "[(5, 0), (4, 2)]",
+       "2"
+      ],
+      [
+       "4",
+       "3",
+       "[(5, 0), (4, 3)]",
+       "3"
+      ],
+      [
+       "7",
+       "0",
+       "[(7, 0)]",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "[(7, 0), (3, 1)]",
+       "3"
+      ],
+      [
+       "6",
+       "2",
+       "[(7, 0), (6, 2)]",
+       "3"
+      ],
+      [
+       "11",
+       "0",
+       "[(11, 0)]",
+       "3"
+      ],
+      [
+       "8",
+       "1",
+       "[(11, 0), (8, 1)]",
+       "3"
+      ],
+      [
+       "5",
+       "1",
+       "[(11, 0), (8, 1), (5, 1)]",
+       "3"
+      ],
+      [
+       "11",
+       "0",
+       "[(11, 0)]",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why does a bigger-left element make x disappear?",
+    "p": [
+     "Each round removes every element whose left neighbour is larger. x is removed once the elements between x and the nearest larger element on its left are gone and that larger element becomes its neighbour: the time is 1 + the longest removal time among the in-between elements. The stack stores exactly those removal times."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each element pushed and popped once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack where each element stores its removal round = 1 + the max round of the elements it covers."
+ },
+ "2307": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "parent, w",
+       "Weighted Union-Find (disjoint set): w[x] is the ratio x / parent[x]",
+       "Union-Find with relations on edges"
+      ],
+      [
+       "find(x) with w[x] *= w[p]",
+       "Path compression that also multiplies weights, so afterwards w[x] = x / root",
+       ""
+      ],
+      [
+       "ra == rb: abs(w[a] / w[b] - v) >= 1e-5",
+       "Already connected: the implied a / b is w[a] / w[b]; if it differs from v there is a contradiction (compare floats with a tolerance)",
+       "Floating-point comparison"
+      ],
+      [
+       "parent[ra] = rb; w[ra] = v * w[b] / w[a]",
+       "Union: set the weight so that a / b = v holds",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a/b = 3`, `b/c = 0.5`, `a/c = 1.5`:"
+    ],
+    "table": {
+     "head": [
+      "equation",
+      "implied ratio",
+      "result"
+     ],
+     "rows": [
+      [
+       "a/b = 3",
+       "new connection",
+       "merged"
+      ],
+      [
+       "b/c = 0.5",
+       "new connection",
+       "merged"
+      ],
+      [
+       "a/c = 1.5",
+       "known ratio 1.500",
+       "consistent"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: False (no contradiction): a/c implied by the first two equations is 3 \u00d7 0.5 = 1.5, and the given value is 1.5."
+    ]
+   },
+   {
+    "h": "Why a weighted Union-Find?",
+    "p": [
+     "Each equation a / b = v links two variables with a ratio. Variables in one group have fixed ratios to the root, so any new equation between two group members can be checked in near-constant time against the stored ratios."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: near O(n \u03b1(n)) (\u03b1 is the inverse Ackermann function).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Weighted Union-Find: store ratio to the root; a repeat connection must match the implied ratio within tolerance."
+ },
+ "2316": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "p / find (Union-Find (disjoint set))",
+       "Groups nodes into connected components",
+       ""
+      ],
+      [
+       "Counter(find(i) for i in range(n))",
+       "Size of each component",
+       ""
+      ],
+      [
+       "rest -= s; res += s * rest",
+       "Pairs between this component and all components not yet counted: size \u00d7 (nodes remaining in other, not-yet-counted components)",
+       "Counting cross pairs once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 7`, edges `[[0,2],[0,5],[2,4],[1,6],[5,4]]` give components of sizes 4, 2 and 1:"
+    ],
+    "table": {
+     "head": [
+      "component size s",
+      "nodes in later components",
+      "pairs s \u00d7 rest",
+      "total"
+     ],
+     "rows": [
+      [
+       "4",
+       "3",
+       "12",
+       "12"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "14"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "14"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 14."
+    ]
+   },
+   {
+    "h": "Why `rest` shrinks before multiplying?",
+    "p": [
+     "Each pair of nodes from different components should be counted exactly once. By removing the current component from `rest` first, `s * rest` counts pairs between it and the components processed after it; earlier components already counted their pairs with this one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + E) \u03b1(n)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find component sizes; sum size \u00d7 (nodes in components not yet counted)."
+ },
+ "2325": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mapping = {' ': ' '}",
+       "Substitution table; spaces map to themselves",
+       ""
+      ],
+      [
+       "if ch not in mapping: mapping[ch] = chr(97 + nxt)",
+       "The first appearance of each cipher letter in the key gets the next plain letter a, b, c, \u2026",
+       "Assigning ranks by first appearance"
+      ],
+      [
+       "chr(97 + nxt)",
+       "Letter with index nxt (97 is the code of 'a')",
+       ""
+      ],
+      [
+       "''.join(mapping[c] for c in message)",
+       "Decodes every character through the table",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "First appearances in the key `\"the quick brown fox \u2026\"` build the table:"
+    ],
+    "table": {
+     "head": [
+      "cipher letter",
+      "plain letter"
+     ],
+     "rows": [
+      [
+       " ",
+       " "
+      ],
+      [
+       "t",
+       "a"
+      ],
+      [
+       "h",
+       "b"
+      ],
+      [
+       "e",
+       "c"
+      ],
+      [
+       "q",
+       "d"
+      ],
+      [
+       "u",
+       "e"
+      ],
+      [
+       "i",
+       "f"
+      ],
+      [
+       "c",
+       "g"
+      ],
+      [
+       "k",
+       "h"
+      ],
+      [
+       "b",
+       "i"
+      ],
+      [
+       "r",
+       "j"
+      ],
+      [
+       "o",
+       "k"
+      ]
+     ]
+    },
+    "bullets": [
+     "Decoded message: `this is a secret`."
+    ]
+   },
+   {
+    "h": "Why first appearance?",
+    "p": [
+     "The problem defines the substitution by the order in which letters first appear in the key. Skipping letters already in the table keeps the alphabet assignments in that order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(key) + len(message)).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Build the substitution table by first appearance in the key, then map the message."
+ },
+ "2328": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(i, j)",
+       "Number of strictly increasing paths that START at (i, j), including the single-cell path",
+       "DP (Dynamic Programming) on a grid with memoization"
+      ],
+      [
+       "r = 1",
+       "The path consisting of the cell alone",
+       ""
+      ],
+      [
+       "grid[a][b] > grid[i][j]: r += go(a, b)",
+       "Extend to any strictly larger neighbour; because values strictly increase there are no cycles",
+       "Strict inequality makes the grid a DAG (Directed Acyclic Graph)"
+      ],
+      [
+       "@lru_cache(None)",
+       "Each cell is computed once",
+       ""
+      ],
+      [
+       "% MOD",
+       "Counts can be huge",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,1],[3,4]]` (value at (row, col)):"
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "value",
+      "paths starting there"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "1",
+       "3"
+      ],
+      [
+       "(0,1)",
+       "1",
+       "2"
+      ],
+      [
+       "(1,0)",
+       "3",
+       "2"
+      ],
+      [
+       "(1,1)",
+       "4",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 8."
+    ]
+   },
+   {
+    "h": "Why does memoized recursion terminate?",
+    "p": [
+     "Each step goes to a strictly larger value, so the recursion can never return to a cell already on the current path. The grid with 'bigger neighbour' edges is acyclic, so the recursion depth is bounded and each cell is solved once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m\u00b7n).",
+     "Space: O(m\u00b7n) for the cache and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Memoized DFS counting increasing paths starting at each cell; strict increase prevents cycles."
+ },
+ "2352": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(tuple(r) for r in grid)",
+       "Counts each distinct row; rows are lists, so they are converted to tuples to be hashable",
+       "Hashing sequences"
+      ],
+      [
+       "zip(*grid)",
+       "Transposes: yields the columns as tuples",
+       ""
+      ],
+      [
+       "rows[c]",
+       "How many rows equal this column (a Counter returns 0 for unknown keys)",
+       ""
+      ],
+      [
+       "sum(...)",
+       "Total matching (row, column) pairs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[3,2,1],[1,7,6],[2,7,7]]`: rows `[(3, 2, 1), (1, 7, 6), (2, 7, 7)]`, columns `[(3, 1, 2), (2, 7, 7), (1, 6, 7)]`:"
+    ],
+    "table": {
+     "head": [
+      "column",
+      "number of equal rows"
+     ],
+     "rows": [
+      [
+       "(3, 1, 2)",
+       "0"
+      ],
+      [
+       "(2, 7, 7)",
+       "1"
+      ],
+      [
+       "(1, 6, 7)",
+       "0"
+      ]
+     ]
+    },
+    "bullets": [
+     "The column `(2, 7, 7)` equals the row `(2, 7, 7)`, the only matching pair, so the answer is 1."
+    ]
+   },
+   {
+    "h": "Why counts and not a double loop?",
+    "p": [
+     "Comparing every row with every column costs O(n\u00b3). Hashing the rows reduces each column check to O(n) for building its tuple plus an O(1) lookup, O(n\u00b2) in total. The Counter also handles duplicate rows: a column equal to two identical rows contributes 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2).",
+     "Space: O(n\u00b2)."
+    ]
+   }
+  ],
+  "takeaway": "Hash rows as tuples in a Counter and look up each column tuple."
+ },
+ "2361": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "reg",
+       "Minimum cost to be at the current stop having arrived by the regular route",
+       "Two-state DP (Dynamic Programming)"
+      ],
+      [
+       "exp",
+       "Minimum cost to be at the current stop on the express route; it starts at `expressCost` because boarding costs once",
+       ""
+      ],
+      [
+       "new_reg = min(reg, exp) + r",
+       "To reach the next stop on the regular line you can come from either line (switching back to regular is free)",
+       ""
+      ],
+      [
+       "new_exp = min(exp, reg + expressCost) + e",
+       "Stay on express, or pay the fee to switch from regular",
+       ""
+      ],
+      [
+       "reg, exp = new_reg, new_exp",
+       "Simultaneous update from the old values",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`regular = [1,6,9,5]`, `express = [5,2,3,10]`, fee 8:"
+    ],
+    "table": {
+     "head": [
+      "regular cost",
+      "express cost",
+      "reg",
+      "exp",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "1",
+       "13",
+       "1"
+      ],
+      [
+       "6",
+       "2",
+       "7",
+       "11",
+       "7"
+      ],
+      [
+       "9",
+       "3",
+       "16",
+       "14",
+       "14"
+      ],
+      [
+       "5",
+       "10",
+       "19",
+       "24",
+       "19"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answers per stop: `[1, 7, 14, 19]`."
+    ]
+   },
+   {
+    "h": "Why compute both states each stop?",
+    "p": [
+     "The cheapest way to reach a stop on the regular line may come from the express line (and vice versa), so both options must be kept: the best overall route to a later stop depends on which line you are on, not just on the cheapest total so far."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Two-state DP (regular vs express) with switching costs; answer each stop is the smaller."
+ },
+ "2373": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(n - 2)",
+       "Top-left corners of all 3\u00d73 windows: the result is (n\u22122)\u00d7(n\u22122)",
+       ""
+      ],
+      [
+       "two inner loops over 3\u00d73",
+       "Scans the window",
+       "Fixed small window"
+      ],
+      [
+       "max(m, grid[i + a][j + b])",
+       "Running maximum of the window",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A 4\u00d74 grid gives a 2\u00d72 result. For each window, the maximum:"
+    ],
+    "table": {
+     "head": [
+      "window top-left",
+      "window rows",
+      "max"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "[9, 9, 8] / [5, 6, 2] / [8, 2, 6]",
+       "9"
+      ],
+      [
+       "(0,1)",
+       "[9, 8, 1] / [6, 2, 6] / [2, 6, 4]",
+       "9"
+      ],
+      [
+       "(1,0)",
+       "[5, 6, 2] / [8, 2, 6] / [6, 2, 2]",
+       "8"
+      ],
+      [
+       "(1,1)",
+       "[6, 2, 6] / [2, 6, 4] / [2, 2, 2]",
+       "6"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[[9, 9], [8, 6]]`."
+    ]
+   },
+   {
+    "h": "Why initialise the maximum to 0?",
+    "p": [
+     "Values are at least 1 in this problem, so 0 is smaller than any entry. If negative values were possible, start from `-inf` or the first cell."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(9 \u00b7 n\u00b2).",
+     "Space: O(n\u00b2) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Slide a 3\u00d73 window and take the maximum; the output is (n \u2212 2) \u00d7 (n \u2212 2)."
+ },
+ "2385": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "build(node, parent)",
+       "DFS (Depth-First Search) that adds an edge between every node and its parent in both directions, turning the tree into an undirected graph",
+       "Tree \u2192 graph so you can walk upward"
+      ],
+      [
+       "deque / seen",
+       "BFS (Breadth-First Search) queue and visited set",
+       ""
+      ],
+      [
+       "minutes = -1; minutes += 1 per layer",
+       "Starts at \u22121 so the first layer (the start node itself) is minute 0",
+       "Counting BFS layers"
+      ],
+      [
+       "for _ in range(len(q))",
+       "Processes one layer, i.e. one minute of spreading",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,5,3,null,4,10,6,9,2]`, infection starts at node 3:"
+    ],
+    "table": {
+     "head": [
+      "minute",
+      "infected at this minute"
+     ],
+     "rows": [
+      [
+       "0",
+       "[3]"
+      ],
+      [
+       "1",
+       "[1, 10, 6]"
+      ],
+      [
+       "2",
+       "[5]"
+      ],
+      [
+       "3",
+       "[4]"
+      ],
+      [
+       "4",
+       "[9, 2]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The last layer is at minute 4: the answer."
+    ]
+   },
+   {
+    "h": "Why convert to a graph?",
+    "p": [
+     "Infection spreads to children AND to the parent, but tree nodes have no parent pointer. Adding the parent edges makes the spread a plain BFS: the answer is the eccentricity (the greatest distance) from the start node."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Tree to undirected graph, then BFS from the start; the number of layers minus one is the time."
+ },
+ "2397": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(1 << j for j, v in enumerate(r) if v)",
+       "Each row becomes a bitmask of the columns where it has a 1",
+       "Row as a set of columns"
+      ],
+      [
+       "combinations(range(n), numSelect)",
+       "From `itertools`: every way to choose numSelect columns",
+       "Brute force over small n"
+      ],
+      [
+       "r & ~chosen == 0",
+       "The row's 1s are a subset of the chosen columns: `~chosen` flips the bits, and AND with it leaves the 1s outside the selection (must be none)",
+       "Subset test with bitmasks"
+      ],
+      [
+       "max(best, count)",
+       "Best selection",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Row masks (bit j = column j): `['000', '101', '110', '100']`. Choose 2 of 3 columns:"
+    ],
+    "table": {
+     "head": [
+      "chosen columns",
+      "mask",
+      "rows covered"
+     ],
+     "rows": [
+      [
+       "(0, 1)",
+       "011",
+       "1"
+      ],
+      [
+       "(0, 2)",
+       "101",
+       "3"
+      ],
+      [
+       "(1, 2)",
+       "110",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "Best: 3 (the all-zero row is covered by any choice)."
+    ]
+   },
+   {
+    "h": "Why bitmasks?",
+    "p": [
+     "Covering a row means all its ones are inside the chosen set, a subset test that one AND does. Since n \u2264 12, trying all C(n, k) selections is cheap."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(C(n, k) \u00b7 m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Rows as bitmasks; try every column combination and count rows whose mask is a subset."
+ },
+ "2406": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(intervals)",
+       "Process by start time",
+       "Interval scheduling sweep"
+      ],
+      [
+       "heap of end times",
+       "A min-heap holding the end time of each group's last interval; `heap[0]` is the group that frees up first",
+       "Priority queue"
+      ],
+      [
+       "heap[0] < s",
+       "The earliest-ending group finishes strictly before this interval starts (touching intervals overlap in this problem), so the interval can join it",
+       ""
+      ],
+      [
+       "heapreplace(heap, e)",
+       "Pops the smallest and pushes e in one step",
+       "Replace the root efficiently"
+      ],
+      [
+       "len(heap)",
+       "Number of groups = most overlapping intervals at once",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[5,10],[6,8],[1,5],[2,3],[1,10]]`, sorted by start:"
+    ],
+    "table": {
+     "head": [
+      "interval",
+      "action",
+      "group end times"
+     ],
+     "rows": [
+      [
+       "[1,5]",
+       "start a new group",
+       "[5]"
+      ],
+      [
+       "[1,10]",
+       "start a new group",
+       "[5, 10]"
+      ],
+      [
+       "[2,3]",
+       "start a new group",
+       "[3, 5, 10]"
+      ],
+      [
+       "[5,10]",
+       "reuse the group ending at 3",
+       "[5, 10, 10]"
+      ],
+      [
+       "[6,8]",
+       "reuse the group ending at 5",
+       "[8, 10, 10]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Groups: 3."
+    ]
+   },
+   {
+    "h": "Why compare with the earliest ending group only?",
+    "p": [
+     "If any group is free, the one that ends earliest is free. If even that group overlaps, all of them do, so a new group is required."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by start and keep a min-heap of group end times; reuse the earliest-ending group when it has finished."
+ },
+ "2433": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pref[i] ^ pref[i - 1]",
+       "XOR (exclusive or) of two consecutive prefix XORs cancels the common part and leaves arr[i]",
+       "XOR is its own inverse"
+      ],
+      [
+       "ans = [pref[0]]",
+       "The first element equals the first prefix",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`pref = [5,2,0,3,1]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "pref[i]",
+      "pref[i\u22121]",
+      "arr[i] = XOR"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "\u2013",
+       "5"
+      ],
+      [
+       "1",
+       "2",
+       "5",
+       "7"
+      ],
+      [
+       "2",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "0",
+       "3"
+      ],
+      [
+       "4",
+       "1",
+       "3",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Result: `[5, 7, 2, 3, 2]`."
+    ]
+   },
+   {
+    "h": "Why does this recover the array?",
+    "p": [
+     "pref[i] = arr[0] ^ \u2026 ^ arr[i], and pref[i\u22121] = arr[0] ^ \u2026 ^ arr[i\u22121]. XOR-ing them cancels all the shared terms (x ^ x = 0), leaving arr[i]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "arr[i] = pref[i] ^ pref[i\u22121] because XOR cancels the shared prefix."
+ },
+ "2439": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total",
+       "Sum of the prefix nums[0..i]",
+       ""
+      ],
+      [
+       "(total + i) // (i + 1)",
+       "Ceiling of total / (i + 1): the smallest possible maximum if the prefix sum could be spread evenly over i + 1 positions",
+       "Ceiling division with integers"
+      ],
+      [
+       "res = max(res, \u2026)",
+       "The answer is the largest such bound over all prefixes, since moving value is only allowed to the left",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,7,1,6]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "prefix sum",
+      "ceil(prefix / (i + 1))",
+      "answer so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "3",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "7",
+       "10",
+       "5",
+       "5"
+      ],
+      [
+       "2",
+       "1",
+       "11",
+       "4",
+       "5"
+      ],
+      [
+       "3",
+       "6",
+       "17",
+       "5",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 5."
+    ]
+   },
+   {
+    "h": "Why prefixes only?",
+    "p": [
+     "An operation moves one unit from nums[i] to nums[i\u22121], i.e. leftwards. So the values in a prefix can never be lowered below its average, rounded up, but suffix values can flow into the prefix and never help it. The answer is the largest prefix average (rounded up)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Answer = max over prefixes of ceil(prefix sum / length), since values can only move left."
+ },
+ "2448": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(zip(nums, cost))",
+       "Pairs values with their per-unit cost and orders by value",
+       ""
+      ],
+      [
+       "run += c; run * 2 >= total",
+       "Running total of weights; the first value where at least half of the total weight lies at or below it is the weighted median",
+       "Weighted median"
+      ],
+      [
+       "sum(c * abs(v - target))",
+       "Total cost of moving every value to the target",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,5,2]`, `cost = [2,3,1,14]` (total weight 20):"
+    ],
+    "table": {
+     "head": [
+      "value",
+      "cost",
+      "cumulative weight",
+      "\u2265 half of 20?"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "2",
+       "False"
+      ],
+      [
+       "2",
+       "14",
+       "16",
+       "True"
+      ]
+     ]
+    },
+    "bullets": [
+     "Weighted median target = 2; total cost 8."
+    ]
+   },
+   {
+    "h": "Why the weighted median?",
+    "p": [
+     "The total cost is a convex piecewise-linear function of the target; moving the target by 1 changes the cost by (weight on the left) \u2212 (weight on the right). The minimum is where the weight on each side first balances, which is the weighted median."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "The optimal target is the weighted median of the values (weights = costs)."
+ },
+ "2451": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(w, w[1:])",
+       "Adjacent letter pairs",
+       ""
+      ],
+      [
+       "ord(b) - ord(a)",
+       "Difference between adjacent letters: the 'difference integer array' of the word",
+       "Shift-invariant fingerprint"
+      ],
+      [
+       "tuple(\u2026)",
+       "Hashable key",
+       ""
+      ],
+      [
+       "groups[key].append(w)",
+       "Group words by the same difference array",
+       "Grouping by key"
+      ],
+      [
+       "len(g) == 1",
+       "The odd word is alone in its group",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[\"adc\",\"wzy\",\"abc\"]`:"
+    ],
+    "table": {
+     "head": [
+      "word",
+      "difference array"
+     ],
+     "rows": [
+      [
+       "adc",
+       "(3, -1)"
+      ],
+      [
+       "wzy",
+       "(3, -1)"
+      ],
+      [
+       "abc",
+       "(1, 1)"
+      ]
+     ]
+    },
+    "bullets": [
+     "`adc` and `wzy` share `(3, -1)`, while `abc` has `(1, 1)` and is alone in its group, so the answer is `abc`."
+    ]
+   },
+   {
+    "h": "Why do the differences identify the odd word?",
+    "p": [
+     "Words with the same difference array are shifted copies of each other. All but one word in the input share a difference array, so the one that stands alone in its group is the odd one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 L).",
+     "Space: O(n \u00b7 L)."
+    ]
+   }
+  ],
+  "takeaway": "Group words by their adjacent-letter difference tuple; the group of size one is the answer."
+ },
+ "2466": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[n]",
+       "Number of strings of length exactly n that can be built by appending blocks of `zero` zeros or `one` ones",
+       "Counting DP (Dynamic Programming), like climbing stairs"
+      ],
+      [
+       "dp[0] = 1",
+       "The empty string is built in one way",
+       "Base case"
+      ],
+      [
+       "dp[n - zero], dp[n - one]",
+       "The last block appended is a zero-block or a one-block",
+       ""
+      ],
+      [
+       "sum(dp[low:high + 1])",
+       "Total over all lengths in the allowed range",
+       "Slice of a list"
+      ],
+      [
+       "% MOD",
+       "Keeps the numbers in range",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`low = 3, high = 3, zero = 1, one = 1`: each step appends '0' or '1', so dp doubles:"
+    ],
+    "table": {
+     "head": [
+      "length n",
+      "dp[n]"
+     ],
+     "rows": [
+      [
+       "0",
+       "1"
+      ],
+      [
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "8"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: sum of dp[3..3] = 8."
+    ]
+   },
+   {
+    "h": "Why is this a stair-climbing DP?",
+    "p": [
+     "A string of length n ends with a block of size `zero` or `one`, so the number of ways is the number of ways for the shorter string plus the other: the same shape as Climbing Stairs with steps `zero` and `one`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(high).",
+     "Space: O(high)."
+    ]
+   }
+  ],
+  "takeaway": "Climbing-stairs DP with step sizes zero and one; sum dp over [low, high]."
+ }
+}

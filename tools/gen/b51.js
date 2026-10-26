@@ -51,7 +51,7 @@ class Solution:
         return sorted(score, key=lambda row: -row[k])
 `)});
 lite({id:3820,slug:"pythagorean-distance-nodes-in-a-tree",title:"Pythagorean Distance Nodes in a Tree",level:"Medium",topic:GR,name:"BFS from x, y and z, test each node",
-w:"Star with centre 0 and targets 1, 2, 3: node 1 sees distances (0, 2, 2) and 0² + 2² = 2² → special; same for 2 and 3 → 3.",k:"Run a BFS from each of the three target nodes to get the distance of every node to x, y and z. For a node sort its three distances (a ≤ b ≤ c) and check a² + b² = c².",
+w:"Star with centre 0 and targets 1, 2, 3: node 1 sees distances (0, 2, 2) and 0² + 2² = 2² → special; same for 2 and 3 → 3.",k:"Run a BFS (Breadth-First Search) from each of the three target nodes to get the distance of every node to x, y and z. For a node sort its three distances (a ≤ b ≤ c) and check a² + b² = c².",
 i:"n = 4, edges = [[0,1],[0,2],[0,3]], x = 1, y = 2, z = 3",o:"3",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:
@@ -604,7 +604,7 @@ class Solution:
         return res
 `)});
 lite({id:371,slug:"sum-of-two-integers",title:"Sum of Two Integers",level:"Medium",topic:MB,name:"XOR for the sum, AND-shift for the carry",
-w:"1 + 2: xor 3, carry 0 → 3. Python needs a 32-bit mask to behave like fixed-width ints.",k:"a XOR b adds without carrying; (a AND b) << 1 is the carry. Repeat until the carry is 0. Python integers are unbounded, so mask to 32 bits and convert back to a negative number if the sign bit is set.",
+w:"1 + 2: xor 3, carry 0 → 3. Python needs a 32-bit mask to behave like fixed-width ints.",k:"a XOR (exclusive OR) b adds without carrying; (a AND b) << 1 is the carry. Repeat until the carry is 0. Python integers are unbounded, so mask to 32 bits and convert back to a negative number if the sign bit is set.",
 i:"a = 1, b = 2",o:"3",time:"O(1)",space:"O(1)",
 code:C(`
 class Solution:

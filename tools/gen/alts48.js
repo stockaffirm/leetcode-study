@@ -56,7 +56,7 @@ class Solution:
         order = sorted(range(len(score)), key=lambda i: score[i][k], reverse=True)
         return [score[i] for i in order]
 `)});
-alt(3820,{name:"DFS for the distances",tag:"Alternative",time:"O(n)",space:"O(n)",explain:"Same test, distances computed with an iterative DFS.",code:C(`
+alt(3820,{name:"DFS for the distances",tag:"Alternative",time:"O(n)",space:"O(n)",explain:"Same test, distances computed with an iterative DFS (Depth-First Search).",code:C(`
 class Solution:
     def specialNodes(self, n, edges, x, y, z):
         g = [[] for _ in range(n)]

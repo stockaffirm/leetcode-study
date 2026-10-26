@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"3223","title":"Minimum Length of String After Operations","level":"Medium","topic":"Hash Map / Set","question":"In one operation choose an index i with an equal character somewhere to its left and another to its right; delete the closest such character on each side. Return the minimum possible length of the string. Example: 'abaacbcbb' → 5.","why":"'abaacbcbb': a×3 → 1, b×4 → 2, c×2 → 2 → 5.","idea":"An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.","input":"s = \"abaacbcbb\"","output":"5","notes":[],"best":"An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.","variants":[{"name":"Odd count leaves one, even count leaves two","code":"class Solution:\n    def minimumLength(self, s):\n        return sum(1 if c % 2 else 2 for c in Counter(s).values())","time":"O(n)","space":"O(1)","explain":"An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abaacbcbb"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","abaacbcbb"]},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aa"]}},{"l":3,"d":1,"f":1,"v":{"s":["s","aa"]},"ret":2}],"trunc":false}},{"name":"Simulate the deletions","tag":"Brute force","code":"class Solution:\n    def minimumLength(self, s):\n        total = 0\n        for c in Counter(s).values():\n            while c >= 3:\n                c -= 2\n            total += c\n        return total","time":"O(n)","space":"O(1)","explain":"For each letter remove two occurrences at a time while at least three remain.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","abaacbcbb"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":0,"c":3}},{"l":6,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":0,"c":3}},{"l":5,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":0,"c":1}},{"l":7,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":0,"c":1}},{"l":4,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":1,"c":1}},{"l":5,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":1,"c":4}},{"l":6,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":1,"c":4}},{"l":5,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":1,"c":2}},{"l":7,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":1,"c":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":3,"c":2}},{"l":5,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":3,"c":2}},{"l":7,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":3,"c":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":5,"c":2}},{"l":8,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":5,"c":2}},{"l":8,"d":1,"f":1,"v":{"s":["s","abaacbcbb"],"total":5,"c":2},"ret":5}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"s":["s","aa"]}},{"l":4,"d":1,"f":1,"v":{"s":["s","aa"],"total":0}},{"l":5,"d":1,"f":1,"v":{"s":["s","aa"],"total":0,"c":2}},{"l":7,"d":1,"f":1,"v":{"s":["s","aa"],"total":0,"c":2}},{"l":4,"d":1,"f":1,"v":{"s":["s","aa"],"total":2,"c":2}},{"l":8,"d":1,"f":1,"v":{"s":["s","aa"],"total":2,"c":2}},{"l":8,"d":1,"f":1,"v":{"s":["s","aa"],"total":2,"c":2},"ret":2}],"trunc":false}}],"ex2":{"input":"nothing removable","output":"2","why":"No letter has a partner on both sides."},"statement":"You are given a string `s`. You may perform this operation any number of times: choose an index `i` such that there is at least one character equal to `s[i]` to its left and at least one character equal to `s[i]` to its right; then delete the closest such character on the left and the closest such character on the right. Return the minimum length of the final string after performing the operation any number of times.\n\nExample 1:\n\n```\nInput: s = \"abaacbcbb\"\nOutput: 5\n```\n\nExample 2:\n\n```\nInput: s = \"aa\"\nOutput: 2\n```\n\nConstraints:\n\n* `1 <= s.length <= 2 * 10^5`\n* `s` consists only of lowercase English letters."};
+window.PROBLEM = {
+ "id": "3223",
+ "title": "Minimum Length of String After Operations",
+ "level": "Medium",
+ "topic": "Hash Map / Set",
+ "question": "In one operation choose an index i with an equal character somewhere to its left and another to its right; delete the closest such character on each side. Return the minimum possible length of the string. Example: 'abaacbcbb' → 5.",
+ "why": "'abaacbcbb': a×3 → 1, b×4 → 2, c×2 → 2 → 5.",
+ "idea": "An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.",
+ "input": "s = \"abaacbcbb\"",
+ "output": "5",
+ "notes": [],
+ "best": "An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.",
+ "variants": [
+  {
+   "name": "Odd count leaves one, even count leaves two",
+   "code": "class Solution:\n    def minimumLength(self, s):\n        return sum(1 if c % 2 else 2 for c in Counter(s).values())",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "An operation deletes the nearest equal letters on both sides of a chosen letter, removing 2 of that letter at a time while at least 3 remain. So a letter with count c shrinks to 1 if c is odd, or to 2 if c is even (c ≥ 2). Sum over the letters.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Simulate the deletions",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def minimumLength(self, s):\n        total = 0\n        for c in Counter(s).values():\n            while c >= 3:\n                c -= 2\n            total += c\n        return total",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "For each letter remove two occurrences at a time while at least three remain.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

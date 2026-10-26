@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"1748","title":"Sum of Unique Elements","level":"Easy","topic":"Hash Map / Set","question":"Return the sum of the numbers that appear exactly once in the array. Example: [1,2,3,2] → 4.","why":"[1,2,3,2]: 1 and 3 appear once → 4.","idea":"Count each number and add up the numbers whose count is exactly 1.","input":"nums = [1,2,3,2]","output":"4","notes":[],"best":"Count each number and add up the numbers whose count is exactly 1.","variants":[{"name":"Count, then sum the singles","code":"class Solution:\n    def sumOfUnique(self, nums):\n        cnt = Counter(nums)\n        return sum(x for x, c in cnt.items() if c == 1)","time":"O(n)","space":"O(n)","explain":"Count each number and add up the numbers whose count is exactly 1.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,2],0],"cnt":["d",[[1,1],[2,2],[3,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,2,3,2],0],"cnt":["d",[[1,1],[2,2],[3,1]]]},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1,1],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1,1],0],"cnt":["d",[[1,5]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1,1],0],"cnt":["d",[[1,5]]]},"ret":0}],"trunc":false}},{"name":"Count with list.count","tag":"Brute force","code":"class Solution:\n    def sumOfUnique(self, nums):\n        return sum(x for x in set(nums) if nums.count(x) == 1)","time":"O(n²)","space":"O(n)","explain":"For every different number check how often it occurs.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,2],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,2,3,2],0]},"ret":4}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1,1],0]}},{"l":3,"d":1,"f":1,"v":{"nums":["l",[1,1,1,1,1],0]},"ret":0}],"trunc":false}}],"understand":{"blocks":[{"h":"What each piece does","table":{"head":["Code","Meaning","Reach for it when"],"rows":[["`Counter(nums)`","Value → frequency","Counting"],["`c == 1`","Appears exactly once","Unique elements"],["`sum(x for x, c in cnt.items() if …)`","Sum the values (the keys) that qualify, each counted once because they are unique","Filter + sum in one expression"]]}},{"h":"Walk through an example","p":["`nums = [1,2,3,2]`:"],"table":{"head":["Value","Frequency","Counted?"],"rows":[["1","1","True"],["2","2","False"],["3","1","True"]]}},{"h":"Result","p":["The unique values are 1 and 3, so the sum is 4. The value 2 occurs twice and is excluded entirely (not even once)."]},{"h":"Time and space","bullets":["Time: O(n).","Space: O(k), the number of distinct values."]}],"takeaway":"Sum of unique elements: count frequencies and add the values that occur exactly once."},"ex2":{"input":"all the same","output":"0","why":"No number appears exactly once: 0."},"statement":"You are given an integer array `nums`. A number is \"unique\" if it appears exactly once in the array. Return the sum of all the unique numbers, or `0` if there are none.\n\nExample 1:\n\n```\nInput: nums = [1,2,3,2]\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: nums = [1,1,1,1,1]\nOutput: 0\n```\n\nConstraints:\n\n* `1 <= nums.length <= 100`\n* `1 <= nums[i] <= 100`"};
+window.PROBLEM = {
+ "id": "1748",
+ "title": "Sum of Unique Elements",
+ "level": "Easy",
+ "topic": "Hash Map / Set",
+ "question": "Return the sum of the numbers that appear exactly once in the array. Example: [1,2,3,2] → 4.",
+ "why": "[1,2,3,2]: 1 and 3 appear once → 4.",
+ "idea": "Count each number and add up the numbers whose count is exactly 1.",
+ "input": "nums = [1,2,3,2]",
+ "output": "4",
+ "notes": [],
+ "best": "Count each number and add up the numbers whose count is exactly 1.",
+ "variants": [
+  {
+   "name": "Count, then sum the singles",
+   "code": "class Solution:\n    def sumOfUnique(self, nums):\n        cnt = Counter(nums)\n        return sum(x for x, c in cnt.items() if c == 1)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Count each number and add up the numbers whose count is exactly 1.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Count with list.count",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def sumOfUnique(self, nums):\n        return sum(x for x in set(nums) if nums.count(x) == 1)",
+   "time": "O(n²)",
+   "space": "O(n)",
+   "explain": "For every different number check how often it occurs.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

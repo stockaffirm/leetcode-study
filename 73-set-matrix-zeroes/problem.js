@@ -1,1 +1,440 @@
-window.PROBLEM = {"id":"73","title":"Set Matrix Zeroes","level":"Medium","topic":"Matrix","question":"Given a grid of numbers, if any cell is 0, set its ENTIRE row and ENTIRE column to 0. Change the grid itself. Example: [[1,1,1],[1,0,1],[1,1,1]] → the middle row and middle column become 0 → [[1,0,1],[0,0,0],[1,0,1]].","why":"[[1,1,1],[1,0,1],[1,1,1]] → the middle row and column become 0.","idea":"First note which rows and columns have a 0, then zero them all.","input":"[[1,1,1],[1,0,1],[1,1,1]]","output":"[[1,0,1],[0,0,0],[1,0,1]]","notes":[],"best":"First note which rows and columns have a 0, then zero them all.","variants":[{"name":"Row and column sets","code":"class Solution:\n    def setZeroes(self, m):\n        rows = {i for i, r in enumerate(m) if 0 in r}\n        cols = {j for r in m for j, v in enumerate(r) if v == 0}\n        for i in range(len(m)):\n            for j in range(len(m[0])):\n                if i in rows or j in cols: m[i][j] = 0","time":"O(n·m)","space":"O(n+m)","explain":"First note which rows and columns have a 0, then zero them all.","frames":[{"title":"Start","description":"One zero in the middle.","codeLines":[2],"facts":{},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["1,1"],"marks":{},"kind":"grid"}]},{"title":"Note rows & cols","description":"rows = {1}, cols = {1}.","codeLines":[3,4],"facts":{},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["1,0","1,1","1,2","0,1","2,1"],"marks":{},"kind":"grid"}],"sub":[{"description":"scan row 0: [1,1,1] has no zero","codeLines":[3],"facts":{},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["0,0","0,1","0,2"],"marks":{},"kind":"grid"}]},{"description":"scan row 1: [1,0,1] has a zero → rows = {1}","codeLines":[3],"facts":{"rows":"{1}"},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["1,0","1,1","1,2"],"marks":{},"kind":"grid"}]},{"description":"scan row 2: no zero","codeLines":[3],"facts":{"rows":"{1}"},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["2,0","2,1","2,2"],"marks":{},"kind":"grid"}]},{"description":"the zero is in column 1 → cols = {1}","codeLines":[4],"facts":{"rows":"{1}","cols":"{1}"},"rows":[{"name":"m","cells":[["1","1","1"],["1","0","1"],["1","1","1"]],"hot":["0,1","1,1","2,1"],"marks":{},"kind":"grid"}]}]},{"title":"Zero them","description":"Every cell in row 1 or column 1 becomes 0.","codeLines":[7],"facts":{},"rows":[{"name":"m","cells":[["1","0","1"],["0","0","0"],["1","0","1"]],"hot":["0,1","1,0","1,1","1,2","2,1"],"marks":{},"kind":"grid"}],"sub":[{"description":"m[0][1] = 0","codeLines":[7],"facts":{},"rows":[{"name":"m","cells":[["1","0","1"],["1","0","1"],["1","1","1"]],"hot":["0,1"],"marks":{},"kind":"grid"}]},{"description":"m[1][0] = 0","codeLines":[7],"facts":{},"rows":[{"name":"m","cells":[["1","0","1"],["0","0","1"],["1","1","1"]],"hot":["1,0"],"marks":{},"kind":"grid"}]},{"description":"m[1][2] = 0","codeLines":[7],"facts":{},"rows":[{"name":"m","cells":[["1","0","1"],["0","0","0"],["1","1","1"]],"hot":["1,2"],"marks":{},"kind":"grid"}]},{"description":"m[2][1] = 0. Every cell in row 1 or column 1 becomes 0.","codeLines":[7],"facts":{},"rows":[{"name":"m","cells":[["1","0","1"],["0","0","0"],["1","0","1"]],"hot":["2,1"],"marks":{},"kind":"grid"}]}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0]}},{"l":4,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]]}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]]}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":0,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":["S",[1]],"cols":["S",[1]],"i":2,"j":2},"ret":null}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0]}},{"l":4,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]]}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]]}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":0,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":3}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":1,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":3}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":0}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":0}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,5],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,0],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,0],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,0],0]],0],"rows":["S",[0]],"cols":["S",[0,3]],"i":2,"j":3},"ret":null}],"trunc":false}},{"name":"First row and column as flags","tag":"Optimal space","code":"class Solution:\n    def setZeroes(self, m):\n        rows, cols = len(m), len(m[0])\n        first_row = any(x == 0 for x in m[0]); first_col = any(m[i][0] == 0 for i in range(rows))\n        for i in range(1, rows):\n            for j in range(1, cols):\n                if m[i][j] == 0: m[i][0] = 0; m[0][j] = 0\n        for i in range(1, rows):\n            for j in range(1, cols):\n                if m[i][0] == 0 or m[0][j] == 0: m[i][j] = 0\n        if first_row:\n            for j in range(cols): m[0][j] = 0\n        if first_col:\n            for i in range(rows): m[i][0] = 0","time":"O(m·n)","space":"O(1)","explain":"Reuse the first row and column to remember which rows/columns to zero.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0]}},{"l":4,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,1,1],0],["l",[1,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":1}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":1}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,1],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":1,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,1,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":1}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":1}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":11,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":13,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2}},{"l":13,"d":1,"f":1,"v":{"m":["l",[["l",[1,0,1],0],["l",[0,0,0],0],["l",[1,0,1],0]],0],"rows":3,"cols":3,"first_row":false,"first_col":false,"i":2,"j":2},"ret":null}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0]}},{"l":4,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":1}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":1}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":2}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":2}},{"l":7,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":6,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":5,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":1}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":1}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":2}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,2],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":1}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":1}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":2}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":2}},{"l":10,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,5],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":9,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":8,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":11,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":12,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":12,"d":1,"f":1,"v":{"m":["l",[["l",[0,1,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":0}},{"l":12,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,2,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":1}},{"l":12,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":2}},{"l":12,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":13,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":14,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":14,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[3,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":0,"j":3}},{"l":14,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[1,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":1,"j":3}},{"l":14,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3}},{"l":14,"d":1,"f":1,"v":{"m":["l",[["l",[0,0,0,0],0],["l",[0,4,5,0],0],["l",[0,3,1,0],0]],0],"rows":3,"cols":4,"first_row":true,"first_col":true,"i":2,"j":3},"ret":null}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`{i for i, r in enumerate(m) if 0 in r}`","Set comprehension: indices of rows containing a 0","Collect a set of qualifying items in one expression; `0 in r` scans the row"],["`{j for r in m for j, v in enumerate(r) if v == 0}`","Nested comprehension: column indices that contain a 0","Same, over two loops; the set removes duplicate columns for free"],["`i in rows or j in cols`","O(1) set membership","The test for 'this cell must become 0'"]]}},{"h":"Walk through an example","p":["`[[0,1,2,0],[3,4,5,2],[1,3,1,5]]`: rows containing a zero = [0], columns = [0, 3]. Every cell in those rows or columns becomes 0:"],"table":{"head":["Original row","Row in rows?","Result row"],"rows":[["[0, 1, 2, 0]","yes","[0, 0, 0, 0]"],["[3, 4, 5, 2]","no","[0, 4, 5, 0]"],["[1, 3, 1, 5]","no","[0, 3, 1, 0]"]]}},{"h":"Why record first, modify after?","p":["If you zeroed as soon as you saw a 0, the new zeros would be mistaken for original zeros, and the whole matrix would turn to 0. Two passes (collect, then write) keep the decision based on the original values only."]},{"h":"Why sets instead of O(1)-space marking?","table":{"head":["Approach","Extra space","Complexity of code"],"rows":[["Row and column sets (this code)","O(m + n)","Simple"],["Use first row and column as markers","O(1)","Needs care with the first row/col's own zeros"]]}},{"h":"Time and space","bullets":["Time: O(m·n) — one scan to collect, one pass to write.","Space: O(m + n) for the two sets."]}],"takeaway":"Record which rows and columns to clear, then clear in a second pass — never mutate while scanning for zeros."},"ex2":{"input":"[[0,1,2,0],[3,4,5,2],[1,3,1,5]]","output":"[[0, 0, 0, 0], [0, 4, 5, 0], [0, 3, 1, 0]]","why":"Two zeros zero out two rows and two columns."},"statement":"If any cell of an `m x n` integer matrix is `0`, turn every cell in that cell's row and column into `0`. Perform the change in place.\n\nExample 1:\n\n```\nInput: matrix = [[1,0],[1,1]]\nOutput: [[0,0],[1,0]]\n```\n\nExample 2:\n\n```\nInput: matrix = [[0,2,3],[4,5,6]]\nOutput: [[0,0,0],[0,5,6]]\n```\n\nConstraints:\n\n* `m == matrix.length`\n* `n == matrix[0].length`\n* `1 <= m, n <= 200`\n* `-2^31 <= matrix[i][j] <= 2^31 - 1`"};
+window.PROBLEM = {
+ "id": "73",
+ "title": "Set Matrix Zeroes",
+ "level": "Medium",
+ "topic": "Matrix",
+ "question": "Given a grid of numbers, if any cell is 0, set its ENTIRE row and ENTIRE column to 0. Change the grid itself. Example: [[1,1,1],[1,0,1],[1,1,1]] → the middle row and middle column become 0 → [[1,0,1],[0,0,0],[1,0,1]].",
+ "why": "[[1,1,1],[1,0,1],[1,1,1]] → the middle row and column become 0.",
+ "idea": "First note which rows and columns have a 0, then zero them all.",
+ "input": "[[1,1,1],[1,0,1],[1,1,1]]",
+ "output": "[[1,0,1],[0,0,0],[1,0,1]]",
+ "notes": [],
+ "best": "First note which rows and columns have a 0, then zero them all.",
+ "variants": [
+  {
+   "name": "Row and column sets",
+   "code": "class Solution:\n    def setZeroes(self, m):\n        rows = {i for i, r in enumerate(m) if 0 in r}\n        cols = {j for r in m for j, v in enumerate(r) if v == 0}\n        for i in range(len(m)):\n            for j in range(len(m[0])):\n                if i in rows or j in cols: m[i][j] = 0",
+   "time": "O(n·m)",
+   "space": "O(n+m)",
+   "explain": "First note which rows and columns have a 0, then zero them all.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "One zero in the middle.",
+     "codeLines": [
+      2
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "m",
+       "cells": [
+        [
+         "1",
+         "1",
+         "1"
+        ],
+        [
+         "1",
+         "0",
+         "1"
+        ],
+        [
+         "1",
+         "1",
+         "1"
+        ]
+       ],
+       "hot": [
+        "1,1"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ]
+    },
+    {
+     "title": "Note rows & cols",
+     "description": "rows = {1}, cols = {1}.",
+     "codeLines": [
+      3,
+      4
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "m",
+       "cells": [
+        [
+         "1",
+         "1",
+         "1"
+        ],
+        [
+         "1",
+         "0",
+         "1"
+        ],
+        [
+         "1",
+         "1",
+         "1"
+        ]
+       ],
+       "hot": [
+        "1,0",
+        "1,1",
+        "1,2",
+        "0,1",
+        "2,1"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ],
+     "sub": [
+      {
+       "description": "scan row 0: [1,1,1] has no zero",
+       "codeLines": [
+        3
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "1",
+           "1"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "0,0",
+          "0,1",
+          "0,2"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "scan row 1: [1,0,1] has a zero → rows = {1}",
+       "codeLines": [
+        3
+       ],
+       "facts": {
+        "rows": "{1}"
+       },
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "1",
+           "1"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "1,0",
+          "1,1",
+          "1,2"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "scan row 2: no zero",
+       "codeLines": [
+        3
+       ],
+       "facts": {
+        "rows": "{1}"
+       },
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "1",
+           "1"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "2,0",
+          "2,1",
+          "2,2"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "the zero is in column 1 → cols = {1}",
+       "codeLines": [
+        4
+       ],
+       "facts": {
+        "rows": "{1}",
+        "cols": "{1}"
+       },
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "1",
+           "1"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "0,1",
+          "1,1",
+          "2,1"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Zero them",
+     "description": "Every cell in row 1 or column 1 becomes 0.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "m",
+       "cells": [
+        [
+         "1",
+         "0",
+         "1"
+        ],
+        [
+         "0",
+         "0",
+         "0"
+        ],
+        [
+         "1",
+         "0",
+         "1"
+        ]
+       ],
+       "hot": [
+        "0,1",
+        "1,0",
+        "1,1",
+        "1,2",
+        "2,1"
+       ],
+       "marks": {},
+       "kind": "grid"
+      }
+     ],
+     "sub": [
+      {
+       "description": "m[0][1] = 0",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "0,1"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "m[1][0] = 0",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "0",
+           "0",
+           "1"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "1,0"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "m[1][2] = 0",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "0",
+           "0",
+           "0"
+          ],
+          [
+           "1",
+           "1",
+           "1"
+          ]
+         ],
+         "hot": [
+          "1,2"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      },
+      {
+       "description": "m[2][1] = 0. Every cell in row 1 or column 1 becomes 0.",
+       "codeLines": [
+        7
+       ],
+       "facts": {},
+       "rows": [
+        {
+         "name": "m",
+         "cells": [
+          [
+           "1",
+           "0",
+           "1"
+          ],
+          [
+           "0",
+           "0",
+           "0"
+          ],
+          [
+           "1",
+           "0",
+           "1"
+          ]
+         ],
+         "hot": [
+          "2,1"
+         ],
+         "marks": {},
+         "kind": "grid"
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "First row and column as flags",
+   "tag": "Optimal space",
+   "code": "class Solution:\n    def setZeroes(self, m):\n        rows, cols = len(m), len(m[0])\n        first_row = any(x == 0 for x in m[0]); first_col = any(m[i][0] == 0 for i in range(rows))\n        for i in range(1, rows):\n            for j in range(1, cols):\n                if m[i][j] == 0: m[i][0] = 0; m[0][j] = 0\n        for i in range(1, rows):\n            for j in range(1, cols):\n                if m[i][0] == 0 or m[0][j] == 0: m[i][j] = 0\n        if first_row:\n            for j in range(cols): m[0][j] = 0\n        if first_col:\n            for i in range(rows): m[i][0] = 0",
+   "time": "O(m·n)",
+   "space": "O(1)",
+   "explain": "Reuse the first row and column to remember which rows/columns to zero.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

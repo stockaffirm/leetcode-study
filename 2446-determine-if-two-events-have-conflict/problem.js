@@ -1,1 +1,34 @@
-window.PROBLEM = {"id":"2446","title":"Determine if Two Events Have Conflict","level":"Easy","topic":"Intervals","question":"Two events are given as [start, end] clock times 'HH:MM' (inclusive). Return true if they overlap at any moment. Example: ['01:15','02:00'] and ['02:00','03:00'] → true.","why":"['01:15','02:00'] and ['02:00','03:00'] share the instant 02:00 → conflict.","idea":"Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.","input":"event1 = [\"01:15\",\"02:00\"], event2 = [\"02:00\",\"03:00\"]","output":"true","notes":[],"best":"Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.","variants":[{"name":"Convert times to minutes, test overlap","code":"class Solution:\n    def haveConflict(self, event1, event2):\n        def m(t):\n            h, mi = t.split(':')\n            return int(h) * 60 + int(mi)\n        return m(event1[0]) <= m(event2[1]) and m(event2[0]) <= m(event1[1])","time":"O(1)","space":"O(1)","explain":"Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.","frames":[],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","01:15"],["s","02:00"]],0],"event2":["l",[["s","02:00"],["s","03:00"]],0]}},{"l":6,"d":1,"f":1,"v":{"event1":["l",[["s","01:15"],["s","02:00"]],0],"event2":["l",[["s","02:00"],["s","03:00"]],0]}},{"l":4,"d":2,"f":2,"v":{"t":["s","01:15"]}},{"l":5,"d":2,"f":2,"v":{"t":["s","01:15"],"h":["s","01"],"mi":["s","15"]}},{"l":5,"d":2,"f":2,"v":{"t":["s","01:15"],"h":["s","01"],"mi":["s","15"]},"ret":75},{"l":4,"d":2,"f":3,"v":{"t":["s","03:00"]}},{"l":5,"d":2,"f":3,"v":{"t":["s","03:00"],"h":["s","03"],"mi":["s","00"]}},{"l":5,"d":2,"f":3,"v":{"t":["s","03:00"],"h":["s","03"],"mi":["s","00"]},"ret":180},{"l":4,"d":2,"f":4,"v":{"t":["s","02:00"]}},{"l":5,"d":2,"f":4,"v":{"t":["s","02:00"],"h":["s","02"],"mi":["s","00"]}},{"l":5,"d":2,"f":4,"v":{"t":["s","02:00"],"h":["s","02"],"mi":["s","00"]},"ret":120},{"l":4,"d":2,"f":5,"v":{"t":["s","02:00"]}},{"l":5,"d":2,"f":5,"v":{"t":["s","02:00"],"h":["s","02"],"mi":["s","00"]}},{"l":5,"d":2,"f":5,"v":{"t":["s","02:00"],"h":["s","02"],"mi":["s","00"]},"ret":120},{"l":6,"d":1,"f":1,"v":{"event1":["l",[["s","01:15"],["s","02:00"]],0],"event2":["l",[["s","02:00"],["s","03:00"]],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","10:00"],["s","11:00"]],0],"event2":["l",[["s","14:00"],["s","15:00"]],0]}},{"l":6,"d":1,"f":1,"v":{"event1":["l",[["s","10:00"],["s","11:00"]],0],"event2":["l",[["s","14:00"],["s","15:00"]],0]}},{"l":4,"d":2,"f":2,"v":{"t":["s","10:00"]}},{"l":5,"d":2,"f":2,"v":{"t":["s","10:00"],"h":["s","10"],"mi":["s","00"]}},{"l":5,"d":2,"f":2,"v":{"t":["s","10:00"],"h":["s","10"],"mi":["s","00"]},"ret":600},{"l":4,"d":2,"f":3,"v":{"t":["s","15:00"]}},{"l":5,"d":2,"f":3,"v":{"t":["s","15:00"],"h":["s","15"],"mi":["s","00"]}},{"l":5,"d":2,"f":3,"v":{"t":["s","15:00"],"h":["s","15"],"mi":["s","00"]},"ret":900},{"l":4,"d":2,"f":4,"v":{"t":["s","14:00"]}},{"l":5,"d":2,"f":4,"v":{"t":["s","14:00"],"h":["s","14"],"mi":["s","00"]}},{"l":5,"d":2,"f":4,"v":{"t":["s","14:00"],"h":["s","14"],"mi":["s","00"]},"ret":840},{"l":4,"d":2,"f":5,"v":{"t":["s","11:00"]}},{"l":5,"d":2,"f":5,"v":{"t":["s","11:00"],"h":["s","11"],"mi":["s","00"]}},{"l":5,"d":2,"f":5,"v":{"t":["s","11:00"],"h":["s","11"],"mi":["s","00"]},"ret":660},{"l":6,"d":1,"f":1,"v":{"event1":["l",[["s","10:00"],["s","11:00"]],0],"event2":["l",[["s","14:00"],["s","15:00"]],0]},"ret":false}],"trunc":false}},{"name":"Compare strings","tag":"Alternative","code":"class Solution:\n    def haveConflict(self, event1, event2):\n        return event1[0] <= event2[1] and event2[0] <= event1[1]","time":"O(1)","space":"O(1)","explain":"'HH:MM' strings of the same format compare correctly as text.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","01:15"],["s","02:00"]],0],"event2":["l",[["s","02:00"],["s","03:00"]],0]}},{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","01:15"],["s","02:00"]],0],"event2":["l",[["s","02:00"],["s","03:00"]],0]},"ret":true}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","10:00"],["s","11:00"]],0],"event2":["l",[["s","14:00"],["s","15:00"]],0]}},{"l":3,"d":1,"f":1,"v":{"event1":["l",[["s","10:00"],["s","11:00"]],0],"event2":["l",[["s","14:00"],["s","15:00"]],0]},"ret":false}],"trunc":false}}],"ex2":{"input":"disjoint","output":"False","why":"Different parts of the day."},"statement":"You are given two events, each as an array of two strings `[startTime, endTime]` in 24-hour `HH:MM` format. Both the start and the end times are included in the event. Return `true` if the two events share at least one moment, and `false` otherwise.\n\nExample 1:\n\n```\nInput: event1 = [\"01:15\",\"02:00\"], event2 = [\"02:00\",\"03:00\"]\nOutput: true\n```\n\nExample 2:\n\n```\nInput: event1 = [\"10:00\",\"11:00\"], event2 = [\"14:00\",\"15:00\"]\nOutput: false\n```\n\nConstraints:\n\n* `event1.length == event2.length == 2`\n* `event1[i].length == event2[i].length == 5`\n* `startTime1 <= endTime1` and `startTime2 <= endTime2`\n* All event times follow the `HH:MM` format."};
+window.PROBLEM = {
+ "id": "2446",
+ "title": "Determine if Two Events Have Conflict",
+ "level": "Easy",
+ "topic": "Intervals",
+ "question": "Two events are given as [start, end] clock times 'HH:MM' (inclusive). Return true if they overlap at any moment. Example: ['01:15','02:00'] and ['02:00','03:00'] → true.",
+ "why": "['01:15','02:00'] and ['02:00','03:00'] share the instant 02:00 → conflict.",
+ "idea": "Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.",
+ "input": "event1 = [\"01:15\",\"02:00\"], event2 = [\"02:00\",\"03:00\"]",
+ "output": "true",
+ "notes": [],
+ "best": "Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.",
+ "variants": [
+  {
+   "name": "Convert times to minutes, test overlap",
+   "code": "class Solution:\n    def haveConflict(self, event1, event2):\n        def m(t):\n            h, mi = t.split(':')\n            return int(h) * 60 + int(mi)\n        return m(event1[0]) <= m(event2[1]) and m(event2[0]) <= m(event1[1])",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "Convert each 'HH:MM' to minutes. Two closed intervals overlap when each starts no later than the other ends.",
+   "frames": [],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Compare strings",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def haveConflict(self, event1, event2):\n        return event1[0] <= event2[1] and event2[0] <= event1[1]",
+   "time": "O(1)",
+   "space": "O(1)",
+   "explain": "'HH:MM' strings of the same format compare correctly as text.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

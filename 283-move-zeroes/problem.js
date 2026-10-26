@@ -1,1 +1,214 @@
-window.PROBLEM = {"id":"283","title":"Move Zeroes","level":"Easy","topic":"Two Pointers","question":"Given a list nums, move all the 0s to the end while keeping the relative order of the non-zero numbers. Do it IN PLACE (change the same list, don't create a new one) and return nothing. Example: [0,1,0,3,12] becomes [1,3,12,0,0].","input":"[0, 1, 0, 3, 12]","output":"[1, 3, 12, 0, 0]","notes":["slow always points at the first zero (or the next free slot).","Swapping keeps zeros moving right."],"best":"A single pass with a slow write pointer; no extra array.","variants":[{"name":"Two pointers: swap in place","code":"class Solution:\n    def moveZeroes(self, nums):\n        slow = 0\n        for fast in range(len(nums)):\n            if nums[fast] != 0:\n                nums[slow], nums[fast] = nums[fast], nums[slow]\n                slow += 1","time":"O(n)","space":"O(1)","explain":"slow marks where the next non-zero belongs.","frames":[{"title":"Input","description":"slow = 0; fast scans.","codeLines":[3],"facts":{},"rows":[{"name":"nums","cells":["0","1","0","3","12"],"hot":[],"marks":{"0":"slow"}}]},{"title":"fast = 0","description":"Zero: skip.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["0","1","0","3","12"],"hot":[0],"marks":{"0":"slow,fast"}}]},{"title":"fast = 1","description":"Non-zero: swap into slow, then slow++.","codeLines":[5,6,7],"facts":{},"rows":[{"name":"nums","cells":["1","0","0","3","12"],"hot":[0,1],"marks":{"1":"slow,fast"}}]},{"title":"fast = 2","description":"Zero: skip.","codeLines":[5],"facts":{},"rows":[{"name":"nums","cells":["1","0","0","3","12"],"hot":[2],"marks":{"1":"slow","2":"fast"}}]},{"title":"fast = 3","description":"Non-zero: swap into slow, then slow++.","codeLines":[5,6,7],"facts":{},"rows":[{"name":"nums","cells":["1","3","0","0","12"],"hot":[1,3],"marks":{"2":"slow","3":"fast"}}]},{"title":"fast = 4","description":"Non-zero: swap into slow, then slow++.","codeLines":[5,6,7],"facts":{},"rows":[{"name":"nums","cells":["1","3","12","0","0"],"hot":[2,4],"marks":{"3":"slow","4":"fast"}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"slow":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"slow":0,"fast":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"slow":0,"fast":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"slow":0,"fast":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"slow":0,"fast":1}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":0,"fast":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":1,"fast":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":1,"fast":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":1,"fast":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":1,"fast":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,0,0,3,12],0],"slow":1,"fast":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,0,0,12],0],"slow":1,"fast":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,0,0,12],0],"slow":2,"fast":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,0,0,12],0],"slow":2,"fast":4}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,3,0,0,12],0],"slow":2,"fast":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"slow":2,"fast":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"slow":3,"fast":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"slow":3,"fast":4},"ret":null}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"slow":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0],0],"slow":0,"fast":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"slow":0,"fast":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"slow":0,"fast":0},"ret":null}],"trunc":false}},{"name":"Extra array","tag":"Brute force","code":"class Solution:\n    def moveZeroes(self, nums):\n        non_zero = [x for x in nums if x != 0]\n        for i in range(len(nums)):\n            nums[i] = non_zero[i] if i < len(non_zero) else 0","time":"O(n)","space":"O(n)","explain":"Copy the non-zeros to a new list, then write them back followed by zeros.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"non_zero":["l",[1,3,12],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"non_zero":["l",[1,3,12],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"non_zero":["l",[1,3,12],0],"i":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"non_zero":["l",[1,3,12],0],"i":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,0,3,12],0],"non_zero":["l",[1,3,12],0],"i":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,0,3,12],0],"non_zero":["l",[1,3,12],0],"i":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,3,12],0],"non_zero":["l",[1,3,12],0],"i":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,12,3,12],0],"non_zero":["l",[1,3,12],0],"i":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,12],0],"non_zero":["l",[1,3,12],0],"i":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,12],0],"non_zero":["l",[1,3,12],0],"i":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"non_zero":["l",[1,3,12],0],"i":4}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"non_zero":["l",[1,3,12],0],"i":4},"ret":null}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"non_zero":["l",[],0]}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0],0],"non_zero":["l",[],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"non_zero":["l",[],0],"i":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"non_zero":["l",[],0],"i":0},"ret":null}],"trunc":false}},{"name":"Two pointers: write then zero-fill","tag":"Better","code":"class Solution:\n    def moveZeroes(self, nums):\n        write = 0\n        for x in nums:\n            if x != 0:\n                nums[write] = x; write += 1\n        for i in range(write, len(nums)): nums[i] = 0","time":"O(n)","space":"O(1)","explain":"Pack the non-zeros to the front, then fill the rest with zeros.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"write":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"write":0,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"write":0,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"write":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[0,1,0,3,12],0],"write":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"write":1,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"write":1,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"write":1,"x":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"write":1,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,1,0,3,12],0],"write":1,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,0,3,12],0],"write":2,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[1,3,0,3,12],0],"write":2,"x":12}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[1,3,0,3,12],0],"write":2,"x":12}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,3,12,3,12],0],"write":3,"x":12}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,12,3,12],0],"write":3,"x":12}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,12],0],"write":3,"x":12,"i":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"write":3,"x":12,"i":4}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[1,3,12,0,0],0],"write":3,"x":12,"i":4},"ret":null}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[0],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0,"x":0}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0,"x":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0,"x":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0,"x":0,"i":0}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[0],0],"write":0,"x":0,"i":0},"ret":null}],"trunc":false}}],"why":"[0,1,0,3,12]: the non-zeros 1, 3, 12 slide left and the zeros go to the end → [1,3,12,0,0].","idea":"Slow pointer = next spot for a non-zero. Swap each non-zero into that spot.","understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`slow`","Next position where a non-zero must go","Boundary: everything before `slow` is the non-zero prefix in original order"],["`fast`","Scans every element","Finds the next non-zero element"],["`nums[slow], nums[fast] = nums[fast], nums[slow]`","Swap","Moves the non-zero forward; the zero it replaces goes behind `fast`"],["`slow += 1`","Grow the non-zero prefix","Only after a swap"]]}},{"h":"Walk through an example","p":["`[0,1,0,3,12]`:"],"table":{"head":["fast","Action","slow after","nums"],"rows":[["start","—","—","[0, 1, 0, 3, 12]"],["fast=0","zero → skip","0","[0, 1, 0, 3, 12]"],["fast=1","swap nums[0] ↔ nums[1]","1","[1, 0, 0, 3, 12]"],["fast=2","zero → skip","1","[1, 0, 0, 3, 12]"],["fast=3","swap nums[1] ↔ nums[3]","2","[1, 3, 0, 0, 12]"],["fast=4","swap nums[2] ↔ nums[4]","3","[1, 3, 12, 0, 0]"]]}},{"h":"Why swap and not just copy?","p":["Copying non-zeros forward and then filling zeros at the end also works but takes a second pass. The swap puts the displaced zero behind `fast` at the same moment, so one pass suffices. When `slow == fast` (no zeros yet) the swap exchanges an element with itself, which is harmless."]},{"h":"What invariant holds?","p":["At any time `nums[:slow]` holds the non-zeros seen so far in original order, and `nums[slow:fast]` contains only zeros. Because every non-zero keeps its left-to-right order, the relative order is preserved."]},{"h":"Time and space","bullets":["Time: O(n) — one pass.","Space: O(1) — in place."]}],"takeaway":"Two pointers (write index and read index): swap each non-zero to the write index to compact non-zeros while pushing zeros back."},"ex2":{"input":"[0]","output":"[0]","why":"A lone zero has nowhere to move — the list stays the same."},"statement":"Move all `0` values of the array `nums` to the end while keeping the relative order of the non-zero values. The array must be modified in place without making a copy.\n\nExample 1:\n\n```\nInput: nums = [0,0,1]\nOutput: [1,0,0]\n```\n\nExample 2:\n\n```\nInput: nums = [5]\nOutput: [5]\n```\n\nConstraints:\n\n* `1 <= nums.length <= 10^4`\n* `-2^31 <= nums[i] <= 2^31 - 1`"};
+window.PROBLEM = {
+ "id": "283",
+ "title": "Move Zeroes",
+ "level": "Easy",
+ "topic": "Two Pointers",
+ "question": "Given a list nums, move all the 0s to the end while keeping the relative order of the non-zero numbers. Do it IN PLACE (change the same list, don't create a new one) and return nothing. Example: [0,1,0,3,12] becomes [1,3,12,0,0].",
+ "input": "[0, 1, 0, 3, 12]",
+ "output": "[1, 3, 12, 0, 0]",
+ "notes": [
+  "slow always points at the first zero (or the next free slot).",
+  "Swapping keeps zeros moving right."
+ ],
+ "best": "A single pass with a slow write pointer; no extra array.",
+ "variants": [
+  {
+   "name": "Two pointers: swap in place",
+   "code": "class Solution:\n    def moveZeroes(self, nums):\n        slow = 0\n        for fast in range(len(nums)):\n            if nums[fast] != 0:\n                nums[slow], nums[fast] = nums[fast], nums[slow]\n                slow += 1",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "slow marks where the next non-zero belongs.",
+   "frames": [
+    {
+     "title": "Input",
+     "description": "slow = 0; fast scans.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "0",
+        "1",
+        "0",
+        "3",
+        "12"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "slow"
+       }
+      }
+     ]
+    },
+    {
+     "title": "fast = 0",
+     "description": "Zero: skip.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "0",
+        "1",
+        "0",
+        "3",
+        "12"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "0": "slow,fast"
+       }
+      }
+     ]
+    },
+    {
+     "title": "fast = 1",
+     "description": "Non-zero: swap into slow, then slow++.",
+     "codeLines": [
+      5,
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "0",
+        "0",
+        "3",
+        "12"
+       ],
+       "hot": [
+        0,
+        1
+       ],
+       "marks": {
+        "1": "slow,fast"
+       }
+      }
+     ]
+    },
+    {
+     "title": "fast = 2",
+     "description": "Zero: skip.",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "0",
+        "0",
+        "3",
+        "12"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "1": "slow",
+        "2": "fast"
+       }
+      }
+     ]
+    },
+    {
+     "title": "fast = 3",
+     "description": "Non-zero: swap into slow, then slow++.",
+     "codeLines": [
+      5,
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "3",
+        "0",
+        "0",
+        "12"
+       ],
+       "hot": [
+        1,
+        3
+       ],
+       "marks": {
+        "2": "slow",
+        "3": "fast"
+       }
+      }
+     ]
+    },
+    {
+     "title": "fast = 4",
+     "description": "Non-zero: swap into slow, then slow++.",
+     "codeLines": [
+      5,
+      6,
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "1",
+        "3",
+        "12",
+        "0",
+        "0"
+       ],
+       "hot": [
+        2,
+        4
+       ],
+       "marks": {
+        "3": "slow",
+        "4": "fast"
+       }
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Extra array",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def moveZeroes(self, nums):\n        non_zero = [x for x in nums if x != 0]\n        for i in range(len(nums)):\n            nums[i] = non_zero[i] if i < len(non_zero) else 0",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Copy the non-zeros to a new list, then write them back followed by zeros.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Two pointers: write then zero-fill",
+   "tag": "Better",
+   "code": "class Solution:\n    def moveZeroes(self, nums):\n        write = 0\n        for x in nums:\n            if x != 0:\n                nums[write] = x; write += 1\n        for i in range(write, len(nums)): nums[i] = 0",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Pack the non-zeros to the front, then fill the rest with zeros.",
+   "frames": [],
+   "alt": true
+  }
+ ],
+ "why": "[0,1,0,3,12]: the non-zeros 1, 3, 12 slide left and the zeros go to the end → [1,3,12,0,0].",
+ "idea": "Slow pointer = next spot for a non-zero. Swap each non-zero into that spot."
+};

@@ -1,1 +1,350 @@
-window.PROBLEM = {"id":"21","title":"Merge Two Sorted Lists","level":"Easy","topic":"Linked List","question":"You are given two linked lists (chains of nodes) that are each sorted from smallest to largest. Join them into one sorted linked list by reusing their nodes, and return its first node. Example: 1→2→4 and 1→3→4 → 1→1→2→3→4→4.","why":"[1,2,4] and [1,3,4] → 1,1,2,3,4,4.","idea":"Keep a tail pointer; repeatedly attach the smaller front node.","input":"1→2→4 and 1→3→4","output":"1→1→2→3→4→4","notes":[],"best":"Keep a tail pointer; repeatedly attach the smaller front node.","variants":[{"name":"Dummy head + tail","code":"class Solution:\n    def mergeTwoLists(self, a, b):\n        dummy = cur = ListNode()\n        while a and b:\n            if a.val <= b.val: cur.next, a = a, a.next\n            else: cur.next, b = b, b.next\n            cur = cur.next\n        cur.next = a or b\n        return dummy.next","time":"O(n+m)","space":"O(1)","explain":"Keep a tail pointer; repeatedly attach the smaller front node.","frames":[{"title":"Start","description":"Compare the two fronts.","codeLines":[3],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[0],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[0],"marks":{},"kind":"list"},{"name":"merged","cells":["·"],"hot":[],"marks":{}}]},{"title":"Take 1 from a","description":"a front 1 ≤ b front 1","codeLines":[5],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[0],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[0],"marks":{},"kind":"list"},{"name":"merged","cells":["1"],"hot":[0],"marks":{},"kind":"list"}]},{"title":"Take 1 from b","description":"b front 1 < a front 2","codeLines":[6],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[1],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[0],"marks":{},"kind":"list"},{"name":"merged","cells":["1","1"],"hot":[1],"marks":{},"kind":"list"}]},{"title":"Take 2 from a","description":"a front 2 ≤ b front 3","codeLines":[5],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[1],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[1],"marks":{},"kind":"list"},{"name":"merged","cells":["1","1","2"],"hot":[2],"marks":{},"kind":"list"}]},{"title":"Take 3 from b","description":"b front 3 < a front 4","codeLines":[6],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[2],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[1],"marks":{},"kind":"list"},{"name":"merged","cells":["1","1","2","3"],"hot":[3],"marks":{},"kind":"list"}]},{"title":"Take 4 from a","description":"a front 4 ≤ b front 4","codeLines":[5],"facts":{},"rows":[{"name":"a","cells":["1","2","4"],"hot":[2],"marks":{},"kind":"list"},{"name":"b","cells":["1","3","4"],"hot":[2],"marks":{},"kind":"list"},{"name":"merged","cells":["1","1","2","3","4"],"hot":[4],"marks":{},"kind":"list"}]},{"title":"Attach the rest","description":"One list is empty; append the other.","codeLines":[8],"facts":{},"rows":[{"name":"merged","cells":["1","1","2","3","4","4"],"hot":[5],"marks":{},"kind":"list"}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0],-1],"cur":["L",[0],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0],-1],"cur":["L",[0],-1]}},{"l":7,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0,1,2,4],-1],"cur":["L",[0,1,2,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0,1,2,4],-1],"cur":["L",[1,2,4],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0,1,2,4],-1],"cur":["L",[1,2,4],-1]}},{"l":6,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1],"dummy":["L",[0,1,2,4],-1],"cur":["L",[1,2,4],-1]}},{"l":7,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,3,4],-1],"cur":["L",[1,1,3,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,3,4],-1],"cur":["L",[1,3,4],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,3,4],-1],"cur":["L",[1,3,4],-1]}},{"l":7,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,2,4],-1],"cur":["L",[1,2,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,2,4],-1],"cur":["L",[2,4],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,2,4],-1],"cur":["L",[2,4],-1]}},{"l":6,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1],"dummy":["L",[0,1,1,2,4],-1],"cur":["L",[2,4],-1]}},{"l":7,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[2,3,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[3,4],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[4],-1],"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[3,4],-1]}},{"l":7,"d":1,"f":1,"v":{"a":null,"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[3,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":null,"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[4],-1]}},{"l":8,"d":1,"f":1,"v":{"a":null,"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4],-1],"cur":["L",[4],-1]}},{"l":9,"d":1,"f":1,"v":{"a":null,"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4,4],-1],"cur":["L",[4,4],-1]}},{"l":9,"d":1,"f":1,"v":{"a":null,"b":["L",[4],-1],"dummy":["L",[0,1,1,2,3,4,4],-1],"cur":["L",[4,4],-1]},"ret":["L",[1,1,2,3,4,4],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1]}},{"l":4,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1],"dummy":["L",[0],-1],"cur":["L",[0],-1]}},{"l":8,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1],"dummy":["L",[0],-1],"cur":["L",[0],-1]}},{"l":9,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1],"dummy":["L",[0,0],-1],"cur":["L",[0,0],-1]}},{"l":9,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1],"dummy":["L",[0,0],-1],"cur":["L",[0,0],-1]},"ret":["L",[0],-1]}],"trunc":false}},{"name":"Recursion","tag":"Alternative","code":"class Solution:\n    def mergeTwoLists(self, a, b):\n        if not a or not b: return a or b\n        if a.val <= b.val:\n            a.next = self.mergeTwoLists(a.next, b); return a\n        b.next = self.mergeTwoLists(a, b.next); return b","time":"O(n+m)","space":"O(n+m)","explain":"The smaller head points to the merge of the rest.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1]}},{"l":4,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1]}},{"l":5,"d":1,"f":1,"v":{"a":["L",[1,2,4],-1],"b":["L",[1,3,4],-1]}},{"l":3,"d":2,"f":2,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1]}},{"l":4,"d":2,"f":2,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1]}},{"l":6,"d":2,"f":2,"v":{"a":["L",[2,4],-1],"b":["L",[1,3,4],-1]}},{"l":3,"d":3,"f":3,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1]}},{"l":4,"d":3,"f":3,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1]}},{"l":5,"d":3,"f":3,"v":{"a":["L",[2,4],-1],"b":["L",[3,4],-1]}},{"l":3,"d":4,"f":4,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1]}},{"l":4,"d":4,"f":4,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1]}},{"l":6,"d":4,"f":4,"v":{"a":["L",[4],-1],"b":["L",[3,4],-1]}},{"l":3,"d":5,"f":5,"v":{"a":["L",[4],-1],"b":["L",[4],-1]}},{"l":4,"d":5,"f":5,"v":{"a":["L",[4],-1],"b":["L",[4],-1]}},{"l":5,"d":5,"f":5,"v":{"a":["L",[4],-1],"b":["L",[4],-1]}},{"l":3,"d":6,"f":6,"v":{"a":null,"b":["L",[4],-1]}},{"l":3,"d":6,"f":6,"v":{"a":null,"b":["L",[4],-1]},"ret":["L",[4],-1]},{"l":5,"d":5,"f":5,"v":{"a":["L",[4,4],-1],"b":["L",[4],-1]},"ret":["L",[4,4],-1]},{"l":6,"d":4,"f":4,"v":{"a":["L",[4,4],-1],"b":["L",[3,4,4],-1]},"ret":["L",[3,4,4],-1]},{"l":5,"d":3,"f":3,"v":{"a":["L",[2,3,4,4],-1],"b":["L",[3,4,4],-1]},"ret":["L",[2,3,4,4],-1]},{"l":6,"d":2,"f":2,"v":{"a":["L",[2,3,4,4],-1],"b":["L",[1,2,3,4,4],-1]},"ret":["L",[1,2,3,4,4],-1]},{"l":5,"d":1,"f":1,"v":{"a":["L",[1,1,2,3,4,4],-1],"b":["L",[1,2,3,4,4],-1]},"ret":["L",[1,1,2,3,4,4],-1]}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1]}},{"l":3,"d":1,"f":1,"v":{"a":null,"b":["L",[0],-1]},"ret":["L",[0],-1]}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["dummy = cur = ListNode()","A throwaway head node; `cur` is the tail of the merged list","The head of the result is not known in advance"],["cur.next, a = a, a.next","Links the smaller node to the tail and advances list a in one tuple assignment","Moving a node between lists without copying"],["a.val <= b.val","`<=` takes from a on ties, which keeps the merge stable","Merging sorted sequences"],["cur.next = a or b","Attaches whichever list still has nodes (the other is None)","Finishing after one side runs out, no loop needed"],["dummy.next","The real head of the result","Returning from dummy-head code"]]}},{"h":"Walk through an example","p":["`a = 1→2→4`, `b = 1→3→4`:"],"table":{"head":["Pick","Merged list so far"],"rows":[["a (1)","1→2→4"],["b (1)","1→1→3→4"],["a (2)","1→1→2→4"],["b (3)","1→1→2→3→4"],["a (4)","1→1→2→3→4"],["attach rest (b)","1→1→2→3→4→4"]]}},{"h":"Why a dummy node?","p":["Without it the first node chosen would need special handling (`head = a` or `head = b`) before the loop. The dummy lets `cur.next = ...` work for the first node too, and `dummy.next` is returned at the end."]},{"h":"Time and space","bullets":["Time: O(n + m); each node is visited once.","Space: O(1). No nodes are created (except the dummy); the existing nodes are relinked."]},{"h":"Subtle point","p":["Once one list is empty the other is already sorted and every remaining node is larger than what is merged, so a single pointer assignment attaches the whole tail."]}],"takeaway":"Merging sorted lists is a dummy head plus a tail pointer that repeatedly takes the smaller front node; attach the leftover list in one step."},"ex2":{"input":"[],[0]","output":"0","why":"One list is empty, so the answer is the other list."},"statement":"Two linked lists are each sorted in non-decreasing order. Splice them together into a single sorted list by relinking their existing nodes, and return the head of the combined list.\n\nExample 1:\n\n```\nInput: list1 = [1,3,5], list2 = [2,4]\nOutput: [1,2,3,4,5]\n```\n\nExample 2:\n\n```\nInput: list1 = [], list2 = [0]\nOutput: [0]\n```\n\nConstraints:\n\n* The total number of nodes in both lists is in the range `[0, 50]`.\n* `-100 <= Node.val <= 100`\n* Both lists are sorted in non-decreasing order."};
+window.PROBLEM = {
+ "id": "21",
+ "title": "Merge Two Sorted Lists",
+ "level": "Easy",
+ "topic": "Linked List",
+ "question": "You are given two linked lists (chains of nodes) that are each sorted from smallest to largest. Join them into one sorted linked list by reusing their nodes, and return its first node. Example: 1→2→4 and 1→3→4 → 1→1→2→3→4→4.",
+ "why": "[1,2,4] and [1,3,4] → 1,1,2,3,4,4.",
+ "idea": "Keep a tail pointer; repeatedly attach the smaller front node.",
+ "input": "1→2→4 and 1→3→4",
+ "output": "1→1→2→3→4→4",
+ "notes": [],
+ "best": "Keep a tail pointer; repeatedly attach the smaller front node.",
+ "variants": [
+  {
+   "name": "Dummy head + tail",
+   "code": "class Solution:\n    def mergeTwoLists(self, a, b):\n        dummy = cur = ListNode()\n        while a and b:\n            if a.val <= b.val: cur.next, a = a, a.next\n            else: cur.next, b = b, b.next\n            cur = cur.next\n        cur.next = a or b\n        return dummy.next",
+   "time": "O(n+m)",
+   "space": "O(1)",
+   "explain": "Keep a tail pointer; repeatedly attach the smaller front node.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "Compare the two fronts.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "·"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Take 1 from a",
+     "description": "a front 1 ≤ b front 1",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "1"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Take 1 from b",
+     "description": "b front 1 < a front 2",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "1",
+        "1"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Take 2 from a",
+     "description": "a front 2 ≤ b front 3",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "1",
+        "1",
+        "2"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Take 3 from b",
+     "description": "b front 3 < a front 4",
+     "codeLines": [
+      6
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "3"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Take 4 from a",
+     "description": "a front 4 ≤ b front 4",
+     "codeLines": [
+      5
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "a",
+       "cells": [
+        "1",
+        "2",
+        "4"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "b",
+       "cells": [
+        "1",
+        "3",
+        "4"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {},
+       "kind": "list"
+      },
+      {
+       "name": "merged",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "3",
+        "4"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    },
+    {
+     "title": "Attach the rest",
+     "description": "One list is empty; append the other.",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "merged",
+       "cells": [
+        "1",
+        "1",
+        "2",
+        "3",
+        "4",
+        "4"
+       ],
+       "hot": [
+        5
+       ],
+       "marks": {},
+       "kind": "list"
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Recursion",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def mergeTwoLists(self, a, b):\n        if not a or not b: return a or b\n        if a.val <= b.val:\n            a.next = self.mergeTwoLists(a.next, b); return a\n        b.next = self.mergeTwoLists(a, b.next); return b",
+   "time": "O(n+m)",
+   "space": "O(n+m)",
+   "explain": "The smaller head points to the merge of the rest.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

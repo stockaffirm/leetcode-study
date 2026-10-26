@@ -118,7 +118,7 @@ class Solution:
             c0, c1 = n0, n1
         return c0 - 1
 `)});
-alt(2316,{name:"DFS components",tag:"Alternative",time:"O(n + e)",space:"O(n + e)",explain:"Find component sizes with DFS and count cross-component pairs.",code:C(`
+alt(2316,{name:"DFS components",tag:"Alternative",time:"O(n + e)",space:"O(n + e)",explain:"Find component sizes with DFS (Depth-First Search) and count cross-component pairs.",code:C(`
 class Solution:
     def countPairs(self, n, edges):
         g = [[] for _ in range(n)]

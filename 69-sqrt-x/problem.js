@@ -1,1 +1,218 @@
-window.PROBLEM = {"id":"69","title":"Sqrt(x)","level":"Easy","topic":"Math","question":"Given a non-negative whole number x, return its square root rounded DOWN to the nearest whole number. Don't use a built-in power or square-root function. Example: x=8 → √8 ≈ 2.83 → 2.","why":"sqrt(8) = 2.82… → 2.","idea":"Binary search for the biggest number whose square is ≤ x.","input":"8","output":"2","notes":[],"best":"Binary search for the biggest number whose square is ≤ x.","variants":[{"name":"Binary search","code":"class Solution:\n    def mySqrt(self, x):\n        lo, hi = 0, x\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if mid * mid <= x: lo = mid + 1\n            else: hi = mid - 1\n        return hi","time":"O(log x)","space":"O(1)","explain":"Binary search for the biggest number whose square is ≤ x.","frames":[{"title":"Range","description":"Answer is between 0 and 8.","codeLines":[3],"facts":{},"rows":[{"name":"candidates","cells":["0","1","2","3","4","5","6","7","8"],"hot":[],"marks":{"0":"lo","8":"hi"}}]},{"title":"mid = 4","description":"16 > 8 → too big → hi = 3.","codeLines":[7],"facts":{"lo":0,"hi":3},"rows":[{"name":"candidates","cells":["0","1","2","3","4","5","6","7","8"],"hot":[4],"marks":{}}]},{"title":"mid = 1","description":"1 ≤ 8 → fine → lo = 2.","codeLines":[6],"facts":{"lo":2,"hi":3},"rows":[{"name":"candidates","cells":["0","1","2","3","4","5","6","7","8"],"hot":[1],"marks":{}}]},{"title":"mid = 2","description":"4 ≤ 8 → lo = 3.","codeLines":[6],"facts":{"lo":3,"hi":3},"rows":[{"name":"candidates","cells":["0","1","2","3","4","5","6","7","8"],"hot":[2],"marks":{}}]},{"title":"mid = 3","description":"9 > 8 → hi = 2. Now lo > hi.","codeLines":[7],"facts":{"lo":3,"hi":2},"rows":[{"name":"candidates","cells":["0","1","2","3","4","5","6","7","8"],"hot":[3],"marks":{}}]},{"title":"Return","description":"hi = 2","codeLines":[8],"facts":{},"rows":[{"name":"answer","cells":["2"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":8}},{"l":4,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":8}},{"l":5,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":8}},{"l":6,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":8,"mid":4}},{"l":7,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":8,"mid":4}},{"l":4,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":3,"mid":4}},{"l":5,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":3,"mid":4}},{"l":6,"d":1,"f":1,"v":{"x":8,"lo":0,"hi":3,"mid":1}},{"l":4,"d":1,"f":1,"v":{"x":8,"lo":2,"hi":3,"mid":1}},{"l":5,"d":1,"f":1,"v":{"x":8,"lo":2,"hi":3,"mid":1}},{"l":6,"d":1,"f":1,"v":{"x":8,"lo":2,"hi":3,"mid":2}},{"l":4,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":3,"mid":2}},{"l":5,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":3,"mid":2}},{"l":6,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":3,"mid":3}},{"l":7,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":3,"mid":3}},{"l":4,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":2,"mid":3}},{"l":8,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":2,"mid":3}},{"l":8,"d":1,"f":1,"v":{"x":8,"lo":3,"hi":2,"mid":3},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":0}},{"l":4,"d":1,"f":1,"v":{"x":0,"lo":0,"hi":0}},{"l":5,"d":1,"f":1,"v":{"x":0,"lo":0,"hi":0}},{"l":6,"d":1,"f":1,"v":{"x":0,"lo":0,"hi":0,"mid":0}},{"l":4,"d":1,"f":1,"v":{"x":0,"lo":1,"hi":0,"mid":0}},{"l":8,"d":1,"f":1,"v":{"x":0,"lo":1,"hi":0,"mid":0}},{"l":8,"d":1,"f":1,"v":{"x":0,"lo":1,"hi":0,"mid":0},"ret":0}],"trunc":false}},{"name":"Linear search","tag":"Brute force","code":"class Solution:\n    def mySqrt(self, x):\n        i = 0\n        while (i + 1) * (i + 1) <= x: i += 1\n        return i","time":"O(√x)","space":"O(1)","explain":"Increase i while (i+1)² ≤ x.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":8}},{"l":4,"d":1,"f":1,"v":{"x":8,"i":0}},{"l":4,"d":1,"f":1,"v":{"x":8,"i":1}},{"l":4,"d":1,"f":1,"v":{"x":8,"i":2}},{"l":5,"d":1,"f":1,"v":{"x":8,"i":2}},{"l":5,"d":1,"f":1,"v":{"x":8,"i":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":0}},{"l":4,"d":1,"f":1,"v":{"x":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"x":0,"i":0}},{"l":5,"d":1,"f":1,"v":{"x":0,"i":0},"ret":0}],"trunc":false}},{"name":"Newton's method","tag":"Alternative","code":"class Solution:\n    def mySqrt(self, x):\n        r = x\n        while r * r > x: r = (r + x // r) // 2\n        return r","time":"O(log x)","space":"O(1)","explain":"Repeatedly average r and x // r until r² ≤ x.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":8}},{"l":4,"d":1,"f":1,"v":{"x":8,"r":8}},{"l":4,"d":1,"f":1,"v":{"x":8,"r":4}},{"l":4,"d":1,"f":1,"v":{"x":8,"r":3}},{"l":4,"d":1,"f":1,"v":{"x":8,"r":2}},{"l":5,"d":1,"f":1,"v":{"x":8,"r":2}},{"l":5,"d":1,"f":1,"v":{"x":8,"r":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"x":0}},{"l":4,"d":1,"f":1,"v":{"x":0,"r":0}},{"l":5,"d":1,"f":1,"v":{"x":0,"r":0}},{"l":5,"d":1,"f":1,"v":{"x":0,"r":0},"ret":0}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","Reach for it when"],"rows":[["lo, hi = 0, x","Search range of possible answers (the answer lies in [0, x])","Binary search on the answer, not on an array"],["mid * mid <= x","Monotone predicate: true for small mid, false for large","Any 'largest value that still satisfies' question"],["// 2","Floor division keeps `mid` an integer","Avoid float sqrt rounding errors"],["return hi","After the loop `hi` is the last value for which the predicate held","Largest-true binary search"]]}},{"h":"Walk through an example","p":["`x = 8`:"],"table":{"head":["lo","hi","mid","mid²","decision"],"rows":[["0","8","4","16","> x: hi = mid-1"],["0","3","1","1","≤ x: lo = mid+1"],["2","3","2","4","≤ x: lo = mid+1"],["3","3","3","9","> x: hi = mid-1"]]},"bullets":["Loop ends with `lo=3`, `hi=2`; `hi` is floor(√8) = 2."]},{"h":"Why return `hi` and not `lo`?","p":["When the loop ends `lo = hi + 1`. `lo` is the first value whose square exceeds `x`; `hi` is the last whose square does not. The floor of the square root is the last value that fits, so `hi`."]},{"h":"Time and space","bullets":["Time: O(log x).","Space: O(1).","`mid * mid` cannot overflow in Python; in languages with fixed-width ints compare `mid <= x // mid` instead."]}],"takeaway":"Binary search on the answer space: find the largest integer whose square is at most x."},"ex2":{"input":"0","output":"0","why":"The square root of 0 is 0."},"statement":"Return the integer part of the square root of a non-negative integer `x` (the root rounded down). Built-in exponent or square-root functions are not allowed.\n\nExample 1:\n\n```\nInput: x = 16\nOutput: 4\n```\n\nExample 2:\n\n```\nInput: x = 24\nOutput: 4\n```\n\nConstraints:\n\n* `0 <= x <= 2^31 - 1`"};
+window.PROBLEM = {
+ "id": "69",
+ "title": "Sqrt(x)",
+ "level": "Easy",
+ "topic": "Math",
+ "question": "Given a non-negative whole number x, return its square root rounded DOWN to the nearest whole number. Don't use a built-in power or square-root function. Example: x=8 → √8 ≈ 2.83 → 2.",
+ "why": "sqrt(8) = 2.82… → 2.",
+ "idea": "Binary search for the biggest number whose square is ≤ x.",
+ "input": "8",
+ "output": "2",
+ "notes": [],
+ "best": "Binary search for the biggest number whose square is ≤ x.",
+ "variants": [
+  {
+   "name": "Binary search",
+   "code": "class Solution:\n    def mySqrt(self, x):\n        lo, hi = 0, x\n        while lo <= hi:\n            mid = (lo + hi) // 2\n            if mid * mid <= x: lo = mid + 1\n            else: hi = mid - 1\n        return hi",
+   "time": "O(log x)",
+   "space": "O(1)",
+   "explain": "Binary search for the biggest number whose square is ≤ x.",
+   "frames": [
+    {
+     "title": "Range",
+     "description": "Answer is between 0 and 8.",
+     "codeLines": [
+      3
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "candidates",
+       "cells": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+       ],
+       "hot": [],
+       "marks": {
+        "0": "lo",
+        "8": "hi"
+       }
+      }
+     ]
+    },
+    {
+     "title": "mid = 4",
+     "description": "16 > 8 → too big → hi = 3.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "lo": 0,
+      "hi": 3
+     },
+     "rows": [
+      {
+       "name": "candidates",
+       "cells": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "mid = 1",
+     "description": "1 ≤ 8 → fine → lo = 2.",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "lo": 2,
+      "hi": 3
+     },
+     "rows": [
+      {
+       "name": "candidates",
+       "cells": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "mid = 2",
+     "description": "4 ≤ 8 → lo = 3.",
+     "codeLines": [
+      6
+     ],
+     "facts": {
+      "lo": 3,
+      "hi": 3
+     },
+     "rows": [
+      {
+       "name": "candidates",
+       "cells": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "mid = 3",
+     "description": "9 > 8 → hi = 2. Now lo > hi.",
+     "codeLines": [
+      7
+     ],
+     "facts": {
+      "lo": 3,
+      "hi": 2
+     },
+     "rows": [
+      {
+       "name": "candidates",
+       "cells": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "hi = 2",
+     "codeLines": [
+      8
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Linear search",
+   "tag": "Brute force",
+   "code": "class Solution:\n    def mySqrt(self, x):\n        i = 0\n        while (i + 1) * (i + 1) <= x: i += 1\n        return i",
+   "time": "O(√x)",
+   "space": "O(1)",
+   "explain": "Increase i while (i+1)² ≤ x.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Newton's method",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def mySqrt(self, x):\n        r = x\n        while r * r > x: r = (r + x // r) // 2\n        return r",
+   "time": "O(log x)",
+   "space": "O(1)",
+   "explain": "Repeatedly average r and x // r until r² ≤ x.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

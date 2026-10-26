@@ -136,7 +136,7 @@ class Solution:
             best = max(best, cur)
         return best
 `)});
-alt(2429,{name:"Try every candidate x",tag:"Brute force",time:"O(2^(bits))",space:"O(1)",explain:"Check all x below a bound and pick the smallest XOR among those with the right number of set bits.",code:C(`
+alt(2429,{name:"Try every candidate x",tag:"Brute force",time:"O(2^(bits))",space:"O(1)",explain:"Check all x below a bound and pick the smallest XOR (exclusive OR) among those with the right number of set bits.",code:C(`
 class Solution:
     def minimizeXor(self, num1, num2):
         cnt = bin(num2).count('1')
@@ -241,7 +241,7 @@ class Solution:
                 res += set(words[i]) == set(words[j])
         return res
 `)});
-alt(1863,{name:"Enumerate every subset",tag:"Brute force",time:"O(2ⁿ·n)",space:"O(n)",explain:"Compute the XOR of each subset (bitmask) and add them up.",code:C(`
+alt(1863,{name:"Enumerate every subset",tag:"Brute force",time:"O(2ⁿ·n)",space:"O(n)",explain:"Compute the XOR (exclusive OR) of each subset (bitmask) and add them up.",code:C(`
 class Solution:
     def subsetXORSum(self, nums):
         total = 0

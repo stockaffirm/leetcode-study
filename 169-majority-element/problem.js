@@ -1,1 +1,316 @@
-window.PROBLEM = {"id":"169","title":"Majority Element","level":"Easy","topic":"Array / String","question":"In a list of numbers, one number (the 'majority') appears MORE than half of the time. Find it. Example: [2,2,1,1,1,2,2] has 7 numbers; 2 appears 4 times, which is more than half → 2.","why":"[2,2,1,1,1,2,2]: 2 appears 4 of 7 times → 2.","idea":"Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.","input":"[2,2,1,1,1,2,2]","output":"2","notes":[],"best":"Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.","variants":[{"name":"Boyer–Moore voting","code":"class Solution:\n    def majorityElement(self, nums):\n        cand, count = None, 0\n        for x in nums:\n            if count == 0: cand = x\n            count += 1 if x == cand else -1\n        return cand","time":"O(n)","space":"O(1)","explain":"Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.","frames":[{"title":"Start","description":"No candidate yet.","codeLines":[3],"facts":{"cand":"None","count":0},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[],"marks":{}}]},{"title":"x = 2","description":"Same as candidate → count up. Candidate 2.","codeLines":[5,6],"facts":{"cand":2,"count":1},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[0],"marks":{"0":"x"}}]},{"title":"x = 2","description":"Same as candidate → count up. Candidate 2.","codeLines":[5,6],"facts":{"cand":2,"count":2},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[1],"marks":{"1":"x"}}]},{"title":"x = 1","description":"Different → cancel one vote. Candidate 2.","codeLines":[5,6],"facts":{"cand":2,"count":1},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[2],"marks":{"2":"x"}}]},{"title":"x = 1","description":"Different → cancel one vote. Candidate 2.","codeLines":[5,6],"facts":{"cand":2,"count":0},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[3],"marks":{"3":"x"}}]},{"title":"x = 1","description":"Same as candidate → count up. Candidate 1.","codeLines":[5,6],"facts":{"cand":1,"count":1},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[4],"marks":{"4":"x"}}]},{"title":"x = 2","description":"Different → cancel one vote. Candidate 1.","codeLines":[5,6],"facts":{"cand":1,"count":0},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[5],"marks":{"5":"x"}}]},{"title":"x = 2","description":"Same as candidate → count up. Candidate 2.","codeLines":[5,6],"facts":{"cand":2,"count":1},"rows":[{"name":"nums","cells":["2","2","1","1","1","2","2"],"hot":[6],"marks":{"6":"x"}}]},{"title":"Return","description":"The majority survives all cancelling.","codeLines":[7],"facts":{},"rows":[{"name":"answer","cells":["2"],"hot":[0],"marks":{}}]}],"tag":"Optimal","trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":null,"count":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":null,"count":0,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":0,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":2,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":2,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":2,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":0,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":0,"x":1}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":0,"x":1}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":1,"x":1}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":0,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":1,"count":0,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":0,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cand":2,"count":1,"x":2},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":null,"count":0}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":null,"count":0,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":0,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":3}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":2}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":2}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":0,"x":2}},{"l":5,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":0,"x":3}},{"l":6,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":0,"x":3}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":3}},{"l":7,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cand":3,"count":1,"x":3},"ret":3}],"trunc":false}},{"name":"Hash map count","tag":"Alternative","code":"class Solution:\n    def majorityElement(self, nums):\n        cnt = Counter(nums)\n        return max(cnt, key=cnt.get)","time":"O(n)","space":"O(n)","explain":"Count every value and take the most frequent.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cnt":["d",[[2,4],[1,3]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0],"cnt":["d",[[2,4],[1,3]]]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cnt":["d",[[3,2],[2,1]]]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0],"cnt":["d",[[3,2],[2,1]]]},"ret":3}],"trunc":false}},{"name":"Sort and take the middle","tag":"Alternative","code":"class Solution:\n    def majorityElement(self, nums):\n        nums.sort()\n        return nums[len(nums) // 2]","time":"O(n log n)","space":"O(1)","explain":"The majority element always sits at the middle after sorting.","frames":[],"alt":true,"trace":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[2,2,1,1,1,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,2,2],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[1,1,1,2,2,2,2],0]},"ret":2}],"trunc":false},"trace2":{"steps":[{"l":3,"d":1,"f":1,"v":{"nums":["l",[3,2,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,3],0]}},{"l":4,"d":1,"f":1,"v":{"nums":["l",[2,3,3],0]},"ret":3}],"trunc":false}}],"understand":{"blocks":[{"h":"What each operation does","table":{"head":["Code","What it does","When to reach for it"],"rows":[["`cand`, `count`","Current candidate and its surplus over opponents","The whole algorithm's state"],["`if count == 0: cand = x`","Pick a new candidate when the previous one was cancelled out","Restart after the votes balance"],["`count += 1 if x == cand else -1`","Vote for or against the candidate","Conditional expression inside `+=`"]]}},{"h":"Walk through an example","p":["`[2,2,1,1,1,2,2]`:"],"table":{"head":["x","cand after","count after"],"rows":[["2","2","1"],["2","2","2"],["1","2","1"],["1","2","0"],["1","1","1"],["2","1","0"],["2","2","1"]]}},{"h":"Why does cancelling pairs find the majority?","p":["Each time a non-candidate cancels a candidate vote, we remove one majority-element and one other element. The majority has more than half of all elements, so after all the pair-removals it cannot be fully cancelled: some copy remains. Note that the final `cand` is correct only because a majority is guaranteed; on `[1,2,3]` it would return 3, which isn't a majority. Without that guarantee you need a second pass to count `cand`."]},{"h":"Alternatives","table":{"head":["Approach","Time","Space"],"rows":[["Counter","O(n)","O(n)"],["Sort and take the middle","O(n log n)","O(1) or O(n)"],["Boyer–Moore (this code)","O(n)","O(1)"]]}},{"h":"Time and space","bullets":["Time: O(n).","Space: O(1)."]}],"takeaway":"Boyer–Moore voting: the majority element survives pair-wise cancellation, so track one candidate and a counter."},"ex2":{"input":"[3,2,3]","output":"3","why":"3 appears 2 of 3 times — more than half."},"statement":"In an array `nums` of size `n`, one value (the majority element) occurs more than `n / 2` times. Return it. The array is guaranteed to have such a value.\n\nExample 1:\n\n```\nInput: nums = [3,1,3]\nOutput: 3\n```\n\nExample 2:\n\n```\nInput: nums = [5,5,2,5,1]\nOutput: 5\n```\n\nConstraints:\n\n* `n == nums.length`\n* `1 <= n <= 5 * 10^4`\n* `-10^9 <= nums[i] <= 10^9`\n* A majority element always exists."};
+window.PROBLEM = {
+ "id": "169",
+ "title": "Majority Element",
+ "level": "Easy",
+ "topic": "Array / String",
+ "question": "In a list of numbers, one number (the 'majority') appears MORE than half of the time. Find it. Example: [2,2,1,1,1,2,2] has 7 numbers; 2 appears 4 times, which is more than half → 2.",
+ "why": "[2,2,1,1,1,2,2]: 2 appears 4 of 7 times → 2.",
+ "idea": "Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.",
+ "input": "[2,2,1,1,1,2,2]",
+ "output": "2",
+ "notes": [],
+ "best": "Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.",
+ "variants": [
+  {
+   "name": "Boyer–Moore voting",
+   "code": "class Solution:\n    def majorityElement(self, nums):\n        cand, count = None, 0\n        for x in nums:\n            if count == 0: cand = x\n            count += 1 if x == cand else -1\n        return cand",
+   "time": "O(n)",
+   "space": "O(1)",
+   "explain": "Boyer–Moore voting: keep a candidate and a count. Equal numbers add, different ones cancel out.",
+   "frames": [
+    {
+     "title": "Start",
+     "description": "No candidate yet.",
+     "codeLines": [
+      3
+     ],
+     "facts": {
+      "cand": "None",
+      "count": 0
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [],
+       "marks": {}
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Same as candidate → count up. Candidate 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 2,
+      "count": 1
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {
+        "0": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Same as candidate → count up. Candidate 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 2,
+      "count": 2
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        1
+       ],
+       "marks": {
+        "1": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Different → cancel one vote. Candidate 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 2,
+      "count": 1
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        2
+       ],
+       "marks": {
+        "2": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Different → cancel one vote. Candidate 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 2,
+      "count": 0
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        3
+       ],
+       "marks": {
+        "3": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 1",
+     "description": "Same as candidate → count up. Candidate 1.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 1,
+      "count": 1
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        4
+       ],
+       "marks": {
+        "4": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Different → cancel one vote. Candidate 1.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 1,
+      "count": 0
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        5
+       ],
+       "marks": {
+        "5": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "x = 2",
+     "description": "Same as candidate → count up. Candidate 2.",
+     "codeLines": [
+      5,
+      6
+     ],
+     "facts": {
+      "cand": 2,
+      "count": 1
+     },
+     "rows": [
+      {
+       "name": "nums",
+       "cells": [
+        "2",
+        "2",
+        "1",
+        "1",
+        "1",
+        "2",
+        "2"
+       ],
+       "hot": [
+        6
+       ],
+       "marks": {
+        "6": "x"
+       }
+      }
+     ]
+    },
+    {
+     "title": "Return",
+     "description": "The majority survives all cancelling.",
+     "codeLines": [
+      7
+     ],
+     "facts": {},
+     "rows": [
+      {
+       "name": "answer",
+       "cells": [
+        "2"
+       ],
+       "hot": [
+        0
+       ],
+       "marks": {}
+      }
+     ]
+    }
+   ],
+   "tag": "Optimal"
+  },
+  {
+   "name": "Hash map count",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def majorityElement(self, nums):\n        cnt = Counter(nums)\n        return max(cnt, key=cnt.get)",
+   "time": "O(n)",
+   "space": "O(n)",
+   "explain": "Count every value and take the most frequent.",
+   "frames": [],
+   "alt": true
+  },
+  {
+   "name": "Sort and take the middle",
+   "tag": "Alternative",
+   "code": "class Solution:\n    def majorityElement(self, nums):\n        nums.sort()\n        return nums[len(nums) // 2]",
+   "time": "O(n log n)",
+   "space": "O(1)",
+   "explain": "The majority element always sits at the middle after sorting.",
+   "frames": [],
+   "alt": true
+  }
+ ]
+};

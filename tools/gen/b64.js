@@ -28,7 +28,7 @@ class Solution:
         return ''.join(res)
 `)});
 lite({id:3389,slug:"minimum-operations-to-make-character-frequencies-equal",title:"Minimum Operations to Make Character Frequencies Equal",level:"Hard",topic:DP,name:"Try every target frequency; DP over letters with a carry",
-w:"'aaabc': change one 'a' to 'b' and insert a 'c' so every letter appears twice → 2.",k:"Pick the common frequency f (1 … n). Walk the letters a…z. A letter can end with f copies or with 0. Extra copies cost 1 each whether deleted or turned into the next letter, but turning them into the next letter can fill that letter's deficit for free later. Keep a small DP over the 'carry' of extra copies passed to the next letter (carry 0 or exactly what the next letter needs); a deficit costs one insertion per missing copy. Take the best over all f.",
+w:"'aaabc': change one 'a' to 'b' and insert a 'c' so every letter appears twice → 2.",k:"Pick the common frequency f (1 … n). Walk the letters a…z. A letter can end with f copies or with 0. Extra copies cost 1 each whether deleted or turned into the next letter, but turning them into the next letter can fill that letter's deficit for free later. Keep a small DP (Dynamic Programming) over the 'carry' of extra copies passed to the next letter (carry 0 or exactly what the next letter needs); a deficit costs one insertion per missing copy. Take the best over all f.",
 i:"s = \"aaabc\"",o:"2",time:"O(n·26)",space:"O(26)",
 code:C(`
 class Solution:
@@ -450,7 +450,7 @@ class Solution:
         return total
 `)});
 lite({id:99,slug:"recover-binary-search-tree",title:"Recover Binary Search Tree",level:"Medium",topic:"Binary Search Tree",name:"In-order walk, swap the two out-of-order nodes",
-w:"[1,3,null,null,2] has 3 and 1 swapped → fixed tree [3,1,null,null,2].",k:"An in-order traversal of a BST is increasing. Two swapped nodes show up as one or two places where the order goes down. The first violation's larger node and the last violation's smaller node are the swapped pair — swap their values.",
+w:"[1,3,null,null,2] has 3 and 1 swapped → fixed tree [3,1,null,null,2].",k:"An in-order traversal of a BST (Binary Search Tree) is increasing. Two swapped nodes show up as one or two places where the order goes down. The first violation's larger node and the last violation's smaller node are the swapped pair — swap their values.",
 i:"root = [1,3,null,null,2]",o:"[3, 1, None, None, 2]",time:"O(n)",space:"O(h)",
 code:C(`
 class Solution:
@@ -689,7 +689,7 @@ class Solution:
         return ops
 `)});
 lite({id:1162,slug:"as-far-from-land-as-possible",title:"As Far from Land as Possible",level:"Medium",topic:GR,name:"Multi-source BFS from every land cell",
-w:"The 3×3 grid with land in the corners: the centre water cell is 2 steps from the nearest land → 2.",k:"Start a BFS from all land cells at once. Each wave moves one step into water; the number of waves needed to reach the last water cell is the largest distance to land. If the grid is all land or all water, return −1.",
+w:"The 3×3 grid with land in the corners: the centre water cell is 2 steps from the nearest land → 2.",k:"Start a BFS (Breadth-First Search) from all land cells at once. Each wave moves one step into water; the number of waves needed to reach the last water cell is the largest distance to land. If the grid is all land or all water, return −1.",
 i:"grid = [[1,0,1],[0,0,0],[1,0,1]]",o:"2",time:"O(n²)",space:"O(n²)",
 code:C(`
 class Solution:
@@ -720,7 +720,7 @@ class Solution:
         return sum(c[0] for c in costs[:n]) + sum(c[1] for c in costs[n:])
 `)});
 lite({id:1345,slug:"jump-game-iv",title:"Jump Game IV",level:"Hard",topic:GR,name:"BFS with a value → indices map",
-w:"[100,-23,-23,404,100,23,23,23,3,404]: 0 → 4 → 3 → 9 takes 3 jumps.",k:"From index i you can step to i±1 or to any index with the same value. BFS from index 0. Group indices by value; the first time a value is used, jump to all its indices at once and clear that list so each value is expanded only once.",
+w:"[100,-23,-23,404,100,23,23,23,3,404]: 0 → 4 → 3 → 9 takes 3 jumps.",k:"From index i you can step to i±1 or to any index with the same value. BFS (Breadth-First Search) from index 0. Group indices by value; the first time a value is used, jump to all its indices at once and clear that list so each value is expanded only once.",
 i:"arr = [100,-23,-23,404,100,23,23,23,3,404]",o:"3",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:
