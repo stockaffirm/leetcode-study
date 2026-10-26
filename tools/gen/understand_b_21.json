@@ -1,0 +1,1893 @@
+{
+ "2566": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`str(num)`",
+       "The number as text",
+       "Digits can be replaced with `str.replace`"
+      ],
+      [
+       "`s.replace(ch, '9')`",
+       "Replace EVERY occurrence of a digit",
+       "The operation replaces all occurrences of one chosen digit at once"
+      ],
+      [
+       "first `ch != '9'`",
+       "The leftmost digit that is not 9",
+       "Making the most significant improvable digit a 9 gives the largest number"
+      ],
+      [
+       "`s.replace(s[0], '0')`",
+       "Turn the first digit (and all its copies) into 0",
+       "Smallest number: the highest place value becomes 0"
+      ],
+      [
+       "`int(hi) - int(lo)`",
+       "Difference",
+       "`int` drops leading zeros (e.g. '00890' → 890)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`11891`:"
+    ],
+    "table": {
+     "head": [
+      "Goal",
+      "Choice",
+      "Result"
+     ],
+     "rows": [
+      [
+       "Largest",
+       "first digit that is not 9 is `1` → replace every 1 by 9",
+       "99899"
+      ],
+      [
+       "Smallest",
+       "first digit is `1` → replace every 1 by 0",
+       "00890 → 890"
+      ],
+      [
+       "Difference",
+       "99899 − 890",
+       "99009"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why these two choices?",
+    "p": [
+     "For the maximum, a larger digit in a higher place gives more, so the leftmost digit that isn't already 9 should become 9 (all its copies too, as required). For the minimum, the most significant place is worth the most, so replacing the first digit by 0 reduces the number as much as possible. Digits are chosen independently for the max and the min."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Maximise by turning the first non-9 digit into 9 everywhere; minimise by turning the first digit into 0 everywhere."
+ },
+ "2596": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`grid[0][0] != 0`",
+       "The tour must start in the top-left cell",
+       "Quick rejection"
+      ],
+      [
+       "`pos[grid[r][c]] = (r, c)`",
+       "Position of each move number",
+       "Dict from move number to cell"
+      ],
+      [
+       "`pos[k - 1], pos[k]`",
+       "Cells of consecutive moves",
+       "Check each step of the tour"
+      ],
+      [
+       "`sorted((abs(dr), abs(dc))) == [1, 2]`",
+       "A knight move changes row and column by 1 and 2 in either order",
+       "`sorted` makes (1,2) and (2,1) equal to `[1, 2]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 5×5 tour from the problem is True. First steps:"
+    ],
+    "table": {
+     "head": [
+      "Move",
+      "Cells",
+      "|Δr|, |Δc| sorted",
+      "Knight move?"
+     ],
+     "rows": [
+      [
+       "0 → 1",
+       "(0,0) → (2,1)",
+       "[1, 2]",
+       "True"
+      ],
+      [
+       "1 → 2",
+       "(2,1) → (4,2)",
+       "[1, 2]",
+       "True"
+      ],
+      [
+       "2 → 3",
+       "(4,2) → (3,0)",
+       "[1, 2]",
+       "True"
+      ],
+      [
+       "3 → 4",
+       "(3,0) → (1,1)",
+       "[1, 2]",
+       "True"
+      ],
+      [
+       "4 → 5",
+       "(1,1) → (0,3)",
+       "[1, 2]",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "An invalid tour",
+    "p": [
+     "`[[0, 3, 6], [5, 8, 1], [2, 7, 4]]` → False: the first seven steps are knight moves, but step 7 → 8 goes from (2,1) to (1,1), a one-cell move (|Δr|, |Δc| = (1, 0)), so the function returns False at that pair."
+    ]
+   },
+   {
+    "h": "Why a position map?",
+    "p": [
+     "Move numbers are given by cell, but we need cells by move number. One pass builds the inverse map in O(n²); then each of the n²−1 steps is an O(1) check."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Invert the grid into move → cell and check that every consecutive pair differs by a (1, 2) knight offset."
+ },
+ "2602": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Ascending order",
+       "The numbers below q form a prefix"
+      ],
+      [
+       "`pre`",
+       "Prefix sums: `pre[i]` = sum of the first i numbers",
+       "Range sums in O(1)"
+      ],
+      [
+       "`bisect_left(nums, q)`",
+       "Number of elements smaller than q",
+       "Split point between 'raise to q' and 'lower to q'"
+      ],
+      [
+       "`q * i - pre[i]`",
+       "Total cost to raise the i smaller numbers to q",
+       "i copies of q minus their actual sum"
+      ],
+      [
+       "`(pre[n] - pre[i]) - q * (n - i)`",
+       "Total cost to lower the larger numbers to q",
+       "Their sum minus (n−i) copies of q"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,6,8]` (sorted `[1, 3, 6, 8]`, prefix sums `[0, 1, 4, 10, 18]`):"
+    ],
+    "table": {
+     "head": [
+      "Query q",
+      "i = elements < q",
+      "Cost to raise",
+      "Cost to lower",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "1·0 − 0 = 0",
+       "(18−0) − 1·4 = 14",
+       "14"
+      ],
+      [
+       "5",
+       "2",
+       "5·2 − 4 = 6",
+       "(18−4) − 5·2 = 4",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefix sums and binary search?",
+    "p": [
+     "For each query the cost is a sum of |x − q|. Elements below q need q − x each, elements at or above need x − q. Sorting makes these two groups a prefix and a suffix; prefix sums give each group's total in O(1) and `bisect_left` finds the split in O(log n), so each query costs O(log n) instead of O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort + prefix sums + bisect: split the array at q and compute the raise and lower costs from prefix sums."
+ },
+ "2611": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sum(reward2)`",
+       "Starting total if the second mouse eats everything",
+       "Baseline"
+      ],
+      [
+       "`reward1[i] - reward2[i]`",
+       "Extra points gained by giving piece i to mouse 1 instead of mouse 2",
+       "The benefit of switching one piece"
+      ],
+      [
+       "`sorted(range(n), key=…, reverse=True)`",
+       "Piece indexes ordered by that gain, largest first",
+       "Index sort: we need the indexes, not the values"
+      ],
+      [
+       "`gain[:k]`",
+       "The k best switches",
+       "Mouse 1 eats exactly k pieces"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "reward1 `[1,1,3,4]`, reward2 `[4,4,1,1]`, `k = 2`: baseline 10."
+    ],
+    "table": {
+     "head": [
+      "Piece",
+      "reward1 − reward2",
+      "Switched to mouse 1?"
+     ],
+     "rows": [
+      [
+       "0",
+       "-3",
+       "False"
+      ],
+      [
+       "1",
+       "-3",
+       "False"
+      ],
+      [
+       "2",
+       "2",
+       "True"
+      ],
+      [
+       "3",
+       "3",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "Total = 10 + 3 + 2 = 15."
+    ]
+   },
+   {
+    "h": "Why does greedy by difference work?",
+    "p": [
+     "Giving piece i to mouse 1 changes the total by exactly `reward1[i] − reward2[i]` relative to the baseline. Exactly k pieces must switch, and the total is the baseline plus the sum of the chosen gains, so choosing the k largest gains is optimal (even negative gains are taken when fewer than k positive ones exist)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Start from everything going to mouse 2 and switch the k pieces with the largest reward1 − reward2."
+ },
+ "2680": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x << k`",
+       "x multiplied by 2^k",
+       "Spend all k doublings on the same number"
+      ],
+      [
+       "`suf[i]`",
+       "OR of `nums[i:]`",
+       "Suffix OR: all numbers to the right"
+      ],
+      [
+       "`pre`",
+       "OR of numbers to the left",
+       "Prefix OR, updated after use"
+      ],
+      [
+       "`pre | (x << k) | suf[i + 1]`",
+       "OR of the array when element i is the one multiplied",
+       "The others stay unchanged"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[12, 9]`, `k = 1` → 30:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "x << k",
+      "OR before i",
+      "OR after i",
+      "OR if i is multiplied"
+     ],
+     "rows": [
+      [
+       "0",
+       "12",
+       "24",
+       "0",
+       "9",
+       "25"
+      ],
+      [
+       "1",
+       "9",
+       "18",
+       "12",
+       "0",
+       "30"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why put all doublings on one number?",
+    "p": [
+     "Shifting an element left by t moves its highest bit up t places, and the highest bit dominates the OR. Splitting the shifts across two numbers gives a smaller top bit than shifting one number by the total. So the best plan multiplies a single element by 2^k, and prefix/suffix ORs let us test each candidate in O(1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "All k doublings go to a single number (it pushes the highest bit furthest); prefix and suffix ORs evaluate each choice in O(1)."
+ },
+ "2698": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`can(s, target)`",
+       "Can the digit string s be split into contiguous parts whose values add up to target?",
+       "Recursive splitting"
+      ],
+      [
+       "`s[:k]`, `s[k:]`",
+       "First part and the remaining digits",
+       "Try every length of the first part"
+      ],
+      [
+       "`int(s[:k])`",
+       "Value of the first part (leading zeros allowed)",
+       "`int('00')` is 0"
+      ],
+      [
+       "`v > target: break`",
+       "The first part is already too big",
+       "Longer prefixes are even bigger (values only grow with length)"
+      ],
+      [
+       "`not s` → `target == 0`",
+       "All digits used",
+       "Success when the remainder is exactly 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10` → 182. Numbers whose square can be split to sum to the number:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "i²",
+      "Splits (found by the search)"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "9",
+       "81",
+       "8 + 1"
+      ],
+      [
+       "10",
+       "100",
+       "10 + 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the pruning `v > target`?",
+    "p": [
+     "All parts are non-negative, so a first part larger than the remaining target can never work, and since longer prefixes are never smaller, the loop can stop. This keeps the recursion tree small even though a square can have up to 7 digits for i ≤ 1000."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · 2^d) where d is the number of digits of i² (at most 7 for n ≤ 1000).",
+     "Space: O(d) recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking over digit splits of i² with pruning when a part exceeds the remaining target."
+ },
+ "2719": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`f(num)`",
+       "Count of integers from 0 to num with digit sum in [min_sum, max_sum]",
+       "Digit DP (Dynamic Programming) over the decimal digits"
+      ],
+      [
+       "`go(i, s, tight)`",
+       "Position i, sum so far s, and whether the prefix equals num's prefix",
+       "`tight` limits the next digit to `digits[i]`"
+      ],
+      [
+       "`lim = digits[i] if tight else 9`",
+       "Largest digit allowed here",
+       "Once a smaller digit is placed, the rest are free (0–9)"
+      ],
+      [
+       "`tight and d == lim`",
+       "Stay tight only if the prefix still matches",
+       "Becomes False after a smaller digit"
+      ],
+      [
+       "`@lru_cache(None)`",
+       "Memoise by (i, s, tight)",
+       "LRU (Least Recently Used) cache with no size bound"
+      ],
+      [
+       "`f(num2) - f(num1) + ok`",
+       "Count in (num1, num2] plus num1 itself if it qualifies",
+       "Range count as a difference of prefix counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num1 = '1'`, `num2 = '12'`, `min_sum = 1`, `max_sum = 8`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "f('12') = numbers 0…12 with sum in [1, 8]",
+       "11"
+      ],
+      [
+       "f('1') = numbers 0…1 with sum in [1, 8]",
+       "1"
+      ],
+      [
+       "num1 itself qualifies (digit sum 1)?",
+       "1"
+      ],
+      [
+       "answer = f(num2) − f(num1) + ok",
+       "11"
+      ],
+      [
+       "brute-force count of 1…12 with sum in [1, 8]",
+       "11"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `tight` and why prune on `s > max_sum`?",
+    "p": [
+     "Counting numbers up to a bound digit by digit needs to remember whether we are still equal to the bound's prefix: only then is the next digit limited. Once a smaller digit appears, everything after is unconstrained. The check `s > max_sum` stops branches whose digit sum has already exceeded the limit. The state space is (positions × sums × 2), small compared with the 10²² numbers in range."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len · max_sum · 10).",
+     "Space: O(len · max_sum)."
+    ]
+   }
+  ],
+  "takeaway": "Digit DP with a tight flag and running digit sum: count up to num2, subtract up to num1, add back num1 if it qualifies."
+ },
+ "2734": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`while a[i] == 'a': i += 1`",
+       "Skip the leading 'a's",
+       "Decrementing an 'a' would turn it into 'z' (worse)"
+      ],
+      [
+       "`i == len(a)` → `a[-1] = 'z'`",
+       "The whole string is 'a's",
+       "The operation must be used once; the least harm is changing the last letter to 'z'"
+      ],
+      [
+       "`while a[i] != 'a': a[i] = chr(ord(a[i]) - 1)`",
+       "Decrement the first run of non-'a' letters",
+       "Stops at the next 'a', which would turn into 'z'"
+      ],
+      [
+       "`chr(ord(c) - 1)`",
+       "Previous letter of the alphabet",
+       "Character arithmetic"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "Result",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "cbabc",
+       "baabc",
+       "first run `cb` is decremented, stops at `a`"
+      ],
+      [
+       "acbbc",
+       "abaab",
+       "skip the leading `a`, decrement `cbb`"
+      ],
+      [
+       "aaa",
+       "aaz",
+       "all 'a': change the last to 'z'"
+      ],
+      [
+       "leetcode",
+       "kddsbncd",
+       "no 'a' at all: the whole string is decremented"
+      ],
+      [
+       "abab",
+       "aaab",
+       "skip `a`, decrement `b`, stop at the next `a`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the first non-'a' run?",
+    "p": [
+     "The earliest position where the string can be made smaller dominates lexicographic order, and decrementing a longer run only improves later positions, but the run must stop before an 'a' (turning it into 'z' would make it worse). So take the first maximal run of non-'a' letters after any leading 'a's."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Skip leading 'a's, then decrement the first maximal run of non-'a' letters; an all-'a' string changes its last letter to 'z'."
+ },
+ "2788": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`w.split(separator)`",
+       "List of pieces between separators",
+       "May contain empty strings for adjacent separators"
+      ],
+      [
+       "nested comprehension `for w in words for part in …`",
+       "Flatten: outer loop over words, inner over pieces",
+       "Order of `for` clauses is the same as nested loops"
+      ],
+      [
+       "`if part`",
+       "Keep only non-empty strings",
+       "An empty string is falsy"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['one.two.three', 'four.five', 'six']` with separator `'.'`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "split",
+      "Kept (non-empty)"
+     ],
+     "rows": [
+      [
+       "one.two.three",
+       "['one', 'two', 'three']",
+       "['one', 'two', 'three']"
+      ],
+      [
+       "four.five",
+       "['four', 'five']",
+       "['four', 'five']"
+      ],
+      [
+       "six",
+       "['six']",
+       "['six']"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Edge case: adjacent and edge separators",
+    "p": [
+     "`'a..b'.split('.')` is `['a', '', 'b']` and `'.x.'.split('.')` is `['', 'x', '']`; the `if part` filter removes the empty strings that adjacent or leading/trailing separators create. (Splitting without an argument would drop them but would also split on spaces, so the explicit separator is needed.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length).",
+     "Space: O(total length)."
+    ]
+   }
+  ],
+  "takeaway": "Flatten the split pieces with a nested comprehension and filter out empty strings."
+ },
+ "2791": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`mask[v] = mask[u] ^ (1 << letter)`",
+       "Parity of each letter on the path from the root to v",
+       "Bit i = 1 if letter i appears an odd number of times"
+      ],
+      [
+       "BFS (Breadth-First Search) order",
+       "Parents are processed before children",
+       "So `mask[u]` is ready when computing `mask[v]`"
+      ],
+      [
+       "path (u, v) letters",
+       "Parity mask = `mask[u] ^ mask[v]`",
+       "The common part of the root paths cancels (XOR)"
+      ],
+      [
+       "`cnt[m]` and `cnt[m ^ (1 << b)]`",
+       "Earlier nodes whose mask equals m, or differs in one bit",
+       "A path can be rearranged into a palindrome iff at most one letter has odd parity"
+      ],
+      [
+       "`cnt[m] += 1` after counting",
+       "Count pairs once (earlier nodes only)",
+       "u < v pairs counted from the later node"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "parent `[-1,0,0,1,1,2]`, letters `'acaabc'` → 8 (masks use bits a=0, b=1, c=2):"
+    ],
+    "table": {
+     "head": [
+      "Node (BFS order)",
+      "Mask from root",
+      "New pairs with earlier nodes",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "000",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "100",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "001",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "101",
+       "2",
+       "4"
+      ],
+      [
+       "4",
+       "110",
+       "1",
+       "5"
+      ],
+      [
+       "5",
+       "101",
+       "3",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why XOR of masks?",
+    "p": [
+     "The multiset of letters on the path between u and v equals the root-to-u letters plus the root-to-v letters, minus twice the root-to-lca letters. Parities are mod 2, so the doubled part vanishes and the parity mask of the path is `mask[u] ^ mask[v]`. A palindrome arrangement exists iff that mask has at most one set bit, i.e. is 0 or a power of two."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26·n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Letter-parity masks from the root: the path parity is mask[u] ^ mask[v]; count pairs whose XOR has at most one set bit."
+ },
+ "2812": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dist`",
+       "Distance from each cell to the nearest thief",
+       "Multi-source BFS (Breadth-First Search) starting from all thieves at once"
+      ],
+      [
+       "`dist[a][b] < 0`",
+       "Not yet visited",
+       "Distances start at −1"
+      ],
+      [
+       "`heap` of `(-safeness, i, j)`",
+       "Max-heap by the best safeness of a path reaching the cell",
+       "Heap stores negatives because `heapq` is a min-heap"
+      ],
+      [
+       "`-min(-s, dist[a][b])`",
+       "Path safeness = minimum cell safeness along the path",
+       "A path is only as safe as its most dangerous cell"
+      ],
+      [
+       "first pop of the target",
+       "Its safeness is optimal",
+       "Dijkstra-like: always expand the safest frontier cell"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Distances to the nearest thief",
+    "p": [
+     "Grid `[[0,0,1],[0,0,0],[0,0,0]]`:"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "dist"
+     ],
+     "rows": [
+      [
+       "0",
+       "[2, 1, 0]"
+      ],
+      [
+       "1",
+       "[3, 2, 1]"
+      ],
+      [
+       "2",
+       "[4, 3, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Best-first search",
+    "p": [
+     "Answer 2:"
+    ],
+    "table": {
+     "head": [
+      "Popped cell",
+      "Path safeness so far",
+      "Action"
+     ],
+     "rows": [
+      [
+       "(0, 0)",
+       "2",
+       "push (1,0): 2, (0,1): 1"
+      ],
+      [
+       "(1, 0)",
+       "2",
+       "push (2,0): 2, (1,1): 2"
+      ],
+      [
+       "(1, 1)",
+       "2",
+       "push (2,1): 2, (1,2): 1"
+      ],
+      [
+       "(2, 0)",
+       "2",
+       "push none"
+      ],
+      [
+       "(2, 1)",
+       "2",
+       "push (2,2): 2"
+      ],
+      [
+       "(2, 2)",
+       "2",
+       "target → return"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a max-heap rather than BFS?",
+    "p": [
+     "We maximise the minimum along the path. Always expanding the cell with the highest current path safeness (like Dijkstra with `min` in place of `+`) guarantees that the first time a cell is popped, its value is the best possible for it. The target's value on the first pop is the answer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² log n).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "BFS for thief distances, then a best-first search (max-heap) where a path's value is the minimum distance on it."
+ },
+ "2824": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Ascending order",
+       "Index order doesn't matter for pair sums"
+      ],
+      [
+       "`nums[l] + nums[r] < target`",
+       "The pair is valid",
+       "If so, so is `nums[l]` with every element between l and r"
+      ],
+      [
+       "`res += r - l`",
+       "All pairs `(l, m)` for m in (l, r]",
+       "Counted at once"
+      ],
+      [
+       "`l += 1` / `r -= 1`",
+       "Move the pointer that can still change things",
+       "Standard two-pointer scan"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[-1,1,2,3,1]` sorted `[-1, 1, 1, 2, 3]`, target 2 → 3:"
+    ],
+    "table": {
+     "head": [
+      "l",
+      "r",
+      "Check",
+      "Action",
+      "Pairs so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "-1+3 = 2 ≥ 2",
+       "r −= 1",
+       "0"
+      ],
+      [
+       "0",
+       "3",
+       "-1+2 = 1 < 2",
+       "+3",
+       "3"
+      ],
+      [
+       "1",
+       "3",
+       "1+2 = 3 ≥ 2",
+       "r −= 1",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "1+1 = 2 ≥ 2",
+       "r −= 1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count r − l at once?",
+    "p": [
+     "The array is sorted. If `nums[l] + nums[r] < target`, then replacing `nums[r]` by any smaller element between l and r keeps the sum below target, so all r − l partners of `nums[l]` work. Then `l` advances. If the sum is too large, `nums[r]` is too big for every remaining `l`, so `r` decreases."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sorted two pointers: when nums[l] + nums[r] < target, all r − l partners of nums[l] qualify."
+ },
+ "2833": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`moves.count('L')`",
+       "Number of left moves",
+       "`str.count` counts non-overlapping occurrences"
+      ],
+      [
+       "`abs(L - R)`",
+       "Net displacement from the fixed moves",
+       "Left and right moves cancel"
+      ],
+      [
+       "`+ moves.count('_')`",
+       "Every wildcard adds one step in the direction already ahead",
+       "Send all '_' the same way"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'L_RL__R'`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "count('L')",
+       "2"
+      ],
+      [
+       "count('R')",
+       "2"
+      ],
+      [
+       "count('_')",
+       "3"
+      ],
+      [
+       "|L − R| + _",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no simulation?",
+    "p": [
+     "Moves commute: only the totals matter, not the order. The farthest end point sends every '_' in the direction of the larger fixed total. If L and R tie, all '_' go either way for the same distance. Hence distance = |L − R| + number of '_'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Moves commute: the farthest distance is |L − R| plus all the wildcards, sent in the dominant direction."
+ },
+ "2836": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`up[j][i]`",
+       "Player reached from i after 2^j passes",
+       "Binary lifting table"
+      ],
+      [
+       "`tot[j][i]`",
+       "Sum of the ids of the next 2^j receivers starting from i (not counting i)",
+       "The value collected during those passes"
+      ],
+      [
+       "`up.append([pu[pu[i]] …])`",
+       "Doubling: 2^j passes = 2^(j−1) passes twice",
+       "Build each level from the previous one"
+      ],
+      [
+       "`tot.append([pt[i] + pt[pu[i]] …])`",
+       "Sum over the first half plus sum over the second half",
+       "Starts the second half at `pu[i]`"
+      ],
+      [
+       "`(k >> j) & 1`",
+       "Is the j-th bit of k set?",
+       "Decompose k passes into powers of two"
+      ],
+      [
+       "`s += tot[j][cur]; cur = up[j][cur]`",
+       "Collect the block's sum and jump",
+       "The start id `x` is added once at the beginning"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The tables",
+    "p": [
+     "receiver `[2,0,1]`, `k = 4` (binary 100):"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "up[j] (player after 2^j passes)",
+      "tot[j] (sum of receivers over 2^j passes)"
+     ],
+     "rows": [
+      [
+       "0",
+       "[2, 0, 1]",
+       "[2, 0, 1]"
+      ],
+      [
+       "1",
+       "[1, 2, 0]",
+       "[3, 2, 1]"
+      ],
+      [
+       "2",
+       "[2, 0, 1]",
+       "[5, 3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Scores",
+    "p": [
+     "Best score 6:"
+    ],
+    "table": {
+     "head": [
+      "Start x",
+      "Jumps used",
+      "f(x)"
+     ],
+     "rows": [
+      [
+       "0",
+       "jump 2^2: +5",
+       "5"
+      ],
+      [
+       "1",
+       "jump 2^2: +3",
+       "4"
+      ],
+      [
+       "2",
+       "jump 2^2: +4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary lifting?",
+    "p": [
+     "`k` can be 10¹⁰, so simulating k passes per start is far too slow. Precomputing, for every player, the endpoint and the sum over 2^j passes lets any k be assembled from at most log₂ k blocks, giving O(n log k) overall. The passes may cycle; the table doubles correctly because the process is deterministic."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log k).",
+     "Space: O(n log k)."
+    ]
+   }
+  ],
+  "takeaway": "Binary lifting storing, for each player, the receiver and the id-sum after 2^j passes; combine the blocks for the bits of k."
+ },
+ "2848": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`diff = [0] * 102`",
+       "Difference array over points 0…101",
+       "Room for `e + 1` with e up to 100"
+      ],
+      [
+       "`diff[s] += 1; diff[e + 1] -= 1`",
+       "+1 where a car starts covering, −1 just after it ends",
+       "Marks interval boundaries in O(1)"
+      ],
+      [
+       "`cur += d`",
+       "Running prefix sum",
+       "`cur` = number of cars covering the point"
+      ],
+      [
+       "`if cur > 0: count += 1`",
+       "Covered by at least one car",
+       "Count points"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[3,6],[1,5],[4,7]]` → 7 points (1 through 7). Selected positions (those where the difference changes, or points in 0…8):"
+    ],
+    "table": {
+     "head": [
+      "Point",
+      "diff[p]",
+      "Cars covering",
+      "Covered so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "0",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "4",
+       "1",
+       "3",
+       "4"
+      ],
+      [
+       "5",
+       "0",
+       "3",
+       "5"
+      ],
+      [
+       "6",
+       "-1",
+       "2",
+       "6"
+      ],
+      [
+       "7",
+       "-1",
+       "1",
+       "7"
+      ],
+      [
+       "8",
+       "-1",
+       "0",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a difference array?",
+    "p": [
+     "Marking every point of every car costs O(total length). A difference array turns each interval into two updates; one prefix-sum sweep over the (at most 100) points then yields the cover counts. The same idea is used for range updates on arrays."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + range) with range ≤ 100.",
+     "Space: O(range)."
+    ]
+   }
+  ],
+  "takeaway": "Difference array + prefix sum sweep: count the points where the number of covering cars is positive."
+ },
+ "2851": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ss = s + s`; `ss[r:r + n] == t`",
+       "Rotation r of s equals t",
+       "Every rotation of s is a window of length n in the doubled string"
+      ],
+      [
+       "`zero`",
+       "1 if t equals s itself (rotation 0)",
+       "The target is the current position of the rotation"
+      ],
+      [
+       "`nonzero`",
+       "Number of other rotations r (1 … n−1) giving t",
+       "If s is periodic this can exceed 1"
+      ],
+      [
+       "state `(at rotation 0, not at rotation 0)`",
+       "Only these two states matter",
+       "By symmetry all non-zero rotations behave the same"
+      ],
+      [
+       "matrix `M = [[0, n-1], [1, n-2]]`",
+       "One operation: from 'at 0' you go to any of the n−1 other rotations; from 'not at 0' you go to rotation 0 in 1 way and to the other n−2 in n−2 ways",
+       "Transition counts between the two states"
+      ],
+      [
+       "fast exponentiation `while e: … M = mul(M, M)`",
+       "Computes M^k in O(log k) multiplications",
+       "Binary exponentiation (square and multiply)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'abcd'`, `t = 'cdab'`, `k = 2` → 2. Here `zero = 0`, `nonzero = 1` (t is s rotated by 2). M^2 gives `a = 3` (ways to end at rotation 0 from rotation 0) and `b = 2` (ways to end at a given non-zero rotation from rotation 0)."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "rotations of s equal to t (r = 2)",
+       "yes"
+      ],
+      [
+       "transition matrix M (n = 4)",
+       "[[0, 3], [1, 2]]"
+      ],
+      [
+       "answer = zero·a + nonzero·b",
+       "0·3 + 1·2 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Correctness check",
+    "p": [
+     "The closed form agrees with a brute-force count over all sequences of k operations on six small cases (`abcd→cdab`, periodic strings such as `ababab`, `aaa`, and different k): True."
+    ]
+   },
+   {
+    "h": "Why two states and a 2×2 matrix?",
+    "p": [
+     "Moving a suffix of length l to the front rotates the string by l positions. After each operation the rotation offset (relative to s) changes by any l in 1…n−1. Only whether the current offset is 0 or not matters for counting, because all non-zero offsets are interchangeable. From offset 0 there are n−1 ways to a non-zero offset. From a given non-zero offset there is exactly 1 way to offset 0 and n−2 ways to other non-zero ones. This is a tiny Markov-style recurrence, so k steps are M^k."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) to compare every rotation with t (string slices), plus O(log k) for the matrix power.",
+     "Space: O(n) for the doubled string."
+    ]
+   }
+  ],
+  "takeaway": "Reduce to rotation counting: two states (offset 0 or not) with transition matrix [[0, n−1], [1, n−2]], raised to the k-th power."
+ },
+ "2866": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`left[i]`",
+       "Best sum of heights for positions 0…i if i is the peak",
+       "Heights to the left are limited by min(maxHeights[j…i])"
+      ],
+      [
+       "`st` monotonic stack",
+       "Indexes with non-decreasing maxHeights",
+       "The previous smaller-or-equal element"
+      ],
+      [
+       "`left[st[-1]] + h[i] * (i - st[-1])`",
+       "Reuse the answer at the previous smaller index, then fill the gap with `h[i]`",
+       "Positions between the previous smaller element and i all get height h[i]"
+      ],
+      [
+       "`h[i] * (i + 1)`",
+       "No smaller element on the left: all positions 0…i get h[i]",
+       "Base case when the stack is empty"
+      ],
+      [
+       "`left[i] + right[i] - h[i]`",
+       "Peak counted in both sides",
+       "Subtract the peak once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,3,4,1,1]` → 13:"
+    ],
+    "table": {
+     "head": [
+      "Peak i",
+      "maxHeights",
+      "left[i]",
+      "right[i]",
+      "left + right − h[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "5",
+       "13",
+       "13"
+      ],
+      [
+       "1",
+       "3",
+       "6",
+       "8",
+       "11"
+      ],
+      [
+       "2",
+       "4",
+       "10",
+       "6",
+       "12"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "2",
+       "5"
+      ],
+      [
+       "4",
+       "1",
+       "5",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a monotonic stack?",
+    "p": [
+     "With the peak at i, the best height at position j to its left is the minimum of maxHeights over j…i. The previous element smaller than h[i] caps everything before it, and everything after it up to i is capped by h[i]. So `left[i]` = (sum already computed for that smaller index) + h[i] × (the gap). The stack finds that index in amortised O(1), turning the naive O(n²) into O(n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic stack for 'best sum to the left of the peak': reuse the answer at the previous smaller element and fill the gap with h[i]."
+ },
+ "2914": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(0, len(s), 2)`",
+       "Start index of each aligned pair (0, 2, 4, …)",
+       "Beautiful means the string splits into even blocks of equal characters; pairs at even offsets are the smallest such unit"
+      ],
+      [
+       "`s[i] != s[i + 1]`",
+       "The pair has different characters",
+       "It needs one flip to become 00 or 11"
+      ],
+      [
+       "`sum(boolean generator)`",
+       "Count pairs needing a flip",
+       "`True` adds 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'1001'` → 2:"
+    ],
+    "table": {
+     "head": [
+      "Pair (positions)",
+      "Characters",
+      "Different?"
+     ],
+     "rows": [
+      [
+       "0,1",
+       "10",
+       "True"
+      ],
+      [
+       "2,3",
+       "01",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check only aligned pairs?",
+    "p": [
+     "A string of even-length blocks of equal characters is the same as a string where every aligned pair (positions 2i, 2i+1) is equal: any block of even length splits into aligned pairs of equal characters. Conversely, equal aligned pairs can be merged into valid blocks. Each unequal pair needs at least one flip and exactly one suffices, and pairs are independent."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A string is beautiful iff every aligned pair of characters is equal; count the unequal aligned pairs."
+ },
+ "2959": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`for mask in range(1 << n)`",
+       "Every subset of branches to keep open",
+       "Bitmask enumeration of 2ⁿ subsets (n ≤ 10)"
+      ],
+      [
+       "`mask >> i & 1`",
+       "Is branch i open?",
+       "Bit test"
+      ],
+      [
+       "`dist` dict over open pairs",
+       "Distance matrix, 0 on the diagonal and ∞ elsewhere",
+       "Only open branches take part"
+      ],
+      [
+       "`min(dist[(u, v)], w)`",
+       "Keep the shortest of parallel roads",
+       "Roads can repeat between two branches"
+      ],
+      [
+       "triple loop over `k, i, j`",
+       "Floyd–Warshall all-pairs shortest paths",
+       "Relax paths through the intermediate branch k"
+      ],
+      [
+       "`all(dist … <= maxDistance)`",
+       "Everything reachable within the limit",
+       "Infinite distances (disconnected) fail automatically"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, maxDistance = 5, roads `[[0,1,2],[1,2,10],[0,2,10]]` → 5 sets can stay open (the empty set, each single branch, and the pair {0,1}):"
+    ],
+    "table": {
+     "head": [
+      "Valid open sets"
+     ],
+     "rows": [
+      [
+       "[]"
+      ],
+      [
+       "[0]"
+      ],
+      [
+       "[1]"
+      ],
+      [
+       "[0, 1]"
+      ],
+      [
+       "[2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why brute force over subsets?",
+    "p": [
+     "n ≤ 10, so there are at most 1024 subsets, and Floyd–Warshall on at most 10 nodes is 1000 steps: about a million operations in total. For small n, enumerating subsets and running an all-pairs shortest path is simpler and safer than any cleverer search."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ · n³).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Enumerate all 2ⁿ subsets with a bitmask and run Floyd–Warshall on each to check the distance limit."
+ },
+ "2962": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`M = max(nums)`",
+       "The array's maximum",
+       "The element that must appear at least k times"
+      ],
+      [
+       "`cnt`",
+       "Number of maxima in the window `nums[l..r]`",
+       "Window with fewer than k maxima after shrinking"
+      ],
+      [
+       "`while cnt >= k: … l += 1`",
+       "Shrink from the left until the window has fewer than k maxima",
+       "The loop ends at the largest `l` such that `nums[l..r]` is NOT enough"
+      ],
+      [
+       "`res += l`",
+       "Number of valid left ends for this right end",
+       "Every start `0 … l−1` gives a subarray with at least k maxima"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,2,3,3]`, `k = 2` → 6:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "x",
+      "maxima in window after shrink",
+      "l after shrink",
+      "Added (= l)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "0",
+       "+0",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "1",
+       "0",
+       "+0",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "0",
+       "+0",
+       "0"
+      ],
+      [
+       "3",
+       "3",
+       "1",
+       "2",
+       "+2",
+       "2"
+      ],
+      [
+       "4",
+       "3",
+       "1",
+       "4",
+       "+4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count `l` rather than the window length?",
+    "p": [
+     "After shrinking, `l` points just past the last start whose subarray [start, r] still contains at least k maxima. So starts 0, 1, …, l−1 all work (a longer window to the left keeps at least as many maxima), which is exactly `l` valid subarrays ending at r. This is the 'count the complement window' trick: shrink while the condition still holds."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window that shrinks while the window still has k maxima; each right end contributes l valid starts."
+ }
+}

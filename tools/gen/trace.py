@@ -159,9 +159,12 @@ def run(code, driver):
     ns["RESULT"] = None
     dcode = compile(prep(driver), "<driver>", "exec")
     import threading
+    import signal
+    def _to(sig, fr): raise TimeoutError("run exceeded 60s")
+    signal.signal(signal.SIGALRM, _to); signal.alarm(60)
     sys.settrace(tracer); threading.settrace(tracer)
     try: exec(dcode, ns)
-    finally: sys.settrace(None); threading.settrace(None)
+    finally: signal.alarm(0); sys.settrace(None); threading.settrace(None)
     return steps, state["trunc"], ns.get("RESULT")
 
 if __name__ == "__main__":
@@ -182,6 +185,7 @@ if __name__ == "__main__":
     for pid, codes in probs.items():
         drv = D.get(int(pid))
         if drv is None: bad.append(pid + " (no driver)"); continue
+        print('..', pid, file=sys.stderr, flush=True)
         res = []
         e2 = D2[int(pid)]; drv2 = e2[0]
         for vi, code in enumerate(codes):

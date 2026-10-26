@@ -1,0 +1,1925 @@
+{
+ "2248": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(lst)`",
+       "Distinct values of one list",
+       "Guards against counting a value twice within the same list"
+      ],
+      [
+       "`Counter(x for lst in nums for x in set(lst))`",
+       "Number of lists that contain each value",
+       "Nested generator: outer loop over lists, inner over each list's distinct values"
+      ],
+      [
+       "`c == len(nums)`",
+       "The value is in every list",
+       "Intersection test"
+      ],
+      [
+       "`sorted(…)`",
+       "Ascending order",
+       "Required output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[3,1,2,4,5],[1,2,3,4],[3,4,5,6]]` → [3, 4]:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "In how many lists",
+      "In all 3?"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "False"
+      ],
+      [
+       "2",
+       "2",
+       "False"
+      ],
+      [
+       "3",
+       "3",
+       "True"
+      ],
+      [
+       "4",
+       "3",
+       "True"
+      ],
+      [
+       "5",
+       "2",
+       "False"
+      ],
+      [
+       "6",
+       "1",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Counter over lists and not pairwise set intersection?",
+    "p": [
+     "Intersecting sets one after another also works (`set.intersection(*map(set, nums))`). The Counter version makes the 'in every list' rule explicit: a value present in all lists is counted exactly len(nums) times, because each list contributes at most once per value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(N log N), where N is the total number of elements (the sort of the result).",
+     "Space: O(N)."
+    ]
+   }
+  ],
+  "takeaway": "Count in how many lists each value occurs (deduplicating within a list); keep those counted in all lists."
+ },
+ "2251": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(s for s, e in flowers)`",
+       "Start days, sorted",
+       "Independent sorted lists of starts and ends"
+      ],
+      [
+       "`bisect_right(starts, p)`",
+       "Flowers that started on or before day p",
+       "Includes flowers starting exactly on p"
+      ],
+      [
+       "`bisect_left(ends, p)`",
+       "Flowers that ended strictly before day p",
+       "A flower ending on day p is still in bloom, so `bisect_left` (excluding ends equal to p)"
+      ],
+      [
+       "difference",
+       "Flowers in bloom on day p",
+       "Started minus already finished"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "starts = `[1, 3, 4, 9]`, ends = `[6, 7, 12, 13]`:"
+    ],
+    "table": {
+     "head": [
+      "Person arrives",
+      "Started (≤ p)",
+      "Ended (< p)",
+      "In bloom"
+     ],
+     "rows": [
+      [
+       "2",
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "7",
+       "3",
+       "1",
+       "2"
+      ],
+      [
+       "11",
+       "4",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can starts and ends be sorted separately?",
+    "p": [
+     "The answer only needs two counts: how many flowers have started, and how many have finished. Pairing each start with its end doesn't matter, because every finished flower has also started (its start ≤ its end < p). Subtracting the counts therefore gives the flowers that started but have not ended."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count flowers started (bisect_right on sorted starts) minus flowers ended (bisect_left on sorted ends)."
+ },
+ "2266": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i]`",
+       "Number of texts for the first i key presses",
+       "dp[0] = 1: empty message"
+      ],
+      [
+       "`limit = 4 if c in '79' else 3`",
+       "Max presses per letter on this key",
+       "Keys 7 and 9 have four letters"
+      ],
+      [
+       "`pressedKeys[j-1] == c`",
+       "The block of presses is all the same key",
+       "A letter can only come from a run of identical digits"
+      ],
+      [
+       "`i - j < limit`",
+       "Block length j…i is at most `limit`",
+       "1–3 (or 4) presses form one letter"
+      ],
+      [
+       "`dp[i] += dp[j-1]`",
+       "Last letter uses presses j…i, the rest forms any message",
+       "Sum over block lengths 1…limit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'22233'` → 8:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Presses so far",
+      "Terms added (dp[j−1])",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "",
+       "—",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "dp[0]=1",
+       "1"
+      ],
+      [
+       "2",
+       "22",
+       "dp[1]=1+dp[0]=1",
+       "2"
+      ],
+      [
+       "3",
+       "222",
+       "dp[2]=2+dp[1]=1+dp[0]=1",
+       "4"
+      ],
+      [
+       "4",
+       "2223",
+       "dp[3]=4",
+       "4"
+      ],
+      [
+       "5",
+       "22233",
+       "dp[4]=4+dp[3]=4",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the run of equal digits matter?",
+    "p": [
+     "One letter is a block of 1 to `limit` identical digits. For each position i the code tries every block length ending at i (while the digits stay equal) and adds the number of ways to type the earlier part. The three 2s give 4 ways (`aaa`, `ab`, `ba`, `c`) and the two 3s give 2 (`dd`, `e`), so 4 × 2 = 8."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) (each position tries at most 4 block lengths).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "DP over key presses: the last letter takes 1 to 3 (or 4) identical presses; add the counts of the shorter prefixes."
+ },
+ "2275": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(x >> b) & 1`",
+       "Bit b of x",
+       "Shift then mask"
+      ],
+      [
+       "`sum(… for x in candidates)`",
+       "How many numbers have bit b set",
+       "Group size for that bit"
+      ],
+      [
+       "`max(… for b in range(25))`",
+       "Best bit",
+       "25 bits cover values up to 10⁷"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[16,17,71,62,12,24,14]` → 4 (bits 2, 3 and 4 each have 4 numbers with that bit set):"
+    ],
+    "table": {
+     "head": [
+      "Bit b",
+      "Numbers with bit b set"
+     ],
+     "rows": [
+      [
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "3"
+      ],
+      [
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "4"
+      ],
+      [
+       "4",
+       "4"
+      ],
+      [
+       "5",
+       "1"
+      ],
+      [
+       "6",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the answer reduce to one bit?",
+    "p": [
+     "A group has bitwise AND > 0 exactly when some bit is set in every member. So a group works if all its members share a common set bit, and the largest group for a bit b consists of ALL numbers with bit b set. The best answer is the largest such count over all bits."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(25·n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A group has AND > 0 iff all members share a set bit: count numbers per bit and take the maximum."
+ },
+ "2296": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.left`",
+       "Characters left of the cursor, in text order",
+       "Stack: the top (end) is the character just before the cursor"
+      ],
+      [
+       "`self.right`",
+       "Characters right of the cursor, with the nearest one at the END",
+       "Stack in reverse order, so popping gives the next character to the right"
+      ],
+      [
+       "`left.extend(text)`",
+       "Insert at the cursor",
+       "Appends each character of the string"
+      ],
+      [
+       "`del self.left[len(self.left) - k:]`",
+       "Delete the last k items",
+       "Slice deletion; `k` was clipped to the available length"
+      ],
+      [
+       "`right.append(left.pop())`",
+       "Move the cursor one step left",
+       "Transfer one character between the stacks"
+      ],
+      [
+       "`''.join(self.left[-10:])`",
+       "The last up to 10 characters left of the cursor",
+       "Slices clip at the start automatically"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Sequence of calls (`left`/`right` shown as text; `right` is shown in reading order):"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Text left of cursor",
+      "Text right of cursor"
+     ],
+     "rows": [
+      [
+       "addText('leetcode')",
+       "—",
+       "'leetcode'",
+       "''"
+      ],
+      [
+       "deleteText(4)",
+       "4",
+       "'leet'",
+       "''"
+      ],
+      [
+       "addText('practice')",
+       "—",
+       "'leetpractice'",
+       "''"
+      ],
+      [
+       "cursorRight(3)",
+       "'etpractice'",
+       "'leetpractice'",
+       "''"
+      ],
+      [
+       "cursorLeft(8)",
+       "'leet'",
+       "'leet'",
+       "'practice'"
+      ],
+      [
+       "deleteText(10)",
+       "4",
+       "''",
+       "'practice'"
+      ],
+      [
+       "cursorLeft(2)",
+       "''",
+       "''",
+       "'practice'"
+      ],
+      [
+       "cursorRight(6)",
+       "'practi'",
+       "'practi'",
+       "'ce'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two stacks?",
+    "p": [
+     "Every operation happens at the cursor: inserting and deleting at the end of `left`, moving the cursor by popping from one stack and pushing onto the other. Each operation costs time proportional to the characters involved (k), not the whole text length, which a plain string with an index would pay on every insertion in the middle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k) per call for k characters moved/deleted (inserting text costs O(len(text)); returning the last 10 characters is O(10)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two stacks around the cursor: edits happen at the end of the left stack and cursor moves shift characters between the stacks."
+ },
+ "2302": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`total`",
+       "Sum of the current window",
+       "Window `nums[left..r]`"
+      ],
+      [
+       "`total * (r - left + 1) >= k`",
+       "Score of the window is too large",
+       "Score = sum × length"
+      ],
+      [
+       "`left += 1`",
+       "Shrink from the left",
+       "Score only decreases when elements are removed (values are positive)"
+      ],
+      [
+       "`res += r - left + 1`",
+       "Count all valid subarrays ENDING at r",
+       "Every shorter window ending at r also has a smaller score"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,4,3,5]`, `k = 10` → 6:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "x",
+      "Window",
+      "Window sum",
+      "Shrink",
+      "Subarrays ending at r",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "[2]",
+       "2",
+       "—",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "[2, 1]",
+       "3",
+       "—",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "4",
+       "[4]",
+       "4",
+       "drop [2, 1]",
+       "1",
+       "4"
+      ],
+      [
+       "3",
+       "3",
+       "[3]",
+       "3",
+       "drop [4]",
+       "1",
+       "5"
+      ],
+      [
+       "4",
+       "5",
+       "[5]",
+       "5",
+       "drop [3]",
+       "1",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the sliding window work?",
+    "p": [
+     "All numbers are positive, so removing an element from the left decreases both the sum and the length, hence the score. That monotonicity means that for each right end, the valid left ends form a contiguous range, and as `r` grows the smallest valid `left` never moves backwards. Every start from `left` to `r` gives a valid subarray: that is `r - left + 1` of them."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n): `left` and `r` each move forward at most n times.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window on sum × length (monotone for positive numbers): count r − left + 1 valid subarrays per right end."
+ },
+ "2311": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`reversed(s)`",
+       "Scan from the least significant bit",
+       "Position from the right gives the bit's weight 1, 2, 4, …"
+      ],
+      [
+       "`ch == '0'` → `length += 1`",
+       "Zeros never increase the value",
+       "They can always be taken (leading zeros are allowed)"
+      ],
+      [
+       "`value + weight <= k`",
+       "Taking this 1 keeps the value within k",
+       "Greedy: prefer the cheapest ones (rightmost = smallest weight)"
+      ],
+      [
+       "`weight *= 2` then `weight = k + 1` cap",
+       "Next bit's weight, capped",
+       "Once weight > k no further 1 can fit; capping avoids huge integers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'1001010'`, `k = 5` → 5 (e.g. subsequence `00101` = 5):"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Bit",
+      "Weight",
+      "Decision",
+      "Value",
+      "Length"
+     ],
+     "rows": [
+      [
+       "6",
+       "0",
+       "1",
+       "'0' always kept",
+       "0",
+       "1"
+      ],
+      [
+       "5",
+       "1",
+       "2",
+       "'1' fits: value += 2",
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "0",
+       "4",
+       "'0' always kept",
+       "2",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "6",
+       "'1' would exceed k (value 2+6 > 5) → skip",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "0",
+       "6",
+       "'0' always kept",
+       "2",
+       "4"
+      ],
+      [
+       "1",
+       "0",
+       "6",
+       "'0' always kept",
+       "2",
+       "5"
+      ],
+      [
+       "0",
+       "1",
+       "6",
+       "'1' would exceed k (value 2+6 > 5) → skip",
+       "2",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why take all zeros and the smallest ones?",
+    "p": [
+     "A zero costs nothing in value, so keeping them all is free. Each 1 adds its weight, so to keep as many as possible choose those with the smallest weights, which are the rightmost ones (weights grow to the left). Scanning from the right and taking a 1 whenever it still fits does exactly this."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy from the right: keep every 0, and keep a 1 only while the running value (sum of weights) stays at most k."
+ },
+ "2344": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`reduce(gcd, numsDivide)`",
+       "Fold `gcd` over the list: gcd of all elements (from `functools` and `math`)",
+       "A number divides every element iff it divides their gcd"
+      ],
+      [
+       "`g % x == 0`",
+       "x divides g",
+       "Condition for x to divide everything in numsDivide"
+      ],
+      [
+       "`min((…), default=None)`",
+       "Smallest valid x, or `None` if the generator is empty",
+       "`default` avoids a `ValueError` on empty input"
+      ],
+      [
+       "`sum(x < best for x in nums)`",
+       "Elements smaller than the target",
+       "Those must all be deleted so that `best` becomes the smallest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,2,4,3]`, `numsDivide = [9,6,9,3,15]`: gcd = 3."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "g",
+       "3"
+      ],
+      [
+       "values in nums that divide g",
+       "[3]"
+      ],
+      [
+       "best (smallest)",
+       "3"
+      ],
+      [
+       "deletions = elements below best",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reduce to the gcd?",
+    "p": [
+     "x divides every number in a list exactly when it divides their gcd, so one gcd replaces m divisibility tests per candidate. The smallest valid x in `nums` is the cheapest target: all numbers smaller than it must be removed (they are not valid divisors, or removing them is necessary for x to be the minimum), while larger ones can stay."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m log V).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reduce numsDivide to its gcd; the target is the smallest nums value dividing it, and the answer counts the smaller elements."
+ },
+ "2347": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`len(set(suits)) == 1`",
+       "All cards share one suit",
+       "A set of the suits has size 1"
+      ],
+      [
+       "`Counter(ranks).values()`",
+       "How many times each rank occurs",
+       "The largest count identifies pairs and triples"
+      ],
+      [
+       "`max(…)`",
+       "Highest multiplicity",
+       "3 or more → Three of a Kind; 2 → Pair"
+      ],
+      [
+       "order of checks",
+       "Flush first, then by multiplicity",
+       "Flush beats the others as the problem defines the order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "ranks",
+      "suits",
+      "Result"
+     ],
+     "rows": [
+      [
+       "[13, 2, 3, 1, 9]",
+       "aaaaa",
+       "Flush"
+      ],
+      [
+       "[4, 4, 2, 4, 4]",
+       "dabcd",
+       "Three of a Kind"
+      ],
+      [
+       "[10, 10, 2, 12, 9]",
+       "abcad",
+       "Pair"
+      ],
+      [
+       "[1, 2, 3, 4, 5]",
+       "abcad",
+       "High Card"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three or more counts as 'Three of a Kind'?",
+    "p": [
+     "With five cards a rank can appear up to 5 times, and the problem says three (or more) of the same rank is 'Three of a Kind'. Checking `m >= 3` handles four or five of a kind without extra branches."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1): always 5 cards.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Check suits with a set, then use the highest rank multiplicity from a Counter."
+ },
+ "2353": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.rating`, `self.cuisine`",
+       "food → current rating / cuisine",
+       "Truth about the current rating"
+      ],
+      [
+       "`heaps[c]` of `(-rating, food)`",
+       "Per-cuisine min-heap",
+       "Negated rating puts the highest rating on top; ties compare the food name alphabetically"
+      ],
+      [
+       "`changeRating` pushes a NEW entry",
+       "Doesn't remove the old one",
+       "Lazy deletion: updating inside a heap would cost O(n)"
+      ],
+      [
+       "`while -h[0][0] != self.rating[h[0][1]]: heappop(h)`",
+       "Discard entries whose rating is outdated",
+       "Stale entries are cleaned only when they reach the top"
+      ],
+      [
+       "`h[0][1]`",
+       "The top food name",
+       "Highest rating, alphabetically first on ties"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "foods kimchi (korean, 9), miso (japanese, 12), sushi (japanese, 8), moussaka (greek, 15), ramen (japanese, 14), bulgogi (korean, 7):"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Detail"
+     ],
+     "rows": [
+      [
+       "highestRated('korean')",
+       "kimchi",
+       "0 stale entries discarded"
+      ],
+      [
+       "highestRated('japanese')",
+       "ramen",
+       "0 stale entries discarded"
+      ],
+      [
+       "changeRating('sushi', 16)",
+       "—",
+       "push (-rating, food)"
+      ],
+      [
+       "highestRated('japanese')",
+       "sushi",
+       "0 stale entries discarded"
+      ],
+      [
+       "changeRating('ramen', 16)",
+       "—",
+       "push (-rating, food)"
+      ],
+      [
+       "highestRated('japanese')",
+       "ramen",
+       "0 stale entries discarded"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "Heaps do not support efficient removal or update of an arbitrary item. Instead, every rating change pushes a fresh `(−new rating, food)` entry, and old entries remain until they surface at the top, where they are recognised as stale by comparing with the current rating in `self.rating`. Each entry is popped at most once, so the cost is O(log n) amortised. When two foods tie at 16 (ramen and sushi), the tuple comparison puts the alphabetically smaller name first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) amortised per call.",
+     "Space: O(n + number of updates)."
+    ]
+   }
+  ],
+  "takeaway": "Per-cuisine heaps with lazy deletion: push a new entry on each update and discard outdated tops when querying."
+ },
+ "2365": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`last = {}`",
+       "Task type → the day it was last done",
+       "O(1) lookup"
+      ],
+      [
+       "`day += 1`",
+       "Do the next task on the next day if possible",
+       "Tasks run in the given order"
+      ],
+      [
+       "`day - last[t] <= space`",
+       "Not enough days since the same type",
+       "Needs at least `space` days between: next allowed day is `last + space + 1`"
+      ],
+      [
+       "`day = last[t] + space + 1`",
+       "Skip ahead (idle days)",
+       "Jump instead of simulating each day"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,1,2,3,1]`, `space = 3` → 9:"
+    ],
+    "table": {
+     "head": [
+      "Task",
+      "Decision",
+      "Day done"
+     ],
+     "rows": [
+      [
+       "1",
+       "first time or far enough",
+       "1"
+      ],
+      [
+       "2",
+       "first time or far enough",
+       "2"
+      ],
+      [
+       "1",
+       "too soon (last on day 1) → jump to day 5",
+       "5"
+      ],
+      [
+       "2",
+       "first time or far enough",
+       "6"
+      ],
+      [
+       "3",
+       "first time or far enough",
+       "7"
+      ],
+      [
+       "1",
+       "too soon (last on day 5) → jump to day 9",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a jump and not simulating each waiting day?",
+    "p": [
+     "Waiting means doing nothing until the earliest allowed day. Computing that day directly (`last + space + 1`) avoids looping over idle days, which could be up to 10⁹ long. Because tasks must run in order, a later task can't fill the idle days."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(number of task types)."
+    ]
+   }
+  ],
+  "takeaway": "Hash map of last-done day per type; if too soon, jump straight to last + space + 1."
+ },
+ "2380": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`zeros`",
+       "Number of zeros to the left",
+       "Each 1 must pass every zero before it, one step per second at best"
+      ],
+      [
+       "`t`",
+       "Time at which the previous 1 finished moving",
+       "The previous 1 blocks the next one"
+      ],
+      [
+       "`max(t + 1, zeros)`",
+       "This 1 needs at least `zeros` seconds (one per zero) and can't be earlier than one second after the previous 1",
+       "Ones move in a pipeline"
+      ],
+      [
+       "`elif zeros:`",
+       "Ignore 1s with no zero before them",
+       "They are already in place"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'0110101'` → 4 seconds:"
+    ],
+    "table": {
+     "head": [
+      "char",
+      "Zeros so far",
+      "t",
+      "Rule"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "zero seen"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "t = max(t + 1, zeros)"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "t = max(t + 1, zeros)"
+      ],
+      [
+       "0",
+       "2",
+       "2",
+       "zero seen"
+      ],
+      [
+       "1",
+       "2",
+       "3",
+       "t = max(t + 1, zeros)"
+      ],
+      [
+       "0",
+       "3",
+       "3",
+       "zero seen"
+      ],
+      [
+       "1",
+       "3",
+       "4",
+       "t = max(t + 1, zeros)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the formula max(t + 1, zeros)?",
+    "p": [
+     "Each 1 wants to move left past every zero before it: that takes at least `zeros` seconds. But a 1 can't overtake the previous 1, and a 1 can only start to move after the one in front has moved away, so it finishes at least one second after the previous 1: `t + 1`. The later of the two lower bounds is the finishing time, and the last 1's time is the answer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Pipeline timing: each 1 finishes at max(previous 1's time + 1, number of zeros before it)."
+ },
+ "2389": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(nums)`",
+       "Ascending order",
+       "The smallest numbers give the most items for a given sum"
+      ],
+      [
+       "`accumulate(…)`",
+       "Prefix sums of the sorted list",
+       "`pre[i]` = sum of the i+1 smallest numbers"
+      ],
+      [
+       "`bisect_right(pre, q)`",
+       "Number of prefix sums that are ≤ q",
+       "The size of the largest prefix with sum ≤ q"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,5,2,1]`, sorted `[1,2,4,5]`, prefix sums `[1, 3, 7, 12]`:"
+    ],
+    "table": {
+     "head": [
+      "Query q",
+      "bisect_right(pre, q)",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "3",
+       "2",
+       "the 2 smallest numbers sum to ≤ 3"
+      ],
+      [
+       "10",
+       "3",
+       "the 3 smallest numbers sum to ≤ 10"
+      ],
+      [
+       "21",
+       "4",
+       "the 4 smallest numbers sum to ≤ 21"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why smallest-first?",
+    "p": [
+     "To fit as many numbers as possible under a sum limit, pick the smallest ones. The prefix sums of the sorted array are increasing, so `bisect_right` finds how many fit by binary search. The original order doesn't matter since a subsequence is judged by its sum, not by position."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, build prefix sums, and bisect_right each query to count how many smallest numbers fit."
+ },
+ "2401": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`used`",
+       "Bitwise OR of all numbers in the window",
+       "Since the numbers have disjoint bits, the OR equals their XOR and also their sum"
+      ],
+      [
+       "`used & x`",
+       "Bits that the new number shares with the window",
+       "Non-zero means a conflict"
+      ],
+      [
+       "`used ^= nums[left]`",
+       "Remove the leaving number's bits",
+       "XOR undoes an OR when the bits are disjoint"
+      ],
+      [
+       "`used |= x`",
+       "Add the new number's bits",
+       "Window grows"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,8,48,10]` → 3:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "x",
+      "Shrink",
+      "Bits in use (binary)",
+      "Window",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "—",
+       "1",
+       "[1]",
+       "1"
+      ],
+      [
+       "1",
+       "3",
+       "drop [1]",
+       "11",
+       "[3]",
+       "1"
+      ],
+      [
+       "2",
+       "8",
+       "—",
+       "1011",
+       "[3, 8]",
+       "2"
+      ],
+      [
+       "3",
+       "48",
+       "—",
+       "111011",
+       "[3, 8, 48]",
+       "3"
+      ],
+      [
+       "4",
+       "10",
+       "drop [3, 8]",
+       "111010",
+       "[48, 10]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check the OR instead of every pair?",
+    "p": [
+     "All pairs in the window have AND 0 exactly when no bit appears in two numbers, i.e. the bit sets are pairwise disjoint. Keeping the OR of the window and testing `used & x` finds a conflict in O(1) instead of comparing x with each member. XOR removal is valid because disjoint sets mean each bit belongs to exactly one number."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window whose elements have pairwise disjoint bits: keep their OR and shrink while the new number overlaps it."
+ },
+ "2404": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x % 2 == 0`",
+       "Even test",
+       "Filter inside the Counter's generator"
+      ],
+      [
+       "`Counter(…)`",
+       "Counts of the even numbers only",
+       "Empty if there are no evens"
+      ],
+      [
+       "`min(cnt, key=lambda x: (-cnt[x], x))`",
+       "Pick the key with the highest count, smallest value on ties",
+       "Tuple key: negated count sorts larger counts first, then the value"
+      ],
+      [
+       "`if not cnt: return -1`",
+       "No even numbers",
+       "Guard before calling `min` on an empty dict (which would raise)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,2,2,4,4,1]` → 2:"
+    ],
+    "table": {
+     "head": [
+      "Even value",
+      "Count",
+      "Key (−count, value)"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "(-1, 0)"
+      ],
+      [
+       "2",
+       "2",
+       "(-2, 2)"
+      ],
+      [
+       "4",
+       "2",
+       "(-2, 4)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `min` with a tuple key instead of sorting?",
+    "p": [
+     "Only the best element is needed. `min` with a key scans once (O(k)) rather than sorting (O(k log k)). The key `(-count, value)` encodes both rules: larger counts win, and among equal counts the smaller value wins."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count the even numbers; take the min by the key (−count, value)."
+ },
+ "2422": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`l, r`",
+       "Two pointers at the ends",
+       "Compare the ends of the remaining array"
+      ],
+      [
+       "`nums[l] == nums[r]`",
+       "Ends match",
+       "Fix them and move inward"
+      ],
+      [
+       "`nums[l] < nums[r]`",
+       "Left end smaller",
+       "The only way to grow it is to merge it with its neighbour"
+      ],
+      [
+       "`nums[l] += nums[l-1]` after `l += 1`",
+       "Merge the old left element into the next one (in place)",
+       "Counts as one operation"
+      ],
+      [
+       "`ops += 1`",
+       "Count merges",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,3,2,1,2,3,1]` → 2:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Array (merged values in place)",
+      "l",
+      "r",
+      "ops"
+     ],
+     "rows": [
+      [
+       "start",
+       "[4, 3, 2, 1, 2, 3, 1]",
+       "0",
+       "6",
+       "0"
+      ],
+      [
+       "right smaller → merge right into previous",
+       "[4, 3, 2, 1, 2, 4, 1]",
+       "0",
+       "5",
+       "1"
+      ],
+      [
+       "equal → move both",
+       "[4, 3, 2, 1, 2, 4, 1]",
+       "1",
+       "4",
+       "1"
+      ],
+      [
+       "right smaller → merge right into previous",
+       "[4, 3, 2, 3, 2, 4, 1]",
+       "1",
+       "3",
+       "2"
+      ],
+      [
+       "equal → move both",
+       "[4, 3, 2, 3, 2, 4, 1]",
+       "2",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why merge the smaller side?",
+    "p": [
+     "If the ends differ, the smaller end can never become equal to the larger end without being merged with its neighbour (merging the larger one would only make it bigger and the gap wider). Greedily merging the smaller side is both necessary and sufficient, and each merge reduces the problem by one element."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (modifies the input)."
+    ]
+   }
+  ],
+  "takeaway": "Two pointers: when the ends differ, merge the smaller end into its neighbour; equal ends move inward."
+ },
+ "2431": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[a][c]`",
+       "Best tastiness using at most `a` money and at most `c` coupons",
+       "Two-dimensional 0/1 knapsack"
+      ],
+      [
+       "`for a in range(maxAmount, -1, -1)`, `for c in range(maxCoupons, -1, -1)`",
+       "Iterate both dimensions DOWNWARD",
+       "Each fruit is used at most once: reads of smaller `a`/`c` still hold the previous fruit's values"
+      ],
+      [
+       "`dp[a - p][c] + t`",
+       "Buy at full price",
+       "Skip nothing; no coupon used"
+      ],
+      [
+       "`dp[a - p // 2][c - 1] + t`",
+       "Buy with a coupon: half price rounded down, one coupon",
+       "Needs `c ≥ 1`"
+      ],
+      [
+       "`max(best, …)`",
+       "Best of skip / buy / buy with coupon",
+       "The three choices per fruit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "prices `[10,20,20]`, tastiness `[5,8,8]`, `maxAmount = 20`, `maxCoupons = 1` → 13 (buy the first fruit at 10 and the second with a coupon at 10: 5 + 8). Selected cells after each fruit:"
+    ],
+    "table": {
+     "head": [
+      "Stage",
+      "dp[10][0]",
+      "dp[10][1]",
+      "dp[20][0]",
+      "dp[20][1]"
+     ],
+     "rows": [
+      [
+       "after fruit (price 10, tastiness 5)",
+       "5",
+       "5",
+       "5",
+       "5"
+      ],
+      [
+       "after fruit (price 20, tastiness 8)",
+       "5",
+       "8",
+       "8",
+       "13"
+      ],
+      [
+       "after fruit (price 20, tastiness 8)",
+       "5",
+       "8",
+       "8",
+       "13"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate downward in both dimensions?",
+    "p": [
+     "`dp[a][c]` is updated in place using cells with smaller `a` or `c` (dp[a−p][c] and dp[a−p//2][c−1]). Processing in decreasing order means those cells still hold the values from BEFORE the current fruit, so the fruit can't be bought twice. This is the same trick as the 1-D 0/1 knapsack, with a second dimension for coupons."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · A · C).",
+     "Space: O(A · C)."
+    ]
+   }
+  ],
+  "takeaway": "Knapsack with two budgets: dp over (money, coupons), iterating both downward so each fruit is used once; a coupon halves the price."
+ },
+ "2434": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cnt`",
+       "Remaining count of each letter in `s` (not yet moved to t)",
+       "Tells the smallest letter that can still appear"
+      ],
+      [
+       "`mn`",
+       "Smallest letter still in the unread part of `s`",
+       "Moves up as letters run out"
+      ],
+      [
+       "`st`",
+       "The robot's string t, as a stack",
+       "Only its last character can be written"
+      ],
+      [
+       "`st[-1] <= mn`",
+       "The top is not worse than anything still to come",
+       "Safe to write it now: nothing smaller can arrive later"
+      ],
+      [
+       "`res.append(st.pop())`",
+       "Write the character to the paper",
+       "Builds the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'bac'` → `abc`:"
+    ],
+    "table": {
+     "head": [
+      "Moved from s",
+      "Smallest remaining letter mn",
+      "Written",
+      "Stack (t)",
+      "Paper"
+     ],
+     "rows": [
+      [
+       "b",
+       "a",
+       "—",
+       "b",
+       ""
+      ],
+      [
+       "a",
+       "c",
+       "['a', 'b']",
+       "",
+       "ab"
+      ],
+      [
+       "c",
+       "z",
+       "['c']",
+       "",
+       "abc"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why pop while top ≤ mn?",
+    "p": [
+     "The paper wants the smallest string. If the top of t is at most every letter still to come, writing it now can't be worse than waiting. If a strictly smaller letter is still in s, we must keep moving characters until that smaller letter appears and can be written first. The comparison `<=` writes equal letters immediately, which is also never worse."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 n) ≈ O(n): `mn` only moves forward (at most 26 steps total).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Monotonic-stack greedy: write the stack's top whenever it is not larger than the smallest letter still unread."
+ },
+ "2446": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`t.split(':')`",
+       "Hours and minutes as strings",
+       "`'01:15'` → `['01', '15']`"
+      ],
+      [
+       "`int(h) * 60 + int(mi)`",
+       "Minutes since midnight",
+       "Turn times into numbers that compare correctly"
+      ],
+      [
+       "`s1 <= e2 and s2 <= e1`",
+       "Overlap test for two closed intervals",
+       "They overlap exactly when each starts no later than the other ends"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "Event 1",
+      "Event 2",
+      "Minutes",
+      "Conflict?"
+     ],
+     "rows": [
+      [
+       "['01:15', '02:00']",
+       "['02:00', '03:00']",
+       "[75, 120] vs [120, 180]",
+       "True"
+      ],
+      [
+       "['01:00', '02:00']",
+       "['01:20', '03:00']",
+       "[60, 120] vs [80, 180]",
+       "True"
+      ],
+      [
+       "['10:00', '11:00']",
+       "['14:00', '15:00']",
+       "[600, 660] vs [840, 900]",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this overlap test?",
+    "p": [
+     "Two intervals do NOT overlap only if one ends before the other starts. Negating that: `start1 <= end2 and start2 <= end1`. Because the events are inclusive (touching at 02:00 counts), the comparisons use `<=`, which is why the first example is a conflict."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Convert HH:MM to minutes; closed intervals overlap iff start1 ≤ end2 and start2 ≤ end1."
+ },
+ "2452": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`zip(q, w)`",
+       "Pairs the letters at equal positions",
+       "Words have the same length"
+      ],
+      [
+       "`sum(a != b for a, b in zip(q, w))`",
+       "Hamming distance: number of positions where the words differ",
+       "Booleans sum as 0/1"
+      ],
+      [
+       "`<= 2`",
+       "At most two edits needed",
+       "Each differing position needs one edit"
+      ],
+      [
+       "`any(… for w in dictionary)`",
+       "Some dictionary word is close enough",
+       "Short-circuits at the first one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "queries `['word', 'note', 'ants', 'wood']`, dictionary `['wood', 'joke', 'moat']`:"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Smallest Hamming distance to a dictionary word",
+      "Included?"
+     ],
+     "rows": [
+      [
+       "word",
+       "1",
+       "True"
+      ],
+      [
+       "note",
+       "2",
+       "True"
+      ],
+      [
+       "ants",
+       "4",
+       "False"
+      ],
+      [
+       "wood",
+       "0",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Hamming distance?",
+    "p": [
+     "All words have the same length, so converting one into another by changing letters in place needs one edit per differing position — the Hamming distance. (No insertions or deletions are involved.)"
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q · d · L).",
+     "Space: O(1) extra besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Count differing positions (Hamming distance) between each query and every dictionary word; keep queries within 2."
+ }
+}

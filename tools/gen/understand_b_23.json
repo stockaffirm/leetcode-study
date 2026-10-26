@@ -1,0 +1,1899 @@
+{
+ "3208": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`colors + colors[:k - 1]`",
+       "Append the first k−1 tiles at the end",
+       "Unrolls the circle: every circular window of k tiles is an ordinary window in `ext`"
+      ],
+      [
+       "`run`",
+       "Length of the current alternating run ending at i",
+       "Resets to 1 when two neighbours have the same colour"
+      ],
+      [
+       "`ext[i] != ext[i - 1]`",
+       "Neighbours alternate",
+       "Extends the run"
+      ],
+      [
+       "`run >= k` → `count += 1`",
+       "A window of k alternating tiles ends at i",
+       "Every position with a long enough run closes exactly one group"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,0,1,0]`, `k = 3` → 3 groups (extended list `[0, 1, 0, 1, 0, 0, 1]`):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "ext[i]",
+      "Alternating run length",
+      "Group ends here?",
+      "Count"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "2",
+       "—",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "3",
+       "group ends here",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "group ends here",
+       "2"
+      ],
+      [
+       "4",
+       "0",
+       "5",
+       "group ends here",
+       "3"
+      ],
+      [
+       "5",
+       "0",
+       "1",
+       "—",
+       "3"
+      ],
+      [
+       "6",
+       "1",
+       "2",
+       "—",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the extension only k − 1 long?",
+    "p": [
+     "A circular window starting at index s ≤ n−1 needs tiles s … s+k−1 (mod n), i.e. at most n+k−2 as an index in the unrolled array. Appending k−1 tiles covers all of them without counting any group twice. Each end position i with a run of at least k contributes one group, so a long run of length L gives L−k+1 groups."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k).",
+     "Space: O(n + k)."
+    ]
+   }
+  ],
+  "takeaway": "Unroll the circle by appending k−1 tiles and count end positions whose alternating run has length at least k."
+ },
+ "3217": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(nums)`",
+       "Values to delete in a set",
+       "O(1) membership instead of scanning nums for every node"
+      ],
+      [
+       "`dummy = tail = ListNode()`",
+       "Start of the output list and its tail pointer",
+       "Build a new chain of kept nodes"
+      ],
+      [
+       "`tail.next = head; tail = head`",
+       "Append the current node to the kept list",
+       "Relinks existing nodes (no copying)"
+      ],
+      [
+       "`tail.next = None`",
+       "Terminate the kept list",
+       "The last kept node may still point to a removed node"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`1→2→3→4→5`, `nums = [1,2,3]` → 4→5:"
+    ],
+    "table": {
+     "head": [
+      "Node value",
+      "Decision",
+      "Kept list so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "removed (in nums)",
+       ""
+      ],
+      [
+       "2",
+       "removed (in nums)",
+       ""
+      ],
+      [
+       "3",
+       "removed (in nums)",
+       ""
+      ],
+      [
+       "4",
+       "kept",
+       "4→5"
+      ],
+      [
+       "5",
+       "kept",
+       "4→5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `tail.next = None` at the end?",
+    "p": [
+     "Suppose the list ends with removed nodes (e.g. `4→5→1` with 1 removed). The last kept node, 5, still points to 1 because we never changed its `next`. Setting `tail.next = None` cuts that stale link. Without a dummy node, handling a removed head would need a special case."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(m) for the set."
+    ]
+   }
+  ],
+  "takeaway": "Rebuild the list from kept nodes using a dummy head and a tail pointer; terminate the tail and use a set for lookups."
+ },
+ "3223": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Count of each character",
+       "Only the count of each letter matters"
+      ],
+      [
+       "`1 if c % 2 else 2`",
+       "Odd count leaves 1 character, even count leaves 2",
+       "Each operation removes two copies of a letter (one on each side of a middle one)"
+      ],
+      [
+       "`sum(…)`",
+       "Total remaining length",
+       "Sum over letters"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abaacbcbb'` → 5:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Count",
+      "Remaining"
+     ],
+     "rows": [
+      [
+       "a",
+       "3",
+       "1"
+      ],
+      [
+       "b",
+       "4",
+       "2"
+      ],
+      [
+       "c",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the count decide?",
+    "p": [
+     "An operation needs a letter with a copy on each side and deletes those two neighbours, so a letter with 3 or more copies loses 2 each time. A letter can be reduced until 1 copy (odd count) or 2 copies (even count) remain: with 2 copies there is no middle one, so no further operation. The positions do not matter because the closest left and right copies can always be arranged for a letter with at least 3 occurrences."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Each operation removes two copies of a letter with at least three: odd counts shrink to 1, even counts to 2."
+ },
+ "3295": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(bannedWords)`",
+       "Banned words in a set",
+       "O(1) lookup"
+      ],
+      [
+       "`sum(w in banned for w in message)`",
+       "Number of message words that are banned",
+       "Boolean sum; each occurrence counts"
+      ],
+      [
+       ">= 2",
+       "At least two matches",
+       "Spam rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "message `['hello', 'world', 'leetcode']`, banned `['world', 'hello']`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Banned?"
+     ],
+     "rows": [
+      [
+       "hello",
+       "True"
+      ],
+      [
+       "world",
+       "True"
+      ],
+      [
+       "leetcode",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set?",
+    "p": [
+     "Without it, each word would be searched in the list of banned words (O(m) each, O(n·m) total). A set makes every membership test O(1). Repeated banned words in the message count separately (the sum counts occurrences), as the rule is about words of the message."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Put banned words in a set and count how many message words are in it."
+ },
+ "3304": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`chr((ord(c) - 97 + 1) % 26 + 97)`",
+       "Next letter with wrap-around (z → a)",
+       "`ord('a') = 97`; subtract, add one, mod 26, add back"
+      ],
+      [
+       "`word += ''.join(…)`",
+       "Append the shifted copy",
+       "Doubles the length each time"
+      ],
+      [
+       "`while len(word) < k`",
+       "Repeat until the word is long enough",
+       "About log₂ k operations"
+      ],
+      [
+       "`word[k - 1]`",
+       "1-based position to a 0-based index",
+       "The k-th character"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 5` → `b`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Word"
+     ],
+     "rows": [
+      [
+       "start",
+       "a"
+      ],
+      [
+       "after an operation",
+       "ab"
+      ],
+      [
+       "after an operation",
+       "abbc"
+      ],
+      [
+       "after an operation",
+       "abbcbccd"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is simulation fine here?",
+    "p": [
+     "The length doubles every operation, so reaching length ≥ k takes only ⌈log₂ k⌉ steps (k ≤ 500 in this problem). A closed form exists: the k-th character equals the number of 1-bits in the binary representation of k−1, as a shift from 'a'. For k = 5, k−1 = 4 = 100₂ has one set bit, so the letter is 'b'."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Build the word by repeated doubling with a shifted copy until it has k characters; the answer is its k-th letter."
+ },
+ "3313": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`bfs(s)`",
+       "Distances from s to every node",
+       "BFS (Breadth-First Search) on an unweighted tree"
+      ],
+      [
+       "`d0.index(max(d0))`",
+       "A farthest node from node 0",
+       "First endpoint A of a diameter (longest path)"
+      ],
+      [
+       "`bfs(A)`, then `dA.index(max(dA))`",
+       "The farthest node from A",
+       "Second diameter endpoint B"
+      ],
+      [
+       "`bfs(B)`",
+       "Distances from B",
+       "Now both endpoints' distances are known"
+      ],
+      [
+       "`A if dA[i] >= dB[i] else B`",
+       "The endpoint farther from i",
+       "The last node marked from i is a farthest node, and one of the diameter's endpoints is always farthest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Path `0-1-2-3`: farthest from node 0 is A = 3, farthest from A is B = 0. Answer [3, 3, 0, 0]:"
+    ],
+    "table": {
+     "head": [
+      "Node i",
+      "dist to A",
+      "dist to B",
+      "Last marked node"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "0"
+      ],
+      [
+       "3",
+       "0",
+       "3",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the diameter endpoints?",
+    "p": [
+     "In a tree, for every node i, a farthest node is an endpoint of a longest path (diameter). So it is enough to compare the distances to the two endpoints and take the larger. Three BFS passes (O(n) each) replace a BFS from every node (O(n²)). The result is a valid farthest node for every i on 200 random trees: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Find the two endpoints of a diameter with BFS (Breadth-First Search); the farthest node from any i is the endpoint farther from i."
+ },
+ "3355": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`diff[l] += 1; diff[r + 1] -= 1`",
+       "Difference array: +1 at the start of a query range, −1 just after its end",
+       "Counts, for each index, how many queries cover it"
+      ],
+      [
+       "`cover += diff[i]`",
+       "Running prefix sum",
+       "`cover` = number of queries covering index i"
+      ],
+      [
+       "`cover < x`",
+       "Fewer queries than the value needs",
+       "Each covering query can decrement the element at most once"
+      ],
+      [
+       "`return False` / `return True`",
+       "Fail at the first index that can't reach 0",
+       "All indexes are independent"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,1]`, queries `[[0,2]]` → True:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "Queries covering i",
+      "cover ≥ nums[i]?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "True"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "True"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A False case: `[4,3,2,1]`, queries `[[1,3],[0,2]]`",
+    "p": [
+     "Result False: index 0 is covered by only one query but needs 4."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "Queries covering i",
+      "cover ≥ nums[i]?"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "1",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is covering count enough?",
+    "p": [
+     "Using a query lets us decrement any subset of its range by 1. If we apply all queries covering index i we can decrement nums[i] up to `cover[i]` times, and choosing which indexes to decrement in each query is free. So index i can reach 0 iff nums[i] ≤ cover[i]; indexes don't interfere."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Difference array counts the queries covering each index; the array can be zeroed iff every nums[i] ≤ cover[i]."
+ },
+ "3367": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dfs(u, p)` returns `(a, b)`",
+       "`a` = best sum in u's subtree when u keeps at most k edges to its CHILDREN; `b` = best sum when u keeps at most k−1 child edges (one slot reserved for the edge to its parent)",
+       "Two states per node"
+      ],
+      [
+       "`base += a`",
+       "Start by keeping NO edge to any child, but taking each child's own best (child allowed all k of its child edges)",
+       "Baseline"
+      ],
+      [
+       "`b + w - a`",
+       "Gain from keeping the edge (u, v): `w` plus the child's value in the restricted state `b`, minus the child's baseline `a`",
+       "Keeping the edge costs the child one slot"
+      ],
+      [
+       "`if … > 0: gains.append(…)`",
+       "Only positive gains matter",
+       "Never keep an edge that lowers the total"
+      ],
+      [
+       "`gains.sort(reverse=True)`; `sum(gains[:k])`",
+       "Keep the k largest gains (and `[: k − 1]` for the restricted state)",
+       "Greedy choice of which child edges to keep"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "edges `[[0,1,4],[0,2,2],[2,3,12],[2,4,6]]`, `k = 2` → 22 (delete the weight-2 edge). Nodes finish bottom-up:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "base (sum of children's a)",
+      "Positive gains (sorted)",
+      "a (up to k child edges)",
+      "b (up to k−1)"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "[]",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "0",
+       "[]",
+       "0",
+       "0"
+      ],
+      [
+       "4",
+       "0",
+       "[]",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "[12, 6]",
+       "18",
+       "12"
+      ],
+      [
+       "0",
+       "18",
+       "[4]",
+       "22",
+       "22"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two values per node?",
+    "p": [
+     "A node's edge to its parent consumes one of its k slots. The parent decides whether to keep that edge, so the child must supply both its best value with all k slots free for children (`a`, used when the edge to the parent is deleted) and with one slot reserved (`b`, used when it is kept). The parent compares the two and keeps the k most valuable edges. The result matches a brute-force search over all edge subsets on 200 random trees: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n): sorting each node's gains.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Tree DP with two states per node (all k child slots vs k−1): keep the k most profitable child edges."
+ },
+ "3394": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(r[lo_idx], r[hi_idx])`",
+       "The rectangle's interval along one axis (x: indexes 0, 2; y: indexes 1, 3)",
+       "Project each rectangle to a line"
+      ],
+      [
+       "`sorted(…)`",
+       "Intervals ordered by start",
+       "Sweep line"
+      ],
+      [
+       "`a >= end`",
+       "This interval starts at or after everything so far ends",
+       "A cut can be made at `end`: no rectangle crosses it"
+      ],
+      [
+       "`end = max(end, b)`",
+       "Furthest right end among the merged intervals",
+       "Merging overlapping intervals"
+      ],
+      [
+       "`count >= 3`",
+       "At least three groups along an axis",
+       "Two cuts create three sections, each with at least one rectangle"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 5 with the four rectangles `[[1, 0, 5, 2], [0, 2, 2, 4], [3, 2, 5, 3], [0, 4, 4, 5]]`. Along the y-axis (rows) the sorted intervals `[start, end)` and group counts are:"
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Starts a new group?",
+      "Furthest end",
+      "Groups"
+     ],
+     "rows": [
+      [
+       "[0, 2)",
+       "True",
+       "2",
+       "1"
+      ],
+      [
+       "[2, 3)",
+       "True",
+       "3",
+       "2"
+      ],
+      [
+       "[2, 4)",
+       "False",
+       "4",
+       "2"
+      ],
+      [
+       "[4, 5)",
+       "True",
+       "5",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "x-axis groups: 1, y-axis groups: 3 → True (the y-axis gives 3 groups, so two horizontal cuts work)."
+    ]
+   },
+   {
+    "h": "Why merged intervals?",
+    "p": [
+     "Rectangles never overlap, but their projections onto one axis can. A cut is valid at a coordinate only if no projection straddles it. Merging overlapping projections into groups leaves exactly the positions where cuts are possible; two cuts need at least three groups, each holding at least one rectangle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(r log r) for sorting r rectangles.",
+     "Space: O(r)."
+    ]
+   }
+  ],
+  "takeaway": "Project rectangles on an axis and merge overlapping intervals: three or more groups mean two valid parallel cuts."
+ },
+ "3433": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(events, key=lambda e: (int(e[1]), e[0] == 'MESSAGE'))`",
+       "Sort by time; at equal times OFFLINE (False) comes before MESSAGE (True)",
+       "Tuple key; `False < True`, so the boolean breaks ties as the problem requires"
+      ],
+      [
+       "`back[u]`",
+       "Time when user u is online again",
+       "Online iff `back[u] <= t`"
+      ],
+      [
+       "`back[int(s)] = t + 60`",
+       "Take the user offline for 60 units",
+       "OFFLINE event"
+      ],
+      [
+       "`tok[2:]`",
+       "User id from `'id1'`",
+       "Strip the two-letter prefix"
+      ],
+      [
+       "`cnt[int(tok[2:])] += 1` per token",
+       "Duplicates in the list count more than once",
+       "Each token is one mention"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "2 users, events `[MESSAGE 10 'id1 id0'], [OFFLINE 11 '0'], [MESSAGE 71 'HERE']` → [2, 2]:"
+    ],
+    "table": {
+     "head": [
+      "Event",
+      "Time",
+      "Argument",
+      "Effect",
+      "Mention counts"
+     ],
+     "rows": [
+      [
+       "MESSAGE",
+       "10",
+       "id1 id0",
+       "mentions id1 id0",
+       "[1, 1]"
+      ],
+      [
+       "OFFLINE",
+       "11",
+       "0",
+       "user 0 offline until 71",
+       "[1, 1]"
+      ],
+      [
+       "MESSAGE",
+       "71",
+       "HERE",
+       "HERE: online users [0, 1] +1",
+       "[2, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort first and process offline events first at ties?",
+    "p": [
+     "Events may arrive in any order, but their effect depends on time: whether a user is online at a message's time depends on earlier OFFLINE events. At the same timestamp the problem says OFFLINE is processed first, so the sort key puts OFFLINE before MESSAGE. Here the HERE message at time 71 reaches user 0 because 11 + 60 = 71 ≤ 71, i.e. the user is back online."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(e log e + e·n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort events by (time, MESSAGE last), keep each user's back-online time, and apply ALL/HERE/id mentions in order."
+ },
+ "3466": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`f00`",
+       "Best total if currently in lane 1 with no switch used",
+       "State: started in lane 1"
+      ],
+      [
+       "`f11`",
+       "Best total if currently in lane 2 after one switch",
+       "State: one switch used"
+      ],
+      [
+       "`f02`",
+       "Best total if currently in lane 1 again after two switches",
+       "State: two switches used (no more allowed)"
+      ],
+      [
+       "`base0 = max(f00, 0)`",
+       "Either continue in lane 1 or start fresh here",
+       "Entering the road at any mile: a new start has total 0"
+      ],
+      [
+       "`n11 = max(base0, f11) + b`",
+       "Switch from lane 1 (or start-from-scratch) into lane 2, or stay in lane 2",
+       "Lane 2's value `b` is added at this mile"
+      ],
+      [
+       "`n02 = max(f11, f02) + a`",
+       "Switch back to lane 1 from lane 2, or stay in lane 1",
+       "Second switch"
+      ],
+      [
+       "`best = max(best, f00, f11, f02)`",
+       "Best over all states and all end miles",
+       "The trip must cover at least one mile, so the maximum is taken after adding a mile"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`lane1 = [1,-2,-10,3]`, `lane2 = [-5,10,0,1]` → 14:"
+    ],
+    "table": {
+     "head": [
+      "lane1[i]",
+      "lane2[i]",
+      "f00",
+      "f11",
+      "f02",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "-5",
+       "1",
+       "-5",
+       "-inf",
+       "1"
+      ],
+      [
+       "-2",
+       "10",
+       "-1",
+       "11",
+       "-7",
+       "11"
+      ],
+      [
+       "-10",
+       "0",
+       "-10",
+       "11",
+       "1",
+       "11"
+      ],
+      [
+       "3",
+       "1",
+       "3",
+       "12",
+       "14",
+       "14"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three states?",
+    "p": [
+     "The rules limit switches to two and require starting in lane 1, so the lane and the number of switches used form a small state machine: (lane 1, 0 switches), (lane 2, 1 switch), (lane 1, 2 switches). At each mile the best total for each state comes from staying in it or from the previous state by one switch. Starting anywhere is handled by `max(f00, 0)`. The DP agrees with a brute-force search over all start/end miles and lane sequences (entering lane 1 and switching immediately counts as one of the two switches) on 100 random small inputs: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Small state-machine DP: (lane 1, 0 switches), (lane 2, 1 switch), (lane 1, 2 switches), with a fresh start allowed at every mile."
+ },
+ "3484": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.cells = {}`",
+       "Cell name → value, storing only cells that were set",
+       "Sparse: unset cells are 0 by default"
+      ],
+      [
+       "`cells.pop(cell, None)`",
+       "Delete a cell (reset to 0)",
+       "The `None` default avoids a KeyError when the cell was never set"
+      ],
+      [
+       "`formula[1:].split('+')`",
+       "Drop the leading `=` and split the two operands",
+       "`'=A1+6'` → `['A1', '6']`"
+      ],
+      [
+       "`part.isdigit()`",
+       "Is the operand a whole number?",
+       "Tells numbers from cell names"
+      ],
+      [
+       "`self.cells.get(part, 0)`",
+       "Value of a cell, or 0 if never set",
+       "Dictionary lookup with a default"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Calls in order:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Stored cells"
+     ],
+     "rows": [
+      [
+       "getValue('=5+7')",
+       "12",
+       "{}"
+      ],
+      [
+       "setCell('A1', 10)",
+       "—",
+       "{'A1': 10}"
+      ],
+      [
+       "getValue('=A1+6')",
+       "16",
+       "{'A1': 10}"
+      ],
+      [
+       "setCell('B2', 15)",
+       "—",
+       "{'A1': 10, 'B2': 15}"
+      ],
+      [
+       "getValue('=A1+B2')",
+       "25",
+       "{'A1': 10, 'B2': 15}"
+      ],
+      [
+       "resetCell('A1')",
+       "—",
+       "{'B2': 15}"
+      ],
+      [
+       "getValue('=A1+B2')",
+       "15",
+       "{'B2': 15}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dictionary instead of a 26-column grid?",
+    "p": [
+     "A grid with up to 10⁴ rows × 26 columns would use hundreds of thousands of entries, most of them 0. A dictionary stores only cells that were set; reading a missing cell with `.get(part, 0)` gives the default. Resetting simply removes the key, restoring the default."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per call (the formula has a fixed shape X+Y).",
+     "Space: O(number of cells set)."
+    ]
+   }
+  ],
+  "takeaway": "Sparse dictionary of set cells with a default of 0; parse '=X+Y' by splitting on '+' and telling numbers from cell names."
+ },
+ "3508": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque` `q`",
+       "Stored packets in arrival order",
+       "FIFO (First In, First Out): the oldest is on the left"
+      ],
+      [
+       "`seen` set of `(source, destination, timestamp)`",
+       "Detects duplicates in O(1)",
+       "Packets are identical if all three match"
+      ],
+      [
+       "`ts[destination]` (list of timestamps)",
+       "Timestamps of ALL packets ever added for that destination, in arrival order",
+       "Arrival order is non-decreasing in time, so the list stays sorted"
+      ],
+      [
+       "`head[d]`",
+       "How many of destination d's packets have already left the router",
+       "The valid packets of d are `ts[d][head[d]:]`"
+      ],
+      [
+       "`bisect_right(lst, endTime, h) - bisect_left(lst, startTime, h)`",
+       "Count timestamps in [start, end] among the packets still stored",
+       "`bisect_*` with a third argument `lo = h` ignores the removed prefix"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`Router(3)`:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Packets in queue",
+      "head (removed per destination)"
+     ],
+     "rows": [
+      [
+       "addPacket(1,4,90)",
+       "True",
+       "[(1, 4, 90)]",
+       "{}"
+      ],
+      [
+       "addPacket(2,5,90)",
+       "True",
+       "[(1, 4, 90), (2, 5, 90)]",
+       "{}"
+      ],
+      [
+       "addPacket(1,4,90)",
+       "False",
+       "[(1, 4, 90), (2, 5, 90)]",
+       "{}"
+      ],
+      [
+       "addPacket(3,5,95)",
+       "True",
+       "[(1, 4, 90), (2, 5, 90), (3, 5, 95)]",
+       "{}"
+      ],
+      [
+       "addPacket(4,5,105)",
+       "True",
+       "[(2, 5, 90), (3, 5, 95), (4, 5, 105)]",
+       "{4: 1}"
+      ],
+      [
+       "forwardPacket()",
+       "[2, 5, 90]",
+       "[(3, 5, 95), (4, 5, 105)]",
+       "{4: 1, 5: 1}"
+      ],
+      [
+       "addPacket(5,2,110)",
+       "True",
+       "[(3, 5, 95), (4, 5, 105), (5, 2, 110)]",
+       "{4: 1, 5: 1}"
+      ],
+      [
+       "getCount(5,100,110)",
+       "1",
+       "[(3, 5, 95), (4, 5, 105), (5, 2, 110)]",
+       "{4: 1, 5: 1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a per-destination list and a head pointer?",
+    "p": [
+     "Each destination's timestamps are appended in non-decreasing order (the problem guarantees increasing timestamps), so they form a sorted list. Packets leave the router oldest first, and for a given destination the oldest are always the earliest in its list, so removal just moves `head[d]` forward (no deletion from the middle of a list). Counting packets in a time range is then two binary searches in the remaining part. The implementation matches a naive list-based reference on 300 random operation sequences with non-decreasing timestamps (as the problem guarantees): True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: addPacket, forwardPacket O(1) amortised; getCount O(log n).",
+     "Space: O(memoryLimit) for the queue, O(packets ever added) for the timestamp lists."
+    ]
+   }
+  ],
+  "takeaway": "FIFO deque + duplicate set + per-destination timestamp lists with a head pointer, and bisect for range counts."
+ },
+ "3535": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`g[t].append((s, pow(f, MOD - 2, MOD)))`",
+       "The reverse conversion uses the modular inverse of f",
+       "`pow(f, MOD−2, MOD)` is f⁻¹ because MOD is prime (Fermat's little theorem)"
+      ],
+      [
+       "`ratio[v]`",
+       "How many units of v equal one unit of the root unit 0",
+       "Everything is expressed relative to node 0"
+      ],
+      [
+       "`ratio[v] = ratio[u] * f % MOD`",
+       "Multiply along the edge",
+       "Product of factors on the path from 0"
+      ],
+      [
+       "`not ratio[v]`",
+       "Not visited yet (ratios are non-zero)",
+       "Doubles as the visited check; works because a ratio is never 0 modulo the prime"
+      ],
+      [
+       "`ratio[b] * pow(ratio[a], MOD - 2, MOD)`",
+       "`b / a` as a modular fraction",
+       "Converting a to b: one a = ratio[b] / ratio[a] units of b"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "conversions `[[0,1,2],[0,2,6]]`, queries `[[1,2],[1,0]]` → [3, 500000004]. Ratios to unit 0: `[1, 2, 6]`. Query (1, 2) = 6 / 2 = 3; query (1, 0) = 1 / 2 ≡ 500000004 modulo 10⁹+7."
+    ],
+    "table": {
+     "head": [
+      "Query (a, b)",
+      "ratio[b] · ratio[a]⁻¹ mod p",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "3",
+       "6 ÷ 2 = 3"
+      ],
+      [
+       "(1, 0)",
+       "500000004",
+       "1 ÷ 2 as a modular value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why go through the root?",
+    "p": [
+     "In a tree there is one path between any two units. Converting a to b equals converting a to the root and then the root to b, so `value(b)/value(a)` in terms of the root unit. Computing every unit's factor relative to node 0 once (O(n)) turns each query into a single modular division (a modular inverse by fast exponentiation)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q log MOD).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Express every unit relative to the root with modular products along tree edges; a query is ratio[b] × inverse(ratio[a])."
+ },
+ "3607": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`p`, `find`",
+       "Union-Find (disjoint set) with path halving",
+       "Grid membership: stations connected by cables share a root"
+      ],
+      [
+       "`p[find(a)] = find(b)`",
+       "Union the two stations' groups",
+       "Build the grids from the cables"
+      ],
+      [
+       "`heaps[find(i)].append(i)`",
+       "Per grid, the list of its stations (already ascending)",
+       "An ascending list is already a valid min-heap"
+      ],
+      [
+       "`off`",
+       "Offline flags",
+       "Stations never come back online"
+      ],
+      [
+       "`while h and off[h[0]]: heappop(h)`",
+       "Lazy deletion: discard offline stations at the top",
+       "Only the top matters, so cleanup happens when needed"
+      ],
+      [
+       "`h[0] if h else -1`",
+       "Smallest online station, or −1",
+       "The answer for an offline query station"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "5 stations in a chain, queries `[[1,3],[2,1],[1,1],[2,2],[1,2]]` → [3, 2, 3]:"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Answer",
+      "What happens"
+     ],
+     "rows": [
+      [
+       "[1, 3]",
+       "3",
+       "x is online → resolves itself"
+      ],
+      [
+       "[2, 1]",
+       "—",
+       "station 1 goes offline"
+      ],
+      [
+       "[1, 1]",
+       "2",
+       "x offline → smallest online in its grid (discarded 1 offline from the heap top)"
+      ],
+      [
+       "[2, 2]",
+       "—",
+       "station 2 goes offline"
+      ],
+      [
+       "[1, 2]",
+       "3",
+       "x offline → smallest online in its grid (discarded 1 offline from the heap top)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "Stations only go offline (never back), so once a station is offline it can never be the answer again. Removing it from a heap immediately would cost O(n); instead, offline stations are discarded only when they reach the top. Each station is popped at most once overall, which keeps the total at O((c + q) log c)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((c + q) · α + c log c).",
+     "Space: O(c)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find for grids plus a lazily cleaned min-heap per grid for the smallest online station."
+ },
+ "3613": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(edges, key=lambda e: e[2])`",
+       "Edges by weight, lightest first",
+       "Kruskal's algorithm order"
+      ],
+      [
+       "`find` with path halving, `parent[ru] = rv`",
+       "Union-Find",
+       "Merge components"
+      ],
+      [
+       "`comps`",
+       "Current number of components",
+       "Starts at n; each successful union reduces it by one"
+      ],
+      [
+       "`comps == k: return w`",
+       "Reached exactly k components",
+       "The last edge used is the heaviest one needed"
+      ],
+      [
+       "`if k >= n: return 0`",
+       "Every node can be its own component",
+       "No edges are needed at all"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 5, edges `[[0,1,4],[1,2,3],[1,3,2],[3,4,6]]`, `k = 2` → 4:"
+    ],
+    "table": {
+     "head": [
+      "Edge",
+      "Action",
+      "Components left"
+     ],
+     "rows": [
+      [
+       "(1, 3) weight 2",
+       "merges two groups",
+       "4"
+      ],
+      [
+       "(1, 2) weight 3",
+       "merges two groups",
+       "3"
+      ],
+      [
+       "(0, 1) weight 4",
+       "merges two groups",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Kruskal until k components remain?",
+    "p": [
+     "To keep at most k components we must keep at least n−k edges forming a forest. To minimise the heaviest kept edge, use the cheapest edges that connect nodes: Kruskal adds edges in increasing weight, and stops as soon as the number of components drops to k. The weight of the last accepted edge is the smallest possible maximum (the bottleneck). The heaviest edge (6) is deleted."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(E log E).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Kruskal in increasing weight order, stopping when k components remain: the last accepted edge's weight is the answer."
+ },
+ "3619": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`grid[i][j] > 0`",
+       "Land cell (positive value)",
+       "Zero cells are water"
+      ],
+      [
+       "`seen`",
+       "Visited flags",
+       "Each cell is added to exactly one island"
+      ],
+      [
+       "`st` (stack)",
+       "Iterative DFS (Depth-First Search)",
+       "Avoids recursion depth limits on large islands"
+      ],
+      [
+       "`total += grid[a][b]`",
+       "Sum the island's values as cells are popped",
+       "Island total"
+      ],
+      [
+       "`total % k == 0`",
+       "Divisible by k",
+       "Count the island"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 5×5 grid `[[0, 2, 1, 0, 0], [0, 5, 0, 0, 5], [0, 0, 1, 0, 0], [0, 1, 4, 7, 0], [0, 2, 0, 0, 8]]` with `k = 5` has 4 islands; 2 have a total divisible by 5:"
+    ],
+    "table": {
+     "head": [
+      "Island start",
+      "Cells",
+      "Total",
+      "Total divisible by 5?"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "3",
+       "8",
+       "False"
+      ],
+      [
+       "(1,4)",
+       "1",
+       "5",
+       "True"
+      ],
+      [
+       "(2,2)",
+       "5",
+       "15",
+       "True"
+      ],
+      [
+       "(4,4)",
+       "1",
+       "8",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why an iterative DFS?",
+    "p": [
+     "Marking a cell visited when it is pushed (not when it is popped) guarantees each cell enters the stack once. The flood fill visits every cell of the island once, so the total work over all islands is O(m·n)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Flood-fill each island with a stack, sum its cells, and count totals divisible by k."
+ },
+ "3634": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Ascending order",
+       "Within a sorted window the minimum is on the left and the maximum on the right"
+      ],
+      [
+       "`nums[r] > k * nums[l]`",
+       "Window max exceeds k × min",
+       "Window is unbalanced"
+      ],
+      [
+       "`l += 1`",
+       "Shrink from the left (raise the minimum)",
+       "Two-pointer window"
+      ],
+      [
+       "`len(nums) - best`",
+       "Everything outside the best window is removed",
+       "Minimum removals"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,5]` sorted `[1, 2, 5]`, `k = 2` → remove 1:"
+    ],
+    "table": {
+     "head": [
+      "r",
+      "nums[r]",
+      "l after shrinking",
+      "Window",
+      "Longest balanced window"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "[1]",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "0",
+       "[1, 2]",
+       "2"
+      ],
+      [
+       "2",
+       "5",
+       "2",
+       "[5]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a contiguous sorted window suffice?",
+    "p": [
+     "A balanced remaining set has some minimum and maximum; all elements between them in sorted order can be kept without breaking the condition, so the optimal kept set is a contiguous block of the sorted array. The largest such block with max ≤ k·min minimises removals."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then slide a window while the maximum is at most k × the minimum; the answer is n minus the longest window."
+ },
+ "3649": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(abs(x) for x in nums)`",
+       "Sorted absolute values",
+       "The condition depends only on |a| and |b|, and positions only matter through i < j, which is symmetric for pair counting"
+      ],
+      [
+       "`a[j] * 2 < a[i]`",
+       "The smaller value is less than half of the larger",
+       "Then the pair is NOT perfect"
+      ],
+      [
+       "`j`",
+       "First index whose value is at least half of `a[i]`",
+       "Moves forward only (two pointers)"
+      ],
+      [
+       "`count += i - j`",
+       "All indexes between j and i−1 pair perfectly with i",
+       "Counts many pairs at once"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,2,3]` → absolute values `[0, 1, 2, 3]` → 2 pairs:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "a[i]",
+      "j",
+      "Pairs with i (i − j)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "2",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does it reduce to |b| ≤ 2|a|?",
+    "p": [
+     "Both conditions simplify (for x = |a| ≤ y = |b|): min(|a−b|,|a+b|) = y − x and max(...) = y + x, and the conditions become y − x ≤ x and y + x ≥ y, i.e. y ≤ 2x. So a pair is perfect exactly when the larger absolute value is at most twice the smaller. The two-pointer count over the sorted absolute values agrees with a brute-force check of the original definition on 300 random arrays: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "A pair is perfect iff the larger absolute value is at most twice the smaller: sort absolute values and count with two pointers."
+ },
+ "3652": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`base`",
+       "Profit with no modification: Σ strategy[i] · prices[i]",
+       "Baseline"
+      ],
+      [
+       "`val = [0] + list(accumulate(s * p …))`",
+       "Prefix sums of strategy × price",
+       "Profit of any range in O(1)"
+      ],
+      [
+       "`pre = [0] + list(accumulate(prices))`",
+       "Prefix sums of the prices",
+       "Sum of prices over a range"
+      ],
+      [
+       "`-(val[i + k] - val[i])`",
+       "Remove the old profit of the window",
+       "Everything in the window is overwritten"
+      ],
+      [
+       "`pre[i + k] - pre[i + k // 2]`",
+       "New profit of the window: the second half sells (strategy 1 × price) and the first half holds (0)",
+       "Sum of the last k/2 prices"
+      ],
+      [
+       "`best = max(best, delta)`",
+       "Best change over all windows; 0 means no modification",
+       "At most one modification"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "prices `[4,2,8]`, strategy `[-1,0,1]`, `k = 2`: base profit 4; each window's change and the final answer 10:"
+    ],
+    "table": {
+     "head": [
+      "Window start",
+      "Old profit removed",
+      "New profit (second half sells)",
+      "Change"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "2",
+       "6"
+      ],
+      [
+       "1",
+       "-8",
+       "8",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefix sums?",
+    "p": [
+     "For each of the n−k+1 windows the profit change is (new profit of the window) − (old profit of the window). Both are range sums, which two prefix-sum arrays give in O(1), so the total is O(n) instead of O(n·k). The result equals a brute-force try of every window on 300 random cases: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Profit change of a window = new profit (second half sells) − old profit, both from prefix sums; take the best window and add it to the base."
+ }
+}

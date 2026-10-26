@@ -1,0 +1,1802 @@
+{
+ "2965": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(x for row in grid for x in row)`",
+       "Frequency of every value, flattening the grid",
+       "Nested generator: outer loop over rows, inner over cells"
+      ],
+      [
+       "`next(generator)`",
+       "First item produced by the generator",
+       "Finds the one value with count 2 without scanning everything"
+      ],
+      [
+       "`x not in cnt`",
+       "The value never appeared",
+       "`Counter` membership: missing keys are absent (until you index them)"
+      ],
+      [
+       "`len(grid) ** 2`",
+       "n² = largest value",
+       "Values range over 1 … n²"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,3],[2,2]]` → [2, 4]:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Count"
+     ],
+     "rows": [
+      [
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "1"
+      ],
+      [
+       "4",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a Counter and not sums?",
+    "p": [
+     "A sum/sum-of-squares approach gives O(1) extra space with algebra: sum difference and square-sum difference give the two numbers. The Counter version is simpler and easier to explain, at O(n²) extra space for the n² values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Count every value: the one with count 2 is repeated, the one with count 0 in 1…n² is missing."
+ },
+ "2977": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ids.setdefault(s, len(ids))`",
+       "Give each distinct rule string a number",
+       "Strings become nodes of a graph"
+      ],
+      [
+       "`d[i][j]`",
+       "Cheapest cost to change string i into string j (any chain of rules)",
+       "Weighted graph; rules are edges"
+      ],
+      [
+       "Floyd–Warshall triple loop",
+       "All-pairs shortest paths between rule strings",
+       "A string can be changed step by step through several rules"
+      ],
+      [
+       "`lengths = sorted({len(s) …})`",
+       "The distinct lengths of rule strings",
+       "Only these substring lengths can be replaced"
+      ],
+      [
+       "`dp[i]`",
+       "Minimum cost to make `source[:i]` equal `target[:i]`",
+       "Left-to-right DP (Dynamic Programming) over positions"
+      ],
+      [
+       "`source[i] == target[i]` → `dp[i+1] = dp[i]`",
+       "Equal letters need no change",
+       "Free step"
+      ],
+      [
+       "`dp[i + L] = dp[i] + d[…]`",
+       "Replace the block of length L if both strings are known and connected",
+       "Transition over block lengths"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "source `abcd`, target `acbe`, rules a→b (2), b→c (5), c→b (5), c→e (1), e→b (2), d→e (20) → 28. Rule strings are numbered `{'a': 0, 'b': 1, 'c': 2, 'e': 3, 'd': 4}` and the cheapest conversions found by Floyd–Warshall include b→c = 5, c→b = 3, d→e = 20. DP over positions:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Options",
+      "dp[0..4]"
+     ],
+     "rows": [
+      [
+       "0",
+       "same letter → free; 'a'→'a' costs 0",
+       "[0, 0, '∞', '∞', '∞']"
+      ],
+      [
+       "1",
+       "'b'→'c' costs 5",
+       "[0, 0, 5, '∞', '∞']"
+      ],
+      [
+       "2",
+       "'c'→'b' costs 3",
+       "[0, 0, 5, 8, '∞']"
+      ],
+      [
+       "3",
+       "'d'→'e' costs 20",
+       "[0, 0, 5, 8, 28]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Floyd–Warshall and a DP?",
+    "p": [
+     "Changing `x` into `y` may use a chain of rules, so the cost between two strings is a shortest path: Floyd–Warshall computes it for all pairs of rule strings. The positions of the actual string are then handled by a prefix DP: at position i we either skip an equal letter or replace a block of one of the allowed lengths. The problem guarantees replaced blocks don't partially overlap, so non-overlapping blocks left to right is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k³ + n · (number of distinct lengths) · L) for k rule strings.",
+     "Space: O(k² + n)."
+    ]
+   }
+  ],
+  "takeaway": "Floyd–Warshall for the cheapest conversion between rule strings, then a left-to-right DP over positions choosing block lengths."
+ },
+ "2992": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[mask]`",
+       "Number of ways to fill positions 1…popcount(mask) with exactly the values in mask",
+       "Bitmask DP (Dynamic Programming): bit v−1 = value v is used"
+      ],
+      [
+       "`bin(mask).count('1') + 1`",
+       "The next position to fill",
+       "Number of values used so far, plus one"
+      ],
+      [
+       "`not (mask >> (v - 1)) & 1`",
+       "Value v not used yet",
+       "Each value appears once in a permutation"
+      ],
+      [
+       "`gcd(v, pos) == 1`",
+       "Self-divisible condition for this position",
+       "gcd from `math`"
+      ],
+      [
+       "`dp[mask | 1 << (v - 1)] += dp[mask]`",
+       "Extend to the larger mask",
+       "Each mask has its positions filled in order, so no permutation is counted twice"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3` → 3. The self-divisible permutations are [(1, 3, 2), (2, 3, 1), (3, 1, 2)] (e.g. position 3 cannot hold 3, position 2 cannot hold 2)."
+    ],
+    "table": {
+     "head": [
+      "mask (used values)",
+      "Ways dp[mask]"
+     ],
+     "rows": [
+      [
+       "000",
+       "1"
+      ],
+      [
+       "001",
+       "1"
+      ],
+      [
+       "010",
+       "1"
+      ],
+      [
+       "011",
+       "1"
+      ],
+      [
+       "100",
+       "1"
+      ],
+      [
+       "101",
+       "2"
+      ],
+      [
+       "110",
+       "1"
+      ],
+      [
+       "111",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a bitmask over values?",
+    "p": [
+     "The condition depends only on the value and its position. Filling positions in order means the number of used values is the position, so the set of used values is enough state. This takes 2ⁿ·n instead of n! permutations (n ≤ 12)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ · n).",
+     "Space: O(2ⁿ)."
+    ]
+   }
+  ],
+  "takeaway": "Bitmask DP filling positions 1…n in order; a value may go to the next position only if gcd(value, position) = 1."
+ },
+ "3001": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`a == e`",
+       "Rook and queen share a column",
+       "Rook attacks along columns"
+      ],
+      [
+       "`between(d, b, f)`",
+       "A coordinate lies strictly between two others",
+       "Blocking test: is the bishop in the rook's path?"
+      ],
+      [
+       "`abs(c - e) == abs(d - f)`",
+       "Bishop and queen are on a common diagonal",
+       "Bishop attacks along diagonals"
+      ],
+      [
+       "`(a - c) * (f - d) == (b - d) * (e - c)`",
+       "Rook lies on the line through the bishop and the queen",
+       "Cross-product test for collinearity"
+      ],
+      [
+       "`return 2`",
+       "No direct attack",
+       "Two moves always suffice: any piece can reach a square attacking the queen"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "rook (a,b), bishop (c,d), queen (e,f)",
+      "Moves",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "(1,1), (8,8), (2,3)",
+       "2",
+       "no direct attack"
+      ],
+      [
+       "(5,3), (3,4), (5,2)",
+       "1",
+       "rook on the same column, bishop not in between"
+      ],
+      [
+       "(4,3), (3,4), (2,3)",
+       "1",
+       "rook on the same row, bishop not in between"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only 1 or 2?",
+    "p": [
+     "If the rook or bishop has a clear line to the queen, one move captures it. Otherwise the answer is 2: some piece can always move to a square that does attack the queen next move. So only direct attacks need checking, with blocking by the other white piece (the pieces can't jump)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "One move if the rook or bishop has a clear line to the queen (the other piece not in between), otherwise two."
+ },
+ "3010": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums[0]`",
+       "The first element",
+       "It is always the first element of the first subarray, so its cost is unavoidable"
+      ],
+      [
+       "`sorted(nums[1:])[:2]`",
+       "The two smallest of the remaining elements",
+       "Two more subarrays start somewhere after index 0; each costs its first element"
+      ],
+      [
+       "`sum(…)`",
+       "Total cost",
+       "Sum of the three chosen first elements"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,12]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "nums[0] (forced)",
+       "1"
+      ],
+      [
+       "sorted(nums[1:])",
+       "[2, 3, 12]"
+      ],
+      [
+       "two smallest",
+       "[2, 3]"
+      ],
+      [
+       "total",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why any two elements can start subarrays",
+    "p": [
+     "Three contiguous subarrays means choosing two cut points. The start of the second and third subarrays can be any two different indexes after 0 (with a gap of at least one element between them or immediately after), because elements between starts just belong to the previous subarray. So the two cheapest values among `nums[1:]` can always be chosen."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) (O(n) with `heapq.nsmallest`).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "The first element is always paid; pick the two smallest of the others as the starts of the other two subarrays."
+ },
+ "3019": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s[i].lower()`",
+       "Lowercase version of a character",
+       "Case-insensitive comparison: 'a' and 'A' are the same key"
+      ],
+      [
+       "`range(1, len(s))`",
+       "Compare each character with the previous one",
+       "Neighbours"
+      ],
+      [
+       "`!=`",
+       "Different keys",
+       "Count a change"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aAbBcC'` → 2:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Pair",
+      "Lowercased",
+      "Change?",
+      "Total"
+     ],
+     "rows": [
+      [
+       "1",
+       "aA",
+       "aa",
+       "False",
+       "0"
+      ],
+      [
+       "2",
+       "Ab",
+       "ab",
+       "True",
+       "1"
+      ],
+      [
+       "3",
+       "bB",
+       "bb",
+       "False",
+       "1"
+      ],
+      [
+       "4",
+       "Bc",
+       "bc",
+       "True",
+       "2"
+      ],
+      [
+       "5",
+       "cC",
+       "cc",
+       "False",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare neighbours only?",
+    "p": [
+     "A key change is defined between consecutive characters, and the first character never counts. Lowercasing both makes `a`→`A` equal, so only real key switches (a→b, b→c) are counted."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count positions where lowercase(s[i]) differs from lowercase(s[i−1])."
+ },
+ "3034": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`range(len(nums) - m)`",
+       "Start positions i of windows with m + 1 numbers",
+       "A window has m+1 numbers and the last start is `len(nums) - m - 1`"
+      ],
+      [
+       "`1 if b > a else (0 if b == a else -1)`",
+       "Sign of the step from a to b",
+       "Nested conditional expression"
+      ],
+      [
+       "`want != pattern[k]`",
+       "Mismatch with the pattern",
+       "Reject the window early (`break`)"
+      ],
+      [
+       "`count += 1`",
+       "The whole pattern matched",
+       "Count the window"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5,6]`, `pattern = [1,1]` → 4:"
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "Window",
+      "Signs found",
+      "Match?",
+      "Count"
+     ],
+     "rows": [
+      [
+       "0",
+       "[1, 2, 3]",
+       "[1, 1]",
+       "True",
+       "1"
+      ],
+      [
+       "1",
+       "[2, 3, 4]",
+       "[1, 1]",
+       "True",
+       "2"
+      ],
+      [
+       "2",
+       "[3, 4, 5]",
+       "[1, 1]",
+       "True",
+       "3"
+      ],
+      [
+       "3",
+       "[4, 5, 6]",
+       "[1, 1]",
+       "True",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare signs of differences?",
+    "p": [
+     "The pattern only says up, equal or down between neighbours, so each window is turned into its sequence of signs and compared with the pattern. The inner loop stops at the first mismatch. A KMP or Z-function approach would find matches in O(n + m) after converting `nums` to a sign array; the simple version here is O(n·m)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·m).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "For each window compute the sign of every step and compare it with the pattern, stopping at the first mismatch."
+ },
+ "3043": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`str(x)`",
+       "The number as digits",
+       "Prefixes of the digit string"
+      ],
+      [
+       "`s[:k]`",
+       "The first k digits",
+       "A prefix"
+      ],
+      [
+       "`prefixes` set",
+       "All prefixes of all numbers in arr1",
+       "O(1) membership"
+      ],
+      [
+       "`for k in range(len(s), 0, -1)`",
+       "Try the longest prefix first",
+       "The first hit is the longest for this number, so `break`"
+      ],
+      [
+       "`best = max(best, k)`",
+       "Longest common prefix overall",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr1 = [1,10,100]`, `arr2 = [1000]` → 3. Prefixes of arr1: ['1', '10', '100']:"
+    ],
+    "table": {
+     "head": [
+      "arr2 number",
+      "Prefix tried",
+      "Result"
+     ],
+     "rows": [
+      [
+       "1000",
+       "1000",
+       "not a prefix of any arr1 number"
+      ],
+      [
+       "1000",
+       "100",
+       "found → stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set of prefixes?",
+    "p": [
+     "A common prefix of x and y is a prefix of y that is also a prefix of x. Collecting all prefixes of arr1 once lets each arr2 number test its prefixes in O(digits) instead of comparing with every arr1 number (O(n·m·digits))."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) · d) for d digits per number.",
+     "Space: O(n · d) for the prefix set."
+    ]
+   }
+  ],
+  "takeaway": "Store all prefixes of arr1 in a set; for each arr2 number find its longest prefix that is in the set."
+ },
+ "3046": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "Count of each value",
+       "Frequency table"
+      ],
+      [
+       "`max(….values())`",
+       "Highest frequency",
+       "The most repeated value"
+      ],
+      [
+       "`<= 2`",
+       "No value appears more than twice",
+       "Two parts can hold at most one copy each"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,2,2,3,4]` → True (highest count 2):"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Count"
+     ],
+     "rows": [
+      [
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "3",
+       "1"
+      ],
+      [
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the frequency bound enough?",
+    "p": [
+     "Each part must contain distinct elements, so a value can appear at most once in each of the two parts, i.e. at most twice overall. If every value appears at most twice, put one copy of each repeated value in each part and fill the rest evenly: both parts have n/2 distinct elements (the lengths work out because the total is even)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Splitting into two parts of distinct elements is possible iff no value appears more than twice."
+ },
+ "3073": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sufmax[i]`",
+       "Maximum of `nums[i:]`",
+       "Best possible k for any j: the largest value to the right"
+      ],
+      [
+       "`seen` (sorted list)",
+       "Values at earlier positions, kept sorted",
+       "`insort` inserts while keeping order (from `bisect`)"
+      ],
+      [
+       "`bisect_left(seen, nums[j])`",
+       "Index of the first earlier value that is ≥ nums[j]",
+       "The element just before it (`seen[idx − 1]`) is the largest earlier value smaller than nums[j]"
+      ],
+      [
+       "`seen[idx - 1] - nums[j] + sufmax[j + 1]`",
+       "Best triplet value with j in the middle",
+       "Maximise `nums[i]` (largest below nums[j]) and `nums[k]` (largest to the right)"
+      ],
+      [
+       "`sufmax[j + 1] > nums[j]`",
+       "A larger value exists to the right",
+       "Needed for `nums[j] < nums[k]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[5,6,9]` → 8:"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "nums[j]",
+      "Earlier values (sorted)",
+      "Max to the right",
+      "Triplet value"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "[]",
+       "9",
+       "—"
+      ],
+      [
+       "1",
+       "6",
+       "[5]",
+       "9",
+       "5 − 6 + 9 = 8"
+      ],
+      [
+       "2",
+       "9",
+       "[5, 6]",
+       "0",
+       "—"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why fix the middle element?",
+    "p": [
+     "For a fixed j, the value is `nums[i] + nums[k] − nums[j]`, and the choices of i and k are independent: pick the largest earlier value that is smaller than nums[j], and the largest later value (which must exceed nums[j]). A sorted list with binary search gives the first, a suffix maximum the second."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) (inserting into a list costs O(n) in the worst case).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle j: best i is the largest earlier smaller value (sorted list + bisect), best k is the suffix maximum."
+ },
+ "3076": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s[a:b]` for all `a < b`",
+       "Every substring of a word",
+       "Slices; a word of length L has L(L+1)/2 of them"
+      ],
+      [
+       "`subs[i]` sets",
+       "Substrings of word i",
+       "Set: O(1) membership and duplicates removed"
+      ],
+      [
+       "`set().union(*(…))`",
+       "Union of the other words' substring sets",
+       "The `*` unpacks the generator into arguments"
+      ],
+      [
+       "`sorted(subs[i], key=lambda x: (len(x), x))`",
+       "Candidates by length, then alphabetical",
+       "The first one not found in `others` is the shortest, alphabetically smallest unique substring"
+      ],
+      [
+       "`best = ''`",
+       "Default when every substring appears elsewhere",
+       "The problem asks for the empty string in that case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['cab','ad','bad','c']` → `['ab', '', 'ba', '']`. First candidates of each word (shortest first, alphabetical):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Candidates (first six)",
+      "Chosen"
+     ],
+     "rows": [
+      [
+       "cab",
+       "['a', 'b', 'c', 'ab', 'ca', 'cab']",
+       "'ab'"
+      ],
+      [
+       "ad",
+       "['a', 'd', 'ad']",
+       "''"
+      ],
+      [
+       "bad",
+       "['a', 'b', 'd', 'ad', 'ba', 'bad']",
+       "'ba'"
+      ],
+      [
+       "c",
+       "['c']",
+       "''"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why precompute all substring sets?",
+    "p": [
+     "Words are short (length ≤ 20, up to 100 words), so each word has at most 210 substrings. Building a set for each word once lets every uniqueness test be an O(1) lookup instead of searching every other word for each candidate."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · L³) (L² substrings per word, each up to L characters, plus the union and sorting).",
+     "Space: O(n · L²) substrings."
+    ]
+   }
+  ],
+  "takeaway": "Collect all substrings of each word in a set; scan a word's substrings by (length, alphabet) for the first one missing from the union of the others."
+ },
+ "3088": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`a = sorted(s)`",
+       "Characters in ascending order",
+       "The lexicographically smallest arrangement; we only fix clashes"
+      ],
+      [
+       "`a[i] == a[n - 1 - i]` for i in the second half",
+       "A character equals its mirror position",
+       "Violates the anti-palindrome rule"
+      ],
+      [
+       "`j = i + 1; while a[j] == a[i]: j += 1`",
+       "First later position with a different (larger) letter",
+       "In sorted order the larger letters are at the end"
+      ],
+      [
+       "`a[i], a[j] = a[j], a[i]`",
+       "Swap in the larger letter",
+       "Smallest change that fixes the clash"
+      ],
+      [
+       "`j == n: return '-1'`",
+       "Every remaining character equals a[i]",
+       "Nothing to swap with: impossible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aabbcc'` → `aabcbc`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "String"
+     ],
+     "rows": [
+      [
+       "sorted",
+       "aabbcc"
+      ],
+      [
+       "i=3: clash with a[2] → swap with index 4",
+       "aabcbc"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another: `'abca'` → `aabc`",
+    "p": [
+     "After sorting, `aabc` is already an anti-palindrome (a≠c, a≠b), so no swap is needed. The implementation was checked against brute force on 150 random strings: True."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "String"
+     ],
+     "rows": [
+      [
+       "sorted",
+       "aabc"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan only the second half?",
+    "p": [
+     "The first half of the sorted string consists of the smallest letters and stays as it is. A clash between `a[i]` and its mirror `a[n−1−i]` can only be fixed by moving a larger letter into the second half; pushing the swap to the first available different letter keeps the string as small as possible."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort for the smallest string, then in the second half swap in the next different letter wherever a position equals its mirror."
+ },
+ "3106": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`ord(ch) - 97`",
+       "Position of the letter in the alphabet (a = 0)",
+       "Character arithmetic"
+      ],
+      [
+       "`min(x, 26 - x)`",
+       "Circular distance from the letter to 'a'",
+       "Either go back x steps or forward 26 − x steps (wrapping z → a)"
+      ],
+      [
+       "`d <= k`",
+       "Enough budget to reach 'a'",
+       "Make it 'a' (the smallest letter) and pay d"
+      ],
+      [
+       "`chr(ord(ch) - k)`",
+       "Move back as far as the remaining budget allows",
+       "Only possible in the backward direction when the budget is short"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 'zbbz'`, `k = 3` → `aaaz`:"
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Distance to 'a'",
+      "Budget before",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "z",
+       "1",
+       "3",
+       "d ≤ k → 'a', k −= 1"
+      ],
+      [
+       "b",
+       "1",
+       "2",
+       "d ≤ k → 'a', k −= 1"
+      ],
+      [
+       "b",
+       "1",
+       "1",
+       "d ≤ k → 'a', k −= 1"
+      ],
+      [
+       "z",
+       "1",
+       "0",
+       "d > k → move back 0 letters to 'z'"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy from the left?",
+    "p": [
+     "Lexicographic order is decided by the earliest position where strings differ, so make the first letter as small as possible, then the second, and so on. Making a letter 'a' costs its circular distance; spending budget earlier (left) always beats saving it for later letters. When the budget can't reach 'a', use it all to reduce this letter as much as possible, going backwards."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy left to right: turn each letter into 'a' if the circular distance fits the budget, otherwise move it back as far as the leftover budget allows."
+ },
+ "3136": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`c.isalnum()`",
+       "Letter or digit",
+       "Rejects characters like `$`, `@`, `#`"
+      ],
+      [
+       "`c.isalpha()`",
+       "Letter only",
+       "Digits are neither vowels nor consonants"
+      ],
+      [
+       "`[c.lower() for c in word if c.isalpha()]`",
+       "Lowercase letters of the word",
+       "Normalises case before the vowel test"
+      ],
+      [
+       "`any(c in 'aeiou' …)`",
+       "At least one vowel",
+       "Vowel check"
+      ],
+      [
+       "`any(c not in 'aeiou' …)`",
+       "At least one consonant",
+       "Only letters are in the list, so 'not a vowel' means consonant"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "word",
+      "Valid?",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "234Adas",
+       "True",
+       "vowel: True, consonant: True"
+      ],
+      [
+       "b3",
+       "False",
+       "too short or has a non-alphanumeric character"
+      ],
+      [
+       "a3$e",
+       "False",
+       "too short or has a non-alphanumeric character"
+      ],
+      [
+       "aya",
+       "True",
+       "vowel: True, consonant: True"
+      ],
+      [
+       "e1t",
+       "True",
+       "vowel: True, consonant: True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why filter to letters before the consonant test?",
+    "p": [
+     "A digit is not a vowel, so `c not in 'aeiou'` is True for digits and `3` would be mistaken for a consonant. Restricting the list to alphabetic characters first (`isalpha`) makes 'not a vowel' mean 'consonant'. For example `'e1t'` has a vowel `e` and a consonant `t`, so it is valid; `'a3e'` would have no consonant."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the letters list."
+    ]
+   }
+  ],
+  "takeaway": "Check length and alphanumerics, then test the letters only for at least one vowel and one consonant."
+ },
+ "3145": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`big_nums`",
+       "Powers of two of 1, then of 2, then of 3, … written in order (1, 2, 1, 2, 4, 1, 4, 2, 4, …)",
+       "Each i contributes its set bits, lowest first"
+      ],
+      [
+       "`ones(n)`",
+       "Total number of set bits in 1…n",
+       "Counts how many entries the numbers 1…n add to `big_nums`"
+      ],
+      [
+       "`exps(n)`",
+       "Sum of the bit positions (exponents) of all set bits in 1…n",
+       "The product of the powers is 2^(sum of exponents)"
+      ],
+      [
+       "`pre(k)`",
+       "Sum of exponents of the first k entries of `big_nums`",
+       "Binary search the largest n with `ones(n) ≤ k`, then add the exponents of the first `rem` bits of n+1"
+      ],
+      [
+       "`x & -x`",
+       "Lowest set bit of x",
+       "Peels the bits in ascending order, as in `big_nums`"
+      ],
+      [
+       "`pow(2, e, m)`",
+       "2^e modulo m",
+       "Fast modular exponentiation; the exponent can be huge"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "First entries of `big_nums`: `[1, 2, 1, 2, 4, 1, 4, 2, 4, 1, 2, 4]`. Query `[1,3,7]`: entries 1…3 are `[2, 1, 2]`, product 2·1·2 = 4, 4 mod 7 = 4."
+    ],
+    "table": {
+     "head": [
+      "Query [from, to, mod]",
+      "Product of big_nums[from..to] mod m",
+      "Formula result"
+     ],
+     "rows": [
+      [
+       "[1, 3, 7]",
+       "4",
+       "4"
+      ],
+      [
+       "[2, 5, 3]",
+       "2",
+       "2"
+      ],
+      [
+       "[0, 0, 10]",
+       "1",
+       "1"
+      ],
+      [
+       "[10, 60, 1000003]",
+       "99464",
+       "99464"
+      ],
+      [
+       "[100, 200, 997]",
+       "798",
+       "798"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why exponents and prefix sums?",
+    "p": [
+     "Every entry is a power of two, so a product of entries is 2^(sum of their exponents). Define `pre(k)` = sum of exponents of the first k entries; the answer is 2^(pre(r+1) − pre(l)) mod m. To get `pre(k)` without building the array (indexes go up to 10¹⁵), find the largest n whose numbers 1…n contribute at most k entries (binary search using bit counting), add all their exponents with a closed formula, and finish the partial number n+1 bit by bit. The closed formulas agree with a brute-force product on the five queries above: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q · log² N): a binary search of ~50 steps, each costing O(60).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Products of powers of two are 2^(exponent sums): count entries and exponents in 1…n with bit-counting formulas and binary search for the cut."
+ },
+ "3148": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`mn[i][j]`",
+       "Smallest value in the region above and to the left of (i, j), including the cell",
+       "All cells from which (i, j) can be reached"
+      ],
+      [
+       "`prev = min(mn[i-1][j], mn[i][j-1])`",
+       "Smallest value among cells strictly up-left",
+       "Merge the two neighbouring regions (they overlap, which doesn't matter for a minimum)"
+      ],
+      [
+       "`grid[i][j] - prev`",
+       "Best score of a path ending at (i, j)",
+       "Total score telescopes: a path's score equals end value − start value"
+      ],
+      [
+       "`float('inf')` borders",
+       "No cell above/left",
+       "`inf` never wins `min`; for the top-left cell `prev` is infinite"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 4×4 grid from the problem → 9 (for example from the 5 at (0,1) to the 14 at (2,2): 14 − 5). First two rows of the scan:"
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Value",
+      "Smallest up-left",
+      "Score ending here",
+      "mn[i][j]"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "9",
+       "∞",
+       "—",
+       "9"
+      ],
+      [
+       "(0,1)",
+       "5",
+       "9",
+       "-4",
+       "5"
+      ],
+      [
+       "(0,2)",
+       "7",
+       "5",
+       "2",
+       "5"
+      ],
+      [
+       "(0,3)",
+       "3",
+       "5",
+       "-2",
+       "3"
+      ],
+      [
+       "(1,0)",
+       "8",
+       "9",
+       "-1",
+       "8"
+      ],
+      [
+       "(1,1)",
+       "9",
+       "5",
+       "4",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the total score collapse to end − start?",
+    "p": [
+     "Each move scores destination − source, so along a path the intermediate values cancel (telescoping sum): the score is just the final value minus the starting value. The best path to a cell therefore starts at the smallest cell that can reach it (anything above and to the left). Tracking that minimum per cell gives the answer in one pass. The path must contain at least one move, so a cell's own value is not used as `prev` for itself: `mn` is updated AFTER computing the candidate."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n) (O(n) with a rolling row)."
+    ]
+   }
+  ],
+  "takeaway": "Moves telescope: score = end − start, so for each cell subtract the smallest value above-left and take the maximum."
+ },
+ "3163": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`j - i < 9`",
+       "Cap the run at 9 characters",
+       "The compression writes a single digit"
+      ],
+      [
+       "`word[j] == c`",
+       "Still the same letter",
+       "Extend the run"
+      ],
+      [
+       "`str(j - i) + c`",
+       "Length followed by the letter",
+       "`'9a'`"
+      ],
+      [
+       "`i = j`",
+       "Jump to the start of the next run",
+       "Avoids rescanning"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aaaaaaaaaaaaaabb'` (14 a's then 2 b's) → `9a5a2b`:"
+    ],
+    "table": {
+     "head": [
+      "Start i",
+      "Letter",
+      "Run length (≤ 9)",
+      "Written"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "9",
+       "9a"
+      ],
+      [
+       "9",
+       "a",
+       "5",
+       "5a"
+      ],
+      [
+       "14",
+       "b",
+       "2",
+       "2b"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the cap in the inner loop condition?",
+    "p": [
+     "A run of 14 a's must be written as `9a` followed by `5a`, because the problem allows one digit only. Adding `j - i < 9` to the loop condition stops the run at 9, and the outer loop starts a new run at the same letter."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Run-length encode with the run length capped at 9: stop each inner loop at nine characters."
+ },
+ "3175": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cur`",
+       "Index of the current champion (front of the queue)",
+       "Starts as player 0"
+      ],
+      [
+       "`wins`",
+       "Consecutive wins of the champion",
+       "Reset to 1 when a new champion wins its first game"
+      ],
+      [
+       "`skills[i] > skills[cur]`",
+       "Challenger i wins",
+       "The loser goes to the back, but we simulate by index order"
+      ],
+      [
+       "`wins == k`",
+       "Someone reached k wins in a row",
+       "Return that player"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[4,2,6,3,9]`, `k = 2` → 2:"
+    ],
+    "table": {
+     "head": [
+      "Challenger i",
+      "Skill",
+      "Result",
+      "Champion",
+      "Wins"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "champion (index 0, skill 4) wins again → wins = 1",
+       "0",
+       "1"
+      ],
+      [
+       "2",
+       "6",
+       "challenger 6 beats champion → new champion, wins = 1",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "champion (index 2, skill 6) wins again → wins = 2",
+       "2",
+       "2"
+      ],
+      [
+       "—",
+       "—",
+       "wins == k → return 2",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no queue simulation?",
+    "p": [
+     "The challengers face the champion in index order the first time around, and a defeated champion goes to the back (behind everyone not yet seen). Because each new challenger beats or loses to the champion in index order, scanning indexes once suffices. If nobody reaches k wins, the strongest player is the champion at the end of the scan and wins forever, so it is returned (`return cur`)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Scan the players once, tracking the current champion and its win streak; the strongest player wins every later game."
+ },
+ "3193": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[j]`",
+       "Number of arrangements of the first i+1 elements (as relative orders) with exactly j inversions",
+       "Inserting a new element adds 0 … i new inversions"
+      ],
+      [
+       "`pre` prefix sums of `dp`",
+       "Cumulative sums for range queries",
+       "The new count is a sliding-window sum of the old counts"
+      ],
+      [
+       "`pre[j + 1] - pre[max(0, j - i)]`",
+       "Sum of `dp[j − i … j]`",
+       "The i-th insertion adds between 0 and i inversions"
+      ],
+      [
+       "`if i in req`",
+       "A requirement on the first i+1 elements",
+       "Keep only the state with exactly that many inversions"
+      ],
+      [
+       "`M = max(req.values())`",
+       "Largest inversion count that matters",
+       "Bounds the DP array size"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, requirements `[[2,2],[0,0]]` → 2 (the permutations `[2,0,1]` and `[1,2,0]`). DP arrays by inversion count (index 0, 1, 2):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "dp"
+     ],
+     "rows": [
+      [
+       "i = 0",
+       "[1, 0, 0]"
+      ],
+      [
+       "i = 1",
+       "[1, 1, 0]"
+      ],
+      [
+       "i = 2 (requirement: 2 inversions)",
+       "[0, 0, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Correctness check",
+    "p": [
+     "The DP matches a brute-force enumeration of all permutations on five small cases (including different requirement sets for n = 3 and 4): True."
+    ]
+   },
+   {
+    "h": "Why inserting elements one by one?",
+    "p": [
+     "Build a permutation by placing the i-th element into the arrangement of the first i−1 elements (as relative ranks). Putting it at position p creates exactly i − p new inversions with the earlier elements, which is any number from 0 to i. So the inversion counts of prefixes evolve with a sliding-window sum, and a requirement on a prefix is a filter on that DP array."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · M) with prefix sums.",
+     "Space: O(M)."
+    ]
+   }
+  ],
+  "takeaway": "Insertion DP over inversion counts: dp'[j] = sum of dp[j−i … j]; apply each prefix requirement as a filter."
+ },
+ "3202": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s`",
+       "The common remainder of the sums of neighbouring picks, tried for each value 0…k−1",
+       "Fix the target and solve a simpler problem"
+      ],
+      [
+       "`dp[r]`",
+       "Longest valid subsequence so far whose LAST element has remainder r",
+       "State per remainder"
+      ],
+      [
+       "`(s - r) % k`",
+       "Remainder the previous element must have so that `prev + x ≡ s`",
+       "Solves `prev ≡ s − r`"
+      ],
+      [
+       "`dp[r] = max(dp[r], dp[(s - r) % k] + 1)`",
+       "Extend a subsequence ending with the partner remainder, or keep the current best",
+       "Standard subsequence DP"
+      ],
+      [
+       "`res = max(res, dp[r])`",
+       "Global best over all s",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5]`, `k = 2` → 5. For each target `s`, `dp[r]` after processing all numbers:"
+    ],
+    "table": {
+     "head": [
+      "Target s",
+      "dp (by last remainder)",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "0",
+       "[2, 3]",
+       "3"
+      ],
+      [
+       "1",
+       "[4, 5]",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why loop over s?",
+    "p": [
+     "The condition says every neighbouring sum has the same remainder s. For a fixed s, each new element x can follow an element with remainder (s − x) mod k, so only the last remainder matters, giving a k-state DP. Trying all s from 0 to k−1 covers every possible common remainder, at O(k · n) total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "For each common sum-remainder s run a DP keyed by the remainder of the last element: x can follow a subsequence ending with remainder (s − x) mod k."
+ }
+}

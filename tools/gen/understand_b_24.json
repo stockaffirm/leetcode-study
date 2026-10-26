@@ -1,0 +1,1074 @@
+{
+ "3688": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x % 2 == 0`",
+       "Even test",
+       "The lowest bit of an even number is 0"
+      ],
+      [
+       "`res |= x`",
+       "Bitwise OR assignment",
+       "Sets every bit that is set in x; bits never get cleared"
+      ],
+      [
+       "`res = 0`",
+       "Identity for OR",
+       "`0 | x = x`, and it is also the answer when there are no even numbers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5,6]` → 6:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "binary",
+      "res after (binary)",
+      "res"
+     ],
+     "rows": [
+      [
+       "1",
+       "001",
+       "skipped (odd)",
+       "0"
+      ],
+      [
+       "2",
+       "010",
+       "010",
+       "2"
+      ],
+      [
+       "3",
+       "011",
+       "skipped (odd)",
+       "2"
+      ],
+      [
+       "4",
+       "100",
+       "110",
+       "6"
+      ],
+      [
+       "5",
+       "101",
+       "skipped (odd)",
+       "6"
+      ],
+      [
+       "6",
+       "110",
+       "110",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does OR need no special case?",
+    "p": [
+     "OR is associative and commutative with identity 0, so folding the even numbers in any order gives their combined OR, and an empty selection naturally leaves 0, which is the required output."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "OR-accumulate only the even numbers; the empty result is 0 automatically."
+ },
+ "3718": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`set(nums)`",
+       "Numbers in a set",
+       "O(1) membership test"
+      ],
+      [
+       "`m += k`",
+       "Next multiple of k",
+       "Walk 2, 4, 6, 8, …"
+      ],
+      [
+       "`while m in s`",
+       "Keep going while the multiple is present",
+       "Stops at the first multiple that is missing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[8,2,3,4,6]`, `k = 2` → 10:"
+    ],
+    "table": {
+     "head": [
+      "Multiple m",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "2",
+       "in nums → next multiple"
+      ],
+      [
+       "4",
+       "in nums → next multiple"
+      ],
+      [
+       "6",
+       "in nums → next multiple"
+      ],
+      [
+       "8",
+       "in nums → next multiple"
+      ],
+      [
+       "10",
+       "not in nums → answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the loop end quickly?",
+    "p": [
+     "`nums` has at most n elements, so among the first n+1 multiples of k at least one is missing; the loop runs at most n+1 times. A set makes each check O(1), whereas scanning the list would give O(n²)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Walk through k, 2k, 3k, … and stop at the first one not in the set of numbers."
+ },
+ "3736": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`max(nums)`",
+       "The largest element",
+       "The common target: raising is the only allowed move, so nothing can go below the maximum"
+      ],
+      [
+       "`max(nums) * len(nums)`",
+       "Sum if all elements were equal to the maximum",
+       "Target total"
+      ],
+      [
+       "`- sum(nums)`",
+       "Subtract the current total",
+       "Total of the +1 moves needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "max",
+       "3"
+      ],
+      [
+       "max × n",
+       "9"
+      ],
+      [
+       "sum",
+       "6"
+      ],
+      [
+       "moves = 9 − 6",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the maximum the best target?",
+    "p": [
+     "Each move adds 1 to a single element, so the final common value must be at least the maximum. Each element needs `target − x` moves, so the total is `n·target − sum`, which grows with the target: the smallest total comes from the smallest possible target, the maximum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Only increases are allowed, so raise everything to the maximum: moves = max × n − sum."
+ },
+ "3799": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`permutations(words, 4)`",
+       "All ordered selections of 4 DIFFERENT words (from `itertools`)",
+       "The four roles (top, left, right, bottom) need distinct words"
+      ],
+      [
+       "`top[0] == left[0]`, `top[3] == right[0]`, `bottom[0] == left[3]`, `bottom[3] == right[3]`",
+       "The four corner conditions",
+       "Letter at each corner is shared by two words"
+      ],
+      [
+       "`res.sort()`",
+       "Sort the list of lists lexicographically",
+       "Lists compare element by element: top first, then left, right, bottom"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['able', 'area', 'echo', 'also']` → [['able', 'area', 'echo', 'also'], ['area', 'able', 'also', 'echo']]:"
+    ],
+    "table": {
+     "head": [
+      "top",
+      "left",
+      "right",
+      "bottom"
+     ],
+     "rows": [
+      [
+       "able",
+       "area",
+       "echo",
+       "also"
+      ],
+      [
+       "area",
+       "able",
+       "also",
+       "echo"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why brute force?",
+    "p": [
+     "With n ≤ 15 words there are at most 15·14·13·12 = 32,760 ordered selections, each checked in O(1). Because `permutations` generates ordered tuples, every assignment of words to roles is tried exactly once, and the conditions pick out the valid squares."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n⁴) for n words.",
+     "Space: O(1) extra besides the output."
+    ]
+   }
+  ],
+  "takeaway": "Try every ordered choice of four distinct words and test the four corner letters; sort the valid squares."
+ },
+ "3820": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`bfs(s)`",
+       "Distances from s to all nodes",
+       "BFS (Breadth-First Search) on an unweighted tree"
+      ],
+      [
+       "`sorted((dx[i], dy[i], dz[i]))`",
+       "The three distances in increasing order",
+       "Puts the largest in `c`, the hypotenuse candidate"
+      ],
+      [
+       "`a * a + b * b == c * c`",
+       "Pythagorean test on integers",
+       "No square roots, no float rounding"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Star: centre 0 with leaves 1, 2, 3; targets 1, 2, 3 → 3 special nodes:"
+    ],
+    "table": {
+     "head": [
+      "Node i",
+      "d to x",
+      "d to y",
+      "d to z",
+      "Test",
+      "Special?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1",
+       "1² + 1² = 2 vs 1² = 1",
+       "False"
+      ],
+      [
+       "1",
+       "0",
+       "2",
+       "2",
+       "0² + 2² = 4 vs 2² = 4",
+       "True"
+      ],
+      [
+       "2",
+       "2",
+       "0",
+       "2",
+       "0² + 2² = 4 vs 2² = 4",
+       "True"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "0",
+       "0² + 2² = 4 vs 2² = 4",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why three BFS runs?",
+    "p": [
+     "Every node needs its distance to each of the three targets. In a tree, one BFS from each target gives all distances in O(n), so the total is 3 BFS passes plus an O(n) scan, rather than computing pairwise distances per node."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "BFS (Breadth-First Search) from each of the three targets, then test a² + b² = c² on the sorted distances of each node."
+ },
+ "3829": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`deque` of riders / drivers",
+       "Waiting lists in arrival order",
+       "FIFO (First In, First Out): the earliest is matched first; `popleft` is O(1)"
+      ],
+      [
+       "`cancelled` set",
+       "Riders who cancelled",
+       "Lazy deletion: don't search the deque"
+      ],
+      [
+       "`while riders[0] in cancelled: popleft()`",
+       "Drop cancelled riders when they reach the front",
+       "Cleanup only where it matters"
+      ],
+      [
+       "`[-1, -1]`",
+       "No match possible",
+       "Either list empty after cleanup"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Calls in order:"
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Returns",
+      "Riders waiting",
+      "Drivers waiting",
+      "Cancelled"
+     ],
+     "rows": [
+      [
+       "addRider(3)",
+       "—",
+       "[3]",
+       "[]",
+       "[]"
+      ],
+      [
+       "addDriver(2)",
+       "—",
+       "[3]",
+       "[2]",
+       "[]"
+      ],
+      [
+       "addRider(1)",
+       "—",
+       "[3, 1]",
+       "[2]",
+       "[]"
+      ],
+      [
+       "cancelRider(3)",
+       "—",
+       "[3, 1]",
+       "[2]",
+       "[3]"
+      ],
+      [
+       "matchDriverWithRider()",
+       "[2, 1]",
+       "[]",
+       "[]",
+       "[3]"
+      ],
+      [
+       "matchDriverWithRider()",
+       "[-1, -1]",
+       "[]",
+       "[]",
+       "[3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy cancellation?",
+    "p": [
+     "Removing an arbitrary rider from the middle of a deque costs O(n). Recording the cancellation in a set is O(1), and a cancelled rider is discarded only when it reaches the front during a match. Each rider is popped at most once, so matching is O(1) amortised."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) amortised per operation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two FIFO queues for riders and drivers, with cancelled riders recorded in a set and skipped when they reach the front."
+ },
+ "3850": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Fraction(1)`",
+       "Exact rational number (from `fractions`)",
+       "Division by `x` must be exact, so floating-point numbers are unsafe"
+      ],
+      [
+       "`states = {value: ways}`",
+       "Number of choice sequences giving each current value",
+       "Dictionary DP over reachable values"
+      ],
+      [
+       "`new[v] += c`, `new[v * x] += c`, `new[v / x] += c`",
+       "The three actions: leave, multiply, divide",
+       "Each state spawns up to three states"
+      ],
+      [
+       "`states.get(Fraction(k), 0)`",
+       "Ways to end at exactly k",
+       "0 if k is unreachable"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,2]`, `k = 6` → 2 (the sequences multiply, multiply, leave and leave, multiply, multiply both reach 6). Reachable values and their counts after each number:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Reachable values and their counts"
+     ],
+     "rows": [
+      [
+       "start",
+       "{'1': 1}"
+      ],
+      [
+       "after x = 2",
+       "{'1/2': 1, '1': 1, '2': 1}"
+      ],
+      [
+       "after x = 3",
+       "{'1/6': 1, '1/3': 1, '1/2': 1, '2/3': 1, '1': 1, '3/2': 1, '2': 1, '3': 1, '6': 1}"
+      ],
+      [
+       "after x = 2",
+       "{'1/12': 1, '1/6': 2, '1/4': 1, '1/3': 3, '1/2': 2, '2/3': 2, '3/4': 1, '1': 3, '4/3': 1, '3/2': 2, '2': 2, '3': 3, '4': 1, '6': 2, '12': 1}"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Fraction and a dictionary of values?",
+    "p": [
+     "Many different choice sequences lead to the same value, so merging them by value keeps the number of states small (far fewer than 3ⁿ). `Fraction` keeps division exact (1/2 stays 1/2), and two different paths reaching 1/2 are recognised as equal; floats could differ by rounding."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(3ⁿ) worst case, much less in practice because equal values merge.",
+     "Space: O(number of distinct values)."
+    ]
+   }
+  ],
+  "takeaway": "DP over the set of reachable exact values (Fractions) with counts: each number multiplies, divides or leaves the value."
+ },
+ "3862": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`left`",
+       "Sum of the elements before index i",
+       "Running prefix sum"
+      ],
+      [
+       "`suf[i + 1]`",
+       "Product of the elements after index i",
+       "Suffix product (empty product = 1)"
+      ],
+      [
+       "`cap = sum(nums) + 1`",
+       "Upper limit for the products",
+       "The left sum never exceeds `sum(nums)`, so any product above it can never match"
+      ],
+      [
+       "`min(cap, suf[i + 1] * nums[i])`",
+       "Cap the product",
+       "Keeps numbers small and avoids huge integers (and still compares correctly)"
+      ],
+      [
+       "`left == suf[i + 1]`",
+       "Balanced index",
+       "First match from the left is the smallest index"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,1,2]` → 1 (suffix products with cap 6: `[4, 2, 2, 1]`):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Sum left of i",
+      "Product right of i",
+      "Balanced?"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "2",
+       "False"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why cap the products?",
+    "p": [
+     "Products of up to 10⁵ numbers explode. But the left sum is at most `sum(nums)`, so once a suffix product exceeds `sum(nums) + 1` it can never equal any prefix sum. Capping at `cap` keeps every product small without changing any comparison, and later products of capped values stay at least `cap`. The result agrees with a direct product computation on 500 random arrays: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sum against suffix products, with products capped at sum(nums) + 1 so they stay small."
+ },
+ "3868": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(nums1)`, `Counter(nums2)`",
+       "Counts of each value in each list",
+       "Free swaps within a list mean only counts matter"
+      ],
+      [
+       "`(c1[v] + c2[v]) % 2`",
+       "Total count of v is odd",
+       "Both final lists must contain v the same number of times, so the total must be even"
+      ],
+      [
+       "`(c1[v] - c2[v]) // 2`",
+       "Copies of v that must move from list 1 to list 2",
+       "Each list must end with half of the total"
+      ],
+      [
+       "`max(0, …)`",
+       "Only count surplus in list 1",
+       "The surplus in list 2 is moved by the same swaps in the other direction"
+      ],
+      [
+       "`set(c1) | set(c2)`",
+       "All values that appear in either list",
+       "Set union"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,1]`, `nums2 = [2,2]` → 1:"
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "In nums1",
+      "In nums2",
+      "Total",
+      "Cost contribution"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "0",
+       "2",
+       "max(0, (2 − 0) // 2) = 1"
+      ],
+      [
+       "2",
+       "0",
+       "2",
+       "2",
+       "max(0, (0 − 2) // 2) = 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the counts decide the cost?",
+    "p": [
+     "Swapping within a list is free, so the lists can be arranged freely; the only paid operation exchanges nums1[i] with nums2[i] at cost 1. The final lists must be equal, so each value must appear equally often in both lists, which requires an even total. Each paid swap moves one surplus copy of a value from list 1 to list 2 while moving one surplus copy of another value back, so the cost is the total number of surplus copies in list 1 (counting each value's excess over its target half). Summing `(c1 − c2) // 2` over values with c1 > c2 gives exactly that. A breadth-first search over all swaps agrees with this formula on 300 random small inputs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Both lists must hold each value equally often; the cost is the total surplus copies that must move from list 1 to list 2."
+ },
+ "3880": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`last1`, `last2`",
+       "Indexes of the most recent 1 and most recent 2",
+       "Only the nearest earlier partner matters for each new element"
+      ],
+      [
+       "`best = float('inf')`",
+       "Smallest distance so far",
+       "Any real distance replaces it"
+      ],
+      [
+       "`i - last2` when x == 1",
+       "Distance from this 1 back to the last 2",
+       "The closest earlier 2"
+      ],
+      [
+       "`i - last1` when x == 2",
+       "Distance from this 2 back to the last 1",
+       "The closest earlier 1"
+      ],
+      [
+       "`best if best != inf else -1`",
+       "No valid pair",
+       "Return −1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,0,0,2,0,1]` → 2:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "last1",
+      "last2",
+      "Pair formed",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "None",
+       "—",
+       "∞"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "None",
+       "—",
+       "∞"
+      ],
+      [
+       "2",
+       "0",
+       "0",
+       "None",
+       "—",
+       "∞"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "3",
+       "pair with last 1 at 0: 3",
+       "3"
+      ],
+      [
+       "4",
+       "0",
+       "0",
+       "3",
+       "—",
+       "3"
+      ],
+      [
+       "5",
+       "1",
+       "5",
+       "3",
+       "pair with last 2 at 3: 2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the most recent partner?",
+    "p": [
+     "For a new 1 at index i, the nearest 2 to its left is the latest 2 seen; any earlier 2 is farther away. Pairs where the 2 comes after the 1 are handled when the 2 is reached (with the latest 1). So every closest pair is examined once in a single left-to-right pass."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Track the last index of 1 and of 2; each new element pairs with the nearest earlier partner of the other value."
+ },
+ "3919": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`gl`, `gr`",
+       "Gaps to the left and right neighbours",
+       "Strictly increasing, so gaps are positive; missing neighbour = infinity"
+      ],
+      [
+       "`closest_right = gr < gl`",
+       "The closest neighbour is on the right (the left wins ties)",
+       "Rule from the problem"
+      ],
+      [
+       "`right[i + 1] = right[i] + (1 if closest_right else gr)`",
+       "Cheapest cost to walk from 0 to i+1 moving right",
+       "Step i → i+1 costs 1 if i+1 is i's closest neighbour, otherwise the gap `gr` (jump cost)"
+      ],
+      [
+       "`left[i - 1] = left[i] + (1 if not closest_right else gl)`",
+       "Cheapest cost to walk from n−1 to i−1 moving left",
+       "Mirror for leftward steps"
+      ],
+      [
+       "`right[r] - right[l]` or `left[r] - left[l]`",
+       "Prefix-sum difference",
+       "Query answer in O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-5,-2,3]`, queries `[[0,2],[2,0],[1,2]]` → [6, 2, 5]. Tables: `right = [0, 1, 6]`, `left = [2, 1, 0]`."
+    ],
+    "table": {
+     "head": [
+      "Query [l, r]",
+      "Direction",
+      "Formula",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "[0, 2]",
+       "right",
+       "right[2] − right[0]",
+       "6"
+      ],
+      [
+       "[2, 0]",
+       "left",
+       "left[0] − left[2]",
+       "2"
+      ],
+      [
+       "[1, 2]",
+       "right",
+       "right[2] − right[1]",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefix sums in each direction?",
+    "p": [
+     "Moving from l to r (l < r) is best done by walking one index at a time: the cheapest way to cover each step is independent of the others, so the total is the sum of per-step costs, stored as prefix sums. The step i → i+1 costs 1 when i+1 is the closest neighbour of i and the gap otherwise; the leftward steps are mirrored. A direct Dijkstra search over all jumps agrees with the formula on 200 random cases: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Per-step costs along the line (1 for a closest-neighbour step, the gap otherwise) stored as prefix sums in each direction."
+ },
+ "4069": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`best[j]`",
+       "Maximum profit using days 0…j",
+       "DP (Dynamic Programming) over the last day"
+      ],
+      [
+       "`b = best[j - 1]`",
+       "Do nothing on day j",
+       "Carry the previous best"
+      ],
+      [
+       "`for i in range(j)`",
+       "Buy on day i, sell on day j",
+       "Try every buy day"
+      ],
+      [
+       "`best[i - cooldown - 1]`",
+       "Best profit that ends early enough to buy again on day i",
+       "After selling on day s, the next buy is allowed from day s + cooldown + 1, so the previous sale must be on day ≤ i − cooldown − 1"
+      ],
+      [
+       "`prices[j] - prices[i] - costs[j - i]`",
+       "Profit of this trade including the holding cost for j − i days",
+       "The cost depends on how long the share is held"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "prices `[1,5,3]`, `cooldown = 1`, `costs = [0,1,2]` → 3:"
+    ],
+    "table": {
+     "head": [
+      "Day j",
+      "best[j]",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "no trade possible"
+      ],
+      [
+       "1",
+       "3",
+       "buy day 0, sell day 1: 5 − 1 − costs[1] = 3"
+      ],
+      [
+       "2",
+       "3",
+       "buy day 0, sell day 2: 3 − 1 − 2 = 0; or keep best[1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why best[i − cooldown − 1] and an O(n²) loop?",
+    "p": [
+     "Selling on day j after buying on day i, with the previous sale on day s, requires s + cooldown + 1 ≤ i, i.e. s ≤ i − cooldown − 1. So the best total for the prefix before the buy is `best[i − cooldown − 1]`, and the trade adds its own profit. The holding cost depends on j − i, so no simple monotone trick applies and all (i, j) pairs are tried: O(n²) for n ≤ 1000."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "DP over prefixes: best[j] = max(best[j−1], best[i − cooldown − 1] + profit of buying on day i and selling on day j)."
+ }
+}

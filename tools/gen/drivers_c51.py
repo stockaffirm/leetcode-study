@@ -14,7 +14,7 @@ D = {
 935: S("knightDialer(2)"),
 }
 D2 = {
-1801: (S("getNumberOfBacklogOrders([[7,1000000000,1],[15,3,0],[5,999999995,0],[5,1,1]])"), "Large amounts, taken modulo 1e9+7.", "huge amounts"),
+1801: (S("getNumberOfBacklogOrders([[7,1000,1],[15,3,0],[5,995,0],[5,1,1]])"), "A big sell order absorbs the smaller buy orders.", "big amounts"),
 1515: (S("getMinDistSum([[1,1],[3,3]])"), "Any point on the segment: 2.82843.", "two points"),
 2361: (S("minimumCosts([11,5,13],[7,10,6],3)"), "Express pays off after the first stop.", "second sample"),
 3186: (S("maximumTotalDamage([7,1,6,6])"), "Cast 1, 6, 6 = 13.", "repeated value"),

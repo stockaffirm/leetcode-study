@@ -1,0 +1,1939 @@
+{
+ "2455": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`x % 6 == 0`",
+       "Divisible by 6",
+       "Even AND divisible by 3 is the same as divisible by lcm(2, 3) = 6"
+      ],
+      [
+       "list comprehension with `if`",
+       "Filter",
+       "Keeps only the qualifying numbers"
+      ],
+      [
+       "`sum(good) // len(good)`",
+       "Integer average, rounded down",
+       "`//` is floor division"
+      ],
+      [
+       "`… if good else 0`",
+       "Guard against an empty list",
+       "Avoids division by zero"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,3,6,10,12,15]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "numbers divisible by 6",
+       "[6, 12]"
+      ],
+      [
+       "sum",
+       "18"
+      ],
+      [
+       "count",
+       "2"
+      ],
+      [
+       "average (floor)",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why one test for 'even and divisible by 3'?",
+    "p": [
+     "A number that is divisible by both 2 and 3 is divisible by 6, because 2 and 3 are coprime. `x % 6 == 0` is one check instead of two. The empty case returns 0 as the problem requires."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the filtered list (O(1) with running totals)."
+    ]
+   }
+  ],
+  "takeaway": "Even and divisible by 3 means divisible by 6: filter, then floor-divide the sum by the count."
+ },
+ "2458": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`depth[v]`",
+       "Distance from the root",
+       "Level of the node"
+      ],
+      [
+       "`height[v]`",
+       "Edges on the longest downward path from v",
+       "`-1` for an empty child, so a leaf has height 0"
+      ],
+      [
+       "`levels[d]`",
+       "Nodes at depth d with their heights",
+       "Group nodes that compete for the deepest path on a level"
+      ],
+      [
+       "`top[d] = lst[:2]`",
+       "Two tallest nodes on each level",
+       "Removing one node only matters if it is the tallest on its level, and then the runner-up takes over"
+      ],
+      [
+       "`d + siblings[1][0]`",
+       "New tree height if the tallest node on the level is removed",
+       "Depth of the level + height of the runner-up"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,3,4,2,null,6,5,null,null,null,null,null,7]`, query: remove node 4 → [2]."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Depth",
+      "Height"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "3"
+      ],
+      [
+       "2",
+       "2",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "1",
+       "2"
+      ],
+      [
+       "5",
+       "2",
+       "1"
+      ],
+      [
+       "6",
+       "2",
+       "0"
+      ],
+      [
+       "7",
+       "3",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Top two per depth",
+    "p": [
+     "Removing node 4 (depth 1): it is the tallest node on its level (height 2), so the runner-up on that level, node 3 (height 1), decides the new height: `d + 1 = 1 + 1 = 2`. Had the removed node not been the tallest, the answer would be `d + (height of the tallest node) `."
+    ],
+    "table": {
+     "head": [
+      "Depth",
+      "Two tallest nodes (height, value)"
+     ],
+     "rows": [
+      [
+       "0",
+       "[(3, 1)]"
+      ],
+      [
+       "1",
+       "[(2, 4), (1, 3)]"
+      ],
+      [
+       "2",
+       "[(1, 5), (0, 6)]"
+      ],
+      [
+       "3",
+       "[(0, 7)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the top two per level?",
+    "p": [
+     "After removing q at depth d, any surviving node deeper than d must descend from some OTHER node on level d. So the deepest survivor below level d is at depth d + (the largest height among the other level-d nodes). If another node exists on level d, the new tree height is at least d, which beats every shallower node, so that is the answer. If q is the only node on its level, the deepest survivor sits on level d − 1, so the height is d − 1. To get 'the largest height among the others' for any q in O(1), it is enough to remember the TWO tallest nodes of each level: if q is the tallest, use the second, otherwise use the first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q) after one traversal and per-level sorting (O(n log n) for the sort).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Store depth and height per node and the two tallest nodes per depth: removing a node replaces it by the runner-up on its level."
+ },
+ "2461": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cnt`",
+       "Counts of values in the current window",
+       "The number of keys = number of distinct values"
+      ],
+      [
+       "`total`",
+       "Window sum",
+       "Updated by adding the entering value and subtracting the leaving one"
+      ],
+      [
+       "`del cnt[old]` when the count hits 0",
+       "Remove vanished values",
+       "Keeps `len(cnt)` equal to the distinct count"
+      ],
+      [
+       "`len(cnt) == k`",
+       "All k values are distinct",
+       "Valid window"
+      ],
+      [
+       "`i >= k - 1`",
+       "The window is full",
+       "Don't evaluate partial windows"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,5,4,2,9,9,9]`, `k = 3` → 15:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "Window",
+      "Sum",
+      "Distinct",
+      "Valid?",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[1]",
+       "1",
+       "1",
+       "—",
+       "0"
+      ],
+      [
+       "1",
+       "5",
+       "[1, 5]",
+       "6",
+       "2",
+       "—",
+       "0"
+      ],
+      [
+       "2",
+       "4",
+       "[1, 5, 4]",
+       "10",
+       "3",
+       "valid",
+       "10"
+      ],
+      [
+       "3",
+       "2",
+       "[5, 4, 2]",
+       "11",
+       "3",
+       "valid",
+       "11"
+      ],
+      [
+       "4",
+       "9",
+       "[4, 2, 9]",
+       "15",
+       "3",
+       "valid",
+       "15"
+      ],
+      [
+       "5",
+       "9",
+       "[2, 9, 9]",
+       "20",
+       "2",
+       "—",
+       "15"
+      ],
+      [
+       "6",
+       "9",
+       "[9, 9, 9]",
+       "27",
+       "1",
+       "—",
+       "15"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why delete zero-count keys?",
+    "p": [
+     "`Counter` keeps keys with count 0 after decrements, so `len(cnt)` would overcount distinct values. Deleting them makes `len(cnt) == k` a correct all-distinct test."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Fixed-size sliding window with a Counter: the window is valid when its Counter has exactly k keys."
+ },
+ "2467": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`find(bob, -1, 0)`",
+       "DFS (Depth-First Search) from Bob's node up to node 0",
+       "Records the time Bob reaches each node on his path (Bob walks the unique path to the root)"
+      ],
+      [
+       "`bob_time[u] = d`",
+       "Bob arrives at u at time d",
+       "Set while unwinding the recursion, only for nodes on the path"
+      ],
+      [
+       "`bob_time.get(u, float('inf'))`",
+       "Bob's time at u, or never",
+       "Nodes off Bob's path have no competition"
+      ],
+      [
+       "`t < bt` / `t == bt`",
+       "Alice earlier → full amount; same time → half; Bob earlier → zero",
+       "Gate rules of the problem"
+      ],
+      [
+       "`not kids`",
+       "Leaf (no children below)",
+       "Alice stops at a leaf: record the total"
+      ],
+      [
+       "`best = max(best, gain)`",
+       "Best leaf total",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "edges `[[0,1],[1,2],[1,3],[3,4]]`, bob = 3, amount `[-2,4,2,-4,6]` → 6. Bob's path to 0 is 3 → 1 → 0, so Bob's arrival times are `{0: 2, 1: 1, 3: 0}`. Alice's DFS:"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Alice's time",
+      "Bob's time",
+      "Rule",
+      "Alice's running gain"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "2",
+       "Alice first → full amount",
+       "-2"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "same time → half",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "never",
+       "Alice first → full amount",
+       "2"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "Bob was here → nothing",
+       "0"
+      ],
+      [
+       "4",
+       "3",
+       "never",
+       "Alice first → full amount",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two DFS passes?",
+    "p": [
+     "Alice's profit at a node depends on who arrives first, so we need Bob's arrival times before simulating Alice. Bob's path is unique (a tree), so a first DFS finds it and records times. Alice may choose any root-to-leaf path, so the second DFS tries all of them, carrying the gain along, and keeps the best at leaves."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two DFS (Depth-First Search) passes: record Bob's arrival times along his path to the root, then explore Alice's root-to-leaf paths with the first-come/half/zero gate rule."
+ },
+ "2488": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.index(k)`",
+       "Position of k",
+       "Every subarray with median k must contain k"
+      ],
+      [
+       "`bal += 1 if nums[i] > k else -1`",
+       "+1 for a bigger number, −1 for a smaller one",
+       "Balance of bigger vs smaller elements"
+      ],
+      [
+       "`cnt[bal] += 1`",
+       "Number of left extensions with this balance",
+       "Counter with `{0: 1}` for 'take nothing from the left'"
+      ],
+      [
+       "`cnt[0] + cnt[1]`",
+       "Subarrays ending at k",
+       "Median is k when the balance is 0 (odd length) or 1 (even length, left middle)"
+      ],
+      [
+       "`cnt[-bal] + cnt[1 - bal]`",
+       "Left extensions that make the total balance 0 or 1",
+       "Combine with the right side's balance"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,2,1,4,5]`, `k = 4` (at index 3) → 3. Left balances are counted first, then right extensions are matched:"
+    ],
+    "table": {
+     "head": [
+      "Side",
+      "Index",
+      "Value",
+      "Balance",
+      "Matches"
+     ],
+     "rows": [
+      [
+       "left",
+       "2",
+       "1",
+       "-1",
+       "—"
+      ],
+      [
+       "left",
+       "1",
+       "2",
+       "-2",
+       "—"
+      ],
+      [
+       "left",
+       "0",
+       "3",
+       "-3",
+       "—"
+      ],
+      [
+       "start",
+       "3",
+       "4",
+       "0",
+       "cnt[0] + cnt[1] = 1 + 0 = 1"
+      ],
+      [
+       "right",
+       "4",
+       "5",
+       "1",
+       "cnt[-1] + cnt[0] = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why balance 0 or 1?",
+    "p": [
+     "In a permutation all values are distinct, so k's rank in the subarray is determined by how many numbers are bigger and smaller. For odd length, k is the median when the bigger and smaller counts are equal (balance 0). For even length, the median is the LEFT middle, so in a subarray of length 2m exactly m−1 numbers are smaller than k and m are bigger: the balance (bigger − smaller) is exactly 1. Splitting the subarray at k turns this into counting pairs (left balance, right balance) with a given sum, done with a Counter."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Balance of bigger minus smaller numbers around k: count left extensions in a Counter and match right extensions to total balance 0 or 1."
+ },
+ "2491": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`skill.sort()`",
+       "Ascending order",
+       "Smallest pairs with largest"
+      ],
+      [
+       "`target = skill[0] + skill[-1]`",
+       "The only possible team total",
+       "The smallest must pair with the largest, otherwise some pair would be too small"
+      ],
+      [
+       "`skill[i], skill[-1 - i]`",
+       "The i-th smallest and the i-th largest",
+       "Two pointers from both ends"
+      ],
+      [
+       "`if a + b != target: return -1`",
+       "Pair doesn't match",
+       "No valid division exists"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,2,5,1,3,4]` sorted `[1, 2, 3, 3, 4, 5]`, target 6 → 22:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Smallest",
+      "Largest",
+      "Sum",
+      "Chemistry (product)"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "5",
+       "6",
+       "5"
+      ],
+      [
+       "1",
+       "2",
+       "4",
+       "6",
+       "8"
+      ],
+      [
+       "2",
+       "3",
+       "3",
+       "6",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the smallest pair with the largest?",
+    "p": [
+     "Every team has the same total T. Total skill = (n/2)·T, so T equals the average pair sum. If the smallest player were paired with anyone but the largest, that team's sum would be below the largest-with-someone team, making equal sums impossible. Sorting and pairing ends inward is therefore the only candidate, and the check verifies it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sort and pair the i-th smallest with the i-th largest; all pair sums must be equal."
+ },
+ "2503": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(range(len(queries)), key=lambda i: queries[i])`",
+       "Query indexes ordered by query value",
+       "Offline processing: smaller queries first, answers stored at their original index"
+      ],
+      [
+       "`heap` of `(value, i, j)`",
+       "Frontier cells ordered by value",
+       "The cheapest frontier cell is the next cell we could enter"
+      ],
+      [
+       "`heap[0][0] < q`",
+       "The smallest frontier cell is below the query",
+       "If even the smallest isn't, we're stuck for this query"
+      ],
+      [
+       "`count += 1`",
+       "Cells collected so far",
+       "Cumulative: a bigger query can reuse everything a smaller one reached"
+      ],
+      [
+       "`res[qi] = count`",
+       "Answer stored by original index",
+       "Restores the original query order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "grid `[[1,2,3],[2,5,7],[3,5,1]]`, queries `[5,6,2]` → [5, 8, 1] (sorted order 2, 5, 6):"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Cells newly collected",
+      "Total points",
+      "Frontier (value, i, j)"
+     ],
+     "rows": [
+      [
+       "query 2 (index 2)",
+       "[(0, 0)]",
+       "1",
+       "[(2, 0, 1), (2, 1, 0)]"
+      ],
+      [
+       "query 5 (index 0)",
+       "[(0, 1), (1, 0), (0, 2), (2, 0)]",
+       "5",
+       "[(5, 1, 1), (5, 2, 1), (7, 1, 2)]"
+      ],
+      [
+       "query 6 (index 1)",
+       "[(1, 1), (2, 1), (2, 2)]",
+       "8",
+       "[(7, 1, 2)]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort the queries?",
+    "p": [
+     "The set of reachable cells only grows as q increases. Processing queries from smallest to largest lets one expanding region (a Prim-like frontier with a min-heap) serve all queries, instead of a fresh flood-fill for each. The frontier's smallest cell is exactly the next cell we can add once q exceeds its value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(mn log mn + q log q).",
+     "Space: O(mn)."
+    ]
+   }
+  ],
+  "takeaway": "Offline queries sorted ascending with a min-heap frontier: expand cells while their value is below the query and reuse the count."
+ },
+ "2506": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`mask |= 1 << (ord(c) - 97)`",
+       "Bit i set if letter i occurs in the word",
+       "A bitmask represents the SET of letters (duplicates don't matter)"
+      ],
+      [
+       "`cnt[mask]`",
+       "Earlier words with the same letter set",
+       "Each earlier word forms one new similar pair"
+      ],
+      [
+       "`res += cnt[mask]` before `cnt[mask] += 1`",
+       "Count pairs i < j once",
+       "Add earlier matches, then register the current word"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['aba','aabb','abcd','bac','aabc']` → 2 (masks shown with 4 bits d c b a):"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Letter-set mask",
+      "Earlier words with this mask",
+      "Pairs so far"
+     ],
+     "rows": [
+      [
+       "aba",
+       "0011",
+       "0",
+       "0"
+      ],
+      [
+       "aabb",
+       "0011",
+       "1",
+       "1"
+      ],
+      [
+       "abcd",
+       "1111",
+       "0",
+       "1"
+      ],
+      [
+       "bac",
+       "0111",
+       "0",
+       "1"
+      ],
+      [
+       "aabc",
+       "0111",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why bitmasks and not sorted sets?",
+    "p": [
+     "A mask is an integer, which hashes in O(1) and compares in O(1). `''.join(sorted(set(w)))` would also work but builds strings. Counting each word against the earlier ones avoids the double count of unordered pairs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total letters).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Represent each word's letter set as a bitmask and count earlier words with the same mask."
+ },
+ "2515": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`abs(i - startIndex)`",
+       "Steps going straight (without wrapping)",
+       "One direction"
+      ],
+      [
+       "`n - gap`",
+       "Steps going the other way around the circle",
+       "The circle has n positions"
+      ],
+      [
+       "`min(gap, n - gap)`",
+       "Shorter way to reach index i",
+       "Circular distance"
+      ],
+      [
+       "`best = n`",
+       "Larger than any possible distance",
+       "Sentinel: if still n, no match; any real distance is at most n/2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`['hello','i','am','leetcode','hello']`, target `'hello'`, start 1 → 1:"
+    ],
+    "table": {
+     "head": [
+      "Match at i",
+      "Direct gap",
+      "Wrap-around gap",
+      "Shorter",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "4",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "3",
+       "2",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `best < n` as the final check?",
+    "p": [
+     "The circular distance never exceeds n // 2, so initialising `best = n` means 'not found' is detected by `best` still equal to n. Returning −1 in that case avoids a separate `found` flag."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Circular distance to each match is min(|i − start|, n − |i − start|); take the smallest."
+ },
+ "2524": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`pow(x, f, MOD)`",
+       "x^f modulo MOD (three-argument `pow`)",
+       "Fast modular exponentiation in O(log f)"
+      ],
+      [
+       "`add(x)`",
+       "Frequency of x goes from f to f+1: score changes by x^(f+1) − x^f",
+       "Update only x's term instead of recomputing the whole window score"
+      ],
+      [
+       "`remove(x)`",
+       "Frequency goes from f to f−1: score changes by x^(f−1) − x^f",
+       "`0` when it reaches 0, since an absent value contributes nothing (and 0 would be `x**0 = 1`, which is wrong)"
+      ],
+      [
+       "`score % MOD`",
+       "Take the modulus only when comparing",
+       "The running score may contain negative intermediate parts; Python's % returns a non-negative result"
+      ],
+      [
+       "`best = max(best, score % MOD)`",
+       "Maximum of the MODDED value",
+       "The problem asks for the maximum modded score, not the modded maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,1,1,2,1,2]`, `k = 3` → 5:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "Window",
+      "Score (mod)",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[1]",
+       "—",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "[1, 1]",
+       "—",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "[1, 1, 1]",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "[1, 1, 2]",
+       "3",
+       "3"
+      ],
+      [
+       "4",
+       "1",
+       "[1, 2, 1]",
+       "3",
+       "3"
+      ],
+      [
+       "5",
+       "2",
+       "[2, 1, 2]",
+       "5",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why update the score incrementally?",
+    "p": [
+     "Recomputing a window's score needs O(distinct · log) work. Only the entering and leaving values change their frequency, so only their terms change: remove the old term x^f, add the new term x^(f±1). Each slide then costs O(log k)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Sliding window with an incrementally updated score: only the frequency terms of the entering and leaving values change."
+ },
+ "2530": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`[-x for x in nums]` + `heapify`",
+       "Max-heap via negation",
+       "`heapq` provides a min-heap"
+      ],
+      [
+       "`-heappop(heap)`",
+       "The current largest number",
+       "Greedy choice"
+      ],
+      [
+       "`(x + 2) // 3`",
+       "ceil(x / 3) in integer arithmetic",
+       "`ceil(a/b) == (a + b − 1) // b`"
+      ],
+      [
+       "`heappush(heap, -ceil)`",
+       "Put the reduced value back",
+       "It may be chosen again later"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,10,3,3,3]`, `k = 3` → 17:"
+    ],
+    "table": {
+     "head": [
+      "Largest taken",
+      "Replaced by ceil(x/3)",
+      "Score",
+      "Heap (largest first)"
+     ],
+     "rows": [
+      [
+       "10",
+       "4",
+       "10",
+       "[4, 3, 3, 3, 1]"
+      ],
+      [
+       "4",
+       "2",
+       "14",
+       "[3, 3, 3, 2, 1]"
+      ],
+      [
+       "3",
+       "1",
+       "17",
+       "[3, 3, 2, 1, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy by largest?",
+    "p": [
+     "Each operation adds the chosen number to the score and shrinks it for future use. Taking the largest now gives the most immediate gain, and the shrunk value is never larger than what the same index would have contributed had it been taken later. An exchange argument shows that using the biggest available value at each step is optimal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Max-heap greedy: pop the largest, add it to the score, push back ceil(x/3)."
+ },
+ "2536": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`d[r1][c1] += 1`",
+       "+1 at the top-left corner of the rectangle",
+       "2-D difference array: only 4 corner updates per query"
+      ],
+      [
+       "`d[r1][c2 + 1] -= 1`, `d[r2 + 1][c1] -= 1`",
+       "Cancel the +1 to the right and below the rectangle",
+       "Stops the effect outside the rectangle"
+      ],
+      [
+       "`d[r2 + 1][c2 + 1] += 1`",
+       "Re-add the corner cancelled twice",
+       "Inclusion–exclusion"
+      ],
+      [
+       "prefix-sum pass: `d[i][j] += d[i-1][j] + d[i][j-1] - d[i-1][j-1]`",
+       "Rebuild the real values by 2-D prefix sums",
+       "The difference array is the 'derivative' of the answer"
+      ],
+      [
+       "`(n + 1) × (n + 1)` size",
+       "One extra row and column",
+       "Room for the `r2 + 1`/`c2 + 1` markers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "n = 3, queries `[[1,1,2,2],[0,0,1,1]]`. Corner markers after both queries (before the prefix-sum pass):"
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "col 0",
+      "col 1",
+      "col 2",
+      "col 3"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "-1",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "0",
+       "-1"
+      ],
+      [
+       "2",
+       "-1",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "3",
+       "0",
+       "-1",
+       "0",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "After the prefix-sum pass",
+    "p": [
+     "Final matrix: `[[1, 1, 0], [1, 2, 1], [0, 1, 1]]`."
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "col 0",
+      "col 1",
+      "col 2"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "2",
+       "0",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not add 1 to every cell of each rectangle?",
+    "p": [
+     "That costs O(area) per query, up to O(n²·q). With a difference array each query is O(1) (four updates), and one final O(n²) pass restores the values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n² + q).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "2-D difference array: four corner updates per query, then a 2-D prefix-sum pass to recover the matrix."
+ },
+ "2539": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Letter → count",
+       "Frequencies c of each letter"
+      ],
+      [
+       "`comb(c, f)`",
+       "Number of ways to choose f of the c copies of a letter (from `math`)",
+       "A subsequence is a set of positions, so positions of one letter are chosen as combinations"
+      ],
+      [
+       "`1 + comb(c, f)`",
+       "Either use the letter f times (choose which copies) or not at all",
+       "1 for 'letter absent'"
+      ],
+      [
+       "product over letters",
+       "Independent choices per letter",
+       "Multiplication principle"
+      ],
+      [
+       "`- 1`",
+       "Remove the empty choice (no letters at all)",
+       "Subsequences must be non-empty"
+      ],
+      [
+       "`range(1, mx + 1)`",
+       "Every common frequency f",
+       "A good subsequence uses each present letter exactly f times"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aabb'` → 11 good subsequences: 8 with frequency 1 (a, a, b, b and four `ab` choices) and 3 with frequency 2 (aa, bb, aabb). For each common frequency f:"
+    ],
+    "table": {
+     "head": [
+      "f",
+      "Factor per letter",
+      "Product",
+      "Product − 1",
+      "Total so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 + C(2,1) = 3; 1 + C(2,1) = 3",
+       "9",
+       "8",
+       "8"
+      ],
+      [
+       "2",
+       "1 + C(2,2) = 2; 1 + C(2,2) = 2",
+       "4",
+       "3",
+       "11"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this count each good subsequence once?",
+    "p": [
+     "A good subsequence has one common frequency f. For that f, every letter is either absent (1 way) or present with exactly f chosen positions (C(c, f) ways). Different f give different subsequences (their letter counts differ), so adding the per-f totals never double counts. The result agrees with a brute-force enumeration of all subsequences for `aabb`, `abcc`, `aaabb` and `abc`: True."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26 · max frequency) combinations, each computed by `math.comb`.",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Count by common frequency f: multiply (1 + C(count, f)) over the letters and subtract the empty selection."
+ },
+ "2542": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(zip(nums2, nums1), reverse=True)`",
+       "Pairs sorted by nums2 DESCENDING",
+       "When we reach a pair, its nums2 is the smallest among all pairs seen so far, so it is the minimum of the chosen set"
+      ],
+      [
+       "`heappush(heap, n1)`",
+       "Min-heap of the chosen nums1 values",
+       "The heap holds the k largest nums1 values among the pairs seen"
+      ],
+      [
+       "`total -= heappop(heap)`",
+       "Remove the smallest nums1 when there are more than k",
+       "Keep the best sum"
+      ],
+      [
+       "`total * n2`",
+       "Score if the current pair's nums2 is the minimum",
+       "Sum of the k best nums1 × current minimum"
+      ],
+      [
+       "`len(heap) == k`",
+       "Only evaluate full selections",
+       "Fewer than k chosen is not a valid choice"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,3,3,2]`, `nums2 = [2,1,3,4]`, `k = 3` → 12:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Event",
+      "Sum of kept nums1",
+      "Score",
+      "best"
+     ],
+     "rows": [
+      [
+       "(nums2 = 4, nums1 = 2)",
+       "—",
+       "2",
+       "—",
+       "0"
+      ],
+      [
+       "(nums2 = 3, nums1 = 3)",
+       "—",
+       "5",
+       "—",
+       "0"
+      ],
+      [
+       "(nums2 = 2, nums1 = 1)",
+       "—",
+       "6",
+       "6 × 2 = 12",
+       "12"
+      ],
+      [
+       "(nums2 = 1, nums1 = 3)",
+       "drop smallest 1",
+       "8",
+       "8 × 1 = 8",
+       "12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why fix the minimum by sorting?",
+    "p": [
+     "The score multiplies a sum by a minimum. Sorting by nums2 descending and treating the current pair as the minimum fixes the multiplier; then we only need the k largest nums1 values among pairs with nums2 at least that, which a size-k min-heap maintains in O(log k) per step."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by nums2 descending so the current nums2 is the minimum; keep the k largest nums1 in a min-heap."
+ },
+ "2545": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted(score, key=…)`",
+       "New list of the rows sorted by the key",
+       "Does not modify the input"
+      ],
+      [
+       "`lambda row: -row[k]`",
+       "Key: negated score in exam k",
+       "Ascending sort of negatives = descending order of scores"
+      ],
+      [
+       "`row[k]`",
+       "Score of this student in column k",
+       "The sorting column"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 2` → [[7, 5, 11, 2], [10, 6, 9, 1], [4, 8, 3, 15]]:"
+    ],
+    "table": {
+     "head": [
+      "Student row",
+      "Exam-2 score",
+      "Key (−score)"
+     ],
+     "rows": [
+      [
+       "[10, 6, 9, 1]",
+       "9",
+       "-9"
+      ],
+      [
+       "[7, 5, 11, 2]",
+       "11",
+       "-11"
+      ],
+      [
+       "[4, 8, 3, 15]",
+       "3",
+       "-3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why negate instead of `reverse=True`?",
+    "p": [
+     "`sorted(score, key=lambda row: row[k], reverse=True)` is equivalent. Negating works only for numbers, while `reverse=True` works for any comparable key; either is fine here. Both are stable, so equal scores keep their original order (the problem says scores are distinct)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log m).",
+     "Space: O(m) for the new list of row references."
+    ]
+   }
+  ],
+  "takeaway": "Sort rows with a key function on column k; negate the key (or use reverse=True) for descending order."
+ },
+ "2551": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`zip(weights, weights[1:])`",
+       "Adjacent pairs `(w[i], w[i+1])`",
+       "A cut between marbles i and i+1 creates the pair of endpoints `w[i]` and `w[i+1]`"
+      ],
+      [
+       "`a + b`",
+       "Cost contribution of one cut",
+       "Each cut adds the last marble of one bag and the first of the next"
+      ],
+      [
+       "`sorted(…)`",
+       "Cut costs in increasing order",
+       "Choose the k−1 cheapest or the k−1 dearest cuts"
+      ],
+      [
+       "`pairs[len(pairs) - (k - 1):]`",
+       "The k−1 largest cut costs",
+       "Maximum score"
+      ],
+      [
+       "`pairs[:k - 1]`",
+       "The k−1 smallest cut costs",
+       "Minimum score"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`weights = [1,3,5,1]`, `k = 2`: adjacent sums sorted `[4, 6, 8]`; k − 1 = 1 cut is chosen: max = 8, min = 4, difference = 4."
+    ],
+    "table": {
+     "head": [
+      "Cut between marbles",
+      "Cost (sum of the two)"
+     ],
+     "rows": [
+      [
+       "0 and 1",
+       "4"
+      ],
+      [
+       "1 and 2",
+       "8"
+      ],
+      [
+       "2 and 3",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the score reduce to cuts?",
+    "p": [
+     "The first marble of the first bag and the last marble of the last bag appear in every split, so they add a constant to both maximum and minimum and cancel in the difference. Every other contribution comes from a cut: the marble at the end of one bag and the first of the next. Choosing k−1 cuts, the score is the constant plus the sum of the chosen cut costs, so the maximum takes the k−1 largest and the minimum the k−1 smallest."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Score = constant + sum of the chosen cut costs (w[i] + w[i+1]); the answer is the sum of the k−1 largest minus the k−1 smallest."
+ },
+ "2554": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`bad = set(banned)`",
+       "Banned numbers in a set",
+       "O(1) membership"
+      ],
+      [
+       "`for v in range(1, n + 1)`",
+       "Candidates in increasing order",
+       "Smallest numbers first"
+      ],
+      [
+       "`total + v > maxSum: break`",
+       "Taking v would exceed the limit",
+       "Every later number is larger, so none can fit either"
+      ],
+      [
+       "`count += 1`",
+       "Numbers taken",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "banned `[1,6,5]`, `n = 5`, `maxSum = 6` → 2:"
+    ],
+    "table": {
+     "head": [
+      "v",
+      "Decision",
+      "Sum",
+      "Count"
+     ],
+     "rows": [
+      [
+       "1",
+       "banned → skip",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "take",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "take",
+       "5",
+       "2"
+      ],
+      [
+       "4",
+       "5 + 4 > 6 → stop",
+       "5",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy from the smallest?",
+    "p": [
+     "To maximise the COUNT under a sum limit, always take the smallest available numbers: any selection of that size has a sum at least as large as the sum of the smallest allowed ones. The first number that doesn't fit ends the search since the rest are larger."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + b).",
+     "Space: O(b)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: take the smallest allowed numbers until the next one would exceed maxSum."
+ },
+ "2557": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`sorted({b for b in banned if b <= n})`",
+       "Banned numbers inside the range, sorted and unique",
+       "Defines the allowed gaps between them"
+      ],
+      [
+       "`for b in bad + [n + 1]`",
+       "Each gap `prev+1 … b−1`",
+       "Sentinel `n + 1` adds the last gap"
+      ],
+      [
+       "`mid * (2 * lo + mid - 1) // 2`",
+       "Sum of `mid` consecutive integers starting at lo (arithmetic series)",
+       "(first + last) · count / 2"
+      ],
+      [
+       "inner binary search on `l`",
+       "Largest count of numbers from this gap that fit in the remaining budget",
+       "Sums grow with count, so binary search works"
+      ],
+      [
+       "`if l < L: return count`",
+       "Couldn't take the whole gap",
+       "The remaining budget can't buy any later number either"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "banned `[1,6,5]`, `n = 5`, `maxSum = 6` → 2. Gaps between banned numbers:"
+    ],
+    "table": {
+     "head": [
+      "Gap",
+      "Numbers in gap",
+      "Taken",
+      "Sum used",
+      "Budget left"
+     ],
+     "rows": [
+      [
+       "2…4",
+       "3",
+       "2",
+       "5",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not loop over every number?",
+    "p": [
+     "`n` can be 10⁹, so looping is too slow. The banned list is short, and between banned values the allowed numbers are consecutive, so their sums are arithmetic series. Within each gap a binary search finds how many fit. Another run, banned `[11]`, `n = 7`, `maxSum = 50`: answer 7 (all of 1…7 sum to 28)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(b log n) for b banned numbers.",
+     "Space: O(b)."
+    ]
+   }
+  ],
+  "takeaway": "Between banned numbers the allowed integers are consecutive: use arithmetic-series sums with a binary search per gap."
+ },
+ "2560": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`enough(c)`",
+       "Can we rob at least k houses without adjacency using only houses worth ≤ c?",
+       "Feasibility check"
+      ],
+      [
+       "`nums[i] <= c: cnt += 1; i += 2`",
+       "Take the house greedily and skip its neighbour",
+       "Greedy: taking the earliest eligible house never hurts"
+      ],
+      [
+       "`else: i += 1`",
+       "House too valuable: skip",
+       "Not allowed under capability c"
+      ],
+      [
+       "`lo, hi = min(nums), max(nums)`",
+       "Range of possible capabilities",
+       "The answer is one of the house values"
+      ],
+      [
+       "`enough(mid)` → `hi = mid`",
+       "Feasible: try smaller",
+       "Binary search for the minimum feasible capability"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[2,3,5,9]`, `k = 2` → 5:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "enough(mid)?",
+      "Update"
+     ],
+     "rows": [
+      [
+       "2",
+       "9",
+       "5",
+       "True",
+       "hi = mid"
+      ],
+      [
+       "2",
+       "5",
+       "3",
+       "False",
+       "lo = mid + 1"
+      ],
+      [
+       "4",
+       "5",
+       "4",
+       "False",
+       "lo = mid + 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why greedy inside the check?",
+    "p": [
+     "With capability c the allowed houses form segments between too-valuable ones. Taking every eligible house as early as possible (and skipping the next one) maximises the number robbed, by an exchange argument (picking the first of two adjacent options leaves at least as much room). Feasibility is monotone in c, so binary search finds the smallest working value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the capability with a greedy non-adjacent count as the feasibility test."
+ },
+ "2563": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Ascending order",
+       "Order of indexes doesn't matter, since pairs are unordered sums"
+      ],
+      [
+       "`count(v)`",
+       "Number of pairs with sum ≤ v",
+       "Two pointers"
+      ],
+      [
+       "`r += j - i`",
+       "If `nums[i] + nums[j] <= v`, then `nums[i]` pairs with every element from i+1 to j",
+       "Sorted: replacing `nums[j]` by a smaller one only lowers the sum"
+      ],
+      [
+       "`count(upper) - count(lower - 1)`",
+       "Pairs with sum ≤ upper minus pairs with sum ≤ lower − 1",
+       "Inclusion–exclusion on a range: sums in [lower, upper]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[0,1,7,4,4,5]` sorted `[0, 1, 4, 4, 5, 7]`, range [3, 6]:"
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "count(≤ 6)",
+       "7"
+      ],
+      [
+       "count(≤ 2)",
+       "1"
+      ],
+      [
+       "pairs in [3, 6]",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtract two counts?",
+    "p": [
+     "Counting pairs whose sum falls between two bounds directly is awkward for two pointers, but counting pairs with sum at most v is easy. The pairs with sums in [lower, upper] are those ≤ upper minus those ≤ lower−1, with integer sums. Each count runs in O(n) after one O(n log n) sort."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Two-pointer count of pairs with sum ≤ v, evaluated at upper and lower − 1, then subtracted."
+ }
+}
