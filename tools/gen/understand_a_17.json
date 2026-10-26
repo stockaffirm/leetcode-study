@@ -1,0 +1,1864 @@
+{
+ "2034": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.prices",
+       "Dict timestamp \u2192 the CURRENT price for it (corrections overwrite)",
+       ""
+      ],
+      [
+       "self.latest",
+       "The newest timestamp seen, for `current`",
+       ""
+      ],
+      [
+       "self.hi / self.lo",
+       "A max-heap (stored as negated prices) and a min-heap of (price, timestamp) pairs; every update is pushed, even for a corrected timestamp",
+       "Heap with lazy deletion"
+      ],
+      [
+       "while top is stale: heappop",
+       "An entry is stale if its price no longer equals the dict's price for that timestamp; stale entries are discarded only when they reach the top",
+       "Lazy deletion"
+      ],
+      [
+       "-self.hi[0][0]",
+       "Peek at the largest price (the heap root)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The sequence from the problem; the last column is the size of the max-heap, including stale entries:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "prices",
+      "max-heap size"
+     ],
+     "rows": [
+      [
+       "update(1, 10)",
+       "\u2013",
+       "{1: 10}",
+       "1"
+      ],
+      [
+       "update(2, 5)",
+       "\u2013",
+       "{1: 10, 2: 5}",
+       "2"
+      ],
+      [
+       "current()",
+       "5",
+       "{1: 10, 2: 5}",
+       "2"
+      ],
+      [
+       "maximum()",
+       "10",
+       "{1: 10, 2: 5}",
+       "2"
+      ],
+      [
+       "update(1, 3)",
+       "\u2013",
+       "{1: 3, 2: 5}",
+       "3"
+      ],
+      [
+       "maximum()",
+       "5",
+       "{1: 3, 2: 5}",
+       "2"
+      ],
+      [
+       "update(4, 2)",
+       "\u2013",
+       "{1: 3, 2: 5, 4: 2}",
+       "3"
+      ],
+      [
+       "minimum()",
+       "2",
+       "{1: 3, 2: 5, 4: 2}",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "A heap cannot remove an arbitrary entry cheaply when a timestamp is corrected. Instead the old entry stays and is recognised as stale (it disagrees with `prices`) when it surfaces. Each entry is popped at most once, so the total cost stays O(log n) amortized per operation."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "`update`: O(log n). `maximum`/`minimum`: O(log n) amortized. `current`: O(1).",
+     "Space: O(n) including stale heap entries."
+    ]
+   }
+  ],
+  "takeaway": "Dict of current prices plus two heaps with lazy deletion of stale entries."
+ },
+ "2040": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lo, hi = -10**10, 10**10",
+       "Range of possible products (values up to 10\u2075 each, so products up to 10\u00b9\u2070)",
+       "Binary search on the answer value"
+      ],
+      [
+       "count(v)",
+       "How many pairs (a, b) have a \u00b7 b \u2264 v, found per `a` with a binary search in the sorted nums2",
+       ""
+      ],
+      [
+       "a > 0: bisect_right(nums2, v // a)",
+       "a\u00b7b \u2264 v \u21d4 b \u2264 floor(v / a) for positive a",
+       "Floor division works for negative v too"
+      ],
+      [
+       "a < 0: m - bisect_left(nums2, -((-v) // a))",
+       "Dividing by a negative a reverses the inequality: b \u2265 ceil(v / a), so count elements from that position to the end",
+       "Ceiling division via negation"
+      ],
+      [
+       "a == 0",
+       "The product is 0: it is \u2264 v when v \u2265 0 (all m pairs count), otherwise none",
+       ""
+      ],
+      [
+       "count(mid) >= k: hi = mid",
+       "Smallest v with at least k pairs \u2264 v is the k-th smallest product",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [2,5]`, `nums2 = [3,4]`, k = 2. The products are 6, 8, 15, 20. `count(v)` for a few values:"
+    ],
+    "table": {
+     "head": [
+      "v",
+      "count(v) pairs with product \u2264 v"
+     ],
+     "rows": [
+      [
+       "5",
+       "0"
+      ],
+      [
+       "6",
+       "1"
+      ],
+      [
+       "7",
+       "1"
+      ],
+      [
+       "8",
+       "2"
+      ],
+      [
+       "14",
+       "2"
+      ],
+      [
+       "15",
+       "3"
+      ],
+      [
+       "20",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "The smallest v with count(v) \u2265 2 is 8 (after 34 halvings)."
+    ]
+   },
+   {
+    "h": "Why handle negatives separately?",
+    "p": [
+     "Multiplying an inequality by a negative number flips it, so the matching elements of nums2 are those at the END of the sorted array, not the start. That is why the negative branch counts `m - bisect_left(...)` and uses ceiling-style division."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 log m \u00b7 log(range)): about 35 halvings of the value range, each with n binary searches.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the product value; count pairs \u2264 v with one bisect per element, flipping the direction for negatives."
+ },
+ "2043": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.bal",
+       "List of balances; account numbers are 1-based, so account a is `bal[a - 1]`",
+       ""
+      ],
+      [
+       "_ok(acct)",
+       "Validates that the account number exists (1 to n)",
+       "One helper for repeated validation"
+      ],
+      [
+       "not (ok1 and ok2) or bal < money \u2192 False",
+       "Validate both accounts before touching either balance, and check funds",
+       "Check everything first, then mutate"
+      ],
+      [
+       "bal[a1-1] -= money; bal[a2-1] += money",
+       "The transfer itself, done only after all checks passed so there is no partial update",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`Bank([10,100,20,50,30])`:"
+    ],
+    "table": {
+     "head": [
+      "call",
+      "returns",
+      "balances"
+     ],
+     "rows": [
+      [
+       "withdraw(3, 10)",
+       "True",
+       "[10, 100, 10, 50, 30]"
+      ],
+      [
+       "transfer(5, 1, 20)",
+       "True",
+       "[30, 100, 10, 50, 10]"
+      ],
+      [
+       "deposit(5, 20)",
+       "True",
+       "[30, 100, 10, 50, 30]"
+      ],
+      [
+       "transfer(3, 4, 15)",
+       "False",
+       "[30, 100, 10, 50, 30]"
+      ],
+      [
+       "withdraw(10, 50)",
+       "False",
+       "[30, 100, 10, 50, 30]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why validate before mutating?",
+    "p": [
+     "A failed transfer must leave both balances unchanged. If the withdrawal were done first and then account 2 found invalid, money would vanish. Checking account numbers and the available balance first guarantees all-or-nothing behaviour."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) per operation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Validate accounts and funds first, then mutate balances; account numbers are 1-based."
+ },
+ "2049": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "children[parents[i]].append(i)",
+       "Builds child lists from the parent array",
+       ""
+      ],
+      [
+       "size[u]",
+       "Number of nodes in u's subtree, computed by post-order DFS (Depth-First Search): `1 + sum(go(v) \u2026)`",
+       "Subtree sizes"
+      ],
+      [
+       "score = \u220f size[v] \u00d7 (n \u2212 size[u])",
+       "Removing u leaves its child subtrees and the rest of the tree (n \u2212 size[u], if not empty); the score is the product of their sizes",
+       "Product over components"
+      ],
+      [
+       "if score > best \u2026 elif ==",
+       "Track the maximum score and how many nodes reach it",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`parents = [-1, 2, 0, 2, 0]`:"
+    ],
+    "table": {
+     "head": [
+      "node",
+      "subtree size",
+      "component sizes multiplied",
+      "score"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "3 \u00d7 1",
+       "3"
+      ],
+      [
+       "1",
+       "1",
+       "4",
+       "4"
+      ],
+      [
+       "2",
+       "3",
+       "1 \u00d7 1 \u00d7 2",
+       "2"
+      ],
+      [
+       "3",
+       "1",
+       "4",
+       "4"
+      ],
+      [
+       "4",
+       "1",
+       "4",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Highest score 4 is reached by 3 nodes."
+    ]
+   },
+   {
+    "h": "Why only subtree sizes?",
+    "p": [
+     "Deleting node u splits the tree into its children's subtrees plus the remainder above it. The sizes of these components are all the score needs, and every size comes from one DFS."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n); the recursion is as deep as the tree."
+    ]
+   }
+  ],
+  "takeaway": "One DFS for subtree sizes; each node's score is the product of its children's sizes and n \u2212 size."
+ },
+ "2055": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pre[i + 1]",
+       "Prefix sum: number of plates `*` among the first i + 1 characters",
+       "Range counts in O(1)"
+      ],
+      [
+       "nxt[i]",
+       "Index of the first candle at or after i (n if none)",
+       "Nearest candle to the right"
+      ],
+      [
+       "prv[i]",
+       "Index of the last candle at or before i (\u22121 if none)",
+       "Nearest candle to the left"
+      ],
+      [
+       "a < b",
+       "At least two distinct candles inside the query; plates between them count",
+       ""
+      ],
+      [
+       "pre[b] - pre[a + 1]",
+       "Plates strictly between the leftmost candle `a` and the rightmost candle `b`",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"**|**|***|\"`, with prefix array `pre = [0, 1, 2, 2, 3, 4, 4, 5, 6, 7, 7]`, `nxt = [2, 2, 2, 5, 5, 5, 9, 9, 9, 9]`, `prv = [-1, -1, 2, 2, 2, 5, 5, 5, 5, 9]`:"
+    ],
+    "table": {
+     "head": [
+      "query",
+      "first candle a",
+      "last candle b",
+      "calculation",
+      "plates"
+     ],
+     "rows": [
+      [
+       "[2,5]",
+       "2",
+       "5",
+       "pre[5] \u2212 pre[3] = 4 \u2212 2",
+       "2"
+      ],
+      [
+       "[5,9]",
+       "5",
+       "9",
+       "pre[9] \u2212 pre[6] = 7 \u2212 4",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why trim to the outermost candles?",
+    "p": [
+     "Plates only count if they lie between two candles that are both inside the query range. Plates before the first candle or after the last candle in the range don't have a candle on one side, so the query is shrunk to [first candle, last candle] first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q) with precomputation and O(1) per query.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix sums of plates plus nearest-candle arrays: shrink each query to its outermost candles, then subtract prefixes."
+ },
+ "2067": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for d in range(1, 27)",
+       "Tries every number d of distinct letters; an equal-count substring with d letters has length exactly d \u00d7 count",
+       "Fixing the window length by the number of distinct letters"
+      ],
+      [
+       "freq = Counter()",
+       "Letter counts in the current window",
+       "Sliding window"
+      ],
+      [
+       "good",
+       "How many letters occur exactly `count` times in the window",
+       "Incremental bookkeeping instead of rescanning"
+      ],
+      [
+       "freq[c] == count \u2192 good += 1; == count + 1 \u2192 good -= 1",
+       "Updates `good` when a letter enters: it becomes exactly right, or overshoots",
+       ""
+      ],
+      [
+       "good == d",
+       "All d letters in the window have exactly `count` occurrences (and the window length d\u00b7count leaves no room for other letters)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"aaabcbbcc\"`, `count = 3`: for each d, window length L = 3d and the number of valid windows:"
+    ],
+    "table": {
+     "head": [
+      "distinct letters d",
+      "window length L",
+      "valid substrings"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "1"
+      ],
+      [
+       "2",
+       "6",
+       "1"
+      ],
+      [
+       "3",
+       "9",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total: 3. The valid substrings are aaa, aaabcbbcc, bcbbcc."
+    ]
+   },
+   {
+    "h": "Why loop over d?",
+    "p": [
+     "A valid substring has exactly d distinct letters, each count times, so its length is d\u00b7count. Fixing d fixes the window size, which makes each pass a fixed-length sliding window with an O(1) update, and there are only 26 possible d."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26 \u00b7 n).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "For each d (1\u201326) slide a window of length d\u00b7count and track how many letters hit exactly count."
+ },
+ "2076": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "parent / find (Union-Find (disjoint set))",
+       "Friend groups; `find` returns a group's representative",
+       ""
+      ],
+      [
+       "pu != pv",
+       "The two people are already in one group: the request is trivially fine",
+       ""
+      ],
+      [
+       "for x, y in restrictions: find(x), find(y)",
+       "Would uniting the groups of u and v put a restricted pair in the same group? Compare the groups of x and y with the two groups being merged",
+       "Checking every restriction against the merge"
+      ],
+      [
+       "(px, py) in ((pu, pv), (pv, pu))",
+       "The restricted pair sits exactly on the two sides of the merge, in either order",
+       ""
+      ],
+      [
+       "parent[pu] = pv",
+       "Accept: merge the groups",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, restriction `[0,1]`, requests `[[0,2],[2,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "request",
+      "accepted?",
+      "reason",
+      "parent array"
+     ],
+     "rows": [
+      [
+       "(0,2)",
+       "True",
+       "no conflict",
+       "[2, 1, 2]"
+      ],
+      [
+       "(2,1)",
+       "False",
+       "merging would put 0 and 1 in one group",
+       "[2, 1, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why check restrictions against groups?",
+    "p": [
+     "Friendship is indirect: if 0 befriends 2 and then 2 befriends 1, then 0 and 1 become connected, which the restriction forbids. Looking only at u and v would miss that, so the code checks whether any restricted pair would end up in the same merged group."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(R \u00b7 (restrictions)) with near-constant `find`.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Union-Find with a restriction check: refuse a merge that would put a restricted pair into one group."
+ },
+ "2094": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(100, 1000, 2)",
+       "Every even three-digit number: no leading zero, last digit even",
+       "Enumerating the answer space (only 450 candidates)"
+      ],
+      [
+       "Counter(map(int, str(x)))",
+       "Digit counts of the candidate",
+       ""
+      ],
+      [
+       "all(cnt[d] >= k for d, k in c.items())",
+       "The available digits cover every digit the number needs, with multiplicity",
+       "Multiset containment"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`digits = [2,1,3,0]`: a few candidates:"
+    ],
+    "table": {
+     "head": [
+      "candidate",
+      "digits needed",
+      "available?"
+     ],
+     "rows": [
+      [
+       "102",
+       "{1: 1, 0: 1, 2: 1}",
+       "True"
+      ],
+      [
+       "120",
+       "{1: 1, 2: 1, 0: 1}",
+       "True"
+      ],
+      [
+       "122",
+       "{1: 1, 2: 2}",
+       "False"
+      ],
+      [
+       "200",
+       "{2: 1, 0: 2}",
+       "False"
+      ],
+      [
+       "306",
+       "{3: 1, 0: 1, 6: 1}",
+       "False"
+      ]
+     ]
+    },
+    "bullets": [
+     "All valid numbers: `[102, 120, 130, 132, 210, 230, 302, 310, 312, 320]`."
+    ]
+   },
+   {
+    "h": "Why enumerate candidates instead of permutations of digits?",
+    "p": [
+     "Only 450 even numbers exist in the range, while generating permutations of the input with deduplication is more code and more work. Checking containment of a candidate's digit counts in the input's counts is simple and already yields the numbers in ascending order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(450 \u00b7 3) = O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Test each even number 100\u2013998 for digit-multiset containment in the input."
+ },
+ "2097": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g[a].append(b); deg[a] += 1; deg[b] -= 1",
+       "Directed graph; deg = out-degree \u2212 in-degree",
+       "Euler path conditions"
+      ],
+      [
+       "start = a node with deg == 1",
+       "In an Eulerian path (a trail using every edge once), the start has one more outgoing than incoming edge; if every degree is 0 (a cycle) any node works",
+       ""
+      ],
+      [
+       "stack st and path (Hierholzer's algorithm)",
+       "Walk along unused edges; when stuck, pop the node onto `path`",
+       "Finding an Euler path iteratively"
+      ],
+      [
+       "path.reverse()",
+       "Nodes pop in reverse order of the trail",
+       ""
+      ],
+      [
+       "zip(path, path[1:])",
+       "Consecutive nodes become the arranged pairs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[5,1],[4,5],[11,9],[9,4]]`; start = 11 (out-degree exceeds in-degree):"
+    ],
+    "table": {
+     "head": [
+      "stack top",
+      "action",
+      "stack",
+      "path (reverse order so far)"
+     ],
+     "rows": [
+      [
+       "top 11",
+       "follow edge to 9",
+       "[11, 9]",
+       "[]"
+      ],
+      [
+       "top 9",
+       "follow edge to 4",
+       "[11, 9, 4]",
+       "[]"
+      ],
+      [
+       "top 4",
+       "follow edge to 5",
+       "[11, 9, 4, 5]",
+       "[]"
+      ],
+      [
+       "top 5",
+       "follow edge to 1",
+       "[11, 9, 4, 5, 1]",
+       "[]"
+      ],
+      [
+       "top 1",
+       "no unused edges: move to path",
+       "[11, 9, 4, 5]",
+       "[1]"
+      ],
+      [
+       "top 5",
+       "no unused edges: move to path",
+       "[11, 9, 4]",
+       "[1, 5]"
+      ],
+      [
+       "top 4",
+       "no unused edges: move to path",
+       "[11, 9]",
+       "[1, 5, 4]"
+      ],
+      [
+       "top 9",
+       "no unused edges: move to path",
+       "[11]",
+       "[1, 5, 4, 9]"
+      ],
+      [
+       "top 11",
+       "no unused edges: move to path",
+       "[]",
+       "[1, 5, 4, 9, 11]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Reversed path: `[11, 9, 4, 5, 1]`, i.e. pairs `[[11, 9], [9, 4], [4, 5], [5, 1]]`."
+    ]
+   },
+   {
+    "h": "Why does Hierholzer produce a valid trail?",
+    "p": [
+     "When the walk gets stuck, the stuck node is the last node of the trail (it has no unused edges). Placing it first into `path` and then backtracking splices in any detours. After the final reversal, every edge appears exactly once in a connected order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Hierholzer's algorithm for a directed Euler path, starting at the node with out-degree minus in-degree equal to 1."
+ },
+ "2115": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "indeg[recipe] = len(set(ingredients))",
+       "How many distinct ingredients are still missing (a set removes duplicates)",
+       "Kahn's algorithm (topological order by counting unmet prerequisites)"
+      ],
+      [
+       "users[x]",
+       "Ingredient \u2192 recipes that use it",
+       "Reverse dependency lists"
+      ],
+      [
+       "q = deque(supplies)",
+       "Start from what we already have",
+       ""
+      ],
+      [
+       "indeg[r] -= 1; == 0 \u2192 append",
+       "An ingredient arrived; when none is missing the recipe can be made, and it then becomes an ingredient itself",
+       "Recipes feeding other recipes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Recipes `bread` (yeast, flour) and `sandwich` (bread, meat); supplies yeast, flour, meat:"
+    ],
+    "table": {
+     "head": [
+      "item processed",
+      "recipes that use it",
+      "missing counts",
+      "newly made"
+     ],
+     "rows": [
+      [
+       "yeast",
+       "['bread']",
+       "{'bread': 1, 'sandwich': 2}",
+       "[]"
+      ],
+      [
+       "flour",
+       "['bread']",
+       "{'bread': 0, 'sandwich': 2}",
+       "['bread']"
+      ],
+      [
+       "meat",
+       "['sandwich']",
+       "{'bread': 0, 'sandwich': 1}",
+       "[]"
+      ],
+      [
+       "bread",
+       "['sandwich']",
+       "{'bread': 0, 'sandwich': 0}",
+       "['sandwich']"
+      ],
+      [
+       "sandwich",
+       "[]",
+       "{'bread': 0, 'sandwich': 0}",
+       "[]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Makeable: `['bread', 'sandwich']`."
+    ]
+   },
+   {
+    "h": "Why does a cycle or missing ingredient cause no output for that recipe?",
+    "p": [
+     "A recipe is added only when its missing count reaches 0. Recipes in a cycle wait for each other forever, and recipes needing an unavailable ingredient never reach 0, so they are never reported."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E) over recipes and ingredient links.",
+     "Space: O(V + E)."
+    ]
+   }
+  ],
+  "takeaway": "Topological sort (Kahn): ingredients arrive, recipes whose missing count reaches 0 become new ingredients."
+ },
+ "2130": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "vals = [] \u2026 append",
+       "Copies the list's values into an array so we can index from both ends",
+       "Linked list \u2192 array"
+      ],
+      [
+       "vals[-1 - i]",
+       "The mirror element of vals[i] from the end (index \u22121 is the last)",
+       ""
+      ],
+      [
+       "range(len(vals) // 2)",
+       "Only the first half; each twin pair is visited once",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`4 \u2192 2 \u2192 2 \u2192 3`: node i and node n\u22121\u2212i are twins."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "vals[i]",
+      "vals[-1 - i]",
+      "twin sum"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "3",
+       "7"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Maximum: 7."
+    ]
+   },
+   {
+    "h": "Why an array and not pointers?",
+    "p": [
+     "A singly linked list can't be walked from the end. Copying to an array costs O(n) space but is simple. The O(1)-space alternative reverses the second half in place (after finding the middle with slow/fast pointers) and walks both halves together."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Copy values to a list and pair index i with n\u22121\u2212i; the O(1)-space version reverses the second half."
+ },
+ "2136": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(zip(growTime, plantTime), reverse=True)",
+       "Pairs each seed's (grow, plant) and orders by growing time, longest first",
+       "Sorting by one key of a tuple"
+      ],
+      [
+       "t += p",
+       "Planting is sequential: you can plant only one seed at a time, so `t` is the day planting finishes",
+       ""
+      ],
+      [
+       "t + g",
+       "That seed blooms after its growing time",
+       "Growth runs in parallel"
+      ],
+      [
+       "best = max(...)",
+       "The full bloom day is when the last seed blooms",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`plantTime = [1,4,3]`, `growTime = [2,3,1]`; seeds in order of decreasing grow time:"
+    ],
+    "table": {
+     "head": [
+      "seed",
+      "planting finished at t",
+      "blooms at t + grow",
+      "latest bloom so far"
+     ],
+     "rows": [
+      [
+       "grow 3, plant 4",
+       "4",
+       "7",
+       "7"
+      ],
+      [
+       "grow 2, plant 1",
+       "5",
+       "7",
+       "7"
+      ],
+      [
+       "grow 1, plant 3",
+       "8",
+       "9",
+       "9"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 9."
+    ]
+   },
+   {
+    "h": "Why plant the slowest-growing seeds first?",
+    "p": [
+     "Planting happens one after another, but growing overlaps. Starting the long-growing seeds early lets their long growth overlap with the planting of the others. An exchange argument shows that putting a seed with a smaller grow time before a larger one never helps."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Plant in order of decreasing grow time so long growth overlaps with other planting."
+ },
+ "2145": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur += d",
+       "The hidden sequence relative to its first element (first = 0)",
+       "Prefix sums of differences"
+      ],
+      [
+       "lo, hi",
+       "The lowest and highest values reached by that relative sequence (both include the starting 0)",
+       ""
+      ],
+      [
+       "(upper - lower) - (hi - lo) + 1",
+       "The first element can slide over a window of size (upper \u2212 lower + 1) \u2212 (hi \u2212 lo): each choice must keep the whole sequence in [lower, upper]",
+       "Counting valid starting values"
+      ],
+      [
+       "max(0, \u2026)",
+       "If the spread hi \u2212 lo is too big, no start works",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`differences = [1,-3,4]`, range [1, 6]:"
+    ],
+    "table": {
+     "head": [
+      "difference",
+      "running value",
+      "lowest so far",
+      "highest so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "-3",
+       "-2",
+       "-2",
+       "1"
+      ],
+      [
+       "4",
+       "2",
+       "-2",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Spread 4; choices for the first value: (6 \u2212 1) \u2212 (2 \u2212 (-2)) + 1 = 2."
+    ]
+   },
+   {
+    "h": "Why does only the spread matter?",
+    "p": [
+     "Choosing the first element s shifts the whole sequence by s. It fits in [lower, upper] iff s + lo \u2265 lower and s + hi \u2264 upper, i.e. s in [lower \u2212 lo, upper \u2212 hi]. The number of integers in that interval is (upper \u2212 hi) \u2212 (lower \u2212 lo) + 1 = (upper \u2212 lower) \u2212 (hi \u2212 lo) + 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hidden sequences correspond to valid starts; the count is range size minus the sequence's spread (max \u2212 min)."
+ },
+ "2154": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "set(nums)",
+       "O(1) membership tests",
+       ""
+      ],
+      [
+       "while original in s: original *= 2",
+       "Keep doubling while the current value is found",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,3,6,1,12]`, `original = 3`:"
+    ],
+    "table": {
+     "head": [
+      "original",
+      "check"
+     ],
+     "rows": [
+      [
+       "3",
+       "in nums \u2192 double"
+      ],
+      [
+       "6",
+       "in nums \u2192 double"
+      ],
+      [
+       "12",
+       "in nums \u2192 double"
+      ],
+      [
+       "24",
+       "not in nums \u2192 stop"
+      ]
+     ]
+    },
+    "bullets": [
+     "Final value: 24."
+    ]
+   },
+   {
+    "h": "Why a set?",
+    "p": [
+     "Each membership check in a list would scan it in O(n); the value can double up to about 30 times, so a set keeps the whole loop at O(n) in total (building the set) plus O(log max) lookups."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + log(max)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Put nums in a set and double while the value is present."
+ },
+ "2163": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "max-heap of negatives for the left part",
+       "Keeps the n smallest values seen so far in the prefix: add the new value, then pop the largest",
+       "Sum of the n smallest in a prefix"
+      ],
+      [
+       "left[i]",
+       "Smallest possible sum of n elements chosen from the first i elements",
+       ""
+      ],
+      [
+       "min-heap for the right part (scanning right to left)",
+       "Keeps the n largest values of the suffix: add the new value, pop the smallest",
+       ""
+      ],
+      [
+       "left[i] - s",
+       "Difference for a split point i: best (smallest) left sum minus best (largest) right sum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [7,9,5,8,1,3]`, n = 2. Left side (smallest-n sums as the prefix grows):"
+    ],
+    "table": {
+     "head": [
+      "prefix",
+      "sum of 2 smallest"
+     ],
+     "rows": [
+      [
+       "left prefix of 3",
+       "12"
+      ],
+      [
+       "left prefix of 4",
+       "12"
+      ]
+     ]
+    },
+    "bullets": [
+     "Right side (scanning right to left, sum of the 2 largest of the suffix):"
+    ]
+   },
+   {
+    "h": "Right-side scan",
+    "p": [
+     "Answer: 1."
+    ],
+    "table": {
+     "head": [
+      "step",
+      "sum of 2 largest in suffix",
+      "left[i]",
+      "best difference so far"
+     ],
+     "rows": [
+      [
+       "start (last n)",
+       "4",
+       "12",
+       "8"
+      ],
+      [
+       "cut after position 3",
+       "11",
+       "12",
+       "1"
+      ],
+      [
+       "cut after position 2",
+       "13",
+       "16",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two heaps and a split point?",
+    "p": [
+     "After removing n elements, the remaining 2n elements split into a first half (from the left part) and a second half. For a split point i, the best choice is the n smallest from the prefix and the n largest from the suffix. Precomputing all prefix and suffix values with heaps takes O(n log n) for all split points."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two sweeps with heaps: smallest-n prefix sums from the left, largest-n suffix sums from the right; minimize the difference over split points."
+ },
+ "2169": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "while num1 and num2",
+       "Both must be non-zero to continue",
+       ""
+      ],
+      [
+       "num1 -= num2 or num2 -= num1",
+       "Subtract the smaller from the larger",
+       "Euclid's algorithm by subtraction"
+      ],
+      [
+       "ops += 1",
+       "Counts each subtraction",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num1 = 2`, `num2 = 3`:"
+    ],
+    "table": {
+     "head": [
+      "operation",
+      "num1",
+      "num2",
+      "count"
+     ],
+     "rows": [
+      [
+       "num2 -= num1",
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "num1 -= num2",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "num1 -= num2",
+       "0",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Could it be faster?",
+    "p": [
+     "Subtraction can take many steps when one number is much larger. Division gives the same count in O(log) time: `ops += num1 // num2` then `num1 %= num2` (and swap roles). The subtraction version is fine for the problem's limit of 10\u2075."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(max(num1, num2)) in the worst case.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Subtractive Euclid: subtract the smaller from the larger, counting steps until one is zero."
+ },
+ "2181": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dummy = tail = ListNode()",
+       "Dummy head and a tail pointer for the new list",
+       "Building a list front to back"
+      ],
+      [
+       "cur = head.next",
+       "Skip the first 0, which only marks the start",
+       ""
+      ],
+      [
+       "total += cur.val",
+       "Sums the values between two zeros",
+       ""
+      ],
+      [
+       "cur.val == 0 \u2192 tail.next = ListNode(total)",
+       "A zero closes the segment: append its sum and reset",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`0 \u2192 3 \u2192 1 \u2192 0 \u2192 4 \u2192 5 \u2192 2 \u2192 0`:"
+    ],
+    "table": {
+     "head": [
+      "value read",
+      "action",
+      "result list"
+     ],
+     "rows": [
+      [
+       "3",
+       "total = 3",
+       "\u2205"
+      ],
+      [
+       "1",
+       "total = 4",
+       "\u2205"
+      ],
+      [
+       "0",
+       "write node 4",
+       "4"
+      ],
+      [
+       "4",
+       "total = 4",
+       "4"
+      ],
+      [
+       "5",
+       "total = 9",
+       "4"
+      ],
+      [
+       "2",
+       "total = 11",
+       "4"
+      ],
+      [
+       "0",
+       "write node 11",
+       "4\u219211"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a dummy node?",
+    "p": [
+     "The first result node doesn't exist until the first zero is seen; the dummy gives `tail.next` something to attach to, and `dummy.next` is the real head."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k) for the k new nodes (O(1) extra if the original nodes are reused)."
+    ]
+   }
+  ],
+  "takeaway": "Walk the list summing values; at each zero, append a node with the sum."
+ },
+ "2187": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "hi = min(time) * totalTrips",
+       "The fastest bus alone could do all trips in this time, an upper bound",
+       "Safe upper bound for the search"
+      ],
+      [
+       "sum(mid // t for t in time)",
+       "Trips all buses finish within `mid` time units (integer division per bus)",
+       "Monotone count"
+      ],
+      [
+       "\u2265 totalTrips: hi = mid",
+       "Enough: try a smaller time",
+       ""
+      ],
+      [
+       "return lo",
+       "The smallest sufficient time",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`time = [1,2,3]`, `totalTrips = 5`:"
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "trips in mid time",
+      "decision"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "3",
+       "5",
+       "enough \u2192 hi = mid"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "3",
+       "not enough \u2192 lo = mid+1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 3."
+    ]
+   },
+   {
+    "h": "Why binary search on time?",
+    "p": [
+     "More time never reduces the number of completed trips, so the count is monotone in time. Searching the smallest time where the count reaches the target is a standard binary search on the answer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n \u00b7 log(min \u00b7 trips)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the time; trips completed = \u03a3 floor(time / bus_time)."
+ },
+ "2193": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "s.index(s[-1])",
+       "Index of the FIRST occurrence of the last character: the left partner to match with the right end",
+       "Greedy matching from the outside in"
+      ],
+      [
+       "i == len(s) - 1",
+       "The last character is the only one of its kind: it must end up in the middle",
+       "The odd-count letter"
+      ],
+      [
+       "moves += i",
+       "Moving the partner from index i to index 0 takes i adjacent swaps; the real implementation just removes it, charging i moves",
+       ""
+      ],
+      [
+       "s.pop(i); s.pop()",
+       "Removes the matched pair from both ends",
+       ""
+      ],
+      [
+       "moves += len(s) // 2",
+       "A unique last character moves to the centre: half the current length",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"aabb\"`:"
+    ],
+    "table": {
+     "head": [
+      "start",
+      "event",
+      "moves added",
+      "total moves",
+      "remaining string"
+     ],
+     "rows": [
+      [
+       "",
+       "match at index 2: bring it to the front pair",
+       "+2",
+       "2",
+       "aa"
+      ],
+      [
+       "",
+       "match at index 0: bring it to the front pair",
+       "+0",
+       "2",
+       ""
+      ]
+     ]
+    },
+    "bullets": [
+     "Answer: 2."
+    ]
+   },
+   {
+    "h": "Why match the last character with its first occurrence?",
+    "p": [
+     "To make the outermost pair equal, the right end needs a partner on the left. The nearest-to-the-front copy is the cheapest to bring: moving it costs i swaps, while choosing a later copy would also be fine but the first copy keeps the other copies in place for later pairs. This greedy is optimal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n\u00b2) (index and pop are O(n), repeated n/2 times).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy from the outside: pair the last character with its first occurrence, paying its index in adjacent swaps."
+ },
+ "2196": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nodes = {}",
+       "Value \u2192 TreeNode, created on first mention so a node is shared between its parent and child roles",
+       "Get-or-create"
+      ],
+      [
+       "nodes[p].left = nodes[c] / right",
+       "Links the child using the flag (1 = left, 0 = right)",
+       ""
+      ],
+      [
+       "children.add(c)",
+       "Records every value that appears as a child",
+       ""
+      ],
+      [
+       "the node not in children",
+       "The root is the only node that is never a child",
+       "Finding the root of a tree from parent links"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Descriptions `[[20,15,1],[20,17,0],[50,20,1],[50,80,0],[80,19,1]]`:"
+    ],
+    "table": {
+     "head": [
+      "description",
+      "meaning",
+      "values seen as children"
+     ],
+     "rows": [
+      [
+       "[20,15,1]",
+       "15 is the left child of 20",
+       "[15]"
+      ],
+      [
+       "[20,17,0]",
+       "17 is the right child of 20",
+       "[15, 17]"
+      ],
+      [
+       "[50,20,1]",
+       "20 is the left child of 50",
+       "[15, 17, 20]"
+      ],
+      [
+       "[50,80,0]",
+       "80 is the right child of 50",
+       "[15, 17, 20, 80]"
+      ],
+      [
+       "[80,19,1]",
+       "19 is the left child of 80",
+       "[15, 17, 19, 20, 80]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The only value never a child is 50: the root. Tree: `50(20(15,17),80(19,))`."
+    ]
+   },
+   {
+    "h": "Why a shared dict of nodes?",
+    "p": [
+     "Descriptions arrive in any order, and a node appears both as a child (in one row) and as a parent (in others). Using one dict guarantees both roles refer to the same object, so the links connect up regardless of order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Create nodes on demand in a dict, link by the left/right flag, and the root is the one value never used as a child."
+ }
+}

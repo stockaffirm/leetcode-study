@@ -1,0 +1,2079 @@
+{
+ "2921": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`rank`",
+       "Coordinate compression: map the prices to ranks 1..m so they can index an array",
+       "Prices are large, but only their ORDER matters"
+      ],
+      [
+       "Fenwick tree (Binary Indexed Tree, BIT) `t`",
+       "A tree over ranks that supports `update(i, v)` (raise position `i` to at least `v`) and `query(i)` (maximum over positions 1..i) in O(log m)",
+       "Prefix-maximum queries with updates"
+      ],
+      [
+       "`i += i & -i`, `i -= i & -i`",
+       "`i & -i` isolates the lowest set bit; adding it climbs to the next tree node that covers `i`, subtracting it walks down the prefix",
+       "Fenwick tree navigation"
+      ],
+      [
+       "`left[j]`",
+       "Best profit among earlier items with a STRICTLY smaller price: `query(rank − 1)`",
+       "The best first element of a triplet ending at `j`"
+      ],
+      [
+       "second pass from the right with `m - rank + 1`",
+       "Reverse the ranks so that 'larger price to the right' becomes a prefix query again",
+       "Mirror trick: one tree type for both directions"
+      ],
+      [
+       "`left[j] > 0 and r > 0`",
+       "Both neighbours must exist (profits are positive, −1 means none)",
+       "Valid triplet"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prices = [10,2,3,4]`, `profits = [100,2,7,10]`. For each middle element `j`: best left profit (smaller price earlier), best right profit (larger price later):"
+    ],
+    "table": {
+     "head": [
+      "j",
+      "price",
+      "profit",
+      "best left",
+      "best right",
+      "Triplet total"
+     ],
+     "rows": [
+      [
+       "0",
+       "10",
+       "100",
+       "-1",
+       "-1",
+       "-"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "-1",
+       "10",
+       "-"
+      ],
+      [
+       "2",
+       "3",
+       "7",
+       "2",
+       "10",
+       "19"
+      ],
+      [
+       "3",
+       "4",
+       "10",
+       "7",
+       "-1",
+       "-"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The only valid triplet is the prices `2 < 3 < 4`, with profits 2 + 7 + 10 = 19. The item with price 10 has no larger price after it, so it cannot be a start."
+    ]
+   },
+   {
+    "h": "Why a Fenwick tree?",
+    "p": [
+     "For each middle element we need the maximum profit among earlier elements with a smaller price. Brute force is O(n²); a sorted structure with prefix maximum answers it in O(log n). A Fenwick tree is the compact way to maintain prefix maxima, since values only ever increase."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every triplet",
+       "O(n³)"
+      ],
+      [
+       "for each middle scan both sides",
+       "O(n²)"
+      ],
+      [
+       "two Fenwick passes (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum profit triplet with increasing prices: for each middle element, take the best smaller-price element to the left and larger-price element to the right, using Fenwick-tree prefix maxima over compressed prices."
+ },
+ "2933": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`times[name].append(int(t[:2]) * 60 + int(t[2:]))`",
+       "Group each person's access times in minutes after midnight (the string `HHMM` is sliced into hours and minutes)",
+       "Convert clock strings to numbers; `defaultdict(list)` groups them"
+      ],
+      [
+       "`ts.sort()`",
+       "The input is not ordered, so sort each person's times",
+       "Window checks need sorted times"
+      ],
+      [
+       "`ts[i + 2] - ts[i] < 60`",
+       "Three consecutive accesses within less than 60 minutes (strictly less: exactly 60 does not count)",
+       "A sliding window of size 3"
+      ],
+      [
+       "`any(...)`",
+       "Stop at the first qualifying window",
+       "Short-circuit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Accesses `a`: 0549, 0532, 0621; `b`: 0457, 0540 (minutes after midnight):"
+    ],
+    "table": {
+     "head": [
+      "Employee",
+      "Sorted minutes",
+      "Windows of three within 60",
+      "Result"
+     ],
+     "rows": [
+      [
+       "a",
+       "[332, 349, 381]",
+       "[(332, 381)]",
+       "high-access"
+      ],
+      [
+       "b",
+       "[297, 340]",
+       "none",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only compare `i` and `i + 2`?",
+    "p": [
+     "In sorted order, any three accesses inside a 60-minute span include three consecutive ones, and the tightest span for a trio starting at `i` is `ts[i]` to `ts[i + 2]`. If that is not under 60, no other trio starting at `i` can be."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all triples",
+       "O(k³) per person"
+      ],
+      [
+       "sorted window of 3 (this code)",
+       "O(k log k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "High-access employees: convert times to minutes, sort per person, and flag anyone with three consecutive accesses less than 60 minutes apart."
+ },
+ "2939": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`(a >> n) << n`",
+       "Keep the bits of `a` ABOVE position `n` unchanged (they are not affected by `x < 2ⁿ`)",
+       "Clear the low n bits"
+      ],
+      [
+       "loop from bit `n - 1` down to 0",
+       "Decide the n free bits from the most significant to the least",
+       "The XOR with `x` can flip each of these bits freely"
+      ],
+      [
+       "`ba == bb`",
+       "If the two bits are equal, choosing `x` to make BOTH 1 is best (both numbers grow)",
+       "Equal bits: `x` bit = complement of both"
+      ],
+      [
+       "`elif ca <= cb: ca |= 1 << bit`",
+       "If they differ, exactly one of the results gets a 1: give it to the SMALLER number",
+       "The sum `ca + cb` is fixed once bits are chosen; the product is largest when the two are as close as possible"
+      ],
+      [
+       "`ca * cb % MOD`",
+       "Final product modulo 10⁹ + 7",
+       "Large product"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = 12` (`1100`), `b = 5` (`0101`), `n = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Bit",
+      "a's bit",
+      "b's bit",
+      "Decision",
+      "(a XOR x)",
+      "(b XOR x)"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "0",
+       "bits differ: give the 1 to the smaller number",
+       "8",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "bits equal → set both to 1",
+       "12",
+       "4"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "bits equal → set both to 1",
+       "14",
+       "6"
+      ],
+      [
+       "0",
+       "0",
+       "1",
+       "bits differ: give the 1 to the smaller number",
+       "14",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The final numbers are 14 and 7, product 98. A brute force over all `x < 2⁴` gives the same maximum."
+    ]
+   },
+   {
+    "h": "Why give the extra 1 to the smaller number?",
+    "p": [
+     "For two numbers with a fixed sum, the product is largest when they are closest. Where the bits differ, XOR with `x` decides which number gets the 1, and the sum of the two numbers at that bit is the same either way. Giving it to the smaller number keeps them close. Where bits agree, making both 1 raises the sum, which is always better."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every x",
+       "O(2ⁿ)"
+      ],
+      [
+       "greedy per bit (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum XOR product: bits above n are fixed; from high to low, make equal bits both 1, and give a differing bit's 1 to the currently smaller number to keep the product large."
+ },
+ "2945": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pre`",
+       "Prefix sums, so the sum of any block `j+1..i` is `pre[i] - pre[j]`",
+       "Block sums in O(1)"
+      ],
+      [
+       "`dp[i]`",
+       "Most blocks into which the first `i` elements can be merged so that block sums are non-decreasing",
+       "DP over prefix length"
+      ],
+      [
+       "`last[i]`",
+       "The SUM of the final block in that best split (keeping it as small as possible)",
+       "The next block must be at least this big"
+      ],
+      [
+       "valid split point `j` for `i`",
+       "`pre[i] - pre[j] >= last[j]`, i.e. `pre[j] + last[j] <= pre[i]`",
+       "The block after `j` must not be smaller than the block before it"
+      ],
+      [
+       "the LARGEST valid `j`",
+       "`dp` never decreases as the prefix grows, and a later `j` also makes the last block smaller; so take the largest valid `j`",
+       "Greedy choice inside the DP"
+      ],
+      [
+       "monotonic deque `q` of candidates `j`",
+       "Keeps candidates ordered by the key `pre[j] + last[j]` (increasing); pop from the front while the NEXT candidate is also valid, and pop from the back candidates with a key not smaller than the new one",
+       "Sliding-window style optimisation: O(1) amortised instead of a scan"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,3,2,6]` → prefix sums `[0,4,7,9,15]`. For each prefix length `i`, the chosen previous cut `j`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "pre[i]",
+      "Chosen j",
+      "dp[i]",
+      "last[i] (last block sum)",
+      "Deque (candidate cuts)"
+     ],
+     "rows": [
+      [
+       "1",
+       "4",
+       "0",
+       "1",
+       "4",
+       "[0, 1]"
+      ],
+      [
+       "2",
+       "7",
+       "0",
+       "1",
+       "7",
+       "[0, 1, 2]"
+      ],
+      [
+       "3",
+       "9",
+       "1",
+       "2",
+       "5",
+       "[1, 3]"
+      ],
+      [
+       "4",
+       "15",
+       "3",
+       "3",
+       "6",
+       "[3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "`dp[4] = 3`: for example `[4]`, `[3+2]`, `[6]` has block sums 4, 5, 6, which is non-decreasing. A brute force over all splits agrees on random inputs."
+    ]
+   },
+   {
+    "h": "Why a monotonic deque?",
+    "p": [
+     "For each `i` we need the largest `j` with `pre[j] + last[j] <= pre[i]`. As `i` grows, `pre[i]` only grows, so a candidate that is valid stays valid, and candidates with a larger key that sit before candidates with a smaller key are useless. A deque keeps candidates in increasing key order, so the valid ones are at the front and each index is pushed and popped once."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP trying all j",
+       "O(n²)"
+      ],
+      [
+       "DP + binary search",
+       "O(n log n)"
+      ],
+      [
+       "DP + monotonic deque (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum non-decreasing array length after merging subarrays: DP over prefixes with the previous block's sum, using a monotonic deque to find the best previous cut in O(1) amortised."
+ },
+ "2948": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`order = sorted(range(n), key=lambda i: nums[i])`",
+       "Indices ordered by value (an index sort)",
+       "Sort while remembering original positions"
+      ],
+      [
+       "`nums[b] - nums[a] <= limit`",
+       "Neighbours in sorted order that differ by at most `limit` can be swapped, and swapping is transitive through chains",
+       "Build groups (connected components) by scanning the sorted values"
+      ],
+      [
+       "`groups`",
+       "Each group is a set of indices whose values can be freely rearranged among those positions",
+       "Elements in one group can reach each other's positions through swaps"
+      ],
+      [
+       "`sorted(g)` and `vals = sorted(nums[i] for i in g)`",
+       "Positions in increasing order and the group's values in increasing order",
+       "Smallest array: put the smallest value at the smallest position"
+      ],
+      [
+       "`res[i] = v`",
+       "Write the sorted values into the sorted positions",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,5,3,9,8]`, `limit = 2`: sorted values 1, 3, 5, 8, 9 split into the groups `{1,3,5}` and `{8,9}` (gaps 2, 2, 3, 1)."
+    ],
+    "table": {
+     "head": [
+      "Group (positions)",
+      "Current values",
+      "Sorted values placed"
+     ],
+     "rows": [
+      [
+       "[0, 1, 2]",
+       "[1, 5, 3]",
+       "[1, 3, 5]"
+      ],
+      [
+       "[3, 4]",
+       "[9, 8]",
+       "[8, 9]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can a group be sorted freely?",
+    "p": [
+     "Two values within `limit` can swap directly. If `a` and `b` can swap and `b` and `c` can swap, then `a` can reach `c` (swap through `b`), so every value in a chain of close values can be moved to any other position of the chain. Sorting the values of a group into the group's positions gives the lexicographically smallest arrangement."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Union-Find over all pairs",
+       "O(n²)"
+      ],
+      [
+       "sort and cut at big gaps (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Smallest array by swaps within a limit: sort the values, cut into groups wherever consecutive values differ by more than the limit, and sort each group into its own positions."
+ },
+ "2954": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gaps = [sick[0], n - 1 - sick[-1]]`",
+       "Healthy children before the first sick one and after the last: each such end gap is infected in ONE direction only",
+       "End gaps have a forced order"
+      ],
+      [
+       "`mid`",
+       "Healthy children between two consecutive sick ones: infection can come from both sides",
+       "Middle gaps have a choice at every step except the last"
+      ],
+      [
+       "`m = n - len(sick)`",
+       "Total number of healthy children to infect",
+       "Length of the infection sequence"
+      ],
+      [
+       "`factorial(m)`",
+       "Orderings of all `m` children if there were no ordering constraints",
+       "Count interleavings of independent gaps"
+      ],
+      [
+       "`* pow(factorial(g), MOD - 2, MOD)` for each gap",
+       "Divide by `g!` for each gap, because inside a gap the order is NOT free (see below): this removes the over-counted arrangements",
+       "Modular division uses the modular inverse (Fermat's little theorem, MOD is prime)"
+      ],
+      [
+       "`* pow(2, g - 1, MOD)` for each middle gap",
+       "Inside a middle gap of size `g` there are `2^(g−1)` orders: each infection can extend from the left or the right end, except the last child, which is forced",
+       "Choices inside a two-sided gap"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `sick = [0, 4]`: no end gaps, one middle gap of size 3, `m = 3` healthy children."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "m!",
+       "6"
+      ],
+      [
+       "divide by 3! (the middle gap)",
+       "1"
+      ],
+      [
+       "multiply by 2^(3−1)",
+       "4"
+      ],
+      [
+       "answer",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do the gaps interleave freely but have internal order?",
+    "p": [
+     "Different gaps are independent: an infection in one gap never affects another, so the `m` children can be ordered by choosing which positions of the sequence belong to which gap (a multinomial coefficient `m! / ∏ g!`). Within one gap, though, the order is constrained: an end gap must be infected from the sick side outward (1 way), and a middle gap can grow from either end, giving `2^(g−1)` orders."
+    ],
+    "table": {
+     "head": [
+      "Gap type",
+      "Orders inside the gap"
+     ],
+     "rows": [
+      [
+       "end gap of size g",
+       "1"
+      ],
+      [
+       "middle gap of size g",
+       "2^(g−1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another check",
+    "p": [
+     "For `n = 4`, `sick = [1]`, there is one end gap of 1 (before) and one of 2 (after): `3!/(1!·2!) = 3` sequences, the code returns 3. The code was also checked against a brute-force simulation on random small inputs."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for the factorials (each `pow` is O(log MOD)).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Infection sequences: interleave the independent gaps with a multinomial (m! over the gap factorials) and multiply 2^(g−1) for each gap with sick children on both sides."
+ },
+ "2957": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`abs(ord(word[i]) - ord(word[i - 1])) <= 1`",
+       "Two letters are almost equal if they are the same or alphabetically adjacent",
+       "Character code difference"
+      ],
+      [
+       "`ops += 1; i += 2`",
+       "Change `word[i]` to a letter that differs from both neighbours (always possible with 26 letters); that also removes any conflict between `word[i]` and `word[i+1]`, so skip one extra position",
+       "Greedy: one change fixes two adjacent pairs"
+      ],
+      [
+       "`else: i += 1`",
+       "The pair is fine; move on",
+       "Advance by one"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"aaaaa\"`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Pair",
+      "Decision"
+     ],
+     "rows": [
+      [
+       "1",
+       "aa",
+       "almost equal → change word[i], skip next"
+      ],
+      [
+       "3",
+       "aa",
+       "almost equal → change word[i], skip next"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "More cases",
+    "table": {
+     "head": [
+      "word",
+      "Minimum operations"
+     ],
+     "rows": [
+      [
+       "`aaaaa`",
+       "2"
+      ],
+      [
+       "`abddez`",
+       "2"
+      ],
+      [
+       "`zyxyxyz`",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the greedy skip correct?",
+    "p": [
+     "When `word[i]` conflicts with `word[i − 1]`, changing `word[i]` to a letter far from both neighbours fixes this pair AND the next pair `(word[i], word[i+1])`. So any problem involving the next position disappears, and the scan resumes at `i + 2`. Fixing the left letter instead would leave the conflict with the right neighbour possibly alive."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP over letter choices",
+       "O(26 · n)"
+      ],
+      [
+       "greedy skip (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Remove almost-equal adjacent characters: scan left to right; on a conflict change the right letter to something far away and skip the next position."
+ },
+ "2972": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "first `while`: longest strictly increasing PREFIX",
+       "`i` is the last index of the increasing prefix `nums[0..i]`",
+       "The remaining array after deleting a subarray is a prefix plus a suffix, both of which must be strictly increasing"
+      ],
+      [
+       "`if i == n - 1: return n * (n + 1) // 2`",
+       "The whole array is already strictly increasing: every subarray (all `n(n+1)/2` of them) can be removed",
+       "Special case"
+      ],
+      [
+       "`res = i + 2`",
+       "Removals that keep only a prefix of the array: remove `nums[l..n-1]` for any `l` from 0 to `i + 1` (keeping `0..i+1` elements, the empty prefix included), which is `i + 2` choices",
+       "Count removals that keep only a prefix"
+      ],
+      [
+       "`j` runs left over the longest strictly increasing SUFFIX",
+       "Each `j` is where the kept suffix begins",
+       "Enumerate suffix starts"
+      ],
+      [
+       "`while i >= 0 and nums[i] >= nums[j]: i -= 1`",
+       "Shrink the kept prefix until its last element is smaller than `nums[j]`; both `i` and `j` only move one direction",
+       "Two pointers over the prefix and suffix"
+      ],
+      [
+       "`res += i + 2`",
+       "For this suffix, the prefix can keep `0..i+1` elements: `i + 2` choices",
+       "Count prefix lengths compatible with the suffix"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [6,5,7,8]`: the increasing prefix is just `[6]` (`i = 0`), the increasing suffix is `[5,7,8]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Prefix end i",
+      "Added",
+      "Total"
+     ],
+     "rows": [
+      [
+       "start",
+       "0",
+       "-",
+       "2"
+      ],
+      [
+       "suffix starts at j=3 (value 8)",
+       "0",
+       "+2",
+       "4"
+      ],
+      [
+       "suffix starts at j=2 (value 7)",
+       "0",
+       "+2",
+       "6"
+      ],
+      [
+       "suffix starts at j=1 (value 5)",
+       "-1",
+       "+1",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two pointers?",
+    "p": [
+     "The kept prefix must end below the suffix's first element. As the suffix start `j` moves left, `nums[j]` gets smaller, so the largest allowed prefix end `i` can only move left too. That makes both pointers move monotonically and the count linear."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every (l, r) removal and check",
+       "O(n³)"
+      ],
+      [
+       "binary search for the prefix end",
+       "O(n log n)"
+      ],
+      [
+       "two pointers (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count removable subarrays leaving a strictly increasing array: take the longest increasing prefix and suffix, and count compatible (prefix length, suffix start) pairs with two monotone pointers."
+ },
+ "3014": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(word).values()`",
+       "How often each distinct letter occurs",
+       "Frequency counting"
+      ],
+      [
+       "`sorted(..., reverse=True)`",
+       "Most frequent letters first",
+       "Greedy assignment: give the cheapest keys to the most frequent letters"
+      ],
+      [
+       "`r // 8 + 1`",
+       "The first 8 letters (rank 0..7) go on first-press positions of the 8 keys 2–9, the next 8 need 2 presses, then 3, then 4",
+       "Eight keys, each with a stack of letters"
+      ],
+      [
+       "`f * (r // 8 + 1)`",
+       "Presses for this letter: frequency × presses per use",
+       "Cost of one letter"
+      ],
+      [
+       "`sum(...)`",
+       "Total presses",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"abcde\"`: five distinct letters, each used once, so each goes to a different key at the first position."
+    ],
+    "table": {
+     "head": [
+      "Rank",
+      "Frequency",
+      "Presses per use",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "1",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why sort by frequency?",
+    "p": [
+     "Cost per use depends only on a letter's position on its key (1, 2, 3 or 4 presses). By the rearrangement inequality, the highest frequency should get the cheapest position. Filling the 8 keys evenly (rank // 8) uses the cheap positions first."
+    ],
+    "table": {
+     "head": [
+      "Assignment",
+      "Total for freqs 5,3,1 on three positions with costs 1,2,3"
+     ],
+     "rows": [
+      [
+       "largest frequency on cheapest position (this code)",
+       "5·1 + 3·2 + 1·3 = 14"
+      ],
+      [
+       "reversed",
+       "5·3 + 3·2 + 1·1 = 22"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 log 26).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum pushes on a phone keypad: assign the most frequent letters to the cheapest key positions, eight letters per press level."
+ },
+ "3017": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`y - x <= 1`",
+       "The extra street is parallel to an existing one, so the graph is just a path: distance `k` has `n − k` unordered pairs",
+       "Special case"
+      ],
+      [
+       "`m = y - x + 1`, `a = x - 1`, `b = n - y`",
+       "After the extra street, houses `x..y` form a CYCLE of `m` houses; `a` houses form a tail hanging off `x`, `b` houses a tail hanging off `y`",
+       "Split the graph into a cycle and two paths"
+      ],
+      [
+       "`add(l, r, v)` with the `diff` array",
+       "A difference array: add `v` to every distance in `l..r` in O(1)",
+       "Range updates, prefix sum at the end"
+      ],
+      [
+       "`add(1, half, m)` (+ the `m // 2` term for even `m`)",
+       "Pairs of cycle houses: for each distance `1..⌊(m−1)/2⌋` there are `m` unordered pairs, and for even `m` exactly `m/2` pairs at distance `m/2`",
+       "Cycle–cycle pairs"
+      ],
+      [
+       "`for tail in (a, b): for s in 1..tail`",
+       "A tail house `s` steps from the cycle reaches the attachment house at distance `s`, the next `half` cycle houses on both sides at `s+1..s+half` (two of each), and for even `m` the opposite house at `s + m/2`",
+       "Tail–cycle pairs"
+      ],
+      [
+       "`add(s + 2, s + b + 1, 1)` for `s in 1..a`",
+       "A left-tail house `s` and a right-tail house `t` are `s + 1 + t` apart through the extra street",
+       "Tail–tail pairs across the cycle"
+      ],
+      [
+       "`cnt[d] += tail - d`",
+       "Pairs of houses on the SAME tail at distance `d` (a path)",
+       "Tail–tail pairs on one side"
+      ],
+      [
+       "`2 * cnt[k]`",
+       "The answer counts ordered pairs",
+       "Double the unordered count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `x = 2`, `y = 4`: the cycle has `m = 3` houses, the left tail `a = 1` and the right tail `b = 1`. The result for distances 1..5 is [10, 8, 2, 0, 0]."
+    ],
+    "table": {
+     "head": [
+      "Distance k",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+     ],
+     "rows": [
+      [
+       "ordered pairs",
+       "10",
+       "8",
+       "2",
+       "0",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why split into cycle and tails?",
+    "p": [
+     "Distances inside a cycle depend only on the cyclic distance (the smaller of the two ways around), and distances from a tail house to anything follow from its distance to the cycle plus distances inside the cycle. Each category contributes a simple range of distances, which the difference array adds in O(1). The formula was checked against a breadth-first search on every `(n, x, y)` with `n ≤ 12`."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "BFS (Breadth-First Search) from every house",
+       "O(n²)"
+      ],
+      [
+       "categories + difference array (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Houses at each distance with one extra street: split into a cycle and two tails, add each category's distance range with a difference array, and double for ordered pairs."
+ },
+ "3026": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pre`",
+       "Sum of the elements BEFORE the current one (prefix sum)",
+       "Subarray sum = difference of prefix sums"
+      ],
+      [
+       "`best_pre[v]`",
+       "The SMALLEST prefix sum seen so far at a position where the element equals `v`",
+       "A good subarray starts at an element `v` and ends at `x` with `|v − x| = k`; we want the smallest starting prefix to maximise the sum"
+      ],
+      [
+       "`for v in (x - k, x + k)`",
+       "Both possible first elements of a good subarray ending at `x`",
+       "`|first − last| = k` has two solutions"
+      ],
+      [
+       "`pre + x - best_pre[v]`",
+       "Sum of the subarray from that start through `x`: (prefix through x) − (prefix before the start)",
+       "Candidate answer"
+      ],
+      [
+       "`best_pre[x] = pre` only if smaller",
+       "Record `x` as a future START with the smallest preceding prefix",
+       "Keep the minimum"
+      ],
+      [
+       "`ans if ans != -inf else 0`",
+       "No good subarray exists: return 0",
+       "Default"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5,6]`, `k = 1`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Prefix before x",
+      "Good subarrays ending at x",
+      "best_pre",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "-",
+       "{1: 0}",
+       "-"
+      ],
+      [
+       "2",
+       "1",
+       "['1: 3 − 0 = 3']",
+       "{1: 0, 2: 1}",
+       "3"
+      ],
+      [
+       "3",
+       "3",
+       "['2: 6 − 1 = 5']",
+       "{1: 0, 2: 1, 3: 3}",
+       "5"
+      ],
+      [
+       "4",
+       "6",
+       "['3: 10 − 3 = 7']",
+       "{1: 0, 2: 1, 3: 3, 4: 6}",
+       "7"
+      ],
+      [
+       "5",
+       "10",
+       "['4: 15 − 6 = 9']",
+       "{1: 0, 2: 1, 3: 3, 4: 6, 5: 10}",
+       "9"
+      ],
+      [
+       "6",
+       "15",
+       "['5: 21 − 10 = 11']",
+       "{1: 0, 2: 1, 3: 3, 4: 6, 5: 10, 6: 15}",
+       "11"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The best good subarray is `[5, 6]` with sum 11."
+    ]
+   },
+   {
+    "h": "Why keep the minimum prefix per value?",
+    "p": [
+     "Many earlier positions may hold the value `v`. The subarray from one of them to `x` has sum `pre[x+1] − pre[start]`, which is largest when `pre[start]` is smallest, so we only store that minimum per value. This turns a search over all starts into a dictionary lookup."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all subarrays",
+       "O(n²)"
+      ],
+      [
+       "dictionary of minimum prefix per value (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum good subarray sum: for each end value, look up the smallest prefix sum at a start value differing by k; keep the minimum prefix per value."
+ },
+ "3035": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(''.join(words))`",
+       "Letter counts over ALL words: operations let us swap any two characters, so only the pooled multiset matters",
+       "Swaps anywhere make the letters a shared pool"
+      ],
+      [
+       "`pairs = sum(v // 2 …)`",
+       "Number of matched letter pairs available; a palindrome of length `L` needs `L // 2` pairs (a middle letter, if any, can be any leftover letter)",
+       "Palindromes are made of mirrored pairs"
+      ],
+      [
+       "`sorted(map(len, words))`",
+       "Shortest words first: they cost the fewest pairs",
+       "Greedy: build as many palindromes as possible"
+      ],
+      [
+       "`if pairs < L // 2: break`",
+       "Not enough pairs for the next (and every longer) word",
+       "Stop"
+      ],
+      [
+       "`pairs -= L // 2; res += 1`",
+       "Spend the pairs and count one more palindromic word",
+       "Update"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = [\"abbb\",\"ba\",\"aa\"]`: pooled letters {'a': 4, 'b': 4}, so there are 3 pairs (`a·a`, `b·b`, and one more `b·b`)."
+    ],
+    "table": {
+     "head": [
+      "Word length",
+      "Pairs needed (L // 2)",
+      "Pairs left",
+      "Result"
+     ],
+     "rows": [
+      [
+       "2",
+       "1",
+       "3",
+       "palindrome built"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "palindrome built"
+      ],
+      [
+       "4",
+       "2",
+       "0",
+       "palindrome built"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the middle letter free?",
+    "p": [
+     "An odd-length palindrome needs one unpaired middle letter. A leftover single letter from the pool serves, and odd-length words have as many middles available as there are words, since every leftover letter appears in the pool. Only the pairs are a limiting resource."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all assignments",
+       "exponential"
+      ],
+      [
+       "count pairs, shortest first (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length + w log w).",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum palindromic words after swaps: pool all letters, count mirrored pairs, and spend them on the shortest words first."
+ },
+ "3047": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`min(topRight x) - max(bottomLeft x)`",
+       "Width of the overlap of two rectangles along x (negative or zero if they don't overlap)",
+       "Interval intersection in one dimension"
+      ],
+      [
+       "same on y",
+       "Height of the overlap along y",
+       "Do the same for the other axis"
+      ],
+      [
+       "`min(w, h)`",
+       "The largest square that fits inside the overlap rectangle has side `min(width, height)`",
+       "Square inside a rectangle"
+      ],
+      [
+       "pairs `i < j`",
+       "Try every pair of rectangles",
+       "n is small (≤ 10³), so O(n²) is fine"
+      ],
+      [
+       "`side * side if side > 0 else 0`",
+       "Area; if no pair overlaps with positive size, 0",
+       "Final answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Rectangles `[1,1]-[3,3]`, `[2,2]-[4,4]`, `[3,1]-[6,6]`:"
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Overlap width",
+      "Overlap height",
+      "Square side",
+      "Best side"
+     ],
+     "rows": [
+      [
+       "0, 1",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "0, 2",
+       "0",
+       "2",
+       "0",
+       "1"
+      ],
+      [
+       "1, 2",
+       "1",
+       "2",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why overlap first?",
+    "p": [
+     "A square inside TWO rectangles must lie inside their intersection, which is itself a rectangle (or empty). The biggest square in it has side `min(width, height)`. Taking the maximum over all pairs gives the largest square lying inside at least two rectangles."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "all pairs (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Largest square inside two rectangles: for each pair, intersect the rectangles and take min(width, height); the best side squared is the answer."
+ },
+ "3071": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`c = n // 2`",
+       "The centre row/column (n is odd)",
+       "The Y's stem and the junction of the arms"
+      ],
+      [
+       "`on_y`",
+       "Cell is on the Y: upper arms are the diagonals `i == j` and `i + j == n - 1` for rows up to the centre; the stem is column `c` from the centre row down",
+       "Define the shape by index conditions"
+      ],
+      [
+       "`y`, `other`",
+       "Counters of the values on the Y and off the Y",
+       "Count cell values for each region"
+      ],
+      [
+       "`for a … for b …` with `a != b`",
+       "The Y must use one value `a`, the rest another value `b`, and they must differ; only 3 values exist, so 6 combinations",
+       "Brute force over a tiny choice set"
+      ],
+      [
+       "`(ny - y[a]) + (no - other[b])`",
+       "Changes needed: Y cells not already `a` plus other cells not already `b`",
+       "Cost = cells to change"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,2,2],[1,1,0],[0,1,0]]`: the Y has 4 cells, the other region 5. Values on the Y: {1: 3, 2: 1}; off the Y: {2: 1, 1: 1, 0: 3}. All six (Y value, other value) choices:"
+    ],
+    "table": {
+     "head": [
+      "Y value",
+      "Other value",
+      "Y cells to change",
+      "Other cells to change",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "4",
+       "4",
+       "8"
+      ],
+      [
+       "0",
+       "2",
+       "4",
+       "4",
+       "8"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "4",
+       "5"
+      ],
+      [
+       "2",
+       "0",
+       "3",
+       "2",
+       "5"
+      ],
+      [
+       "2",
+       "1",
+       "3",
+       "4",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why enumerate only value pairs?",
+    "p": [
+     "Every cell in a region must end with the same value, so the only decision is which value each region gets. With three possible values there are six ordered pairs of distinct values. For each pair the cost is the number of cells that don't already match, read directly from the counters."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "enumerate value pairs + counters (this code)",
+       "O(n²)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Write the letter Y on a grid: count cell values inside and outside the Y, then try the six (Y value, other value) pairs of distinct values."
+ },
+ "3074": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`need = sum(apple)`",
+       "Total apples that must fit into boxes",
+       "Only the total matters: apples can be redistributed freely"
+      ],
+      [
+       "`sorted(capacity, reverse=True)`",
+       "Largest boxes first",
+       "Greedy: fewest boxes means the biggest ones"
+      ],
+      [
+       "`enumerate(..., 1)`",
+       "Count boxes used, starting at 1",
+       "Counter"
+      ],
+      [
+       "`need -= c` then `if need <= 0: return i`",
+       "Stop at the first prefix of boxes whose total capacity covers the apples",
+       "Smallest number of boxes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`apple = [1,3,2]` (6 apples), `capacity = [4,3,1,5,2]`:"
+    ],
+    "table": {
+     "head": [
+      "Boxes used",
+      "Next largest capacity",
+      "Apples still without a box"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "1"
+      ],
+      [
+       "2",
+       "4",
+       "-3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we ignore which pack the apples came from?",
+    "p": [
+     "Apples from different packs may be put into the same box, so the problem is just 'cover the total number of apples with as few boxes as possible'. The best strategy is to take boxes in decreasing order of capacity."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "sort + prefix (this code)",
+       "O(m log m)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log m) for m boxes.",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Apple redistribution: only the total matters; use boxes from largest capacity downward until their capacity covers the apples."
+ },
+ "3086": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ones`",
+       "Positions of the existing ones",
+       "Sparse list of ones"
+      ],
+      [
+       "first loop: Alice stands at index `i`",
+       "`own` = 1 if there is a one at `i` (picked free), `adj` = ones in the two neighbouring cells (each costs 1 move to bring to `i`)",
+       "Ones at distance 0 and 1 are the cheap ones"
+      ],
+      [
+       "`u = min(k, own + adj)`",
+       "Ones obtainable cheaply at `i`",
+       "Cap at `k`"
+      ],
+      [
+       "`k - u <= maxChanges`",
+       "Remaining ones must be CREATED (each creation uses a change and then 1 move to bring it adjacent and 1 more to pick: 2 moves)",
+       "Creating a one: change an adjacent 0 to 1, then swap it in"
+      ],
+      [
+       "`max(0, u - own) + 2 * (k - u)`",
+       "Moves = cheap adjacent ones (1 each, minus the free one) + 2 per created one",
+       "Cost for this standing position"
+      ],
+      [
+       "second part: `need = k - maxChanges`",
+       "Use ALL changes (each 2 moves), and fetch `need` existing ones from farther away; pick `need` consecutive ones whose distances to the MEDIAN one are smallest",
+       "Fetch from the median to minimise the sum of distances"
+      ],
+      [
+       "`pre`, `left`, `right`",
+       "Prefix sums of positions give the sum of distances to the median in O(1) per window",
+       "Sum of absolute differences to the median"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,0,0,0,1,1,0,0,1]`, `k = 3`, `maxChanges = 1`. Candidate standing positions with the cheap-ones cost (the cheapest cases only):"
+    ],
+    "table": {
+     "head": [
+      "Alice at",
+      "Own",
+      "Adjacent ones",
+      "Cheap ones u",
+      "Created ones k − u",
+      "Moves"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "5",
+       "1",
+       "1",
+       "2",
+       "1",
+       "3"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "2",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The cheap-neighbour option gives 3. The median-window option (fetching `need = 2` ones plus 2 moves for the change) gives 3. The minimum is 3."
+    ]
+   },
+   {
+    "h": "Why the median?",
+    "p": [
+     "Fetching several ones to one standing cell costs the sum of their distances to it. Among a window of consecutive ones, that sum is smallest when Alice stands at the median one, so the window sum can be computed from prefix sums of the one positions."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "simulate all move sequences",
+       "exponential"
+      ],
+      [
+       "two cases: near ones + created ones, or median windows (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum moves to pick k ones: either stand next to cheap ones and create the rest, or gather a window of existing ones around its median using prefix sums."
+ },
+ "3092": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt`",
+       "Current count of each id",
+       "Dictionary of counts"
+      ],
+      [
+       "`heapq.heappush(heap, (-cnt[x], x))`",
+       "Push the NEW count of the changed id as a negative number (so the min-heap acts as a max-heap)",
+       "Python's heap is a min-heap"
+      ],
+      [
+       "`-heap[0][0] != cnt[heap[0][1]]`",
+       "The top entry's count no longer matches the id's real count: it is STALE (an older value)",
+       "Lazy deletion"
+      ],
+      [
+       "`heappop` of stale entries",
+       "Discard them only when they surface at the top",
+       "A heap cannot delete from the middle"
+      ],
+      [
+       "`ans.append(-heap[0][0])`",
+       "After cleaning, the top is the highest current count",
+       "Answer for this step"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,2,1]`, `freq = [3,2,-3,1]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Counts",
+      "Stale entries removed",
+      "Maximum count"
+     ],
+     "rows": [
+      [
+       "id 2, change 3",
+       "{2: 3}",
+       "0",
+       "3"
+      ],
+      [
+       "id 3, change 2",
+       "{2: 3, 3: 2}",
+       "0",
+       "3"
+      ],
+      [
+       "id 2, change -3",
+       "{2: 0, 3: 2}",
+       "1",
+       "2"
+      ],
+      [
+       "id 1, change 1",
+       "{2: 0, 3: 2, 1: 1}",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why lazy deletion?",
+    "p": [
+     "Each step changes one id's count, leaving its old heap entry behind. Removing that entry directly would need an index into the heap. Instead we just push the new value and clean stale entries from the top before reading it. Each entry is pushed once and popped at most once."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "scan all counts each step",
+       "O(n²)"
+      ],
+      [
+       "heap with lazy deletion (this code)",
+       "O(n log n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Most frequent IDs: a max-heap of (count, id) with lazy deletion of stale entries."
+ },
+ "3101": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`run`",
+       "Length of the alternating subarray ENDING at the current element",
+       "Streak ending here"
+      ],
+      [
+       "`x != prev`",
+       "The current element differs from the previous one, extending the alternation",
+       "Adjacent comparison"
+      ],
+      [
+       "`run = run + 1 if … else 1`",
+       "Extend, or restart at 1",
+       "Reset to 1, because a single element is alternating"
+      ],
+      [
+       "`total += run`",
+       "`run` is also the number of alternating subarrays that end here (one for each possible start)",
+       "Count by right end"
+      ],
+      [
+       "`prev = None` first",
+       "The first element has no predecessor",
+       "Initial state"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [0, 1, 1, 1]`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "run (subarrays ending here)",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "1",
+       "1",
+       "4"
+      ],
+      [
+       "1",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `run` count subarrays?",
+    "p": [
+     "If the alternating streak ending at `i` has length `r`, then the subarrays `nums[i−r+1..i]`, `nums[i−r+2..i]`, …, `nums[i..i]` are all alternating: `r` of them. Summing `r` over every right end counts every alternating subarray exactly once."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Alternating subarrays"
+     ],
+     "rows": [
+      [
+       "`[0,1,1,1]`",
+       "5"
+      ],
+      [
+       "`[1,0,1,0,1]`",
+       "15"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count alternating subarrays: keep the length of the alternating run ending at each element and add it to the total."
+ }
+}

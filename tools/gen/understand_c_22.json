@@ -1,0 +1,1972 @@
+{
+ "2555": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`p`",
+       "Sorted prize positions (the input is sorted)",
+       "A segment of length `k` covers a window of consecutive prizes"
+      ],
+      [
+       "`j`",
+       "Left end of the window of prizes within distance `k` of `p[i]`, found with two pointers",
+       "Sliding window"
+      ],
+      [
+       "`i - j + 1`",
+       "Prizes in the best segment that ENDS at prize `i`",
+       "Window size"
+      ],
+      [
+       "`best[x]`",
+       "The most prizes one segment can collect among the first `x` prizes",
+       "Prefix maximum, so a second segment can use everything to the left"
+      ],
+      [
+       "`best[j] + i - j + 1`",
+       "Second segment ends at `i`; the first segment is the best one entirely before index `j` (no overlap)",
+       "Combine two non-overlapping windows"
+      ],
+      [
+       "`best[i + 1] = max(best[i], i - j + 1)`",
+       "Update the prefix maximum with the window ending at `i`",
+       "Running best"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`prizePositions = [1,1,2,2,3,3,5]`, `k = 2`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "p[i]",
+      "Window ending at i",
+      "Best before the window",
+      "Answer so far",
+      "best[i+1]"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[0,0] = 1 prizes",
+       "best[0] = 0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "[0,1] = 2 prizes",
+       "best[0] = 0",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "[0,2] = 3 prizes",
+       "best[0] = 0",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "2",
+       "[0,3] = 4 prizes",
+       "best[0] = 0",
+       "4",
+       "4"
+      ],
+      [
+       "4",
+       "3",
+       "[0,4] = 5 prizes",
+       "best[0] = 0",
+       "5",
+       "5"
+      ],
+      [
+       "5",
+       "3",
+       "[0,5] = 6 prizes",
+       "best[0] = 0",
+       "6",
+       "6"
+      ],
+      [
+       "6",
+       "5",
+       "[4,6] = 3 prizes",
+       "best[4] = 4",
+       "7",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a prefix maximum and a window?",
+    "p": [
+     "Two segments that do not overlap can be separated by a split point. For the segment ending at `i`, the other segment must lie entirely to the left of the window start `j`, and the best such segment is `best[j]`. Computing the prefix maximum once avoids trying every pair of windows (O(n²))."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every pair of segments",
+       "O(n²)"
+      ],
+      [
+       "two pointers + prefix maximum (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Two non-overlapping segments: slide a window of prizes within distance k and combine it with the best window entirely to its left (prefix maximum)."
+ },
+ "2561": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(basket1)`, `cnt.subtract(Counter(basket2))`",
+       "`cnt[v]` = how many more copies of `v` basket 1 has than basket 2 (can be negative)",
+       "`Counter.subtract` keeps zero and negative counts, unlike the `-` operator"
+      ],
+      [
+       "`c % 2`",
+       "An odd difference means the fruit can't be split evenly between the baskets: answer −1",
+       "Parity check"
+      ],
+      [
+       "`extra += [v] * (abs(c) // 2)`",
+       "Each surplus value `v` must move `|c| / 2` copies across; this collects the values to be swapped",
+       "Half the imbalance moves"
+      ],
+      [
+       "`extra.sort()` and the first `len(extra) // 2`",
+       "Of the `len(extra)` fruits that must move, only half the swaps are needed; pair the smallest half with the largest half, paying the smaller one's cost",
+       "Each swap costs the cheaper fruit"
+      ],
+      [
+       "`min(x, 2 * m)`",
+       "A swap costs `x` directly, or `2 · m` via the globally cheapest fruit `m` (swap it in and back out)",
+       "The cheaper route"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`basket1 = [4,2,2,2]`, `basket2 = [1,4,1,2]`:"
+    ],
+    "table": {
+     "head": [
+      "Fruit cost",
+      "count(basket1) − count(basket2)"
+     ],
+     "rows": [
+      [
+       "1",
+       "-2"
+      ],
+      [
+       "2",
+       "2"
+      ],
+      [
+       "4",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": "Value `2` has two extra copies in basket 1 and value `1` has two extra copies in basket 2 (differences `{4: 0, 2: 2, 1: -2}`), so one `1` and one `2` must change baskets. The fruits to move are [1, 2]. The globally cheapest fruit costs 1, so the swap costs `min(x, 2·1)` and the total is 1."
+   },
+   {
+    "h": "Why only the smaller half of `extra` pays?",
+    "p": [
+     "Each swap exchanges one fruit from basket 1 with one from basket 2. The cost is the smaller of the two swapped fruits, so we always pair the smallest unmatched fruit with the largest. Going through the sorted list, the cheaper half of the list is exactly the set of costs paid."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "sort the fruits to move",
+       "cheapest are paid for"
+      ],
+      [
+       "pay `min(x, 2m)` for the smaller half",
+       "optimal pairing small–large"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Rearranging fruits: halve the count imbalance to find the fruits that must move, sort them, and pay min(cost, 2 × global minimum) for the cheaper half."
+ },
+ "2591": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`money < children`",
+       "Everyone needs at least $1",
+       "Impossible case"
+      ],
+      [
+       "`money -= children`",
+       "Give every child $1 first; to reach $8 a child needs 7 more",
+       "Reduce to counting 7s"
+      ],
+      [
+       "`eights = min(money // 7, children)`",
+       "How many children can reach exactly $8 (each needs $7 more)",
+       "Greedy: maximise the number of $8 children"
+      ],
+      [
+       "`left = children - eights`",
+       "Children not at $8",
+       "The leftover group"
+      ],
+      [
+       "`left == 0 and money > 0`",
+       "Everyone has $8 but there is money left over: someone would exceed $8, so one child must drop out of the $8 group",
+       "Leftover with no room"
+      ],
+      [
+       "`left == 1 and money == 3`",
+       "The only remaining child would get exactly $4 (1 + 3), which is forbidden",
+       "Special forbidden amount"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "money, children",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "20, 3",
+       "1"
+      ],
+      [
+       "16, 2",
+       "2"
+      ],
+      [
+       "2, 3",
+       "-1"
+      ],
+      [
+       "8, 2",
+       "0"
+      ],
+      [
+       "23, 2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why those two corrections?",
+    "p": [
+     "The rules say nobody may get $4, and every dollar must be given out. After handing out as many $8s as possible, leftover money must go to non-$8 children. If there is no such child, or the single remaining child would end up with $4, the only fix is to take one child out of the $8 group, which makes room."
+    ],
+    "table": {
+     "head": [
+      "Situation",
+      "Fix"
+     ],
+     "rows": [
+      [
+       "all children at $8 and money left",
+       "one fewer $8 child"
+      ],
+      [
+       "one child left with $4 total",
+       "one fewer $8 child"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum children with exactly $8: give $1 to each, hand out groups of $7 greedily, then fix the two corner cases (leftover money with no free child, or a forbidden $4)."
+ },
+ "2603": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`deg`, `alive`",
+       "Degree of each node and the set of nodes not yet removed",
+       "Leaf peeling (trimming leaves repeatedly)"
+      ],
+      [
+       "first queue: leaves with `coins[i] == 0`",
+       "A leaf with no coin is useless to visit, so delete it; its parent may then become a coinless leaf, so repeat",
+       "Remove subtrees that contain no coins"
+      ],
+      [
+       "`for _ in range(2)`: remove all current leaves",
+       "The robot collects coins within distance 2 of where it stands, so a leaf with a coin can be reached from 2 edges away; peeling the leaves twice shrinks the tree to the part the robot must actually walk",
+       "Two layers of slack"
+      ],
+      [
+       "`2 * max(0, len(alive) - 1)`",
+       "A walk that starts and ends at the same node and visits every remaining node traverses each remaining edge twice; a tree with `v` nodes has `v − 1` edges",
+       "Edge count × 2"
+      ],
+      [
+       "`max(0, …)`",
+       "If everything was peeled away, no walking is needed",
+       "Empty case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "A path of 6 nodes, coins at the two ends: `[1,0,0,0,0,1]`."
+    ],
+    "table": {
+     "head": [
+      "Stage",
+      "Nodes still alive"
+     ],
+     "rows": [
+      [
+       "after removing coinless leaves (none: both ends have coins)",
+       "[0, 1, 2, 3, 4, 5]"
+      ],
+      [
+       "after peeling leaves once",
+       "[1, 2, 3, 4]"
+      ],
+      [
+       "after peeling leaves a second time",
+       "[2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "2 nodes remain, so the robot walks 1 edge(s) twice: 2."
+    ]
+   },
+   {
+    "h": "Why peel exactly twice?",
+    "p": [
+     "From a node the robot gathers every coin within distance 2. A coin on a leaf is collected by standing at the leaf's grandparent, so the leaf and its parent never need to be visited. Peeling two layers of leaves removes precisely those nodes. The remaining tree is the minimal connected set the robot must tour."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try every start with a full DFS",
+       "O(n²)"
+      ],
+      [
+       "peeling leaves (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Collect coins in a tree: delete coinless leaves, then peel two more layers of leaves (coins within distance 2 are free); the answer is twice the remaining edge count."
+ },
+ "2639": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`str(grid[i][j])`",
+       "The decimal text of the number, including a leading `-` for negatives",
+       "The width includes the minus sign"
+      ],
+      [
+       "`len(...)`",
+       "Number of characters",
+       "Width"
+      ],
+      [
+       "outer loop over columns `j`, inner over rows `i`",
+       "Column-major scan so we can keep the maximum of one column at a time",
+       "Scan down each column"
+      ],
+      [
+       "`w = max(w, …)`",
+       "Widest entry in this column",
+       "Running maximum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[-15,1,3],[15,7,12],[5,6,-2]]`:"
+    ],
+    "table": {
+     "head": [
+      "Column",
+      "Values",
+      "Widths",
+      "Column width"
+     ],
+     "rows": [
+      [
+       "0",
+       "[-15, 15, 5]",
+       "[3, 2, 1]",
+       "3"
+      ],
+      [
+       "1",
+       "[1, 7, 6]",
+       "[1, 1, 1]",
+       "1"
+      ],
+      [
+       "2",
+       "[3, 12, -2]",
+       "[1, 2, 2]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is `-15` width 3?",
+    "p": [
+     "The minus sign takes one character, so `-15` needs 3 characters while `15` needs 2. Converting to a string counts exactly the characters that would be printed."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "`len(str(x))`"
+     ],
+     "rows": [
+      [
+       "5",
+       "1"
+      ],
+      [
+       "-2",
+       "2"
+      ],
+      [
+       "-15",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Alternative",
+    "p": [
+     "`[max(len(str(x)) for x in col) for col in zip(*grid)]` does the same in one line: `zip(*grid)` transposes the rows into columns."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Column widths: the maximum string length of the numbers in each column (negatives count the minus sign)."
+ },
+ "2645": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`groups`",
+       "Number of copies of `\"abc\"` needed so the word can be a subsequence-compatible sequence of `abc` blocks",
+       "Count blocks"
+      ],
+      [
+       "`zip(word, word[1:])`",
+       "Each adjacent pair of letters",
+       "Neighbour comparison"
+      ],
+      [
+       "`b <= a`",
+       "If the next letter is not strictly greater, it cannot belong to the same `abc` block, so it starts a new one",
+       "A strictly increasing run fits within one block"
+      ],
+      [
+       "`3 * groups - len(word)`",
+       "The final string has `3 · groups` characters; we keep `len(word)` of them, so the rest are inserted",
+       "Total length minus existing letters"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "word",
+      "Blocks",
+      "Insertions = 3·blocks − len"
+     ],
+     "rows": [
+      [
+       "b",
+       "1",
+       "2"
+      ],
+      [
+       "aaa",
+       "3",
+       "6"
+      ],
+      [
+       "abc",
+       "1",
+       "0"
+      ],
+      [
+       "aaabbc",
+       "4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count descents (non-increases)?",
+    "p": [
+     "A valid string is `abcabc…`. Inside one `abc` block letters strictly increase, so the word splits into maximal strictly increasing runs, each needing its own block. A drop or repeat (`b <= a`) marks the boundary between runs."
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Runs"
+     ],
+     "rows": [
+      [
+       "`aaa`",
+       "a | a | a → 3 blocks"
+      ],
+      [
+       "`abc`",
+       "one run → 1 block"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Minimum additions to make 'abc'-repeated string: split the word into strictly increasing runs; each run needs one 'abc' block, so the answer is 3 × runs − length."
+ },
+ "2657": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt`",
+       "How many times each value has been seen across BOTH prefixes",
+       "Arrays are permutations, so each value appears at most once in each"
+      ],
+      [
+       "`cnt[a] == 2`",
+       "The value is now present in both prefixes: it is common",
+       "A count of 2 means seen in A and in B"
+      ],
+      [
+       "`common += 1`",
+       "One more value common to both prefixes",
+       "Running total"
+      ],
+      [
+       "`res.append(common)`",
+       "Prefix common count after this index",
+       "One answer per index"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`A = [1,3,2,4]`, `B = [3,1,2,4]`:"
+    ],
+    "table": {
+     "head": [
+      "a",
+      "b",
+      "Counter",
+      "Common so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "{1: 1, 3: 1}",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "{1: 2, 3: 2}",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "{1: 2, 3: 2, 2: 2}",
+       "3"
+      ],
+      [
+       "4",
+       "4",
+       "{1: 2, 3: 2, 2: 2, 4: 2}",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a single counter works",
+    "p": [
+     "Each value appears once in `A` and once in `B`. The first time a value shows up in either prefix its count becomes 1; when it appears in the other prefix its count becomes 2 and it is common from then on. Counting how many values reach 2 gives the answer without comparing prefixes."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "intersect the prefixes at every index",
+       "O(n²)"
+      ],
+      [
+       "counter (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix common array: one Counter over both arrays; a value reaching count 2 becomes common, and the running total is the answer at each index."
+ },
+ "2672": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`colors`",
+       "Current colours; 0 = uncoloured",
+       "Array state"
+      ],
+      [
+       "`pairs`",
+       "Number of adjacent equal-coloured (non-zero) pairs",
+       "Maintain a global count incrementally"
+      ],
+      [
+       "first loop over `idx ± 1` BEFORE recolouring",
+       "Subtract the pairs that involve the OLD colour of `idx` (only if `idx` was coloured and a neighbour matches it)",
+       "Remove the old contribution"
+      ],
+      [
+       "`colors[idx] = col`",
+       "Apply the update",
+       "Mutate"
+      ],
+      [
+       "second loop over `idx ± 1` AFTER recolouring",
+       "Add the pairs that involve the NEW colour",
+       "Add the new contribution"
+      ],
+      [
+       "only the two neighbours",
+       "A change at `idx` can only affect pairs `(idx − 1, idx)` and `(idx, idx + 1)`",
+       "Local update, O(1) per query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`:"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Colours",
+      "Adjacent same-colour pairs"
+     ],
+     "rows": [
+      [
+       "colour index 0 with 2",
+       "[2, 0, 0, 0]",
+       "0"
+      ],
+      [
+       "colour index 1 with 2",
+       "[2, 2, 0, 0]",
+       "1"
+      ],
+      [
+       "colour index 3 with 1",
+       "[2, 2, 0, 1]",
+       "1"
+      ],
+      [
+       "colour index 1 with 1",
+       "[2, 1, 0, 1]",
+       "0"
+      ],
+      [
+       "colour index 2 with 1",
+       "[2, 1, 1, 1]",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtract before and add after?",
+    "p": [
+     "Recolouring changes only the pairs touching `idx`. The code first removes the pairs that existed with the old colour, then adds the pairs that exist with the new colour. Recomputing all pairs would cost O(n) per query."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time per query"
+     ],
+     "rows": [
+      [
+       "recount all pairs",
+       "O(n)"
+      ],
+      [
+       "adjust the two neighbouring pairs (this code)",
+       "O(1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Adjacent equal colours: keep a running pair count; before recolouring subtract the pairs with the old colour, after recolouring add the pairs with the new one (only two neighbours)."
+ },
+ "2714": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dist[u][h]`",
+       "Shortest distance to node `u` having used exactly `h` hops (edges whose weight is set to 0)",
+       "Dijkstra with a resource in the state: (node, hops used)"
+      ],
+      [
+       "`pq` of `(cost, node, hops)`",
+       "Min-heap by cost",
+       "Dijkstra's algorithm (shortest paths with non-negative weights)"
+      ],
+      [
+       "`c + w < dist[v][h]`",
+       "Walk the edge normally and pay its weight",
+       "Option 1"
+      ],
+      [
+       "`h < k and c < dist[v][h + 1]`",
+       "Use a hop: the edge costs 0, so the cost stays `c` and the hop count rises",
+       "Option 2"
+      ],
+      [
+       "`if c > dist[u][h]: continue`",
+       "Stale heap entry",
+       "Lazy deletion"
+      ],
+      [
+       "`min(dist[d])`",
+       "Best over every hop count used at the destination",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Edges `0-1 (4)`, `0-2 (2)`, `2-3 (6)`; from 1 to 3 with `k = 2` hops. Final table `dist[node][hops used]` (∞ = unreachable):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "h = 0",
+      "h = 1",
+      "h = 2"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "0",
+       "4",
+       "0"
+      ],
+      [
+       "2",
+       "6",
+       "2",
+       "0"
+      ],
+      [
+       "3",
+       "12",
+       "6",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The best distance to node 3 is 2: hop over `1→0` (free) and walk `0→2` (2), then hop over `2→3` (free)."
+    ]
+   },
+   {
+    "h": "Why add the hops to the state?",
+    "p": [
+     "The best route to a node may depend on how many free edges are left. A plain per-node distance would discard a costlier route that saved a hop. With states (node, hops used), each is optimal for its own budget."
+    ],
+    "table": {
+     "head": [
+      "Graph nodes",
+      "Count"
+     ],
+     "rows": [
+      [
+       "cities",
+       "n"
+      ],
+      [
+       "(city, hops used) states",
+       "n · (k + 1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · (n + E) log(k · n)).",
+     "Space: O(n · k)."
+    ]
+   }
+  ],
+  "takeaway": "Shortest path with k free hops: Dijkstra over (node, hops used) states, where an edge is either paid for or used as a free hop."
+ },
+ "2768": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a 2×2 block is named by its top-left corner `(a, b)`",
+       "There are `(m − 1) · (n − 1)` blocks",
+       "Name blocks by one corner"
+      ],
+      [
+       "`for a in (x - 1, x): for b in (y - 1, y)`",
+       "A black cell `(x, y)` lies in the up-to-four blocks whose top-left corner is `(x−1 or x, y−1 or y)`",
+       "Each cell belongs to at most 4 blocks"
+      ],
+      [
+       "`0 <= a < m - 1 and 0 <= b < n - 1`",
+       "Keep only corners that actually name a block",
+       "Boundary check"
+      ],
+      [
+       "`cnt[(a, b)]`",
+       "Number of black cells in block `(a, b)`; only blocks that contain at least one black cell are stored",
+       "Sparse counting"
+      ],
+      [
+       "`ans[0] = total - sum(ans[1:])`",
+       "Blocks with zero black cells are all the rest",
+       "Counts by complement (the grid can be 10^5 wide, so don't enumerate)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 3`, `n = 3`, black cell `(0, 0)`: it lies only in the block whose top-left corner is `(0, 0)` (the other corners fall outside)."
+    ],
+    "table": {
+     "head": [
+      "Blocks with k black cells",
+      "k = 0",
+      "k = 1",
+      "k = 2",
+      "k = 3",
+      "k = 4"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "0",
+       "0",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count only blocks that contain black cells?",
+    "p": [
+     "The grid can be 10⁵ × 10⁵, but there are at most 4 blocks per black cell. Storing counts for those blocks in a dictionary uses O(black cells) memory; the number of empty blocks follows from the total number of blocks minus the others."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Memory"
+     ],
+     "rows": [
+      [
+       "whole grid of block counts",
+       "O(m·n)"
+      ],
+      [
+       "dictionary of touched blocks (this code)",
+       "O(black cells)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(black cells).",
+     "Space: O(black cells)."
+    ]
+   }
+  ],
+  "takeaway": "Black blocks: count, per 2×2 block touched by a black cell, how many black cells it holds; blocks with zero are the total minus the rest."
+ },
+ "2771": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`a1`",
+       "Length of the longest non-decreasing subarray ending at index `i` if `nums1[i]` is chosen at `i`",
+       "Dynamic Programming (DP) with two choices per position"
+      ],
+      [
+       "`a2`",
+       "Same, if `nums2[i]` is chosen at `i`",
+       "Second state"
+      ],
+      [
+       "`b1`, `b2`",
+       "The new values for index `i + 1`; computed from the old `a1`, `a2` (so the update uses old values)",
+       "Compute into new variables, then assign"
+      ],
+      [
+       "four `if` conditions",
+       "Extend a chain ending in `nums1[i-1]` or `nums2[i-1]` by either `nums1[i]` or `nums2[i]` when it stays non-decreasing",
+       "All four combinations (previous choice × current choice)"
+      ],
+      [
+       "`best = max(best, a1, a2)`",
+       "Longest run seen anywhere",
+       "Maximum over states"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [2,3,1]`, `nums2 = [1,2,1]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "a1 (choose nums1[i])",
+      "a2 (choose nums2[i])",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two states per index?",
+    "p": [
+     "At each position we may take the value from either array, and the next position's validity depends on which value was taken. So the DP keeps the best run length for each choice, and each transition checks the four possible predecessor/current pairs."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try all 2ⁿ choices",
+       "exponential"
+      ],
+      [
+       "two-state DP (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Longest non-decreasing subarray from two arrays: DP with two states per index (value taken from nums1 or nums2), extending from either previous state when the order holds."
+ },
+ "2828": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`w[0] for w in words`",
+       "The first character of each word (a generator expression)",
+       "Collect one element from each item"
+      ],
+      [
+       "`''.join(...)`",
+       "Concatenate the first letters into a string",
+       "Join a sequence of characters"
+      ],
+      [
+       "`== s`",
+       "Compare with the target; strings of different lengths are automatically unequal",
+       "Equality also checks the length"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = ['alice','bob','charlie']`, `s = 'abc'`:"
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "First letter"
+     ],
+     "rows": [
+      [
+       "alice",
+       "a"
+      ],
+      [
+       "bob",
+       "b"
+      ],
+      [
+       "charlie",
+       "c"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The first letters join to `abc`, which equals `s`, so the answer is True."
+    ]
+   },
+   {
+    "h": "Why no separate length check?",
+    "p": [
+     "If the number of words differs from `len(s)`, the joined string has a different length, and `==` returns False. The comparison covers both the letters and the length in one step."
+    ],
+    "table": {
+     "head": [
+      "words",
+      "s",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`['a','b']`",
+       "`ab`",
+       "True"
+      ],
+      [
+       "`['a','b']`",
+       "`abc`",
+       "False (length differs)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(number of words).",
+     "Space: O(number of words) for the joined string."
+    ]
+   }
+  ],
+  "takeaway": "Acronym check: join the first letters of the words and compare with s."
+ },
+ "2849": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dx`, `dy`",
+       "Horizontal and vertical distance to the target",
+       "Chebyshev distance setting: a king-like move changes both coordinates by at most 1 per second"
+      ],
+      [
+       "`max(dx, dy) <= t`",
+       "The fastest possible walk takes `max(dx, dy)` seconds (diagonal steps cover both axes at once); any extra time can be burned by moving back and forth or around",
+       "Reachability within exactly `t` seconds"
+      ],
+      [
+       "`dx == 0 and dy == 0: return t != 1`",
+       "If we start on the target, we can stay (t = 0) or burn time, except for exactly 1 second since we MUST move each second and cannot return in one step",
+       "The one exception"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "start → target, t",
+      "dx, dy",
+      "Reachable?"
+     ],
+     "rows": [
+      [
+       "(2,4) → (7,7), t=6",
+       "5, 3",
+       "True"
+      ],
+      [
+       "(3,1) → (7,3), t=3",
+       "4, 2",
+       "False"
+      ],
+      [
+       "(1,1) → (1,1), t=1",
+       "0, 0",
+       "False"
+      ],
+      [
+       "(1,1) → (1,1), t=0",
+       "0, 0",
+       "True"
+      ],
+      [
+       "(1,1) → (1,1), t=2",
+       "0, 0",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can extra time always be burned?",
+    "p": [
+     "You must move every second, and you may step to any of the 8 neighbours. If you are not at the target, you can waste a second by stepping to a neighbour and back or moving around, so any `t ≥ max(dx, dy)` works. At the target itself, a single second is impossible (you'd have to leave and can't be back), but two or more seconds work (step out and back)."
+    ],
+    "table": {
+     "head": [
+      "Start",
+      "t",
+      "Reachable"
+     ],
+     "rows": [
+      [
+       "on target",
+       "0",
+       "yes"
+      ],
+      [
+       "on target",
+       "1",
+       "no"
+      ],
+      [
+       "on target",
+       "2",
+       "yes (step out and back)"
+      ],
+      [
+       "elsewhere",
+       "≥ max(dx, dy)",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Reachable at time t with 8-direction moves: Chebyshev distance max(dx, dy) ≤ t, except that standing on the target for exactly 1 second is impossible."
+ },
+ "2858": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g[u].append((v, 0))`, `g[v].append((u, 1))`",
+       "Each directed edge `u → v` is stored both ways: walking it forward costs 0, walking it backward costs 1 reversal",
+       "Treat the directed graph as undirected with a cost for going against the arrow"
+      ],
+      [
+       "first traversal from node 0",
+       "`total` = reversals needed so that every node is reachable from node 0",
+       "Cost of the root"
+      ],
+      [
+       "`ans[0] = total`",
+       "Answer for the root",
+       "Base value"
+      ],
+      [
+       "second traversal: `ans[v] = ans[u] + (1 if w == 0 else -1)`",
+       "Moving the root from `u` to `v`: if the edge `u → v` points away from `u` (cost 0 from `u`), it must now be reversed (+1); if it pointed toward `u`, reversing it is no longer needed (−1)",
+       "Rerooting: update the answer in O(1) from the neighbour's answer"
+      ],
+      [
+       "no recursion",
+       "An iterative stack and queue avoid Python's recursion limit on deep trees",
+       "Large inputs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, edges `2→0`, `2→1`, `1→3`: the answer for each starting node."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Derivation",
+      "Reversals"
+     ],
+     "rows": [
+      [
+       "0",
+       "root (total reversals when starting at 0)",
+       "1"
+      ],
+      [
+       "2",
+       "from 0: edge is backward (−1)",
+       "0"
+      ],
+      [
+       "1",
+       "from 2: edge is forward (+1)",
+       "1"
+      ],
+      [
+       "3",
+       "from 1: edge is forward (+1)",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why rerooting?",
+    "p": [
+     "Computing the answer from scratch for each node costs O(n) each, O(n²) in total. Moving the root across one edge changes the answer by exactly ±1 (the orientation of that single edge), so after one initial pass we can fill every other node in O(1) using its neighbour's answer."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "traverse from every node",
+       "O(n²)"
+      ],
+      [
+       "rerooting (this code)",
+       "O(n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Edge reversals so every node is reachable: compute the cost for root 0, then reroot along each edge with ±1."
+ },
+ "2861": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for comp in composition`",
+       "Try each machine separately: all alloys must come from ONE machine",
+       "Independent subproblems"
+      ],
+      [
+       "`ok(a)`",
+       "Can we make `a` alloys on this machine within the budget?",
+       "Feasibility check"
+      ],
+      [
+       "`max(0, a * comp[j] - stock[j]) * cost[j]`",
+       "Metal `j` needed is `a · comp[j]`; we already hold `stock[j]`, so buy only the shortfall at `cost[j]` each",
+       "Cost of a purchase list"
+      ],
+      [
+       "binary search on `a`",
+       "`ok` is monotone: if `a` alloys are affordable, so are fewer",
+       "Maximum feasible count"
+      ],
+      [
+       "`mid = (lo + hi + 1) // 2`, `lo = mid`",
+       "Upper midpoint when the feasible branch keeps `mid`",
+       "Largest feasible value"
+      ],
+      [
+       "`best = max(best, lo)`",
+       "The best machine",
+       "Maximum over machines"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Budget 15, empty stock, metal costs `[1,2,3]`, two machines:"
+    ],
+    "table": {
+     "head": [
+      "Machine",
+      "Max alloys",
+      "Cost at that count",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "machine 0 [1, 1, 1]",
+       "2",
+       "12",
+       "2"
+      ],
+      [
+       "machine 1 [1, 1, 10]",
+       "0",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why binary search?",
+    "p": [
+     "The total cost grows with the number of alloys, so affordability is True…True False…False. Binary search finds the largest affordable count in O(log(budget)) checks, each O(n). Trying counts one by one would be O(budget · n)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "try each count",
+       "O(budget · n · k)"
+      ],
+      [
+       "binary search per machine (this code)",
+       "O(k · n · log budget)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k · n · log(budget + max(stock))).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Maximum alloys: for each machine binary search the largest count whose shortfall (needed minus stock) costs at most the budget; take the best machine."
+ },
+ "2912": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`D`",
+       "Ways to be AT the destination after the moves so far",
+       "State by relationship to the destination"
+      ],
+      [
+       "`R`",
+       "Ways to be in the destination's ROW but at a different column",
+       "Same row, different cell"
+      ],
+      [
+       "`C`",
+       "Ways to be in the destination's COLUMN but at a different row",
+       "Same column, different cell"
+      ],
+      [
+       "`O`",
+       "Ways to be in a cell sharing neither row nor column",
+       "Other cells"
+      ],
+      [
+       "the tuple assignment with four formulas",
+       "Each move changes the row or the column to ANY other value; the formulas count how many cells of each class are reachable from each class (for example from the destination, `m − 1` cells in the same row and `n − 1` in the same column)",
+       "Group symmetrical cells into four classes instead of tracking n·m cells"
+      ],
+      [
+       "initial class from `source` vs `dest`",
+       "Put the 1 in the class that describes the starting cell",
+       "Starting state"
+      ],
+      [
+       "`% MOD`",
+       "Counts grow quickly",
+       "Modulus"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3` rows, `m = 2` columns, `k = 2` moves, source `(1,1)`, destination `(2,2)`: they differ in both row and column, so the start is class O."
+    ],
+    "table": {
+     "head": [
+      "Move",
+      "D (at dest)",
+      "R (same row)",
+      "C (same column)",
+      "O (other)"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why four classes?",
+    "p": [
+     "A move changes either the row or the column to a different value. Whether a cell is the destination, shares its row, shares its column, or neither fully determines how many ways it can reach each class next, so cells in the same class are interchangeable. That collapses an n·m-state DP into 4 states and k steps, giving O(k)."
+    ],
+    "table": {
+     "head": [
+      "Approach",
+      "Time"
+     ],
+     "rows": [
+      [
+       "DP over every cell",
+       "O(k · n·m·(n + m))"
+      ],
+      [
+       "four classes (this code)",
+       "O(k)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Ways to reach a cell with exactly k row-or-column moves: classify cells relative to the destination (at it, same row, same column, other) and run a 4-state transition k times."
+ },
+ "2915": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[s]`",
+       "Length of the longest subsequence of the numbers processed so far whose sum is EXACTLY `s`; `−∞` if impossible",
+       "0/1 knapsack where the value is the item count"
+      ],
+      [
+       "`dp[0] = 0`",
+       "The empty subsequence has sum 0 and length 0",
+       "Base case"
+      ],
+      [
+       "`for s in range(target, x - 1, -1)`",
+       "Go from large sums to small so each number is used at most once",
+       "Reverse order for 0/1 knapsack"
+      ],
+      [
+       "`dp[s - x] + 1 > dp[s]`",
+       "Take `x`: the best subsequence for `s − x` plus one more element",
+       "Take option"
+      ],
+      [
+       "`float('-inf')`",
+       "Marks unreachable sums so they never win a comparison",
+       "Sentinel"
+      ],
+      [
+       "`dp[target] if dp[target] > 0 else -1`",
+       "If the target is unreachable (still `−∞`) return −1",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5]`, `target = 9`: `dp[0..9]` after each number."
+    ],
+    "table": {
+     "head": [
+      "After",
+      "dp[0..9]"
+     ],
+     "rows": [
+      [
+       "start",
+       "['0', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞']"
+      ],
+      [
+       "x = 1",
+       "[0, 1, '-∞', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞', '-∞']"
+      ],
+      [
+       "x = 2",
+       "[0, 1, 1, 2, '-∞', '-∞', '-∞', '-∞', '-∞', '-∞']"
+      ],
+      [
+       "x = 3",
+       "[0, 1, 1, 2, 2, 2, 3, '-∞', '-∞', '-∞']"
+      ],
+      [
+       "x = 4",
+       "[0, 1, 1, 2, 2, 2, 3, 3, 3, 3]"
+      ],
+      [
+       "x = 5",
+       "[0, 1, 1, 2, 2, 2, 3, 3, 3, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why iterate the sum downward?",
+    "p": [
+     "Going from high sums to low sums means `dp[s − x]` still holds the value from BEFORE the current number was considered, so the number is used once. Iterating upward would let one number be added repeatedly (unbounded knapsack)."
+    ],
+    "table": {
+     "head": [
+      "Direction",
+      "Meaning"
+     ],
+     "rows": [
+      [
+       "downward (this code)",
+       "each number at most once"
+      ],
+      [
+       "upward",
+       "each number any number of times"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · target).",
+     "Space: O(target)."
+    ]
+   }
+  ],
+  "takeaway": "Longest subsequence with a target sum: 0/1 knapsack where dp[s] is the maximum count achieving sum s, iterating sums downward."
+ },
+ "2918": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`z1`, `z2`",
+       "Number of zeros in each array; each zero must become a positive integer, so at least 1",
+       "Minimum replacement value"
+      ],
+      [
+       "`a = sum(nums1) + z1`",
+       "The smallest possible sum of array 1: every zero becomes 1",
+       "Lower bound for each array"
+      ],
+      [
+       "`b = sum(nums2) + z2`",
+       "Same for array 2",
+       "Lower bound"
+      ],
+      [
+       "`a < b and z1 == 0`",
+       "Array 1 is the smaller side but has no zeros to increase: it can never reach `b`",
+       "Impossible case"
+      ],
+      [
+       "`max(a, b)`",
+       "Otherwise the smaller array can raise its zeros to match the larger array's minimum sum",
+       "The minimum equal sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "nums1, nums2",
+      "min sum 1",
+      "min sum 2",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "[3, 2, 0, 1, 0], [6, 5, 0]",
+       "8",
+       "12",
+       "12"
+      ],
+      [
+       "[2, 0, 2, 0], [1, 4]",
+       "6",
+       "5",
+       "-1"
+      ],
+      [
+       "[1, 2], [1, 1]",
+       "3",
+       "2",
+       "-1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer the maximum of the two lower bounds?",
+    "p": [
+     "Each array's sum is at least its all-ones minimum. The target equal sum must be at least the larger minimum. The array with the smaller minimum can reach it by increasing any of its zeros, but only if it HAS a zero; otherwise its sum is stuck below the target and the answer is −1."
+    ],
+    "table": {
+     "head": [
+      "Case",
+      "Result"
+     ],
+     "rows": [
+      [
+       "smaller side has a zero",
+       "max(a, b)"
+      ],
+      [
+       "smaller side has no zero",
+       "−1"
+      ],
+      [
+       "sums already equal",
+       "a (= b)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Equal sums after replacing zeros: each array's minimum sum treats every zero as 1; the answer is the larger minimum unless the smaller one has no zero to grow."
+ }
+}

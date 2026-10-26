@@ -1,0 +1,2090 @@
+{
+ "1192": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`disc[u]`",
+       "Discovery time: when the DFS (Depth-First Search) first reaches u",
+       "A global counter `timer`"
+      ],
+      [
+       "`low[u]`",
+       "Smallest discovery time reachable from u's subtree using tree edges plus at most one back edge",
+       "Detects whether the subtree has another route to u's ancestors"
+      ],
+      [
+       "`v == parent: continue`",
+       "Don't go back along the edge we came from",
+       "Otherwise that edge would look like a cycle"
+      ],
+      [
+       "`low[u] = min(low[u], low[v])`",
+       "Child's reach propagates to the parent",
+       "After the recursive call"
+      ],
+      [
+       "`low[v] > disc[u]`",
+       "The child's subtree cannot reach u or above except through edge u–v",
+       "Then u–v is a bridge (critical connection)"
+      ],
+      [
+       "`low[u] = min(low[u], disc[v])`",
+       "Visited neighbour: a back edge",
+       "Allows the subtree to reach an ancestor"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "4 servers, cables `[[0,1],[1,2],[2,0],[1,3]]` → [[1, 3]]. Events in order:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Detail",
+      "Note"
+     ],
+     "rows": [
+      [
+       "enter 0",
+       "disc = low = 0",
+       "from -1"
+      ],
+      [
+       "enter 1",
+       "disc = low = 1",
+       "from 0"
+      ],
+      [
+       "enter 2",
+       "disc = low = 2",
+       "from 1"
+      ],
+      [
+       "2 sees visited 0",
+       "back edge: low[2] = min(.., disc[0]) = 0",
+       "—"
+      ],
+      [
+       "back at 1 from 2",
+       "low[2] = 0 ≤ disc[1] = 1",
+       "low[1] = 0"
+      ],
+      [
+       "enter 3",
+       "disc = low = 3",
+       "from 1"
+      ],
+      [
+       "back at 1 from 3",
+       "low[3] = 3 > disc[1] = 1",
+       "bridge [1, 3]"
+      ],
+      [
+       "back at 0 from 1",
+       "low[1] = 0 ≤ disc[0] = 0",
+       "low[0] = 0"
+      ],
+      [
+       "0 sees visited 2",
+       "back edge: low[0] = min(.., disc[2]) = 0",
+       "—"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `low[v] > disc[u]` mean a bridge?",
+    "p": [
+     "`low[v]` is the earliest vertex (by discovery time) that v's subtree can reach without using the edge u–v. If even that is later than u, then nothing in v's subtree can get to u or to u's ancestors except through this edge; removing it disconnects the subtree. In the example the triangle 0–1–2 has a back edge so none of its cables is critical, while 3 can only be reached through 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V + E).",
+     "Space: O(V + E) for the graph and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Tarjan's bridge algorithm: DFS with discovery and low-link times; an edge u–v is a bridge when low[v] > disc[u]."
+ },
+ "1195": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`threading.Condition()`",
+       "A lock plus the ability to wait for, and announce, a change",
+       "`with self.cv:` acquires the lock; `wait()` releases it while sleeping"
+      ],
+      [
+       "`self.i`",
+       "The next number to print (shared by all four threads)",
+       "Only one thread's condition matches it at a time"
+      ],
+      [
+       "`matches(self.i)`",
+       "This thread's rule (multiple of 3 only, 5 only, both, or neither)",
+       "Each thread acts only on its own numbers"
+      ],
+      [
+       "`while … not matches: self.cv.wait()`",
+       "Sleep until another thread changes `i`",
+       "`while`, not `if`: re-check after waking, since the state may have changed"
+      ],
+      [
+       "`self.cv.notify_all()`",
+       "Wake every waiting thread after `i` changes",
+       "Threads whose number is now due can proceed"
+      ],
+      [
+       "`self.i > self.n`",
+       "All numbers done",
+       "Wake the others (so they can exit too) and return"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "What a run looks like",
+    "p": [
+     "Running the four threads for `n = 15` printed ['1', '2', 'fizz', '4', 'buzz', 'fizz', '7', '8', 'fizz', 'buzz', '11', 'fizz', '13', '14', 'fizzbuzz']; matches the expected sequence: True."
+    ]
+   },
+   {
+    "h": "Why a condition variable?",
+    "bullets": [
+     "Exactly one of the four threads is responsible for each number, and they must run in order, so threads need to wait for their turn.",
+     "`wait()` releases the lock, so the thread whose turn it is can enter, print, increment `i` and `notify_all()`.",
+     "Busy-waiting (spinning on `i`) would waste CPU; the condition variable lets the others sleep."
+    ]
+   },
+   {
+    "h": "A subtle point: the exit condition",
+    "p": [
+     "When `i` passes `n`, threads still sleeping inside `wait()` would never wake without a final `notify_all()`. The thread that sees `i > n` notifies everyone and returns, so all four exit and the run ends."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) printing steps (each step wakes all four threads, so O(n) wake-ups in total times a constant 4).",
+     "Space: O(1) shared state."
+    ]
+   }
+  ],
+  "takeaway": "Condition variable turn-taking: each thread waits until the shared counter matches its rule, acts, increments, and notifies all."
+ },
+ "1207": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`Counter(arr)`",
+       "Value → number of occurrences",
+       "Count frequencies"
+      ],
+      [
+       "`count.values()`",
+       "The occurrence counts",
+       "Only the counts matter now"
+      ],
+      [
+       "`set(count.values())`",
+       "Distinct counts",
+       "Duplicates collapse"
+      ],
+      [
+       "`len(set(…)) == len(count)`",
+       "As many distinct counts as distinct values",
+       "True when no two values share a count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,2,1,1,3]`:"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`Counter(arr)`",
+       "{1: 3, 2: 2, 3: 1}"
+      ],
+      [
+       "`count.values()`",
+       "[3, 2, 1]"
+      ],
+      [
+       "`set(count.values())`",
+       "{1, 2, 3}"
+      ],
+      [
+       "`len(set) == len(count)`",
+       "3 == 3 → True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare lengths?",
+    "p": [
+     "If two values had the same count, the set of counts would be smaller than the dictionary of values (a set removes duplicates). Equal sizes mean every count is unique. For `[1,2]` the counts are `[1,1]`, the set is `{1}` (size 1) versus 2 values, so the answer is False."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Counter then set: all counts are unique exactly when the set of counts is as large as the Counter."
+ },
+ "1213": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`i, j, k`",
+       "One pointer per array",
+       "Three-way merge of sorted arrays"
+      ],
+      [
+       "`a == b == c`",
+       "Chained comparison: all three equal",
+       "The value is in all arrays"
+      ],
+      [
+       "`m = min(a, b, c)`",
+       "Smallest current value",
+       "It cannot appear in all three arrays at later positions of the others, so it is discarded"
+      ],
+      [
+       "`if a == m: i += 1` (three separate `if`s)",
+       "Advance every pointer whose value equals the minimum",
+       "Handles ties for the minimum in one step"
+      ],
+      [
+       "`while i < … and j < … and k < …`",
+       "Stop when any array is exhausted",
+       "No more common values are possible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[1,2,3,4,5]`, `[1,2,5,7,9]`, `[1,3,4,5,8]` → [1, 5]:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "k",
+      "Values",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "1,1,1",
+       "all equal → output 1, move all"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "2,2,3",
+       "min = 2 → move i,j"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "3,5,3",
+       "min = 3 → move i,k"
+      ],
+      [
+       "3",
+       "2",
+       "2",
+       "4,5,4",
+       "min = 4 → move i,k"
+      ],
+      [
+       "4",
+       "2",
+       "3",
+       "5,5,5",
+       "all equal → output 5, move all"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why advance only the smallest?",
+    "p": [
+     "All arrays are strictly increasing. The smallest current value is smaller than at least one other pointer's value, and that other array will never show it again (its pointer only moves forward). So the smallest value cannot be a common element, and its pointer can safely move on."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(a + b + c).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Three pointers over sorted arrays: output when all equal; otherwise advance every pointer sitting at the minimum."
+ },
+ "1216": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dp[i][j]`",
+       "Length of the longest palindromic subsequence in `s[i..j]`",
+       "Interval DP"
+      ],
+      [
+       "`s[i] == s[j]` → `dp[i+1][j-1] + 2`",
+       "Equal ends wrap the inside palindrome",
+       "For `j = i+1` the inside is empty; `dp[i+1][j-1]` reads the untouched cell (0) below the diagonal"
+      ],
+      [
+       "`max(dp[i+1][j], dp[i][j-1])`",
+       "Different ends: drop one",
+       "Take the better"
+      ],
+      [
+       "`n - dp[0][n-1] <= k`",
+       "Characters to delete = length − longest palindromic subsequence",
+       "Valid if at most k deletions are needed"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'abcdeca'`, `k = 2`: the longest palindromic subsequence has length 5 (`acdca`), so deletions needed = 2 ≤ 2 → True. The upper triangle of `dp`:"
+    ],
+    "table": {
+     "head": [
+      "i \\ j",
+      "0:a",
+      "1:b",
+      "2:c",
+      "3:d",
+      "4:e",
+      "5:c",
+      "6:a"
+     ],
+     "rows": [
+      [
+       "0:a",
+       "1",
+       "1",
+       "1",
+       "1",
+       "1",
+       "3",
+       "5"
+      ],
+      [
+       "1:b",
+       "",
+       "1",
+       "1",
+       "1",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "2:c",
+       "",
+       "",
+       "1",
+       "1",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "3:d",
+       "",
+       "",
+       "",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "4:e",
+       "",
+       "",
+       "",
+       "",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "5:c",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1",
+       "1"
+      ],
+      [
+       "6:a",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does deleting the fewest characters relate to the longest palindromic subsequence?",
+    "p": [
+     "Whatever you keep after deletions must be a palindrome subsequence of s. Keeping the longest one deletes the fewest characters: n − LPS. So the question 'at most k deletions?' is exactly `n − LPS ≤ k`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Palindrome by deletions = n − (longest palindromic subsequence), computed with interval DP."
+ },
+ "1219": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`grid[i][j] = 0` then restore `grid[i][j] = g`",
+       "Mark the cell as used, then undo it after exploring",
+       "Backtracking visited marker; the same cell may be used by other paths"
+      ],
+      [
+       "`max(dfs(...) for four directions)`",
+       "Best continuation among the four neighbours",
+       "Cells with 0 (empty, off-grid or already used) return 0, ending the path"
+      ],
+      [
+       "`return g + best`",
+       "Gold here plus the best path onward",
+       "Path value"
+      ],
+      [
+       "`max(dfs(i, j) for i … for j …)`",
+       "Try every cell as a start",
+       "The path may begin anywhere"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[0,6,0],[5,8,7],[0,9,0]]` → 24. Best path value starting from each gold cell:"
+    ],
+    "table": {
+     "head": [
+      "Start",
+      "Best total"
+     ],
+     "rows": [
+      [
+       "(0,1) = 6",
+       "23"
+      ],
+      [
+       "(1,0) = 5",
+       "22"
+      ],
+      [
+       "(1,1) = 8",
+       "17"
+      ],
+      [
+       "(1,2) = 7",
+       "24"
+      ],
+      [
+       "(2,1) = 9",
+       "24"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why restore the cell after the recursion?",
+    "p": [
+     "The visited mark must apply only to the current path. After exploring from a cell, putting its gold back lets other paths (from other starts or other branches) pass through it. Without the restore, the first exploration would erase gold for all later ones."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n·3^g): from each start at most 3 new directions per step, over a path of g gold cells.",
+     "Space: O(g) recursion depth."
+    ]
+   }
+  ],
+  "takeaway": "Backtracking DFS (Depth-First Search): mark the cell as used, explore four directions, restore it, and take the best total from every start."
+ },
+ "1249": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "Indexes of '(' not yet matched",
+       "Stack: the latest '(' is matched by the next ')'"
+      ],
+      [
+       "`remove` set",
+       "Indexes of brackets to delete",
+       "O(1) membership when rebuilding"
+      ],
+      [
+       "`else: remove.add(i)`",
+       "A ')' with no '(' before it",
+       "Cannot be fixed by anything else"
+      ],
+      [
+       "`remove |= set(st)`",
+       "Leftover '(' that were never closed",
+       "In-place set union with the remaining stack indexes"
+      ],
+      [
+       "`''.join(c for i, c in enumerate(s) if i not in remove)`",
+       "Rebuild the string without removed positions",
+       "Single pass"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`lee(t(c)o)de)` → `lee(t(c)o)de`. Only bracket characters are shown:"
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Char",
+      "Action",
+      "Stack",
+      "remove"
+     ],
+     "rows": [
+      [
+       "3",
+       "(",
+       "push index",
+       "[3]",
+       "[]"
+      ],
+      [
+       "5",
+       "(",
+       "push index",
+       "[3, 5]",
+       "[]"
+      ],
+      [
+       "7",
+       ")",
+       "matches the latest '('",
+       "[3]",
+       "[]"
+      ],
+      [
+       "9",
+       ")",
+       "matches the latest '('",
+       "[]",
+       "[]"
+      ],
+      [
+       "12",
+       ")",
+       "no open '(' → remove",
+       "[]",
+       "[12]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store indexes rather than characters?",
+    "p": [
+     "Brackets of the same kind are identical, so to delete a specific one we need its position. The stack of indexes remembers which '(' are unmatched, and any left over at the end are deleted. Only the unmatched brackets are removed, which is the minimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Stack of open-bracket indexes: unmatched ')' are marked at once, leftover '(' at the end; rebuild without them."
+ },
+ "1282": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`defaultdict(list)`",
+       "Group size → people waiting in a not-yet-full group",
+       "Creates an empty list for a new size"
+      ],
+      [
+       "`open_groups[size].append(i)`",
+       "Add person i to the open group of their size",
+       "One open group per size at a time"
+      ],
+      [
+       "`len(open_groups[size]) == size`",
+       "The group is full",
+       "Time to close it"
+      ],
+      [
+       "`open_groups.pop(size)`",
+       "Remove and return the full group",
+       "Next person of that size starts a fresh group"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[3,3,3,3,3,1,3]` → [[0, 1, 2], [5], [3, 4, 6]]:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Needs group of",
+      "Open groups",
+      "Finished groups"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "{3: [0]}",
+       "[]"
+      ],
+      [
+       "1",
+       "3",
+       "{3: [0, 1]}",
+       "[]"
+      ],
+      [
+       "2",
+       "3",
+       "{}",
+       "[[0, 1, 2]]"
+      ],
+      [
+       "3",
+       "3",
+       "{3: [3]}",
+       "[[0, 1, 2]]"
+      ],
+      [
+       "4",
+       "3",
+       "{3: [3, 4]}",
+       "[[0, 1, 2]]"
+      ],
+      [
+       "5",
+       "1",
+       "{3: [3, 4]}",
+       "[[0, 1, 2], [5]]"
+      ],
+      [
+       "6",
+       "3",
+       "{}",
+       "[[0, 1, 2], [5], [3, 4, 6]]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does greedy filling work?",
+    "p": [
+     "Any assignment of people to groups of the right size is accepted, so people with the same required size can be taken in order. At most one group per size is ever open, and it is emitted the moment it reaches its size."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "One open bucket per group size: append the person and emit the bucket when it reaches that size."
+ },
+ "1291": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`digits = '123456789'`",
+       "The source of all sequential numbers",
+       "Every sequential-digit number is a slice of it"
+      ],
+      [
+       "`range(len(str(low)), len(str(high)) + 1)`",
+       "Possible numbers of digits",
+       "From low's length to high's length"
+      ],
+      [
+       "`range(0, 10 - length)`",
+       "Valid start positions for a slice of this length",
+       "A slice of length L starting at s needs s + L ≤ 9"
+      ],
+      [
+       "`int(digits[start:start + length])`",
+       "Slice to number",
+       "Slices come out already in increasing order of value"
+      ],
+      [
+       "`low <= num <= high`",
+       "Range filter",
+       "Keep only the numbers in the interval"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`low = 100`, `high = 300` → [123, 234]:"
+    ],
+    "table": {
+     "head": [
+      "Length",
+      "Start",
+      "Slice",
+      "In [100, 300]?"
+     ],
+     "rows": [
+      [
+       "3",
+       "0",
+       "123",
+       "in range"
+      ],
+      [
+       "3",
+       "1",
+       "234",
+       "in range"
+      ],
+      [
+       "3",
+       "2",
+       "345",
+       "out of range"
+      ],
+      [
+       "3",
+       "3",
+       "456",
+       "out of range"
+      ],
+      [
+       "3",
+       "4",
+       "567",
+       "out of range"
+      ],
+      [
+       "3",
+       "5",
+       "678",
+       "out of range"
+      ],
+      [
+       "3",
+       "6",
+       "789",
+       "out of range"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why slicing and not counting up?",
+    "p": [
+     "Only 45 sequential-digit numbers exist (9 of length 1, 8 of length 2, … 1 of length 9), so generating them all from the string is O(1) work. Looping through every integer from low to high could take up to 10⁹ iterations. The result is automatically sorted because shorter lengths are smaller and, for equal length, a later start gives a larger number."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1): at most 45 slices.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Generate every sequential-digit number as a slice of '123456789' and filter by the range."
+ },
+ "1297": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s[i:i + minSize]`",
+       "The window of length minSize starting at i",
+       "Only the shortest allowed length is considered"
+      ],
+      [
+       "`len(set(window)) <= maxLetters`",
+       "Distinct letter limit",
+       "Set of characters has size = number of different letters"
+      ],
+      [
+       "`Counter(generator)`",
+       "Count how many times each valid window occurs",
+       "Overlaps count (windows start at every index)"
+      ],
+      [
+       "`max(cnt.values(), default=0)`",
+       "The highest count, or 0 when no window qualifies",
+       "`default` avoids an error on an empty sequence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'aababcaab'`, `maxLetters = 2`, `minSize = 3` → 2. Windows of length 3:"
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Distinct letters",
+      "Counted?"
+     ],
+     "rows": [
+      [
+       "aab",
+       "2",
+       "yes"
+      ],
+      [
+       "aba",
+       "2",
+       "yes"
+      ],
+      [
+       "bab",
+       "2",
+       "yes"
+      ],
+      [
+       "abc",
+       "3",
+       "no"
+      ],
+      [
+       "bca",
+       "3",
+       "no"
+      ],
+      [
+       "caa",
+       "2",
+       "yes"
+      ],
+      [
+       "aab",
+       "2",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the shortest length matters",
+    "p": [
+     "A longer substring contains a minSize-long substring that occurs at least as often (every occurrence of the long one contains an occurrence of the short one) and has no more distinct letters. So the maximum frequency is always achieved at length `minSize`, and `maxSize` can be ignored. Counts: {'aab': 2, 'aba': 1, 'bab': 1, 'caa': 1}."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · minSize) to build and hash each window.",
+     "Space: O(n · minSize) for the counter."
+    ]
+   }
+  ],
+  "takeaway": "Only the shortest allowed length can be most frequent, so count all minSize windows that meet the letter limit."
+ },
+ "1309": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s[i] == '#'`",
+       "A '#' means the two digits before it form a number 10–26",
+       "Decide by looking at the end of a token"
+      ],
+      [
+       "`int(s[i - 2:i])`",
+       "The two digits as a number",
+       "Slice just before the '#'"
+      ],
+      [
+       "`chr(96 + n)`",
+       "Number to letter (1 → 'a')",
+       "`ord('a') = 97`"
+      ],
+      [
+       "`i -= 3` / `i -= 1`",
+       "Skip the '#' and its two digits / a single digit",
+       "Move left by the token length"
+      ],
+      [
+       "`reversed(res)`",
+       "Characters were collected from the right",
+       "Flip back at the end"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'10#11#12'` → `jkab`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "Token",
+      "Letter"
+     ],
+     "rows": [
+      [
+       "7",
+       "2",
+       "single digit",
+       "b"
+      ],
+      [
+       "6",
+       "1",
+       "single digit",
+       "a"
+      ],
+      [
+       "5",
+       "#",
+       "two digits s[3:5] = 11",
+       "k"
+      ],
+      [
+       "2",
+       "#",
+       "two digits s[0:2] = 10",
+       "j"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why scan from the right?",
+    "p": [
+     "Reading from the left you could not tell whether a `1` starts the two-digit `10#` or stands alone until you look two characters ahead. Reading from the right, a `#` immediately announces a two-digit token, so every decision is local."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Decode from the right: '#' means the previous two digits form one letter, otherwise one digit is one letter."
+ },
+ "1312": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`s[::-1]`",
+       "Reversed string",
+       "The longest palindromic subsequence of s equals the longest common subsequence (LCS) of s and its reverse"
+      ],
+      [
+       "`prev`, `cur`",
+       "Two rows of the LCS table",
+       "Row i depends only on row i−1, so O(n) space suffices"
+      ],
+      [
+       "`prev[j-1] + 1`",
+       "Matching letters extend the LCS diagonally",
+       "Standard LCS recurrence"
+      ],
+      [
+       "`max(prev[j], cur[j-1])`",
+       "Mismatch: best of dropping a letter from either string",
+       "Standard LCS recurrence"
+      ],
+      [
+       "`n - prev[n]`",
+       "Letters not in the longest palindromic subsequence",
+       "Each needs one inserted mirror partner"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`'mbadm'` with reverse `'mdabm'`; each row shows `cur[1..5]` after processing `s[i]`:"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "s[i]",
+      "LCS row"
+     ],
+     "rows": [
+      [
+       "1",
+       "m",
+       "[1, 1, 1, 1, 1]"
+      ],
+      [
+       "2",
+       "b",
+       "[1, 1, 1, 2, 2]"
+      ],
+      [
+       "3",
+       "a",
+       "[1, 1, 2, 2, 2]"
+      ],
+      [
+       "4",
+       "d",
+       "[1, 2, 2, 2, 2]"
+      ],
+      [
+       "5",
+       "m",
+       "[1, 2, 2, 2, 3]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the answer n − LPS?",
+    "p": [
+     "Keep the longest palindromic subsequence (here length 3, `mam` or `mdm`). Every other letter is unmatched, and inserting one mirror copy for each makes a palindrome. So the minimum insertions equal n minus the LPS: 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n) with the two rolling rows."
+    ]
+   }
+  ],
+  "takeaway": "Minimum insertions = n − longest palindromic subsequence, computed as LCS (Longest Common Subsequence) of s and reverse(s)."
+ },
+ "1318": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`(a >> i) & 1`",
+       "Bit i of a",
+       "Shift right by i, then mask the lowest bit"
+      ],
+      [
+       "`z == 0`",
+       "Target bit is 0",
+       "Both a's and b's bits must be 0 (OR is 0 only if both are 0)"
+      ],
+      [
+       "`flips += x + y`",
+       "One flip for each of them that is 1",
+       "Counts the 1s that must be cleared"
+      ],
+      [
+       "`z == 1` and `x + y == 0`",
+       "Target bit is 1 but both are 0",
+       "Flipping one of them (cost 1) is enough"
+      ],
+      [
+       "`range(32)`",
+       "All 32 bit positions",
+       "Covers every bit of the inputs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = 2` (010), `b = 6` (110), `c = 5` (101) → 3 flips. First four bits (higher bits are all 0 and need nothing):"
+    ],
+    "table": {
+     "head": [
+      "Bit i",
+      "a",
+      "b",
+      "c",
+      "Rule",
+      "Flips",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "1",
+       "need 1: at least one must be 1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "0",
+       "need 0: clear every 1",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "0",
+       "1",
+       "1",
+       "need 1: at least one must be 1",
+       "0",
+       "3"
+      ],
+      [
+       "3",
+       "0",
+       "0",
+       "0",
+       "need 0: clear every 1",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why are the bits independent?",
+    "p": [
+     "OR works bit by bit, and a flip changes only one bit, so each bit position can be solved separately and the costs added. When the target is 0 every 1 must go (two 1s cost two flips); when the target is 1 and one of x, y is already 1, nothing is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1): 32 iterations.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Solve each bit independently: target 0 clears every 1 among a and b, target 1 needs one flip only if both are 0."
+ },
+ "1345": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`same = defaultdict(list)`",
+       "Value → all indexes holding that value",
+       "Lets us jump between equal values in one step"
+      ],
+      [
+       "`same[arr[i]] + [i - 1, i + 1]`",
+       "All neighbours of i: equal-valued indexes plus the two adjacent ones",
+       "Edges of the implicit graph"
+      ],
+      [
+       "`seen`",
+       "Indexes already queued",
+       "Standard BFS (Breadth-First Search) visited set"
+      ],
+      [
+       "`same[arr[i]] = []`",
+       "Clear the list after using it once",
+       "The first visit to a value already queues all its indexes; scanning the same list again would make the algorithm O(n²)"
+      ],
+      [
+       "`for _ in range(len(q))` + `steps += 1`",
+       "Process one BFS layer per step count",
+       "`steps` is the number of jumps"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[100,-23,-23,404,100,23,23,23,3,404]` → 3 jumps:"
+    ],
+    "table": {
+     "head": [
+      "Jumps",
+      "Indexes in this layer",
+      "Newly queued"
+     ],
+     "rows": [
+      [
+       "0",
+       "[0]",
+       "[4, 1]"
+      ],
+      [
+       "1",
+       "[4, 1]",
+       "[3, 5, 2]"
+      ],
+      [
+       "2",
+       "[3, 5, 2]",
+       "[9, 6, 7]"
+      ],
+      [
+       "3",
+       "[9]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why clear `same[arr[i]]`?",
+    "p": [
+     "When we first pop an index with value v, every index with value v is queued. Later pops of other indexes with value v would re-scan the whole list (all already seen). Emptying it makes each list scanned once, giving O(n) overall. With many duplicates (e.g. all equal values) this is the difference between linear and quadratic time."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "BFS (Breadth-First Search) on indexes with edges to i±1 and to equal values; clear each value's list after its first use to stay linear."
+ },
+ "1351": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`r, c = 0, n - 1`",
+       "Start at the top-right corner",
+       "There it is the largest in its column and the smallest in its row (rows and columns are sorted in non-increasing order)"
+      ],
+      [
+       "`grid[r][c] < 0`",
+       "Negative at the pointer",
+       "Everything below it in the column is also negative (columns are non-increasing)"
+      ],
+      [
+       "`res += m - r`",
+       "Count the whole column part from row r to the bottom",
+       "Counts many cells at once"
+      ],
+      [
+       "`c -= 1` / `r += 1`",
+       "Move left after a negative; down after a non-negative",
+       "Staircase walk: each step discards a row or a column"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Matrix `[[4,3,2,-1],[3,2,1,-1],[1,1,-1,-2],[-1,-1,-2,-3]]` → 8:"
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Value",
+      "Reason",
+      "Move",
+      "Count"
+     ],
+     "rows": [
+      [
+       "(0,3)",
+       "-1",
+       "negative → whole column below counts: +4",
+       "c −= 1",
+       "4"
+      ],
+      [
+       "(0,2)",
+       "2",
+       "not negative",
+       "r += 1",
+       "4"
+      ],
+      [
+       "(1,2)",
+       "1",
+       "not negative",
+       "r += 1",
+       "4"
+      ],
+      [
+       "(2,2)",
+       "-1",
+       "negative → whole column below counts: +2",
+       "c −= 1",
+       "6"
+      ],
+      [
+       "(2,1)",
+       "1",
+       "not negative",
+       "r += 1",
+       "6"
+      ],
+      [
+       "(3,1)",
+       "-1",
+       "negative → whole column below counts: +1",
+       "c −= 1",
+       "7"
+      ],
+      [
+       "(3,0)",
+       "-1",
+       "negative → whole column below counts: +1",
+       "c −= 1",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this beat scanning every cell?",
+    "p": [
+     "A negative at (r, c) means every cell below it in column c is negative too, so the part of the column from row r down is counted and the column is finished. A non-negative at (r, c) means every cell to its left in row r is also non-negative (rows are non-increasing), so row r has nothing more to count among columns up to c, and the row is finished. The pointer path has at most m + n steps."
+    ],
+    "table": {
+     "head": [
+      "Method",
+      "Time"
+     ],
+     "rows": [
+      [
+       "Scan all cells",
+       "O(m·n)"
+      ],
+      [
+       "Binary search per row",
+       "O(m log n)"
+      ],
+      [
+       "Staircase (this code)",
+       "O(m + n)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Staircase search from the top-right corner of a doubly sorted matrix: a negative counts a whole column part, a non-negative discards the row."
+ },
+ "1357": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dict(zip(products, prices))`",
+       "Product → price",
+       "`zip` pairs the two lists; `dict` builds the lookup"
+      ],
+      [
+       "`self.count`",
+       "Customers served so far",
+       "The discount applies when it is a multiple of n"
+      ],
+      [
+       "`sum(self.price[p] * a for p, a in zip(product, amount))`",
+       "Bill = sum of price × quantity",
+       "Generator expression over paired lists"
+      ],
+      [
+       "`self.count % self.n == 0`",
+       "Every n-th customer",
+       "Modulo test"
+      ],
+      [
+       "`total * (100 - discount) / 100`",
+       "Apply the percentage off",
+       "Multiplying first keeps the arithmetic exact for integers before the division"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `discount = 50`, products 1…7 with prices `[100,200,300,400,300,200,100]`:"
+    ],
+    "table": {
+     "head": [
+      "Customer #",
+      "Items (product, amount)",
+      "Raw total",
+      "Discount?",
+      "Bill"
+     ],
+     "rows": [
+      [
+       "1",
+       "[(1, 1), (2, 2)]",
+       "500",
+       "full price",
+       "500.0"
+      ],
+      [
+       "2",
+       "[(3, 10), (7, 10)]",
+       "4000",
+       "full price",
+       "4000.0"
+      ],
+      [
+       "3",
+       "[(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1), (7, 1)]",
+       "1600",
+       "discount (every 3rd)",
+       "800.0"
+      ],
+      [
+       "4",
+       "[(4, 10)]",
+       "4000",
+       "full price",
+       "4000.0"
+      ],
+      [
+       "5",
+       "[(7, 10), (3, 10)]",
+       "4000",
+       "full price",
+       "4000.0"
+      ],
+      [
+       "6",
+       "[(7, 10), (5, 10), (3, 10), (1, 9), (6, 9), (4, 9), (2, 9)]",
+       "15100",
+       "discount (every 3rd)",
+       "7550.0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a counter and not a timer or list of customers?",
+    "p": [
+     "Only the customer's position in the sequence matters, so a single integer is sufficient. `getBill` is O(items) because each item needs one price lookup."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(items in the bill) per call.",
+     "Space: O(number of products)."
+    ]
+   }
+  ],
+  "takeaway": "Keep a price dictionary and a customer counter; every n-th bill is scaled by (100 − discount)/100."
+ },
+ "1366": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`cnt = {c: [0] * n …}`",
+       "Team → list of how many votes it got at rank 1, 2, …, n",
+       "One counter per position"
+      ],
+      [
+       "`cnt[c][i] += 1`",
+       "Voter ranked team c at position i",
+       "Tally"
+      ],
+      [
+       "`key=lambda c: ([-x for x in cnt[c]], c)`",
+       "Sort key: negated vote counts, then the letter",
+       "Lists compare element by element (first-place votes first); negating sorts larger counts first; the letter breaks full ties alphabetically"
+      ],
+      [
+       "`sorted(votes[0], key=…)`",
+       "Sorts the team letters (any vote string contains all teams)",
+       "Result is the ranking"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "votes `['ABC', 'ACB', 'ABC', 'ACB', 'ACB']` → `ACB`. Counts per rank (rank 1, 2, 3):"
+    ],
+    "table": {
+     "head": [
+      "Team",
+      "Votes at rank 1, 2, 3",
+      "Sort key"
+     ],
+     "rows": [
+      [
+       "A",
+       "[5, 0, 0]",
+       "([-5, 0, 0], 'A')"
+      ],
+      [
+       "B",
+       "[0, 2, 3]",
+       "([0, -2, -3], 'B')"
+      ],
+      [
+       "C",
+       "[0, 3, 2]",
+       "([0, -3, -2], 'C')"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why negate the counts?",
+    "p": [
+     "`sorted` is ascending, but a team with MORE first-place votes should come first. Negating each count turns 'larger is better' into 'smaller sorts first'. Since lists compare lexicographically, the first rank decides, ties go to the next rank, and so on; the trailing letter handles complete ties."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·m + m log m) for n teams and m votes.",
+     "Space: O(n²) for the count table."
+    ]
+   }
+  ],
+  "takeaway": "Rank by a sort key of negated per-position vote counts, then the team letter."
+ },
+ "1372": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`dfs(node, came_from, length)`",
+       "Visit a node, knowing the direction we arrived from and the zigzag length ending here",
+       "Top-down DFS (Depth-First Search): state flows to the children"
+      ],
+      [
+       "`came_from == 'R'`",
+       "Arrived from the right (this node is a right child)",
+       "Going left now continues the zigzag"
+      ],
+      [
+       "`length + 1 if … else 1`",
+       "Continue the zigzag or restart with length 1",
+       "Any node may start a new zigzag as a left or right step"
+      ],
+      [
+       "`best = max(best, length)`",
+       "Track the maximum",
+       "Length counts edges"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,null,1,1,1,null,null,1,1,null,1]` (longest zigzag has 3 edges). Each row is a visited node (position = path of L/R from the root):"
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Arrived by",
+      "Zigzag length",
+      "best"
+     ],
+     "rows": [
+      [
+       "root",
+       "—",
+       "0",
+       "0"
+      ],
+      [
+       "root.R",
+       "R",
+       "1",
+       "1"
+      ],
+      [
+       "root.R.L",
+       "L",
+       "2",
+       "2"
+      ],
+      [
+       "root.R.R",
+       "R",
+       "1",
+       "2"
+      ],
+      [
+       "root.R.R.L",
+       "L",
+       "2",
+       "2"
+      ],
+      [
+       "root.R.R.L.R",
+       "R",
+       "3",
+       "3"
+      ],
+      [
+       "root.R.R.R",
+       "R",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why restart at 1 instead of 0?",
+    "p": [
+     "A child reached by a move that does not continue the zigzag still forms a one-edge path from its parent, so length restarts at 1 (the root has length 0 because no edge exists yet). Every node therefore starts a new candidate in each direction, so zigzags beginning in the middle of the tree are found too."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "DFS passing the arrival direction: continue a zigzag by switching direction, otherwise restart at length 1."
+ },
+ "1381": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`self.st`",
+       "The values",
+       "Normal stack"
+      ],
+      [
+       "`self.inc`",
+       "Pending increment for each position, applied when the element is popped",
+       "Lazy propagation: record the add at the position `k−1` instead of touching k elements"
+      ],
+      [
+       "`self.inc[i] += val`",
+       "Mark 'everything from the bottom up to i gets val'",
+       "O(1) increment"
+      ],
+      [
+       "`self.inc[-1] += add`",
+       "On pop, pass the increment down to the element below",
+       "Elements below the popped one were also covered by that increment"
+      ],
+      [
+       "`self.st.pop() + add`",
+       "Popped value plus its accumulated increment",
+       "Apply the lazy add now"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`maxSize = 3`:"
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "Returns",
+      "Stack values",
+      "Pending increments"
+     ],
+     "rows": [
+      [
+       "push(1)",
+       "—",
+       "[1]",
+       "[0]"
+      ],
+      [
+       "push(2)",
+       "—",
+       "[1, 2]",
+       "[0, 0]"
+      ],
+      [
+       "pop()",
+       "2",
+       "[1]",
+       "[0]"
+      ],
+      [
+       "push(2)",
+       "—",
+       "[1, 2]",
+       "[0, 0]"
+      ],
+      [
+       "push(3)",
+       "—",
+       "[1, 2, 3]",
+       "[0, 0, 0]"
+      ],
+      [
+       "push(4)",
+       "—",
+       "[1, 2, 3]",
+       "[0, 0, 0]"
+      ],
+      [
+       "increment(5,100)",
+       "—",
+       "[1, 2, 3]",
+       "[0, 0, 100]"
+      ],
+      [
+       "increment(2,100)",
+       "—",
+       "[1, 2, 3]",
+       "[0, 100, 100]"
+      ],
+      [
+       "pop()",
+       "103",
+       "[1, 2]",
+       "[0, 200]"
+      ],
+      [
+       "pop()",
+       "202",
+       "[1]",
+       "[200]"
+      ],
+      [
+       "pop()",
+       "201",
+       "[]",
+       "[]"
+      ],
+      [
+       "pop()",
+       "-1",
+       "[]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it correct to push the increment down on pop?",
+    "p": [
+     "`increment(k, val)` affects the bottom k elements. Storing it on the k-th element means: this element and every element below it get `val`. When the top element is popped it uses its own stored value and hands it to the element below (`inc[-1] += add`), so the elements below still receive it later. Pushing a new element starts with 0, because earlier increments did not apply to elements added afterwards."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) for push, pop and increment.",
+     "Space: O(maxSize)."
+    ]
+   }
+  ],
+  "takeaway": "Lazy increments: store the add at the k-th position and push it down on each pop, making increment O(1)."
+ },
+ "1390": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "When to reach for it"
+     ],
+     "rows": [
+      [
+       "`while d * d <= x`",
+       "Test divisors up to √x",
+       "Divisors come in pairs (d, x // d); one of each pair is ≤ √x"
+      ],
+      [
+       "`divs.add(d); divs.add(x // d)`",
+       "Add both members of the pair",
+       "A set avoids counting a square root twice (e.g. 4 = 2 × 2)"
+      ],
+      [
+       "`if len(divs) > 4: break`",
+       "Too many divisors already",
+       "Early exit"
+      ],
+      [
+       "`len(divs) == 4` → `total += sum(divs)`",
+       "Exactly four divisors",
+       "Add all four to the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[21,4,7]` → 32:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Divisors found",
+      "Count",
+      "Action"
+     ],
+     "rows": [
+      [
+       "21",
+       "[1, 3, 7, 21]",
+       "4",
+       "sum 32"
+      ],
+      [
+       "4",
+       "[1, 2, 4]",
+       "3",
+       "skip"
+      ],
+      [
+       "7",
+       "[1, 7]",
+       "2",
+       "skip"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a set and why stop at √x?",
+    "p": [
+     "Looping to √x finds each pair once, so the cost per number is O(√x) instead of O(x). For a perfect square the pair (d, x // d) has equal members; the set stores it once, which is why 4 has three divisors (1, 2, 4), not four."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·√max) for n numbers.",
+     "Space: O(1) (at most 5 divisors are ever stored)."
+    ]
+   }
+  ],
+  "takeaway": "Count divisors in pairs up to √x using a set, stop once more than four are found, and sum when exactly four."
+ }
+}
