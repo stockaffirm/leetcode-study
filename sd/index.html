@@ -68,8 +68,8 @@
     return `<div class="card"><h2>Request access</h2><p>You are signed in as <b>${esc(S.user.email)}</b>. Ask for access and wait for approval.</p><div class="btns"><button class="btn pri" id="req">Request access</button></div></div>`;
   }
   function adminPanel(){
-    const pend = S.reqs.filter(r => r.status === "pending").length;
-    return `<div class="card"><h2>Access requests <span class="pill">${pend} pending</span></h2>${S.reqs.filter(r => r.email !== S.user.email).map(r => `<div class="areq"><div><b>${esc(r.name || r.email)}</b> <small>${esc(r.email)} · ${new Date(r.requested_at).toLocaleDateString()}</small><span class="pill ${esc(r.status)}">${esc(r.status)}</span></div><div>${r.status !== "approved" ? `<button class="btn sm pri" data-d="approved" data-u="${esc(r.user_id)}">Approve</button>` : ""}${r.status !== "denied" ? ` <button class="btn sm bad" data-d="denied" data-u="${esc(r.user_id)}">${r.status === "approved" ? "Revoke" : "Deny"}</button>` : ""}</div></div>`).join("") || "<p>No requests yet.</p>"}</div>`;
+    const pend = S.reqs.filter(r => r.status === "pending" && r.email !== S.user.email).length;
+    return `<div class="card"><h2>Access requests <span class="pill">${pend} pending</span></h2>${S.reqs.filter(r => r.email !== S.user.email).map(r => `<div class="areq"><div><b>${esc(r.name || r.email)}</b> <small>${esc(r.email)} · ${new Date(r.requested_at).toLocaleDateString()}</small><span class="pill ${esc(r.status)}">${esc(r.status)}</span></div><div>${r.status !== "approved" ? `<button class="btn sm pri" data-d="approved" data-u="${esc(r.user_id)}">Approve</button>` : ""}${r.status === "pending" ? ` <button class="btn sm bad" data-d="denied" data-u="${esc(r.user_id)}">Deny</button>` : ""}</div></div>`).join("") || "<p>No requests yet.</p>"}</div>`;
   }
   function renderList(){
     const box = $("#list"); if(!box) return;
