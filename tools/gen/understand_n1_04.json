@@ -1,0 +1,1552 @@
+{
+ "1800": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "best = cur = nums[0]",
+       "Running sum of the current ascending run and the best sum so far",
+       ""
+      ],
+      [
+       "nums[i] > nums[i-1]",
+       "The run continues only when strictly bigger than the previous element",
+       ""
+      ],
+      [
+       "cur + nums[i] ... else nums[i]",
+       "Extend the run, or start a new run at this element",
+       ""
+      ],
+      [
+       "best = max(best, cur)",
+       "Keep the largest run sum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [10,20,30,5,10,50]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "cur",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "10",
+       "10",
+       "10"
+      ],
+      [
+       "1",
+       "20",
+       "30",
+       "30"
+      ],
+      [
+       "2",
+       "30",
+       "60",
+       "60"
+      ],
+      [
+       "3",
+       "5",
+       "5 (new run)",
+       "60"
+      ],
+      [
+       "4",
+       "10",
+       "15",
+       "60"
+      ],
+      [
+       "5",
+       "50",
+       "65",
+       "65"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "One pass: extend the running sum while values strictly increase, restart otherwise, and keep the maximum."
+ },
+ "1836": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cnt = Counter()",
+       "Counts of every value in the list",
+       "First pass over the list"
+      ],
+      [
+       "dummy = ListNode(0, head)",
+       "A fake node in front, so deleting the head needs no special case",
+       ""
+      ],
+      [
+       "prev.next.val",
+       "The node about to be examined",
+       ""
+      ],
+      [
+       "cnt[...] > 1: prev.next = prev.next.next",
+       "Unlink the node when its value appears more than once",
+       ""
+      ],
+      [
+       "else: prev = prev.next",
+       "Keep the node and move on",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [1,2,3,2]`, counts `{1:1, 2:2, 3:1}`."
+    ],
+    "table": {
+     "head": [
+      "Node examined",
+      "Count",
+      "Action",
+      "List so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "keep",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "remove",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "keep",
+       "1 → 3"
+      ],
+      [
+       "2",
+       "2",
+       "remove",
+       "1 → 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the counts."
+    ]
+   }
+  ],
+  "takeaway": "Count all values first, then delete every node whose value was seen more than once, using a dummy head."
+ },
+ "1848": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "enumerate(nums)",
+       "Index and value together",
+       ""
+      ],
+      [
+       "if v == target",
+       "Only positions that hold the target",
+       ""
+      ],
+      [
+       "abs(i - start)",
+       "Distance from the start index",
+       ""
+      ],
+      [
+       "min(...)",
+       "The closest one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5]`, `target = 5`, `start = 3`."
+    ],
+    "table": {
+     "head": [
+      "Index holding 5",
+      "|i − start|"
+     ],
+     "rows": [
+      [
+       "4",
+       "|4 − 3| = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Scan all indexes holding the target and take the smallest distance to start."
+ },
+ "1886": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for _ in range(4)",
+       "A square can be rotated to 4 different orientations (0, 90, 180, 270 degrees)",
+       ""
+      ],
+      [
+       "mat == target",
+       "Compare the current orientation with the target",
+       ""
+      ],
+      [
+       "mat[::-1]",
+       "Reverse the order of the rows",
+       ""
+      ],
+      [
+       "zip(*mat[::-1])",
+       "Reading columns of the reversed rows is a 90° clockwise rotation",
+       ""
+      ],
+      [
+       "[list(row) for row in ...]",
+       "Turn the tuples back into lists so == works",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`mat = [[0,1],[1,0]]`, `target = [[1,0],[0,1]]`."
+    ],
+    "table": {
+     "head": [
+      "Rotation",
+      "mat",
+      "Equal to target?"
+     ],
+     "rows": [
+      [
+       "0°",
+       "[[0,1],[1,0]]",
+       "no"
+      ],
+      [
+       "90°",
+       "reverse rows → [[1,0],[0,1]], then columns → [[1,0],[0,1]]",
+       "yes → true"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Rotate the matrix 90° at a time (reverse rows, then transpose) and compare with the target up to four times."
+ },
+ "1900": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp(n, f, s)",
+       "(earliest, latest) round in which players at positions f < s meet, with n players left",
+       "Memoised with lru_cache"
+      ],
+      [
+       "f + s == n + 1",
+       "They are opposite each other, so they play in this round → (1, 1)",
+       ""
+      ],
+      [
+       "f + s > n + 1",
+       "Mirror the row: the same game with positions (n+1−s, n+1−f)",
+       "Reduces the problem to the left-leaning case"
+      ],
+      [
+       "half = (n + 1) // 2",
+       "Players left in the next round",
+       ""
+      ],
+      [
+       "a in range(f), b in range(s − f)",
+       "a players before f and b players between f and s may advance (any count is allowed because the other results can be chosen freely)",
+       "Enumerating every possible outcome of the other matches"
+      ],
+      [
+       "dp(half, a + 1, a + b + 2)",
+       "Next round positions of the two stars",
+       "When s is in the first half"
+      ],
+      [
+       "the else branch",
+       "s lies in the right half; players between the opponent of s and s pair among themselves, adding (s − o)//2 more winners before s",
+       "o = n + 1 − s"
+      ],
+      [
+       "r[0] + 1, r[1] + 1",
+       "Add this round to the earliest/latest from the next state",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 11`, `firstPlayer = 2`, `secondPlayer = 4`. They do not meet this round (2 + 4 = 6 < 12). The next round has 6 players; the four possible new position pairs and their results are:"
+    ],
+    "table": {
+     "head": [
+      "Next positions (f, s) of 6",
+      "Earliest, latest from there"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "(3, 3)"
+      ],
+      [
+       "(1, 3)",
+       "(2, 3)"
+      ],
+      [
+       "(2, 3)",
+       "(3, 3)"
+      ],
+      [
+       "(2, 4)",
+       "(3, 3)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Combining",
+    "p": [
+     "The smallest first value is 2 and the largest second value is 3. Adding the current round gives `[3, 4]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: about O(n⁴) states-times-choices in the worst case, small for n ≤ 28.",
+     "Space: O(n³) for the memo."
+    ]
+   }
+  ],
+  "takeaway": "Memoised search on (players left, position of each star): enumerate how many other players advance before and between them, and combine the outcomes."
+ },
+ "1925": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "squares",
+       "Set of perfect squares c² for c up to n",
+       ""
+      ],
+      [
+       "for a ... for b ...",
+       "Every pair (a, b)",
+       ""
+      ],
+      [
+       "a*a + b*b in squares",
+       "c = √(a²+b²) exists and c ≤ n, so (a, b, c) is a triple",
+       ""
+      ],
+      [
+       "sum(1 ...)",
+       "Counts the pairs, each pair fixes c",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`. Squares: 1, 4, 9, 16, 25."
+    ],
+    "table": {
+     "head": [
+      "(a, b)",
+      "a² + b²",
+      "In squares?"
+     ],
+     "rows": [
+      [
+       "(3, 4)",
+       "25",
+       "yes (c = 5)"
+      ],
+      [
+       "(4, 3)",
+       "25",
+       "yes (c = 5)"
+      ],
+      [
+       "all other pairs",
+       "e.g. 1+4 = 5, 9+9 = 18",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Try every pair (a, b) and check whether a² + b² is a perfect square of a number at most n."
+ },
+ "1945": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ord(c) - 96",
+       "Letter position (a = 1 ... z = 26)",
+       ""
+      ],
+      [
+       "''.join(str(...))",
+       "Concatenate the numbers as text, e.g. 9 9 9 9 → \"9999\"",
+       ""
+      ],
+      [
+       "for _ in range(k)",
+       "Repeat the transform k times",
+       ""
+      ],
+      [
+       "str(sum(int(d) for d in digits))",
+       "Sum of the digits, turned back into text for the next round",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = iiii`, `k = 1`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "convert",
+       "i = 9 → \"9999\""
+      ],
+      [
+       "transform 1",
+       "9 + 9 + 9 + 9 = 36"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another example",
+    "p": [
+     "`leetcode`, `k = 2`: the string becomes `12552031545`; round 1 gives `1+2+5+5+2+0+3+1+5+4+5 = 33`; round 2 gives `3+3 = 6`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for the conversion; later rounds shrink quickly.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Build the digit string once, then replace it by its digit sum k times."
+ },
+ "1975": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total += abs(v)",
+       "Sum of absolute values, the best possible if every sign could be positive",
+       ""
+      ],
+      [
+       "neg += v < 0",
+       "Counts the negative numbers",
+       ""
+      ],
+      [
+       "small = min(small, abs(v))",
+       "Smallest absolute value in the matrix",
+       ""
+      ],
+      [
+       "neg % 2",
+       "Flipping two adjacent cells changes the number of negatives by 0 or ±2, so its parity stays",
+       ""
+      ],
+      [
+       "total - 2 * small",
+       "If the parity is odd, one value must stay negative; choose the smallest",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`matrix = [[1,-1],[-1,1]]`: absolute values sum to 4, there are 2 negatives (even)."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "total",
+       "4"
+      ],
+      [
+       "negatives",
+       "2 → even"
+      ],
+      [
+       "answer",
+       "4 − 0 = 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "An odd case",
+    "p": [
+     "`[[1,2,3],[-1,-2,-3],[1,2,3]]`: total = 18, 3 negatives (odd), smallest absolute value 1, so the answer is `18 − 2 = 16`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The number of negatives keeps its parity; if it is odd, sacrifice the element with the smallest absolute value."
+ },
+ "1983": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "diff += a - b",
+       "Running difference of the two prefix sums",
+       ""
+      ],
+      [
+       "first = {0: -1}",
+       "Earliest index where each difference value appeared (0 before the array starts)",
+       ""
+      ],
+      [
+       "diff in first",
+       "The sums over (first[diff], i] are equal for both arrays",
+       ""
+      ],
+      [
+       "best = max(best, i - first[diff])",
+       "Width of that range",
+       ""
+      ],
+      [
+       "else: first[diff] = i",
+       "Record only the first occurrence, which gives the widest range",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,1,0,1]`, `nums2 = [0,1,1,0]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "a − b",
+      "diff",
+      "Seen before at",
+      "Width",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "–",
+       "–",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "−1",
+       "0",
+       "−1",
+       "3",
+       "3"
+      ],
+      [
+       "3",
+       "1",
+       "1",
+       "0",
+       "3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Equal range sums mean the prefix difference repeats; remember the first index of each difference and take the widest gap."
+ },
+ "2000": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "word.find(ch)",
+       "Index of the first occurrence, or −1",
+       ""
+      ],
+      [
+       "word[:i + 1]",
+       "Prefix up to and including that character",
+       ""
+      ],
+      [
+       "[::-1]",
+       "Reverse it",
+       ""
+      ],
+      [
+       "+ word[i + 1:]",
+       "Append the rest unchanged",
+       "When ch is missing i = −1, so the prefix is empty and the word is unchanged"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = abcdefd`, `ch = d`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "i",
+       "3"
+      ],
+      [
+       "prefix",
+       "abcd"
+      ],
+      [
+       "reversed",
+       "dcba"
+      ],
+      [
+       "answer",
+       "dcba + efd = dcbaefd"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Find the first occurrence, reverse the slice up to it, and keep the remainder."
+ },
+ "2013": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.cnt = Counter()",
+       "How many times each point has been added",
+       "Duplicates count separately"
+      ],
+      [
+       "tuple(point)",
+       "Lists cannot be dictionary keys, tuples can",
+       ""
+      ],
+      [
+       "abs(px - x) == abs(py - y) and px != x",
+       "The stored point is a diagonal corner of a square with positive side",
+       ""
+      ],
+      [
+       "cnt[(x, py)] and cnt[(px, y)]",
+       "The other two corners",
+       ""
+      ],
+      [
+       "c * ... * ...",
+       "Number of ways to choose copies of the three corners",
+       ""
+      ],
+      [
+       "list(self.cnt.items())",
+       "Snapshot, so lookups during the loop are safe",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The example: add (3,10), (11,2), (3,2), then queries."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Matching stored corner",
+      "Calculation",
+      "Result"
+     ],
+     "rows": [
+      [
+       "count (11,10)",
+       "(3,2): |3−11| = 8 = |2−10|",
+       "1 × cnt(11,2)=1 × cnt(3,10)=1",
+       "1"
+      ],
+      [
+       "count (14,8)",
+       "no point on a diagonal",
+       "–",
+       "0"
+      ],
+      [
+       "add (11,2) again",
+       "cnt(11,2) = 2",
+       "",
+       ""
+      ],
+      [
+       "count (11,10)",
+       "(3,2)",
+       "1 × 2 × 1",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: add O(1); count O(number of distinct points).",
+     "Space: O(number of distinct points)."
+    ]
+   }
+  ],
+  "takeaway": "Store counts per point; for a query, every stored point on a diagonal gives a square, multiplied by the counts of the two missing corners."
+ },
+ "2044": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "target",
+       "OR of the whole array, which is the largest OR any subset can reach",
+       ""
+      ],
+      [
+       "dfs(i, cur)",
+       "Decide for element i: include or exclude, with the OR so far in cur",
+       ""
+      ],
+      [
+       "i == len(nums)",
+       "All elements decided: count 1 if cur equals target",
+       ""
+      ],
+      [
+       "dfs(i+1, cur) + dfs(i+1, cur | nums[i])",
+       "Exclude branch plus include branch",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1]`, target = `3 | 1 = 3`."
+    ],
+    "table": {
+     "head": [
+      "Subset",
+      "OR",
+      "Equals target?"
+     ],
+     "rows": [
+      [
+       "{}",
+       "0",
+       "no"
+      ],
+      [
+       "{3}",
+       "3",
+       "yes"
+      ],
+      [
+       "{1}",
+       "1",
+       "no"
+      ],
+      [
+       "{3, 1}",
+       "3",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Two subsets reach the maximum OR, so the answer is 2. The empty subset gives 0, which differs from the target because all numbers are positive."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(2ⁿ), fine for n ≤ 16.",
+     "Space: O(n) recursion."
+    ]
+   }
+  ],
+  "takeaway": "The maximum OR is the OR of everything; try all 2ⁿ subsets and count those that reach it."
+ },
+ "2058": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "prev, cur, nxt",
+       "A sliding window of three neighbouring nodes",
+       ""
+      ],
+      [
+       "cur.val > prev.val and cur.val > nxt.val",
+       "Local maximum",
+       ""
+      ],
+      [
+       "cur.val < prev.val and cur.val < nxt.val",
+       "Local minimum",
+       ""
+      ],
+      [
+       "pos",
+       "Indices of the critical points",
+       ""
+      ],
+      [
+       "min(b - a ...)",
+       "Smallest gap between neighbouring critical points",
+       ""
+      ],
+      [
+       "pos[-1] - pos[0]",
+       "Largest gap, between the first and last",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [5,3,1,2,5,1,2]`."
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Value",
+      "prev / next",
+      "Critical?",
+      "pos"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "5 / 1",
+       "no",
+       "[]"
+      ],
+      [
+       "2",
+       "1",
+       "3 / 2",
+       "yes (min)",
+       "[2]"
+      ],
+      [
+       "3",
+       "2",
+       "1 / 5",
+       "no",
+       "[2]"
+      ],
+      [
+       "4",
+       "5",
+       "2 / 1",
+       "yes (max)",
+       "[2, 4]"
+      ],
+      [
+       "5",
+       "1",
+       "5 / 2",
+       "yes (min)",
+       "[2, 4, 5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Gaps between neighbours: 2 and 1, so the minimum is 1. The largest distance is `5 − 2 = 3`. The answer is `[1, 3]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the position list."
+    ]
+   }
+  ],
+  "takeaway": "Record the positions of local extremes in one pass; the minimum distance is between neighbours and the maximum is last minus first."
+ },
+ "2074": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "size",
+       "Required size of the current group (1, 2, 3, ...)",
+       ""
+      ],
+      [
+       "nodes",
+       "Collects up to `size` nodes of this group",
+       ""
+      ],
+      [
+       "len(nodes) % 2 == 0",
+       "Reverse only groups with even length (the last group may be shorter)",
+       ""
+      ],
+      [
+       "vals = [...][::-1]; x.val = v",
+       "Reverses by rewriting the values instead of the links",
+       ""
+      ],
+      [
+       "cur = node; size += 1",
+       "Continues after the group with the next size",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [5,2,6,3,9,1,7,3,8,4]`."
+    ],
+    "table": {
+     "head": [
+      "Group size",
+      "Nodes",
+      "Length even?",
+      "After"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "no",
+       "5"
+      ],
+      [
+       "2",
+       "2, 6",
+       "yes",
+       "6, 2"
+      ],
+      [
+       "3",
+       "3, 9, 1",
+       "no",
+       "3, 9, 1"
+      ],
+      [
+       "4",
+       "7, 3, 8, 4",
+       "yes",
+       "4, 8, 3, 7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`[5,6,2,3,9,1,4,8,3,7]`. A final group shorter than its turn is reversed only if its actual length is even."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(√n) for one group at a time (group sizes grow by one)."
+    ]
+   }
+  ],
+  "takeaway": "Walk the list in groups of size 1, 2, 3, ...; for every group of even actual length, reverse its values."
+ },
+ "2104": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total(less)",
+       "Sum of subarray maxima when less is true, subarray minima when false",
+       ""
+      ],
+      [
+       "monotonic stack st",
+       "Indices whose values are in monotone order; popping finds the nearest bigger (or smaller) neighbour",
+       ""
+      ],
+      [
+       "mid = st.pop()",
+       "The element whose span is now known",
+       ""
+      ],
+      [
+       "left = st[-1] if st else -1",
+       "Nearest earlier element that is not smaller (or bigger)",
+       ""
+      ],
+      [
+       "nums[mid] * (mid - left) * (i - mid)",
+       "nums[mid] is the max/min of (mid − left) × (i − mid) subarrays",
+       "Left choices times right choices"
+      ],
+      [
+       "total(True) - total(False)",
+       "Sum of maxima minus sum of minima = sum of ranges",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3]`. Contribution of each element as the maximum:"
+    ],
+    "table": {
+     "head": [
+      "Element",
+      "Subarrays where it is max",
+      "Contribution"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "3",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Minima and result",
+    "p": [
+     "Sum of maxima = 14. As the minimum: 3 contributes `3×1×1 = 3`, 2 contributes `2×1×2 = 4`, 1 contributes `1×1×3 = 3`, so the sum of minima = 10. Answer: `14 − 10 = 4`.",
+     "In ties the boundary rules (strict on one side, non-strict on the other) make every subarray count exactly once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sum of ranges = sum of maxima − sum of minima, and each of those is computed in O(n) with a monotonic stack."
+ },
+ "2127": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "indeg",
+       "How many employees favour each person",
+       ""
+      ],
+      [
+       "queue of indeg 0",
+       "Nobody likes them, so they are chain starts; peel them off",
+       ""
+      ],
+      [
+       "depth[v] = max(depth[v], depth[u] + 1)",
+       "Longest chain of employees that leads into v",
+       ""
+      ],
+      [
+       "remaining nodes",
+       "The cycles of the favourite graph",
+       ""
+      ],
+      [
+       "cycle length ≥ 3",
+       "The cycle alone fills a table; chains cannot be attached",
+       ""
+      ],
+      [
+       "cycle length 2",
+       "A pair can seat its two longest chains on each side: depth[a] + depth[b]; chains of different pairs can be combined",
+       ""
+      ],
+      [
+       "max(longest_cycle, pairs)",
+       "Best of the two strategies",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`favorite = [2,2,1,2]` (0→2, 1→2, 2→1, 3→2)."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "indegrees",
+       "[0, 1, 3, 0]"
+      ],
+      [
+       "peel 0 and 3",
+       "depth[2] = 2"
+      ],
+      [
+       "remaining cycle",
+       "1 ↔ 2 (length 2)"
+      ],
+      [
+       "pairs",
+       "depth[1] + depth[2] = 1 + 2 = 3"
+      ],
+      [
+       "answer",
+       "max(0, 3) = 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Each employee points to one favourite: peel off the chains, then the answer is either the longest cycle of length ≥ 3 or the sum of all 2-cycles with their longest chains."
+ },
+ "2147": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seats",
+       "Indices of all 'S'",
+       ""
+      ],
+      [
+       "len(seats) == 0 or odd",
+       "Every section needs exactly 2 seats, so the count must be even and positive → 0 ways otherwise",
+       ""
+      ],
+      [
+       "seats[i] - seats[i-1]",
+       "Number of positions where the divider between pair (i−2, i−1) and pair (i, i+1) can go: after seat i−1 up to just before seat i",
+       ""
+      ],
+      [
+       "range(2, len(seats), 2)",
+       "One gap between each pair of consecutive seat pairs",
+       ""
+      ],
+      [
+       "res * ... % MOD",
+       "Independent choices multiply",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`corridor = SSPPSPS`: seats at indexes 0, 1, 4, 6."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "seats[i] − seats[i−1]",
+      "res"
+     ],
+     "rows": [
+      [
+       "2",
+       "4 − 1 = 3",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The divider between the first pair (seats at 0 and 1) and the second pair (4 and 6) can go after position 1, 2 or 3, so there are 3 ways."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Group the seats in pairs; between neighbouring pairs the divider can go in (distance) places, and the answer is the product of those distances."
+ },
+ "2176": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for i ... for j in range(i + 1, n)",
+       "All pairs with i < j",
+       "n ≤ 100, so about 5,000 pairs"
+      ],
+      [
+       "nums[i] == nums[j]",
+       "Equal values",
+       ""
+      ],
+      [
+       "i * j % k == 0",
+       "Product of indices divisible by k",
+       ""
+      ],
+      [
+       "sum(1 ...)",
+       "Counts matching pairs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,2,2,2,1,3]`, `k = 2`. Equal-value pairs:"
+    ],
+    "table": {
+     "head": [
+      "(i, j)",
+      "i·j",
+      "Divisible by 2?"
+     ],
+     "rows": [
+      [
+       "(0, 6)",
+       "0",
+       "yes"
+      ],
+      [
+       "(1, 5)",
+       "5",
+       "no"
+      ],
+      [
+       "(2, 3)",
+       "6",
+       "yes"
+      ],
+      [
+       "(2, 4)",
+       "8",
+       "yes"
+      ],
+      [
+       "(3, 4)",
+       "12",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "With n up to 100, just test every pair for equal values and an index product divisible by k."
+ }
+}

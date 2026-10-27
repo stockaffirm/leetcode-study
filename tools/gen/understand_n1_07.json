@@ -1,0 +1,1564 @@
+{
+ "3471": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(len(nums) - k + 1)",
+       "Start of each window of size k",
+       ""
+      ],
+      [
+       "set(nums[i:i+k])",
+       "Distinct values of one window, so a value counts once per window",
+       ""
+      ],
+      [
+       "cnt[v] += 1",
+       "Number of windows containing v",
+       ""
+      ],
+      [
+       "c == 1",
+       "Almost missing: the value appears in exactly one window",
+       ""
+      ],
+      [
+       "max(..., default=-1)",
+       "Largest such value, or −1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,9,2,1,7]`, `k = 3`. Windows: `[3,9,2]`, `[9,2,1]`, `[2,1,7]`."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Windows containing it",
+      "Almost missing?"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "yes"
+      ],
+      [
+       "9",
+       "2",
+       "no"
+      ],
+      [
+       "2",
+       "3",
+       "no"
+      ],
+      [
+       "1",
+       "2",
+       "no"
+      ],
+      [
+       "7",
+       "1",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The largest almost-missing value is 7."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · k).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count in how many windows each value appears (once per window) and take the largest value counted exactly once."
+ },
+ "3483": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "permutations(digits, 3)",
+       "Every ordered choice of three different positions",
+       ""
+      ],
+      [
+       "a != 0",
+       "No leading zero",
+       ""
+      ],
+      [
+       "c % 2 == 0",
+       "Even number (last digit even)",
+       ""
+      ],
+      [
+       "seen.add(a*100 + b*10 + c)",
+       "A set removes duplicate numbers made from repeated digits",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`digits = [1,2,3,4]`."
+    ],
+    "table": {
+     "head": [
+      "Last digit",
+      "Choices for the other two",
+      "Numbers"
+     ],
+     "rows": [
+      [
+       "2",
+       "ordered pairs from {1,3,4}",
+       "3 × 2 = 6"
+      ],
+      [
+       "4",
+       "ordered pairs from {1,2,3}",
+       "3 × 2 = 6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "12 distinct even numbers (no zero is available, so no leading-zero problems)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³) for n ≤ 10 digits.",
+     "Space: O(1) (at most 900 numbers)."
+    ]
+   }
+  ],
+  "takeaway": "Enumerate all 3-digit permutations, filter leading zero and odd endings, and count distinct values with a set."
+ },
+ "3498": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "ord(c) - 97",
+       "Position in the alphabet from 0 (a = 0)",
+       ""
+      ],
+      [
+       "26 - (...)",
+       "Reversed value: a = 26, b = 25, ..., z = 1",
+       ""
+      ],
+      [
+       "* (i + 1)",
+       "Multiply by the 1-indexed position in the string",
+       ""
+      ],
+      [
+       "sum(...)",
+       "Reverse degree",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = abc`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Reversed value",
+      "Position",
+      "Product"
+     ],
+     "rows": [
+      [
+       "a",
+       "26",
+       "1",
+       "26"
+      ],
+      [
+       "b",
+       "25",
+       "2",
+       "50"
+      ],
+      [
+       "c",
+       "24",
+       "3",
+       "72"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`26 + 50 + 72 = 148`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A direct sum of (reversed alphabet value × 1-indexed position)."
+ },
+ "3514": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "vals = set(nums)",
+       "Duplicates add nothing, since values may be reused",
+       ""
+      ],
+      [
+       "pairs = {a ^ b ...}",
+       "All XORs of two values (a = b gives 0)",
+       ""
+      ],
+      [
+       "{p ^ c for p in pairs for c in vals}",
+       "Every XOR of three values (a value may repeat)",
+       "Indices i ≤ j ≤ k allow repeated indices, so any choice of values with repetition is allowed"
+      ],
+      [
+       "len(...)",
+       "Number of distinct results",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "pairs",
+       "1^1 = 0, 1^3 = 2, 3^3 = 0 → {0, 2}"
+      ],
+      [
+       "triplets",
+       "0^1 = 1, 0^3 = 3, 2^1 = 3, 2^3 = 1 → {1, 3}"
+      ],
+      [
+       "count",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V²) for V distinct values (at most 1500), i.e. about 2 million operations, and the triple step costs about |pairs| × V.",
+     "Space: O(V)."
+    ]
+   }
+  ],
+  "takeaway": "Because indices may repeat, build all pair XORs from the set of values first, then XOR each with every value and count the distinct results."
+ },
+ "3524": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur[r]",
+       "Number of subarrays ending at the previous element whose product mod k is r",
+       ""
+      ],
+      [
+       "new[x % k] += 1",
+       "The subarray consisting of x alone",
+       ""
+      ],
+      [
+       "new[r * x % k] += cur[r]",
+       "Extend every earlier subarray by x",
+       ""
+      ],
+      [
+       "res[r] += cur[r]",
+       "Add all subarrays ending at x to the totals",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,5]`, `k = 3`. `cur[r]` after each element:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "cur = [r0, r1, r2]",
+      "res so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "[0, 1, 0]",
+       "[0, 1, 0]"
+      ],
+      [
+       "2",
+       "[0, 0, 2]",
+       "[0, 1, 2]"
+      ],
+      [
+       "3",
+       "[3, 0, 0]",
+       "[3, 1, 2]"
+      ],
+      [
+       "4",
+       "[3, 1, 0]",
+       "[6, 2, 2]"
+      ],
+      [
+       "5",
+       "[3, 0, 2]",
+       "[9, 2, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "DP on the remainder of the product for subarrays ending at each position; add them up per remainder."
+ },
+ "3536": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "map(int, str(n))",
+       "Digits of n",
+       ""
+      ],
+      [
+       "sorted(...)",
+       "Ascending order",
+       ""
+      ],
+      [
+       "d[-1] * d[-2]",
+       "Product of the two largest digits",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 31`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "digits",
+       "1, 3"
+      ],
+      [
+       "sorted",
+       "[1, 3]"
+      ],
+      [
+       "3 × 1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another check",
+    "p": [
+     "For `124` the sorted digits are `[1, 2, 4]` and the answer is `4 × 2 = 8`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d log d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "The largest product of two digits comes from the two largest digits."
+ },
+ "3547": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "line = deque([n])",
+       "Start with the largest value n",
+       ""
+      ],
+      [
+       "for v in range(n - 1, 0, -1)",
+       "Place the remaining values from large to small",
+       ""
+      ],
+      [
+       "(n - v) % 2: append, else appendleft",
+       "Alternate between the right end and the left end",
+       "Large values end up next to each other in the middle"
+      ],
+      [
+       "sum(a * b for a, b in zip(line, line[1:]))",
+       "Sum of products of neighbours = the edge values of a single chain",
+       ""
+      ],
+      [
+       "len(edges) == n: += line[0] * line[-1]",
+       "If there are n edges (a cycle), the ends are also joined",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, chain with 3 edges. Building the line:"
+    ],
+    "table": {
+     "head": [
+      "v",
+      "Side",
+      "line"
+     ],
+     "rows": [
+      [
+       "start",
+       "–",
+       "[4]"
+      ],
+      [
+       "3",
+       "right",
+       "[4, 3]"
+      ],
+      [
+       "2",
+       "left",
+       "[2, 4, 3]"
+      ],
+      [
+       "1",
+       "right",
+       "[2, 4, 3, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`2·4 + 4·3 + 3·1 = 8 + 12 + 3 = 23`. With a cycle of n edges, the closing edge adds `line[0] * line[-1]` (for example 82 for n = 6)."
+    ],
+    "bullets": [
+     "This solution lays all n numbers on one line, so it describes the case where the graph is a single chain or a single cycle."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Put the biggest numbers in the middle and alternate the smaller ones outward, so large values multiply large values; close the ends when the graph is a cycle."
+ },
+ "3558": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "adj",
+       "Adjacency lists",
+       ""
+      ],
+      [
+       "BFS from node 1",
+       "depth[v] = distance from the root",
+       ""
+      ],
+      [
+       "d = max(depth.values())",
+       "Number of edges on the path to the deepest node",
+       ""
+      ],
+      [
+       "pow(2, d - 1, MOD)",
+       "The first d − 1 edges can each be 1 or 2; the last edge is then forced so that the total is odd",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [[1,2],[1,3],[3,4],[3,5]]`."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "depth"
+     ],
+     "rows": [
+      [
+       "1",
+       "0"
+      ],
+      [
+       "2, 3",
+       "1"
+      ],
+      [
+       "4, 5",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`d = 2`, so the answer is `2^(2−1) = 2`: the two edges must be (1, 2) or (2, 1) to have an odd total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Only the depth of the deepest node matters: 2^(d−1) ways, since the last edge weight is fixed by the parity."
+ },
+ "3582": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "caption.split()",
+       "Words separated by spaces",
+       ""
+      ],
+      [
+       "c.isalpha()",
+       "Drops any character that is not a letter",
+       ""
+      ],
+      [
+       "w.lower() for the first word",
+       "First word fully lower-case",
+       ""
+      ],
+      [
+       "w.capitalize() for later words",
+       "First letter upper-case, the rest lower-case",
+       ""
+      ],
+      [
+       "('#' + out)[:100]",
+       "Add the hash and cut to 100 characters",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`caption = Leetcode daily streak achieved`."
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Becomes"
+     ],
+     "rows": [
+      [
+       "Leetcode",
+       "leetcode"
+      ],
+      [
+       "daily",
+       "Daily"
+      ],
+      [
+       "streak",
+       "Streak"
+      ],
+      [
+       "achieved",
+       "Achieved"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`#leetcodeDailyStreakAchieved`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Clean each word, lower-case the first and capitalise the rest, add '#', and truncate."
+ },
+ "3612": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "res = []",
+       "The string built so far, as a list of characters",
+       ""
+      ],
+      [
+       "'*'",
+       "Remove the last character if there is one",
+       ""
+      ],
+      [
+       "'#'",
+       "res = res + res duplicates the whole result",
+       ""
+      ],
+      [
+       "'%'",
+       "Reverse in place",
+       ""
+      ],
+      [
+       "otherwise",
+       "A lowercase letter is appended",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = a#b%*`."
+    ],
+    "table": {
+     "head": [
+      "Char",
+      "res after"
+     ],
+     "rows": [
+      [
+       "a",
+       "a"
+      ],
+      [
+       "#",
+       "aa"
+      ],
+      [
+       "b",
+       "aab"
+      ],
+      [
+       "%",
+       "baa"
+      ],
+      [
+       "*",
+       "ba"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) where L is the final length (duplication can double the string, but s has at most 20 characters).",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate the operations directly on a list of characters."
+ },
+ "3633": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "double loop over rides",
+       "Every land ride paired with every water ride",
+       ""
+      ],
+      [
+       "max(ls + ld, ws) + wd",
+       "Land first: it finishes at ls + ld, the water ride starts at the later of that time and its opening time ws, then lasts wd",
+       ""
+      ],
+      [
+       "max(ws + wd, ls) + ld",
+       "Water first, then land",
+       ""
+      ],
+      [
+       "min(...)",
+       "The earliest finish",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Land rides `(2, 4)`, `(8, 1)` and water ride `(6, 3)`."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Land first",
+      "Water first"
+     ],
+     "rows": [
+      [
+       "land (2,4) + water (6,3)",
+       "max(6, 6) + 3 = 9",
+       "max(9, 2) + 4 = 13"
+      ],
+      [
+       "land (8,1) + water (6,3)",
+       "max(9, 6) + 3 = 12",
+       "max(9, 8) + 1 = 10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The smallest of 9, 13, 12 and 10 is 9."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · m).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Try every pair of rides in both orders; the second ride starts at the later of the first one's finish and its own opening time."
+ },
+ "3660": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pre[i]",
+       "Largest value among nums[0..i]",
+       ""
+      ],
+      [
+       "suf[i]",
+       "Smallest value among nums[i..n-1]",
+       ""
+      ],
+      [
+       "pre[i] > suf[i+1]",
+       "Some value on the left is larger than some value on the right, so one can cross from the right part back to the left part and the two sides share reachable values",
+       "If not, the prefix [0..i] is a closed group"
+      ],
+      [
+       "ans[i] = ans[i+1]",
+       "Then i reaches everything that i+1 reaches",
+       ""
+      ],
+      [
+       "else ans[i] = pre[i]",
+       "Otherwise the best reachable value is the prefix maximum",
+       ""
+      ],
+      [
+       "ans[-1] = pre[-1]",
+       "The last index can reach the overall maximum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,3]`: `pre = [2,2,3]`, `suf = [1,1,3]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Test pre[i] > suf[i+1]",
+      "ans[i]"
+     ],
+     "rows": [
+      [
+       "2",
+       "–",
+       "3"
+      ],
+      [
+       "1",
+       "2 > 3? no",
+       "pre[1] = 2"
+      ],
+      [
+       "0",
+       "2 > 1? yes",
+       "ans[1] = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`[2,2,3]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Compare the prefix maximum with the suffix minimum at each boundary; if the two sides can connect, share the answer, otherwise use the prefix maximum."
+ },
+ "3702": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total",
+       "XOR of the whole array",
+       ""
+      ],
+      [
+       "total != 0",
+       "The whole array is the longest valid subsequence",
+       ""
+      ],
+      [
+       "total == 0 and any(nums)",
+       "Remove one non-zero element x: the XOR becomes x, which is non-zero → length n − 1",
+       ""
+      ],
+      [
+       "otherwise",
+       "All elements are 0, so every subsequence has XOR 0 → answer 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "total",
+       "1 ^ 2 ^ 3 = 0"
+      ],
+      [
+       "any non-zero?",
+       "yes"
+      ],
+      [
+       "answer",
+       "3 − 1 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "If the total XOR is non-zero take everything; if it is zero, dropping a single non-zero element works (n − 1), or 0 when all elements are zero."
+ },
+ "3714": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "run",
+       "Longest block of one repeated letter (balanced because only one letter appears)",
+       ""
+      ],
+      [
+       "x, y, z loops",
+       "Substrings containing only the letters x and y: a letter z is a separator that resets the state",
+       ""
+      ],
+      [
+       "diff += 1 if c == x else -1",
+       "Count of x minus count of y",
+       ""
+      ],
+      [
+       "diff in first",
+       "Equal counts between two positions → balanced substring of two letters",
+       ""
+      ],
+      [
+       "seen with key (a − b, b − c)",
+       "All three letters: equal counts exist exactly when both differences repeat between prefixes",
+       ""
+      ],
+      [
+       "best = max(...)",
+       "The longest of the three kinds",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = abbac`. The two-letter pass for letters a and b (separator c):"
+    ],
+    "table": {
+     "head": [
+      "i",
+      "char",
+      "diff",
+      "Action",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "a",
+       "1",
+       "first[1] = 0",
+       "1"
+      ],
+      [
+       "1",
+       "b",
+       "0",
+       "seen at −1 → length 2",
+       "2"
+      ],
+      [
+       "2",
+       "b",
+       "−1",
+       "first[−1] = 2",
+       "2"
+      ],
+      [
+       "3",
+       "a",
+       "0",
+       "seen at −1 → length 4",
+       "4"
+      ],
+      [
+       "4",
+       "c",
+       "–",
+       "separator: reset",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The substring `abba` has two a's and two b's, so the answer is 4. The single-letter pass finds only 2 (`bb`), and the three-letter pass finds nothing longer."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Check three cases with prefix-difference maps: one repeated letter, two letters (split by the third), and all three letters."
+ },
+ "3731": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "s = set(nums)",
+       "Fast membership test",
+       ""
+      ],
+      [
+       "range(min(nums), max(nums) + 1)",
+       "Every integer between the smallest and largest value",
+       ""
+      ],
+      [
+       "x not in s",
+       "Missing numbers",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,4,2,5]`."
+    ],
+    "table": {
+     "head": [
+      "x in 1..5",
+      "In nums?"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes"
+      ],
+      [
+       "2",
+       "yes"
+      ],
+      [
+       "3",
+       "no → missing"
+      ],
+      [
+       "4",
+       "yes"
+      ],
+      [
+       "5",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(range + n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Walk through the range from the minimum to the maximum and keep the numbers that are not in the set."
+ },
+ "3756": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "num[i]",
+       "Number formed by joining the non-zero digits of s[:i] (mod 10⁹+7)",
+       ""
+      ],
+      [
+       "total[i], cnt[i]",
+       "Sum and count of the non-zero digits in s[:i]",
+       ""
+      ],
+      [
+       "pow10[c]",
+       "10^c mod p",
+       ""
+      ],
+      [
+       "x = num[r+1] − num[l] * pow10[c]",
+       "Remove the prefix part: num[r+1] = num[l] · 10^c + x, where c is the number of non-zero digits in the query",
+       ""
+      ],
+      [
+       "x * (total[r+1] − total[l])",
+       "Number times digit sum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 10203004`. Prefix tables (prefix length → num, total, cnt):"
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "c",
+      "x",
+      "digit sum",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "[0, 7]",
+       "4",
+       "1234",
+       "10",
+       "12340"
+      ],
+      [
+       "[1, 3]",
+       "cnt[4] − cnt[1] = 1",
+       "12 − 1·10 = 2",
+       "3 − 1 = 2",
+       "4"
+      ],
+      [
+       "[4, 6]",
+       "cnt[7] − cnt[4] = 1",
+       "123 − 12·10 = 3",
+       "6 − 3 = 3",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Prefix tables for the zero-skipped number, digit sum and digit count let each query peel its number out with one multiplication."
+ },
+ "3783": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str(n)[::-1]",
+       "Reverse the digits as text",
+       ""
+      ],
+      [
+       "int(...)",
+       "Back to a number (leading zeros disappear)",
+       ""
+      ],
+      [
+       "abs(n - ...)",
+       "Absolute difference",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 25`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "reverse",
+       "52"
+      ],
+      [
+       "|25 − 52|",
+       "27"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Reverse the digit string, convert back, and take the absolute difference."
+ },
+ "3867": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "best = max(best, x)",
+       "Largest value seen so far (prefix maximum)",
+       ""
+      ],
+      [
+       "gcd(x, best)",
+       "Greatest common divisor of the element and the prefix maximum",
+       ""
+      ],
+      [
+       "prefix.sort()",
+       "Sorted ascending",
+       ""
+      ],
+      [
+       "gcd(prefix[i], prefix[-1 - i])",
+       "Pair the i-th smallest with the i-th largest",
+       ""
+      ],
+      [
+       "range(len(prefix) // 2)",
+       "Only complete pairs; a middle leftover is skipped",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,6,4]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Prefix max",
+      "gcd",
+      "Array"
+     ],
+     "rows": [
+      [
+       "2",
+       "2",
+       "2",
+       "[2]"
+      ],
+      [
+       "6",
+       "6",
+       "6",
+       "[2, 6]"
+      ],
+      [
+       "4",
+       "6",
+       "2",
+       "[2, 6, 2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Sorted: `[2, 2, 6]`. One pair: `gcd(2, 6) = 2` (the middle 2 is left over). Answer: 2."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log M) for the sort and gcd computations.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Build the prefix-gcd array, sort it, pair smallest with largest and add up the gcds of the pairs."
+ },
+ "3903": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "suf[i]",
+       "Smallest value from index i to the end (built right to left)",
+       ""
+      ],
+      [
+       "top",
+       "Largest value from the start up to the current index",
+       ""
+      ],
+      [
+       "top − suf[i] <= k",
+       "The instability of index i is within the limit",
+       ""
+      ],
+      [
+       "return i",
+       "The first index that passes is the smallest stable one",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,0,1,4]`, `k = 3`. `suf = [0,0,1,4]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "top",
+      "suf[i]",
+      "top − suf[i]",
+      "≤ 3?"
+     ],
+     "rows": [
+      [
+       "0",
+       "5",
+       "0",
+       "5",
+       "no"
+      ],
+      [
+       "1",
+       "5",
+       "0",
+       "5",
+       "no"
+      ],
+      [
+       "2",
+       "5",
+       "1",
+       "4",
+       "no"
+      ],
+      [
+       "3",
+       "5",
+       "4",
+       "1",
+       "yes → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Precompute the suffix minimum, track the prefix maximum, and return the first index where their difference is at most k."
+ }
+}

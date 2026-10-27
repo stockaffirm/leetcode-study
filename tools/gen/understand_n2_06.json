@@ -1,0 +1,1719 @@
+{
+ "3464": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pos(p)`",
+       "Position of a boundary point measured along the perimeter, walking around the square: bottom edge, right edge, top edge, left edge",
+       "Turning a 2D boundary into a circle (a 1D cyclic order)"
+      ],
+      [
+       "`pts = sorted(points, key=pos)`",
+       "Points in the order they appear around the square",
+       "Greedy selection needs an order"
+      ],
+      [
+       "`dist(a, b)`",
+       "Manhattan distance",
+       "The distance named in the question"
+      ],
+      [
+       "`ok(d)`",
+       "Can we choose `k` points with every pair at least `d` apart?",
+       "Feasibility test for binary search"
+      ],
+      [
+       "`for st in range(n)`",
+       "Try each point as the first chosen point",
+       "The circle has no natural starting point"
+      ],
+      [
+       "`while dist(...) < d: j += 1`",
+       "From the last chosen point, move forward to the first point at least `d` away",
+       "Greedy: take the nearest valid next point"
+      ],
+      [
+       "`dist(pts[cur % n], pts[st]) >= d`",
+       "The last chosen point must also be far enough from the first (the circle wraps around)",
+       "Closing the cycle"
+      ],
+      [
+       "binary search on `d` between `0` and `2 * side`",
+       "The largest feasible `d`; larger `d` is harder, so feasibility is monotone",
+       "Maximise a minimum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`side = 2`, `points = [[0,0],[1,2],[2,0],[2,2],[2,1]]`, `k = 4`. Sorted around the square: `(0,0) (2,0) (2,1) (2,2) (1,2)`.",
+     "The answer is `1`."
+    ],
+    "table": {
+     "head": [
+      "lo, hi",
+      "mid",
+      "`ok(mid)`",
+      "Reason"
+     ],
+     "rows": [
+      [
+       "0, 4",
+       "2",
+       "False",
+       "from `(0,0)` the greedy picks `(2,0)`, `(2,2)` leave only `(1,2)`, at distance 1; every other start also stops at 3 points"
+      ],
+      [
+       "0, 1",
+       "1",
+       "True",
+       "`(0,0)`, `(2,0)`, `(2,1)`, `(2,2)` are pairwise at least 1 apart, and the wrap-around distance is 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does greedy work for a fixed start?",
+    "p": [
+     "Once the first point is fixed, taking the nearest point that is at least `d` away leaves the largest possible set of points for the later choices. Trying every point as the start covers the cyclic wrap-around."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2 · log side), because each start moves forward through at most `n` points, and the binary search takes about log(2·side) steps.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Order the points around the perimeter, binary search the distance, and test it greedily from every starting point while checking the wrap-around."
+ },
+ "3478": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`order = sorted(range(n), key=lambda i: nums1[i])`",
+       "Indices sorted by `nums1`, so all smaller values come first",
+       "\"Strictly smaller\" becomes \"earlier in the order\""
+      ],
+      [
+       "`heap`, `total`",
+       "A min-heap holding the `k` largest `nums2` values seen so far, and their sum",
+       "Top-k running sum"
+      ],
+      [
+       "inner `while j < n and nums1[...] == ...`",
+       "Finds the group of equal `nums1` values",
+       "Ties must not see each other"
+      ],
+      [
+       "`res[order[j]] = total`",
+       "Assign the answer to every index in the group before adding any of them",
+       "Only strictly smaller values count"
+      ],
+      [
+       "`heappush(heap, v); total += v`",
+       "Add a value",
+       "Adding to the pool"
+      ],
+      [
+       "`if len(heap) > k: total -= heappop(heap)`",
+       "Keep only the `k` largest by evicting the smallest",
+       "Top-k with a min-heap"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [4,2,1,5,3]`, `nums2 = [10,20,30,40,50]`, `k = 2`. Sorted order by `nums1`: indices 2, 1, 4, 0, 3.",
+     "The result by index is `[80, 30, 0, 80, 50]`."
+    ],
+    "table": {
+     "head": [
+      "Index (nums1)",
+      "Answer = `total` before adding",
+      "Add `nums2`",
+      "Heap after",
+      "total after"
+     ],
+     "rows": [
+      [
+       "2 (1)",
+       "0",
+       "30",
+       "30",
+       "30"
+      ],
+      [
+       "1 (2)",
+       "30",
+       "20",
+       "20, 30",
+       "50"
+      ],
+      [
+       "4 (3)",
+       "50",
+       "50",
+       "30, 50 (20 evicted)",
+       "80"
+      ],
+      [
+       "0 (4)",
+       "80",
+       "10",
+       "30, 50 (10 evicted)",
+       "80"
+      ],
+      [
+       "3 (5)",
+       "80",
+       "40",
+       "40, 50 (30 evicted)",
+       "90"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why assign the group before pushing?",
+    "p": [
+     "The values in a group have equal `nums1`, and the question needs strictly smaller. Giving all members the sum from before the group guarantees none of them uses another member of the same group."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by nums1 and sweep with a size-k min-heap of nums2 values, giving each group of equal keys the sum from before the group."
+ },
+ "3487": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pos = {x for x in nums if x > 0}`",
+       "The distinct positive values",
+       "Keeping one copy of each value"
+      ],
+      [
+       "`sum(pos)`",
+       "Sum of all distinct positive values",
+       "The best possible subarray after deleting"
+      ],
+      [
+       "`max(nums)` when there are no positives",
+       "Keep just the single largest element",
+       "Everything is zero or negative"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Because we may delete elements first, we can delete every duplicate, zero and negative number, leaving the distinct positive values as one array of unique elements, whose whole sum is the answer."
+    ],
+    "table": {
+     "head": [
+      "nums",
+      "Distinct positives",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "`[1,2,3,4,5]`",
+       "1, 2, 3, 4, 5",
+       "15"
+      ],
+      [
+       "`[1,1,0,1,1]`",
+       "1",
+       "1"
+      ],
+      [
+       "`[1,2,-1,-2,1,0,-1]`",
+       "1, 2",
+       "3"
+      ],
+      [
+       "`[-4,-2]`",
+       "none",
+       "`max` = −2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the no-positives case different?",
+    "p": [
+     "If there is no positive number, any subarray with more than one element can only get smaller or equal, so the best is a single element: the largest one. Zero is counted as \"not positive\" here, which is fine because the maximum would then be 0 itself."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the set."
+    ]
+   }
+  ],
+  "takeaway": "Delete everything except one copy of each positive value; if none is positive, the answer is the maximum element."
+ },
+ "3499": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`groupby(s)`",
+       "Splits the string into maximal runs of equal characters",
+       "Run-length encoding"
+      ],
+      [
+       "`blocks = [(c, length), ...]`",
+       "Each run's character and length",
+       "Working with runs instead of single characters"
+      ],
+      [
+       "`for k in range(1, len(blocks) - 1)`",
+       "Only runs that have a neighbour on both sides can be traded",
+       "A run of 1s must be surrounded by 0s"
+      ],
+      [
+       "`blocks[k][0] == '1'`",
+       "This run is a block of 1s",
+       "The block to turn into 0s"
+      ],
+      [
+       "`blocks[k - 1][1] + blocks[k + 1][1]`",
+       "The zero runs on its two sides: after the trade they and the block form one run of zeros bounded by 1s, which can all be turned into 1s. The block's own 1s are lost and regained, so the net gain is the two zero runs",
+       "Computing the net gain of a trade"
+      ],
+      [
+       "`s.count('1') + best`",
+       "Current 1s plus the best gain",
+       "The final count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"1000100\"` has runs `1(1), 0(3), 1(1), 0(2)`.",
+     "The string already has two 1s, plus the best gain 5, giving `7`. For `\"0100\"` the only 1-run has neighbours of lengths 1 and 2, giving `1 + 3 = 4`."
+    ],
+    "table": {
+     "head": [
+      "Run index k",
+      "Run",
+      "Neighbouring zero runs",
+      "Gain"
+     ],
+     "rows": [
+      [
+       "1",
+       "`0` × 3",
+       "(a zero run, not tradable)",
+       "–"
+      ],
+      [
+       "2",
+       "`1` × 1",
+       "3 and 2",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a trade gain exactly the two neighbouring zero runs?",
+    "p": [
+     "First the 1-block becomes zeros, so the left zeros, the block and the right zeros form one long zero run. That run is bounded by 1s (the original ones next to it, or the imaginary 1 padded at either end of the string), so it can be turned entirely into 1s. The block's own cells end up as 1 again, so the net change in the number of 1s is the left run plus the right run."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the runs."
+    ]
+   }
+  ],
+  "takeaway": "Split into runs; trading a 1-run that sits between two zero runs gains the lengths of those two zero runs, so take the best such run."
+ },
+ "3516": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`abs(x - z)`",
+       "Distance person 1 has to walk",
+       "Distance on a number line"
+      ],
+      [
+       "`abs(y - z)`",
+       "Distance person 2 has to walk",
+       "Same"
+      ],
+      [
+       "`1 if a < b else 2 if b < a else 0`",
+       "The smaller distance arrives first; equal distances arrive together",
+       "Three-way comparison"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Both walk at the same speed, so the shorter distance wins."
+    ],
+    "table": {
+     "head": [
+      "x, y, z",
+      "Distances",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "2, 7, 4",
+       "2 and 3",
+       "1"
+      ],
+      [
+       "2, 5, 6",
+       "4 and 1",
+       "2"
+      ],
+      [
+       "1, 5, 3",
+       "2 and 2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compare the two distances to z: the smaller wins, equal means a tie."
+ },
+ "3532": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums[i] - nums[i - 1] > maxDiff`",
+       "True when the gap between neighbours in the sorted array is too wide to jump",
+       "Detecting a break in a sorted sequence"
+      ],
+      [
+       "`comp[i]`",
+       "Component number of node `i`: it increases by 1 at every wide gap",
+       "Labelling consecutive groups"
+      ],
+      [
+       "`comp[u] == comp[v]`",
+       "Two nodes are connected exactly when they are in the same group",
+       "Answering a connectivity query"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,5,6,8]`, `maxDiff = 2`.",
+     "With `comp = [0,1,1,1]` the queries `(0,1)`, `(0,2)`, `(1,3)`, `(2,3)` give `[False, False, True, True]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i] − nums[i−1]",
+      "Wide?",
+      "comp[i]"
+     ],
+     "rows": [
+      [
+       "0",
+       "–",
+       "–",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "yes",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "no",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "no",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do neighbours decide connectivity?",
+    "p": [
+     "Because the array is sorted, if a gap between two neighbouring values is larger than `maxDiff`, then any pair of values on opposite sides is even farther apart, so no edge crosses the gap. If every neighbouring gap is small, the nodes form a chain. Hence each connected component is a block of consecutive indices."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + q).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "In a sorted array the components are blocks separated by gaps larger than maxDiff, so label them and compare labels."
+ },
+ "3542": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "A monotonic stack (increasing from bottom to top) of the distinct positive levels currently \"open\"",
+       "Tracking the heights seen to the left"
+      ],
+      [
+       "`while st and st[-1] > x: st.pop()`",
+       "A smaller value ends the larger levels: they were handled by earlier operations and cannot continue past `x`",
+       "Closing taller levels"
+      ],
+      [
+       "`if x == 0: continue`",
+       "Zeros need no operation, and they have already cleared everything above them from the stack",
+       "Zero is the target value"
+      ],
+      [
+       "`if not st or st[-1] < x:` push and `ops += 1`",
+       "A new, higher level appears that no open operation covers, so it needs its own operation",
+       "Counting new levels"
+      ],
+      [
+       "equal top: no push",
+       "The same value is already open, and the earlier operation can also cover this occurrence",
+       "Reusing an operation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,2,1]`.",
+     "The answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Stack before",
+      "Action",
+      "Stack after",
+      "ops"
+     ],
+     "rows": [
+      [
+       "3",
+       "[]",
+       "push",
+       "[3]",
+       "1"
+      ],
+      [
+       "1",
+       "[3]",
+       "pop 3, push 1",
+       "[1]",
+       "2"
+      ],
+      [
+       "2",
+       "[1]",
+       "1 < 2, push",
+       "[1,2]",
+       "3"
+      ],
+      [
+       "1",
+       "[1,2]",
+       "pop 2, top equals 1, no push",
+       "[1]",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does an equal value on the stack cost nothing?",
+    "p": [
+     "If the same value is on the stack with nothing smaller between the two occurrences, one operation on the whole subarray between them zeroes both. Smaller values in between would have popped it. So the second occurrence is covered by the first operation."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each element is pushed and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "A monotonic stack counts the distinct levels that need their own operation; equal levels with nothing smaller between them share one."
+ },
+ "3550": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`enumerate(nums)`",
+       "Index and value together",
+       "Looping with positions"
+      ],
+      [
+       "`str(x)` and `int(d)`",
+       "Split a number into its decimal digits",
+       "Digit sums"
+      ],
+      [
+       "`sum(...) == i`",
+       "Does the digit sum equal the index?",
+       "The condition"
+      ],
+      [
+       "first `return i`",
+       "The loop goes in increasing index order, so the first hit is the smallest index",
+       "Early return"
+      ],
+      [
+       "`return -1`",
+       "No index matched",
+       "Not found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,10,11]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "Digit sum",
+      "Equal to i?"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "no"
+      ],
+      [
+       "1",
+       "10",
+       "1",
+       "yes → return 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · digits).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Scan the indices in order and return the first one whose value's digit sum equals the index."
+ },
+ "3559": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`g`",
+       "Adjacency lists of the tree",
+       "Graph storage"
+      ],
+      [
+       "BFS (Breadth-First Search) from node 1",
+       "Fills `depth[v]` (distance from the root) and `up[0][v]` (the parent)",
+       "Rooting a tree"
+      ],
+      [
+       "`up[j][v]`",
+       "The `2^j`-th ancestor of `v`, built by `up[j][v] = up[j-1][up[j-1][v]]`",
+       "Binary lifting (jump pointers)"
+      ],
+      [
+       "`lca(a, b)`",
+       "The lowest common ancestor (LCA): lift the deeper node to the same depth, then lift both together from the largest jump down",
+       "Finding where two paths meet"
+      ],
+      [
+       "`d = depth[u] + depth[v] - 2 * depth[lca]`",
+       "Number of edges on the path from `u` to `v`",
+       "Distance in a tree"
+      ],
+      [
+       "`pow(2, d - 1, MOD)` if `d` else `0`",
+       "Ways to give `d` edges weights 1 or 2 so that the sum is odd: half of all `2^d` assignments",
+       "Counting by parity"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [[1,2],[1,3],[3,4],[3,5]]`: depths are `1:0, 2:1, 3:1, 4:2, 5:2`.",
+     "The result is `[2,1,4]`."
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "LCA",
+      "Edges `d`",
+      "Answer `2^(d−1)`"
+     ],
+     "rows": [
+      [
+       "(1,4)",
+       "1",
+       "0 + 2 − 0 = 2",
+       "2"
+      ],
+      [
+       "(3,4)",
+       "3",
+       "1 + 2 − 2 = 1",
+       "1"
+      ],
+      [
+       "(2,5)",
+       "1",
+       "1 + 2 − 0 = 3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it exactly half of the assignments?",
+    "p": [
+     "The sum is odd exactly when an odd number of the edges carry weight 1. Among the `2^d` assignments of 1 or 2, those with an odd number of 1s are half of them, which is `2^(d−1)` when `d ≥ 1`. With no edges the sum is 0 (even), so the answer is 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log n).",
+     "Space: O(n log n) for the jump table."
+    ]
+   }
+  ],
+  "takeaway": "Answer each query with the path length d from an LCA computation: 2^(d−1) odd assignments (and 0 when d is 0)."
+ },
+ "3583": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`left`",
+       "Counts of values to the left of the current index",
+       "Counting earlier elements"
+      ],
+      [
+       "`right`",
+       "Counts of values to the right (initially all values, then reduced as we pass them)",
+       "Counting later elements"
+      ],
+      [
+       "`right[x] -= 1`",
+       "Remove the current element from the \"right\" side, so `right` counts only later elements",
+       "The middle element itself belongs to neither side"
+      ],
+      [
+       "`left[2 * x] * right[2 * x]`",
+       "With `x` as the middle value: ways to choose a left partner and a right partner both equal to `2x`",
+       "Fix the middle element and multiply"
+      ],
+      [
+       "`left[x] += 1`",
+       "Move the current element to the \"left\" side",
+       "Sliding the split point"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [8,4,2,8,4]`.",
+     "The total is `2`."
+    ],
+    "table": {
+     "head": [
+      "Middle x",
+      "Need `2x` on both sides",
+      "`left[2x]`",
+      "`right[2x]`",
+      "Added"
+     ],
+     "rows": [
+      [
+       "8",
+       "16",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "4",
+       "8",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "4",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "8",
+       "16",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "4",
+       "8",
+       "1",
+       "0",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why use the middle element?",
+    "p": [
+     "A triplet is determined by its middle index `j`; the left and right partners are then chosen independently from the earlier and later elements equal to `2 · nums[j]`. Multiplying the two counts and summing over all `j` counts every triplet exactly once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle index; multiply the counts of 2·x on its left and on its right."
+ },
+ "3620": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`indeg`, `ready`, `order`",
+       "Topological order of the DAG (Kahn's algorithm: repeatedly take nodes with no remaining incoming edges)",
+       "Shortest paths on a DAG in one pass"
+      ],
+      [
+       "`ok(s)`",
+       "Is there a valid path using only edges of cost at least `s` whose total cost is at most `k`?",
+       "Feasibility test for the binary search on the score"
+      ],
+      [
+       "`dist[u]`",
+       "Cheapest total cost to reach `u` using allowed edges",
+       "DP (dynamic programming) over the topological order"
+      ],
+      [
+       "`if dist[u] == INF or (u != 0 and u != n - 1 and not online[u])` skip",
+       "Unreachable or offline nodes cannot be passed through",
+       "The online rule"
+      ],
+      [
+       "`if c >= s and dist[u] + c < dist[v]`",
+       "Only edges of cost at least `s` are allowed, and we relax the cost",
+       "Edge relaxation"
+      ],
+      [
+       "`dist[n - 1] <= k`",
+       "The cheapest valid path fits the budget",
+       "Budget check"
+      ],
+      [
+       "binary search on `s`",
+       "If a path with all edges at least `s` exists, one also exists for any smaller `s`, so search for the largest `s`",
+       "Maximise the minimum edge"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [[0,1,5],[1,3,10],[0,2,3],[2,3,4]]`, all nodes online, `k = 10`.",
+     "The answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "lo, hi",
+      "mid",
+      "Allowed edges (cost ≥ mid)",
+      "Cheapest path cost",
+      "`ok`"
+     ],
+     "rows": [
+      [
+       "0, 10",
+       "5",
+       "0→1, 1→3",
+       "15",
+       "False → hi = 4"
+      ],
+      [
+       "0, 4",
+       "2",
+       "all",
+       "7 (via 2)",
+       "True → lo = 2"
+      ],
+      [
+       "2, 4",
+       "3",
+       "0→1, 1→3, 0→2, 2→3 (all cost ≥ 3)",
+       "7",
+       "True → lo = 3"
+      ],
+      [
+       "3, 4",
+       "4",
+       "0→1, 1→3, 2→3",
+       "15 (no path through 2)",
+       "False → hi = 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the score become a threshold?",
+    "p": [
+     "The score of a path is its smallest edge cost, so \"score at least `s`\" means every edge on the path costs at least `s`. Restricting the graph to such edges turns the score into a yes/no question, and the DAG shortest path then tests the cost limit `k`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + m) log C), where C is the largest edge cost.",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search the minimum edge cost; for each guess compute the cheapest path over a topological order using only edges at or above the guess."
+ },
+ "3640": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`inc1[i]`",
+       "Best sum of a strictly increasing run ending at `i` (the first part of the shape, with at least two elements)",
+       "Phase 1 of a three-phase shape"
+      ],
+      [
+       "`dec[i]`",
+       "Best sum of \"increase, then decrease\" ending at `i`",
+       "Phase 2"
+      ],
+      [
+       "`inc2[i]`",
+       "Best sum of the full \"increase, decrease, increase\" shape ending at `i`",
+       "Phase 3, the answer"
+      ],
+      [
+       "`if nums[i-1] < nums[i]`",
+       "Going up: extend `inc1` (or start it from `nums[i−1]`), and extend `inc2` or start it after a decreasing part",
+       "The two phases that go up"
+      ],
+      [
+       "`elif nums[i-1] > nums[i]`",
+       "Going down: extend `dec` or start it after the first increasing run",
+       "The phase that goes down"
+      ],
+      [
+       "equal neighbours",
+       "Nothing is updated, which resets all three phases at this index (they stay `−∞`)",
+       "A flat step breaks any strict shape"
+      ],
+      [
+       "`max(inc2)`",
+       "The best complete shape ending anywhere",
+       "Final answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,4,2,7]`.",
+     "The answer is `14`, the whole array `1, 4, 2, 7`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Step",
+      "Update"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 → 4 (up)",
+       "`inc1[1] = 1 + 4 = 5`"
+      ],
+      [
+       "2",
+       "4 → 2 (down)",
+       "`dec[2] = inc1[1] + 2 = 7`"
+      ],
+      [
+       "3",
+       "2 → 7 (up)",
+       "`inc1[3] = 2 + 7 = 9`, `inc2[3] = dec[2] + 7 = 14`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can the phases share an element?",
+    "p": [
+     "In the required shape the turning points belong to two neighbouring phases (the peak ends the increase and starts the decrease). The DP (dynamic programming) handles this by starting the next phase from the previous index's value, so the turning element is counted once in the sum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "A three-state DP (up, down, up again) along the array, where equal neighbours break the shape."
+ },
+ "3699": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "values shifted to ranks `0 .. size-1`",
+       "Only the relative order of values matters, so use ranks inside `[l, r]`",
+       "Counting patterns over an ordered range"
+      ],
+      [
+       "`up[v]`",
+       "Number of valid arrays so far that end with value `v` after an upward step",
+       "Direction state"
+      ],
+      [
+       "`down[v]`",
+       "Number that end with value `v` after a downward step",
+       "Direction state"
+      ],
+      [
+       "initial `up[v] = v`, `down[v] = size − 1 − v`",
+       "Arrays of length 2: the previous value is any smaller (`v` choices) or any larger (`size − 1 − v` choices)",
+       "Base case"
+      ],
+      [
+       "`new_up[v] = sum of down[u] for u < v`",
+       "After a down step, the next must be up to a larger value",
+       "Alternating directions"
+      ],
+      [
+       "`new_down[v] = sum of up[u] for u > v`",
+       "After an up step, the next must be down to a smaller value",
+       "Alternating directions"
+      ],
+      [
+       "running sums `run`",
+       "Prefix sums (from the left for `up`, from the right for `down`) make each layer O(size) instead of O(size²)",
+       "Speeding up range sums"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `l = 4`, `r = 5`, so `size = 2`. For length 2, `up = [0, 1]` and `down = [1, 0]`.",
+     "Now `sum(up) + sum(down) = 1 + 1 = 2`, matching the arrays `[4,5,4]` and `[5,4,5]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "`new_up`",
+      "`new_down`"
+     ],
+     "rows": [
+      [
+       "one more element",
+       "`[0, down[0]] = [0, 1]`",
+       "`[up[1], 0] = [1, 0]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do only the last value and direction matter?",
+    "p": [
+     "The next element must go in the opposite direction from the last step and cannot equal the last value. So all that decides what can follow is the last value and whether the last step was up or down."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · (r − l)).",
+     "Space: O(r − l)."
+    ]
+   }
+  ],
+  "takeaway": "Track, for each last value, the number of arrays whose last step was up or down, and alternate using prefix sums."
+ },
+ "3703": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`st`",
+       "A stack of runs `[character, count]` instead of single characters",
+       "Long repeated runs of the same character"
+      ],
+      [
+       "`if st and st[-1][0] == c: st[-1][1] += 1 else: st.append([c, 1])`",
+       "Extend the last run or start a new one",
+       "Run-length encoding built on the fly"
+      ],
+      [
+       "`c == ')' and st[-1][1] == k`",
+       "The current run of `)` has just reached length `k`",
+       "The right half of a balanced block is complete"
+      ],
+      [
+       "`st[-2][0] == '(' and st[-2][1] >= k`",
+       "Immediately before it is a run of at least `k` opening brackets",
+       "The left half exists"
+      ],
+      [
+       "`st.pop(); st[-1][1] -= k`",
+       "Remove the `)` run, and `k` of the `(`",
+       "Delete the substring"
+      ],
+      [
+       "`if st[-1][1] == 0: st.pop()`",
+       "Drop the opening run if nothing is left of it, so neighbouring runs can merge later",
+       "Keeping the stack clean"
+      ],
+      [
+       "`''.join(ch * cnt ...)`",
+       "Rebuild the final string",
+       "Decoding the runs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"((()))()()()\"`, `k = 3`.",
+     "The final stack decodes to `\"()()()\"`."
+    ],
+    "table": {
+     "head": [
+      "Characters read",
+      "Stack (runs)"
+     ],
+     "rows": [
+      [
+       "`(((`",
+       "`[(\"(\",3)]`"
+      ],
+      [
+       "`)` `)`",
+       "`[(\"(\",3), (\")\",1)]`, then `(\")\",2)`"
+      ],
+      [
+       "third `)`",
+       "`(\")\",3)` equals `k`, and `(\"(\",3)` before it → remove both, stack is empty"
+      ],
+      [
+       "`()`",
+       "`[(\"(\",1), (\")\",1)]`, no removal because counts are 1 (not 3)"
+      ],
+      [
+       "`()()`",
+       "the remaining pairs are added the same way"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store runs and not single characters?",
+    "p": [
+     "A k-balanced substring is defined by runs of exactly `k` parentheses of each kind. With counts stored per run, checking and deleting `k` characters is O(1) instead of scanning back `2k` positions."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Keep a stack of (character, run length); when a run of ) reaches length k right after at least k opening brackets, delete the k + k characters."
+ },
+ "3737": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pref`",
+       "Prefix sums of `+1` for each `target` and `−1` for any other value",
+       "Turning a counting condition into a sum"
+      ],
+      [
+       "`pref[j] > pref[i]`",
+       "In the subarray `i .. j−1` the number of targets exceeds the number of non-targets, i.e. `target` is a strict majority",
+       "A positive sum means the majority"
+      ],
+      [
+       "double loop over `i < j`",
+       "Check every pair of prefix positions",
+       "Brute force, fine for `n ≤ 1000`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,2,3]`, `target = 2`: the values become `−1, +1, +1, −1`, so `pref = [0, −1, 0, 1, 0]`.",
+     "The total is `5`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Positions j > i with `pref[j] > pref[i]`",
+      "Count"
+     ],
+     "rows": [
+      [
+       "0 (0)",
+       "j = 3",
+       "1"
+      ],
+      [
+       "1 (−1)",
+       "j = 2, 3, 4",
+       "3"
+      ],
+      [
+       "2 (0)",
+       "j = 3",
+       "1"
+      ],
+      [
+       "3 (1)",
+       "none",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does \"sum greater than 0\" mean \"more than half\"?",
+    "p": [
+     "If the subarray has `t` targets and `o` other elements, its sum is `t − o`. It is positive exactly when `t > o`, which is the same as `2t > t + o`, the length of the subarray."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Map elements to +1/−1 and count the pairs of prefix sums that increase."
+ },
+ "3772": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`val[u]`",
+       "`+1` for a good node, `−1` for a bad one",
+       "Score of a single node"
+      ],
+      [
+       "`order`, `parent`",
+       "An order in which each node appears before its children (from a stack-based traversal) and each node's parent, with root `0`",
+       "Avoiding recursion"
+      ],
+      [
+       "`down[u]`",
+       "Best score of a connected group that contains `u` and lies inside `u`'s subtree: `val[u]` plus the positive `down` values of its children",
+       "Tree DP (dynamic programming), bottom up"
+      ],
+      [
+       "`down[parent] += max(0, down[u])` (reverse order)",
+       "Add a child's contribution only when it is positive",
+       "Optional subtrees"
+      ],
+      [
+       "`full[u]`",
+       "Best score of a group containing `u` in the whole tree",
+       "The answer"
+      ],
+      [
+       "`down[u] + max(0, full[p] - max(0, down[u]))`",
+       "Start from `u`'s subtree, and add what the parent side can give: the parent's best group without the branch through `u`",
+       "Rerooting (pushing information top down)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `edges = [[0,1],[1,2]]`, `good = [1,0,1]`, so `val = [1,−1,1]`.",
+     "The result is `[1, 1, 1]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "bottom-up `down`",
+       "`down[2] = 1`; `down[1] = −1 + 1 = 0`; `down[0] = 1 + max(0, 0) = 1`"
+      ],
+      [
+       "`full[0]`",
+       "`1` (the root has no parent side)"
+      ],
+      [
+       "`full[1]`",
+       "`down[1] + max(0, full[0] − max(0, down[1])) = 0 + 1 = 1`"
+      ],
+      [
+       "`full[2]`",
+       "`down[2] + max(0, full[1] − max(0, down[2])) = 1 + 0 = 1`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why subtract `max(0, down[u])`?",
+    "p": [
+     "`full[p]` already includes the best contribution of the branch through `u`, which is `max(0, down[u])`. To know what the parent side can offer to `u` we must remove that branch, otherwise it would be counted twice."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Compute the best subtree group bottom-up, then reroot top-down, removing a child's own contribution when passing the parent's value down."
+ },
+ "3838": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ord(c) - 97`",
+       "Index of the letter (`a` is 0)",
+       "Mapping letters to array positions"
+      ],
+      [
+       "`sum(weights[...] for c in w)`",
+       "Total weight of the word",
+       "Summing a lookup"
+      ],
+      [
+       "`total % 26`",
+       "Remainder after division by 26, a number from 0 to 25",
+       "Wrapping into the alphabet"
+      ],
+      [
+       "`chr(122 - total % 26)`",
+       "`122` is the code of `z`, so remainder 0 gives `z`, 1 gives `y`, and so on",
+       "Reversed alphabet"
+      ],
+      [
+       "`''.join(out)`",
+       "The mapped letters as one string",
+       "Final output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words = [\"abcd\",\"def\",\"xyz\"]`.",
+     "The result is `\"rij\"`."
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Weight",
+      "mod 26",
+      "Letter"
+     ],
+     "rows": [
+      [
+       "abcd",
+       "5 + 3 + 12 + 14 = 34",
+       "8",
+       "`r`"
+      ],
+      [
+       "def",
+       "14 + 1 + 2 = 17",
+       "17",
+       "`i`"
+      ],
+      [
+       "xyz",
+       "7 + 7 + 2 = 16",
+       "16",
+       "`j`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length of the words).",
+     "Space: O(number of words)."
+    ]
+   }
+  ],
+  "takeaway": "Sum each word's letter weights, take it mod 26, and read the letter at that position of the reversed alphabet."
+ },
+ "3870": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n - 999`",
+       "Numbers from `1000` to `n`; each of them has one comma (up to `n = 10^5`, written `100,000`)",
+       "Counting by ranges of digit length"
+      ],
+      [
+       "`max(0, ...)`",
+       "If `n < 1000` there are no commas at all",
+       "Clamp at zero"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Commas appear first in `1,000`. With the limit `n ≤ 10^5`, no number has more than one comma."
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Numbers with a comma",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "999",
+       "none",
+       "0"
+      ],
+      [
+       "1002",
+       "1000, 1001, 1002",
+       "3"
+      ],
+      [
+       "100000",
+       "1000 to 100000",
+       "99001"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only one comma per number?",
+    "p": [
+     "A second comma would appear only from `1,000,000`, which is beyond the limit of `10^5`. For larger limits you would add one more for every number from `10^6`, and so on."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Every number from 1000 upward (up to 10^5) has exactly one comma, so the count is max(0, n − 999)."
+ },
+ "4052": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`grid[i][(j + rowShift[i]) % n]`",
+       "Element that lands at column `j` after row `i` is rotated left by `rowShift[i]`",
+       "Cyclic rotation with the modulo operator"
+      ],
+      [
+       "`rows`",
+       "The grid after all row rotations",
+       "Apply the first step completely before the second"
+      ],
+      [
+       "`rows[(i + colShift[j]) % n][j]`",
+       "Element that lands at row `i` of column `j` after the column is rotated upward by `colShift[j]`",
+       "Same idea along columns"
+      ],
+      [
+       "`% n`",
+       "Wraps the index around the end",
+       "Rotations"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,2],[3,4]]`, `rowShift = [1,0]`, `colShift = [0,1]`.",
+     "The final grid is `[[2,4],[3,1]]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "rotate row 0 left by 1",
+       "`[2,1]`"
+      ],
+      [
+       "row 1 unchanged",
+       "`[3,4]`"
+      ],
+      [
+       "column 0 shift 0",
+       "`[2,3]`"
+      ],
+      [
+       "column 1 up by 1",
+       "`[1,4]` becomes `[4,1]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compute rows first and then columns?",
+    "p": [
+     "The two steps do not commute in general, so the order matters. Building `rows` first and then reading from it for the column step gives exactly \"all rows first, then all columns\"."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2).",
+     "Space: O(n^2)."
+    ]
+   }
+  ],
+  "takeaway": "Rotate every row with modular indexing, then rotate every column of the result the same way."
+ }
+}

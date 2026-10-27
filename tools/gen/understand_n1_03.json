@@ -1,0 +1,1504 @@
+{
+ "1375": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "top",
+       "The largest position flipped so far",
+       "If the first `step` bits are all 1 and nothing beyond is, the largest flipped position is exactly `step`"
+      ],
+      [
+       "enumerate(flips, 1)",
+       "Gives the step number (1, 2, 3, ...) with each flipped position",
+       ""
+      ],
+      [
+       "top == step",
+       "After step flips, the largest flipped position equals step",
+       "flips is a permutation, so step distinct positions all at most step are exactly 1..step"
+      ],
+      [
+       "count += 1",
+       "This step is prefix-aligned",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`flips = [3,2,4,1,5]`."
+    ],
+    "table": {
+     "head": [
+      "step",
+      "flip",
+      "top",
+      "top == step?",
+      "count"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "3",
+       "no",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "3",
+       "no",
+       "0"
+      ],
+      [
+       "3",
+       "4",
+       "4",
+       "no",
+       "0"
+      ],
+      [
+       "4",
+       "1",
+       "4",
+       "yes",
+       "1"
+      ],
+      [
+       "5",
+       "5",
+       "5",
+       "yes",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Because flips is a permutation, the string is prefix-aligned exactly when the largest flipped position equals the number of steps taken."
+ },
+ "1432": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "big",
+       "Maximum value: turn the first digit that is not 9 into 9 (everywhere it appears)",
+       "Largest number greedily maximises from the left"
+      ],
+      [
+       "s.replace(c, '9')",
+       "Replaces every copy of that digit",
+       ""
+      ],
+      [
+       "small, first digit != '1'",
+       "Replace the first digit by 1 everywhere",
+       "Smallest without a leading zero"
+      ],
+      [
+       "small, first digit == '1'",
+       "Instead replace the first later digit that is not 0 or 1 with 0",
+       "The leading 1 must stay; digits 0 and 1 are already as small as allowed"
+      ],
+      [
+       "int(big) - int(small)",
+       "The largest difference",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 555`."
+    ],
+    "table": {
+     "head": [
+      "Variable",
+      "Computation",
+      "Value"
+     ],
+     "rows": [
+      [
+       "big",
+       "first non-9 digit is 5 → every 5 becomes 9",
+       "999"
+      ],
+      [
+       "small",
+       "first digit 5 ≠ 1 → every 5 becomes 1",
+       "111"
+      ],
+      [
+       "difference",
+       "999 − 111",
+       "888"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why replacing with 0 is only allowed after a leading 1",
+    "p": [
+     "Changing the first digit to 0 would give a leading zero, which is not allowed. So the first digit goes to 1 when it can. When it already is 1, the next best option is to turn some other digit into 0 (digits 0 and 1 are skipped because changing them either does nothing or would damage the leading 1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) for d digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy on digits: make the biggest value by turning the first non-9 into 9, and the smallest by turning the first digit into 1 (or a later digit into 0 if it already is 1)."
+ },
+ "1458": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Best dot product using prefixes nums1[:i], nums2[:j] with at least one pair",
+       ""
+      ],
+      [
+       "NEG = -inf",
+       "Marks 'no valid pair yet', so empty subsequences are never chosen",
+       "Keeps the non-empty rule"
+      ],
+      [
+       "prod = nums1[i-1] * nums2[j-1]",
+       "Dot product if we pair just these two elements",
+       ""
+      ],
+      [
+       "dp[i-1][j], dp[i][j-1]",
+       "Skip an element from either array",
+       ""
+      ],
+      [
+       "prod + max(dp[i-1][j-1], 0)",
+       "Pair them and extend a previous result only if it helps (a negative previous result is dropped)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [2,1,-2,5]`, `nums2 = [3,0,-6]`. The winning cell is `dp[3][3]` (prefixes `[2,1,-2]` and `[3,0,-6]`), where `prod = -2 × -6 = 12`."
+    ],
+    "table": {
+     "head": [
+      "Option for dp[3][3]",
+      "Value"
+     ],
+     "rows": [
+      [
+       "skip -2 (dp[2][3])",
+       "6"
+      ],
+      [
+       "skip -6 (dp[3][2])",
+       "6"
+      ],
+      [
+       "pair only (prod)",
+       "12"
+      ],
+      [
+       "prod + max(dp[2][2], 0)",
+       "12 + 6 = 18"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`dp[3][3] = 18`, built from `2 × 3 + (-2) × (-6)`. The last row cannot beat it: pairing 5 with a later element only gives `-24` at best, so `dp[4][3] = 18`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n·m).",
+     "Space: O(n·m)."
+    ]
+   }
+  ],
+  "takeaway": "Subsequence DP with four options per cell: skip from either side, pair alone, or pair and extend a previous result when it is positive."
+ },
+ "1474": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur = head",
+       "Walks the list",
+       ""
+      ],
+      [
+       "for _ in range(m - 1): cur = cur.next",
+       "Moves to the last node that will be kept (the m-th)",
+       ""
+      ],
+      [
+       "drop = cur.next",
+       "First node to delete",
+       ""
+      ],
+      [
+       "for _ in range(n): drop = drop.next",
+       "Skips n nodes (or until the list ends)",
+       ""
+      ],
+      [
+       "cur.next = drop; cur = drop",
+       "Links the kept part to what comes after the deleted part and continues from there",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = 1..13`, `m = 2`, `n = 3`."
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "Last kept",
+      "Deleted",
+      "Next start"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "3, 4, 5",
+       "6"
+      ],
+      [
+       "2",
+       "7",
+       "8, 9, 10",
+       "11"
+      ],
+      [
+       "3",
+       "12",
+       "13",
+       "none → stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) for a list of L nodes.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Walk m−1 steps to the last kept node, skip n nodes, relink, and repeat."
+ },
+ "1534": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "combinations(range(len(arr)), 3)",
+       "All index triples i < j < k",
+       "n ≤ 100, so about 160,000 triples is cheap"
+      ],
+      [
+       "abs(arr[i]-arr[j]) <= a and ...",
+       "The three given conditions",
+       ""
+      ],
+      [
+       "sum(1 for ... if ...)",
+       "Counts the triples that satisfy them",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [3,0,1,1,9,7]`, `a = 7, b = 2, c = 3`. The good triples are:"
+    ],
+    "table": {
+     "head": [
+      "(i, j, k)",
+      "Values",
+      "|ai−aj| ≤ 7",
+      "|aj−ak| ≤ 2",
+      "|ai−ak| ≤ 3"
+     ],
+     "rows": [
+      [
+       "(0,1,2)",
+       "3, 0, 1",
+       "3 ✓",
+       "1 ✓",
+       "2 ✓"
+      ],
+      [
+       "(0,1,3)",
+       "3, 0, 1",
+       "3 ✓",
+       "1 ✓",
+       "2 ✓"
+      ],
+      [
+       "(0,2,3)",
+       "3, 1, 1",
+       "2 ✓",
+       "0 ✓",
+       "2 ✓"
+      ],
+      [
+       "(1,2,3)",
+       "0, 1, 1",
+       "1 ✓",
+       "0 ✓",
+       "1 ✓"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why no triple with 9 or 7 works",
+    "p": [
+     "For example `(0,4,5)` (3, 9, 7) fails the last check: `|3 − 7| = 4 > 3`. The others using 9 or 7 fail the first or last check as well. The total is 4."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "With n up to 100, checking every triple directly is fast enough."
+ },
+ "1569": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "arr[0]",
+       "The first element is always the root of the BST",
+       ""
+      ],
+      [
+       "left / right",
+       "Elements smaller / larger than the root, in their original order",
+       ""
+      ],
+      [
+       "comb(len(arr) - 1, len(left))",
+       "Ways to interleave the left and right sequences: choose which positions go to the left group",
+       "Left and right subtrees are independent of each other"
+      ],
+      [
+       "ways(left) * ways(right)",
+       "Times the ways inside each subtree",
+       ""
+      ],
+      [
+       "len(arr) <= 2: return 1",
+       "Arrays of length 0, 1 or 2 have only one valid order",
+       ""
+      ],
+      [
+       "ways(nums) - 1",
+       "Excludes the original ordering",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,3]`: root 2, left `[1]`, right `[3]`."
+    ],
+    "table": {
+     "head": [
+      "Part",
+      "Value"
+     ],
+     "rows": [
+      [
+       "interleavings comb(2, 1)",
+       "2"
+      ],
+      [
+       "ways([1]) × ways([3])",
+       "1 × 1"
+      ],
+      [
+       "total ways",
+       "2"
+      ],
+      [
+       "minus the original",
+       "2 − 1 = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Another check",
+    "p": [
+     "For `[3,4,5,1,2]`: root 3, left `[1,2]`, right `[4,5]`. `comb(4, 2) = 6` interleavings, subtrees contribute 1 each, so 6 − 1 = 5."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²) in the worst case (splitting lists at each level).",
+     "Space: O(n) recursion plus lists."
+    ]
+   }
+  ],
+  "takeaway": "The root must come first; the two subtrees keep their own order and can be interleaved in C(n−1, left size) ways, times the ways inside each."
+ },
+ "1576": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "chars = list(s)",
+       "Mutable copy of the string",
+       ""
+      ],
+      [
+       "left / right",
+       "The neighbouring characters (empty at the edges)",
+       ""
+      ],
+      [
+       "for ch in 'abc'",
+       "Try three letters",
+       "Only two neighbours can block, so one of three always works"
+      ],
+      [
+       "ch != left and ch != right",
+       "Picks the first letter different from both",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = ?zs`."
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Char",
+      "left",
+      "right",
+      "Chosen"
+     ],
+     "rows": [
+      [
+       "0",
+       "?",
+       "(none)",
+       "z",
+       "a"
+      ],
+      [
+       "1",
+       "z",
+       "",
+       "",
+       ""
+      ],
+      [
+       "2",
+       "s",
+       "",
+       "",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "A second example",
+    "p": [
+     "`ubv?w`: the `?` has neighbours `v` and `w`, so `a` is picked and the result is `ubvaw`. If the right neighbour is another `?`, it will be replaced later and will avoid the letter chosen here."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Each '?' has at most two neighbours, so trying 'a', 'b', 'c' always finds a letter that differs from both."
+ },
+ "1590": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "r = sum(nums) % p",
+       "Remainder that must be removed",
+       "If 0 nothing to remove"
+      ],
+      [
+       "cur",
+       "Prefix sum modulo p",
+       ""
+      ],
+      [
+       "need = (cur - r) % p",
+       "The earlier prefix remainder such that the subarray between has sum ≡ r (mod p)",
+       ""
+      ],
+      [
+       "last",
+       "Maps a prefix remainder to the latest index where it occurred (starts with {0: -1})",
+       "Latest index gives the shortest subarray"
+      ],
+      [
+       "best < len(nums)",
+       "Removing the whole array is not allowed, so best starts at n and stays n if nothing shorter is found",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,1,4,2]`, `p = 6`; total 10, so `r = 4`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "cur",
+      "need",
+      "last[need]",
+      "Length",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "3",
+       "5",
+       "–",
+       "–",
+       "4"
+      ],
+      [
+       "1",
+       "1",
+       "4",
+       "0",
+       "−1",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "4",
+       "2",
+       "4",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "4",
+       "0",
+       "−1",
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Best is 1: remove the element 4, leaving `3 + 1 + 2 = 6`, divisible by 6."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(min(n, p))."
+    ]
+   }
+  ],
+  "takeaway": "Find the shortest subarray whose sum has the same remainder as the total, using prefix remainders in a hash map."
+ },
+ "1637": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(x for x, _ in points)",
+       "Only the x-coordinates matter, in order",
+       ""
+      ],
+      [
+       "zip(xs, xs[1:])",
+       "Pairs of neighbouring x-values",
+       ""
+      ],
+      [
+       "max(b - a ...)",
+       "The largest gap",
+       "No point can lie strictly inside the widest empty vertical strip between neighbouring x-values"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`points = [[8,7],[9,9],[7,4],[9,7]]`: x-values 8, 9, 7, 9."
+    ],
+    "table": {
+     "head": [
+      "Sorted xs",
+      "Gaps",
+      "Max"
+     ],
+     "rows": [
+      [
+       "7, 8, 9, 9",
+       "1, 1, 0",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Ignore y, sort the x-coordinates, and return the largest gap between neighbours."
+ },
+ "1654": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bad",
+       "Forbidden positions as a set",
+       ""
+      ],
+      [
+       "limit",
+       "An upper bound so the search ends: past max(forbidden, x) + a + b going further right cannot help",
+       ""
+      ],
+      [
+       "state (pos, back, d)",
+       "Position, whether the last jump was backward, and the jumps used",
+       "The no-two-backward rule needs that flag"
+      ],
+      [
+       "BFS with deque",
+       "Explores by number of jumps, so the first time pos == x is the minimum",
+       ""
+      ],
+      [
+       "seen",
+       "Visited (position, flag) pairs",
+       ""
+      ],
+      [
+       "nxt",
+       "Forward is always allowed; backward only if the last jump was not backward",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`forbidden = [14,4,18,1,15]`, `a = 3`, `b = 15`, `x = 9`."
+    ],
+    "table": {
+     "head": [
+      "Jumps",
+      "Positions reached",
+      "Note"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       ""
+      ],
+      [
+       "1",
+       "3",
+       "backward to −15 is invalid"
+      ],
+      [
+       "2",
+       "6",
+       "from 3; backward to −12 invalid"
+      ],
+      [
+       "3",
+       "9",
+       "equals x → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(limit), each (position, flag) once.",
+     "Space: O(limit)."
+    ]
+   }
+  ],
+  "takeaway": "BFS on (position, last-jump-was-backward) states with a bounded range finds the fewest jumps."
+ },
+ "1668": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "word * (k + 1)",
+       "The word repeated k+1 times",
+       ""
+      ],
+      [
+       "in sequence",
+       "Substring test",
+       ""
+      ],
+      [
+       "while ...: k += 1",
+       "Keeps growing k while the longer repeat still appears",
+       "If k repeats do not fit, k+1 repeats cannot fit either"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`sequence = ababc`, `word = ab`."
+    ],
+    "table": {
+     "head": [
+      "k tried",
+      "word × (k+1)",
+      "In sequence?"
+     ],
+     "rows": [
+      [
+       "0",
+       "ab",
+       "yes → k = 1"
+      ],
+      [
+       "1",
+       "abab",
+       "yes → k = 2"
+      ],
+      [
+       "2",
+       "ababab",
+       "no → stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n/m) · n) in the worst case.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Keep repeating the word and testing for a substring until it no longer fits."
+ },
+ "1675": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x * 2 if x % 2 else x",
+       "Make every number even first (odd numbers doubled)",
+       "Doubling an odd number is its only upward move; afterwards only halving remains"
+      ],
+      [
+       "max-heap (negated values)",
+       "Pop the largest element",
+       ""
+      ],
+      [
+       "low",
+       "Smallest element currently in the heap",
+       ""
+      ],
+      [
+       "best = min(best, top - low)",
+       "Records the deviation (max − min)",
+       ""
+      ],
+      [
+       "top % 2 → break",
+       "The largest is odd and cannot be halved, so the maximum cannot be reduced further",
+       ""
+      ],
+      [
+       "top //= 2; push back",
+       "Halve the maximum (the only way to shrink the range) and update low",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4]` becomes `[2,2,6,4]`, so max 6, min 2."
+    ],
+    "table": {
+     "head": [
+      "Pop (max)",
+      "low",
+      "top − low",
+      "best",
+      "Action"
+     ],
+     "rows": [
+      [
+       "6",
+       "2",
+       "4",
+       "4",
+       "halve to 3, low = 2"
+      ],
+      [
+       "4",
+       "2",
+       "2",
+       "2",
+       "halve to 2"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "1",
+       "odd → stop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log M) where M is the largest value.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Raise every odd number once, then repeatedly halve the maximum with a heap; the deviation is checked after each step until the maximum is odd."
+ },
+ "1684": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "a = set(allowed)",
+       "Allowed letters",
+       ""
+      ],
+      [
+       "set(w) <= a",
+       "The word's letters are a subset of the allowed letters",
+       ""
+      ],
+      [
+       "sum(...)",
+       "True counts as 1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`allowed = ab`."
+    ],
+    "table": {
+     "head": [
+      "Word",
+      "Letters",
+      "Subset?"
+     ],
+     "rows": [
+      [
+       "ad",
+       "a, d",
+       "no"
+      ],
+      [
+       "bd",
+       "b, d",
+       "no"
+      ],
+      [
+       "aaab",
+       "a, b",
+       "yes"
+      ],
+      [
+       "baa",
+       "a, b",
+       "yes"
+      ],
+      [
+       "badab",
+       "a, b, d",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length of all words).",
+     "Space: O(1) apart from word sets (at most 26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "A word is consistent exactly when its set of letters is a subset of the allowed set."
+ },
+ "1703": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pos",
+       "Indexes of the ones",
+       ""
+      ],
+      [
+       "p[i] = pos[i] - i",
+       "Removes the gaps the ones must keep between each other: ones become adjacent when all p values are equal",
+       "Turns 'make them consecutive' into 'make them equal'"
+      ],
+      [
+       "pre",
+       "Prefix sums of p",
+       ""
+      ],
+      [
+       "window of k ones",
+       "Each window of k consecutive ones is considered",
+       ""
+      ],
+      [
+       "med = p[mid]",
+       "The median minimises the total distance",
+       ""
+      ],
+      [
+       "left / right",
+       "Sum of |p − med| for the left half and the right half, using prefix sums",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,0,0,1,0,1]`, `k = 2`. `pos = [0,3,5]`, `p = [0,2,3]`, `pre = [0,0,2,5]`."
+    ],
+    "table": {
+     "head": [
+      "Window i",
+      "mid / median",
+      "left",
+      "right",
+      "Total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1 / 2",
+       "2·1 − 0 = 2",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "2 / 3",
+       "3·1 − 2 = 1",
+       "0",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The best window costs 1: swap the 0 between the last two ones to make them adjacent."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Subtract each one's index to remove the required gaps, then the cost of gathering k ones is the sum of distances to the median, computed with prefix sums."
+ },
+ "1722": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "p, find",
+       "Union-Find (disjoint set) with path compression",
+       ""
+      ],
+      [
+       "p[find(a)] = find(b)",
+       "Joins the two indices of each allowed swap",
+       "Swaps chain: connected indices can be arranged in any order"
+      ],
+      [
+       "groups",
+       "Indices of each connected component",
+       ""
+      ],
+      [
+       "Counter(source[i]) & Counter(target[i])",
+       "Multiset overlap: how many values can be matched inside the group",
+       ""
+      ],
+      [
+       "n - match",
+       "The remaining positions stay different",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`source = [1,2,3,4]`, `target = [2,1,4,5]`, swaps `[0,1]`, `[2,3]`."
+    ],
+    "table": {
+     "head": [
+      "Group (indices)",
+      "source values",
+      "target values",
+      "Matched"
+     ],
+     "rows": [
+      [
+       "{0, 1}",
+       "1, 2",
+       "2, 1",
+       "2"
+      ],
+      [
+       "{2, 3}",
+       "3, 4",
+       "4, 5",
+       "1 (the 4)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Matches total 3, so the Hamming distance is `4 − 3 = 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + swaps) · α(n)), near-linear.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Indices joined by swaps form groups where values can be rearranged freely; count how many values already match as multisets."
+ },
+ "1733": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "langs",
+       "Each user's languages as a set",
+       ""
+      ],
+      [
+       "not (langs[a-1] & langs[b-1])",
+       "A friend pair with no shared language",
+       "Only these pairs matter"
+      ],
+      [
+       "need",
+       "Users who are in at least one such pair",
+       ""
+      ],
+      [
+       "know",
+       "How many users in need already know each language",
+       ""
+      ],
+      [
+       "len(need) - max(know.values())",
+       "Teach the most-known language to everyone in need who lacks it",
+       "Only one language may be taught"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`, `languages = [[1],[2],[1,2]]`, friendships `[1,2]`, `[1,3]`, `[2,3]`."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Common language?",
+      "Effect"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "none",
+       "users 1 and 2 are in need"
+      ],
+      [
+       "(1, 3)",
+       "1",
+       "fine"
+      ],
+      [
+       "(2, 3)",
+       "2",
+       "fine"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`need = {user 1, user 2}`; language 1 is known by user 1 and language 2 by user 2, so the best count is 1. Teaching one language to the other user costs `2 − 1 = 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(friendships · n + users · n).",
+     "Space: O(users · n)."
+    ]
+   }
+  ],
+  "takeaway": "Only friend pairs without a shared language matter; pick the language already known by most of those users and teach the rest."
+ },
+ "1765": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "h = [[-1] ...]",
+       "Heights, −1 means not assigned yet",
+       ""
+      ],
+      [
+       "water cells → 0 and queue",
+       "All water cells start the search together (multi-source BFS)",
+       ""
+      ],
+      [
+       "BFS expands to the 4 neighbours",
+       "Each unassigned neighbour gets height + 1",
+       ""
+      ],
+      [
+       "h[a][b] < 0",
+       "Visited check",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`isWater = [[0,1],[0,0]]`."
+    ],
+    "table": {
+     "head": [
+      "Pop",
+      "Neighbours set"
+     ],
+     "rows": [
+      [
+       "(0,1) height 0",
+       "(1,1) = 1 and (0,0) = 1"
+      ],
+      [
+       "(1,1) height 1",
+       "(1,0) = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result and why it is the best",
+    "p": [
+     "The grid becomes `[[1,0],[2,1]]`. Each land cell gets its distance to the nearest water cell: it cannot be higher because neighbours differ by at most 1, and BFS gives the largest legal height."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Heights are the distance to the nearest water cell, found with one BFS started from all water cells at once."
+ },
+ "1791": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "set(edges[0]) & set(edges[1])",
+       "The nodes shared by the first two edges",
+       ""
+      ],
+      [
+       ".pop()",
+       "The single common node",
+       "In a star the centre is in every edge, and no other node is in two edges"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [[1,2],[2,3],[4,2]]`: first two edges are `{1,2}` and `{2,3}`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "{1, 2} & {2, 3}",
+       "{2}"
+      ],
+      [
+       "pop",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The centre appears in every edge, so it is the only node shared by the first two edges."
+ }
+}

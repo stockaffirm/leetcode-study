@@ -1,0 +1,1863 @@
+{
+ "3006": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`s.startswith(a, i)`",
+       "True if `a` occurs in `s` starting at index `i`",
+       "Checking a pattern at a position"
+      ],
+      [
+       "`pa`, `pb`",
+       "Sorted lists of all start positions of `a` and `b` in `s`",
+       "Collecting occurrences first"
+      ],
+      [
+       "`bisect_left(pb, i - k)`",
+       "Index of the first `b`-position that is at least `i − k`",
+       "Binary search in a sorted list"
+      ],
+      [
+       "`pb[p] <= i + k`",
+       "That position is also within `i + k`, so some `b` lies in the window `[i − k, i + k]`",
+       "Range-existence test"
+      ],
+      [
+       "`res.append(i)`",
+       "`i` is beautiful",
+       "Collect the answers in order (`pa` is already sorted)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"isawsquirrelnearmysquirrelhouseohmy\"`, `a = \"my\"`, `b = \"squirrel\"`, `k = 15`. Then `pa = [16, 33]` and `pb = [4, 18]`.",
+     "Both are beautiful: `[16, 33]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Window",
+      "First `b` position at least `i − k`",
+      "Within `i + k`?"
+     ],
+     "rows": [
+      [
+       "16",
+       "[1, 31]",
+       "4",
+       "yes (4 ≤ 31)"
+      ],
+      [
+       "33",
+       "[18, 48]",
+       "18",
+       "yes (18 ≤ 48)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only check the first position in range?",
+    "p": [
+     "If any `b`-position lies in `[i − k, i + k]`, then the smallest position that is `≥ i − k` is also in that window (it can only be smaller or equal). So testing just that one position is enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · (|a| + |b|) + |pa| log |pb|) for the scans and the binary searches.",
+     "Space: O(n) for the position lists."
+    ]
+   }
+  ],
+  "takeaway": "Find all positions of a and b, and for each a-position binary-search the nearest b-position at or after i − k."
+ },
+ "3020": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt = Counter(nums)`",
+       "How many times each value occurs",
+       "The subset is determined by counts"
+      ],
+      [
+       "`cnt[1]` branch",
+       "The value 1 squares to itself, so any odd number of 1s works as the pattern `1,1,...,1`; if the count is even, drop one",
+       "A special case in the pattern"
+      ],
+      [
+       "`y = x; while cnt.get(y, 0) >= 2: length += 2; y *= y`",
+       "Climb the chain `x, x², x⁴, ...`: while at least two copies exist, the value can sit on both sides of the palindrome",
+       "Following repeated squaring"
+      ],
+      [
+       "`length += 1 if cnt.get(y, 0) >= 1 else -1`",
+       "If one copy of the next value `y` exists it becomes the peak (`+1`); otherwise the last pair must give up one element to be the peak (`−1`)",
+       "Choosing the centre"
+      ],
+      [
+       "`best = max(best, length)`",
+       "Keep the longest pattern over all starting values",
+       "Maximise"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,4,1,2,2]`, counts `5:1, 4:1, 1:1, 2:2`.",
+     "The best subset is `{2, 4, 2}`, so the answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "Start x",
+      "Chain",
+      "length"
+     ],
+     "rows": [
+      [
+       "1",
+       "one copy, odd",
+       "1"
+      ],
+      [
+       "5",
+       "only one 5, no pair; peak `5`",
+       "1"
+      ],
+      [
+       "4",
+       "one 4 as peak",
+       "1"
+      ],
+      [
+       "2",
+       "two 2s → +2, next value 4 exists once → +1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `−1` when the next value is missing?",
+    "p": [
+     "Each loop step counted 2 for a value that has two copies. If the next square `y` is absent, the pattern still needs a single peak, and the only candidate is the last value counted. It can appear only once in the middle instead of twice, so the total is reduced by 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · log log max), since each chain squares the value and ends fast.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For each starting value follow x, x², x⁴, ... while pairs exist and end with a single peak; handle 1 separately."
+ },
+ "3040": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`solve(score)`",
+       "Maximum operations if every operation must have this score",
+       "Fix the one thing that is common and solve"
+      ],
+      [
+       "`go(l, r)` with `@lru_cache`",
+       "Best number of operations on the remaining subarray `nums[l..r]`",
+       "Interval DP (dynamic programming over ranges) with memoisation"
+      ],
+      [
+       "`r - l + 1 < 2: return 0`",
+       "Fewer than two elements left, no operation possible",
+       "Base case"
+      ],
+      [
+       "three `if` checks",
+       "Delete the first two, the last two, or the first and last, each only if the sum equals `score`",
+       "The three allowed moves"
+      ],
+      [
+       "`max(solve(...), solve(...), solve(...))`",
+       "The first operation must be one of the three moves, so the score is one of three values",
+       "The score is fixed by the first operation"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,2,1,2,3,4]`, `score = 5` (the first two sum to 5).",
+     "Three operations in total, so the result is `3`."
+    ],
+    "table": {
+     "head": [
+      "Subarray",
+      "Move used",
+      "Operations after"
+     ],
+     "rows": [
+      [
+       "`[3,2,1,2,3,4]`",
+       "delete first two (3 + 2)",
+       "continue with `[1,2,3,4]`"
+      ],
+      [
+       "`[1,2,3,4]`",
+       "delete first and last (1 + 4)",
+       "continue with `[2,3]`"
+      ],
+      [
+       "`[2,3]`",
+       "delete both (2 + 3)",
+       "continue with empty"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only three candidate scores?",
+    "p": [
+     "Whatever the first operation is, it removes one of the three pairs at the ends of the original array. Its sum then fixes the score of all later operations, so trying those three sums covers every possible plan."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2) states per score, three scores.",
+     "Space: O(n^2)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the score from the first move (three options), then memoised interval DP counts the most operations that keep that sum."
+ },
+ "3133": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`res = x`",
+       "Every element must contain all the 1 bits of `x`, so the smallest element is `x` itself",
+       "The AND (bitwise AND) of the array can only keep bits common to all"
+      ],
+      [
+       "`k = n - 1`",
+       "We need the `(n−1)`-th number after `x` in the sequence of valid numbers; its index written in binary decides the free bits",
+       "Counting in binary"
+      ],
+      [
+       "`if not x & bit`",
+       "This bit position is free: `x` has 0 here, so the elements can use it",
+       "Free bit positions"
+      ],
+      [
+       "`if k & 1: res |= bit`",
+       "Put the next bit of `k` into this free position",
+       "Spreading the bits of a number into the gaps of another"
+      ],
+      [
+       "`k >>= 1`",
+       "Move to the next bit of `k` only after using a free position",
+       "Consume the bits of `k`"
+      ],
+      [
+       "`bit <<= 1`",
+       "Next bit position",
+       "Walk upward"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`, `x = 4` (binary `100`), so `k = 2` (binary `10`).",
+     "The valid sequence is `4, 5, 6`, and the last element is `6`."
+    ],
+    "table": {
+     "head": [
+      "bit",
+      "Free?",
+      "Bit of k used",
+      "res"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes",
+       "0",
+       "4 (100)"
+      ],
+      [
+       "2",
+       "yes",
+       "1",
+       "6 (110)"
+      ],
+      [
+       "4",
+       "the loop has already ended (k is 0)",
+       "–",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this give the minimum?",
+    "p": [
+     "All valid elements are `x` plus extra bits in the free positions. Listing them in increasing order is the same as counting upward in binary using only the free positions as digits. The `(n − 1)`-th such number is `x` with the bits of `n − 1` placed into the free positions, which is exactly what the loop builds. The first element is `x` itself, so the AND cannot contain more bits than `x`, and every element contains all of `x`'s bits, so the AND is exactly `x`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n + log x).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The last element is x with the binary digits of n − 1 poured into the zero bits of x."
+ },
+ "3151": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(nums, nums[1:])`",
+       "Each element paired with its right neighbour",
+       "Comparing neighbours"
+      ],
+      [
+       "`(a + b) % 2 == 1`",
+       "The sum of two numbers is odd exactly when one is even and one is odd",
+       "Parity test on a pair"
+      ],
+      [
+       "`all(...)`",
+       "Every neighbouring pair must satisfy it (true for a single element)",
+       "\"For every pair\""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,4]`.",
+     "Both pairs differ in parity, so the result is `True`. For `[4,3,1,6]` the pair `(3, 1)` sums to 4, so `False`."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Sum",
+      "Odd?"
+     ],
+     "rows": [
+      [
+       "(2, 1)",
+       "3",
+       "yes"
+      ],
+      [
+       "(1, 4)",
+       "5",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the sliced copy (O(1) with an index loop)."
+    ]
+   }
+  ],
+  "takeaway": "Check that every adjacent pair sums to an odd number."
+ },
+ "3169": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`meetings.sort()`",
+       "Order by start day",
+       "Merging overlapping intervals"
+      ],
+      [
+       "`end`",
+       "The last day already covered by the merged meetings so far",
+       "The merged frontier"
+      ],
+      [
+       "`if s > end: busy += e - s + 1; end = e`",
+       "A new meeting starts after the frontier: all its days are new",
+       "Disjoint interval"
+      ],
+      [
+       "`elif e > end: busy += e - end; end = e`",
+       "The meeting overlaps the frontier but extends it: only the extra days are new",
+       "Overlapping interval"
+      ],
+      [
+       "`days - busy`",
+       "Days with no meeting",
+       "Complement"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`days = 10`, `meetings = [[5,7],[1,3],[9,10]]`, sorted `[[1,3],[5,7],[9,10]]`.",
+     "Free days = `10 − 8 = 2` (days 4 and 8)."
+    ],
+    "table": {
+     "head": [
+      "Meeting",
+      "Case",
+      "busy",
+      "end"
+     ],
+     "rows": [
+      [
+       "[1,3]",
+       "new (1 > 0)",
+       "3",
+       "3"
+      ],
+      [
+       "[5,7]",
+       "new (5 > 3)",
+       "6",
+       "7"
+      ],
+      [
+       "[9,10]",
+       "new (9 > 7)",
+       "8",
+       "10"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only count the new days?",
+    "p": [
+     "Overlapping meetings share days, and counting each meeting fully would count those days twice. Tracking the furthest covered day (`end`) means each day is added exactly once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log m) for sorting.",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sort the meetings, count each busy day once with a running end, and subtract from the total days."
+ },
+ "3211": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`go(cur)`",
+       "Recursive search that extends the current string `cur` one character at a time (backtracking)",
+       "Generating all strings with a rule"
+      ],
+      [
+       "`len(cur) == n`",
+       "A complete string has been built",
+       "Base case"
+      ],
+      [
+       "`go(cur + '1')`",
+       "A `1` can always be appended",
+       "Unrestricted choice"
+      ],
+      [
+       "`if not cur or cur[-1] == '1': go(cur + '0')`",
+       "A `0` can be appended only at the start or after a `1`, otherwise two zeros would be adjacent",
+       "The constraint"
+      ],
+      [
+       "`sorted(res)`",
+       "Return the strings in order (the recursion visits `1` before `0`)",
+       "Tidy output"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`. The recursion tree (a string can only be extended with `0` if it is empty or ends in `1`):",
+     "Sorted: `[\"010\",\"011\",\"101\",\"110\",\"111\"]`."
+    ],
+    "table": {
+     "head": [
+      "Prefix",
+      "Extensions tried",
+      "Complete strings"
+     ],
+     "rows": [
+      [
+       "(empty)",
+       "`1`, `0`",
+       "–"
+      ],
+      [
+       "`1`",
+       "`11`, `10`",
+       "–"
+      ],
+      [
+       "`11`",
+       "`111`, `110`",
+       "111, 110"
+      ],
+      [
+       "`10`",
+       "`101` only (it ends in 0)",
+       "101"
+      ],
+      [
+       "`0`",
+       "`01` only",
+       "–"
+      ],
+      [
+       "`01`",
+       "`011`, `010`",
+       "011, 010"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it enough to check the last character?",
+    "p": [
+     "Two adjacent zeros always include the last character of the prefix and the new one. The rest of the string was already valid, so checking the end is sufficient."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · F), where F (about 1.6^n, the Fibonacci numbers) is the count of valid strings.",
+     "Space: O(n) recursion depth plus the output."
+    ]
+   }
+  ],
+  "takeaway": "Build strings by backtracking, allowing a 0 only when the string is empty or ends with 1."
+ },
+ "3234": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nxt[i]`",
+       "Index of the first `0` at or after `i` (or `n` if none)",
+       "Jumping from one zero to the next"
+      ],
+      [
+       "`total += cur - i`",
+       "Substrings starting at `i` that contain no zero at all: lengths `1` to `cur − i`, all dominant",
+       "The zero-zeros case"
+      ],
+      [
+       "`z`",
+       "Number of zeros in the substrings currently counted",
+       "Only `z² ≤ n` can be dominant, so `z` is small (at most about `√n`)"
+      ],
+      [
+       "`cur`",
+       "Position of the `z`-th zero after `i`",
+       "Walk zero by zero"
+      ],
+      [
+       "`nz = nxt[cur + 1]`",
+       "Position of the next zero, so ends in `[cur, nz − 1]` give exactly `z` zeros",
+       "The range of valid end positions"
+      ],
+      [
+       "`lo = max(cur, i + z*z + z - 1)`",
+       "Smallest end where the length is at least `z² + z` (so ones ≥ z²)",
+       "The dominance condition in terms of length"
+      ],
+      [
+       "`total += nz - lo`",
+       "Number of valid ends in `[lo, nz − 1]`",
+       "Counting a range"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"00011\"` (`n = 5`). For each start `i`:",
+     "The total is `5`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Zero-zero substrings",
+      "Substrings with `z` zeros that are dominant",
+      "Added"
+     ],
+     "rows": [
+      [
+       "0",
+       "0 (`s[0]` is `0`)",
+       "`z=1`: need length ≥ 2 and ends in `[0,0]`, none; `z=2`: none",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "none",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "`z=1`: ends `3` and `4` (`01`, `011`)",
+       "2"
+      ],
+      [
+       "3",
+       "2 (`1`, `11`)",
+       "none",
+       "2"
+      ],
+      [
+       "4",
+       "1 (`1`)",
+       "none",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can `z` stop at about `√n`?",
+    "p": [
+     "A substring with `z` zeros needs at least `z²` ones, so its length is at least `z² + z`, which cannot exceed `n`. Therefore the loop `while z * z <= n` visits only the possible zero counts, giving O(n √n) overall."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n √n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For each start, count dominant substrings by the number of zeros z (at most about √n), using next-zero jumps to count valid end positions as a range."
+ },
+ "3274": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ord(c[0]) - ord('a')`",
+       "Column number from 0 to 7",
+       "Converting a letter to an index"
+      ],
+      [
+       "`int(c[1])`",
+       "Row number from 1 to 8",
+       "The digit"
+      ],
+      [
+       "`(col + row) % 2`",
+       "Parity of the sum: squares of the same colour have sums of the same parity",
+       "Chessboard colouring"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`\"a1\"` has column 0 and row 1, so parity 1. `\"c3\"` has column 2 and row 3, so parity 1. They match.",
+     "`a1` and `c3` have the same colour (`True`); `a1` and `h3` do not (`False`)."
+    ],
+    "table": {
+     "head": [
+      "Square",
+      "Column + row",
+      "Parity"
+     ],
+     "rows": [
+      [
+       "a1",
+       "0 + 1 = 1",
+       "1"
+      ],
+      [
+       "c3",
+       "2 + 3 = 5",
+       "1"
+      ],
+      [
+       "h3",
+       "7 + 3 = 10",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does parity give the colour?",
+    "p": [
+     "Moving one square sideways or up changes the column or the row by 1, which flips the parity of their sum, and neighbouring squares have different colours on a chessboard."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two squares have the same colour exactly when column + row has the same parity for both."
+ },
+ "3306": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`at_least(k)`",
+       "Number of substrings that contain all five vowels and at least `k` consonants",
+       "Count \"at least\" and subtract to get \"exactly\""
+      ],
+      [
+       "`vow`",
+       "Counter of vowels currently in the window",
+       "Tracking presence in a window"
+      ],
+      [
+       "`cons`",
+       "Number of consonants in the window",
+       "Counting a category"
+      ],
+      [
+       "`while len(vow) == 5 and cons >= k:` shrink from the left",
+       "Shrink until the window is no longer valid",
+       "Finding the point where validity ends"
+      ],
+      [
+       "`res += left`",
+       "All start positions before `left` give a valid substring ending at the current character",
+       "Counting all valid starts for each end"
+      ],
+      [
+       "`at_least(k) - at_least(k + 1)`",
+       "Substrings with at least `k` minus those with at least `k + 1` consonants, i.e. exactly `k`",
+       "Exact count from two \"at least\" counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"aeiou\"`, `k = 0`.",
+     "The answer is `1 − 0 = 1`."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Result",
+      "Why"
+     ],
+     "rows": [
+      [
+       "`at_least(0)`",
+       "1",
+       "at the last character the window has all 5 vowels; the shrink loop removes `a` (left = 1), so 1 start works"
+      ],
+      [
+       "`at_least(1)`",
+       "0",
+       "there are no consonants, so no window ever qualifies"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `res += left` count starts?",
+    "p": [
+     "The window `[left, r]` is the first one (smallest `left`) that no longer satisfies the condition after shrinking. Every start index smaller than `left` was valid for this end, so there are `left` valid substrings ending at `r`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (the counter has at most 5 keys)."
+    ]
+   }
+  ],
+  "takeaway": "Count substrings with at least k consonants and all vowels with a sliding window, and subtract the count for k + 1."
+ },
+ "3312": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt[v]`",
+       "How many times the value `v` occurs in `nums`",
+       "Counting by value"
+      ],
+      [
+       "`c = sum(cnt[k] for k in range(g, m + 1, g))`",
+       "Number of elements divisible by `g`",
+       "Multiples enumeration, a harmonic-sum loop"
+      ],
+      [
+       "`c * (c - 1) // 2`",
+       "Pairs among them: every such pair has a gcd (greatest common divisor) that is a multiple of `g`",
+       "Pairs from `c` items"
+      ],
+      [
+       "`- sum(exact[k] for k in range(2 * g, ...))`",
+       "Remove pairs whose gcd is a larger multiple of `g`, leaving pairs with gcd exactly `g`",
+       "Inclusion–exclusion by multiples"
+      ],
+      [
+       "`pref`",
+       "Running total of `exact[1..g]`: how many sorted gcd values are `≤ g`",
+       "Prefix counts"
+      ],
+      [
+       "`bisect_right(pref, q) + 1`",
+       "The smallest `g` for which `pref[g] > q`, i.e. the gcd at sorted index `q`",
+       "Binary search on cumulative counts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,4]`, `m = 4`. Going from `g = 4` down to `1`:",
+     "Cumulative counts for `g = 1..4` are `[2,3,3,3]`. For queries `0, 2, 2`: `bisect_right(pref, 0) + 1 = 1`, and `bisect_right(pref, 2) + 1 = 2`. The result is `[1,2,2]`."
+    ],
+    "table": {
+     "head": [
+      "g",
+      "Elements divisible by g",
+      "Pairs",
+      "Minus larger multiples",
+      "`exact[g]`"
+     ],
+     "rows": [
+      [
+       "4",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "2 (2 and 4)",
+       "1",
+       "`exact[4] = 0`",
+       "1"
+      ],
+      [
+       "1",
+       "3",
+       "3",
+       "`exact[2] + exact[3] + exact[4] = 1`",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not compute all pairs' gcds?",
+    "p": [
+     "There are about `n²/2` pairs, which is far too many for `n = 10^5`. Counting by value uses only the maximum value `m`, with a harmonic-sum amount of work."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m log m + q log m).",
+     "Space: O(m)."
+    ]
+   }
+  ],
+  "takeaway": "Count pairs by gcd value using multiples and inclusion–exclusion, then answer each query with a binary search on the cumulative counts."
+ },
+ "3321": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`freq`",
+       "Count of each value in the current window",
+       "Sliding window of counts"
+      ],
+      [
+       "`(freq[v], v)` pair",
+       "A value's \"strength\": higher count wins and, on ties, the larger value wins; tuples compare in exactly that order",
+       "Ordering by count then value"
+      ],
+      [
+       "`top`",
+       "Sorted list of the `x` strongest pairs (weakest first)",
+       "Elements that contribute to the x-sum"
+      ],
+      [
+       "`rest`",
+       "Sorted list of all the other pairs (strongest last)",
+       "Elements that do not contribute"
+      ],
+      [
+       "`state[\"sum\"]`",
+       "Current x-sum: for each pair in `top`, count times value",
+       "Maintained incrementally"
+      ],
+      [
+       "`remove`, `add`, `rebalance`",
+       "Take a pair out, put one in, then fill `top` up to `x` pairs and swap while `rest`'s best beats `top`'s worst",
+       "Keeping the invariant \"top holds the strongest x\""
+      ],
+      [
+       "`change(v, delta)`",
+       "Remove the old pair of `v`, change its count, add the new pair, rebalance",
+       "One element enters or leaves the window"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,2,2,3,4,2,3]`, `k = 6`, `x = 2`.",
+     "The answers are `[6,10,12]`."
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Counts",
+      "Two strongest pairs",
+      "x-sum"
+     ],
+     "rows": [
+      [
+       "`1,1,2,2,3,4`",
+       "1:2, 2:2, 3:1, 4:1",
+       "(2,2), (2,1)",
+       "2·2 + 2·1 = 6"
+      ],
+      [
+       "`1,2,2,3,4,2`",
+       "1:1, 2:3, 3:1, 4:1",
+       "(3,2), (1,4)",
+       "3·2 + 1·4 = 10"
+      ],
+      [
+       "`2,2,3,4,2,3`",
+       "2:3, 3:2, 4:1",
+       "(3,2), (2,3)",
+       "3·2 + 2·3 = 12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep two sorted lists?",
+    "p": [
+     "Only the `x` strongest pairs contribute to the sum. When a count changes, at most the boundary between `top` and `rest` moves, so a few swaps restore the invariant. This avoids re-sorting all values for every window."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: roughly O(n · d), where `d` is the number of distinct values in a window: list searches, inserts and removals are linear in the list size. A balanced tree or heap with lazy deletion would give O(n log n).",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Maintain the top-x (count, value) pairs and their sum while the window slides, rebalancing two sorted lists after each element enters or leaves."
+ },
+ "3336": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[(a, b)]`",
+       "Number of ways to have chosen two disjoint subsequences whose gcds are currently `a` and `b` (gcd (greatest common divisor) `0` means \"still empty\")",
+       "The state is the gcd of each subsequence"
+      ],
+      [
+       "`{(0, 0): 1}`",
+       "Both subsequences start empty",
+       "Start state"
+      ],
+      [
+       "`new[(a, b)] += c`",
+       "Skip the current number",
+       "Option 1"
+      ],
+      [
+       "`new[(gcd(a, x), b)] += c`",
+       "Put the number into the first subsequence",
+       "Option 2 (`gcd(0, x) = x`)"
+      ],
+      [
+       "`new[(a, gcd(b, x))] += c`",
+       "Put the number into the second subsequence",
+       "Option 3"
+      ],
+      [
+       "`a == b and a > 0`",
+       "Both are non-empty and have equal gcd",
+       "Final filter"
+      ],
+      [
+       "`% MOD`",
+       "Keep counts small",
+       "Counting problems"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1]`. Each number can be skipped or sent to one of the two subsequences.",
+     "Only `(1,1)` has both non-empty with equal gcd: 2 ways (the first `1` in the first subsequence and the second in the other, or the reverse). That matches the expected answer for two equal ones."
+    ],
+    "table": {
+     "head": [
+      "After",
+      "States and counts"
+     ],
+     "rows": [
+      [
+       "start",
+       "(0,0): 1"
+      ],
+      [
+       "first 1",
+       "(0,0): 1, (1,0): 1, (0,1): 1"
+      ],
+      [
+       "second 1",
+       "(0,0): 1, (1,0): 3, (0,1): 3, (1,1): 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why gcd 0 for an empty subsequence?",
+    "p": [
+     "`gcd(0, x) = x`, so the first element added to an empty subsequence sets its gcd to that element, and later numbers combine as usual. No separate \"is it empty\" flag is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · S), where S is the number of (a, b) states, bounded by about 200² (values up to 200).",
+     "Space: O(S)."
+    ]
+   }
+  ],
+  "takeaway": "DP (dynamic programming) over pairs of gcds for the two subsequences, where each number is skipped or added to one of them."
+ },
+ "3347": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Sorted so the elements within `k` of a target form a contiguous block",
+       "Range counting with binary search"
+      ],
+      [
+       "`cand`",
+       "Candidate target values: each number and the points `x − k` and `x + k`",
+       "The best target is either an existing value or at a boundary of some number's reach"
+      ],
+      [
+       "`near = bisect_right(nums, t + k) - bisect_left(nums, t - k)`",
+       "How many numbers lie in `[t − k, t + k]`, i.e. can become `t` with one operation",
+       "Counting a range in a sorted list"
+      ],
+      [
+       "`same = cnt.get(t, 0)`",
+       "Numbers already equal to `t` need no operation",
+       "Free elements"
+      ],
+      [
+       "`same + min(numOperations, near - same)`",
+       "Free ones plus as many convertible ones as the operations allow",
+       "Limited operations"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,11,20,20]`, `k = 5`, `numOperations = 1`.",
+     "The best is `2`."
+    ],
+    "table": {
+     "head": [
+      "Target t",
+      "In reach `[t−5, t+5]`",
+      "Already equal",
+      "Result"
+     ],
+     "rows": [
+      [
+       "20",
+       "20, 20",
+       "2",
+       "2 + min(1, 0) = 2"
+      ],
+      [
+       "10",
+       "5, 11",
+       "0",
+       "0 + min(1, 2) = 1"
+      ],
+      [
+       "16",
+       "11, 20, 20",
+       "0",
+       "0 + min(1, 3) = 1"
+      ],
+      [
+       "11",
+       "11",
+       "1",
+       "1 + min(1, 0) = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why test `x − k` and `x + k` as well?",
+    "p": [
+     "The number of elements within reach of `t` only changes when `t − k` or `t + k` passes an element, i.e. at `t = x + k` or `t = x − k`. Between such points it stays constant. The part `same` only matters at existing values. So all useful targets are among these candidates."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Try each candidate target, count the elements within k via binary search, and add the free equal ones plus as many conversions as allowed."
+ },
+ "3377": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`is_prime` sieve up to `10^d`",
+       "Sieve of Eratosthenes: which numbers are prime",
+       "The rule forbids prime values"
+      ],
+      [
+       "`if is_prime[n] or is_prime[m]: return -1`",
+       "The start and the target must not be prime",
+       "Immediate impossibility"
+      ],
+      [
+       "`dist = {n: n}`",
+       "Cheapest known cost to reach each number, counting the starting value",
+       "Dijkstra's shortest-path algorithm; the \"weight\" is the value of the number reached"
+      ],
+      [
+       "`heappop(pq)`",
+       "Always expand the cheapest unfinished number",
+       "Priority queue"
+      ],
+      [
+       "`s = str(u).zfill(d)`",
+       "Digits of `u`, padded to `d` digits",
+       "Keep all positions available"
+      ],
+      [
+       "`for nd in (digit - 1, digit + 1)`",
+       "Decrease or increase one digit by 1 (if it stays in `0..9`)",
+       "Neighbour generation"
+      ],
+      [
+       "`not is_prime[v] and cost + v < dist...`",
+       "Move only to non-prime numbers, and only if it is cheaper",
+       "Edge relaxation"
+      ],
+      [
+       "`if u == m: return cost`",
+       "The first time the target is popped, its cost is minimal",
+       "Dijkstra's termination"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`, `m = 12`. Going 10 → 11 is not allowed (11 is prime). A cheapest valid route is 10 → 20 → 21 → 22 → 12, and the cost is the sum of every value, including the first.",
+     "The answer is `85`."
+    ],
+    "table": {
+     "head": [
+      "Number",
+      "Change",
+      "Running cost"
+     ],
+     "rows": [
+      [
+       "10",
+       "start",
+       "10"
+      ],
+      [
+       "20",
+       "first digit +1",
+       "30"
+      ],
+      [
+       "21",
+       "last digit +1",
+       "51"
+      ],
+      [
+       "22",
+       "last digit +1",
+       "73"
+      ],
+      [
+       "12",
+       "first digit −1",
+       "85"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why Dijkstra and not plain BFS (Breadth-First Search)?",
+    "p": [
+     "Each move has a different cost (the value of the number you land on), so the shortest path in the number of moves is not the cheapest. Dijkstra handles non-negative edge weights and always pops the cheapest number first."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(V log V) with V up to 10^d numbers and 2d edges each, plus the sieve.",
+     "Space: O(10^d)."
+    ]
+   }
+  ],
+  "takeaway": "Treat numbers as graph nodes, move by changing one digit by 1 to a non-prime number, and run Dijkstra with the landed value as the edge cost."
+ },
+ "3393": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[i][j][x]`",
+       "Number of paths from `(0,0)` to `(i,j)` whose XOR (exclusive OR) is `x`",
+       "Counting paths with a running aggregate"
+      ],
+      [
+       "`16`",
+       "Cell values are below 16, so every XOR is below 16",
+       "A small value range makes the extra dimension cheap"
+      ],
+      [
+       "`dp[0][0][grid[0][0]] = 1`",
+       "The path consisting of the first cell",
+       "Start"
+      ],
+      [
+       "`x ^ grid[i][j]`",
+       "XOR with the current cell undoes it: a path ending here with XOR `x` came from a path with XOR `x ^ cell`",
+       "XOR is its own inverse"
+      ],
+      [
+       "`dp[i-1][j] + dp[i][j-1]`",
+       "A path arrives from above or from the left",
+       "Right/down moves only"
+      ],
+      [
+       "`% MOD`",
+       "Counts can be huge",
+       "Counting problems"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[2,1,5],[7,10,0],[12,6,4]]`, `k = 11`. The first row, where only one path exists to each cell:",
+     "So `dp[0][2][6] = 1`. Continuing the table for all cells, `dp[2][2][11] = 3`, which is the result."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Path XOR so far"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "2"
+      ],
+      [
+       "(0,1)",
+       "2 ^ 1 = 3"
+      ],
+      [
+       "(0,2)",
+       "3 ^ 5 = 6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why recover the previous XOR with `x ^ cell`?",
+    "p": [
+     "If the path up to the previous cell had XOR `y` and the current cell is `c`, then the new XOR is `y ^ c = x`, which means `y = x ^ c`. So the number of ways to end with XOR `x` equals the number of ways to end the previous cell with XOR `x ^ c`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m · n · 16).",
+     "Space: O(m · n · 16)."
+    ]
+   }
+  ],
+  "takeaway": "DP (dynamic programming) over cells and the XOR value so far (16 possible values), where a path with XOR x here came from one with XOR x ^ cell."
+ },
+ "3397": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Process values from smallest to largest",
+       "Greedy assignment in order"
+      ],
+      [
+       "`cur`",
+       "The most recently chosen final value (starts at minus infinity)",
+       "Keeping the last used value"
+      ],
+      [
+       "`pick = max(cur + 1, x - k)`",
+       "The smallest value in `x`'s range that is also bigger than the previous choice",
+       "Leave room for the following elements"
+      ],
+      [
+       "`if pick <= x + k:`",
+       "The pick still lies inside `[x − k, x + k]`, so this element can be distinct",
+       "Range check"
+      ],
+      [
+       "`count += 1; cur = pick`",
+       "Count it and remember its value",
+       "Greedy bookkeeping"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,2,3,3,4]`, `k = 2`.",
+     "All six values end up distinct, so the answer is `6`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Range",
+      "`pick`",
+      "count"
+     ],
+     "rows": [
+      [
+       "1",
+       "[−1, 3]",
+       "−1",
+       "1"
+      ],
+      [
+       "2",
+       "[0, 4]",
+       "0",
+       "2"
+      ],
+      [
+       "2",
+       "[0, 4]",
+       "1",
+       "3"
+      ],
+      [
+       "3",
+       "[1, 5]",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "[1, 5]",
+       "3",
+       "5"
+      ],
+      [
+       "4",
+       "[2, 6]",
+       "4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the smallest possible pick?",
+    "p": [
+     "Each element should take the smallest legal value above the previous one, leaving as much room as possible for later (larger) elements. Because the elements are sorted, an exchange argument shows no other order gives more distinct values."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then give each element the smallest value in its range that is larger than the last assigned value."
+ },
+ "3414": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`order`, `starts`",
+       "Interval indices sorted by start (ties by index), and the sorted starts",
+       "Binary search for \"the next interval that starts after this one ends\""
+      ],
+      [
+       "`f(p, k)`",
+       "Best result using at most `k` more intervals, looking only at `order[p:]`; the result is a pair `(total weight, tuple of indices)`",
+       "DP (dynamic programming) with memoisation that also tracks the chosen indices"
+      ],
+      [
+       "`best = f(p + 1, k)`",
+       "Skip the interval at position `p`",
+       "Option 1"
+      ],
+      [
+       "`f(bisect_right(starts, r), k - 1)`",
+       "Take it and continue with the first interval whose start is strictly greater than `r` (touching endpoints overlap)",
+       "Option 2"
+      ],
+      [
+       "`tuple(sorted(idx + (i,)))`",
+       "The chosen set as a sorted tuple",
+       "Lexicographic comparison of index lists"
+      ],
+      [
+       "`cand[0] > best[0] or (cand[0] == best[0] and cand[1] < best[1])`",
+       "Prefer a higher weight and, on a tie, the lexicographically smaller index list",
+       "Tie-breaking rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`intervals = [[1,3,2],[4,5,2],[1,5,5],[6,9,3],[6,7,1],[8,9,1]]`. Some compatible choices (at most 4 intervals):",
+     "The best weight is 8, reached by `[2,3]`."
+    ],
+    "table": {
+     "head": [
+      "Indices",
+      "Total weight"
+     ],
+     "rows": [
+      [
+       "2, 3",
+       "5 + 3 = 8"
+      ],
+      [
+       "0, 1, 3",
+       "2 + 2 + 3 = 7"
+      ],
+      [
+       "0, 1, 4, 5",
+       "2 + 2 + 1 + 1 = 6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why store the tuple with the score?",
+    "p": [
+     "The question asks for the lexicographically smallest list among the best ones. Comparing tuples of sorted indices when the weights tie gives exactly that, and storing it in the DP value avoids reconstructing it afterwards."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: about O(n log n): 4 · n states, each with a binary search and a tiny sort.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Memoised DP over positions in start order and the remaining number of intervals, with ties broken by the lexicographically smaller index tuple."
+ },
+ "3429": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[(a, b)]`",
+       "Minimum cost so far when the current outer pair of houses has colours `a` (left) and `b` (right)",
+       "Process houses from both ends inward"
+      ],
+      [
+       "`a != b`",
+       "The two mirror houses must differ",
+       "The extra rule"
+      ],
+      [
+       "`cost[0][a] + cost[n - 1][b]`",
+       "Cost of the outermost pair",
+       "Initial states"
+      ],
+      [
+       "`for i in range(1, n // 2)`",
+       "Move one pair inward at a time",
+       "Mirror pairs"
+      ],
+      [
+       "`min(v for (p, q), v in dp.items() if p != a and q != b)`",
+       "The previous pair `(p, q)` must differ from the new colours on its own side, because those houses are neighbours",
+       "Adjacent-house rule"
+      ],
+      [
+       "`min(dp.values())`",
+       "Best total over all colourings of the innermost pair",
+       "Final answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, `cost = [[3,5,7],[6,2,9],[4,8,1],[7,3,5]]`. The pairs are houses `(0,3)` and `(1,2)`. One cheapest colouring is `0, 1, 2, 1` for houses 0 to 3.",
+     "The colouring has no equal neighbours, and the mirror pairs (houses 0 and 3, and 1 and 2) differ, so the total is `3 + 2 + 1 + 3 = 9`."
+    ],
+    "table": {
+     "head": [
+      "House",
+      "Colour",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "3"
+      ],
+      [
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why do mirror pairs make a small state?",
+    "p": [
+     "Each layer links two houses, and only the neighbours on each side matter for the next layer. With 3 colours and `a != b` there are only 6 states per layer, so the work per layer is constant."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) (6 states, 6 transitions each, per layer).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Go inward from both ends, keeping the best cost for each valid (left colour, right colour) pair."
+ },
+ "3440": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gaps`",
+       "Free stretches: before the first meeting, between meetings, and after the last (`n + 1` of them)",
+       "Turning meetings into gaps"
+      ],
+      [
+       "`pre`, `suf`",
+       "Running maximum of the gaps from the left and from the right",
+       "Largest gap on each side of a position in O(1)"
+      ],
+      [
+       "`dur`",
+       "Length of meeting `i`",
+       "How much room it needs elsewhere"
+      ],
+      [
+       "`other`",
+       "The largest gap not touching meeting `i` (`gaps[0..i−1]` and `gaps[i+2..]`)",
+       "Where the meeting could be moved to"
+      ],
+      [
+       "`gaps[i] + gaps[i + 1]`",
+       "Free time created by lifting meeting `i` out: its two neighbouring gaps merge",
+       "Removing an item from a timeline"
+      ],
+      [
+       "`+ (dur if other >= dur else 0)`",
+       "If it fits in another gap, it leaves for good and its time becomes free as well",
+       "Moving versus sliding"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`eventTime = 5`, `startTime = [1,3]`, `endTime = [2,5]`. Gaps: `[1, 1, 0]`.",
+     "The best is `2`."
+    ],
+    "table": {
+     "head": [
+      "Meeting i",
+      "dur",
+      "Neighbouring gaps",
+      "Other largest gap",
+      "Free time"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1 + 1",
+       "0",
+       "2"
+      ],
+      [
+       "1",
+       "2",
+       "1 + 0",
+       "1 (< 2)",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the merged gap the answer when the meeting cannot move away?",
+    "p": [
+     "If the meeting cannot fit in any other gap, it must stay within the stretch formed by its two neighbouring gaps. Sliding it to one end leaves `gaps[i] + gaps[i + 1]` as one continuous free period. If it does fit elsewhere, its own duration is added to that free period."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For each meeting merge its two neighbouring gaps, and add its duration if some other gap can hold it."
+ }
+}

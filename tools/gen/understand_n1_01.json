@@ -1,0 +1,1427 @@
+{
+ "145": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "st = [root] if root else []",
+       "Explicit stack seeded with the root (empty if the tree is empty)",
+       "You want to avoid recursion and its depth limit"
+      ],
+      [
+       "node = st.pop()",
+       "Takes the most recently pushed node",
+       "Depth-first traversal with a stack"
+      ],
+      [
+       "res.append(node.val)",
+       "Records the node BEFORE its children",
+       "Producing a root, right, left order"
+      ],
+      [
+       "push left, then right",
+       "Left goes on first, so right is popped first",
+       "Controls which child is visited first"
+      ],
+      [
+       "res[::-1]",
+       "Reverses the finished list",
+       "Turning root-right-left into left-right-root (postorder)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,null,2,3]`: node 1 has right child 2, and 2 has left child 3."
+    ],
+    "table": {
+     "head": [
+      "Pop",
+      "res after append",
+      "Stack after pushes"
+     ],
+     "rows": [
+      [
+       "1",
+       "[1]",
+       "[2]"
+      ],
+      [
+       "2",
+       "[1, 2]",
+       "[3]"
+      ],
+      [
+       "3",
+       "[1, 2, 3]",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does reversing give postorder?",
+    "p": [
+     "Postorder is left, right, node. Reading it backwards gives node, right, left. The loop produces exactly that order (node first, then the right subtree, then the left), so reversing it at the end yields `[3, 2, 1]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is pushed and popped once.",
+     "Space: O(h) for the stack plus O(n) for the answer, where h is the tree height."
+    ]
+   }
+  ],
+  "takeaway": "Postorder without recursion: do a root-right-left traversal with a stack and reverse the result."
+ },
+ "335": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "d = distance",
+       "Short alias for the list of segment lengths",
+       "Making the long comparisons readable"
+      ],
+      [
+       "range(3, len(d))",
+       "Starts at the fourth segment, since fewer than four segments cannot cross",
+       "Skipping cases that cannot happen"
+      ],
+      [
+       "d[i] >= d[i-2] and d[i-1] <= d[i-3]",
+       "Segment i reaches across segment i-3 (a shrinking turn)",
+       "Case 1: the fourth segment crosses the first"
+      ],
+      [
+       "i >= 4 and d[i-1] == d[i-3] and d[i] + d[i-4] >= d[i-2]",
+       "Segment i touches segment i-4 when the neighbours line up exactly",
+       "Case 2: the fifth segment meets the first"
+      ],
+      [
+       "the long i >= 5 condition",
+       "Segment i crosses segment i-5 after an outward spiral turns inward",
+       "Case 3: the sixth segment crosses the first"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`distance = [2,1,1,2]`. Only `i = 3` is checked (four segments)."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "d[i]",
+      "d[i-2]",
+      "d[i-1]",
+      "d[i-3]",
+      "Case 1 test",
+      "Result"
+     ],
+     "rows": [
+      [
+       "3",
+       "2",
+       "1",
+       "1",
+       "2",
+       "2 >= 1 and 1 <= 2",
+       "True → crosses"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The three ways to cross",
+    "p": [
+     "Moving counter-clockwise, a path can only cross itself in three patterns. Each is detected from the last few segment lengths, so no coordinates are needed."
+    ],
+    "bullets": [
+     "Case 1: the path spirals inward and the new segment is long enough to cross the segment three back.",
+     "Case 2: the new segment exactly reaches the segment four back (the two previous lengths are equal), which counts as touching.",
+     "Case 3: the path first spiralled outward, then turned inward and crosses the segment five back."
+    ]
+   },
+   {
+    "h": "A path that never crosses",
+    "p": [
+     "For `[1,2,3,4]` (a spiral outward) at `i = 3`: `d[3] = 4 >= d[1] = 2` is true but `d[2] = 3 <= d[0] = 1` is false, so case 1 fails, and the other cases need more segments. The loop ends and the answer is `False`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass with constant-time checks.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Self-crossing needs no geometry: only three patterns of the last six segment lengths can produce a crossing, so one linear pass is enough."
+ },
+ "357": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = 1",
+       "Counts the number 0 (one digit, trivially unique)",
+       "Starting the count with the base case"
+      ],
+      [
+       "unique, avail = 9, 9",
+       "unique is the count of k-digit numbers; avail is the number of digits still unused",
+       "Counting by choosing digits one position at a time"
+      ],
+      [
+       "range(1, min(n, 10) + 1)",
+       "Handles lengths 1 to n, but never more than 10 because there are only 10 digits",
+       "Avoiding useless work for large n"
+      ],
+      [
+       "k == 1: total += 9",
+       "One-digit numbers 1 to 9",
+       "The first length is special (no previous digits)"
+      ],
+      [
+       "unique *= avail; avail -= 1",
+       "Each extra position can use any digit not used yet: 9, then 8, then 7 ...",
+       "Counting permutations step by step"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`: count numbers from 0 to 99 with distinct digits."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "unique (k-digit count)",
+      "avail after",
+      "total"
+     ],
+     "rows": [
+      [
+       "start",
+       "9",
+       "9",
+       "1"
+      ],
+      [
+       "1",
+       "9",
+       "9",
+       "10"
+      ],
+      [
+       "2",
+       "9 × 9 = 81",
+       "8",
+       "91"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the first digit different?",
+    "p": [
+     "A k-digit number cannot start with 0, giving 9 choices for the first digit. Every later position can use 0, so it has 10 minus the digits already used: 9, 8, 7, and so on. The counts for each length are added together; the answer for `n = 0` is just 1 (the number 0)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(min(n, 10)), effectively constant.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count unique-digit numbers by length with a permutation product (9 × 9 × 8 × ...) and sum over all lengths."
+ },
+ "447": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for x1, y1 in points",
+       "Treats each point as the middle point of the boomerang",
+       "The shared point i of the triple must be fixed first"
+      ],
+      [
+       "(x1-x2)**2 + (y1-y2)**2",
+       "Squared distance, so no square root or rounding is needed",
+       "Comparing distances exactly"
+      ],
+      [
+       "Counter(...)",
+       "Maps each distance to how many points are at that distance from the centre",
+       "Grouping by an equal-value key"
+      ],
+      [
+       "c * (c - 1)",
+       "Ordered pairs among c points at the same distance",
+       "The order of j and k matters here, so it is c(c-1), not c(c-1)/2"
+      ],
+      [
+       "res += sum(...)",
+       "Adds the per-centre total to the answer",
+       "Accumulating over all centres"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`points = [[0,0],[1,0],[2,0]]`."
+    ],
+    "table": {
+     "head": [
+      "Centre",
+      "Squared distances to all points",
+      "Counter",
+      "Boomerangs"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0, 1, 4",
+       "{0:1, 1:1, 4:1}",
+       "0"
+      ],
+      [
+       "(1,0)",
+       "1, 0, 1",
+       "{1:2, 0:1}",
+       "2 × 1 = 2"
+      ],
+      [
+       "(2,0)",
+       "4, 1, 0",
+       "{4:1, 1:1, 0:1}",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the point itself harmless?",
+    "p": [
+     "The centre contributes distance 0 with count 1, and `1 * 0 = 0`, so it never adds anything."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²), a distance for every pair of points.",
+     "Space: O(n) for the counter of one centre."
+    ]
+   }
+  ],
+  "takeaway": "Fix the middle point, group the other points by squared distance, and each group of size c gives c(c−1) boomerangs."
+ },
+ "501": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "stack / node",
+       "Iterative inorder traversal using an explicit stack",
+       "Visiting a BST in sorted order without recursion"
+      ],
+      [
+       "while node: push; node = node.left",
+       "Walks down the left spine",
+       "First step of any iterative inorder"
+      ],
+      [
+       "run = run + 1 if node.val == prev else 1",
+       "Length of the current streak of equal values",
+       "In sorted order equal values are adjacent"
+      ],
+      [
+       "best, modes",
+       "Longest streak so far and the values that reached it",
+       "Tracking all values tied for the maximum"
+      ],
+      [
+       "if run > best ... elif run == best",
+       "A longer streak replaces the list; an equal one is added",
+       "Keeping every mode"
+      ],
+      [
+       "node = node.right",
+       "Moves to the right subtree after visiting the node",
+       "Second half of inorder"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[1,null,2,2]`. Inorder visits the values 1, 2, 2."
+    ],
+    "table": {
+     "head": [
+      "Visit",
+      "prev",
+      "run",
+      "best",
+      "modes"
+     ],
+     "rows": [
+      [
+       "1",
+       "None",
+       "1",
+       "1",
+       "[1]"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "1",
+       "[1, 2]"
+      ],
+      [
+       "2",
+       "2",
+       "2",
+       "2",
+       "[2]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why inorder?",
+    "p": [
+     "Inorder on a binary search tree gives the values in sorted order, so equal values form one contiguous streak. Only the current streak length is needed, not a full count dictionary. The final `sorted` just makes the output order predictable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node visited once.",
+     "Space: O(h) for the stack, not counting the answer."
+    ]
+   }
+  ],
+  "takeaway": "A BST read in inorder is sorted, so modes are found by tracking the longest streak of equal neighbours."
+ },
+ "551": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "s.count('A')",
+       "Number of absences in the whole record",
+       "Total-count rule"
+      ],
+      [
+       "< 2",
+       "Fewer than two absences allowed",
+       "Checking the first rule"
+      ],
+      [
+       "'LLL' not in s",
+       "No three late days in a row",
+       "A run of three equal letters is just a substring test"
+      ],
+      [
+       "and",
+       "Both rules must hold to earn the award",
+       "Combining the two conditions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Two records compared."
+    ],
+    "table": {
+     "head": [
+      "s",
+      "count of A",
+      "contains LLL?",
+      "Result"
+     ],
+     "rows": [
+      [
+       "PPALLP",
+       "1 (< 2)",
+       "no",
+       "true"
+      ],
+      [
+       "PPALLL",
+       "1 (< 2)",
+       "yes",
+       "false"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why substring search is enough",
+    "p": [
+     "Three consecutive late days is exactly the substring `LLL` — any longer run also contains it. So no loop or counter is needed."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Two independent rules: count the A's and search for the substring LLL."
+ },
+ "590": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "res = []",
+       "Output list shared by the inner function",
+       "Collecting values in visit order"
+      ],
+      [
+       "def go(node)",
+       "Recursive helper",
+       "Depth-first traversal of the tree"
+      ],
+      [
+       "if node:",
+       "Does nothing for an empty node",
+       "Handles an empty tree or a missing child safely"
+      ],
+      [
+       "for c in node.children: go(c)",
+       "Visits all children from left to right first",
+       "Postorder means children before the node"
+      ],
+      [
+       "res.append(node.val)",
+       "Records the node after its children",
+       "The defining step of postorder"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree: 1 has children 3, 2, 4; 3 has children 5 and 6."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "What happens",
+      "res so far"
+     ],
+     "rows": [
+      [
+       "go(1)",
+       "visit children 3, 2, 4 in turn",
+       "[]"
+      ],
+      [
+       "go(3)",
+       "visit children 5, 6 first",
+       "[]"
+      ],
+      [
+       "go(5), go(6)",
+       "leaves: append themselves",
+       "[5, 6]"
+      ],
+      [
+       "back in 3",
+       "append 3",
+       "[5, 6, 3]"
+      ],
+      [
+       "go(2), go(4)",
+       "leaves",
+       "[5, 6, 3, 2, 4]"
+      ],
+      [
+       "back in 1",
+       "append 1",
+       "[5, 6, 3, 2, 4, 1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is visited once.",
+     "Space: O(h) recursion depth plus the answer list."
+    ]
+   }
+  ],
+  "takeaway": "N-ary postorder is the same recursion as for a binary tree, but with a loop over all the children."
+ },
+ "623": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "depth == 1",
+       "The new row becomes the root",
+       "The only case where the root itself changes"
+      ],
+      [
+       "TreeNode(val, root)",
+       "New node with the old tree as its LEFT child",
+       "Constructor takes (value, left, right)"
+      ],
+      [
+       "level = [root]; repeat depth-2 times",
+       "Moves down one level at a time, keeping only real children",
+       "Reaching the nodes at depth-1 (breadth-first)"
+      ],
+      [
+       "node.left = TreeNode(val, node.left)",
+       "New left child that adopts the old left subtree as its own left child",
+       "Inserting a node in the middle of an edge"
+      ],
+      [
+       "node.right = TreeNode(val, None, node.right)",
+       "Mirror: the old right subtree becomes the new node's right child",
+       "Same for the right side"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [4,2,6,3,1,5]`, `val = 1`, `depth = 2`. Depth-1 is the root itself, so the loop runs 0 times and `level = [4]`."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Old left / right",
+      "New left / right"
+     ],
+     "rows": [
+      [
+       "4",
+       "2 / 6",
+       "new 1 (left = 2) / new 1 (right = 6)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Result",
+    "p": [
+     "The tree becomes `[4,1,1,2,null,null,6,3,1,5]`: two new 1s under the root, with the old subtrees hanging from the left of the left one and the right of the right one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), at worst every node is visited once while walking down.",
+     "Space: O(w) for the widest level."
+    ]
+   }
+  ],
+  "takeaway": "Walk to the level just above the target depth, then splice a new node into each edge, giving it the old subtree on the matching side."
+ },
+ "651": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp = list(range(n + 1))",
+       "dp[i] = best count with i presses; starts as just pressing A i times",
+       "Base values for the no-paste option"
+      ],
+      [
+       "for i in range(3, n + 1)",
+       "Fills longer press counts in order",
+       "dp[i] depends on smaller indexes"
+      ],
+      [
+       "for j in range(1, i - 2)",
+       "j is the press count where we do Ctrl-A, Ctrl-C",
+       "Choosing the last point at which text is copied"
+      ],
+      [
+       "dp[j] * (i - j - 1)",
+       "The text after j presses gets pasted: 2 presses spent on select and copy, the other i-j-2 presses paste, so there are i-j-1 copies in total",
+       "Each paste adds another copy of the block"
+      ],
+      [
+       "max(dp[i], ...)",
+       "Keeps the best option",
+       "Taking the best over all j"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 7`. Initial `dp = [0,1,2,3,4,5,6,7]`. Rows show the candidate values."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "candidates (j: dp[j] × (i−j−1))",
+      "dp[i]"
+     ],
+     "rows": [
+      [
+       "3",
+       "none",
+       "3"
+      ],
+      [
+       "4",
+       "j=1: 2",
+       "4"
+      ],
+      [
+       "5",
+       "j=1: 3, j=2: 4",
+       "5"
+      ],
+      [
+       "6",
+       "j=1: 4, j=2: 6, j=3: 6",
+       "6"
+      ],
+      [
+       "7",
+       "j=1: 5, j=2: 8, j=3: 9, j=4: 8",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Best count after i presses = max of just typing A, or building dp[j] and then select-copy followed by pastes, which multiplies it by i−j−1."
+ },
+ "672": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "presses == 0",
+       "Nothing changes, so only the starting state",
+       "Zero presses is a single outcome"
+      ],
+      [
+       "n == 1",
+       "One bulb is either on or off",
+       "With any press, 2 states"
+      ],
+      [
+       "n == 2",
+       "3 states after one press, 4 after two or more",
+       "Case analysis for two bulbs"
+      ],
+      [
+       "otherwise",
+       "4 states for 1 press, 7 for 2 presses, 8 for 3 or more",
+       "Bulbs beyond the third behave like the first three"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3, presses = 1`. All bulbs start on. The four buttons give these states:"
+    ],
+    "table": {
+     "head": [
+      "Button",
+      "Effect",
+      "Bulbs 1 2 3"
+     ],
+     "rows": [
+      [
+       "flip all",
+       "every bulb flips",
+       "off off off"
+      ],
+      [
+       "flip even",
+       "bulb 2",
+       "on off on"
+      ],
+      [
+       "flip odd",
+       "bulbs 1, 3",
+       "off on off"
+      ],
+      [
+       "flip 3k+1",
+       "bulb 1 (and 4, 7 ...)",
+       "off on on"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why a closed form works",
+    "p": [
+     "Pressing the same button twice cancels out, so only whether each of the four buttons was pressed an odd number of times matters. The pattern of the buttons repeats across the bulbs, so the first three bulbs decide the count. That leaves a handful of cases listed in the code, indexed by how many presses (0, 1, 2, 3 or more) are available."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Bulb Switcher II is a small case analysis: only min(n, 3) bulbs and min(presses, 3) presses change the answer."
+ },
+ "717": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i = 0",
+       "Pointer to the start of the current character",
+       "Decoding left to right"
+      ],
+      [
+       "while i < len(bits) - 1",
+       "Stops before the final bit",
+       "The last bit is handled separately"
+      ],
+      [
+       "i += bits[i] + 1",
+       "A 0 is a one-bit character (move 1); a 1 starts a two-bit character (move 2)",
+       "Using the bit value as the step size"
+      ],
+      [
+       "return i == len(bits) - 1",
+       "True if the jumps land exactly on the last bit",
+       "The last character is one-bit only if it stands alone"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Two inputs."
+    ],
+    "table": {
+     "head": [
+      "bits",
+      "Steps of i",
+      "Final i",
+      "Last index",
+      "Result"
+     ],
+     "rows": [
+      [
+       "[1,0,0]",
+       "0 → 2",
+       "2",
+       "2",
+       "true"
+      ],
+      [
+       "[1,1,1,0]",
+       "0 → 2 → 4",
+       "4",
+       "3",
+       "false"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this decide it?",
+    "p": [
+     "Decoding is unambiguous when read from the left, since a 1 always begins a two-bit character. If the jumps skip over the last index (it was the second half of `10` or `11`), then the last bit is not alone."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Hop through the array using bit + 1 as the step; the last bit stands alone only if the hops land on it."
+ },
+ "777": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i, j",
+       "Pointers into start and result",
+       "Matching the k-th non-X character in both"
+      ],
+      [
+       "while ... == 'X': += 1",
+       "Skips blank cells",
+       "X is just empty space"
+      ],
+      [
+       "i == n or j == n",
+       "One string ran out of pieces",
+       "Both must run out together"
+      ],
+      [
+       "start[i] != result[j]",
+       "The next piece differs",
+       "Pieces L and R can never pass each other, so order must match"
+      ],
+      [
+       "L and i < j",
+       "An L would have to move right",
+       "L only moves left, so its position can only decrease"
+      ],
+      [
+       "R and i > j",
+       "An R would have to move left",
+       "R only moves right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`start = RXXLRXRXL`, `result = XRLXXRRLX`. Non-X pieces with positions:"
+    ],
+    "table": {
+     "head": [
+      "Piece #",
+      "start (piece@idx)",
+      "result (piece@idx)",
+      "Allowed?"
+     ],
+     "rows": [
+      [
+       "1",
+       "R@0",
+       "R@1",
+       "R moves right: 0 ≤ 1 ✓"
+      ],
+      [
+       "2",
+       "L@3",
+       "L@2",
+       "L moves left: 3 ≥ 2 ✓"
+      ],
+      [
+       "3",
+       "R@4",
+       "R@5",
+       "✓"
+      ],
+      [
+       "4",
+       "R@6",
+       "R@6",
+       "✓"
+      ],
+      [
+       "5",
+       "L@8",
+       "L@7",
+       "✓"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The idea",
+    "p": [
+     "Moves swap an `X` with a neighbour, so the order of the L and R pieces never changes. Therefore the pieces must match one by one, and each L can only end up at the same or a lower index, each R at the same or a higher one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compare the non-X pieces in order: the letters must match, L may only move left and R only right."
+ },
+ "808": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "n >= 4800: return 1.0",
+       "For large n the answer is within the allowed error of 1",
+       "Cutting off huge inputs (answers within 10^-5 are accepted)"
+      ],
+      [
+       "n = (n + 24) // 25",
+       "Counts the soup in units of 25 ml, rounded up",
+       "All servings are multiples of 25 ml"
+      ],
+      [
+       "@lru_cache(None)",
+       "Memoizes p(a, b)",
+       "Overlapping subproblems"
+      ],
+      [
+       "a <= 0 and b <= 0: 0.5",
+       "Both empty together counts half",
+       "The problem asks for P(A first) + ½ P(both)"
+      ],
+      [
+       "a <= 0: 1.0 / b <= 0: 0.0",
+       "A empty first counts fully; B empty first counts zero",
+       ""
+      ],
+      [
+       "0.25 * (p(a-4,b) + p(a-3,b-1) + p(a-2,b-2) + p(a-1,b-3))",
+       "Average over the four equally likely servings (in 25 ml units)",
+       "Expected value / probability recursion"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 50` → 2 units. `p(2, 2) = 0.25 × (p(−2,2) + p(−1,1) + p(0,0) + p(1,−1))`."
+    ],
+    "table": {
+     "head": [
+      "Term",
+      "Meaning",
+      "Value"
+     ],
+     "rows": [
+      [
+       "p(−2, 2)",
+       "A empty, B not",
+       "1.0"
+      ],
+      [
+       "p(−1, 1)",
+       "A empty, B not",
+       "1.0"
+      ],
+      [
+       "p(0, 0)",
+       "Both empty",
+       "0.5"
+      ],
+      [
+       "p(1, −1)",
+       "B empty first",
+       "0.0"
+      ],
+      [
+       "Sum × 0.25",
+       "",
+       "0.25 × 2.5 = 0.625"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1) in practice, the table has at most about 192 × 192 states (4800 / 25 = 192).",
+     "Space: same."
+    ]
+   }
+  ],
+  "takeaway": "Work in 25 ml units, memoize the four-way average, and return 1 for large n where the answer is essentially 1."
+ },
+ "819": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "c.lower() if c.isalpha() else ' '",
+       "Lower-cases letters and turns every other character into a space",
+       "Cleans punctuation and case in one pass"
+      ],
+      [
+       "text.split()",
+       "Splits on whitespace into words",
+       "Tokenizing"
+      ],
+      [
+       "ban = set(banned)",
+       "Set for fast membership test",
+       "Skipping banned words"
+      ],
+      [
+       "[w for w in ... if w not in ban]",
+       "Keeps only allowed words",
+       "Filtering"
+      ],
+      [
+       "Counter(words).most_common(1)[0][0]",
+       "The word with the highest count",
+       "Frequency counting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Paragraph `Bob hit a ball, the hit BALL flew far after it was hit.` with banned `[hit]`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "cleaned text",
+       "bob hit a ball the hit ball flew far after it was hit"
+      ],
+      [
+       "after removing hit",
+       "bob a ball the ball flew far after it was"
+      ],
+      [
+       "counts",
+       "ball: 2, all others: 1"
+      ],
+      [
+       "most common",
+       "ball"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L), where L is the paragraph length.",
+     "Space: O(L)."
+    ]
+   }
+  ],
+  "takeaway": "Normalise to lowercase words, drop the banned ones, and take the most common."
+ },
+ "834": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "adj",
+       "Adjacency lists of the tree",
+       "Walking a tree given as an edge list"
+      ],
+      [
+       "order / parent (iterative DFS)",
+       "Visit order from node 0 and each node's parent",
+       "Avoiding recursion; later loops use this order"
+      ],
+      [
+       "size[u]",
+       "Number of nodes in u's subtree",
+       "Used when moving the root"
+      ],
+      [
+       "down[u]",
+       "Sum of distances from u to the nodes inside its own subtree",
+       "Bottom-up pass"
+      ],
+      [
+       "for u in reversed(order)",
+       "Children are processed before parents",
+       "down[p] += down[u] + size[u]"
+      ],
+      [
+       "ans[u] = ans[parent] − size[u] + (n − size[u])",
+       "Moving the root from the parent to u: the size[u] nodes below get 1 closer, the other n−size[u] get 1 farther",
+       "Rerooting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `n = 6`, edges 0-1, 0-2, 2-3, 2-4, 2-5. Root at 0."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "size",
+      "down",
+      "ans"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "0",
+       "8 − 1 + 5 = 12"
+      ],
+      [
+       "3, 4, 5",
+       "1",
+       "0",
+       "6 − 1 + 5 = 10 each"
+      ],
+      [
+       "2",
+       "4",
+       "3",
+       "8 − 4 + 2 = 6"
+      ],
+      [
+       "0",
+       "6",
+       "8",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Where down[0] = 8 comes from",
+    "p": [
+     "Node 1 adds `0 + 1 = 1`. Node 2 adds `3 + 4 = 7` (its own 3 plus one step for each of its 4 nodes). Total 8, the sum of distances from node 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), two passes over the tree.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Compute distance sums for one root, then reroot to every other node in O(1) each: ans[child] = ans[parent] − size + (n − size)."
+ },
+ "848": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "zip(reversed(s), reversed(shifts))",
+       "Walks the string from the end",
+       "The last letter is shifted only by the last number, so a running sum from the right works"
+      ],
+      [
+       "total = (total + sh) % 26",
+       "Suffix sum of shifts, kept below 26",
+       "Shifts wrap around the alphabet"
+      ],
+      [
+       "ord(c) - 97 + total",
+       "Letter index plus the shift",
+       "Letters become 0-25"
+      ],
+      [
+       "% 26 + 97",
+       "Wraps and converts back to a letter",
+       ""
+      ],
+      [
+       "''.join(reversed(res))",
+       "Restores the original order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = abc`, `shifts = [3, 5, 9]`. Letter i is shifted by the sum of `shifts[i:]`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Suffix sum mod 26",
+      "New index",
+      "New letter"
+     ],
+     "rows": [
+      [
+       "c (index 2)",
+       "9",
+       "(2 + 9) % 26 = 11",
+       "l"
+      ],
+      [
+       "b (index 1)",
+       "9 + 5 = 14",
+       "(1 + 14) % 26 = 15",
+       "p"
+      ],
+      [
+       "a (index 0)",
+       "14 + 3 = 17",
+       "17",
+       "r"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Reading the new letters in the original order gives `rpl`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Letter i is shifted by the sum of shifts[i:], so keep a suffix sum modulo 26 going right to left."
+ }
+}

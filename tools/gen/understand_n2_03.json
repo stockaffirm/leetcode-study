@@ -1,0 +1,2073 @@
+{
+ "1615": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`deg[a] += 1; deg[b] += 1`",
+       "Number of roads at each city",
+       "Counting edges per node (the degree)"
+      ],
+      [
+       "`linked.add((a, b)); linked.add((b, a))`",
+       "Set of directly connected pairs, stored in both directions",
+       "Fast \"is there an edge between a and b?\""
+      ],
+      [
+       "`deg[a] + deg[b]`",
+       "Roads touching `a` or `b`, counting a shared road twice",
+       "First estimate of the rank"
+      ],
+      [
+       "`- ((a, b) in linked)`",
+       "A road joining the two cities was counted in both degrees, so subtract it once",
+       "Fixing the double count (`True` acts as 1)"
+      ],
+      [
+       "nested loops over `a < b`",
+       "Try every pair of different cities",
+       "`n` is at most 100"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, `roads = [[0,1],[0,3],[1,2],[1,3]]` gives degrees `[2,3,1,2]`.",
+     "The maximum is `4`."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "deg sum",
+      "Connected?",
+      "Rank"
+     ],
+     "rows": [
+      [
+       "(0,1)",
+       "5",
+       "yes",
+       "4"
+      ],
+      [
+       "(0,2)",
+       "3",
+       "no",
+       "3"
+      ],
+      [
+       "(0,3)",
+       "4",
+       "yes",
+       "3"
+      ],
+      [
+       "(1,2)",
+       "4",
+       "yes",
+       "3"
+      ],
+      [
+       "(1,3)",
+       "5",
+       "yes",
+       "4"
+      ],
+      [
+       "(2,3)",
+       "3",
+       "no",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2 + roads).",
+     "Space: O(roads) for the set of linked pairs."
+    ]
+   }
+  ],
+  "takeaway": "The rank of a pair is deg[a] + deg[b], minus 1 if the two cities share a road; check every pair."
+ },
+ "1638": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for i`, `for j`",
+       "Start position of the substring in `s` and of the one in `t`",
+       "Every pair of starting points"
+      ],
+      [
+       "`k`",
+       "Current length minus one: how far both substrings have been extended",
+       "Growing two substrings in step"
+      ],
+      [
+       "`diff`",
+       "Mismatches between `s[i..i+k]` and `t[j..j+k]` so far",
+       "Counting differences"
+      ],
+      [
+       "`if diff > 1: break`",
+       "More than one mismatch, and extending can only add more",
+       "Early exit"
+      ],
+      [
+       "`if diff == 1: count += 1`",
+       "The pair of substrings of this length differs in exactly one place",
+       "Counting valid pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"ab\"`, `t = \"bb\"`.",
+     "The total is `3`."
+    ],
+    "table": {
+     "head": [
+      "i, j",
+      "k",
+      "Compare",
+      "diff",
+      "count"
+     ],
+     "rows": [
+      [
+       "0, 0",
+       "0",
+       "a vs b",
+       "1",
+       "1"
+      ],
+      [
+       "0, 0",
+       "1",
+       "b vs b",
+       "1",
+       "2"
+      ],
+      [
+       "0, 1",
+       "0",
+       "a vs b",
+       "1",
+       "3"
+      ],
+      [
+       "1, 0",
+       "0",
+       "b vs b",
+       "0",
+       "3"
+      ],
+      [
+       "1, 1",
+       "0",
+       "b vs b",
+       "0",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does it count each pair once?",
+    "p": [
+     "A pair of substrings is determined by the two start positions and the length. For a fixed pair of starts, the code visits each length once (`k` increases by one), and counts it exactly when the mismatch count is 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(|s| · |t| · min(|s|, |t|)), which is fine for lengths up to 100.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "For every pair of start positions, extend both substrings together and count the lengths where they differ in exactly one place."
+ },
+ "1671": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`left[i]`",
+       "Length of the longest strictly increasing subsequence that ends at `i`",
+       "LIS (Longest Increasing Subsequence) from the left"
+      ],
+      [
+       "`right[i]`",
+       "Length of the longest strictly decreasing subsequence that starts at `i`",
+       "The same idea from the right"
+      ],
+      [
+       "`left[i] + right[i] - 1`",
+       "Mountain length with its peak at `i` (the peak is counted once)",
+       "Combining two arms"
+      ],
+      [
+       "`if left[i] > 1 and right[i] > 1`",
+       "The peak needs at least one element on each side",
+       "A mountain cannot be only a slope"
+      ],
+      [
+       "`n - keep`",
+       "Everything not in the best mountain is removed",
+       "Minimising removals = maximising what is kept"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,1,5,6,2,3,1]`.",
+     "Valid peaks and their mountain lengths: index 3 gives 4, index 4 gives 5, index 5 gives 3, index 6 gives 4. The best is `keep = 5` (for example `1,5,6,3,1`), so the answer is `8 − 5 = 3`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+     ],
+     "rows": [
+      [
+       "value",
+       "2",
+       "1",
+       "1",
+       "5",
+       "6",
+       "2",
+       "3",
+       "1"
+      ],
+      [
+       "`left`",
+       "1",
+       "1",
+       "1",
+       "2",
+       "3",
+       "2",
+       "3",
+       "1"
+      ],
+      [
+       "`right`",
+       "2",
+       "1",
+       "1",
+       "3",
+       "3",
+       "2",
+       "2",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must both `left` and `right` exceed 1?",
+    "p": [
+     "If `left[i] == 1` the peak has nothing rising before it, and the \"mountain\" would be just a decreasing run, which is not allowed. The same holds for `right[i] == 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Compute the longest increasing run ending at each index and the longest decreasing run starting there; the best peak maximises their sum minus one."
+ },
+ "1680": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i.bit_length()`",
+       "Number of bits in the binary form of `i`",
+       "The width of the number being appended"
+      ],
+      [
+       "`res << i.bit_length()`",
+       "Shifts the string built so far left to make room for `i`",
+       "Concatenating binary strings"
+      ],
+      [
+       "`| i`",
+       "Puts the bits of `i` into the freed low bits (same as adding here, because those bits are zero)",
+       "Appending without carry"
+      ],
+      [
+       "`% MOD`",
+       "Keeps the number small",
+       "Huge results"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 3`.",
+     "The result is `27`, the value of `11011`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "binary",
+      "`res` before",
+      "`res << bits`",
+      "`| i`"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "0",
+       "0",
+       "1"
+      ],
+      [
+       "2",
+       "10",
+       "1",
+       "100 (4)",
+       "110 (6)"
+      ],
+      [
+       "3",
+       "11",
+       "110 (6)",
+       "11000 (24)",
+       "11011 (27)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can we take the modulus at each step?",
+    "p": [
+     "Shifting left is multiplication by a power of two, and OR-ing `i` into the freed low bits is the same as adding `i`. Multiplication and addition give the same remainder whether you reduce at every step or only at the end, so reducing each time keeps the numbers small without changing the result."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Build the answer incrementally: shift left by the bit length of i, add i, and reduce modulo 10^9 + 7."
+ },
+ "1695": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "The values currently inside the window",
+       "Checking for duplicates in O(1)"
+      ],
+      [
+       "`left`",
+       "Left edge of the window",
+       "Sliding window (two pointers)"
+      ],
+      [
+       "`total`",
+       "Sum of the window",
+       "Maintaining a running sum"
+      ],
+      [
+       "`while x in seen:` remove `nums[left]`",
+       "The new value `x` is already in the window, so shrink from the left until it is gone",
+       "Restoring the \"all distinct\" property"
+      ],
+      [
+       "`best = max(best, total)`",
+       "Best window sum so far",
+       "Tracking the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,2,4,5,6]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Action",
+      "Window",
+      "total",
+      "best"
+     ],
+     "rows": [
+      [
+       "4",
+       "add",
+       "[4]",
+       "4",
+       "4"
+      ],
+      [
+       "2",
+       "add",
+       "[4,2]",
+       "6",
+       "6"
+      ],
+      [
+       "4",
+       "remove the first 4, then add",
+       "[2,4]",
+       "6",
+       "6"
+      ],
+      [
+       "5",
+       "add",
+       "[2,4,5]",
+       "11",
+       "11"
+      ],
+      [
+       "6",
+       "add",
+       "[2,4,5,6]",
+       "17",
+       "17"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does shrinking only from the left work?",
+    "p": [
+     "Values are positive, so a longer window always has a bigger sum than any window inside it. For each right edge we want the longest window of distinct values, which is the one with the smallest valid `left`. When the window breaks, increasing `left` is the minimal change that fixes it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each element enters and leaves the window once.",
+     "Space: O(n) for the set."
+    ]
+   }
+  ],
+  "takeaway": "Slide a window of distinct values, shrinking from the left on a duplicate, and track the largest window sum."
+ },
+ "1717": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`remove(s, a, b, val)`",
+       "Remove every substring `ab` (using a stack) and add `val` for each one",
+       "Cancelling adjacent pairs, like matching brackets"
+      ],
+      [
+       "`st[-1] == a and c == b`",
+       "The top of the stack is `a` and the new character is `b`, so they form the pair",
+       "The stack always holds characters that have not formed a pair yet"
+      ],
+      [
+       "`st.pop(); gain += val`",
+       "Remove the pair and score it",
+       "Counting a removal"
+      ],
+      [
+       "`if x >= y`",
+       "Remove the more valuable pair type first",
+       "Greedy order"
+      ],
+      [
+       "second `remove(...)`",
+       "Remove the other pair type from what is left",
+       "The remaining characters can still form the cheaper pair"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"cdbcbbaaabab\"`, `x = 4` (for `ab`), `y = 5` (for `ba`). Since `y > x`, remove `ba` first.",
+     "The total is `19`."
+    ],
+    "table": {
+     "head": [
+      "Pass",
+      "Stack at the end",
+      "Pairs removed",
+      "Gain"
+     ],
+     "rows": [
+      [
+       "remove `ba` (5 each)",
+       "`cdbcab`",
+       "3",
+       "15"
+      ],
+      [
+       "remove `ab` (4 each)",
+       "`cdbc`",
+       "1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why remove the more valuable pair first?",
+    "p": [
+     "Both kinds of pair compete for the same letters. A removal of the more valuable pair scores more than one of the cheaper pair, and each removal uses up one `a` and one `b` either way, so taking the valuable pairs first and the cheaper pairs from the leftovers gives the best total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), two passes.",
+     "Space: O(n) for the stack."
+    ]
+   }
+  ],
+  "takeaway": "Greedily strip the higher-value pair with a stack, then strip the other pair from what remains."
+ },
+ "1778": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dirs`, `back`",
+       "Moves and their opposites; `back` lets the robot return to the previous cell",
+       "Exploring and then undoing a move"
+      ],
+      [
+       "`free`",
+       "Set of open cells found so far, in coordinates relative to the start (the start is `(0, 0)`)",
+       "The real grid is unknown, so we build our own map"
+      ],
+      [
+       "`dfs(x, y)`",
+       "Depth-first search (DFS) that explores every reachable open cell",
+       "Mapping a hidden structure"
+      ],
+      [
+       "`master.canMove(d)`",
+       "Asks whether a step is possible",
+       "The only way to see walls"
+      ],
+      [
+       "`master.move(d)` ... `master.move(back[d])`",
+       "Step in, explore, then step back so the robot is at `(x, y)` again",
+       "Backtracking"
+      ],
+      [
+       "`target[0]`",
+       "Coordinates of the target if `isTarget()` was ever true",
+       "Remember where it is"
+      ],
+      [
+       "BFS (Breadth-First Search) over `free`",
+       "Shortest path in an unweighted grid",
+       "Once the map is known, ordinary BFS gives the minimum steps"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Hidden grid `[[0,0,1],[1,0,0],[0,0,0]]` with start top-left. The DFS maps seven open cells, target at relative `(2,2)`. BFS distances from `(0,0)`:",
+     "The answer is `4`."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Distance"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0"
+      ],
+      [
+       "(0,1)",
+       "1"
+      ],
+      [
+       "(1,1)",
+       "2"
+      ],
+      [
+       "(2,1)",
+       "3"
+      ],
+      [
+       "(1,2)",
+       "3"
+      ],
+      [
+       "(2,0)",
+       "4"
+      ],
+      [
+       "(2,2) target",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two phases?",
+    "p": [
+     "You cannot run BFS on cells you have not seen, and the robot can only move one step at a time. DFS with backtracking explores the whole reachable region safely (each cell is entered once). BFS on the recorded map then finds the shortest route without moving the robot."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m · n), every open cell is visited a constant number of times.",
+     "Space: O(m · n) for the map, the queue and the recursion stack."
+    ]
+   }
+  ],
+  "takeaway": "Explore the hidden grid with DFS and backtracking to build a map, then run BFS on the map to get the shortest path."
+ },
+ "1792": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gain(p, t)`",
+       "Increase in a class's pass ratio if one more student is added: `(p+1)/(t+1) − p/t`",
+       "Measuring the benefit of one more unit"
+      ],
+      [
+       "`heap = [(-gain, p, t), ...]`",
+       "Max-heap by gain (Python's heap is a min-heap, so the gain is negated)",
+       "Always picking the largest benefit"
+      ],
+      [
+       "`heappop` then `heappush`",
+       "Take the class with the biggest gain, add a student, recompute its gain, put it back",
+       "Greedy with updates"
+      ],
+      [
+       "`round(sum(p / t ...) / len(classes), 5)`",
+       "Average ratio over all classes, rounded to 5 decimals",
+       "The required output format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`classes = [[1,2],[3,5],[2,2]]`, `extraStudents = 2`.",
+     "Final ratios: 3/4, 3/5 and 2/2 sum to 2.35, and the average is `0.78333`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Gains (1/2, 3/5, 2/2)",
+      "Chosen class",
+      "New class"
+     ],
+     "rows": [
+      [
+       "1",
+       "0.1667, 0.0667, 0",
+       "[1,2]",
+       "[2,3]"
+      ],
+      [
+       "2",
+       "0.0833, 0.0667, 0",
+       "[2,3]",
+       "[3,4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does greedy work?",
+    "p": [
+     "Adding a student to a class helps less and less each time (the gain decreases as the class grows). Because the gains only shrink, always spending the next student where the gain is currently largest is optimal."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + extra) log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Use a max-heap on the marginal gain of one more passing student and hand out the extra students one by one."
+ },
+ "1808": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n <= 3: return n`",
+       "With 1, 2 or 3 prime factors, the best count is `n` itself",
+       "Small base cases"
+      ],
+      [
+       "`pow(3, n // 3, MOD)`",
+       "Fast modular exponentiation: 3 to the power `n // 3`, computed mod 10^9 + 7",
+       "Huge powers"
+      ],
+      [
+       "`n % 3 == 0 / 1 / 2`",
+       "Splits `n` into as many 3s as possible, with a leftover of 0, 1 or 2",
+       "Maximising a product of parts"
+      ],
+      [
+       "`* 4` when the remainder is 1",
+       "Use `3^(q−1) · 4` (that is, `2 · 2`) instead of `3^q · 1`",
+       "A leftover of 1 is wasted, so merge it with one 3"
+      ],
+      [
+       "`* 2` when the remainder is 2",
+       "Use `3^q · 2`",
+       "Keep the leftover 2 as its own part"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "If `n` has primes with exponents `e1, e2, ...` adding up to `primeFactors`, the number of nice divisors is the product `e1 · e2 · ...`. We want the best way to split `primeFactors` into parts with the largest product."
+    ],
+    "table": {
+     "head": [
+      "primeFactors",
+      "Split",
+      "Product"
+     ],
+     "rows": [
+      [
+       "5",
+       "3 + 2",
+       "6"
+      ],
+      [
+       "8",
+       "3 + 3 + 2",
+       "18"
+      ],
+      [
+       "4",
+       "2 + 2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why 3s?",
+    "p": [
+     "Splitting a part of 4 or more never lowers the product (`4 = 2 + 2` gives `2 · 2 = 4`, and `5 = 2 + 3` gives `6 > 5`), and three 2s are worse than two 3s (`2 · 2 · 2 = 8 < 3 · 3 = 9`). So use as many 3s as possible and handle the remainder as in the table above."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) for the modular power.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The count of nice divisors is a product of exponents, so split primeFactors into 3s (with a 2 or 2·2 for the leftover) and use fast modular power."
+ },
+ "1822": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sign = 1`",
+       "Start from a positive product",
+       "Multiplicative identity for signs"
+      ],
+      [
+       "`if x == 0: return 0`",
+       "Any zero makes the product zero",
+       "Early exit"
+      ],
+      [
+       "`if x < 0: sign = -sign`",
+       "Each negative number flips the sign",
+       "Tracking parity without multiplying"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-1,-2,-3,-4,3,2,1]`.",
+     "Four negatives, so the result is `1`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "sign after"
+     ],
+     "rows": [
+      [
+       "-1",
+       "-1"
+      ],
+      [
+       "-2",
+       "1"
+      ],
+      [
+       "-3",
+       "-1"
+      ],
+      [
+       "-4",
+       "1"
+      ],
+      [
+       "3, 2, 1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not compute the product?",
+    "p": [
+     "Only the sign matters, and multiplying 1000 numbers up to 100 in size would create a huge number. Counting negatives gives the answer without overflow."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Return 0 if any zero is present; otherwise the sign depends only on whether the number of negatives is even or odd."
+ },
+ "1840": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`r = sorted(restrictions + [[1, 0]])`",
+       "Restrictions in position order, with building 1 fixed at height 0",
+       "Treating the first building as a restriction"
+      ],
+      [
+       "`r.append([n, n - 1])`",
+       "If the last building has no restriction, its height can be at most `n − 1` (starting from 0 and rising by 1 each step)",
+       "Adding the far end as a restriction"
+      ],
+      [
+       "forward pass `r[i][1] = min(r[i][1], r[i-1][1] + gap)`",
+       "A limit may not be more than the previous limit plus the distance",
+       "Propagating restrictions to the right"
+      ],
+      [
+       "backward pass",
+       "The same from the right side",
+       "Propagating restrictions to the left"
+      ],
+      [
+       "`(hp + hq + q - p) // 2`",
+       "Highest peak between two neighbouring restricted positions `p < q` with limits `hp`, `hq`",
+       "The tallest \"tent\" shape between two points"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `restrictions = [[2,1],[4,1]]`. After adding `[1,0]` and `[5,4]`:",
+     "The answer is `2`."
+    ],
+    "table": {
+     "head": [
+      "Pass",
+      "Detail",
+      "Heights at positions 1, 2, 4, 5"
+     ],
+     "rows": [
+      [
+       "start",
+       "restrictions plus the two added ends",
+       "0, 1, 1, 4"
+      ],
+      [
+       "forward",
+       "position 5: min(4, 1 + 1) = 2",
+       "0, 1, 1, 2"
+      ],
+      [
+       "backward",
+       "nothing gets smaller",
+       "0, 1, 1, 2"
+      ],
+      [
+       "peaks",
+       "(1,2) gives 1, (2,4) gives 2, (4,5) gives 2",
+       "best = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the peak formula?",
+    "p": [
+     "Between positions `p` and `q` heights can rise at slope 1 from `hp` and fall at slope 1 toward `hq`. The two slopes meet at height `(hp + hq + (q − p)) / 2`, rounded down because heights are integers. The two passes first make sure `hp` and `hq` are themselves reachable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(r log r), where `r` is the number of restrictions (sorting).",
+     "Space: O(r)."
+    ]
+   }
+  ],
+  "takeaway": "Tighten all restrictions with a left-to-right and a right-to-left pass, then compute the highest peak between each neighbouring pair."
+ },
+ "1851": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`intervals.sort()`",
+       "Order intervals by left end",
+       "Sweeping through points in order"
+      ],
+      [
+       "`for q in sorted(queries)`",
+       "Answer queries in increasing order so intervals only ever need to be added",
+       "Offline processing"
+      ],
+      [
+       "`heappush(heap, (r - l + 1, r))`",
+       "Add an interval that has started, keyed by its size",
+       "A min-heap by size"
+      ],
+      [
+       "`while heap and heap[0][1] < q: heappop(heap)`",
+       "Discard intervals that ended before `q`",
+       "Lazy deletion from the heap top"
+      ],
+      [
+       "`res[q] = heap[0][0] if heap else -1`",
+       "The smallest remaining interval contains `q`; otherwise `-1`",
+       "Reading the answer"
+      ],
+      [
+       "`return [res[q] for q in queries]`",
+       "Restore the original query order",
+       "Offline answers must be mapped back"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`intervals = [[1,4],[2,4],[3,6],[4,4]]`, queries sorted `[2,3,4,5]`.",
+     "The answers in the original order are `[3,3,1,4]`."
+    ],
+    "table": {
+     "head": [
+      "q",
+      "Added to heap (size, right)",
+      "Removed (ended)",
+      "Smallest size"
+     ],
+     "rows": [
+      [
+       "2",
+       "(4,4), (3,4)",
+       "none",
+       "3"
+      ],
+      [
+       "3",
+       "(4,6)",
+       "none",
+       "3"
+      ],
+      [
+       "4",
+       "(1,4)",
+       "none",
+       "1"
+      ],
+      [
+       "5",
+       "none",
+       "(1,4), (3,4), (4,4)",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is it enough to look only at the heap top?",
+    "p": [
+     "Every interval in the heap has already started (`left <= q`). Once the expired ones are removed from the top, the top is the smallest interval that is still alive, which means it contains `q`. Expired intervals deeper in the heap are removed later, when they reach the top."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + q) log (n + q)).",
+     "Space: O(n + q)."
+    ]
+   }
+  ],
+  "takeaway": "Sweep the sorted queries, push started intervals into a size-keyed heap, drop expired ones from the top, and read the smallest."
+ },
+ "1887": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Equal values become adjacent and values are in ascending order",
+       "Grouping by value"
+      ],
+      [
+       "`rank`",
+       "How many distinct smaller values lie below the current one",
+       "Position of the value in the distinct sorted list"
+      ],
+      [
+       "`if nums[i] != nums[i - 1]: rank += 1`",
+       "A new, larger value starts",
+       "Detecting a new group"
+      ],
+      [
+       "`res += rank`",
+       "This element must be reduced `rank` times, one step per smaller distinct value",
+       "Counting operations per element"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,1,3]`, sorted `[1,3,5]`.",
+     "The answer is `3`: the value 5 goes down `5 → 3 → 1` (2 operations) and the value 3 goes `3 → 1` (1 operation)."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "value",
+      "New value?",
+      "rank",
+      "res"
+     ],
+     "rows": [
+      [
+       "1",
+       "3",
+       "yes",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "5",
+       "yes",
+       "2",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does each element cost `rank`?",
+    "p": [
+     "One operation lowers one element to the next smaller distinct value. An element with `rank` distinct values below it has to step down through each of them, so it needs exactly `rank` operations, and the operations of different elements are independent in total."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting.",
+     "Space: O(1) extra (sorting in place)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, and add to the answer the number of distinct smaller values below each element."
+ },
+ "1904": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`minutes(t)`",
+       "Converts `\"HH:MM\"` into minutes since midnight",
+       "Working with times as numbers"
+      ],
+      [
+       "`if end < start: end += 24 * 60`",
+       "The session crossed midnight, so the logout belongs to the next day",
+       "Wrap-around intervals"
+      ],
+      [
+       "`(start + 14) // 15 * 15`",
+       "Round the login time up to the next multiple of 15 (the first round that starts after you arrived)",
+       "Ceiling to a grid"
+      ],
+      [
+       "`end // 15 * 15`",
+       "Round the logout time down to a multiple of 15 (the last round that ended before you left)",
+       "Floor to a grid"
+      ],
+      [
+       "`max(0, (end - start) // 15)`",
+       "Number of whole 15-minute rounds between the two, never negative",
+       "Counting complete blocks"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`loginTime = \"09:31\"`, `logoutTime = \"10:14\"`.",
+     "The answer is `1`. For `21:30` to `03:00`, `end` becomes `3 · 60 + 1440 = 1620`, giving `(1620 − 1290) // 15 = 22`."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Minutes",
+      "After rounding"
+     ],
+     "rows": [
+      [
+       "start",
+       "571",
+       "585 (09:45)"
+      ],
+      [
+       "end",
+       "614",
+       "600 (10:00)"
+      ],
+      [
+       "rounds",
+       "–",
+       "(600 − 585) // 15 = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `max(0, ...)`?",
+    "p": [
+     "If you log in and out inside the same round, rounding the start up and the end down can leave `end < start`. The result must be `0` in that case, not negative."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Convert to minutes, move the start up and the end down to multiples of 15, and count the whole rounds in between."
+ },
+ "1927": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`left`, `right`",
+       "The two halves of the string",
+       "The win condition compares the halves"
+      ],
+      [
+       "`sum_l`, `sum_r`",
+       "Sum of the known digits in each half",
+       "Starting totals"
+      ],
+      [
+       "`q_l`, `q_r`",
+       "Number of `?` in each half",
+       "How much is still to be decided"
+      ],
+      [
+       "`(q_l + q_r) % 2`",
+       "An odd number of `?` means Alice makes the last move and can always unbalance the sums",
+       "Parity of the number of moves"
+      ],
+      [
+       "`(sum_l - sum_r) * 2 != 9 * (q_r - q_l)`",
+       "Bob wins only when the two sides can be made equal under optimal play; otherwise Alice wins",
+       "The balance test"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = \"25??\"`: left `25`, right `??`.",
+     "`14 != 18`, so Alice wins and the result is `True`."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "`sum_l`, `sum_r`",
+       "7, 0"
+      ],
+      [
+       "`q_l`, `q_r`",
+       "0, 2"
+      ],
+      [
+       "number of `?`",
+       "2, which is even"
+      ],
+      [
+       "`(7 − 0) · 2`",
+       "14"
+      ],
+      [
+       "`9 · (2 − 0)`",
+       "18"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the formula look like that?",
+    "p": [
+     "When the number of `?` is even, Bob can answer each of Alice's digits `d` with a digit `9 − d` on the same side, so each pair of `?` is worth 9 in total, or 4.5 per `?` on average. Bob wins exactly when `sum_l + 4.5 · q_l == sum_r + 4.5 · q_r`. Multiplying by 2 gives the check `2 · (sum_l − sum_r) == 9 · (q_r − q_l)`, and Alice wins when it does not hold."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the slices."
+    ]
+   }
+  ],
+  "takeaway": "Alice wins if the number of ? is odd; otherwise Bob wins only when twice the known difference equals 9 times the difference in ? counts."
+ },
+ "1952": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for d in range(1, n + 1) if n % d == 0`",
+       "All divisors of `n`",
+       "Brute force when `n` is small (<= 10^4)"
+      ],
+      [
+       "`sum(1 for ...)`",
+       "Counts how many divisors there are",
+       "Counting items that satisfy a condition"
+      ],
+      [
+       "`== 3`",
+       "Exactly three divisors",
+       "The condition from the question"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`.",
+     "Three divisors (1, 2, 4), so the result is `True`. For `n = 2` there are only two, so `False`."
+    ],
+    "table": {
+     "head": [
+      "d",
+      "Divides 4?"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes"
+      ],
+      [
+       "2",
+       "yes"
+      ],
+      [
+       "3",
+       "no"
+      ],
+      [
+       "4",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Which numbers qualify?",
+    "p": [
+     "A number has exactly three divisors only when it is the square of a prime (like 4, 9, 25). With the small limit, counting divisors directly is simple and fast enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count the divisors by trial and compare with 3."
+ },
+ "1984": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "The best group of `k` scores is always `k` neighbours in sorted order",
+       "Minimising a spread"
+      ],
+      [
+       "`nums[i + k - 1] - nums[i]`",
+       "Highest minus lowest in the window of `k` sorted scores starting at `i`",
+       "Fixed-size sliding window"
+      ],
+      [
+       "`range(len(nums) - k + 1)`",
+       "Every possible window start",
+       "Sliding over the array"
+      ],
+      [
+       "`min(...)`",
+       "Smallest spread among all windows",
+       "Final answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [9,4,1,7]`, `k = 2`, sorted `[1,4,7,9]`.",
+     "The smallest difference is `2`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Window",
+      "Highest − lowest"
+     ],
+     "rows": [
+      [
+       "0",
+       "1, 4",
+       "3"
+      ],
+      [
+       "1",
+       "4, 7",
+       "3"
+      ],
+      [
+       "2",
+       "7, 9",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why must the chosen scores be adjacent after sorting?",
+    "p": [
+     "If you pick `k` scores that skip a value in between, replacing the skipped-over extreme with that in-between value keeps or reduces the spread. So some set of `k` consecutive sorted values is always at least as good."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then slide a window of size k and take the smallest max − min."
+ },
+ "2001": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gcd(w, h)`",
+       "Greatest common divisor of the sides",
+       "Reducing a fraction"
+      ],
+      [
+       "`(w // g, h // g)`",
+       "The ratio in lowest terms, an exact key for \"same ratio\"",
+       "Avoiding floating-point comparison"
+      ],
+      [
+       "`Counter(...)`",
+       "How many rectangles share each ratio",
+       "Grouping equal keys"
+      ],
+      [
+       "`c * (c - 1) // 2`",
+       "Number of pairs inside a group of `c`",
+       "Counting unordered pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`rectangles = [[4,8],[3,6],[10,20],[15,30]]`.",
+     "One group of 4: `4 · 3 / 2 = 6` pairs."
+    ],
+    "table": {
+     "head": [
+      "Rectangle",
+      "gcd",
+      "Reduced ratio"
+     ],
+     "rows": [
+      [
+       "[4,8]",
+       "4",
+       "(1,2)"
+      ],
+      [
+       "[3,6]",
+       "3",
+       "(1,2)"
+      ],
+      [
+       "[10,20]",
+       "10",
+       "(1,2)"
+      ],
+      [
+       "[15,30]",
+       "15",
+       "(1,2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why not divide `w / h`?",
+    "p": [
+     "Dividing as floating-point numbers can introduce rounding errors, so two equal ratios might not compare equal. The reduced fraction is exact, and two ratios are equal exactly when their reduced fractions are identical."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max side) for the gcd computations.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Reduce each width/height to lowest terms, group equal ratios, and count pairs per group."
+ },
+ "2015": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`events[s]` / `events[e]`",
+       "Map from a coordinate to `[height change, count change]`: `+h, +1` where a building starts and `−h, −1` where it ends",
+       "Sweep line (processing changes in position order)"
+      ],
+      [
+       "`points = sorted(events)`",
+       "All positions where something changes",
+       "Visiting only the interesting places"
+      ],
+      [
+       "`total`, `count`",
+       "Total height and number of buildings covering the segment that starts at the current point",
+       "Running state"
+      ],
+      [
+       "`if count == 0: continue`",
+       "No building here, so this stretch is left out",
+       "Gaps"
+      ],
+      [
+       "`avg = total // count`",
+       "Average rounded down",
+       "The required average"
+      ],
+      [
+       "merge check `res[-1][1] == p and res[-1][2] == avg`",
+       "If the previous segment ends here with the same average, extend it",
+       "Producing the minimum number of segments"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`buildings = [[1,4,2],[3,9,4]]`; points are `1, 3, 4, 9`.",
+     "The point `9` is the last one and only closes a building, so the loop stops before it (`points[:-1]`)."
+    ],
+    "table": {
+     "head": [
+      "Point p",
+      "total",
+      "count",
+      "avg",
+      "Segment [p, next)"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "1",
+       "2",
+       "[1,3,2]"
+      ],
+      [
+       "3",
+       "6",
+       "2",
+       "3",
+       "[3,4,3]"
+      ],
+      [
+       "4",
+       "4",
+       "1",
+       "4",
+       "[4,9,4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why merge neighbours?",
+    "p": [
+     "Building boundaries can split a stretch into pieces that have the same average. The question wants the fewest segments, so if the previous segment ends exactly where this one starts and the average is equal, it is extended instead of adding a new one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sweep over start and end events, keep the running height total and count, and merge adjacent segments that have the same average."
+ },
+ "2071": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "binary search on `k`",
+       "The answer is the largest `k` for which `can(k)` is true; if `k` tasks can be done, so can `k − 1`",
+       "A monotone yes/no condition"
+      ],
+      [
+       "`ts = tasks[:k]` and `workers[len(workers) - k:]`",
+       "If `k` tasks are done, use the `k` easiest tasks and the `k` strongest workers",
+       "Best possible choice for a fixed `k`"
+      ],
+      [
+       "`deque dq`",
+       "Tasks the current worker could do if they take a pill, in increasing order",
+       "Candidate tasks"
+      ],
+      [
+       "`while ptr < k and ts[ptr] <= w + strength`",
+       "Add every task that the worker can reach with a pill",
+       "Growing the candidate set as workers get stronger"
+      ],
+      [
+       "`if dq[0] <= w: dq.popleft()`",
+       "The worker can do the easiest candidate without a pill",
+       "Save pills"
+      ],
+      [
+       "`else: use a pill, dq.pop()`",
+       "Otherwise take a pill and do the hardest task they can reach",
+       "Make the pill count"
+      ],
+      [
+       "`if p == 0: return False`",
+       "Needed a pill but none left",
+       "Failure"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`tasks = [3,2,1]`, `workers = [0,3,3]`, `pills = 1`, `strength = 1`. Check `can(3)`: sorted tasks `[1,2,3]`, workers `[0,3,3]`.",
+     "All three tasks are assigned, so `can(3)` is true and the answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "Worker",
+      "Reachable tasks added",
+      "`dq`",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "tasks <= 1: 1",
+       "[1]",
+       "1 > 0, use the pill, remove task 1"
+      ],
+      [
+       "3",
+       "tasks <= 4: 2, 3",
+       "[2,3]",
+       "2 <= 3, take task 2 without a pill"
+      ],
+      [
+       "3",
+       "none new",
+       "[3]",
+       "3 <= 3, take task 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the weakest worker goes first?",
+    "p": [
+     "The weakest worker is the hardest to place, so it picks first. If it can do the easiest task for free, it should (this saves pills). If not, it must use a pill, and since the pill is spent anyway, it should take the hardest task it can reach, leaving easier tasks for the stronger workers."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + m log m + k log min(n, m)) overall; each check is linear.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search the number of tasks; for each guess, match weakest to strongest workers with a deque, using a pill only when needed."
+ },
+ "2090": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pre`",
+       "Prefix sums: `pre[i]` is the sum of the first `i` elements",
+       "Fast range sums"
+      ],
+      [
+       "`pre[i + k + 1] - pre[i - k]`",
+       "Sum of `nums[i-k .. i+k]`",
+       "Range sum from two prefix values"
+      ],
+      [
+       "`// (2 * k + 1)`",
+       "Integer division by the window size",
+       "Floor average"
+      ],
+      [
+       "`range(k, n - k)`",
+       "Only indices with `k` elements on both sides get an average; others stay `-1`",
+       "Boundary handling"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [7,4,3,9,1,8,5,2,6]`, `k = 3`, so the window has 7 elements.",
+     "The other indices keep `-1`, giving `[-1,-1,-1,5,4,4,-1,-1,-1]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Window",
+      "Sum",
+      "Average"
+     ],
+     "rows": [
+      [
+       "3",
+       "indices 0 to 6",
+       "37",
+       "5"
+      ],
+      [
+       "4",
+       "indices 1 to 7",
+       "32",
+       "4"
+      ],
+      [
+       "5",
+       "indices 2 to 8",
+       "34",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefix sums?",
+    "p": [
+     "Recomputing each window would cost O(k) per index. With prefix sums every window sum takes O(1), so the whole job is linear."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Use prefix sums to get each window of 2k + 1 elements in O(1) and divide, leaving -1 near the borders."
+ },
+ "2119": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`num == 0`",
+       "Zero reverses to zero",
+       "The special case"
+      ],
+      [
+       "`num % 10 != 0`",
+       "The last digit is not zero, so no digits are lost when reversing",
+       "Detecting trailing zeros"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Reversing twice only changes a number if reversing drops something."
+    ],
+    "table": {
+     "head": [
+      "num",
+      "First reverse",
+      "Second reverse",
+      "Same?"
+     ],
+     "rows": [
+      [
+       "526",
+       "625",
+       "526",
+       "yes"
+      ],
+      [
+       "1800",
+       "81",
+       "18",
+       "no"
+      ],
+      [
+       "0",
+       "0",
+       "0",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is a trailing zero the only problem?",
+    "p": [
+     "Trailing zeros become leading zeros after the first reversal, and leading zeros disappear. Every other digit survives both reversals in its original place. Zero itself is fine because it stays `0`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The number survives a double reversal exactly when it is 0 or does not end with 0."
+ },
+ "2138": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`-len(s) % k`",
+       "How many characters are missing to reach the next multiple of `k` (it is 0 when the length is already a multiple)",
+       "Padding to a multiple"
+      ],
+      [
+       "`s += fill * (...)`",
+       "Pad the end with the fill character",
+       "Making the last group full"
+      ],
+      [
+       "`range(0, len(s), k)`",
+       "Start index of each group",
+       "Stepping by group size"
+      ],
+      [
+       "`s[i:i + k]`",
+       "One group of `k` characters",
+       "Slicing"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abcdefghij\"`, `k = 3`, `fill = \"x\"`. The length is 10, and `-10 % 3 = 2`, so two fill characters are added."
+    ],
+    "table": {
+     "head": [
+      "Padded string",
+      "Groups"
+     ],
+     "rows": [
+      [
+       "`abcdefghijxx`",
+       "`abc`, `def`, `ghi`, `jxx`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `-len(s) % k`?",
+    "p": [
+     "In Python the remainder takes the sign of the divisor, so `-10 % 3` is `2`, exactly the amount needed. If the length is a multiple of `k` the result is 0 and nothing is added."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Pad the string to a multiple of k with the fill character and slice it into groups of k."
+ }
+}

@@ -1,0 +1,1618 @@
+{
+ "880": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "size = size * int(c) if c.isdigit() else size + 1",
+       "Length of the decoded string so far, computed without building it",
+       "The decoded string can be astronomically long"
+      ],
+      [
+       "for c in reversed(s)",
+       "Undo the encoding from the end",
+       "Each step shrinks size back to the length before that character"
+      ],
+      [
+       "k %= size",
+       "Maps k into the repeated block, because a digit repeats the earlier text",
+       "A repeat means position k equals position k mod size of the shorter text"
+      ],
+      [
+       "k == 0 and c.isalpha()",
+       "The k-th letter is the last letter of the text at this point",
+       "k % size == 0 means the last character of the block"
+      ],
+      [
+       "size //= int(c)",
+       "Undoes a digit: the text before it was size / digit long",
+       ""
+      ],
+      [
+       "size -= 1",
+       "Undoes a letter",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = leet2code3`, `k = 10`. Forward pass sizes: l1, e2, e3, t4, `2`→8, c9, o10, d11, e12, `3`→36."
+    ],
+    "table": {
+     "head": [
+      "Char (from end)",
+      "size before",
+      "k after k %= size",
+      "Action"
+     ],
+     "rows": [
+      [
+       "3",
+       "36",
+       "10",
+       "digit: size = 12"
+      ],
+      [
+       "e",
+       "12",
+       "10",
+       "letter: size = 11"
+      ],
+      [
+       "d",
+       "11",
+       "10",
+       "letter: size = 10"
+      ],
+      [
+       "o",
+       "10",
+       "0",
+       "k == 0 and a letter → return o"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Never build the decoded string: track its length, then walk backwards using k mod length until k hits 0 on a letter."
+ },
+ "913": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "color[m][c][t]",
+       "Result of the game from state (mouse at m, cat at c, t = whose turn: 0 mouse, 1 cat): DRAW, MOUSE or CAT",
+       "Game states with a known outcome are propagated backwards"
+      ],
+      [
+       "degree[m][c][t]",
+       "How many moves the player to move has (the cat may not enter node 0)",
+       "A state is lost for the mover only when every move leads to a loss"
+      ],
+      [
+       "seed states",
+       "Mouse at 0 → MOUSE wins; mouse and cat on the same node → CAT wins",
+       "Terminal positions"
+      ],
+      [
+       "parents(m, c, t)",
+       "The states from which one move leads here",
+       "Walking the game backwards from known results"
+      ],
+      [
+       "pt == 0 and col == MOUSE (or pt == 1 and col == CAT)",
+       "The mover can move into a winning state, so the parent has the same result",
+       "One winning move is enough"
+      ],
+      [
+       "else: degree -= 1",
+       "One more of the mover's moves is known to lose; when none are left, the opponent wins",
+       "All moves lose"
+      ],
+      [
+       "return color[1][2][0]",
+       "Mouse at 1, cat at 2, mouse to move",
+       "The starting state; unresolved states stay DRAW"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Small graph `[[1,3],[0],[3],[0,2]]` (edges 0-1, 0-3, 2-3). Start state is (mouse 1, cat 2, mouse to move)."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "What happens"
+     ],
+     "rows": [
+      [
+       "Seed",
+       "(0, c, any turn) is a MOUSE win for c = 1, 2, 3; (c, c, any turn) is a CAT win"
+      ],
+      [
+       "Pop (0, 2, cat to move, MOUSE)",
+       "Its parent states come from a mouse move: (1, 2, mouse to move) and (3, 2, mouse to move)"
+      ],
+      [
+       "For (1, 2, 0)",
+       "Mouse to move and the colour is MOUSE → the mouse has a winning move, so it is coloured MOUSE immediately"
+      ],
+      [
+       "Result",
+       "color[1][2][0] = MOUSE → answer 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The site's example",
+    "p": [
+     "For the graph on this page the search ends with the start state still unresolved (neither player can force a win without repeating positions), so it stays DRAW and the answer is 0."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³) with n nodes: n² positions times two turns, each with up to n moves.",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Cat and Mouse is solved backwards: start from the known wins, push results to earlier states, and whatever never gets decided is a draw."
+ },
+ "932": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "res = [1]",
+       "A beautiful array of length 1",
+       "Base case"
+      ],
+      [
+       "2 * x - 1 for x in res",
+       "Maps every element to an odd number",
+       "Odd half of the next array"
+      ],
+      [
+       "2 * x for x in res",
+       "Maps every element to an even number",
+       "Even half of the next array"
+      ],
+      [
+       "while len(res) < n",
+       "Doubles the length each round",
+       "Build up to at least n"
+      ],
+      [
+       "[x for x in res if x <= n]",
+       "Removes the extra numbers larger than n",
+       "Taking a sub-pattern keeps the property"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`."
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "Odd half",
+      "Even half",
+      "res"
+     ],
+     "rows": [
+      [
+       "start",
+       "",
+       "",
+       "[1]"
+      ],
+      [
+       "1",
+       "[1]",
+       "[2]",
+       "[1, 2]"
+      ],
+      [
+       "2",
+       "[1, 3]",
+       "[2, 4]",
+       "[1, 3, 2, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the construction works",
+    "p": [
+     "If an array is beautiful, then doubling and shifting its values (`2x−1` or `2x`) keeps it beautiful. Putting all odd numbers before all even numbers is safe: for `i < k < j`, the sum `nums[i] + nums[j]` can only equal `2·nums[k]` (an even number) if both ends have the same parity, so they lie in the same half, where the property already holds. Removing numbers larger than n keeps the order and cannot create a bad triple."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), the array doubles each round.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Build a beautiful array by doubling: odd images of the previous array, then even images, and drop what exceeds n."
+ },
+ "948": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "tokens.sort()",
+       "Cheapest tokens first",
+       "Greedy needs the smallest and largest cost"
+      ],
+      [
+       "lo, hi",
+       "Pointers to the cheapest and the most expensive unused token",
+       "Two-ended greedy"
+      ],
+      [
+       "power >= tokens[lo]",
+       "Play the cheapest token face up: spend its power, gain 1 score",
+       "Buying score as cheaply as possible"
+      ],
+      [
+       "best = max(best, score)",
+       "Remembers the highest score reached",
+       "Score may drop later, but the best is what counts"
+      ],
+      [
+       "elif score > 0: power += tokens[hi]",
+       "Play the most expensive token face down: lose 1 score, gain its (large) power",
+       "Selling score for the most power"
+      ],
+      [
+       "else: break",
+       "No power and no score left to trade",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`tokens = [100,200,300,400]`, `power = 200`."
+    ],
+    "table": {
+     "head": [
+      "Action",
+      "power",
+      "score",
+      "best"
+     ],
+     "rows": [
+      [
+       "face up 100",
+       "100",
+       "1",
+       "1"
+      ],
+      [
+       "face down 400",
+       "500",
+       "0",
+       "1"
+      ],
+      [
+       "face up 200",
+       "300",
+       "1",
+       "1"
+      ],
+      [
+       "face up 300",
+       "0",
+       "2",
+       "2"
+      ],
+      [
+       "lo > hi → stop",
+       "0",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort, then O(n).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Sorted two-pointer greedy: buy score with the cheapest token, sell score for the most expensive token's power, and keep the best score seen."
+ },
+ "961": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen = set()",
+       "Values met so far",
+       "O(1) duplicate check"
+      ],
+      [
+       "if x in seen: return x",
+       "First value seen twice",
+       "Only the repeated value can appear twice"
+      ],
+      [
+       "seen.add(x)",
+       "Remember the value",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,3]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "seen before",
+      "Result"
+     ],
+     "rows": [
+      [
+       "1",
+       "{}",
+       "add"
+      ],
+      [
+       "2",
+       "{1}",
+       "add"
+      ],
+      [
+       "3",
+       "{1, 2}",
+       "add"
+      ],
+      [
+       "3",
+       "{1, 2, 3}",
+       "3 is in seen → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the first repeat is the answer",
+    "p": [
+     "All other values appear only once, so any value seen twice must be the n-times repeated one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Only one value repeats, so the first duplicate found with a set is the answer."
+ },
+ "972": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x.split('(')",
+       "Splits off the repeating part in brackets",
+       "Strings like 0.5(25)"
+      ],
+      [
+       "head, rep",
+       "head is the text before the bracket; rep is the repeating digits",
+       "Separating non-repeating and repeating digits"
+      ],
+      [
+       "whole, frac",
+       "Integer part and non-repeating decimals",
+       "Splitting at the dot"
+      ],
+      [
+       "Fraction(int(frac), 10 ** len(frac))",
+       "Exact value of the non-repeating decimals",
+       "Avoids floating point errors"
+      ],
+      [
+       "Fraction(int(rep), 10**len(frac) * (10**len(rep) - 1))",
+       "Exact value of the repeating tail",
+       "A block of r repeating digits is rep ÷ (10^r − 1), shifted by the non-repeating digits"
+      ],
+      [
+       "value(s) == value(t)",
+       "Fractions compare exactly",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = 0.(52)`, `t = 0.5(25)`."
+    ],
+    "table": {
+     "head": [
+      "String",
+      "whole",
+      "frac",
+      "rep",
+      "Value"
+     ],
+     "rows": [
+      [
+       "0.(52)",
+       "0",
+       "(none)",
+       "52",
+       "52 / 99"
+      ],
+      [
+       "0.5(25)",
+       "0",
+       "5",
+       "25",
+       "5/10 + 25/(10 × 99) = 495/990 + 25/990 = 520/990 = 52/99"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Both strings equal 52/99, so the answer is `true`. Using exact fractions avoids any floating-point comparison."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(L) for L characters (digit parts are at most 4 long).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Turn each string into an exact Fraction (whole + non-repeating part + repeating part ÷ (10^r − 1)) and compare."
+ },
+ "1015": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "k % 2 == 0 or k % 5 == 0",
+       "No repunit can work: numbers made of 1s end in 1, so they are never divisible by 2 or 5",
+       "Early exit"
+      ],
+      [
+       "rem = (rem * 10 + 1) % k",
+       "Remainder of the next repunit: appending a 1 is ×10 + 1",
+       "Work with remainders, never the huge number"
+      ],
+      [
+       "for length in range(1, k + 1)",
+       "At most k different remainders exist, so if none is 0 within k steps it will never happen",
+       ""
+      ],
+      [
+       "if rem == 0: return length",
+       "First repunit divisible by k",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`k = 3`."
+    ],
+    "table": {
+     "head": [
+      "length",
+      "repunit",
+      "rem = (rem×10+1) % 3"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "11",
+       "2"
+      ],
+      [
+       "3",
+       "111",
+       "0 → return 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Build the repunit modulo k one digit at a time; after k steps the remainders must repeat, so no answer means −1."
+ },
+ "1026": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "go(node, lo, hi)",
+       "lo and hi are the smallest and largest values on the path from the root to this node's parent",
+       "Carrying ancestor information down"
+      ],
+      [
+       "abs(node.val - lo), abs(node.val - hi)",
+       "The best difference with any ancestor is against the min or max",
+       "Extremes give the largest difference"
+      ],
+      [
+       "lo, hi = min(lo, node.val), max(hi, node.val)",
+       "Updates the path range with this node",
+       ""
+      ],
+      [
+       "nonlocal best",
+       "Shared answer updated in recursion",
+       ""
+      ],
+      [
+       "go(root, root.val, root.val)",
+       "Starts with the root as both lo and hi",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [8,3,10,1,6,null,14,null,null,4,7,13]`."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Path min / max before it",
+      "Difference found",
+      "best"
+     ],
+     "rows": [
+      [
+       "8",
+       "8 / 8",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "8 / 8",
+       "5",
+       "5"
+      ],
+      [
+       "1",
+       "3 / 8",
+       "7 (|1 − 8|)",
+       "7"
+      ],
+      [
+       "6, 4, 7",
+       "3 / 8 …",
+       "at most 5",
+       "7"
+      ],
+      [
+       "10, 14, 13",
+       "8 / 10 …",
+       "at most 6",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(h) recursion."
+    ]
+   }
+  ],
+  "takeaway": "Pass the min and max of the path down the tree; the best difference for each node is against one of those two."
+ },
+ "1042": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g",
+       "Adjacency lists",
+       "Graph from the paths"
+      ],
+      [
+       "color = [0] * (n + 1)",
+       "0 means not planted yet (gardens are 1-indexed)",
+       ""
+      ],
+      [
+       "used = {color[v] for v in g[u]}",
+       "Flower types already used by neighbours (0 for unplanted ones)",
+       ""
+      ],
+      [
+       "next(c for c in range(1, 5) if c not in used)",
+       "Smallest of 4 types not in used",
+       "A garden has at most 3 neighbours, so at least one type is free"
+      ],
+      [
+       "color[1:]",
+       "Drop the unused slot 0",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Triangle `n = 3`, `paths = [[1,2],[2,3],[3,1]]`."
+    ],
+    "table": {
+     "head": [
+      "Garden",
+      "Neighbour colours",
+      "Chosen"
+     ],
+     "rows": [
+      [
+       "1",
+       "{0, 0}",
+       "1"
+      ],
+      [
+       "2",
+       "{1, 0}",
+       "2"
+      ],
+      [
+       "3",
+       "{2, 1}",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + paths).",
+     "Space: O(n + paths)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy colouring works because every garden has at most 3 neighbours and there are 4 types, so a free type always exists."
+ },
+ "1096": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "union()",
+       "Parses terms separated by commas and returns the set of all their words",
+       "The comma means union"
+      ],
+      [
+       "product_terms()",
+       "Parses a run of adjacent parts and returns every concatenation",
+       "Writing parts side by side means a product"
+      ],
+      [
+       "cur = {\"\"}",
+       "The product starts with one empty word",
+       ""
+      ],
+      [
+       "s[pos] == '{'",
+       "Recursively parse a brace group with union(), then skip the closing brace",
+       "Nested braces"
+      ],
+      [
+       "cur = {a + b for a in cur for b in inner}",
+       "Cartesian product of the words so far with the next part",
+       ""
+      ],
+      [
+       "sorted(union())",
+       "Distinct words (sets) in order",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`{a,b}{c,{d,e}}`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "First group {a,b}",
+       "{a, b}"
+      ],
+      [
+       "Second group: c, then {d,e}",
+       "{c, d, e}"
+      ],
+      [
+       "Product of the two groups",
+       "{ac, ad, ae, bc, bd, be}"
+      ],
+      [
+       "Sorted",
+       "[ac, ad, ae, bc, bd, be]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: bounded by the size of the output times the expression length.",
+     "Space: O(output size)."
+    ]
+   }
+  ],
+  "takeaway": "Recursive descent: commas build unions, adjacent parts build products, braces recurse."
+ },
+ "1122": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "rank = {v: i for i, v in enumerate(arr2)}",
+       "Position of each value in arr2",
+       "Lookup for the custom order"
+      ],
+      [
+       "rank.get(x, len(arr2))",
+       "Values missing from arr2 get a rank after all others",
+       "Pushes them to the end"
+      ],
+      [
+       "key=lambda x: (rank, x)",
+       "Sort first by rank, then by the value itself",
+       "Ties among missing values are ascending"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr2 = [2,1,4,3,9,6]` gives ranks 2:0, 1:1, 4:2, 3:3, 9:4, 6:5. Values 7 and 19 are not in arr2, so their rank is 6."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Key"
+     ],
+     "rows": [
+      [
+       "2 (three times)",
+       "(0, 2)"
+      ],
+      [
+       "1",
+       "(1, 1)"
+      ],
+      [
+       "4",
+       "(2, 4)"
+      ],
+      [
+       "3 (twice)",
+       "(3, 3)"
+      ],
+      [
+       "9",
+       "(4, 9)"
+      ],
+      [
+       "6",
+       "(5, 6)"
+      ],
+      [
+       "7, 19",
+       "(6, 7), (6, 19)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + m).",
+     "Space: O(m + n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by a key: the position in arr2, with a fallback rank after it for the rest."
+ },
+ "1189": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(text)",
+       "Letter counts",
+       "Counting letters"
+      ],
+      [
+       "c['b'], c['a'], c['n']",
+       "One of each per copy of balloon",
+       ""
+      ],
+      [
+       "c['l'] // 2, c['o'] // 2",
+       "l and o each appear twice in balloon",
+       ""
+      ],
+      [
+       "min(...)",
+       "The scarcest ingredient limits the copies",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`text = nlaebolko`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Count",
+      "Copies possible"
+     ],
+     "rows": [
+      [
+       "b",
+       "1",
+       "1"
+      ],
+      [
+       "a",
+       "1",
+       "1"
+      ],
+      [
+       "n",
+       "1",
+       "1"
+      ],
+      [
+       "l",
+       "2",
+       "2 // 2 = 1"
+      ],
+      [
+       "o",
+       "2",
+       "2 // 2 = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1) (26 letters)."
+    ]
+   }
+  ],
+  "takeaway": "Count letters and divide by how many each copy of the word needs; the smallest result wins."
+ },
+ "1206": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Node(val, levels)",
+       "A value and one next pointer per level it takes part in",
+       ""
+      ],
+      [
+       "head = Node(-1, MAX)",
+       "Sentinel node present at all 16 levels",
+       ""
+      ],
+      [
+       "_find_prev(num)",
+       "At each level, from the top, moves right while the next value is smaller than num; records the last node before the spot",
+       "Search from express lanes down to the bottom list"
+      ],
+      [
+       "search",
+       "Looks at the node after the level-0 predecessor",
+       ""
+      ],
+      [
+       "add: random.random() < 0.5",
+       "Gives the new node a random height by coin flips",
+       "Half of the nodes reach each higher level"
+      ],
+      [
+       "add: splice at each level",
+       "Inserts the node after prev[lvl] at every level it joins",
+       ""
+      ],
+      [
+       "erase",
+       "Unlinks the node at each level where it is the next node, returns whether it existed",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Operations from the example."
+    ],
+    "table": {
+     "head": [
+      "Operation",
+      "What _find_prev finds",
+      "Result"
+     ],
+     "rows": [
+      [
+       "add(1), add(2), add(3)",
+       "each inserted in sorted order at level 0 (some also at higher levels)",
+       "None"
+      ],
+      [
+       "search(0)",
+       "predecessor is head; next is 1 ≠ 0",
+       "False"
+      ],
+      [
+       "add(4)",
+       "after 3",
+       "None"
+      ],
+      [
+       "search(1)",
+       "next after head is 1",
+       "True"
+      ],
+      [
+       "erase(0)",
+       "next is 1 ≠ 0",
+       "False"
+      ],
+      [
+       "erase(1)",
+       "found, unlinked at every level",
+       "True"
+      ],
+      [
+       "search(1)",
+       "next is 2",
+       "False"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why levels make it fast",
+    "p": [
+     "Higher levels link only some nodes, so a search can take long jumps and drop down a level when the next jump would overshoot. With random heights this takes about O(log n) steps on average."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) expected per operation.",
+     "Space: O(n) expected, a node has about 2 pointers on average."
+    ]
+   }
+  ],
+  "takeaway": "A skiplist is a sorted linked list with random express lanes; _find_prev finds the predecessor at every level and all three operations use it."
+ },
+ "1246": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j]",
+       "Fewest moves to remove arr[i..j]",
+       "Interval DP"
+      ],
+      [
+       "best = 1 + dp[i+1][j]",
+       "Remove arr[i] alone, then the rest",
+       "Always possible"
+      ],
+      [
+       "arr[i] == arr[k]",
+       "arr[i] can be removed together with arr[k] in one palindrome move",
+       "The ends match"
+      ],
+      [
+       "inner = dp[i+1][k-1]",
+       "Moves to clear the inside between them",
+       "If the inside is empty, arr[i..k] is itself a palindrome"
+      ],
+      [
+       "max(1, inner) + outer",
+       "The inside's last move can swallow arr[i] and arr[k]; an empty inside still needs 1 move",
+       "outer = dp[k+1][j] is the rest"
+      ],
+      [
+       "loops by length",
+       "Shorter intervals are solved first",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,3,4,1,5]`."
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Options",
+      "dp"
+     ],
+     "rows": [
+      [
+       "[3,4]",
+       "remove 3, then 4",
+       "2"
+      ],
+      [
+       "[3,4,1]",
+       "no matching ends",
+       "3"
+      ],
+      [
+       "[1,3,4,1]",
+       "1 + dp[3,4,1] = 4; ends match: dp[3,4] = 2",
+       "2"
+      ],
+      [
+       "[1,3,4,1,5]",
+       "1 + dp[3,4,1,5] = 5; match with k=3: dp[3,4] + dp[5] = 2 + 1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n³).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Interval DP: either delete the first element alone, or pair it with a matching element so that both vanish together with the palindrome between them."
+ },
+ "1273": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "children",
+       "Child lists built from the parent array",
+       ""
+      ],
+      [
+       "go(u)",
+       "Returns (sum of the subtree, number of nodes kept)",
+       "Bottom-up DFS"
+      ],
+      [
+       "total += s; size += c",
+       "Adds each child's results (children already trimmed)",
+       ""
+      ],
+      [
+       "0 if total == 0 else size",
+       "A subtree with sum 0 is removed completely, so it keeps 0 nodes",
+       ""
+      ],
+      [
+       "go(0)[1]",
+       "Kept nodes in the whole tree",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The example: `parent = [-1,0,0,1,2,2,2]`, `value = [1,-2,4,0,-2,-1,-1]`."
+    ],
+    "table": {
+     "head": [
+      "Node",
+      "Subtree sum",
+      "Kept"
+     ],
+     "rows": [
+      [
+       "3 (leaf, 0)",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "−2 + 0 = −2",
+       "1"
+      ],
+      [
+       "4, 5, 6",
+       "−2, −1, −1",
+       "1 each"
+      ],
+      [
+       "2",
+       "4 − 2 − 1 − 1 = 0",
+       "0 (removed with its leaves)"
+      ],
+      [
+       "0",
+       "1 − 2 + 0 = −1",
+       "1 + 1 + 0 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) (recursion depth up to n)."
+    ]
+   }
+  ],
+  "takeaway": "Compute subtree sums bottom-up, and let a zero-sum subtree report 0 kept nodes."
+ },
+ "1288": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(..., key=(start, -end))",
+       "Sort by start; for equal starts, larger end first",
+       "Covered intervals then appear after the interval that covers them"
+      ],
+      [
+       "reach",
+       "Largest end seen so far",
+       ""
+      ],
+      [
+       "if e > reach",
+       "This interval ends further than everything before it, so nothing covers it",
+       "Not covered"
+      ],
+      [
+       "count += 1; reach = e",
+       "Keep it and extend reach",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`[[1,4],[3,6],[2,8]]` sorted becomes `[1,4]`, `[2,8]`, `[3,6]`."
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "e > reach?",
+      "count",
+      "reach"
+     ],
+     "rows": [
+      [
+       "[1,4]",
+       "4 > −1 yes",
+       "1",
+       "4"
+      ],
+      [
+       "[2,8]",
+       "8 > 4 yes",
+       "2",
+       "8"
+      ],
+      [
+       "[3,6]",
+       "6 > 8 no: covered by [2,8]",
+       "2",
+       "8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(1) apart from the sort."
+    ]
+   }
+  ],
+  "takeaway": "After sorting by start (end descending), an interval is covered exactly when its end does not pass the furthest end so far."
+ },
+ "1301": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp[i][j] = (score, ways)",
+       "Best score from S to this cell and how many paths reach it; (−1, 0) means unreachable",
+       ""
+      ],
+      [
+       "dp[n-1][n-1] = (0, 1)",
+       "The start has score 0 and one way",
+       ""
+      ],
+      [
+       "neighbours (i+1,j), (i,j+1), (i+1,j+1)",
+       "The cells we could have come from (moving up/left from S means coming from below/right)",
+       ""
+      ],
+      [
+       "s > best / s == best",
+       "Higher score replaces the way count; equal scores add the way counts",
+       ""
+      ],
+      [
+       "val = 0 if board[i][j] == 'E' else int(...)",
+       "E adds nothing; digits add their value",
+       ""
+      ],
+      [
+       "ways % MOD",
+       "Keeps counts small",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`board = [E23, 2X2, 12S]`. Filling from bottom-right."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Comes from",
+      "(score, ways)"
+     ],
+     "rows": [
+      [
+       "(2,1) '2'",
+       "(2,2)",
+       "(2, 1)"
+      ],
+      [
+       "(2,0) '1'",
+       "(2,1)",
+       "(3, 1)"
+      ],
+      [
+       "(1,2) '2'",
+       "(2,2)",
+       "(2, 1)"
+      ],
+      [
+       "(1,0) '2'",
+       "(2,0)=3 beats (2,1)=2",
+       "(5, 1)"
+      ],
+      [
+       "(0,2) '3'",
+       "(1,2)",
+       "(5, 1)"
+      ],
+      [
+       "(0,1) '2'",
+       "(0,2)=5 beats (1,2)=2",
+       "(7, 1)"
+      ],
+      [
+       "(0,0) E",
+       "(0,1)=7 beats (1,0)=5",
+       "(7, 1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "DP over cells storing (best score, number of ways); equal scores add up the ways, better scores replace them."
+ },
+ "1339": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dfs(node)",
+       "Returns the sum of the subtree",
+       ""
+      ],
+      [
+       "sums.append(s)",
+       "Every subtree sum is a candidate: cutting the edge above that node splits off exactly this subtree",
+       ""
+      ],
+      [
+       "total = dfs(root)",
+       "Sum of the whole tree",
+       ""
+      ],
+      [
+       "s * (total - s)",
+       "Product if the subtree sum s is cut off",
+       ""
+      ],
+      [
+       "% (10**9 + 7)",
+       "Taken once at the end, after the real maximum has been found",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [1,2,3,4,5,6]`, total = 21."
+    ],
+    "table": {
+     "head": [
+      "Subtree rooted at",
+      "Sum s",
+      "s × (21 − s)"
+     ],
+     "rows": [
+      [
+       "4",
+       "4",
+       "68"
+      ],
+      [
+       "5",
+       "5",
+       "80"
+      ],
+      [
+       "2",
+       "11",
+       "110"
+      ],
+      [
+       "6",
+       "6",
+       "90"
+      ],
+      [
+       "3",
+       "9",
+       "108"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The largest product is 110 (cutting off the subtree of node 2). Because Python integers do not overflow, the modulo can wait until the end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Cutting any edge isolates a subtree of sum s, so try s × (total − s) for every subtree sum."
+ }
+}

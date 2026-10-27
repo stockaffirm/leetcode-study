@@ -1,0 +1,1579 @@
+{
+ "2216": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pos = i - deletions",
+       "Where this element would sit in the array after the deletions made so far",
+       ""
+      ],
+      [
+       "pos % 2 == 1 and nums[i-1] == x",
+       "This element would be the second of a pair (odd position) and equals the first, which is not allowed",
+       "Greedy: delete it right away"
+      ],
+      [
+       "deletions += 1",
+       "Delete the current element; later elements shift left",
+       ""
+      ],
+      [
+       "(len(nums) - deletions) % 2",
+       "If the final length is odd, one more element (the last) must go",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,2,3,5]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "pos",
+      "Rule triggered?",
+      "deletions"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "0",
+       "no (even position)",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "yes: equals nums[0]",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "no: 1 ≠ 2",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "2",
+       "no",
+       "1"
+      ],
+      [
+       "4",
+       "5",
+       "3",
+       "no: 3 ≠ 5",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The final length",
+    "p": [
+     "The kept length is `5 − 1 = 4`, which is even, so nothing more is deleted. Answer: 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Greedy: delete an element whenever it would pair with an equal neighbour, then delete the last one if the final length is odd."
+ },
+ "2257": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "grid",
+       "0 = free, 1 = guarded, 2 = guard, 3 = wall",
+       ""
+      ],
+      [
+       "for r, c in guards: for each of 4 directions",
+       "From every guard, walk outwards",
+       ""
+      ],
+      [
+       "while ... grid[a][b] not in (2, 3)",
+       "Stop at the border, a wall, or another guard",
+       ""
+      ],
+      [
+       "grid[a][b] = 1",
+       "Mark the cell as seen",
+       ""
+      ],
+      [
+       "sum(row.count(0) ...)",
+       "Cells still free and unseen",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 4, n = 6` with guards `(0,0) (1,1) (2,3)` and walls `(0,1) (2,2) (1,4)`. Cells seen by the guards:"
+    ],
+    "table": {
+     "head": [
+      "Guard",
+      "Cells marked"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "(1,0), (2,0), (3,0); the wall at (0,1) blocks the right"
+      ],
+      [
+       "(1,1)",
+       "(2,1), (3,1), (1,2), (1,3); walls at (0,1) and (1,4) stop it"
+      ],
+      [
+       "(2,3)",
+       "(1,3), (0,3), (3,3), (2,4), (2,5); the wall at (2,2) blocks the left"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The count",
+    "p": [
+     "11 different cells are marked. The grid has `24 − 3 guards − 3 walls = 18` free cells, so `18 − 11 = 7` are unguarded."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n) because each guard's four rays are bounded by the grid and re-scanned cells are limited (about four visits per cell).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Mark guards and walls, sweep four rays from every guard, and count the cells left untouched."
+ },
+ "2290": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dist[i][j]",
+       "Fewest obstacles removed to reach (i, j)",
+       ""
+      ],
+      [
+       "nd = dist[i][j] + grid[a][b]",
+       "Entering an obstacle cell costs 1, an empty cell costs 0",
+       "Edge weights are only 0 or 1"
+      ],
+      [
+       "deque",
+       "0-1 BFS: cost-0 cells go to the FRONT, cost-1 cells to the BACK",
+       "Keeps cells in non-decreasing order of distance without a heap"
+      ],
+      [
+       "if nd < dist[a][b]",
+       "Only relax when it improves",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[0,1,1],[1,1,0],[1,1,0]]`."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "dist",
+      "Reached from"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "0",
+       "start"
+      ],
+      [
+       "(0,1)",
+       "1",
+       "(0,0)"
+      ],
+      [
+       "(0,2)",
+       "2",
+       "(0,1)"
+      ],
+      [
+       "(1,2)",
+       "2",
+       "(0,2), cost 0 (empty cell)"
+      ],
+      [
+       "(2,2)",
+       "2",
+       "(1,2), cost 0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m·n).",
+     "Space: O(m·n)."
+    ]
+   }
+  ],
+  "takeaway": "Treat obstacles as cost-1 edges and empty cells as cost-0 edges, and use 0-1 BFS with a deque."
+ },
+ "2337": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "i, j",
+       "Pointers to the next piece in start and in target",
+       ""
+      ],
+      [
+       "skip '_'",
+       "Blank cells are ignored",
+       ""
+      ],
+      [
+       "i == n or j == n",
+       "One string has no pieces left; both must end together",
+       ""
+      ],
+      [
+       "start[i] != target[j]",
+       "Pieces cannot jump over each other, so the order must match",
+       ""
+      ],
+      [
+       "'L' and i < j",
+       "L only moves left, so it would need to move right",
+       ""
+      ],
+      [
+       "'R' and i > j",
+       "R only moves right, so it would need to move left",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`start = _L__R__R_`, `target = L______RR`."
+    ],
+    "table": {
+     "head": [
+      "Piece",
+      "start index",
+      "target index",
+      "Allowed?"
+     ],
+     "rows": [
+      [
+       "L",
+       "1",
+       "0",
+       "moves left ✓"
+      ],
+      [
+       "R",
+       "4",
+       "7",
+       "moves right ✓"
+      ],
+      [
+       "R",
+       "7",
+       "8",
+       "moves right ✓"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compare the pieces in order: same letters, L ends at or left of where it started, R at or right."
+ },
+ "2364": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x - i",
+       "The value minus its index",
+       "j − i = nums[j] − nums[i] is the same as nums[j] − j = nums[i] − i"
+      ],
+      [
+       "Counter(...)",
+       "How many positions share each x − i",
+       ""
+      ],
+      [
+       "c * (c - 1) // 2",
+       "Good pairs inside a group of c equal keys",
+       ""
+      ],
+      [
+       "n * (n - 1) // 2 - good",
+       "All pairs minus good pairs = bad pairs",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,1,3,3]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "nums[i] − i"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "4"
+      ],
+      [
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "3",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The key 0 appears twice, so there is `2 × 1 / 2 = 1` good pair. Total pairs are `4 × 3 / 2 = 6`, so the bad pairs are `6 − 1 = 5`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count the good pairs (equal nums[i] − i) and subtract from the total number of pairs."
+ },
+ "2419": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "m = max(nums)",
+       "An AND can never exceed any of its elements, so the largest possible AND is the maximum element",
+       ""
+      ],
+      [
+       "x == m",
+       "Only subarrays made entirely of m can reach it",
+       ""
+      ],
+      [
+       "run",
+       "Length of the current streak of m",
+       ""
+      ],
+      [
+       "best",
+       "Longest streak",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,3,2,2]`, `m = 3`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "run",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "2"
+      ],
+      [
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "2",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The largest possible AND is the maximum value, so the answer is the longest run of that maximum."
+ },
+ "2441": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "seen = set(nums)",
+       "Constant-time membership",
+       ""
+      ],
+      [
+       "x > 0 and -x in seen",
+       "Positive values whose negative also exists",
+       ""
+      ],
+      [
+       "max(..., default=-1)",
+       "Largest such value, or −1 if there are none",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [-1,2,-3,3]`."
+    ],
+    "table": {
+     "head": [
+      "Positive x",
+      "−x in array?"
+     ],
+     "rows": [
+      [
+       "2",
+       "no (−2 missing)"
+      ],
+      [
+       "3",
+       "yes (−3 present)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Only 3 qualifies, so the answer is 3."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Put everything in a set and take the largest positive number whose negative is also present."
+ },
+ "2463": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "robot.sort(); factory.sort()",
+       "Sorted positions; optimal assignments never cross",
+       "Lets us assign robots to factories in order"
+      ],
+      [
+       "dp[i][j]",
+       "Minimum distance for the first i robots using only the first j factories",
+       ""
+      ],
+      [
+       "dp[0][j] = 0",
+       "No robots, no cost",
+       ""
+      ],
+      [
+       "dp[i][j] = dp[i][j-1]",
+       "Option 1: factory j repairs no robot",
+       ""
+      ],
+      [
+       "for t in range(1, min(cap, i) + 1)",
+       "Option 2: factory j repairs the last t robots (up to its limit)",
+       ""
+      ],
+      [
+       "cost += abs(robot[i - t] - pos)",
+       "Adds one more robot to the group, accumulating the cost",
+       ""
+      ],
+      [
+       "dp[i-t][j-1] + cost",
+       "The remaining i − t robots use the earlier factories",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`robot = [0,4,6]`, `factory = [[2,2],[6,2]]`."
+    ],
+    "table": {
+     "head": [
+      "Cell",
+      "Options",
+      "Value"
+     ],
+     "rows": [
+      [
+       "dp[2][1]",
+       "factory (2) takes robots 0 and 4: 2 + 2",
+       "4"
+      ],
+      [
+       "dp[3][1]",
+       "needs 3 robots in a cap-2 factory",
+       "∞"
+      ],
+      [
+       "dp[3][2]",
+       "t=1: robot 6 → factory 6 costs 0, plus dp[2][1] = 4",
+       "4"
+      ],
+      [
+       "dp[3][2]",
+       "t=2: robots 4, 6 → factory 6 costs 2 + 0 = 2, plus dp[1][1] = 2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Both options give 4, so the answer is `4`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · m · cap).",
+     "Space: O(n · m)."
+    ]
+   }
+  ],
+  "takeaway": "Sort robots and factories, then DP over (robots handled, factories used) where each factory takes a block of consecutive robots up to its limit."
+ },
+ "2517": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(price)",
+       "Sorted prices make the pick greedy",
+       ""
+      ],
+      [
+       "ok(g)",
+       "Can we choose k candies with every neighbouring pair at least g apart?",
+       "Greedy: take the first, then the next price at least g above the last pick"
+      ],
+      [
+       "lo, hi = 0, max − min",
+       "Search range for the answer (tastiness)",
+       ""
+      ],
+      [
+       "mid = (lo + hi + 1) // 2",
+       "Upper midpoint, so the loop always makes progress when lo = mid",
+       ""
+      ],
+      [
+       "if ok(mid): lo = mid else hi = mid - 1",
+       "Binary search for the largest g that works",
+       "If gap g is possible, every smaller gap is possible too"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`price = [13,5,1,8,21,2]` sorted: `1, 2, 5, 8, 13, 21`; `k = 3`."
+    ],
+    "table": {
+     "head": [
+      "mid (gap)",
+      "Greedy picks",
+      "Count ≥ 3?",
+      "Move"
+     ],
+     "rows": [
+      [
+       "10",
+       "1, 13",
+       "no (2)",
+       "hi = 9"
+      ],
+      [
+       "5",
+       "1, 8, 13",
+       "yes",
+       "lo = 5"
+      ],
+      [
+       "7",
+       "1, 8, 21",
+       "yes",
+       "lo = 7"
+      ],
+      [
+       "8",
+       "1, 13, 21",
+       "yes",
+       "lo = 8"
+      ],
+      [
+       "9",
+       "1, 13",
+       "no",
+       "hi = 8"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`lo = hi = 8`. Picking 1, 13, 21 gives gaps 12 and 8, so the tastiness is 8."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + n log(max − min)).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the answer with a greedy check: can we place k candies at least g apart?"
+ },
+ "2535": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(nums)",
+       "Element sum",
+       ""
+      ],
+      [
+       "str(x) for each digit",
+       "Break every number into digits and add them",
+       ""
+      ],
+      [
+       "abs(element_sum - digit_sum)",
+       "The absolute difference",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,15,6,3]`."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "element sum",
+       "1 + 15 + 6 + 3 = 25"
+      ],
+      [
+       "digit sum",
+       "1 + 1 + 5 + 6 + 3 = 16"
+      ],
+      [
+       "difference",
+       "25 − 16 = 9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total digits).",
+     "Space: O(1) apart from the temporary string per number."
+    ]
+   }
+  ],
+  "takeaway": "Compute both sums directly and take the absolute difference."
+ },
+ "2590": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "self.tasks",
+       "Maps a task id to [userId, description, dueDate, tag set, done]",
+       ""
+      ],
+      [
+       "self.by_user",
+       "For each user, the ids of their tasks",
+       ""
+      ],
+      [
+       "tid = len(self.tasks) + 1",
+       "Ids start at 1 and count tasks across all users",
+       ""
+      ],
+      [
+       "completeTask",
+       "Marks done only if the task exists and belongs to that user",
+       ""
+      ],
+      [
+       "_pending(userId, tag)",
+       "Collects uncompleted tasks (matching the tag when one is given) as (due, id, description)",
+       ""
+      ],
+      [
+       "sorted(items)",
+       "Sorts by due date; the id breaks ties",
+       "Returns the descriptions in order"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The example, call by call."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Result"
+     ],
+     "rows": [
+      [
+       "addTask(1, Task1, 50, [])",
+       "1"
+      ],
+      [
+       "addTask(1, Task2, 100, [P1])",
+       "2"
+      ],
+      [
+       "getAllTasks(1)",
+       "[Task1, Task2] (due 50, 100)"
+      ],
+      [
+       "getAllTasks(5)",
+       "[] (user 5 has none)"
+      ],
+      [
+       "addTask(1, Task3, 30, [P1])",
+       "3"
+      ],
+      [
+       "getTasksForTag(1, P1)",
+       "[Task3, Task2] (due 30, 100)"
+      ],
+      [
+       "completeTask(5, 1)",
+       "nothing: task 1 belongs to user 1"
+      ],
+      [
+       "completeTask(1, 2)",
+       "Task2 marked done"
+      ],
+      [
+       "getTasksForTag(1, P1)",
+       "[Task3]"
+      ],
+      [
+       "getAllTasks(1)",
+       "[Task3, Task1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: add O(1); queries O(t log t) for t tasks of that user.",
+     "Space: O(total tasks)."
+    ]
+   }
+  ],
+  "takeaway": "Keep tasks in a dictionary with a per-user id list; every query filters the user's pending tasks and sorts by due date."
+ },
+ "2607": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g = gcd(n, k)",
+       "Number of independent groups",
+       ""
+      ],
+      [
+       "arr[start::g]",
+       "All elements whose indices differ by a multiple of g",
+       ""
+      ],
+      [
+       "sorted(...); med = vals[len//2]",
+       "Median of the group, which minimises the total change",
+       ""
+      ],
+      [
+       "sum(abs(v - med))",
+       "Operations to make the whole group equal the median",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,4,1,3]`, `k = 2`. Here `n = 4`, so `g = gcd(4, 2) = 2`."
+    ],
+    "table": {
+     "head": [
+      "Group",
+      "Elements",
+      "Median",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "start 0",
+       "1, 1",
+       "1",
+       "0"
+      ],
+      [
+       "start 1",
+       "4, 3",
+       "4",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why gcd(n, k)",
+    "p": [
+     "In a circular array, two windows of length k that start at neighbouring indexes have equal sums only if `arr[i] == arr[i + k]` (wrapping around). Repeating that rule links indexes that differ by multiples of k modulo n, which are exactly the classes modulo gcd(n, k). Each class must become one value, and the median is the cheapest."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "All window sums are equal exactly when each class of indexes modulo gcd(n, k) holds one value; make each class equal to its median."
+ },
+ "2664": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "board",
+       "Visit order, −1 = unvisited",
+       ""
+      ],
+      [
+       "moves",
+       "The eight knight moves",
+       ""
+      ],
+      [
+       "go(i, j, step)",
+       "Mark the cell with its step, then try each move",
+       ""
+      ],
+      [
+       "step == m*n - 1",
+       "Every cell is visited: success",
+       ""
+      ],
+      [
+       "board[a][b] == -1",
+       "Move only to unvisited cells on the board",
+       ""
+      ],
+      [
+       "board[i][j] = -1; return False",
+       "Backtrack: undo the mark when no continuation works",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 3, n = 4`, start `(0, 0)`. One tour that results (each step is a knight move):"
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Cell"
+     ],
+     "rows": [
+      [
+       "0",
+       "(0,0)"
+      ],
+      [
+       "1",
+       "(1,2)"
+      ],
+      [
+       "2",
+       "(2,0)"
+      ],
+      [
+       "3",
+       "(0,1)"
+      ],
+      [
+       "4",
+       "(1,3)"
+      ],
+      [
+       "5",
+       "(2,1)"
+      ],
+      [
+       "6",
+       "(0,2)"
+      ],
+      [
+       "7",
+       "(2,3)"
+      ],
+      [
+       "8",
+       "(1,1)"
+      ],
+      [
+       "9",
+       "(0,3)"
+      ],
+      [
+       "10",
+       "(2,2)"
+      ],
+      [
+       "11",
+       "(1,0)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Writing each step into its cell gives `[[0,3,6,9],[11,8,1,4],[2,5,10,7]]`. The search tries the moves in a fixed order and backs out of dead ends. Any valid tour is accepted."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: exponential in the worst case, but boards are at most 5 × 5.",
+     "Space: O(m·n) for the board and recursion."
+    ]
+   }
+  ],
+  "takeaway": "Depth-first search over knight moves with backtracking; the tiny board limits the search."
+ },
+ "2739": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "use = min(5, mainTank)",
+       "Burn up to 5 litres in one block",
+       ""
+      ],
+      [
+       "distance += use * 10",
+       "10 km per litre",
+       ""
+      ],
+      [
+       "use == 5 and additionalTank > 0",
+       "Every full 5 litres burned triggers a transfer",
+       ""
+      ],
+      [
+       "additionalTank -= 1; mainTank += 1",
+       "Move 1 litre into the main tank",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`mainTank = 5`, `additionalTank = 10`."
+    ],
+    "table": {
+     "head": [
+      "Block",
+      "use",
+      "distance",
+      "main",
+      "additional"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "50",
+       "0 + 1 = 1",
+       "9"
+      ],
+      [
+       "2",
+       "1",
+       "60",
+       "0",
+       "9"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The second block burns only 1 litre, so there is no transfer. The total distance is 60."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(mainTank).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate in blocks of 5 litres, topping up 1 litre from the spare tank after each full block."
+ },
+ "2807": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cur.next",
+       "The neighbour that follows",
+       ""
+      ],
+      [
+       "gcd(cur.val, cur.next.val)",
+       "Greatest common divisor of the two values",
+       ""
+      ],
+      [
+       "ListNode(g, cur.next)",
+       "New node pointing at the old next node",
+       ""
+      ],
+      [
+       "cur.next = g",
+       "Splices the new node in",
+       ""
+      ],
+      [
+       "cur = g.next",
+       "Skip over the new node to the next original node",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [18,6,10,3]`."
+    ],
+    "table": {
+     "head": [
+      "cur",
+      "next",
+      "gcd inserted",
+      "List"
+     ],
+     "rows": [
+      [
+       "18",
+       "6",
+       "6",
+       "18, 6, 6, 10, 3"
+      ],
+      [
+       "6",
+       "10",
+       "2",
+       "18, 6, 6, 2, 10, 3"
+      ],
+      [
+       "10",
+       "3",
+       "1",
+       "18, 6, 6, 2, 10, 1, 3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log M) where M is the largest value (gcd cost).",
+     "Space: O(1) extra besides the new nodes."
+    ]
+   }
+  ],
+  "takeaway": "Walk the list and splice a gcd node between each pair, then skip past the new node."
+ },
+ "2894": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(1, n + 1)",
+       "Every integer from 1 to n",
+       ""
+      ],
+      [
+       "x if x % m else -x",
+       "Add numbers not divisible by m, subtract those that are",
+       ""
+      ],
+      [
+       "sum(...)",
+       "num1 − num2 in one pass",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`, `m = 3`."
+    ],
+    "table": {
+     "head": [
+      "Group",
+      "Numbers",
+      "Sum"
+     ],
+     "rows": [
+      [
+       "not divisible by 3",
+       "1, 2, 4, 5, 7, 8, 10",
+       "37"
+      ],
+      [
+       "divisible by 3",
+       "3, 6, 9",
+       "18"
+      ],
+      [
+       "difference",
+       "37 − 18",
+       "19"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Add every non-multiple of m and subtract every multiple in a single sum."
+ },
+ "2952": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "coins.sort()",
+       "Smallest coins first",
+       ""
+      ],
+      [
+       "reach",
+       "Every amount from 1 to reach can be formed",
+       ""
+      ],
+      [
+       "coins[i] <= reach + 1",
+       "The next coin extends the range to reach + coin without a gap",
+       ""
+      ],
+      [
+       "else: reach += reach + 1; added += 1",
+       "Add a coin of value reach + 1, which doubles the range",
+       "The best possible coin to add"
+      ],
+      [
+       "while reach < target",
+       "Stop once all of 1..target is covered",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`coins = [1,4,10]`, `target = 19`."
+    ],
+    "table": {
+     "head": [
+      "reach",
+      "Next coin",
+      "Action",
+      "reach after",
+      "added"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1 ≤ 1: use it",
+       "1",
+       "0"
+      ],
+      [
+       "1",
+       "4",
+       "4 > 2: add coin 2",
+       "3",
+       "1"
+      ],
+      [
+       "3",
+       "4",
+       "4 ≤ 4: use it",
+       "7",
+       "1"
+      ],
+      [
+       "7",
+       "10",
+       "10 > 8: add coin 8",
+       "15",
+       "2"
+      ],
+      [
+       "15",
+       "10",
+       "10 ≤ 16: use it",
+       "25 ≥ 19",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n + log target).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "Track the range 1..reach that can be built; use the next coin if it fits, otherwise add the coin reach + 1."
+ },
+ "2974": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(nums)",
+       "Rounds always remove the two smallest left",
+       ""
+      ],
+      [
+       "range(0, len(a) - 1, 2)",
+       "Each pair of neighbours is one round",
+       ""
+      ],
+      [
+       "a[i], a[i+1] = a[i+1], a[i]",
+       "Bob appends his (second smallest) element before Alice appends hers",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,4,2,3]` sorted is `[2,3,4,5]`."
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "Alice takes",
+      "Bob takes",
+      "Appended"
+     ],
+     "rows": [
+      [
+       "1",
+       "2",
+       "3",
+       "3, 2"
+      ],
+      [
+       "2",
+       "4",
+       "5",
+       "5, 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`[3,2,5,4]`: each pair of neighbours in the sorted array is swapped."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, then swap each adjacent pair, because Bob's removal goes into the result before Alice's."
+ }
+}

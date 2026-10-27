@@ -1,0 +1,2046 @@
+{
+ "87": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`@lru_cache(None)` on `go(a, b)`",
+       "Remembers the answer for every pair of substrings already examined",
+       "Recursion revisits the same subproblems many times"
+      ],
+      [
+       "`a == b`",
+       "Identical strings are trivially scrambles of each other",
+       "Cheapest base case, ends the recursion early"
+      ],
+      [
+       "`sorted(a) != sorted(b)`",
+       "Different letter multisets can never be scrambles",
+       "Prune hopeless branches before splitting"
+      ],
+      [
+       "`go(a[:i], b[:i]) and go(a[i:], b[i:])`",
+       "Cut at `i` and keep the two halves in the same order",
+       "The \"no swap\" case of a split"
+      ],
+      [
+       "`go(a[:i], b[n - i:]) and go(a[i:], b[:n - i])`",
+       "Cut at `i` and swap: the front of `a` must match the back of `b`",
+       "The \"swap\" case of a split"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s1 = \"great\"`, `s2 = \"rgeat\"`, `n = 5`. The first cut that works is `i = 2`."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Check",
+      "Result"
+     ],
+     "rows": [
+      [
+       "`go(\"great\",\"rgeat\")`",
+       "Not equal, same letters, try cuts",
+       "continue"
+      ],
+      [
+       "cut `i=1`",
+       "`go(\"g\",\"r\")` is False (letters differ); swapped `go(\"g\",\"t\")` is False",
+       "fail"
+      ],
+      [
+       "cut `i=2`, no swap",
+       "`go(\"gr\",\"rg\")` and `go(\"eat\",\"eat\")`",
+       "need both"
+      ],
+      [
+       "`go(\"gr\",\"rg\")`",
+       "Cut `i=1`, swapped: `go(\"g\",\"g\")` True and `go(\"r\",\"r\")` True",
+       "True"
+      ],
+      [
+       "`go(\"eat\",\"eat\")`",
+       "Equal strings",
+       "True"
+      ],
+      [
+       "back at the top",
+       "Both halves True",
+       "True"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two cases per cut?",
+    "p": [
+     "Scrambling may swap the two parts, so after cutting `a` at `i`, either its front part lines up with the front of `b` (no swap) or with the last `i` characters of `b` (swap). Trying both for every `i` covers every way the first split can happen."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^4) in the worst case. There are O(n^2) distinct pairs of equal-length substrings that appear (start of `a` and start of `b` for each length), and each does O(n) cut work plus O(n log n) sorting.",
+     "Space: O(n^3) for the memo table and the substrings it stores."
+    ]
+   }
+  ],
+  "takeaway": "Recursively try every cut with and without a swap, prune with an equal-letters check, and memoize so repeated substring pairs are solved once."
+ },
+ "147": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dummy = ListNode(0)`",
+       "A fake head in front of the sorted list",
+       "Inserting at the very front should not need a special case"
+      ],
+      [
+       "`cur = head`, `nxt = cur.next`",
+       "`cur` is the node being inserted; `nxt` remembers the rest of the input before the links change",
+       "You are about to re-link a node"
+      ],
+      [
+       "`prev = dummy` then `while prev.next and prev.next.val < cur.val`",
+       "Walk the sorted list until the next node is not smaller than `cur`",
+       "Finding the insertion point"
+      ],
+      [
+       "`cur.next = prev.next; prev.next = cur`",
+       "Splice `cur` in between `prev` and its old next",
+       "Standard linked-list insert"
+      ],
+      [
+       "`cur = nxt`",
+       "Move to the next unsorted node",
+       "Continue the outer loop"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [4,2,1,3]`. The list hanging off `dummy` is the sorted part."
+    ],
+    "table": {
+     "head": [
+      "Insert",
+      "`prev` stops after",
+      "Sorted list after"
+     ],
+     "rows": [
+      [
+       "4",
+       "dummy",
+       "4"
+      ],
+      [
+       "2",
+       "dummy (4 is not < 2)",
+       "2 → 4"
+      ],
+      [
+       "1",
+       "dummy",
+       "1 → 2 → 4"
+      ],
+      [
+       "3",
+       "node 2 (next is 4, not < 3)",
+       "1 → 2 → 3 → 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why save `nxt` first?",
+    "p": [
+     "Inserting `cur` overwrites `cur.next`, which pointed to the unsorted remainder. Without `nxt` the rest of the input would be lost."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2) in the worst case, because each insertion may walk across the whole sorted part. Already-sorted input is also O(n^2) here since the scan starts from the front each time.",
+     "Space: O(1) extra, nodes are re-linked in place."
+    ]
+   }
+  ],
+  "takeaway": "Insertion sort on a linked list: detach each node, scan the sorted list from a dummy head to find its place, and splice it in."
+ },
+ "299": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(secret, guess)`",
+       "Pairs up the characters at the same position",
+       "Comparing two strings position by position"
+      ],
+      [
+       "`sum(a == b for a, b in zip(...))`",
+       "Counts positions where the digits match: the bulls",
+       "Counting True values"
+      ],
+      [
+       "`Counter(secret) & Counter(guess)`",
+       "Multiset intersection: for each digit the smaller of the two counts",
+       "How many digits the two strings share, with multiplicity"
+      ],
+      [
+       "`sum(...values())`",
+       "Total number of shared digits, bulls and cows together",
+       "Adding up counts"
+      ],
+      [
+       "`common - bulls`",
+       "The shared digits that are not in the right place: the cows",
+       "Splitting one total into two parts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`secret = \"1807\"`, `guess = \"7810\"`.",
+     "Shared total is 4. Only position 1 matches (`8` and `8`), so bulls = 1, cows = 4 − 1 = 3, giving `\"1A3B\"`."
+    ],
+    "table": {
+     "head": [
+      "Digit",
+      "In secret",
+      "In guess",
+      "min (shared)"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "7",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "8",
+       "1",
+       "1",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does subtracting bulls give the cows?",
+    "p": [
+     "Every bull is also a shared digit, so it is inside the intersection total. The remaining shared digits are in the secret and in the guess but not at the same position, which is the definition of a cow. Taking the minimum of the counts also makes sure each secret digit is used at most once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for the pass and the counters.",
+     "Space: O(1), at most 10 distinct digits."
+    ]
+   }
+  ],
+  "takeaway": "Bulls are position matches; total shared digits come from a Counter intersection; cows are total minus bulls."
+ },
+ "363": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for top` / `for bottom`",
+       "Fixes the top and bottom rows of the rectangle",
+       "Reducing a 2D problem to a 1D one"
+      ],
+      [
+       "`cols[j] += matrix[bottom][j]`",
+       "`cols[j]` is the column-j sum between `top` and `bottom`",
+       "Compressing several rows into one row"
+      ],
+      [
+       "`run`",
+       "Running prefix sum of `cols` from the left",
+       "Subarray sum = difference of two prefix sums"
+      ],
+      [
+       "`prefixes` (kept sorted)",
+       "All earlier prefix sums, always in order",
+       "You need the smallest earlier value that is at least some bound"
+      ],
+      [
+       "`bisect_left(prefixes, run - k)`",
+       "Index of the first prefix `>= run - k`",
+       "Finding the smallest valid candidate in a sorted list"
+      ],
+      [
+       "`best = max(best, run - prefixes[idx])`",
+       "The sum `run - prefix` is `<= k` and as large as possible for this right edge",
+       "Keeping the best answer"
+      ],
+      [
+       "`insort(prefixes, run)`",
+       "Insert the current prefix, keeping the list sorted",
+       "Maintaining a sorted list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`matrix = [[1,0,1],[0,-2,3]]`, `k = 2`. Take `top = 0`, `bottom = 0`, so `cols = [1,0,1]`.",
+     "Other row pairs give at most 2 as well, so the answer is `2`."
+    ],
+    "table": {
+     "head": [
+      "v",
+      "run",
+      "prefixes before",
+      "need prefix >= run-k",
+      "chosen prefix",
+      "run - prefix",
+      "best"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "[0]",
+       "-1",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "0",
+       "1",
+       "[0,1]",
+       "-1",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "2",
+       "[0,1,1]",
+       "0",
+       "0",
+       "2",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the smallest prefix that is `>= run - k`?",
+    "p": [
+     "For a fixed right end, the sum is `run - prefix`. We need `run - prefix <= k`, which means `prefix >= run - k`. Among the allowed prefixes, the smallest one makes `run - prefix` the largest, so it is the best candidate. A binary search on the sorted list finds it."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m^2 · n log n). The row pair loops cost m^2, and each scan over columns does a binary search (plus an insertion that shifts list items). Choose the smaller dimension as the row side when one is much bigger.",
+     "Space: O(n) for `cols` and `prefixes`."
+    ]
+   }
+  ],
+  "takeaway": "Fix two rows, collapse to a 1D array, and use a sorted list of prefix sums plus binary search to find the best subarray sum not above k."
+ },
+ "401": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for h in range(12) for m in range(60)`",
+       "Every valid time on the watch: hours 0 to 11, minutes 0 to 59",
+       "The search space is small enough to enumerate"
+      ],
+      [
+       "`bin(h).count('1')`",
+       "Number of 1 bits in `h`, i.e. LEDs lit for the hour",
+       "Counting set bits"
+      ],
+      [
+       "`... + ... == turnedOn`",
+       "Keep only times whose total lit LEDs match",
+       "Filtering by a count"
+      ],
+      [
+       "`\"%d:%02d\" % (h, m)`",
+       "Format hour without padding and minute with two digits",
+       "Matching a fixed output format"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`turnedOn = 1`. Only times where exactly one bit is set across hour and minute qualify.",
+     "That produces the ten times 0:01, 0:02, 0:04, 0:08, 0:16, 0:32, 1:00, 2:00, 4:00, 8:00."
+    ],
+    "table": {
+     "head": [
+      "Time",
+      "Hour bits",
+      "Minute bits",
+      "Total",
+      "Kept?"
+     ],
+     "rows": [
+      [
+       "0:01",
+       "0",
+       "1",
+       "1",
+       "yes"
+      ],
+      [
+       "0:03",
+       "0",
+       "2",
+       "2",
+       "no"
+      ],
+      [
+       "4:00",
+       "1",
+       "0",
+       "1",
+       "yes"
+      ],
+      [
+       "3:00",
+       "2",
+       "0",
+       "2",
+       "no"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why enumerate times instead of choosing LEDs?",
+    "p": [
+     "There are only 12 × 60 = 720 candidate times. Looping over them and counting bits is simpler than choosing which LEDs to light, and it automatically skips impossible times such as hour 13 or minute 61."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(720), a constant.",
+     "Space: O(1) besides the output list."
+    ]
+   }
+  ],
+  "takeaway": "Try all 720 valid times and keep those whose hour bits plus minute bits equal the number of lit LEDs."
+ },
+ "436": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`starts = sorted((s, i) for i, (s, _) in enumerate(intervals))`",
+       "List of (start, original index) pairs in start order",
+       "You need to search by start but report the original index"
+      ],
+      [
+       "`keys = [s for s, _ in starts]`",
+       "Only the sorted starts, for binary search",
+       "`bisect` works on a plain list of numbers"
+      ],
+      [
+       "`bisect_left(keys, e)`",
+       "Index of the first start `>= e`",
+       "Smallest value that is at least a bound"
+      ],
+      [
+       "`starts[j][1] if j < len(starts) else -1`",
+       "The original index at that position, or `-1` if no start is large enough",
+       "Handling \"not found\""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`intervals = [[3,4],[2,3],[1,2]]`. Sorted starts: `[(1,2),(2,1),(3,0)]`, so `keys = [1,2,3]`.",
+     "Result: `[-1, 0, 1]`."
+    ],
+    "table": {
+     "head": [
+      "Interval i",
+      "end",
+      "`bisect_left(keys, end)`",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "0",
+       "4",
+       "3 (past the end)",
+       "-1"
+      ],
+      [
+       "1",
+       "3",
+       "2",
+       "index 0 (start 3)"
+      ],
+      [
+       "2",
+       "2",
+       "1",
+       "index 1 (start 2)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the first start `>= end` the right one?",
+    "p": [
+     "The right interval needs start at least `end` and, among those, the smallest start. In a sorted list that is exactly the first element at or after `end`, which is what `bisect_left` returns. Because every start is unique there are no ties to break."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting plus one binary search per interval.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort the starts once and answer each interval with a binary search for the first start at or after its end."
+ },
+ "504": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if num == 0: return \"0\"`",
+       "The loop below would produce an empty string for 0",
+       "Guarding a base case"
+      ],
+      [
+       "`sign = \"-\" if num < 0 else \"\"`; `num = abs(num)`",
+       "Handle the sign separately and work with a positive number",
+       "Converting negatives is easier on magnitudes"
+      ],
+      [
+       "`num, r = divmod(num, 7)`",
+       "Quotient and remainder in one step; `r` is the next digit from the right",
+       "Peeling off digits in some base"
+      ],
+      [
+       "`digits.append(str(r))`",
+       "Collect digits in the order produced (lowest first)",
+       "Building a result backwards"
+      ],
+      [
+       "`''.join(reversed(digits))`",
+       "Put the digits in most-significant-first order",
+       "Reversing the collected digits"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = 100`.",
+     "Digits collected `2, 0, 2`, reversed they read `\"202\"`. Check: 2·49 + 0·7 + 2 = 100."
+    ],
+    "table": {
+     "head": [
+      "num before",
+      "divmod(num, 7)",
+      "digit",
+      "num after"
+     ],
+     "rows": [
+      [
+       "100",
+       "(14, 2)",
+       "2",
+       "14"
+      ],
+      [
+       "14",
+       "(2, 0)",
+       "0",
+       "2"
+      ],
+      [
+       "2",
+       "(0, 2)",
+       "2",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why reverse at the end?",
+    "p": [
+     "The remainder gives the least significant digit first, but a number is written starting from the most significant one. Appending is cheap, so we collect first and reverse once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log_7 |num|), one step per digit.",
+     "Space: O(log_7 |num|) for the digits."
+    ]
+   }
+  ],
+  "takeaway": "Repeatedly take `num % 7` as the next digit and `num // 7` as the rest, then reverse the digits and reattach the sign."
+ },
+ "552": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`dp[(a, l)]`",
+       "Number of valid records so far with `a` absences (0 or 1) and a current streak of `l` late days at the end (0 to 2)",
+       "The future depends only on a few summary numbers"
+      ],
+      [
+       "`dp[(0, 0)] = 1`",
+       "The empty record: no absence, no late streak",
+       "Starting state"
+      ],
+      [
+       "`new[(a, 0)] += ways`",
+       "Add a present day `P`: streak resets to 0",
+       "Transition that keeps the absence count"
+      ],
+      [
+       "`if a == 0: new[(1, 0)] += ways`",
+       "Add an absent day `A`, allowed only if none so far; streak resets",
+       "A limit of fewer than 2 absences"
+      ],
+      [
+       "`if l < 2: new[(a, l + 1)] += ways`",
+       "Add a late day `L`; a third in a row is forbidden",
+       "A limit on consecutive repeats"
+      ],
+      [
+       "`% MOD`",
+       "Keep numbers small, as the problem asks",
+       "Counting problems with huge answers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 2`. After one day: `(0,0)`: 1 (P), `(1,0)`: 1 (A), `(0,1)`: 1 (L). After the second day:",
+     "Total = 2 + 3 + 1 + 1 + 1 = 8. (There are 9 records of length 2; only `AA` is excluded.)"
+    ],
+    "table": {
+     "head": [
+      "State",
+      "Count",
+      "Where it comes from"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "2",
+       "P from (0,0) and P from (0,1)"
+      ],
+      [
+       "(1,0)",
+       "3",
+       "A from (0,0), P from (1,0), A from (0,1)"
+      ],
+      [
+       "(0,1)",
+       "1",
+       "L from (0,0)"
+      ],
+      [
+       "(1,1)",
+       "1",
+       "L from (1,0)"
+      ],
+      [
+       "(0,2)",
+       "1",
+       "L from (0,1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only 6 states?",
+    "p": [
+     "To know whether adding a character keeps the record eligible we only need how many `A` have appeared (0 or 1) and how many `L` end the record (0, 1 or 2). Everything else about the past is irrelevant, so 2 × 3 states are enough."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) with a constant 6 states and 3 transitions each.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Count records with a small DP (dynamic programming) over (absences so far, trailing lates) and add them up after n days."
+ },
+ "591": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stack`",
+       "Names of the tags that are open right now",
+       "Matching nested start and end tags"
+      ],
+      [
+       "`name_end(j)`",
+       "Scans uppercase letters from `j` and returns where the name stops",
+       "Reading a token of a certain character class"
+      ],
+      [
+       "`if i > 0 and not stack: return False`",
+       "After the outer tag has closed nothing else may follow",
+       "The whole snippet must be one tag"
+      ],
+      [
+       "`startswith(\"<![CDATA[\", i)` then `find(\"]]>\", i)`",
+       "CDATA (Character Data) block: skip straight to the first `]]>` without interpreting what is inside",
+       "Content that must be read literally"
+      ],
+      [
+       "`startswith(\"</\", i)`",
+       "End tag: its name must equal the name popped from the stack",
+       "Closing a tag"
+      ],
+      [
+       "`elif code[i] == '<'`",
+       "Start tag: name must be 1 to 9 uppercase letters followed by `>`; push it",
+       "Opening a tag"
+      ],
+      [
+       "`else: ... i += 1`",
+       "Ordinary text, allowed only inside some tag",
+       "Plain characters"
+      ],
+      [
+       "`return not stack`",
+       "Every opened tag must have been closed",
+       "Final check"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`code = \"<A>x</A>\"`.",
+     "The scan ends with an empty stack, so the result is `True`. For `\"<A><B></A></B>\"` the end tag `</A>` pops `B`, the names differ, and the result is `False`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Seen",
+      "Action",
+      "Stack after"
+     ],
+     "rows": [
+      [
+       "0",
+       "`<A>`",
+       "start tag, push `A`",
+       "[A]"
+      ],
+      [
+       "3",
+       "`x`",
+       "plain text inside a tag",
+       "[A]"
+      ],
+      [
+       "4",
+       "`</A>`",
+       "end tag, name `A` matches the popped `A`",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the check at the top of the loop?",
+    "p": [
+     "The first condition runs before each token. If the stack is empty but we are past index 0, the outer tag has already been closed, so extra text or a second top-level tag makes the whole snippet invalid. It also forces index 0 to start with a tag, because plain text with an empty stack is rejected."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), every character is visited a constant number of times (the CDATA search jumps forward).",
+     "Space: O(n) for the stack in the worst case."
+    ]
+   }
+  ],
+  "takeaway": "Scan left to right with a stack of open tag names, skipping CDATA literally and rejecting any text outside the single outer tag."
+ },
+ "624": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo, hi = arrays[0][0], arrays[0][-1]`",
+       "Smallest and largest value seen so far (arrays are sorted, so ends are the extremes)",
+       "Tracking running min and max"
+      ],
+      [
+       "`abs(a[-1] - lo)`",
+       "Pair the new array's largest with the smallest seen earlier",
+       "One of the two best combinations"
+      ],
+      [
+       "`abs(hi - a[0])`",
+       "Pair the new array's smallest with the largest seen earlier",
+       "The other best combination"
+      ],
+      [
+       "`lo = min(lo, a[0])`, `hi = max(hi, a[-1])`",
+       "Update after using the old values, so a pair never uses one array twice",
+       "Keeping the \"different arrays\" rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arrays = [[1,2,3],[4,5],[1,2,3]]`. Start with `lo = 1`, `hi = 3`.",
+     "The answer is `4`."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Candidates",
+      "best",
+      "lo",
+      "hi"
+     ],
+     "rows": [
+      [
+       "[4,5]",
+       "`abs(5-1)=4`, `abs(3-4)=1`",
+       "4",
+       "1",
+       "5"
+      ],
+      [
+       "[1,2,3]",
+       "`abs(3-1)=2`, `abs(5-1)=4`",
+       "4",
+       "1",
+       "5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only the first and last elements?",
+    "p": [
+     "The farthest apart two numbers from different arrays can be is between a minimum of one and a maximum of the other, and in a sorted array those are the ends. Updating `lo` and `hi` after computing the candidates guarantees both numbers come from different arrays."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m), one step per array.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Walk the arrays once, pairing each array's ends with the smallest and largest value seen in earlier arrays."
+ },
+ "654": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stack`",
+       "Nodes in decreasing order of value, the current \"right spine\" of the tree",
+       "A monotonic stack"
+      ],
+      [
+       "`node = TreeNode(x)`",
+       "New node for the next number",
+       "Building the tree as numbers arrive"
+      ],
+      [
+       "`while stack and stack[-1].val < x: last = stack.pop()`",
+       "Pop all smaller nodes; the last popped one is the biggest of them",
+       "Smaller elements to the left become the left subtree"
+      ],
+      [
+       "`node.left = last`",
+       "The popped chain becomes this node's left child",
+       "Attaching the left subtree"
+      ],
+      [
+       "`if stack: stack[-1].right = node`",
+       "The node hangs on the right of the next larger one",
+       "Attaching to the larger neighbour"
+      ],
+      [
+       "`return stack[0]`",
+       "The bottom of the stack is the maximum, the root",
+       "Reading the result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,2,1,6,0,5]`.",
+     "The root is 6 with left child 3 (whose right chain is 2 then 1) and right child 5 (left child 0)."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Popped",
+      "Link made",
+      "Stack after"
+     ],
+     "rows": [
+      [
+       "3",
+       "none",
+       "none",
+       "[3]"
+      ],
+      [
+       "2",
+       "none",
+       "3.right = 2",
+       "[3,2]"
+      ],
+      [
+       "1",
+       "none",
+       "2.right = 1",
+       "[3,2,1]"
+      ],
+      [
+       "6",
+       "1, 2, 3 (last = 3)",
+       "6.left = 3",
+       "[6]"
+      ],
+      [
+       "0",
+       "none",
+       "6.right = 0",
+       "[6,0]"
+      ],
+      [
+       "5",
+       "0",
+       "5.left = 0, 6.right = 5",
+       "[6,5]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is this correct?",
+    "p": [
+     "The maximum binary tree puts every number's nearest larger neighbours above it. A new value `x` pops everything smaller, and those nodes lie to its left in the array, so they form its left subtree. If a larger node remains on the stack, `x` is the newest element to its right, so `x` becomes its right child (replacing a previous right child, which was already moved under `x`)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is pushed and popped once.",
+     "Space: O(n) for the stack."
+    ]
+   }
+  ],
+  "takeaway": "A decreasing stack builds the tree in one pass: pop smaller nodes to be the new node's left child, then hang it on the larger node that remains."
+ },
+ "725": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n` after the first loop",
+       "Length of the list",
+       "You need the size to plan the split"
+      ],
+      [
+       "`size, extra = divmod(n, k)`",
+       "Every part gets `size` nodes and the first `extra` parts get one more",
+       "Splitting as evenly as possible with earlier parts larger"
+      ],
+      [
+       "`parts.append(node)`",
+       "The head of this part is the current node",
+       "Recording a part"
+      ],
+      [
+       "`for _ in range(size + (1 if i < extra else 0) - 1)`",
+       "Walk to the last node of this part (length minus one steps)",
+       "Reaching the end of a segment"
+      ],
+      [
+       "`node.next, node = None, node.next`",
+       "Cut the link after this part and step to the start of the next one, in one assignment",
+       "Detaching a segment without losing the rest"
+      ],
+      [
+       "`if node:` guards",
+       "For empty parts `node` is already `None`",
+       "Fewer nodes than parts"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [1,2,3]`, `k = 5`: `n = 3`, `size = 0`, `extra = 3`."
+    ],
+    "table": {
+     "head": [
+      "Part i",
+      "Target length",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "[1], then cut and move to 2"
+      ],
+      [
+       "1",
+       "1",
+       "[2]"
+      ],
+      [
+       "2",
+       "1",
+       "[3]"
+      ],
+      [
+       "3",
+       "0",
+       "[] (node is None)"
+      ],
+      [
+       "4",
+       "0",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the one-line tuple assignment?",
+    "p": [
+     "On the right side Python first evaluates `(None, node.next)`, so the old next node is remembered. Then it sets `node.next = None` (the cut) and `node` to the remembered next node. Doing the two steps in separate lines would need a temporary variable."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k), one pass to count and one pass to cut.",
+     "Space: O(1) besides the output list of k heads."
+    ]
+   }
+  ],
+  "takeaway": "Count the nodes, give each part `n // k` nodes (the first `n % k` parts one extra), and cut the list at those boundaries."
+ },
+ "794": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`x`, `o`",
+       "Number of `X` and `O` on the board",
+       "Move order can be checked by counts"
+      ],
+      [
+       "`wins(p)`",
+       "True if player `p` fills any row, column or diagonal",
+       "Checking all 8 winning lines"
+      ],
+      [
+       "`zip(*board)`",
+       "Transposes the rows into columns",
+       "Getting columns from rows"
+      ],
+      [
+       "`o > x or x > o + 1`",
+       "`X` moves first, so `x` is either equal to `o` or one more",
+       "Impossible move counts"
+      ],
+      [
+       "`wins('X') and x != o + 1`",
+       "If `X` has won, `X` made the last move, so `x` must be one more than `o`",
+       "The game stops at the first win"
+      ],
+      [
+       "`wins('O') and x != o`",
+       "If `O` has won, `O` moved last, so counts must be equal",
+       "Same idea for `O`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Board `[\"XOX\",\"O O\",\"XOX\"]`: `x = 4`, `o = 4`.",
+     "All checks pass, so the result is `True`. For `[\"XXX\",\"   \",\"OOO\"]` both players have a line, and `wins('X')` demands `x == o + 1` but `x == o == 3`, so it is `False`."
+    ],
+    "table": {
+     "head": [
+      "Check",
+      "Value",
+      "Passes?"
+     ],
+     "rows": [
+      [
+       "counts",
+       "`o > x`? no; `x > o+1`? no",
+       "yes"
+      ],
+      [
+       "`wins('X')`",
+       "no line is all `X`",
+       "yes"
+      ],
+      [
+       "`wins('O')`",
+       "no line is all `O`",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is checking counts plus winners enough?",
+    "p": [
+     "A reachable board must have a legal move count and must not continue after someone has won. Counts handle the order of play, and the winner conditions handle the stopping rule. If both players had won, the two conditions contradict each other (one needs `x == o + 1`, the other `x == o`), so it is rejected automatically."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1), the board has 9 cells.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Check that X leads by 0 or 1 move, and that a winner is consistent with who moved last."
+ },
+ "832": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for row in image`",
+       "Processes each row independently",
+       "Row operations do not interact"
+      ],
+      [
+       "`reversed(row)`",
+       "Reads the row from right to left: the horizontal flip",
+       "Reversing without modifying the list"
+      ],
+      [
+       "`1 - v`",
+       "Turns 0 into 1 and 1 into 0: the inversion",
+       "Flipping a bit"
+      ],
+      [
+       "nested list comprehension",
+       "Builds the new matrix directly",
+       "Transforming every element"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`image = [[1,1,0],[1,0,1],[0,0,0]]`."
+    ],
+    "table": {
+     "head": [
+      "Row",
+      "Reversed",
+      "Inverted"
+     ],
+     "rows": [
+      [
+       "[1,1,0]",
+       "[0,1,1]",
+       "[1,0,0]"
+      ],
+      [
+       "[1,0,1]",
+       "[1,0,1]",
+       "[0,1,0]"
+      ],
+      [
+       "[0,0,0]",
+       "[0,0,0]",
+       "[1,1,1]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can both steps be one pass?",
+    "p": [
+     "Flipping moves elements and inverting changes each value; neither depends on neighbours, so doing both while reading the row from the back gives the same result as two separate passes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2), each cell is read once.",
+     "Space: O(n^2) for the new matrix."
+    ]
+   }
+  ],
+  "takeaway": "Read each row backwards and replace every value `v` by `1 - v`."
+ },
+ "835": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`a`, `b`",
+       "Coordinates of the `1` cells in each image",
+       "Only the ones matter for an overlap"
+      ],
+      [
+       "`(x2 - x1, y2 - y1)`",
+       "The shift that would move a `1` of `img1` onto a `1` of `img2`",
+       "Each pair of ones votes for one shift"
+      ],
+      [
+       "`Counter(...)`",
+       "Counts how many pairs vote for each shift",
+       "Tallying votes"
+      ],
+      [
+       "`max(cnt.values(), default=0)`",
+       "The most popular shift is the best overlap; `default=0` handles an image with no ones",
+       "Taking the best tally"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`img1` has ones at (0,0), (0,1), (1,1), (2,1). `img2` has ones at (1,1), (1,2), (2,2).",
+     "The best shift gets 3 votes, so the answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "Shift (dx, dy)",
+      "Pairs that vote for it"
+     ],
+     "rows": [
+      [
+       "(1, 1)",
+       "(0,0)→(1,1), (0,1)→(1,2), (1,1)→(2,2): 3 votes"
+      ],
+      [
+       "(1, 0)",
+       "only (0,1)→(1,1) lines up: 1 vote"
+      ],
+      [
+       "any other shift",
+       "never more than 3 votes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does counting shifts work?",
+    "p": [
+     "A shift lines up a given pair of ones exactly when it equals their coordinate difference. Every shift's overlap is therefore the number of pairs that produce that difference, so the shift with the most votes gives the largest overlap. Cells moved off the grid are never counted because only real ones are compared."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(A · B), where A and B are the numbers of ones (at most n^2 each, so O(n^4)).",
+     "Space: O(number of distinct shifts), up to O(n^2)."
+    ]
+   }
+  ],
+  "takeaway": "Let every pair of ones vote for the shift that lines them up, and the most-voted shift is the maximum overlap."
+ },
+ "868": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pos`",
+       "Index of the bit currently being looked at, counting from the right",
+       "Walking through bits"
+      ],
+      [
+       "`n & 1`",
+       "Is the lowest bit 1?",
+       "Testing a bit"
+      ],
+      [
+       "`last`",
+       "Position of the previous 1 bit, `None` before the first one",
+       "Remembering the previous event"
+      ],
+      [
+       "`best = max(best, pos - last)`",
+       "Gap between this 1 and the previous 1",
+       "Tracking a maximum"
+      ],
+      [
+       "`n >>= 1`",
+       "Drop the lowest bit",
+       "Moving to the next bit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 22`, binary `10110`."
+    ],
+    "table": {
+     "head": [
+      "pos",
+      "bit",
+      "last",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "None",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "0",
+       "2",
+       "1"
+      ],
+      [
+       "4",
+       "1",
+       "4",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `last is not None`?",
+    "p": [
+     "The first 1 bit has no earlier 1 to measure against, so it only records its position. Without this check the first gap would be measured from a made-up position."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n), one step per bit.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Scan the bits from the right, remember where the previous 1 was, and keep the largest distance between consecutive 1s."
+ },
+ "899": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`if k == 1`",
+       "With only the first letter movable, the only operation is a rotation",
+       "The move set decides the strategy"
+      ],
+      [
+       "`s[i:] + s[:i]`",
+       "The string rotated left by `i` positions",
+       "Generating all cyclic shifts"
+      ],
+      [
+       "`min(...)`",
+       "The lexicographically smallest rotation",
+       "Comparing strings"
+      ],
+      [
+       "`''.join(sorted(s))`",
+       "For `k >= 2` any arrangement is reachable, so the sorted string is the best",
+       "The goal is the smallest possible string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"cba\"`, `k = 1`: all rotations.",
+     "The smallest is `\"acb\"`. With `s = \"baaca\"`, `k = 3` the result is the sorted string `\"aaabc\"`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Rotation"
+     ],
+     "rows": [
+      [
+       "0",
+       "cba"
+      ],
+      [
+       "1",
+       "bac"
+      ],
+      [
+       "2",
+       "acb"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is any order possible when `k >= 2`?",
+    "p": [
+     "With two movable letters you can effectively swap neighbouring letters (moving the second letter to the end, then rotating the rest around), and repeated adjacent swaps can build any ordering. So the best result is simply all letters in sorted order."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2) for `k == 1` (n rotations of length n, compared character by character) and O(n log n) otherwise.",
+     "Space: O(n) for the strings built."
+    ]
+   }
+  ],
+  "takeaway": "One movable letter only rotates the string, so try all rotations; two or more can reach every ordering, so just sort."
+ },
+ "916": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(w)`",
+       "Letter counts of a word",
+       "Frequency of characters"
+      ],
+      [
+       "`need |= Counter(w)`",
+       "Union of counters: for each letter keep the larger count",
+       "Merging requirements, keeping the strictest"
+      ],
+      [
+       "`need - Counter(w)`",
+       "Subtraction keeping only positive leftovers: what `need` asks for that `w` lacks",
+       "Checking if a word covers a requirement"
+      ],
+      [
+       "`not (...)`",
+       "An empty counter is falsy, so `not` means the word covers everything",
+       "Using truthiness of containers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`words2 = [\"e\",\"o\"]` gives `need = {e:1, o:1}`."
+    ],
+    "table": {
+     "head": [
+      "Word in words1",
+      "`need - Counter(word)`",
+      "Kept?"
+     ],
+     "rows": [
+      [
+       "amazon",
+       "{e:1} (no `e`)",
+       "no"
+      ],
+      [
+       "apple",
+       "{o:1} (no `o`)",
+       "no"
+      ],
+      [
+       "facebook",
+       "{}",
+       "yes"
+      ],
+      [
+       "google",
+       "{}",
+       "yes"
+      ],
+      [
+       "leetcode",
+       "{}",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why merge all words of `words2` into one requirement?",
+    "p": [
+     "A word is universal when it covers every word of `words2`. For each letter the word must have at least the largest count that any single word of `words2` asks for. So one combined \"max count per letter\" requirement is equivalent to checking each word separately, and it needs only one comparison per candidate."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total length of words1 + words2).",
+     "Space: O(1), counters have at most 26 keys."
+    ]
+   }
+  ],
+  "takeaway": "Combine words2 into one per-letter maximum requirement, then keep the words of words1 that meet it."
+ },
+ "940": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`end[c]`",
+       "Number of distinct subsequences that end with the letter `c`",
+       "Counting by last character avoids double counting"
+      ],
+      [
+       "`1 + sum(end.values())`",
+       "The single letter `c`, plus every existing subsequence with `c` appended",
+       "Extending all previous results"
+      ],
+      [
+       "`end[c] = ...` (assignment, not `+=`)",
+       "The new value replaces the old one, because it already includes everything the old one counted",
+       "Duplicate letters would otherwise be counted twice"
+      ],
+      [
+       "`sum(end.values()) % MOD`",
+       "All distinct non-empty subsequences",
+       "Final total"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"abc\"`.",
+     "For `\"aba\"` the last `a` sets `end[a] = 1 + 3 = 4` (replacing 1), and the total is 4 + 2 = 6."
+    ],
+    "table": {
+     "head": [
+      "Char",
+      "New `end[c]`",
+      "All `end` values",
+      "Sum"
+     ],
+     "rows": [
+      [
+       "a",
+       "1 + 0 = 1",
+       "a:1",
+       "1"
+      ],
+      [
+       "b",
+       "1 + 1 = 2",
+       "a:1, b:2",
+       "3"
+      ],
+      [
+       "c",
+       "1 + 3 = 4",
+       "a:1, b:2, c:4",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why overwrite instead of adding?",
+    "p": [
+     "Appending `a` to every earlier subsequence, including those that already ended with `a`, creates every distinct subsequence ending in `a` that can be formed so far. The old ones ending in `a` are a subset of these, so keeping both would count the same strings twice."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26 · n), the sum covers at most 26 letters per character.",
+     "Space: O(26)."
+    ]
+   }
+  ],
+  "takeaway": "Track how many distinct subsequences end with each letter; each new character recomputes its own count from the total so far."
+ },
+ "950": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`q = deque(range(n))`",
+       "Queue of positions in the final deck, in the order they will be dealt",
+       "Simulating the reveal process on positions instead of values"
+      ],
+      [
+       "`sorted(deck)`",
+       "Cards in the order they must be revealed",
+       "The reveal order is increasing"
+      ],
+      [
+       "`res[q.popleft()] = card`",
+       "The next revealed position receives the next smallest card",
+       "Assigning values to positions"
+      ],
+      [
+       "`q.append(q.popleft())`",
+       "The next position goes to the bottom of the deck",
+       "The \"move the top card to the bottom\" rule"
+      ],
+      [
+       "`if q:`",
+       "Skip the move after the last card",
+       "Nothing left to rotate"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`deck = [17,13,11,2,3,5,7]`, sorted `[2,3,5,7,11,13,17]`, positions `[0..6]`.",
+     "Result `[2,13,3,11,5,17,7]`."
+    ],
+    "table": {
+     "head": [
+      "Card",
+      "Position revealed",
+      "Queue afterwards (after rotating)"
+     ],
+     "rows": [
+      [
+       "2",
+       "0",
+       "[2,3,4,5,6,1]"
+      ],
+      [
+       "3",
+       "2",
+       "[4,5,6,1,3]"
+      ],
+      [
+       "5",
+       "4",
+       "[6,1,3,5]"
+      ],
+      [
+       "7",
+       "6",
+       "[3,5,1]"
+      ],
+      [
+       "11",
+       "3",
+       "[1,5]"
+      ],
+      [
+       "13",
+       "1",
+       "[5]"
+      ],
+      [
+       "17",
+       "5",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why simulate on positions?",
+    "p": [
+     "The reveal process is fixed by the number of cards, not by their values. Running it on indices tells us which position is revealed first, second and so on, so we just place the smallest card at the first, the next smallest at the second, etc."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting, O(n) for the simulation.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate the reveal on positions with a queue, and give the sorted cards to those positions in the order they are revealed."
+ },
+ "966": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`exact = set(wordlist)`",
+       "Fast check for an exact match, case included",
+       "Highest priority rule"
+      ],
+      [
+       "`case.setdefault(w.lower(), w)`",
+       "Maps the lowercase word to the first list word that has that lowercase form",
+       "\"First in the list wins\""
+      ],
+      [
+       "`mask(w)`",
+       "Lowercases the word and replaces every vowel with `*`",
+       "A key where all vowel variants look the same"
+      ],
+      [
+       "`vowel.setdefault(mask(w), w)`",
+       "Maps each vowel-masked key to its first word",
+       "Third priority rule"
+      ],
+      [
+       "`elif` chain in the query loop",
+       "Try exact, then case-insensitive, then vowel-masked, then empty string",
+       "Priority-ordered lookups"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`wordlist = [\"KiTe\",\"kite\",\"hare\",\"Hare\"]`."
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Rule that fires",
+      "Answer"
+     ],
+     "rows": [
+      [
+       "kite",
+       "exact",
+       "kite"
+      ],
+      [
+       "Kite",
+       "lowercase `kite` first came from `KiTe`",
+       "KiTe"
+      ],
+      [
+       "HARE",
+       "lowercase `hare` first came from `hare`",
+       "hare"
+      ],
+      [
+       "Hear",
+       "mask `h**r` matches no list mask (`h*r*`)",
+       "(empty)"
+      ],
+      [
+       "keti",
+       "mask `k*t*` matches `KiTe`",
+       "KiTe"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why `setdefault`?",
+    "p": [
+     "`setdefault` stores a value only if the key is new, so later words never overwrite earlier ones. That implements the rule that the first matching word in the list is the one returned."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(total characters in the word list and queries).",
+     "Space: O(total characters) for the three lookup structures."
+    ]
+   }
+  ],
+  "takeaway": "Precompute three lookups (exact, lowercase, vowel-masked) and check them in priority order for each query."
+ },
+ "976": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(nums, reverse=True)`",
+       "Sides from largest to smallest",
+       "Greedy on the biggest candidates first"
+      ],
+      [
+       "`nums[i + 1] + nums[i + 2] > nums[i]`",
+       "Triangle inequality for the sides `nums[i]` (longest) and the next two",
+       "Validity test for a triangle"
+      ],
+      [
+       "`return nums[i] + nums[i + 1] + nums[i + 2]`",
+       "The first valid triple from the top has the biggest perimeter",
+       "Stopping at the first success"
+      ],
+      [
+       "`return 0`",
+       "No triple of consecutive sides works",
+       "Nothing found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,2]` sorted descending: `[2,2,1]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Longest",
+      "Other two",
+      "Sum of other two > longest?"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "2, 1",
+       "3 > 2 yes → perimeter 5"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only consecutive triples?",
+    "p": [
+     "For a given longest side, the best partners are the two next-largest values, because they make the sum of the two shorter sides as large as possible. If even those do not beat the longest side, no other pair will, so that side can be dropped and the search moves on. The first success is the largest possible perimeter."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Sort descending and take the first three consecutive lengths that satisfy the triangle inequality."
+ }
+}

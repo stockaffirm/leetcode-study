@@ -1,0 +1,2118 @@
+{
+ "2179": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`where = {v: i for i, v in enumerate(nums2)}`",
+       "Position of every value in `nums2`",
+       "Translating values into positions in the other array"
+      ],
+      [
+       "Fenwick tree (also called Binary Indexed Tree, BIT): `tree`, `add(i)`, `query(i)`",
+       "A structure for \"how many inserted positions are below `i`\" in O(log n)",
+       "Counting smaller items among those already seen"
+      ],
+      [
+       "`p = where[v]`",
+       "Where the current value sits in `nums2`",
+       "We treat `v` as the middle element of a triplet"
+      ],
+      [
+       "`left = query(p)`",
+       "Values seen earlier in `nums1` that also sit before `p` in `nums2`: possible first elements",
+       "Elements before the middle in both arrays"
+      ],
+      [
+       "`right = (n - 1 - p) - (k - left)`",
+       "Values after `p` in `nums2` (`n − 1 − p`), minus those already seen in `nums1` (`k − left` of the seen ones are after `p`): possible third elements",
+       "Elements after the middle in both arrays"
+      ],
+      [
+       "`res += left * right`",
+       "Each choice of first and third forms one good triplet with `v` in the middle",
+       "Counting by the middle element"
+      ],
+      [
+       "`add(p)`",
+       "Insert this position for the later values",
+       "Updating the structure"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [2,0,1,3]`, `nums2 = [0,1,2,3]`, so `where` maps each value to itself.",
+     "The only good triplet is `(0, 1, 3)`, so the result is `1`."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "v",
+      "p",
+      "left",
+      "right",
+      "added to res"
+     ],
+     "rows": [
+      [
+       "0",
+       "2",
+       "2",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "1",
+       "0",
+       "0",
+       "0",
+       "2",
+       "0"
+      ],
+      [
+       "2",
+       "1",
+       "1",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "3",
+       "0",
+       "0"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does `right` have that form?",
+    "p": [
+     "Values after `p` in `nums2` number `n − 1 − p`. Some of them have already appeared earlier in `nums1` (so they cannot come after `v` there). Of the `k` values seen so far, `left` are before `p` in `nums2`, so `k − left` are after it; subtracting those leaves exactly the values that are after `v` in both arrays."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Count triplets by their middle value: values before it in both arrays times values after it in both, using a Fenwick tree for the \"before\" counts."
+ },
+ "2206": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(nums)`",
+       "How many times each value appears",
+       "Frequency counting"
+      ],
+      [
+       "`c % 2 == 0`",
+       "A value can be fully paired only if it appears an even number of times",
+       "Parity check"
+      ],
+      [
+       "`all(...)`",
+       "Every value must pass",
+       "\"For every\" conditions"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,2,3,2,2,2]`.",
+     "Both counts are even, so the result is `True`. For `[1,2,3,4]` each count is 1, so `False`."
+    ],
+    "table": {
+     "head": [
+      "Value",
+      "Count",
+      "Even?"
+     ],
+     "rows": [
+      [
+       "3",
+       "2",
+       "yes"
+      ],
+      [
+       "2",
+       "4",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why is the parity of counts enough?",
+    "p": [
+     "Pairs consist of equal numbers, so each value forms its own pairs independently. A value with an even count splits perfectly into pairs; an odd count always leaves one unmatched."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(number of distinct values)."
+    ]
+   }
+  ],
+  "takeaway": "Everything pairs up exactly when every value occurs an even number of times."
+ },
+ "2236": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`root.val`",
+       "Value at the root",
+       "Reading the node"
+      ],
+      [
+       "`root.left.val + root.right.val`",
+       "Sum of the children's values",
+       "The tree is guaranteed to have exactly these two children, so no `None` checks are needed"
+      ],
+      [
+       "`==`",
+       "Compare the two",
+       "The whole condition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [10,4,6]`.",
+     "For `[5,3,1]` the children sum to 4, so the result is `False`."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "root",
+       "10"
+      ],
+      [
+       "children sum",
+       "4 + 6 = 10"
+      ],
+      [
+       "equal?",
+       "yes → `True`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compare the root value with the sum of its two children."
+ },
+ "2259": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for i, c in enumerate(number) if c == digit`",
+       "Every position holding the digit",
+       "Trying each possible removal"
+      ],
+      [
+       "`number[:i] + number[i + 1:]`",
+       "The string with position `i` removed",
+       "Deleting one character"
+      ],
+      [
+       "`max(...)`",
+       "The largest result; since all candidates have the same length, string comparison matches numeric comparison",
+       "Comparing equal-length digit strings"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`number = \"1231\"`, `digit = \"1\"`.",
+     "The larger is `\"231\"`."
+    ],
+    "table": {
+     "head": [
+      "Removed index",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "231"
+      ],
+      [
+       "3",
+       "123"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why compare as strings?",
+    "p": [
+     "Every candidate has the same number of digits, so the first position where two candidates differ decides which is larger, which is exactly how string comparison works. No conversion to integers is needed (the numbers could have 100 digits)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^2) in the worst case (up to n candidates of length n); a single greedy scan can reach O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Try removing each occurrence of the digit and keep the largest resulting string."
+ },
+ "2306": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`groups[w[0]].add(w[1:])`",
+       "For each first letter, the set of suffixes (the rest of the word)",
+       "Grouping by prefix"
+      ],
+      [
+       "`a & b`",
+       "Suffixes shared by two groups",
+       "A shared suffix means swapping creates an existing idea"
+      ],
+      [
+       "`len(a) - shared`",
+       "Suffixes in group `a` that do not exist in group `b`",
+       "Words that are safe to move into `b`'s first letter"
+      ],
+      [
+       "`(len(a) - shared) * (len(b) - shared)`",
+       "Valid pairs between the two groups: an idea from `a` and an idea from `b`, both with suffixes that the other group does not have",
+       "Counting valid combinations"
+      ],
+      [
+       "`2 * ...`",
+       "The two orders `\"A B\"` and `\"B A\"` are different names",
+       "Counting ordered pairs"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ideas = [\"coffee\",\"donuts\",\"time\",\"toffee\"]`: groups `c: {offee}`, `d: {onuts}`, `t: {ime, offee}`.",
+     "The total is `6`."
+    ],
+    "table": {
+     "head": [
+      "Letters",
+      "Shared",
+      "Only in first",
+      "Only in second",
+      "Names"
+     ],
+     "rows": [
+      [
+       "c, d",
+       "0",
+       "1",
+       "1",
+       "2 · 1 · 1 = 2"
+      ],
+      [
+       "c, t",
+       "1 (`offee`)",
+       "0",
+       "1",
+       "0"
+      ],
+      [
+       "d, t",
+       "0",
+       "1",
+       "2",
+       "2 · 1 · 2 = 4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only compare pairs of first letters?",
+    "p": [
+     "Swapping the first letters of two ideas that start with the same letter changes nothing, so only ideas with different first letters can form a name. After the swap, `A` becomes `letterB + suffixA`. It is a new word exactly when `suffixA` is not in group B, and the same for `B`. So it is enough to count suffixes by first-letter group."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(26^2 · n) at worst for the set intersections.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Group suffixes by first letter; for each pair of letters, count suffixes unique to each side and multiply, times 2 for the order."
+ },
+ "2321": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`gain(a, b)`",
+       "The largest increase in `sum(a)` that swapping one subarray with `b` can bring",
+       "Kadane's algorithm (largest-sum subarray)"
+      ],
+      [
+       "`y - x`",
+       "Change in `a`'s sum at one index if its element is replaced by `b`'s",
+       "Per-index difference"
+      ],
+      [
+       "`cur = max(0, cur + y - x)`",
+       "Best gain of a subarray ending here, or start fresh (or swap nothing)",
+       "Kadane's step"
+      ],
+      [
+       "`max(sum(nums1) + gain(nums1, nums2), sum(nums2) + gain(nums2, nums1))`",
+       "Try improving either array and take the better",
+       "The score is the larger sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [60,60,60]`, `nums2 = [10,90,10]`.",
+     "`sum(nums1) + 30 = 210`. Improving `nums2` instead gives `110 + 70 = 180`, so the answer is `210`."
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "`y − x` (improving nums1)",
+      "`cur`",
+      "`best`"
+     ],
+     "rows": [
+      [
+       "0",
+       "−50",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "+30",
+       "30",
+       "30"
+      ],
+      [
+       "2",
+       "−50",
+       "0",
+       "30"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only maximise the gain?",
+    "p": [
+     "Swapping a segment moves its elements from one array to the other: one sum rises by the segment's difference and the other falls by the same amount. The score is the larger sum, so we find the best improvement for each array separately; the best segment is a maximum-sum subarray of the differences."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Swapping a segment changes the sums by the sum of differences, so run Kadane's algorithm on the differences for each direction."
+ },
+ "2350": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`seen`",
+       "The faces collected in the current round",
+       "Greedy coverage"
+      ],
+      [
+       "`len(seen) == k`",
+       "Every face has appeared at least once, so every sequence of this length can be formed",
+       "A \"complete round\""
+      ],
+      [
+       "`rounds += 1; seen = set()`",
+       "Start a new round after a complete one",
+       "Resetting"
+      ],
+      [
+       "`return rounds + 1`",
+       "After `rounds` complete rounds, every sequence of that length exists; some sequence of length `rounds + 1` does not",
+       "The shortest missing length"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`rolls = [4,2,1,2,3,3,2,4,1]`, `k = 4`.",
+     "The answer is `2 + 1 = 3`."
+    ],
+    "table": {
+     "head": [
+      "Roll",
+      "`seen` size",
+      "Rounds"
+     ],
+     "rows": [
+      [
+       "4",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "0"
+      ],
+      [
+       "1",
+       "3",
+       "0"
+      ],
+      [
+       "2",
+       "3",
+       "0"
+      ],
+      [
+       "3",
+       "4 (all faces)",
+       "1, reset"
+      ],
+      [
+       "3",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "4",
+       "3",
+       "1"
+      ],
+      [
+       "1",
+       "4 (all faces)",
+       "2, reset"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does a full round guarantee all shorter sequences?",
+    "p": [
+     "Each round contains every face, so after `r` rounds any sequence of length `r` can be picked one face per round. The leftover part after the last complete round misses some face, so a sequence that needs that face in the next position cannot be completed. That makes the answer `rounds + 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Greedily cut the rolls into rounds that contain all k faces; the shortest missing sequence is one longer than the number of complete rounds."
+ },
+ "2384": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(num)`",
+       "How many of each digit are available",
+       "Building from a multiset"
+      ],
+      [
+       "`d * (cnt[d] // 2)`",
+       "Half of the pairs of digit `d`: one copy of each pair goes into the left half",
+       "Palindromes are built from mirrored pairs"
+      ],
+      [
+       "`for d in '9876543210'`",
+       "Largest digit first, so the left half is as large as possible",
+       "Greedy by digit"
+      ],
+      [
+       "`.lstrip('0')`",
+       "Remove zeros at the front, which would make a leading zero",
+       "No leading zeros allowed"
+      ],
+      [
+       "`middle`",
+       "The largest digit with an odd count can go in the centre",
+       "Using a leftover single digit"
+      ],
+      [
+       "`if not left: return middle or '0'`",
+       "If no usable pairs remain, answer is the best single digit (or `0`)",
+       "Edge case"
+      ],
+      [
+       "`left + middle + left[::-1]`",
+       "Mirror the left half around the middle",
+       "Palindrome assembly"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num = \"444947137\"`: counts `4:4, 9:1, 7:2, 1:1, 3:1`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "halves from 9 down to 0",
+       "7 gives `7`, 4 gives `44`, so `left = \"744\"`"
+      ],
+      [
+       "middle",
+       "the largest odd-count digit is `9`"
+      ],
+      [
+       "answer",
+       "`744` + `9` + `447` = `7449447`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why strip zeros from the left half only?",
+    "p": [
+     "The half is ordered from large to small digits, so zeros sit at its end unless nothing else is there. A left half consisting only of zeros would lead to a number such as `00900`. Stripping them leaves an empty half, and then the best answer is just the middle digit, or `0` if there is none."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Build the left half from pairs of the largest digits, put the largest leftover digit in the middle, and avoid a leading zero."
+ },
+ "2409": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`months`",
+       "Days in each month of a non-leap year",
+       "Converting dates"
+      ],
+      [
+       "`day(s)`",
+       "Day number within the year: days of all earlier months plus the day of the month",
+       "Making dates comparable numbers"
+      ],
+      [
+       "`lo = max(arrivals)`",
+       "The later arrival is when both are present",
+       "Interval intersection start"
+      ],
+      [
+       "`hi = min(departures)`",
+       "The earlier departure ends the overlap",
+       "Interval intersection end"
+      ],
+      [
+       "`max(0, hi - lo + 1)`",
+       "Number of days in the overlap (inclusive), or 0 if empty",
+       "Counting inclusive days"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Alice `08-15` to `08-18`, Bob `08-16` to `08-19`. The 31+28+31+30+31+30+31 = 212 days before August are added.",
+     "`lo = 228`, `hi = 230`, so there are `230 − 228 + 1 = 3` shared days."
+    ],
+    "table": {
+     "head": [
+      "Date",
+      "Day number"
+     ],
+     "rows": [
+      [
+       "08-15",
+       "227"
+      ],
+      [
+       "08-18",
+       "230"
+      ],
+      [
+       "08-16",
+       "228"
+      ],
+      [
+       "08-19",
+       "231"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Convert the dates to day-of-year numbers, intersect the two ranges, and count the days inclusively."
+ },
+ "2413": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n % 2 == 0`",
+       "`n` is already even",
+       "Parity test"
+      ],
+      [
+       "`return n`",
+       "The smallest positive multiple of `n` is `n` itself, and it is also a multiple of 2",
+       "The least common multiple (LCM) of 2 and an even `n` is `n`"
+      ],
+      [
+       "`return 2 * n`",
+       "For odd `n`, 2 and `n` share no factor, so the LCM is `2n`",
+       "LCM of coprime numbers"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5` is odd, so the answer is `10`. For `n = 6`, which is even, the answer is `6`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The least common multiple of 2 and n is n when n is even, otherwise 2n."
+ },
+ "2421": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`parent`, `find`",
+       "Union-Find (Disjoint Set Union) with path compression",
+       "Merging connected parts of a graph"
+      ],
+      [
+       "`count[root]`",
+       "Number of nodes in the component that carry the root's value (the maximum value in it)",
+       "The number of possible endpoints"
+      ],
+      [
+       "`sorted(edges, key=max of endpoint values)`",
+       "Process edges in order of the largest value they touch, so a component only ever contains values at or below the current edge's maximum",
+       "Adding nodes from the smallest value upward"
+      ],
+      [
+       "`if va == vb: res += count[ra] * count[rb]`",
+       "Two components whose maximum values are equal get connected, creating a good path between each pair of nodes at that maximum value",
+       "Counting new pairs when merging"
+      ],
+      [
+       "`elif va < vb: parent[ra] = rb`",
+       "Attach the component with the smaller maximum below the larger one, keeping the larger value at the root",
+       "The root must always hold the component's maximum"
+      ],
+      [
+       "`res = n` at the start",
+       "Every single node is a good path",
+       "Base count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`vals = [1,3,2,1,3]`, `edges = [[0,1],[0,2],[2,3],[2,4]]`. Edges sorted by their larger endpoint value: `(0,2)` and `(2,3)` (max 2), then `(0,1)` and `(2,4)` (max 3).",
+     "The answer is `6`."
+    ],
+    "table": {
+     "head": [
+      "Edge",
+      "Roots' values",
+      "Action",
+      "res"
+     ],
+     "rows": [
+      [
+       "start",
+       "–",
+       "each node is a path",
+       "5"
+      ],
+      [
+       "(0,2)",
+       "1 and 2",
+       "attach 0 below 2",
+       "5"
+      ],
+      [
+       "(2,3)",
+       "2 and 1",
+       "attach 3 below 2",
+       "5"
+      ],
+      [
+       "(0,1)",
+       "2 and 3",
+       "attach the component of 2 below 1",
+       "5"
+      ],
+      [
+       "(2,4)",
+       "3 and 3",
+       "equal: `res += 1 · 1`, merge",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why process edges in increasing order of their max value?",
+    "p": [
+     "A good path can only pass through nodes whose values are at most the endpoint value. When an edge with maximum value `v` is processed, the component of each endpoint contains only nodes with values `≤ v`. Two components whose largest values are both exactly `v` are then joined by a path that stays at or below `v`, so every pair of their `v`-valued nodes gives a new good path."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) (sorting the edges, near-linear union-find).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Add edges by increasing max value with Union-Find, tracking how many nodes in each component hold the component's max; merging two equal maxima adds count × count paths."
+ },
+ "2492": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`p = list(range(n + 1))`",
+       "Union-Find parents for cities `1..n`",
+       "Connected components"
+      ],
+      [
+       "`p[find(a)] = find(b)`",
+       "Merge the components of the two cities of every road",
+       "Union operation"
+      ],
+      [
+       "`find(a) == find(1)`",
+       "The road belongs to the component of city 1",
+       "Selecting the relevant roads"
+      ],
+      [
+       "`min(w ...)`",
+       "The smallest road distance in that component",
+       "The answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 4`, `roads = [[1,2,9],[2,3,6],[2,4,5],[1,4,7]]`: all cities end up in one component.",
+     "The minimum is `5`."
+    ],
+    "table": {
+     "head": [
+      "Road",
+      "In the component of city 1?",
+      "Distance"
+     ],
+     "rows": [
+      [
+       "1–2",
+       "yes",
+       "9"
+      ],
+      [
+       "2–3",
+       "yes",
+       "6"
+      ],
+      [
+       "2–4",
+       "yes",
+       "5"
+      ],
+      [
+       "1–4",
+       "yes",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why any road in the component?",
+    "p": [
+     "A path may use roads and cities more than once, so from city 1 you can walk to any road in the same component, cross it, and come back. Since city `n` is guaranteed to be connected to city 1, the best score is simply the smallest edge in that component."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n + roads) · α(n)), nearly linear.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Connect all cities with Union-Find and take the minimum road in the component that contains city 1."
+ },
+ "2528": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pref`, `base[i]`",
+       "Power of each city from the existing stations: the sum over the window `[i − r, i + r]`",
+       "Range sums with prefix sums"
+      ],
+      [
+       "binary search on `target`",
+       "Is it possible to raise every city to at least `target`? The answer is monotone, so search for the largest feasible target",
+       "Maximise a minimum"
+      ],
+      [
+       "`ok(target)`",
+       "Greedy check that scans left to right",
+       "Feasibility test"
+      ],
+      [
+       "`need = target - base[i] - add`",
+       "Missing power at city `i` after earlier new stations",
+       "What must still be built"
+      ],
+      [
+       "`add`, `extra`",
+       "Difference array: new stations placed at `i + r` cover cities `i .. i + 2r`, so their effect ends at `i + 2r + 1`",
+       "Range updates in O(1)"
+      ],
+      [
+       "`used > k: return False`",
+       "More stations needed than allowed",
+       "Budget check"
+      ],
+      [
+       "`lo, hi = min(base), min(base) + k`",
+       "The answer is at least the current minimum and at most that plus `k`",
+       "Bounds"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`stations = [1,2,4,5,0]`, `r = 1`, `k = 2`: `base = [3,7,11,9,5]`. Check `target = 5`:",
+     "This works within `k = 2`, but `target = 6` would need more than 2, so the answer is `5`."
+    ],
+    "table": {
+     "head": [
+      "City i",
+      "base[i]",
+      "add so far",
+      "need",
+      "used"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "0",
+       "2",
+       "2 (place 2 stations at city 1; they cover cities 0 to 2)"
+      ],
+      [
+       "1",
+       "7",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "2",
+       "11",
+       "2",
+       "0",
+       "2"
+      ],
+      [
+       "3",
+       "9",
+       "0 (the bonus ends)",
+       "0",
+       "2"
+      ],
+      [
+       "4",
+       "5",
+       "0",
+       "0",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why place stations as far right as possible?",
+    "p": [
+     "When city `i` is short, any new station must cover city `i`. Placing it at city `i + r` covers the furthest cities to the right (`i .. i + 2r`), which helps later cities the most. Since cities to the left are already satisfied, nothing is lost."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log k).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search the target power; check it greedily from the left, building the needed stations as far right as possible with a difference array."
+ },
+ "2540": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`i`, `j`",
+       "Pointers into the two sorted arrays",
+       "Two pointers on sorted data"
+      ],
+      [
+       "`nums1[i] == nums2[j]: return`",
+       "The first match found is the smallest common value",
+       "Early exit"
+      ],
+      [
+       "`nums1[i] < nums2[j]: i += 1`",
+       "The smaller value cannot match anything later in the other array, so advance it",
+       "Merge-style scan"
+      ],
+      [
+       "`return -1`",
+       "One array ran out without a match",
+       "Not found"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,3]`, `nums2 = [2,4]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "j",
+      "Compare",
+      "Action"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "1 < 2",
+       "i = 1"
+      ],
+      [
+       "1",
+       "0",
+       "2 == 2",
+       "return 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does the first match give the minimum?",
+    "p": [
+     "Both arrays are sorted and the pointers always sit at the smallest unchecked values. Anything skipped was smaller than the value in the other array and so could not appear there. The first equal pair is therefore the smallest shared value."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Walk two pointers over the sorted arrays, advancing the smaller one, and stop at the first equal pair."
+ },
+ "2579": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n * n`",
+       "Cells in the full diamond layers counted as an `n × n` square",
+       "Spotting a geometric pattern"
+      ],
+      [
+       "`(n - 1) * (n - 1)`",
+       "The cells of the smaller diamond layer",
+       "The second square"
+      ],
+      [
+       "sum",
+       "The coloured region is a diamond, which is made of two interleaved squares",
+       "Decomposing a shape"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The number of coloured cells after `n` minutes:"
+    ],
+    "table": {
+     "head": [
+      "n",
+      "Formula",
+      "Cells"
+     ],
+     "rows": [
+      [
+       "1",
+       "1 + 0",
+       "1"
+      ],
+      [
+       "2",
+       "4 + 1",
+       "5"
+      ],
+      [
+       "3",
+       "9 + 4",
+       "13"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why two squares?",
+    "p": [
+     "The diamond has rows of width 1, 3, 5, ..., 2n − 1, ..., 3, 1. Colouring the cells in a checkerboard way, the cells of one colour form an `n × n` square and the other colour an `(n − 1) × (n − 1)` square. Adding them gives the whole diamond."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(1).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The coloured diamond has n² + (n − 1)² cells."
+ },
+ "2593": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted((v, i) for i, v in enumerate(nums))`",
+       "Pairs (value, index) in order of value, with ties broken by the smaller index",
+       "Processing in the order the rules specify"
+      ],
+      [
+       "`marked`",
+       "Which positions are already marked",
+       "Tracking visited items"
+      ],
+      [
+       "`if not marked[i]`",
+       "The first unmarked element in sorted order is the smallest unmarked one",
+       "Skipping marked elements"
+      ],
+      [
+       "`score += v` and marking `i`, `i − 1`, `i + 1`",
+       "Add the value and mark it with both neighbours",
+       "Applying the rule"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,1,3,4,5,2]`, sorted pairs `(1,1) (2,0) (2,5) (3,2) (4,3) (5,4)`.",
+     "The score is `7`."
+    ],
+    "table": {
+     "head": [
+      "Pair",
+      "Marked already?",
+      "Action",
+      "score"
+     ],
+     "rows": [
+      [
+       "(1,1)",
+       "no",
+       "take 1, mark 0, 1, 2",
+       "1"
+      ],
+      [
+       "(2,0)",
+       "yes",
+       "skip",
+       "1"
+      ],
+      [
+       "(2,5)",
+       "no",
+       "take 2, mark 4, 5",
+       "3"
+      ],
+      [
+       "(3,2)",
+       "yes",
+       "skip",
+       "3"
+      ],
+      [
+       "(4,3)",
+       "no",
+       "take 4, mark 2, 3, 4",
+       "7"
+      ],
+      [
+       "(5,4)",
+       "yes",
+       "skip",
+       "7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why one sort is enough?",
+    "p": [
+     "Marking only ever removes elements from consideration. Walking the globally sorted list and skipping marked elements visits unmarked elements in exactly the order \"smallest value, then smallest index\"."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort the pairs (value, index), take each unmarked one, and mark it with its neighbours."
+ },
+ "2615": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pos[x]`",
+       "The sorted list of indices where value `x` occurs",
+       "Grouping equal values"
+      ],
+      [
+       "`total = sum(p)`",
+       "Sum of all indices in the group",
+       "Used to get the sum of distances in O(1)"
+      ],
+      [
+       "`left`",
+       "Sum of the indices before the current one in the group",
+       "Prefix sum over the group"
+      ],
+      [
+       "`i * j - left`",
+       "Sum of distances to the `j` earlier indices: each is `i − earlier`",
+       "Distances to the left"
+      ],
+      [
+       "`(total - left - i) - i * (m - j - 1)`",
+       "Sum of distances to the `m − j − 1` later indices: each is `later − i`",
+       "Distances to the right"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,3,1,1,2]`: value `1` occurs at indices `[0,2,3]`, `total = 5`, `m = 3`.",
+     "Result `[5,0,3,4,0]`; the values `3` and `2` occur once and get `0`."
+    ],
+    "table": {
+     "head": [
+      "j",
+      "i",
+      "Left part (`i·j − left`)",
+      "Right part",
+      "`res[i]`"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0 − 0 = 0",
+       "(5 − 0 − 0) − 0 = 5",
+       "5"
+      ],
+      [
+       "1",
+       "2",
+       "2 − 0 = 2",
+       "(5 − 0 − 2) − 2 · 1 = 1",
+       "3"
+      ],
+      [
+       "2",
+       "3",
+       "6 − 2 = 4",
+       "(5 − 2 − 3) − 0 = 0",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this beats comparing all pairs?",
+    "p": [
+     "Instead of adding `|i − j|` for every pair, the sum of distances to earlier indices is `i · (their count) − (their sum)`, and to later indices `(their sum) − i · (their count)`. A running prefix sum makes each of these O(1)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Group equal values, and use prefix sums of positions to compute the sum of distances to the earlier and later copies in O(1)."
+ },
+ "2749": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`for k in range(1, 61)`",
+       "Try each possible number of operations",
+       "A small answer range"
+      ],
+      [
+       "`x = num1 - k * num2`",
+       "After `k` operations the `num2` parts have been removed `k` times, so `x` must be exactly the sum of `k` powers of two",
+       "Rewriting the problem"
+      ],
+      [
+       "`x >= k`",
+       "`k` powers of two (each at least 1) sum to at least `k`",
+       "Lower bound"
+      ],
+      [
+       "`bin(x).count('1') <= k`",
+       "The fewest powers of two that add up to `x` is its number of 1 bits; extra ones can be made by splitting a power into two halves",
+       "Binary representation"
+      ],
+      [
+       "`return -1`",
+       "No `k` works",
+       "Impossible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`num1 = 3`, `num2 = -2`.",
+     "The answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "k",
+      "x = 3 + 2k",
+      "x ≥ k?",
+      "ones in x",
+      "ones ≤ k?"
+     ],
+     "rows": [
+      [
+       "1",
+       "5",
+       "yes",
+       "2",
+       "no"
+      ],
+      [
+       "2",
+       "7",
+       "yes",
+       "3",
+       "no"
+      ],
+      [
+       "3",
+       "9",
+       "yes",
+       "2",
+       "yes"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why can any count between the number of ones and `x` be reached?",
+    "p": [
+     "A power of two (`2^i` with `i > 0`) can be split into two copies of `2^(i−1)`, which increases the count of terms by one. Starting from the minimum (the 1 bits of `x`), we can reach any count up to `x` by splitting until all terms are 1."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(60).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "After k operations, num1 − k · num2 must be a sum of exactly k powers of two, which holds when its popcount is at most k and it is at least k."
+ },
+ "2778": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n = len(nums)`",
+       "The size of the array",
+       "The special-index rule depends on `n`"
+      ],
+      [
+       "`range(1, n + 1)`",
+       "Positions in 1-indexed form",
+       "The problem is 1-indexed"
+      ],
+      [
+       "`if n % i == 0`",
+       "Position `i` is special when it divides `n`",
+       "Divisor test"
+      ],
+      [
+       "`nums[i - 1] ** 2`",
+       "Square of the element (convert to 0-indexed)",
+       "Converting between indexing styles"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4]`, `n = 4`: positions 1, 2 and 4 divide 4.",
+     "The sum is `1 + 4 + 16 = 21`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Divides 4?",
+      "`nums[i − 1]`",
+      "Square"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "yes",
+       "2",
+       "4"
+      ],
+      [
+       "3",
+       "no",
+       "–",
+       "–"
+      ],
+      [
+       "4",
+       "yes",
+       "4",
+       "16"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Loop over 1-indexed positions, keep those that divide n, and add the squares."
+ },
+ "2815": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`max(str(x))`",
+       "The largest digit of `x`, as a character (digit characters compare in the same order as digits)",
+       "Finding the max digit"
+      ],
+      [
+       "`best[d]`",
+       "The largest number seen so far whose maximum digit is `d`",
+       "One representative per group"
+      ],
+      [
+       "`if d in best: res = max(res, best[d] + x)`",
+       "Pair the new number with the best earlier one of the same group",
+       "Best partner for the current element"
+      ],
+      [
+       "`best[d] = max(best.get(d, 0), x)`",
+       "Update the group's best",
+       "Keeping the largest"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [51,71,17,24,42]`.",
+     "The answer is `88`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "Max digit",
+      "Earlier best in group",
+      "res"
+     ],
+     "rows": [
+      [
+       "51",
+       "5",
+       "none",
+       "-1"
+      ],
+      [
+       "71",
+       "7",
+       "none",
+       "-1"
+      ],
+      [
+       "17",
+       "7",
+       "71",
+       "88"
+      ],
+      [
+       "24",
+       "4",
+       "none",
+       "88"
+      ],
+      [
+       "42",
+       "4",
+       "24",
+       "88 (24 + 42 = 66)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why keep only the best number per group?",
+    "p": [
+     "For a fixed partner, the best pair uses the largest other number in the same group. Keeping the running maximum of each group means every number is paired with its best possible earlier partner, and every pair is considered when its second member arrives."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · digits).",
+     "Space: O(1), at most 10 groups."
+    ]
+   }
+  ],
+  "takeaway": "Group numbers by their largest digit and keep the maximum of each group, pairing each new number with it."
+ },
+ "2845": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pref`",
+       "Number of elements so far with `x % modulo == k`",
+       "Prefix count of \"matching\" elements"
+      ],
+      [
+       "`seen`",
+       "How many times each prefix count (mod `modulo`) has occurred, starting with the empty prefix `{0: 1}`",
+       "Counting earlier prefixes with a given property"
+      ],
+      [
+       "`(pref - k) % modulo`",
+       "The remainder an earlier prefix must have so that the matching count in between has remainder `k`",
+       "Solving `(pref − earlier) % modulo == k`"
+      ],
+      [
+       "`res += seen[...]`",
+       "Each earlier prefix with that remainder starts one interesting subarray ending here",
+       "Counting subarrays by their right end"
+      ],
+      [
+       "`seen[pref % modulo] += 1`",
+       "Record the current prefix for later positions",
+       "Updating the counter"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,2,4]`, `modulo = 2`, `k = 1`. Only `3` has `3 % 2 == 1`.",
+     "The answer is `3`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "`pref`",
+      "Needed earlier remainder",
+      "Matches found",
+      "res"
+     ],
+     "rows": [
+      [
+       "3",
+       "1",
+       "(1 − 1) % 2 = 0",
+       "1 (the empty prefix)",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "0",
+       "1",
+       "2"
+      ],
+      [
+       "4",
+       "1",
+       "0",
+       "1",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why does this work?",
+    "p": [
+     "The matching count of a subarray is `pref[r] − pref[l]`. It is interesting when this difference has remainder `k` modulo `modulo`, i.e. `pref[l] ≡ pref[r] − k`. Counting how often each remainder occurred among the earlier prefixes gives the number of valid left ends for every right end."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(min(n, modulo))."
+    ]
+   }
+  ],
+  "takeaway": "Prefix counts of matching elements plus a hash map of remainders let you count valid left ends for each right end."
+ },
+ "2906": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`flat`",
+       "The grid flattened to one list",
+       "The answer only depends on \"all other elements\""
+      ],
+      [
+       "`pref`",
+       "Product of everything before the current element",
+       "Prefix products"
+      ],
+      [
+       "`suf`",
+       "Product of everything after the current element",
+       "Suffix products"
+      ],
+      [
+       "`res[i] = pref` then `res[i] *= suf`",
+       "Product of everything except element `i`",
+       "Product of the array except self"
+      ],
+      [
+       "`% MOD` with `MOD = 12345`",
+       "Keep values within the required modulus. 12345 is not prime, so dividing the total by an element is not possible",
+       "Why we cannot just divide"
+      ],
+      [
+       "`res[i * n:(i + 1) * n]`",
+       "Cut the flat list back into rows",
+       "Rebuilding the matrix shape"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,2],[3,4]]`, flat `[1,2,3,4]`.",
+     "Reshaped: `[[24,12],[8,6]]`."
+    ],
+    "table": {
+     "head": [
+      "Index",
+      "Product before",
+      "Product after",
+      "Product"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "24",
+       "24"
+      ],
+      [
+       "1",
+       "1",
+       "12",
+       "12"
+      ],
+      [
+       "2",
+       "2",
+       "4",
+       "8"
+      ],
+      [
+       "3",
+       "6",
+       "1",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why prefix and suffix instead of division?",
+    "p": [
+     "Dividing the total product by an element only works with modular inverses, which do not exist for every value when the modulus (12345 = 3 · 5 · 823) is not prime. Multiplying the prefix and suffix products avoids division completely."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n · m).",
+     "Space: O(n · m)."
+    ]
+   }
+  ],
+  "takeaway": "Flatten the grid, multiply the product of everything before by the product of everything after for each cell, and reshape."
+ },
+ "2956": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`s1, s2 = set(nums1), set(nums2)`",
+       "Sets for O(1) membership tests",
+       "Fast \"does this value occur in the other array?\""
+      ],
+      [
+       "`sum(x in s2 for x in nums1)`",
+       "Counts the indices of `nums1` whose value occurs in `nums2` (duplicates count each time)",
+       "Counting with a condition"
+      ],
+      [
+       "`sum(x in s1 for x in nums2)`",
+       "The same from the other side",
+       "Symmetric count"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [4,3,2,3,1]`, `nums2 = [2,2,5,2,3,6]`.",
+     "The result is `[3,4]`."
+    ],
+    "table": {
+     "head": [
+      "Array",
+      "Elements that occur in the other array",
+      "Count"
+     ],
+     "rows": [
+      [
+       "`nums1`",
+       "3, 2, 3",
+       "3"
+      ],
+      [
+       "`nums2`",
+       "2, 2, 2, 3",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why count elements, not distinct values?",
+    "p": [
+     "The question asks for the number of indices, so a value that appears several times counts each time. The set is only used to test membership."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + m).",
+     "Space: O(n + m)."
+    ]
+   }
+  ],
+  "takeaway": "Put each array in a set and count how many elements of the other array are in it."
+ },
+ "2975": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "Meaning",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`h = sorted(hFences + [1, m])`",
+       "Positions of all horizontal fences, including the fixed borders",
+       "The borders always remain"
+      ],
+      [
+       "`v = sorted(vFences + [1, n])`",
+       "The same for vertical fences",
+       "Second dimension"
+      ],
+      [
+       "`{b - a for a, b in combinations(h, 2)}`",
+       "Every possible side length: keep fences `a` and `b`, remove the ones between",
+       "All pairwise gaps"
+      ],
+      [
+       "`hd & vd`",
+       "Lengths that can be achieved both vertically and horizontally",
+       "Square needs equal width and height"
+      ],
+      [
+       "`max(common) ** 2 % (10**9 + 7)`",
+       "The largest square area, reduced by the modulus",
+       "The required output"
+      ],
+      [
+       "`else -1`",
+       "No common length means no square",
+       "Impossible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`m = 4`, `n = 3`, `hFences = [2,3]`, `vFences = [2]`.",
+     "The common gaps are `1` and `2`, and the largest square has side 2, so the area is `4`."
+    ],
+    "table": {
+     "head": [
+      "Direction",
+      "Fence positions",
+      "Possible gaps"
+     ],
+     "rows": [
+      [
+       "horizontal",
+       "1, 2, 3, 4",
+       "1, 2, 3"
+      ],
+      [
+       "vertical",
+       "1, 2, 3",
+       "1, 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why are all pairwise differences the possible sizes?",
+    "p": [
+     "A field is bounded by two horizontal and two vertical fences that remain. Any two fences (including the borders) can be the remaining ones if all those between them are removed, so each pair gives a possible side length. The side lengths must match in both directions for a square."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(h^2 + v^2), at most about 600^2 for the number of fences.",
+     "Space: O(h^2 + v^2) for the sets."
+    ]
+   }
+  ],
+  "takeaway": "Collect all gap sizes from pairs of fences in each direction, intersect them, and square the largest common one."
+ }
+}

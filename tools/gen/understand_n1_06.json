@@ -1,0 +1,1665 @@
+{
+ "3016": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(word).values()",
+       "How often each letter occurs",
+       ""
+      ],
+      [
+       "sorted(..., reverse=True)",
+       "Most frequent letters first",
+       ""
+      ],
+      [
+       "i // 8 + 1",
+       "Letter number i (from 0) goes to key slot i // 8: the first 8 letters take 1 press, the next 8 take 2 presses, and so on",
+       "8 keys, each slot depth is one more press"
+      ],
+      [
+       "f * (i // 8 + 1)",
+       "Presses this letter costs in total",
+       ""
+      ],
+      [
+       "sum(...)",
+       "Total presses",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = xyzxyzxyzxyz`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "Frequency",
+      "Rank i",
+      "Presses per use",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "x",
+       "4",
+       "0",
+       "1",
+       "4"
+      ],
+      [
+       "y",
+       "4",
+       "1",
+       "1",
+       "4"
+      ],
+      [
+       "z",
+       "4",
+       "2",
+       "1",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result and the greedy",
+    "p": [
+     "Total 12. Giving the most frequent letters the cheapest positions (first slot of each key) is optimal, which is why the frequencies are sorted descending. With more than 8 distinct letters the extra ones would cost 2 presses each."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 log 26).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Sort letter frequencies in descending order and charge the first 8 letters 1 press each, the next 8 two presses, and so on."
+ },
+ "3025": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sort by (x, −y)",
+       "Alice candidates left to right; for equal x the higher point comes first",
+       ""
+      ],
+      [
+       "for i: Alice",
+       "Fix Alice's point",
+       ""
+      ],
+      [
+       "points[j][1] <= points[i][1]",
+       "Bob must be at or below Alice (his x is already at or to the right because of the sort)",
+       ""
+      ],
+      [
+       "top",
+       "Highest y among the Bob candidates already seen below Alice",
+       "Any such earlier point lies inside the fence of a later one"
+      ],
+      [
+       "points[j][1] > top",
+       "Bob is valid only if no earlier candidate sits at height between Bob and Alice",
+       ""
+      ],
+      [
+       "top = points[j][1]",
+       "Raise the bar for later candidates",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`points = [[6,2],[4,4],[2,6]]` sorted: `(2,6)`, `(4,4)`, `(6,2)`."
+    ],
+    "table": {
+     "head": [
+      "Alice",
+      "Bob j",
+      "Check",
+      "count"
+     ],
+     "rows": [
+      [
+       "(2,6)",
+       "(4,4)",
+       "4 ≤ 6 and 4 > −∞ → valid, top = 4",
+       "1"
+      ],
+      [
+       "(2,6)",
+       "(6,2)",
+       "2 ≤ 6 but 2 > 4 fails: (4,4) is inside the fence",
+       "1"
+      ],
+      [
+       "(4,4)",
+       "(6,2)",
+       "2 ≤ 4 → valid",
+       "2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(1) extra."
+    ]
+   }
+  ],
+  "takeaway": "After sorting, a Bob is valid only if no earlier candidate sits higher than him but still under Alice."
+ },
+ "3119": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "road.split('.')",
+       "Splits the road into stretches of consecutive potholes",
+       ""
+      ],
+      [
+       "len(g) for g in ... if g",
+       "Lengths of the non-empty stretches",
+       ""
+      ],
+      [
+       "sorted(..., reverse=True)",
+       "Longest stretches first: each stretch has the same overhead of 1, so longer ones are the best value",
+       ""
+      ],
+      [
+       "budget >= g + 1",
+       "Can the whole stretch be fixed?",
+       "cost is length + 1"
+      ],
+      [
+       "else: fixed += budget - 1; break",
+       "Partial repair of the next stretch with what is left (needs at least 2)",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`road = x.x.xxx...x`, `budget = 14`. Stretch lengths sorted: 3, 1, 1, 1."
+    ],
+    "table": {
+     "head": [
+      "Stretch",
+      "Cost",
+      "Budget left",
+      "Fixed so far"
+     ],
+     "rows": [
+      [
+       "3",
+       "4",
+       "10",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "8",
+       "4"
+      ],
+      [
+       "1",
+       "2",
+       "6",
+       "5"
+      ],
+      [
+       "1",
+       "2",
+       "4",
+       "6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "All stretches are repaired within the budget: 6 potholes."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) in the number of stretches.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Fix the longest stretches first, since every stretch pays a fixed extra cost of 1; use any leftover budget for a partial repair."
+ },
+ "3139": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "cost2 = min(cost2, 2 * cost1)",
+       "Two single raises can replace a pair raise, so the pair price is never worse than 2 × cost1",
+       ""
+      ],
+      [
+       "for t in range(mx, 2*mx + 2)",
+       "Tries each target value from the maximum upwards (the solution limits the search to this range)",
+       ""
+      ],
+      [
+       "total = n*t - sum",
+       "Total number of +1 raises needed to reach t",
+       ""
+      ],
+      [
+       "biggest = t - mn",
+       "The smallest element needs the most raises",
+       ""
+      ],
+      [
+       "biggest*2 <= total",
+       "The largest need does not exceed all the others combined, so raises can be paired up almost perfectly",
+       ""
+      ],
+      [
+       "(total//2)*cost2 + (total%2)*cost1",
+       "Pairs, plus one single raise if the total is odd",
+       ""
+      ],
+      [
+       "else branch",
+       "The smallest element needs more than the rest: pair each raise of the others with it, then the leftover raises are singles",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [4,1]`, `cost1 = 5`, `cost2 = min(2, 10) = 2`; `mx = 4`, `mn = 1`, sum = 5."
+    ],
+    "table": {
+     "head": [
+      "Target t",
+      "total",
+      "biggest",
+      "Cost"
+     ],
+     "rows": [
+      [
+       "4",
+       "3",
+       "3",
+       "others = 0: 0·2 + 3·5 = 15"
+      ],
+      [
+       "5",
+       "5",
+       "4",
+       "others = 1: 1·2 + 3·5 = 17"
+      ],
+      [
+       "6",
+       "7",
+       "5",
+       "others = 2: 2·2 + 3·5 = 19"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The cheapest target is 4 with cost 15. In this case nothing can be paired (the other element needs no raises), so every raise is a single."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + max).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "For each target, raises are paired when possible (the neediest element is paired with the others); otherwise the surplus uses single raises."
+ },
+ "3160": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "color_of",
+       "The current colour of each coloured ball",
+       ""
+      ],
+      [
+       "cnt",
+       "How many balls currently have each colour",
+       ""
+      ],
+      [
+       "if ball in color_of",
+       "Recolouring: remove the old colour from the counts",
+       ""
+      ],
+      [
+       "del cnt[old] when 0",
+       "Keeps len(cnt) equal to the number of distinct colours",
+       ""
+      ],
+      [
+       "res.append(len(cnt))",
+       "Answer after this query",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`queries = [[1,4],[2,5],[1,3],[3,4]]`."
+    ],
+    "table": {
+     "head": [
+      "Query",
+      "Change",
+      "cnt",
+      "Distinct"
+     ],
+     "rows": [
+      [
+       "(1, 4)",
+       "ball 1 → 4",
+       "{4:1}",
+       "1"
+      ],
+      [
+       "(2, 5)",
+       "ball 2 → 5",
+       "{4:1, 5:1}",
+       "2"
+      ],
+      [
+       "(1, 3)",
+       "ball 1: 4 → 3 (4 vanishes)",
+       "{5:1, 3:1}",
+       "2"
+      ],
+      [
+       "(3, 4)",
+       "ball 3 → 4",
+       "{5:1, 3:1, 4:1}",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q).",
+     "Space: O(q)."
+    ]
+   }
+  ],
+  "takeaway": "Keep each ball's colour and a count per colour, removing a colour when its count hits zero."
+ },
+ "3190": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x % 3 != 0",
+       "Not divisible by 3",
+       ""
+      ],
+      [
+       "one operation",
+       "±1 always reaches a multiple of 3 from a remainder of 1 or 2",
+       ""
+      ],
+      [
+       "sum(...)",
+       "Count the numbers that need an operation",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "x % 3",
+      "Operation needed"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "yes (−1)"
+      ],
+      [
+       "2",
+       "2",
+       "yes (+1)"
+      ],
+      [
+       "3",
+       "0",
+       "no"
+      ],
+      [
+       "4",
+       "1",
+       "yes (−1)"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Every number that is not a multiple of 3 is exactly one step from one, so the answer is how many such numbers exist."
+ },
+ "3229": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "d = b - a",
+       "How much position i must change",
+       ""
+      ],
+      [
+       "abs(d - prev)",
+       "How much the required change differs from the previous position's",
+       "A subarray operation changes the difference sequence only at its two ends"
+      ],
+      [
+       "total += abs(prev) at the end",
+       "The sequence also returns to 0 after the last position",
+       ""
+      ],
+      [
+       "total // 2",
+       "Each operation fixes two ends (one start and one stop), so it covers two units of difference",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,5,1,2]`, `target = [4,6,2,4]`; required changes d = `[1,1,1,2]`."
+    ],
+    "table": {
+     "head": [
+      "Position",
+      "d",
+      "|d − prev|",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "2",
+       "1",
+       "0",
+       "1"
+      ],
+      [
+       "3",
+       "2",
+       "1",
+       "2"
+      ],
+      [
+       "end",
+       "–",
+       "|2 − 0| = 2",
+       "4"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`4 // 2 = 2` operations: add 1 to the whole array, then add 1 to the last element."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Look at the changes between neighbouring required differences; every operation fixes two of them, so the answer is half their absolute sum."
+ },
+ "3254": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "run",
+       "Length of the streak of consecutive +1 steps ending at i",
+       ""
+      ],
+      [
+       "x == nums[i-1] + 1",
+       "Continues the streak (each element exactly one more than the previous)",
+       ""
+      ],
+      [
+       "i >= k - 1",
+       "A full window of k elements ends here",
+       ""
+      ],
+      [
+       "run >= k",
+       "The whole window is consecutive and ascending",
+       ""
+      ],
+      [
+       "x if ... else -1",
+       "The power is the last element (the maximum) or −1",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,3,2,5]`, `k = 3`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "x",
+      "run",
+      "Window ends?",
+      "Result"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "1",
+       "no",
+       ""
+      ],
+      [
+       "1",
+       "2",
+       "2",
+       "no",
+       ""
+      ],
+      [
+       "2",
+       "3",
+       "3",
+       "yes",
+       "3"
+      ],
+      [
+       "3",
+       "4",
+       "4",
+       "yes",
+       "4"
+      ],
+      [
+       "4",
+       "3",
+       "1",
+       "yes",
+       "−1"
+      ],
+      [
+       "5",
+       "2",
+       "1",
+       "yes",
+       "−1"
+      ],
+      [
+       "6",
+       "5",
+       "1",
+       "yes",
+       "−1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the answer."
+    ]
+   }
+  ],
+  "takeaway": "Track the length of the current consecutive-ascending run; a window is good when the run reaching its end is at least k."
+ },
+ "3310": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "g",
+       "Who calls whom (directed graph)",
+       ""
+      ],
+      [
+       "sus = {k}; st = [k]",
+       "Depth-first search from k collects every method reachable from it",
+       ""
+      ],
+      [
+       "a not in sus and b in sus",
+       "A healthy method depends on a suspicious one",
+       ""
+      ],
+      [
+       "return list(range(n))",
+       "Then nothing can be removed",
+       ""
+      ],
+      [
+       "[i for i in range(n) if i not in sus]",
+       "Otherwise remove all suspicious methods",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, `k = 0`, calls `1→2`, `0→2`, `0→1`, `3→4`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "reachable from 0",
+       "0, 2, 1 (0 calls 2 and 1)"
+      ],
+      [
+       "healthy → suspicious call?",
+       "3→4: both healthy; no violation"
+      ],
+      [
+       "remaining",
+       "[3, 4]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + calls).",
+     "Space: O(n + calls)."
+    ]
+   }
+  ],
+  "takeaway": "Find everything reachable from k, and remove it only if no outside method calls into that group."
+ },
+ "3318": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(len(nums) - k + 1)",
+       "Start of each window of length k",
+       ""
+      ],
+      [
+       "Counter(nums[i:i+k])",
+       "Occurrence count of each value in the window",
+       ""
+      ],
+      [
+       "sorted(..., key=(count, value), reverse=True)",
+       "Most frequent first; ties go to the larger value",
+       ""
+      ],
+      [
+       "[:x]",
+       "Keep the top x values",
+       ""
+      ],
+      [
+       "sum(v * c ...)",
+       "Each kept value contributes value × count",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,2,2,3,4,2,3]`, `k = 6`, `x = 2`."
+    ],
+    "table": {
+     "head": [
+      "Window",
+      "Counts",
+      "Top 2",
+      "x-sum"
+     ],
+     "rows": [
+      [
+       "1,1,2,2,3,4",
+       "1:2, 2:2, 3:1, 4:1",
+       "1 and 2",
+       "2 + 4 = 6"
+      ],
+      [
+       "1,2,2,3,4,2",
+       "2:3, others 1",
+       "2, then 4 (larger of the ties)",
+       "6 + 4 = 10"
+      ],
+      [
+       "2,2,3,4,2,3",
+       "2:3, 3:2, 4:1",
+       "2, 3",
+       "6 + 6 = 12"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((n − k + 1) · k log k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "With small limits, recount every window and keep the x most frequent values, breaking ties toward the larger value."
+ },
+ "3333": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "groupby(word)",
+       "Splits the word into runs of equal letters; g is each run's length",
+       ""
+      ],
+      [
+       "total = product of run lengths",
+       "Number of original strings: each run came from between 1 and g typed letters, and the number of choices for the typed count is g (all lengths are accepted here)",
+       "Every original string has length at least the number of runs"
+      ],
+      [
+       "len(groups) >= k",
+       "Every original string already has length ≥ k",
+       "So all of them count"
+      ],
+      [
+       "dp[j]",
+       "Number of original strings with total length j so far (only j < k kept)",
+       ""
+      ],
+      [
+       "pref (prefix sums)",
+       "Sum of a range of dp in O(1)",
+       ""
+      ],
+      [
+       "new[j] = pref[j] - pref[lo]",
+       "Add a run of between 1 and g letters to a shorter length j − 1 ... j − g",
+       ""
+      ],
+      [
+       "total - sum(dp)",
+       "Subtract the strings that are too short",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = aabbccdd` (4 runs of length 2), `k = 7`. `total = 2·2·2·2 = 16`. Counts of too-short strings after each run (length: ways):"
+    ],
+    "table": {
+     "head": [
+      "After run",
+      "Lengths and ways"
+     ],
+     "rows": [
+      [
+       "1",
+       "1:1, 2:1"
+      ],
+      [
+       "2",
+       "2:1, 3:2, 4:1"
+      ],
+      [
+       "3",
+       "3:1, 4:3, 5:3, 6:1"
+      ],
+      [
+       "4 (lengths < 7)",
+       "4:1, 5:4, 6:6"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The short ones add up to `1 + 4 + 6 = 11`, so the answer is `16 − 11 = 5`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(runs · k).",
+     "Space: O(k)."
+    ]
+   }
+  ],
+  "takeaway": "Count all strings as the product of run lengths, then subtract those shorter than k using a DP over run lengths with prefix sums."
+ },
+ "3346": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums.sort()",
+       "Sorted, so ranges can be counted with binary search",
+       ""
+      ],
+      [
+       "cand = {x, x-k, x+k}",
+       "Interesting target values: an existing value or a boundary of a reachable window",
+       ""
+      ],
+      [
+       "bisect_right(t + k) − bisect_left(t − k)",
+       "Number of elements that can be turned into t (within k)",
+       ""
+      ],
+      [
+       "same",
+       "Elements already equal to t, which cost no operation",
+       ""
+      ],
+      [
+       "same + min(numOperations, near − same)",
+       "Free ones plus as many others as operations allow",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,4,5]`, `k = 1`, `numOperations = 2`."
+    ],
+    "table": {
+     "head": [
+      "Target t",
+      "near (within 1)",
+      "same",
+      "Frequency"
+     ],
+     "rows": [
+      [
+       "4",
+       "4, 5 → 2",
+       "1",
+       "1 + min(2, 1) = 2"
+      ],
+      [
+       "5",
+       "4, 5 → 2",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "1 → 1",
+       "1",
+       "1"
+      ],
+      [
+       "3",
+       "4 → 1",
+       "0",
+       "min(2, 1) = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "For each candidate target, count elements within k of it and cap the changed ones by the allowed operations."
+ },
+ "3354": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total, left",
+       "Sum of all values and the sum to the left of the current index",
+       ""
+      ],
+      [
+       "x == 0",
+       "Only zeros are valid starting points",
+       ""
+      ],
+      [
+       "right = total - left",
+       "Sum to the right of the zero",
+       ""
+      ],
+      [
+       "left == right",
+       "Both directions work → 2 selections",
+       "The ball bounces until every unit is used up"
+      ],
+      [
+       "abs(left - right) == 1",
+       "Exactly one direction works (towards the larger side) → 1 selection",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,0,2,0,3]`, total 6."
+    ],
+    "table": {
+     "head": [
+      "Zero at",
+      "left",
+      "right",
+      "Counts"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "5",
+       "no (difference 4)"
+      ],
+      [
+       "3",
+       "3",
+       "3",
+       "equal → +2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "Answer 2: starting at index 3 in either direction works."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "A start at a zero works when the sums on its two sides are equal (either direction) or differ by one (one direction)."
+ },
+ "3363": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "diag = sum(fruits[i][i])",
+       "The first child can collect the whole main diagonal and this is best for it",
+       ""
+      ],
+      [
+       "upper(g)",
+       "Best path for a child that starts at the top-right corner and stays above the diagonal until the last step",
+       ""
+      ],
+      [
+       "dp[i][j]",
+       "Best fruits for that child standing at (i, j) after i moves (row i)",
+       ""
+      ],
+      [
+       "from dp[i-1][j-1], dp[i-1][j], dp[i-1][j+1]",
+       "The three allowed moves, each step goes down one row",
+       ""
+      ],
+      [
+       "j > i",
+       "The child stays in the cells above the diagonal, which the first child does not use",
+       ""
+      ],
+      [
+       "transpose and call upper again",
+       "The third child's mirrored path becomes the same problem",
+       ""
+      ],
+      [
+       "dp[n-2][n-1]",
+       "Cell just above the final corner; the corner itself is counted in diag",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "The 4 × 4 example. Main diagonal: `1 + 6 + 11 + 16 = 34`."
+    ],
+    "table": {
+     "head": [
+      "Child",
+      "Best path",
+      "Fruits"
+     ],
+     "rows": [
+      [
+       "second (from top-right)",
+       "4 → 8 → 12 (cells (0,3), (1,2), (2,3))",
+       "24"
+      ],
+      [
+       "third (from bottom-left, transposed grid)",
+       "13 → 14 → 15 (cells (3,0), (3,1), (3,2))",
+       "42"
+      ],
+      [
+       "first",
+       "diagonal",
+       "34"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "`34 + 24 + 42 = 100`. The corner `(3,3)` is only counted once, in the diagonal sum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "The first child takes the diagonal; the other two are independent DPs in the two triangles on either side (the second on the transposed grid)."
+ },
+ "3388": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "lcp[i][j]",
+       "Length of the longest common prefix of the suffixes starting at i and j",
+       ""
+      ],
+      [
+       "filled from the back",
+       "If nums[i] == nums[j], lcp[i][j] = lcp[i+1][j+1] + 1",
+       ""
+      ],
+      [
+       "i, j loops",
+       "Split points: nums1 = [0, i), nums2 = [i, j), nums3 = [j, n)",
+       ""
+      ],
+      [
+       "j − i >= i and lcp[0][i] >= i",
+       "nums1 is a prefix of nums2",
+       ""
+      ],
+      [
+       "n − j >= j − i and lcp[i][j] >= j − i",
+       "nums2 is a prefix of nums3",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,1,2,1]`. Splits `(i, j)`:"
+    ],
+    "table": {
+     "head": [
+      "(i, j)",
+      "nums1 | nums2 | nums3",
+      "Beautiful?"
+     ],
+     "rows": [
+      [
+       "(1, 2)",
+       "[1] | [1] | [2,1]",
+       "yes: nums1 is a prefix of nums2"
+      ],
+      [
+       "(1, 3)",
+       "[1] | [1,2] | [1]",
+       "yes: nums1 is a prefix of nums2"
+      ],
+      [
+       "(2, 3)",
+       "[1,1] | [2] | [1]",
+       "no: nums2 is not a prefix of nums3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n²).",
+     "Space: O(n²)."
+    ]
+   }
+  ],
+  "takeaway": "Precompute longest common prefixes of all suffix pairs, then test the two prefix conditions for every split in O(1)."
+ },
+ "3396": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "range(len(nums) - 1, -1, -1)",
+       "Scan from the right",
+       ""
+      ],
+      [
+       "seen",
+       "Values found to the right",
+       ""
+      ],
+      [
+       "nums[i] in seen",
+       "The latest position that duplicates something to its right",
+       ""
+      ],
+      [
+       "(i + 3) // 3",
+       "Each operation removes 3 elements from the front; removing up to and including index i takes ceil((i + 1) / 3) operations",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,3,4,2,3,3,5,7]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums[i]",
+      "seen before adding",
+      "Action"
+     ],
+     "rows": [
+      [
+       "8",
+       "7",
+       "{}",
+       "add"
+      ],
+      [
+       "7",
+       "5",
+       "{7}",
+       "add"
+      ],
+      [
+       "6",
+       "3",
+       "{7,5}",
+       "add"
+      ],
+      [
+       "5",
+       "3",
+       "{7,5,3}",
+       "duplicate → (5 + 3) // 3 = 2"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Find the rightmost index that duplicates something to its right; everything up to it must be removed, three elements per operation."
+ },
+ "3423": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(i + 1) % n",
+       "Next index, wrapping from the last to the first",
+       ""
+      ],
+      [
+       "abs(nums[i] - nums[(i+1) % n])",
+       "Difference between a neighbouring pair",
+       ""
+      ],
+      [
+       "max(...)",
+       "Largest of them",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [1,2,4]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "Pair",
+      "Difference"
+     ],
+     "rows": [
+      [
+       "0",
+       "1, 2",
+       "1"
+      ],
+      [
+       "1",
+       "2, 4",
+       "2"
+      ],
+      [
+       "2",
+       "4, 1 (wraps)",
+       "3"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Use modulo for the wrap-around and take the largest absolute difference between neighbours."
+ },
+ "3439": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "gaps",
+       "Free time before the first meeting, between meetings, and after the last",
+       ""
+      ],
+      [
+       "window of k + 1 gaps",
+       "Moving k meetings can push them together so k + 1 neighbouring gaps merge into one",
+       ""
+      ],
+      [
+       "window += gaps[i] − gaps[i−k−1]",
+       "Slide the window by one gap",
+       ""
+      ],
+      [
+       "best",
+       "The largest window sum",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`eventTime = 5`, `k = 1`, meetings `[1,2]` and `[3,5]`. Gaps: before = 1, between = `3 − 2 = 1`, after = `5 − 5 = 0`."
+    ],
+    "table": {
+     "head": [
+      "Window (k + 1 = 2 gaps)",
+      "Sum"
+     ],
+     "rows": [
+      [
+       "gaps 0–1: 1 + 1",
+       "2"
+      ],
+      [
+       "gaps 1–2: 1 + 0",
+       "1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The best is 2: move the first meeting right against the second one."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Rescheduling k meetings merges k + 1 consecutive free gaps, so slide a window of k + 1 gaps and keep the largest sum."
+ },
+ "3453": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total",
+       "Sum of all square areas (overlap counted once per square)",
+       ""
+      ],
+      [
+       "lo, hi",
+       "The lowest y and the highest top edge, where the answer must lie",
+       ""
+      ],
+      [
+       "below(h)",
+       "Area below the horizontal line at height h: for each square, side × clamp(h − y, 0, side)",
+       ""
+      ],
+      [
+       "for _ in range(100)",
+       "Binary search on the real number h",
+       ""
+      ],
+      [
+       "below(mid) * 2 < total",
+       "Less than half is below → the line must go up (lo = mid); otherwise go down (hi = mid)",
+       "below(h) only ever grows with h"
+      ],
+      [
+       "round(lo, 5)",
+       "The answer to the required precision",
+       ""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`squares = [[0,0,1],[2,2,1]]`, total area 2, so we need 1 below the line."
+    ],
+    "table": {
+     "head": [
+      "Line h",
+      "Area below",
+      "Move"
+     ],
+     "rows": [
+      [
+       "1.5",
+       "1",
+       "hi = 1.5 (at least half)"
+      ],
+      [
+       "0.75",
+       "0.75",
+       "lo = 0.75 (less than half)"
+      ],
+      [
+       "…",
+       "…",
+       "interval keeps shrinking toward 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "The result",
+    "p": [
+     "The smallest height with at least half the area below is 1.0 (between 1 and 2 the area below stays exactly 1, so the search settles on the smallest such height)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(100 · n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search on the line's height; the area below the line grows with height, so find where it reaches half of the total."
+ }
+}
