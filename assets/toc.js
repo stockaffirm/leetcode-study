@@ -16,9 +16,10 @@
     const on = b.getAttribute("aria-pressed") !== "true";
     btns.forEach(x => x.setAttribute("aria-pressed", "false"));
     b.setAttribute("aria-pressed", on);
-    rows.forEach(r => r.classList.toggle("hl", on && (r.dataset.s || "").split(" ").includes(b.dataset.flt)));
+    rows.forEach(r => r.classList.toggle("hl", on && (b.dataset.flt === "later" ? r.classList.contains("lt") : (r.dataset.s || "").split(" ").includes(b.dataset.flt))));
     document.dispatchEvent(new Event("lc-paint"));
   });
+  document.addEventListener("lc-paint", () => { const b = btns.find(x => x.dataset.flt === "later" && x.getAttribute("aria-pressed") === "true"); if(b) rows.forEach(r => r.classList.toggle("hl", r.classList.contains("lt"))); });
 })();
 
 /* Section headers: total / read / wrote counts, and a highlight + match count when a filter (LeetCode 75, Meta, ...) is on,

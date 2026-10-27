@@ -29,7 +29,7 @@ const html=`<!doctype html>
 <title>CodeAffirm</title><link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap"><h1>CodeAffirm</h1>
 <p class="sdnav"><a href="sd/">System Design Prep &#128274; <small>private, approval needed</small></a></p>
-<div class="tools"><button id="expAll">Expand all</button><button id="colAll">Collapse all</button><span class="gap"></span>${member.map(m=>`<button class="flt" data-flt="${m.key}" aria-pressed="false">${esc(m.title)}</button>`).join("")}</div>
+<div class="tools"><button id="expAll">Expand all</button><button id="colAll">Collapse all</button><span class="gap"></span><button class="flt" data-flt="later" aria-pressed="false" title="Problems you saved to learn later">⏰ Learn later</button>${member.map(m=>`<button class="flt" data-flt="${m.key}" aria-pressed="false">${esc(m.title)}</button>`).join("")}</div>
 ${list("LeetCode 75","",g75,()=>true)}
 ${list("LeetCode 150","not in the 75",g150,id=>!in75.has(+id))}
 ${extra.map((e,i)=>{const seen=new Set([in75,in150,...member.slice(2,2+i).map(m=>m.ids)].flatMap(x=>[...x]));return list(esc(e.title),esc(e.note||"new problems only"),e.groups,id=>!seen.has(+id))}).join("\n")}

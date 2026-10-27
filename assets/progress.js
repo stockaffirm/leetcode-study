@@ -2,14 +2,14 @@
    to Supabase (one private row per GitHub user) so it survives cleared storage and follows you across devices.
    Sync merges per problem by timestamp (latest change wins), so an empty browser can never wipe saved progress. */
 (function(){
-  const KD = "lc75.done", KU = "lc75.undone", KW = "lc75.wrote", KX = "lc75.unwrote";
+  const KD = "lc75.done", KU = "lc75.undone", KW = "lc75.wrote", KX = "lc75.unwrote", KL = "lc75.later", KY = "lc75.unlater";
   const ls = {
     get(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } },
     set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} },
     del(k){ try { localStorage.removeItem(k); } catch(e){} }
   };
-  const state = () => ({ done: ls.get(KD, {}), undone: ls.get(KU, {}), wrote: ls.get(KW, {}), unwrote: ls.get(KX, {}) });
-  const save = s => { ls.set(KD, s.done); ls.set(KU, s.undone); ls.set(KW, s.wrote || {}); ls.set(KX, s.unwrote || {}); };
+  const state = () => ({ done: ls.get(KD, {}), undone: ls.get(KU, {}), wrote: ls.get(KW, {}), unwrote: ls.get(KX, {}), later: ls.get(KL, {}), unlater: ls.get(KY, {}) });
+  const save = s => { ls.set(KD, s.done); ls.set(KU, s.undone); ls.set(KW, s.wrote || {}); ls.set(KX, s.unwrote || {}); ls.set(KL, s.later || {}); ls.set(KY, s.unlater || {}); };
   /* latest timestamp wins per problem; a tie keeps it done */
   function mergeKind(a, b, k, ku){
     const out = { on: {}, off: {} }, A = a[k] || {}, AU = a[ku] || {}, B = b[k] || {}, BU = b[ku] || {};
@@ -20,8 +20,8 @@
     return out;
   }
   function merge(a, b){
-    const r = mergeKind(a, b, "done", "undone"), w = mergeKind(a, b, "wrote", "unwrote");
-    return { done: r.on, undone: r.off, wrote: w.on, unwrote: w.off };
+    const r = mergeKind(a, b, "done", "undone"), w = mergeKind(a, b, "wrote", "unwrote"), l = mergeKind(a, b, "later", "unlater");
+    return { done: r.on, undone: r.off, wrote: w.on, unwrote: w.off, later: l.on, unlater: l.off };
   }
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -49,7 +49,7 @@
     if(method === "GET"){
       const { data, error } = await sb.from("leetcode_progress").select("data").maybeSingle();
       if(error) throw Object.assign(new Error(error.message), { status: 500 });
-      const d = (data && data.data) || {}; return { data: { done: d.done || {}, undone: d.undone || {}, wrote: d.wrote || {}, unwrote: d.unwrote || {} } };
+      const d = (data && data.data) || {}; return { data: { done: d.done || {}, undone: d.undone || {}, wrote: d.wrote || {}, unwrote: d.unwrote || {}, later: d.later || {}, unlater: d.unlater || {} } };
     }
     const { error } = await sb.from("leetcode_progress").upsert({ user_id: session.user.id, data: body, updated_at: new Date().toISOString() });
     if(error) throw Object.assign(new Error(error.message), { status: 500 });
@@ -88,7 +88,13 @@
       if(on){ if(s.wrote[id]) return; s.wrote[id] = now; delete s.unwrote[id]; } else { delete s.wrote[id]; s.unwrote[id] = now; }
       save(s); later();
     },
-    clear(){ ls.del(KD); ls.del(KU); ls.del(KW); ls.del(KX); },
+    hasL(id){ return !!state().later[id]; },
+    setL(id, on){
+      const s = state(), now = Date.now();
+      if(on){ if(s.later[id]) return; s.later[id] = now; delete s.unlater[id]; } else { delete s.later[id]; s.unlater[id] = now; }
+      save(s); later();
+    },
+    clear(){ ls.del(KL); ls.del(KY); ls.del(KD); ls.del(KU); ls.del(KW); ls.del(KX); },
     paint(){},
     sync,
     async connect(){ try { const sb = await client(); await sb.auth.signInWithOAuth({ provider: "github", options: { redirectTo: INDEX_URL } }); } catch(e){ say("err", e.message); } },
@@ -99,7 +105,7 @@
 
   /* ---- index page: checkboxes + sync button ---- */
   const rows = [...document.querySelectorAll(".rowx")]; if(!rows.length){ if(gh.cfg()) sync(); return; }
-  P.paint = () => { rows.forEach(r => { const d = P.has(r.dataset.id), w = P.hasW(r.dataset.id); r.classList.toggle("done", d); r.querySelector(".rd").setAttribute("aria-checked", d); r.querySelector(".wk").setAttribute("aria-checked", w); }); document.dispatchEvent(new Event("lc-paint")); };
+  P.paint = () => { rows.forEach(r => { const d = P.has(r.dataset.id), w = P.hasW(r.dataset.id); r.classList.toggle("done", d); r.classList.toggle("lt", P.hasL(r.dataset.id)); r.querySelector(".rd").setAttribute("aria-checked", d); r.querySelector(".wk").setAttribute("aria-checked", w); }); document.dispatchEvent(new Event("lc-paint")); };
   rows.forEach(r => { r.querySelector(".rd").onclick = () => { P.set(r.dataset.id, !P.has(r.dataset.id)); P.paint(); }; r.querySelector(".wk").onclick = () => { P.setW(r.dataset.id, !P.hasW(r.dataset.id)); P.paint(); }; });
   const tools = document.querySelector(".tools");
   if(tools){

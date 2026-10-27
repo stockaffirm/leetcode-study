@@ -27,8 +27,7 @@ $("#app").innerHTML = `
 <h1>${P.id}. ${esc(P.title)}</h1>
 <p class="sub"><span class="tag ${P.level}">${P.level}</span><span class="tag">${esc(P.topic)}</span></p>
 <section class="sec"><h2><b>1</b>Question</h2>
-  ${P.statement?stmtHtml(P.statement):`<p class="q">${esc(P.question)}</p>`}
-  <p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>
+  ${P.statement?`<details class="qfull"><summary>Full question (examples and constraints)</summary>${stmtHtml(P.statement)}</details>`:`<p class="q">${esc(P.question)}</p><p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>`}
   <div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div>
   ${P.why?`<p class="why"><b>Why?</b> ${esc(P.why)}</p>`:""}${P.idea?`<p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>`:""}${P.ex2?`<p class="why edge"><b>Edge / failure case</b> <code>${esc(P.ex2.input)}</code> → <code>${esc(P.ex2.output)}</code><br>${esc(P.ex2.why)}</p>`:""}
 </section>
@@ -43,6 +42,7 @@ ${pnav}
   <button id="play" class="play" title="Play / Pause (space)">▶ Play</button>
   <button id="next" title="Next flow step (→)">Flow ▶</button>
   <button id="done" class="dn" title="Mark as read">☐ Read</button>
+  <button id="later" class="dn lt" title="Skip this problem for now and come back to it later">⏰ Learn later</button>
   <div class="prog"><i id="pg"></i></div><span class="ct" id="ct"></span>
   <select id="spd" title="Speed"><option value="2">0.5×</option><option value="1" selected>1×</option><option value="0.5">2×</option></select>
 </div></div>`;
@@ -272,6 +272,9 @@ function render(){
 }
 function updDone(){ const d=Progress.has(P.id), b=$("#done"); b.classList.toggle("on",d); b.textContent=d?"✓ Read":"☐ Read"; }
 $("#done").onclick=()=>{Progress.set(P.id,!Progress.has(P.id));updDone();};
+function updLater(){ const l=Progress.hasL(P.id), b=$("#later"); b.classList.toggle("on",l); b.textContent=l?"⏰ Saved for later":"⏰ Learn later"; b.title=l?"Click to remove from your learn-later list":"Skip this problem for now and come back to it later"; }
+$("#later").onclick=()=>{ const on=!Progress.hasL(P.id); Progress.setL(P.id,on); updLater(); const n=document.querySelector("a[data-next]"); if(on&&n) setTimeout(()=>{location.href=n.href;},350); };
+updLater();
 function stop(){ if(timer){clearInterval(timer);timer=null;} }
 function micro1(d){ if(mode==="trace"){ const n=curTrace().steps.length; tidx=Math.min(n-1,Math.max(0,tidx+d)); render(); return; } const n=micro().length; idx=Math.min(n-1,Math.max(0,idx+d)); render(); }
 function flow(d){ if(mode==="trace") return micro1(d); const X=M(); if(d>0){ if(X.fi<V().frames.length-1) idx=firstOf(X.fi+1); } else { idx = X.si>0 ? firstOf(X.fi) : firstOf(Math.max(0,X.fi-1)); } render(); }
