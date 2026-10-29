@@ -129,10 +129,38 @@ function syncCells(box, vals, hotFn){
   while(cws.length > vals.length) cws.pop().remove();
   vals.forEach((v,i)=>setCell(cws[i], v, hotFn(i)));
 }
+/* Binary trees: levels[i][j] is the node at depth i, slot j (children of slot j are 2j and 2j+1); null / "·" = no node. */
+const absent = v => v===null || v===undefined || v==="·";
+function treeSvg(levels, hot, labels){
+  if(!levels.length || absent((levels[0]||[])[0])) return '<span class="tnone">empty tree</span>';
+  const pos = new Map(); let nx = 0, maxD = 0;
+  const walk = (i,j) => {
+    if(i>=levels.length || absent((levels[i]||[])[j]) || i>60) return;
+    walk(i+1,2*j); pos.set(i+","+j,{x:nx++,y:i}); maxD = Math.max(maxD,i); walk(i+1,2*j+1);
+  };
+  walk(0,0);
+  const DX=46, DY=54, R=18, W=nx*DX+16, H=(maxD+1)*DY+10, X=k=>8+pos.get(k).x*DX+DX/2-8, Y=k=>R+4+pos.get(k).y*DY;
+  let ed="", nd="";
+  pos.forEach((_,k)=>{ const [i,j]=k.split(",").map(Number);
+    [2*j,2*j+1].forEach(c=>{ const ck=(i+1)+","+c; if(pos.has(ck)) ed += `<line x1="${X(k)}" y1="${Y(k)}" x2="${X(ck)}" y2="${Y(ck)}"/>`; });
+    const t=String(levels[i][j]), lb=labels&&labels[k];
+    nd += `<g class="tn${hot&&hot.has(k)?" hot":""}"><circle cx="${X(k)}" cy="${Y(k)}" r="${R}"/><text x="${X(k)}" y="${Y(k)+5}" text-anchor="middle">${esc(t.length>4?t.slice(0,3)+"…":t)}</text>${lb?`<text class="tl" x="${X(k)}" y="${Y(k)+R+13}" text-anchor="middle">${esc(lb)}</text>`:""}</g>`; });
+  return `<svg class="tsvg" viewBox="0 0 ${W} ${H+14}" width="${W}" height="${H+14}" role="img" aria-label="binary tree">${ed}${nd}</svg>`;
+}
+/* Guided frames describe a tree as rows named "level 0", "level 1", ...: fold them into one tree row. */
+function groupTree(rows){
+  const lv = rows.filter(r=>/^level \d+$/i.test(r.name)); if(!lv.length) return rows;
+  const levels=[], hot=[], marks={};
+  lv.forEach(r=>{ const i=+r.name.split(" ")[1]; levels[i]=r.cells.map(c=>absent(c)?null:c); (r.hot||[]).forEach(j=>hot.push(i+","+j)); Object.entries(r.marks||{}).forEach(([j,l])=>marks[i+","+j]=l); });
+  for(let i=0;i<levels.length;i++) if(!levels[i]) levels[i]=[];
+  const out=[]; let put=false;
+  rows.forEach(r=>{ if(/^level \d+$/i.test(r.name)){ if(!put){ put=true; out.push({name:"tree",kind:"tree",levels,cells:[],hot,marks}); } } else out.push(r); });
+  return out;
+}
 function makeRow(r){
   const el=document.createElement("div"); el.className="row rnew";
   const nm=document.createElement("span"); nm.className="nm"; nm.textContent=r.name; el.appendChild(nm);
-  const body=document.createElement("div"); body.className = r.kind==="grid" ? "grid2" : "cells"+(r.kind==="list"?" listrow":""); el.appendChild(body);
+  const body=document.createElement("div"); body.className = r.kind==="grid" ? "grid2" : r.kind==="tree" ? "treebox" : "cells"+(r.kind==="list"?" listrow":""); el.appendChild(body);
   return {el, body, kind:r.kind||"", ptrs:new Map()};
 }
 function placePtrs(st, marks){
@@ -150,12 +178,15 @@ function placePtrs(st, marks){
   st.body.style.paddingBottom = (maxk>=0 ? 18+maxk*15 : 0)+"px";
 }
 function renderStage(rows, facts){
+  rows = groupTree(rows);
   const seen=new Set(), order=[];
   rows.forEach(r=>{
     let st=rowEls.get(r.name);
     if(!st || st.kind!==(r.kind||"")){ if(st) st.el.remove(); st=makeRow(r); rowEls.set(r.name,st); }
     seen.add(r.name); order.push(st.el);
-    if(r.kind==="grid"){
+    if(r.kind==="tree"){
+      st.body.innerHTML = treeSvg(r.levels, new Set(r.hot), r.marks);
+    } else if(r.kind==="grid"){
       while(st.body.children.length < r.cells.length){ const g=document.createElement("div"); g.className="cells"; st.body.appendChild(g); }
       while(st.body.children.length > r.cells.length) st.body.lastChild.remove();
       r.cells.forEach((row,ri)=>syncCells(st.body.children[ri], row, ci=>r.hot.includes(ri+","+ci)));
@@ -174,7 +205,7 @@ function renderStage(rows, facts){
     fr.body.innerHTML = entries.map(([k,v])=>`<span class="fc">${esc(k)} = ${esc(v)}</span>`).join(""); order.push(fr.el);
   } else if(fr){ fr.el.remove(); rowEls.delete("\u0000facts"); }
   order.forEach((el,i)=>{ if(stage.children[i]!==el) stage.insertBefore(el, stage.children[i]||null); });
-  rows.forEach(r=>{ const st=rowEls.get(r.name); if(st.kind!=="grid") placePtrs(st, r.marks); });
+  rows.forEach(r=>{ const st=rowEls.get(r.name); if(st.kind!=="grid" && st.kind!=="tree") placePtrs(st, r.marks); });
 }
 
 /* ---------- Every-line mode: the real code was run; each executed line is one step ---------- */
@@ -205,7 +236,7 @@ function toRows(vars){
     if(e[0]==="S"){ if(!e[1].length){ facts[name]="set()"; continue; } rows.push({name,cells:e[1].map(cell),hot:[],marks:{}}); continue; }
     if(e[0]==="d"){ if(!e[1].length){ facts[name]="{}"; continue; } rows.push({name,cells:e[1].map(([k,v])=>cs(k)+"→"+cs(v)),hot:[],marks:{}}); continue; }
     if(e[0]==="L"){ rows.push({name,cells:e[1].map(cell).concat(e[2]>=0?["↺"+e[2]]:[]),hot:[],marks:{},kind:"list"}); continue; }
-    if(e[0]==="T"){ e[1].forEach((lv,i)=>rows.push({name:name+" · L"+i,cells:lv.map(x=>x===null?"·":cell(x)),hot:[],marks:{}})); continue; }
+    if(e[0]==="T"){ rows.push({name,kind:"tree",levels:e[1].map(lv=>lv.map(x=>x===null?null:cell(x))),cells:[],hot:[],marks:{}}); continue; }
   }
   return {rows,facts};
 }
@@ -230,9 +261,10 @@ function renderTrace(){
   const {rows,facts}=toRows(s.v);
   const pr=prev&&prev.f===s.f?toRows(prev.v):null;
   rows.forEach(r=>{ const o=pr&&pr.rows.find(x=>x.name===r.name); if(!o) return;
-    if(r.kind==="grid"){ r.cells.forEach((row,ri)=>row.forEach((c,ci)=>{ if(!o.cells[ri]||o.cells[ri][ci]!==c) r.hot.push(ri+","+ci); })); }
+    if(r.kind==="tree"){ r.levels.forEach((lv,i)=>lv.forEach((c,j)=>{ if(c!==null && (!o.levels[i]||o.levels[i][j]!==c)) r.hot.push(i+","+j); })); }
+    else if(r.kind==="grid"){ r.cells.forEach((row,ri)=>row.forEach((c,ci)=>{ if(!o.cells[ri]||o.cells[ri][ci]!==c) r.hot.push(ri+","+ci); })); }
     else r.cells.forEach((c,i)=>{ if(o.cells[i]!==c) r.hot.push(i); }); });
-  const prim0=rows.find(r=>r.kind!=="grid"&&r.cells.length>0);
+  const prim0=rows.find(r=>r.kind!=="grid"&&r.kind!=="tree"&&r.cells.length>0);
   if(prim0) for(const [k,e] of Object.entries(s.v)){ if(PTR.has(k)&&typeof e==="number"&&e>=0&&e<prim0.cells.length){ prim0.marks[e]=prim0.marks[e]?prim0.marks[e]+","+k:k; } }
   document.querySelectorAll(".ln").forEach(el=>el.classList.toggle("on", +el.dataset.n===s.l));
   const first=document.querySelector(".ln.on"); if(first){const box=$("#code"); const t=first.offsetTop-box.clientHeight/3; if(box.scrollHeight>box.clientHeight) box.scrollTo({top:t,behavior:"smooth"});}
