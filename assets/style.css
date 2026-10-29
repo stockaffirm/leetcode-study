@@ -222,3 +222,5 @@ h1{font-size:28px}
 .treebox{overflow-x:auto;padding:4px 0}.tsvg{display:block;margin:0 auto;max-width:100%;height:auto}.tsvg line{stroke:var(--mute);stroke-width:1.6;opacity:.55}
 .tn circle{fill:var(--card);stroke:var(--accent);stroke-width:2;transition:fill .25s,stroke .25s}.tn text{fill:var(--ink);font:600 13px ui-monospace,Menlo,monospace}
 .tn.hot circle{fill:var(--hot);stroke:#e5a400}.tn.hot text{fill:var(--hot-ink)}.tn .tl{font:700 11px system-ui,sans-serif;fill:var(--accent)}.tnone{color:var(--mute);font-size:13px}
+
+.srow.stree{display:block;overflow-x:auto}.srow.stree .tsvg{margin:0}

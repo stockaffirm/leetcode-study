@@ -62,7 +62,8 @@ function renderTabs(){
 
 /* ---------- "Answer at a glance": one-page summary of the best solution ---------- */
 function sRows(rows){
-  return rows.map(r=>{
+  return groupTree(rows).map(r=>{
+    if(r.kind==="tree") return `<div class="srow stree">${treeSvg(r.levels,new Set(r.hot),r.marks)}</div>`;
     const mk=r.marks||{};
     const ch=(c,i,hot)=>{const t=String(c);return `<span class="sc"><span class="cell${hot?" hot":""}${t==="·"?" sp nul":""}">${t===" "?"␣":esc(t)}</span><span class="smk">${i>=0&&mk[i]?esc(mk[i]):""}</span></span>`;};
     const body = r.kind==="grid"
