@@ -222,7 +222,7 @@ function cs(e){
     case "S": return "{"+e[1].map(cs).join(", ")+"}";
     case "d": return "{"+e[1].map(([k,v])=>cs(k)+": "+cs(v)).join(", ")+"}";
     case "L": return e[1].map(cs).join(" → ")+(e[2]>=0?" ↺":"");
-    case "T": return "tree"; default: return e[1];
+    case "T": return "node "+(((e[1]||[])[0]||[])[0]); default: return e[1];
   }
 }
 const cell = e => prim(e)||e[0]==="x" ? (e===null?"None":e===true?"True":e===false?"False":prim(e)?String(e):e[1]) : e[0]==="s" ? e[1] : cs(e);
@@ -243,6 +243,25 @@ function toRows(vars){
   }
   return {rows,facts};
 }
+/* Every-line mode: a variable like `node` holds a subtree of the main tree. Instead of drawing it again, light up and label where it sits in the main tree. */
+const SUBN = new Set(["node","cur","curr","current","n","x","sub","subtree","temp","tmp","head"]);
+function foldSubtrees(rows){
+  const trees = rows.filter(r=>r.kind==="tree"); if(trees.length<2) return rows;
+  const cnt = r => r.levels.reduce((a,l)=>a+l.filter(v=>!absent(v)).length,0);
+  const main = trees.reduce((a,b)=>cnt(b)>cnt(a)?b:a), mc = cnt(main), gone = new Set();
+  const trim = a => { a=a.map(v=>absent(v)?null:String(v)); while(a.length&&a[a.length-1]===null) a.pop(); return JSON.stringify(a); };
+  trees.forEach(t=>{
+    if(t===main || !(cnt(t)<mc || SUBN.has(t.name))) return;
+    for(let i=0;i<main.levels.length;i++) for(let j=0;j<main.levels[i].length;j++){
+      if(absent(main.levels[i][j])) continue;
+      let same = true;
+      for(let k=0;k<t.levels.length&&same;k++){ const w=1<<k, seg=(main.levels[i+k]||[]).slice(j*w,(j+1)*w); same = trim(seg)===trim(t.levels[k]||[]); }
+      if(!same) continue;
+      const key=i+","+j; main.hot.push(key); main.marks[key]=main.marks[key]?main.marks[key]+","+t.name:t.name; gone.add(t); return;
+    }
+  });
+  return rows.filter(r=>!gone.has(r));
+}
 function traceCaption(T,i){
   const s=T.steps[i], prev=i>0?T.steps[i-1]:null, src=(V().code.split("\n")[s.l-1]||"").trim(), pre=s.d>1?"(inside a call, depth "+s.d+") ":"";
   if("ret" in s){
@@ -261,12 +280,13 @@ function changes(prev,s){
 const curTrace = () => (ex===2 && V().trace2) ? V().trace2 : V().trace;
 function renderTrace(){
   const T=curTrace(), s=T.steps[tidx], prev=tidx>0?T.steps[tidx-1]:null, n=T.steps.length;
-  const {rows,facts}=toRows(s.v);
+  let {rows,facts}=toRows(s.v);
   const pr=prev&&prev.f===s.f?toRows(prev.v):null;
   rows.forEach(r=>{ const o=pr&&pr.rows.find(x=>x.name===r.name); if(!o) return;
     if(r.kind==="tree"){ r.levels.forEach((lv,i)=>lv.forEach((c,j)=>{ if(c!==null && (!o.levels[i]||o.levels[i][j]!==c)) r.hot.push(i+","+j); })); }
     else if(r.kind==="grid"){ r.cells.forEach((row,ri)=>row.forEach((c,ci)=>{ if(!o.cells[ri]||o.cells[ri][ci]!==c) r.hot.push(ri+","+ci); })); }
     else r.cells.forEach((c,i)=>{ if(o.cells[i]!==c) r.hot.push(i); }); });
+  rows=foldSubtrees(rows);
   const prim0=rows.find(r=>r.kind!=="grid"&&r.kind!=="tree"&&r.cells.length>0);
   if(prim0) for(const [k,e] of Object.entries(s.v)){ if(PTR.has(k)&&typeof e==="number"&&e>=0&&e<prim0.cells.length){ prim0.marks[e]=prim0.marks[e]?prim0.marks[e]+","+k:k; } }
   document.querySelectorAll(".ln").forEach(el=>el.classList.toggle("on", +el.dataset.n===s.l));
