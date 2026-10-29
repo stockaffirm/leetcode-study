@@ -68,7 +68,7 @@ function sRows(rows){
     const ch=(c,i,hot)=>{const t=String(c);return `<span class="sc"><span class="cell${hot?" hot":""}${t==="·"?" sp nul":""}">${t===" "?"␣":esc(t)}</span><span class="smk">${i>=0&&mk[i]?esc(mk[i]):""}</span></span>`;};
     const body = r.kind==="grid"
       ? `<div class="sgrid">${r.cells.map((row,ri)=>`<div class="scells">${row.map((c,ci)=>ch(c,-1,r.hot.includes(ri+","+ci))).join("")}</div>`).join("")}</div>`
-      : `<div class="scells${r.kind==="list"?" slist":""}">${r.cells.map((c,i)=>ch(c,i,r.hot.includes(i))).join("")}</div>`;
+      : `<div class="scells${r.kind==="list"?" slist":""}">${r.cells.map((c,i)=>ch(c,i,r.hot.includes(i)).replace('class="sc"', i===r.cells.length-1?'class="sc lst"':'class="sc"')).join("")}</div>`;
     return `<div class="srow"><span class="snm">${esc(r.name)}</span>${body}</div>`;
   }).join("");
 }
@@ -89,7 +89,7 @@ function renderSummary(){
     <div class="pn pc"><pre class="code scode">${B.code.split("\n").map((l,i)=>`<span class="ln"><i>${i+1}</i>${hl(l)||" "}</span>`).join("")}</pre></div>
     <div class="pn pk"><h3>Key idea <small>(${esc(B.name)})</small></h3><ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul></div>
     ${P.ex2?`<div class="pn pe"><h3>Edge / failure case</h3><p class="spio"><b>Input</b> ${esc(P.ex2.input)}<br><b>Output</b> ${esc(P.ex2.output)}</p><p>${esc(P.ex2.why)}</p></div>`:""}<div class="pn px"><h3>Complexity</h3><ul><li><b>Time:</b> <span class="sf">${esc(B.time)}</span></li><li><b>Space:</b> <span class="sf b">${esc(B.space)}</span></li></ul><p>${esc(B.explain||"")}</p></div>
-  </div><div class="pn pw"><h3>Example walkthrough</h3><p class="spio"><b>Input</b> ${esc(P.input)}</p>${steps}
+  </div><div class="pn pw${/linked list/i.test(P.topic)?" llist":""}"><h3>Example walkthrough</h3><p class="spio"><b>Input</b> ${esc(P.input)}</p>${steps}
     <div class="sstep sres"><div class="sinfo"><b>Result</b></div><div class="sdia">${last?sRows(last.sub&&last.sub.length?last.sub[last.sub.length-1].rows:last.rows):""}</div><div class="snote">Output: ${esc(P.output)}</div></div></div></div>`;
 }
 function fmt(t){return esc(t).replace(/`([^`]+)`/g,"<code>$1</code>")}
@@ -116,6 +116,7 @@ function renderStatic(){
 
 /* Diagram renderer: keeps elements between steps so CSS transitions animate (cells recolour, values pop, pointers glide). */
 const stage = $("#stage"), rowEls = new Map();
+if(/linked list/i.test(P.topic)) stage.classList.add("llist");
 function popEl(el){ el.classList.remove("pop"); void el.offsetWidth; el.classList.add("pop"); }
 function setCell(cw, v, hot){
   const el = cw.firstChild, t = String(v), sp = t===" ", nul = t==="·", txt = sp?"␣":t;
@@ -129,6 +130,7 @@ function syncCells(box, vals, hotFn){
   while(cws.length < vals.length){ const c=mkCw(), pt=box.querySelector(".ptr"); box.insertBefore(c, pt); cws.push(c); }
   while(cws.length > vals.length) cws.pop().remove();
   vals.forEach((v,i)=>setCell(cws[i], v, hotFn(i)));
+  cws.forEach((c,i)=>c.classList.toggle("lst", i===cws.length-1));
 }
 /* Binary trees: levels[i][j] is the node at depth i, slot j (children of slot j are 2j and 2j+1); null / "·" = no node. */
 const absent = v => v===null || v===undefined || v==="·";

@@ -224,3 +224,8 @@ h1{font-size:28px}
 .tn.hot circle{fill:var(--hot);stroke:#e5a400}.tn.hot text{fill:var(--hot-ink)}.tn .tl{font:700 11px system-ui,sans-serif;fill:var(--accent)}.tnone{color:var(--mute);font-size:13px}
 
 .srow.stree{display:block;overflow-x:auto}.srow.stree .tsvg{margin:0}
+
+.llist .cw,.llist .sc{position:relative;margin-right:26px}.llist .cell{border-radius:9px}
+.llist .cw::after,.llist .sc::after{content:"\2192";position:absolute;right:-22px;top:50%;transform:translateY(-62%);color:var(--mute);font-size:17px;pointer-events:none}
+.llist .cw.lst::after,.llist .sc.lst::after{content:"\2192 None";right:-52px;font-size:11px;font-style:italic;transform:translateY(-55%)}
+.llist .cw.lst,.llist .sc.lst{margin-right:52px}
