@@ -27,7 +27,8 @@ $("#app").innerHTML = `
 <h1>${P.id}. ${esc(P.title)}</h1>
 <p class="sub"><span class="tag ${P.level}">${P.level}</span><span class="tag">${esc(P.topic)}</span></p>
 <section class="sec"><h2><b>1</b>Question</h2>
-  ${P.statement?`<details class="qfull"><summary>Full question (examples and constraints)</summary>${stmtHtml(P.statement)}</details>`:`<p class="q">${esc(P.question)}</p><p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>`}
+  ${P.statement?`<details class="qfull"><summary>Full question (examples and constraints)</summary>${stmtHtml(P.statement)}</details>`:`<p class="q">${esc(P.question)}</p>`}
+  <p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>
   <div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div>
   ${P.why?`<p class="why"><b>Why?</b> ${esc(P.why)}</p>`:""}${P.idea?`<p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>`:""}${P.ex2?`<p class="why edge"><b>Edge / failure case</b> <code>${esc(P.ex2.input)}</code> → <code>${esc(P.ex2.output)}</code><br>${esc(P.ex2.why)}</p>`:""}
 </section>
