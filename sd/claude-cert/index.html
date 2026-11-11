@@ -67,9 +67,9 @@
   const itemDone = (s, i) => stepsOf(s.items[i]).every(([k]) => S.done[s.ord + "." + i + "." + k]);
   const stepCount = (s, i) => stepsOf(s.items[i]).filter(([k]) => S.done[s.ord + "." + i + "." + k]).length;
   function totals(){ let t = 0, d = 0, ti = 0, di = 0; S.secs.forEach(s => s.items.forEach((it, i) => { if(!vis(it)) return; ti++; const n = stepsOf(it).length; t += n; const c = stepCount(s, i); d += c; if(c === n) di++; })); return { t, d, ti, di }; }
-  const ordered = () => (S.exam !== "ALL" && S.plan && S.plan.order[S.exam]) ? S.plan.order[S.exam].map(o => S.secs.find(s => s.ord === o)).filter(Boolean) : S.secs;
+  const ordered = () => (S.plan && S.plan.order[S.exam]) ? S.plan.order[S.exam].map(o => S.secs.find(s => s.ord === o)).filter(Boolean) : S.secs;
   const blueprint = () => { const e = S.exam !== "ALL" && S.plan && S.plan.exams[S.exam]; if(!e) return "";
-    return `<div class="card"><h3>${esc(e.name)}</h3><p style="margin:4px 0">${e.items} items · 120 minutes · $${e.fee} · pass 720/1000 · credential valid 12 months${e.note ? " · " + esc(e.note) : ""}</p><ul style="margin:6px 0;padding-left:20px">${e.domains.map(([n, w]) => `<li>${esc(n)} <b>${w}%</b></li>`).join("")}</ul><small>Sections below follow this exam's weights, highest-value first. Source: official exam guide v1.0 (July 2026).</small></div>`; };
+    return `<div class="card"><h3>${esc(e.name)}</h3><p style="margin:4px 0">${e.items} items · 120 minutes · $${e.fee} · pass 720/1000 · credential valid 12 months${e.note ? " · " + esc(e.note) : ""}</p><ul style="margin:6px 0;padding-left:20px">${e.domains.map(([n, w]) => `<li>${esc(n)} <b>${w}%</b></li>`).join("")}</ul><small>Study the sections in the order shown, basics first, building up. The weights above show where to spend the most time. Source: official exam guide v1.0 (July 2026).</small></div>`; };
 
   const topicOf = k => { const [o, i] = k.split("."); const s = S.secs.find(x => x.ord === +o); return s && s.items[+i] ? { s, i: +i, it: s.items[+i] } : null; };
   const topicKeys = t => stepsOf(t.it).map(([k]) => t.s.ord + "." + t.i + "." + k);
