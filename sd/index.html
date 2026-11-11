@@ -15,6 +15,7 @@
 .ub code,.utake code{font-family:ui-monospace,Menlo,monospace;font-size:.92em;padding:1px 5px;border-radius:5px;background:var(--line)}
 .utw{overflow-x:auto;margin:8px 0}.ut{border-collapse:collapse;width:100%;font-size:14px}.ut th,.ut td{text-align:left;padding:7px 10px;border:1px solid var(--line);vertical-align:top}.ut th{background:var(--line)}
 .ucode{margin:8px 0;padding:10px 12px;overflow-x:auto}.utake{border-left:4px solid var(--line)}.mine{border-left:4px solid var(--accent)}
+.lnk{margin:8px 0 0;line-height:1.7}.lnk a{color:var(--accent);text-decoration:none;font-size:13px}.lnk small{color:var(--mute)}
 .pn{border-radius:12px;padding:14px 16px;border:1px solid var(--line)}.pn h3{margin:0 0 6px;font-size:18px}.pn p{margin:6px 0}.pn ul{margin:6px 0;padding-left:20px}.pn li{margin:4px 0}
 </style></head>
 <body><div class="sdw" id="app"><p class="lead">Loading…</p></div>
@@ -80,12 +81,16 @@
     box.querySelectorAll("[data-m]").forEach(b => b.onclick = () => mark(b.dataset.s, b.dataset.m));
   }
   const table = t => `<div class="utw"><table class="ut"><thead><tr>${t.head.map(h => `<th>${fmt(h)}</th>`).join("")}</tr></thead><tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  let TT = null;
+  async function loadTitles(){ if(TT) return; TT = {}; const r = await sb.from("cert_sections").select("ord,items").gt("ord", 0).lt("ord", 18); (r.data || []).forEach(s => Array.isArray(s.items) && s.items.forEach((it, i) => { TT[s.ord + "." + i] = it.t; })); }
+  const chips = ks => { const a = ks.filter(k => TT && TT[k]).map(k => { const [x, y] = k.split("."); return `<a href="claude-cert/#t-${x}-${y}">${esc(TT[k])}</a>`; }); return a.length ? `<p class="lnk"><small>Related tracker topics:</small> ${a.join(" · ")}</p>` : ""; };
   async function renderItem(slug){
     app.innerHTML = head() + `<p class="lead">Loading…</p>`; wire();
     const r = await sb.from("sd_content").select("*").eq("slug", slug).maybeSingle();
     if(!r.data){ app.innerHTML = head() + `<div class="card"><p>Not found.</p><a href="#">← All topics</a></div>`; return wire(); }
     const b = r.data.body;
-    app.innerHTML = head() + `<p><a href="#">← All topics</a></p><h2>${esc(r.data.title)}</h2>` + (b.blocks || []).map((k, i) => `<div class="pn ub${k.mine ? " mine" : ""}"><h3><b>${i + 1}</b>${fmt(k.h)}</h3>${(k.p || []).map(x => `<p>${fmt(x)}</p>`).join("")}${k.code ? `<pre class="code ucode">${esc(k.code)}</pre>` : ""}${k.table ? table(k.table) : ""}${k.bullets ? `<ul>${k.bullets.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>` : ""}</div>`).join("") + (b.takeaway ? `<div class="pn utake"><b>Interview takeaway</b> ${fmt(b.takeaway)}</div>` : "");
+    if((b.blocks || []).some(k => k.links)) await loadTitles();
+    app.innerHTML = head() + `<p><a href="#">← All topics</a></p><h2>${esc(r.data.title)}</h2>` + (b.blocks || []).map((k, i) => `<div class="pn ub${k.mine ? " mine" : ""}"><h3><b>${i + 1}</b>${fmt(k.h)}</h3>${(k.p || []).map(x => `<p>${fmt(x)}</p>`).join("")}${k.code ? `<pre class="code ucode">${esc(k.code)}</pre>` : ""}${k.table ? table(k.table) : ""}${k.bullets ? `<ul>${k.bullets.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>` : ""}${k.links ? chips(k.links) : ""}</div>`).join("") + (b.takeaway ? `<div class="pn utake"><b>Interview takeaway</b> ${fmt(b.takeaway)}</div>` : "");
     wire();
   }
   function wire(){

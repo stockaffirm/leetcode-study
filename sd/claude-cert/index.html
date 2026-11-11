@@ -51,6 +51,7 @@
       const c = await sb.from("cert_sections").select("ord,title,items").order("ord");
       if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.det = (c.data.find(r => r.ord === 103) || {}).items || {}; S.dr = (c.data.find(r => r.ord === 104) || {}).items || {}; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
       const p = await sb.from("cert_progress").select("key"); S.done = {}; (p.data || []).forEach(r => S.done[r.key] = 1);
+      if(!booted && /^#t-\d+-\d+$/.test(location.hash)){ const m = location.hash.match(/^#t-(\d+)-(\d+)$/); setTimeout(() => jump(m[1] + "." + m[2]), 0); }
       if(!booted){ booted = true; const f = S.secs.find(s => s.items.some((_, i) => !S.done[s.ord + "." + i + ".m"])); if(f) open.add(f.ord); }
     }
     render();
@@ -85,7 +86,11 @@
     if(r.error){ S.done = prev; S.err = "Could not save: " + r.error.message; render(); }
   }
   function jump(key){ const t = topicOf(key); if(!t) return; S.view = "topics"; if(!vis(t.it)) S.exam = "ALL"; open.add(t.s.ord); render(); const el = document.getElementById("t-" + t.s.ord + "-" + t.i); if(el) el.scrollIntoView({ block: "center" }); }
-  function detHtml(key){ const d = S.det && S.det[key]; if(!d) return "";
+  const SCN = ["scn-support-resolution-agent", "scn-claude-code-team-workflow", "scn-multi-agent-research", "scn-developer-productivity-agent", "scn-claude-code-ci", "scn-structured-data-extraction"];
+  const scnLink = slug => `<p style="margin:4px 0;font-size:13px"><a href="../#${slug}">Open the full system design →</a></p>`;
+  function detHtml(key){ const sm = key.match(/^A\.5\.(\d)$/); if(sm && SCN[+sm[1]]) return scnLink(SCN[+sm[1]]) + (S.det && S.det[key] ? detHtml2(key) : "");
+    return detHtml2(key); }
+  function detHtml2(key){ const d = S.det && S.det[key]; if(!d) return "";
     const ul = a => `<ul style="margin:4px 0;padding-left:20px">${a.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`;
     return `<details class="lk"><summary>From the exam guide</summary>${d.d ? `<p style="margin:4px 0;font-size:13px">${esc(d.d)}</p>` : `${d.k && d.k.length ? `<small><b>Knowledge of</b></small>${ul(d.k)}` : ""}${d.s && d.s.length ? `<small><b>Skills in</b></small>${ul(d.s)}` : ""}`}</details>`; }
   function bpHtml(){
@@ -131,7 +136,7 @@
       OS.map(s => { const idx = s.items.map((it, i) => i).filter(i => vis(s.items[i])); if(!idx.length) return "";
         const dn = idx.filter(i => itemDone(s, i)).length;
         return `<details class="sec" data-o="${s.ord}"${open.has(s.ord) ? " open" : ""}><summary><span>${String(s.ord).padStart(2, "0")}. ${esc(s.title)}</span><span class="cnt">${dn}/${idx.length}</span></summary>` +
-          idx.map(i => { const it = s.items[i]; return `<div class="it${itemDone(s, i) ? " done" : ""}" id="t-${s.ord}-${i}"><h3>${esc(it.t)}${[...it.g].map(g => `<span class="tag" title="${EXAMS[g]}">${g}</span>`).join("")}</h3>${stepsOf(it).map(([k, l]) => stepHtml(s, i, it, k, l)).join("")}</div>`; }).join("") + `</details>`; }).join("")) +
+          idx.map(i => { const it = s.items[i]; return `<div class="it${itemDone(s, i) ? " done" : ""}" id="t-${s.ord}-${i}"><h3>${esc(it.t)}${[...it.g].map(g => `<span class="tag" title="${EXAMS[g]}">${g}</span>`).join("")}</h3>${s.ord === 17 && i >= 12 && i <= 17 ? scnLink(SCN[i - 12]) : ""}${stepsOf(it).map(([k, l]) => stepHtml(s, i, it, k, l)).join("")}</div>`; }).join("") + `</details>`; }).join("")) +
       `<p class="note">P = Architect Professional, A = Architect Foundations, D = Developer Foundations. Exam tags are editorial study mappings, not official task identifiers. Udemy links open the course; find the exact lecture inside it, and some lectures are only the closest relevant lesson. Topics without a Watch step came from the exam guides and have no matching lecture. Verify syntax against current official documentation and your exam guide.</p>`;
     wire(); const nx = $("#nx"); if(nx && next) nx.onclick = () => { open.add(next.s.ord); render(); const el = document.getElementById("t-" + next.s.ord + "-" + next.i); if(el) el.scrollIntoView({ block: "center" }); };
   }
