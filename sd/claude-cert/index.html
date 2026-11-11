@@ -30,7 +30,7 @@
   const esc = s => String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   const safeUrl = u => /^https:\/\//.test(u) ? u : "#";
   const sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
-  let S = { user: null, access: null, meta: null, secs: [], done: {}, exam: "ALL", err: "" };
+  let S = { user: null, access: null, meta: null, dm: null, secs: [], done: {}, exam: "ALL", err: "" };
   const open = new Set(); let booted = false;
 
   const home = () => location.origin + location.pathname;
@@ -47,7 +47,7 @@
     const ad = await sb.rpc("sd_is_admin"); if(ad.data === true) S.access = "approved";
     if(allowed()){
       const c = await sb.from("cert_sections").select("ord,title,items").order("ord");
-      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.secs = c.data.filter(r => r.ord > 0); }
+      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
       const p = await sb.from("cert_progress").select("key"); S.done = {}; (p.data || []).forEach(r => S.done[r.key] = 1);
       if(!booted){ booted = true; const f = S.secs.find(s => s.items.some((_, i) => !S.done[s.ord + "." + i + ".m"])); if(f) open.add(f.ord); }
     }
@@ -76,7 +76,8 @@
   function stepHtml(s, i, it, k, lab){
     const key = s.ord + "." + i + "." + k, on = !!S.done[key]; let body;
     if(k === "v"){ const c = S.meta.courses[it.v[0]]; body = `<b>Watch:</b> <a href="${esc(safeUrl(c.u))}" target="_blank" rel="noopener noreferrer">${esc(c.n)} — ${esc(it.v[1])}</a>`; }
-    else if(k === "r"){ const d = S.meta.docs[it.r]; body = `<b>Read:</b> <a href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener noreferrer">${esc(d.n)}</a>`; }
+    else if(k === "r"){ const ids = S.dm && S.dm.map[s.ord + "." + i]; const ds = ids ? ids.map(n => S.dm.docs[n]).filter(Boolean) : [S.meta.docs[it.r]];
+      body = `<b>Read:</b> ` + ds.map(d => `<a href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener noreferrer">${esc(d.n)}</a>`).join(" · "); }
     else body = `<b>Master:</b> <span class="m">explain / implement without notes</span>`;
     return `<div class="st"><button class="ckb" role="checkbox" aria-label="${lab}" aria-checked="${on}" data-k="${esc(key)}">${on ? "✓" : ""}</button><div>${body}</div></div>`;
   }
