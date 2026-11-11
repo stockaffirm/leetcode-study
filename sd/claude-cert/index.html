@@ -17,6 +17,7 @@
 .st{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:center;padding:4px 0;font-size:14px}.st a{color:var(--accent);text-decoration:none;overflow-wrap:anywhere}.st span.m{color:var(--mute)}
 .ckb{width:30px;height:30px;border-radius:8px;border:2px solid var(--mute);background:transparent;cursor:pointer;color:#fff;font-size:16px;line-height:1;justify-self:center}.ckb[aria-checked=true]{background:var(--ok);border-color:var(--ok)}
 .ckb[aria-checked=mixed]{background:var(--accent);border-color:var(--accent)}.ob{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:start}.lk summary{cursor:pointer;color:var(--mute);font-size:13px;margin-top:2px}.lk div{padding:2px 0;font-size:13px}.lk a{color:var(--accent);text-decoration:none}
+.mq{margin:4px 0;padding:8px 10px;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:6px;font-size:14px}
 .it.done h3{color:var(--mute);text-decoration:line-through}.note{font-size:12px;color:var(--mute);margin-top:18px}
 </style></head>
 <body><div class="sdw" id="app"><p class="lead">Loading…</p></div>
@@ -48,7 +49,7 @@
     const ad = await sb.rpc("sd_is_admin"); if(ad.data === true) S.access = "approved";
     if(allowed()){
       const c = await sb.from("cert_sections").select("ord,title,items").order("ord");
-      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.det = (c.data.find(r => r.ord === 103) || {}).items || {}; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
+      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.det = (c.data.find(r => r.ord === 103) || {}).items || {}; S.dr = (c.data.find(r => r.ord === 104) || {}).items || {}; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
       const p = await sb.from("cert_progress").select("key"); S.done = {}; (p.data || []).forEach(r => S.done[r.key] = 1);
       if(!booted){ booted = true; const f = S.secs.find(s => s.items.some((_, i) => !S.done[s.ord + "." + i + ".m"])); if(f) open.add(f.ord); }
     }
@@ -112,7 +113,8 @@
     else if(k === "r"){ const ids = S.dm && S.dm.map[s.ord + "." + i]; const ds = (ids ? ids.map(n => S.dm.docs[n]) : [S.meta.docs[it.r]]).filter(Boolean);
       const weak = S.plan && S.plan.weak && S.plan.weak.includes(s.ord + "." + i);
       body = `<b>Read:</b> ` + (ds.length ? ds.map(d => `<a href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener noreferrer">${esc(d.n)}</a>`).join(" · ") : `<span class="m">${esc(it.n || "No matching docs page.")}</span>`) + (weak && ds.length ? ` <span class="m">(closest pages; no dedicated docs)</span>` : ""); }
-    else body = `<b>Master:</b> <span class="m">explain / implement without notes</span>`;
+    else { const dq = S.dr && S.dr[s.ord] && S.dr[s.ord][i];
+      body = dq ? `<b>Master:</b> answer this out loud or on paper first, with no notes.<div class="mq">${esc(dq[0])}</div><details class="lk"><summary>Show model answer</summary><p style="margin:4px 0;font-size:13px">${esc(dq[1])}</p></details>` : `<b>Master:</b> <span class="m">explain / implement without notes</span>`; }
     return `<div class="st"><button class="ckb" role="checkbox" aria-label="${lab}" aria-checked="${on}" data-k="${esc(key)}">${on ? "✓" : ""}</button><div>${body}</div></div>`;
   }
   function render(){
