@@ -229,3 +229,7 @@ h1{font-size:28px}
 .llist .cw::after,.llist .sc::after{content:"\2192";position:absolute;right:-22px;top:50%;transform:translateY(-62%);color:var(--mute);font-size:17px;pointer-events:none}
 .llist .cw.lst::after,.llist .sc.lst::after{content:"\2192 None";right:-52px;font-size:11px;font-style:italic;transform:translateY(-55%)}
 .llist .cw.lst,.llist .sc.lst{margin-right:52px}
+
+.inpic{margin:10px 0 2px;padding:10px 12px;border:1px dashed var(--line);border-radius:12px}.inpic>small{display:block;color:var(--mute);font-size:12px;margin-bottom:6px}
+.inpics{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start}.inpics figure{margin:0;text-align:center}.inpics figcaption{font:600 11px ui-monospace,Menlo,monospace;color:var(--mute);margin-bottom:2px}
+.tsvg .ew{font:600 11px ui-monospace,Menlo,monospace;fill:var(--accent)}.tsvg .ah{fill:var(--mute);opacity:.7}.tsvg .loop{fill:none;stroke:var(--mute);stroke-width:1.6;opacity:.6}

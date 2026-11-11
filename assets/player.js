@@ -30,6 +30,7 @@ $("#app").innerHTML = `
   ${P.statement?`<details class="qfull"><summary>Full question (examples and constraints)</summary>${stmtHtml(P.statement)}</details>`:`<p class="q">${esc(P.question)}</p>`}
   <p class="lcl"><a id="lclink" href="https://leetcode.com/problemset/?search=${encodeURIComponent(P.id)}" target="_blank" rel="noopener">Open the original problem on LeetCode ↗</a></p>
   <div class="io"><div><small>Example input</small>${esc(P.input)}</div><div class="arrow">→</div><div><small>Output</small>${esc(P.output)}</div></div>
+  <div class="inpic" id="inpic"></div>
   ${P.why?`<p class="why"><b>Why?</b> ${esc(P.why)}</p>`:""}${P.idea?`<p class="idea"><b>💡 Key idea</b> ${esc(P.idea)}</p>`:""}${P.ex2?`<p class="why edge"><b>Edge / failure case</b> <code>${esc(P.ex2.input)}</code> → <code>${esc(P.ex2.output)}</code><br>${esc(P.ex2.why)}</p>`:""}
 </section>
 <div class="work"><section class="sec codeSec"><h2><b>2</b>Code<span class="copyw"><button id="copy" title="Copy the whole solution">Copy all</button></span></h2><div class="tabs" id="tabs"></div><pre class="code" id="code"></pre><div class="meta" id="meta"></div></section>
@@ -149,6 +150,72 @@ function treeSvg(levels, hot, labels){
     const t=String(levels[i][j]), lb=labels&&labels[k];
     nd += `<g class="tn${hot&&hot.has(k)?" hot":""}"><circle cx="${X(k)}" cy="${Y(k)}" r="${R}"/><text x="${X(k)}" y="${Y(k)+5}" text-anchor="middle">${esc(t.length>4?t.slice(0,3)+"…":t)}</text>${lb?`<text class="tl" x="${X(k)}" y="${Y(k)+R+13}" text-anchor="middle">${esc(lb)}</text>`:""}</g>`; });
   return `<svg class="tsvg" viewBox="0 0 ${W} ${H+14}" width="${W}" height="${H+14}" role="img" aria-label="binary tree">${ed}${nd}</svg>`;
+}
+/* ---- Example input as a picture: level-order tree lists, parent arrays and edge lists ---- */
+const jarr = t => { try { return JSON.parse(t.replace(/\bnull\b/gi,"null").replace(/'/g,'"')); } catch(e){ return null; } };
+function levelsFromList(a){            /* LeetCode level-order list -> slot levels */
+  if(!Array.isArray(a)||!a.length||a[0]===null||a.length>63) return null;
+  const lv=[[a[0]]], q=[[0,0]]; let k=1;
+  while(q.length && k<a.length){
+    const [i,j]=q.shift();
+    for(const c of [0,1]){ if(k>=a.length) break; const v=a[k++]; if(v===null) continue;
+      const ci=i+1, cj=2*j+c; if(ci>12) return null; (lv[ci]=lv[ci]||[])[cj]=v; q.push([ci,cj]); }
+  }
+  return lv.map(l=>Array.from(l||[],v=>v===undefined?null:v));
+}
+function heapLevels(a){ const lv=[]; for(let i=0;i<a.length;i++){ const d=Math.floor(Math.log2(i+1)); (lv[d]=lv[d]||[]).push(a[i]); } return lv; }
+function svgWrap(w,h,inner,label){ return `<svg class="tsvg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${esc(label)}">${inner}</svg>`; }
+function parentTreeSvg(par, vals){             /* parent[i] = parent of node i (-1 = root) */
+  const n=par.length, ch=Array.from({length:n},()=>[]); let root=-1;
+  par.forEach((p,i)=>{ if(p<0) root=i; else if(p<n) ch[p].push(i); }); if(root<0) return null;
+  const pos=new Map(); let nx=0, md=0;
+  const walk=(u,d)=>{ md=Math.max(md,d); if(!ch[u].length){ pos.set(u,{x:nx++,y:d}); return; } ch[u].forEach(c=>walk(c,d+1)); const xs=ch[u].map(c=>pos.get(c).x); pos.set(u,{x:(Math.min(...xs)+Math.max(...xs))/2,y:d}); };
+  walk(root,0);
+  const DX=46,DY=54,R=18,W=Math.max(1,nx)*DX+16; let ed="",nd="";
+  pos.forEach((q,u)=>{ ch[u].forEach(c=>{ const o=pos.get(c); ed+=`<line x1="${8+q.x*DX+DX/2-8}" y1="${R+4+q.y*DY}" x2="${8+o.x*DX+DX/2-8}" y2="${R+4+o.y*DY}"/>`; }); });
+  pos.forEach((q,u)=>{ nd+=`<g class="tn"><circle cx="${8+q.x*DX+DX/2-8}" cy="${R+4+q.y*DY}" r="${R}"/><text x="${8+q.x*DX+DX/2-8}" y="${R+9+q.y*DY}" text-anchor="middle">${esc(vals?vals[u]:u)}</text></g>`; });
+  return svgWrap(W,(md+1)*DY+14,ed+nd,"tree");
+}
+function graphSvg(n, edges, directed, base){
+  const R=n<=6?70:n<=12?95:120, CX=R+30, CY=R+26, W=2*CX, H=2*CY, r=17;
+  const pt=i=>{ const a=-Math.PI/2+2*Math.PI*i/n; return [CX+R*Math.cos(a), CY+R*Math.sin(a)]; };
+  let ed="", nd="";
+  edges.forEach(([a,b,w])=>{ const A=a-base, B=b-base; if(A<0||B<0||A>=n||B>=n) return; if(A===B){ const [x,y]=pt(A); ed+=`<circle class="loop" cx="${x}" cy="${y-r-6}" r="8"/>`; return; }
+    const [x1,y1]=pt(A), [x2,y2]=pt(B), dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy)||1, ux=dx/L, uy=dy/L,
+      sx=x1+ux*r, sy=y1+uy*r, ex=x2-ux*(r+(directed?3:0)), ey=y2-uy*(r+(directed?3:0));
+    ed+=`<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}"/>`;
+    if(directed) ed+=`<polygon class="ah" points="${ex},${ey} ${ex-ux*9-uy*4.5},${ey-uy*9+ux*4.5} ${ex-ux*9+uy*4.5},${ey-uy*9-ux*4.5}"/>`;
+    if(w!==undefined) ed+=`<text class="ew" x="${(x1+x2)/2+(-uy)*9}" y="${(y1+y2)/2+ux*9+4}" text-anchor="middle">${esc(w)}</text>`; });
+  for(let i=0;i<n;i++){ const [x,y]=pt(i); nd+=`<g class="tn"><circle cx="${x}" cy="${y}" r="${r}"/><text x="${x}" y="${y+5}" text-anchor="middle">${i+base}</text></g>`; }
+  return svgWrap(W,H,ed+nd,"graph");
+}
+function inputPictures(P){
+  const t=String(P.input||""), out=[]; const topic=String(P.topic||"");
+  const isTree=/tree/i.test(topic);
+  /* binary trees given as level-order lists */
+  const seen=new Set();
+  for(const m of t.matchAll(/\b(root\d?|p|q|tree\d?|node)\s*=\s*(\[[^\]]*\])/gi)){ const lv=levelsFromList(jarr(m[2])); if(lv&&!seen.has(m[2])){ seen.add(m[2]); out.push([m[1],treeSvg(lv,null,null)]); } }
+  if(!out.length && isTree){ const m=t.match(/^\s*(\[[^\]]*\])/); if(m){ const lv=levelsFromList(jarr(m[1])); if(lv) out.push(["tree",treeSvg(lv,null,null)]); } }
+  if(!out.length && isTree){ const m=t.match(/\bcost\s*=\s*(\[[^\]]*\])/i); const a=m&&jarr(m[1]); if(a&&a.length<=31) out.push(["tree (node 1 = root)",treeSvg(heapLevels(a),null,null)]); }
+  /* parent arrays -> rooted tree */
+  if(!out.length){ const m=t.match(/\b(parents?|prevRoom)\s*=?\s*(\[[^\]]*\])/i); const a=m&&jarr(m[2]); if(a&&a.length>1&&a.length<=24&&a.every(Number.isInteger)){ const sv=parentTreeSvg(a); if(sv) out.push(["tree",sv]); } }
+  /* edge lists -> graph */
+  if(!out.length){
+    const m=t.match(/\b(edges|connections|roads|pairs|prerequisites|flights|times|redEdges|blueEdges)\s*=?\s*(\[\[[^\]]*\](?:\s*,\s*\[[^\]]*\])*\s*\])/i); const a=m&&jarr(m[2]);
+    if(a&&a.length&&a.length<=40&&a.every(e=>Array.isArray(e)&&e.length>=2&&Number.isInteger(e[0])&&Number.isInteger(e[1]))){
+      const lab=a.flatMap(e=>[e[0],e[1]]), base=Math.min(...lab)>=1?1:0;
+      const nm=t.match(/\bn\s*=\s*(\d+)/i), n=Math.max(nm?+nm[1]:0, Math.max(...lab)-base+1);
+      const dir=/prereq|flights|times|redEdges|blueEdges/i.test(m[1]), w=a.some(e=>e.length>=3&&Number.isInteger(e[2])) && !/pairs|prereq/i.test(m[1]);
+      if(n>=2&&n<=24) out.push([w?"weighted graph":(dir?"directed graph":"graph"),graphSvg(n,a.map(e=>[e[0],e[1],w?e[2]:undefined]),dir,base)]);
+    }
+  }
+  return out;
+}
+function renderInputPics(){
+  const box=document.getElementById("inpic"); if(!box) return;
+  let pics=[]; try{ pics=inputPictures(P); }catch(e){ pics=[]; }
+  if(!pics.length){ box.style.display="none"; return; }
+  box.innerHTML=`<small>Example input drawn as a picture</small><div class="inpics">${pics.map(([l,sv])=>`<figure><figcaption>${esc(l)}</figcaption>${sv}</figure>`).join("")}</div>`;
 }
 /* Guided frames describe a tree as rows named "level 0", "level 1", ...: fold them into one tree row. */
 function groupTree(rows){
@@ -352,6 +419,7 @@ document.querySelectorAll("#exs button").forEach(b=>b.onclick=()=>{ stop(); ex=+
 if(!P.variants.some(v=>v.trace)) $("#modes").style.display="none";
 renderSummary();renderUnderstand();
 renderTabs(); renderStatic(); if(!V().frames.length && V().trace) setMode("trace"); else render();
+renderInputPics();
 })();
 
 /* Notepad: a floating icon opens a blank white pad for typing your own answer. Saved per problem in this browser. */
