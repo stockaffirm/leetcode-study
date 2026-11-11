@@ -16,6 +16,7 @@
 .it{padding:10px 16px;border-top:1px solid var(--line)}.it h3{margin:0 0 6px;font-size:15px}.tag{display:inline-block;padding:0 7px;margin-left:6px;border-radius:99px;background:var(--line);font-size:11px;font-weight:700;vertical-align:middle}
 .st{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:center;padding:4px 0;font-size:14px}.st a{color:var(--accent);text-decoration:none;overflow-wrap:anywhere}.st span.m{color:var(--mute)}
 .ckb{width:30px;height:30px;border-radius:8px;border:2px solid var(--mute);background:transparent;cursor:pointer;color:#fff;font-size:16px;line-height:1;justify-self:center}.ckb[aria-checked=true]{background:var(--ok);border-color:var(--ok)}
+.ckb[aria-checked=mixed]{background:var(--accent);border-color:var(--accent)}.ob{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:start}.lk summary{cursor:pointer;color:var(--mute);font-size:13px;margin-top:2px}.lk div{padding:2px 0;font-size:13px}.lk a{color:var(--accent);text-decoration:none}
 .it.done h3{color:var(--mute);text-decoration:line-through}.note{font-size:12px;color:var(--mute);margin-top:18px}
 </style></head>
 <body><div class="sdw" id="app"><p class="lead">Loading…</p></div>
@@ -31,7 +32,7 @@
   const safeUrl = u => /^https:\/\//.test(u) ? u : "#";
   const sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
   let S = { user: null, access: null, meta: null, dm: null, plan: null, secs: [], done: {}, exam: "ALL", err: "" };
-  const open = new Set(); let booted = false;
+  const open = new Set(), openB = new Set(); let booted = false;
 
   const home = () => location.origin + location.pathname;
   const signIn = provider => sb.auth.signInWithOAuth({ provider, options: { redirectTo: home() } });
@@ -47,7 +48,7 @@
     const ad = await sb.rpc("sd_is_admin"); if(ad.data === true) S.access = "approved";
     if(allowed()){
       const c = await sb.from("cert_sections").select("ord,title,items").order("ord");
-      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
+      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
       const p = await sb.from("cert_progress").select("key"); S.done = {}; (p.data || []).forEach(r => S.done[r.key] = 1);
       if(!booted){ booted = true; const f = S.secs.find(s => s.items.some((_, i) => !S.done[s.ord + "." + i + ".m"])); if(f) open.add(f.ord); }
     }
@@ -69,6 +70,29 @@
   const ordered = () => (S.exam !== "ALL" && S.plan && S.plan.order[S.exam]) ? S.plan.order[S.exam].map(o => S.secs.find(s => s.ord === o)).filter(Boolean) : S.secs;
   const blueprint = () => { const e = S.exam !== "ALL" && S.plan && S.plan.exams[S.exam]; if(!e) return "";
     return `<div class="card"><h3>${esc(e.name)}</h3><p style="margin:4px 0">${e.items} items · 120 minutes · $${e.fee} · pass 720/1000 · credential valid 12 months${e.note ? " · " + esc(e.note) : ""}</p><ul style="margin:6px 0;padding-left:20px">${e.domains.map(([n, w]) => `<li>${esc(n)} <b>${w}%</b></li>`).join("")}</ul><small>Sections below follow this exam's weights, highest-value first. Source: official exam guide v1.0 (July 2026).</small></div>`; };
+
+  const topicOf = k => { const [o, i] = k.split("."); const s = S.secs.find(x => x.ord === +o); return s && s.items[+i] ? { s, i: +i, it: s.items[+i] } : null; };
+  const topicKeys = t => stepsOf(t.it).map(([k]) => t.s.ord + "." + t.i + "." + k);
+  const objInfo = o => { const ts = o.l.map(topicOf).filter(Boolean); return { ts, done: ts.filter(t => itemDone(t.s, t.i)).length, total: ts.length }; };
+  const objDone = x => x.total > 0 && x.done === x.total;
+  async function toggleObj(di, oi){
+    const o = S.bp[S.exam][di].o[oi], x = objInfo(o), keys = x.ts.flatMap(topicKeys), on = !objDone(x);
+    if(!on && !confirm("Clear these topics? Topics shared with other objectives will show as incomplete there too.")) return;
+    const prev = Object.assign({}, S.done);
+    keys.forEach(k => { if(on) S.done[k] = 1; else delete S.done[k]; }); render();
+    const r = on ? await sb.from("cert_progress").upsert(keys.map(key => ({ user_id: S.user.id, key }))) : await sb.from("cert_progress").delete().eq("user_id", S.user.id).in("key", keys);
+    if(r.error){ S.done = prev; S.err = "Could not save: " + r.error.message; render(); }
+  }
+  function jump(key){ const t = topicOf(key); if(!t) return; S.view = "topics"; if(!vis(t.it)) S.exam = "ALL"; open.add(t.s.ord); render(); const el = document.getElementById("t-" + t.s.ord + "-" + t.i); if(el) el.scrollIntoView({ block: "center" }); }
+  function bpHtml(){
+    const B = S.bp && S.bp[S.exam]; if(!B) return `<div class="card"><p class="msg">Pick an exam above to see its blueprint.</p></div>`;
+    const e = S.plan && S.plan.exams[S.exam]; let T = 0, Dn = 0; B.forEach(dom => dom.o.forEach(o => { T++; if(objDone(objInfo(o))) Dn++; }));
+    return `<div class="card"><h3>${esc(e ? e.name : "")} blueprint</h3>${e ? `<p style="margin:4px 0">${e.items} items · 120 minutes · $${e.fee} · pass 720/1000 · valid 12 months${e.note ? " · " + esc(e.note) : ""}</p>` : ""}<div class="bar"><i style="width:${T ? Math.round(100 * Dn / T) : 0}%"></i></div><small>${Dn} of ${T} objectives complete. Ticking an objective ticks every linked topic, and ticking topics fills the objective, so both views share one set of ticks. Source: official exam guide v1.0 (July 2026), objectives condensed.</small></div>` +
+      B.map((dom, di) => { const id = S.exam + di; let d = 0; dom.o.forEach(o => { if(objDone(objInfo(o))) d++; });
+        return `<details class="sec" data-bd="${id}"${openB.has(id) ? " open" : ""}><summary><span>${esc(dom.n)}${dom.w != null ? ` <span class="tag">${dom.w}%</span>` : ""}</span><span class="cnt">${d}/${dom.o.length}</span></summary>` +
+          dom.o.map((o, oi) => { const x = objInfo(o), st = objDone(x) ? "true" : x.done ? "mixed" : "false";
+            return `<div class="it"><div class="ob"><button class="ckb" role="checkbox" aria-checked="${st}" aria-label="${esc(o.t)}" data-ob="${di}.${oi}">${st === "true" ? "✓" : st === "mixed" ? "–" : ""}</button><div><div>${esc(o.t)}</div><details class="lk"><summary>${x.done}/${x.total} topics</summary>${x.ts.map(t => `<div><a href="#" data-j="${t.s.ord}.${t.i}">${itemDone(t.s, t.i) ? "✓ " : ""}${esc(t.it.t)}</a></div>`).join("")}</details></div></div></div>`; }).join("") + `</details>`; }).join("");
+  }
 
   const head = () => `<div class="top"><a href="../">← System Design Prep</a><span class="who">${S.user ? esc(S.user.email || "") + ' · <a href="#" id="so">Sign out</a>' : ""}</span></div><h1>Claude Certification Tracker</h1>`;
   function gate(){
@@ -95,11 +119,12 @@
       `<p class="lead">Watch the lesson, read the source, then explain or implement it from memory. Tick each step.${S.meta.udemyHome ? ` <a href="${esc(safeUrl(S.meta.udemyHome))}" target="_blank" rel="noopener noreferrer">Open Udemy</a>` : ""}</p>
       <div class="card"><h2>${pct}% complete</h2><div class="bar"><i style="width:${pct}%"></i></div><small>${T.di} of ${T.ti} topics fully mastered · ${T.d} of ${T.t} steps</small>
       <div class="flt"><small>Exam:</small>${[["ALL", "All"], ["P", "Professional"], ["A", "Arch. Foundations"], ["D", "Dev. Foundations"]].map(([k, l]) => `<button class="btn sm${S.exam === k ? " on" : ""}" data-e="${k}">${l}</button>`).join("")}</div>
-      ${next ? `<div class="btns"><button class="btn sm pri" id="nx">Jump to next unfinished topic</button></div>` : `<p class="msg">Everything in this view is done.</p>`}</div>` + blueprint() +
+      <div class="flt"><small>View:</small>${[["topics", "Topics"], ["bp", "Exam blueprint"]].map(([k, l]) => `<button class="btn sm${(S.view || "topics") === k ? " on" : ""}" data-v="${k}">${l}</button>`).join("")}</div>
+      ${next ? `<div class="btns"><button class="btn sm pri" id="nx">Jump to next unfinished topic</button></div>` : `<p class="msg">Everything in this view is done.</p>`}</div>` + (S.view === "bp" ? bpHtml() : blueprint() +
       OS.map(s => { const idx = s.items.map((it, i) => i).filter(i => vis(s.items[i])); if(!idx.length) return "";
         const dn = idx.filter(i => itemDone(s, i)).length;
         return `<details class="sec" data-o="${s.ord}"${open.has(s.ord) ? " open" : ""}><summary><span>${String(s.ord).padStart(2, "0")}. ${esc(s.title)}</span><span class="cnt">${dn}/${idx.length}</span></summary>` +
-          idx.map(i => { const it = s.items[i]; return `<div class="it${itemDone(s, i) ? " done" : ""}" id="t-${s.ord}-${i}"><h3>${esc(it.t)}${[...it.g].map(g => `<span class="tag" title="${EXAMS[g]}">${g}</span>`).join("")}</h3>${stepsOf(it).map(([k, l]) => stepHtml(s, i, it, k, l)).join("")}</div>`; }).join("") + `</details>`; }).join("") +
+          idx.map(i => { const it = s.items[i]; return `<div class="it${itemDone(s, i) ? " done" : ""}" id="t-${s.ord}-${i}"><h3>${esc(it.t)}${[...it.g].map(g => `<span class="tag" title="${EXAMS[g]}">${g}</span>`).join("")}</h3>${stepsOf(it).map(([k, l]) => stepHtml(s, i, it, k, l)).join("")}</div>`; }).join("") + `</details>`; }).join("")) +
       `<p class="note">P = Architect Professional, A = Architect Foundations, D = Developer Foundations. Exam tags are editorial study mappings, not official task identifiers. Udemy links open the course; find the exact lecture inside it, and some lectures are only the closest relevant lesson. Topics without a Watch step came from the exam guides and have no matching lecture. Verify syntax against current official documentation and your exam guide.</p>`;
     wire(); const nx = $("#nx"); if(nx && next) nx.onclick = () => { open.add(next.s.ord); render(); const el = document.getElementById("t-" + next.s.ord + "-" + next.i); if(el) el.scrollIntoView({ block: "center" }); };
   }
@@ -109,6 +134,10 @@
     const rq = $("#req"); if(rq) rq.onclick = requestAccess;
     app.querySelectorAll("[data-k]").forEach(b => b.onclick = () => toggle(b.dataset.k));
     app.querySelectorAll("[data-e]").forEach(b => b.onclick = () => { S.exam = b.dataset.e; render(); });
+    app.querySelectorAll("[data-v]").forEach(b => b.onclick = () => { S.view = b.dataset.v; if(S.view === "bp" && S.exam === "ALL") S.exam = "P"; render(); });
+    app.querySelectorAll("[data-ob]").forEach(b => b.onclick = () => { const [di, oi] = b.dataset.ob.split(".").map(Number); toggleObj(di, oi); });
+    app.querySelectorAll("[data-j]").forEach(a => a.onclick = e => { e.preventDefault(); jump(a.dataset.j); });
+    app.querySelectorAll("details[data-bd]").forEach(d => d.addEventListener("toggle", () => { if(d.open) openB.add(d.dataset.bd); else openB.delete(d.dataset.bd); }));
     app.querySelectorAll("details[data-o]").forEach(d => d.addEventListener("toggle", () => { const o = +d.dataset.o; if(d.open) open.add(o); else open.delete(o); }));
   }
   sb.auth.onAuthStateChange(ev => { if(ev === "SIGNED_IN" || ev === "SIGNED_OUT" || ev === "INITIAL_SESSION") load(); });
