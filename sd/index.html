@@ -85,13 +85,14 @@
   let TT = null;
   async function loadTitles(){ if(TT) return; TT = {}; const r = await sb.from("cert_sections").select("ord,items").gt("ord", 0).lt("ord", 18); (r.data || []).forEach(s => Array.isArray(s.items) && s.items.forEach((it, i) => { TT[s.ord + "." + i] = it.t; })); }
   const chips = ks => { const a = ks.filter(k => TT && TT[k]).map(k => { const [x, y] = k.split("."); return `<a href="claude-cert/#t-${x}-${y}">${esc(TT[k])}</a>`; }); return a.length ? `<p class="lnk"><small>Related tracker topics:</small> ${a.join(" · ")}</p>` : ""; };
+  const docsHtml = ds => { const a = ds.filter(d => d && /^https:\/\//.test(d.u)).map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener noreferrer">${esc(d.n)}</a>`); return a.length ? `<p class="lnk"><small>Official docs:</small> ${a.join(" · ")}</p>` : ""; };
   async function renderItem(slug){
     app.innerHTML = head() + `<p class="lead">Loading…</p>`; wire();
     const r = await sb.from("sd_content").select("*").eq("slug", slug).maybeSingle();
     if(!r.data){ app.innerHTML = head() + `<div class="card"><p>Not found.</p><a href="#">← All topics</a></div>`; return wire(); }
     const b = r.data.body;
     if((b.blocks || []).some(k => k.links || k.viz)) await loadTitles();
-    app.innerHTML = head() + `<p><a href="#">← All topics</a></p><h2>${esc(r.data.title)}</h2>` + (b.blocks || []).map((k, i) => `<div class="pn ub${k.mine ? " mine" : ""}">${k.h ? `<h3><b>${i + 1}</b>${fmt(k.h)}</h3>` : ""}${k.viz ? `<div class="vzmount" data-i="${i}"></div>` : ""}${(k.p || []).map(x => `<p>${fmt(x)}</p>`).join("")}${k.code ? `<pre class="code ucode">${esc(k.code)}</pre>` : ""}${k.table ? table(k.table) : ""}${k.bullets ? `<ul>${k.bullets.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>` : ""}${k.links ? chips(k.links) : ""}</div>`).join("") + (b.takeaway ? `<div class="pn utake"><b>Interview takeaway</b> ${fmt(b.takeaway)}</div>` : "");
+    app.innerHTML = head() + `<p><a href="#">← All topics</a></p><h2>${esc(r.data.title)}</h2>` + (b.blocks || []).map((k, i) => `<div class="pn ub${k.mine ? " mine" : ""}">${k.h ? `<h3><b>${i + 1}</b>${fmt(k.h)}</h3>` : ""}${k.viz ? `<div class="vzmount" data-i="${i}"></div>` : ""}${(k.p || []).map(x => `<p>${fmt(x)}</p>`).join("")}${k.code ? `<pre class="code ucode">${esc(k.code)}</pre>` : ""}${k.table ? table(k.table) : ""}${k.bullets ? `<ul>${k.bullets.map(x => `<li>${fmt(x)}</li>`).join("")}</ul>` : ""}${k.links ? chips(k.links) : ""}${k.docs ? docsHtml(k.docs) : ""}</div>`).join("") + (b.takeaway ? `<div class="pn utake"><b>Interview takeaway</b> ${fmt(b.takeaway)}</div>` : "");
     wire();
     app.querySelectorAll(".vzmount").forEach(m => { const k = (b.blocks || [])[+m.dataset.i]; if(k && k.viz && window.SDViz) window.SDViz.mount(m, k.viz, { chips: ks => chips(ks) }); });
   }
