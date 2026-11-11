@@ -48,7 +48,7 @@
     const ad = await sb.rpc("sd_is_admin"); if(ad.data === true) S.access = "approved";
     if(allowed()){
       const c = await sb.from("cert_sections").select("ord,title,items").order("ord");
-      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
+      if(c.error) S.err = c.error.message; else { S.meta = (c.data.find(r => r.ord === 0) || {}).items; S.dm = (c.data.find(r => r.ord === 100) || {}).items || null; S.plan = (c.data.find(r => r.ord === 101) || {}).items || null; S.bp = (c.data.find(r => r.ord === 102) || {}).items || null; S.det = (c.data.find(r => r.ord === 103) || {}).items || {}; S.secs = c.data.filter(r => r.ord > 0 && r.ord < 100); }
       const p = await sb.from("cert_progress").select("key"); S.done = {}; (p.data || []).forEach(r => S.done[r.key] = 1);
       if(!booted){ booted = true; const f = S.secs.find(s => s.items.some((_, i) => !S.done[s.ord + "." + i + ".m"])); if(f) open.add(f.ord); }
     }
@@ -84,6 +84,9 @@
     if(r.error){ S.done = prev; S.err = "Could not save: " + r.error.message; render(); }
   }
   function jump(key){ const t = topicOf(key); if(!t) return; S.view = "topics"; if(!vis(t.it)) S.exam = "ALL"; open.add(t.s.ord); render(); const el = document.getElementById("t-" + t.s.ord + "-" + t.i); if(el) el.scrollIntoView({ block: "center" }); }
+  function detHtml(key){ const d = S.det && S.det[key]; if(!d) return "";
+    const ul = a => `<ul style="margin:4px 0;padding-left:20px">${a.map(b => `<li>${esc(b)}</li>`).join("")}</ul>`;
+    return `<details class="lk"><summary>From the exam guide</summary>${d.d ? `<p style="margin:4px 0;font-size:13px">${esc(d.d)}</p>` : `${d.k && d.k.length ? `<small><b>Knowledge of</b></small>${ul(d.k)}` : ""}${d.s && d.s.length ? `<small><b>Skills in</b></small>${ul(d.s)}` : ""}`}</details>`; }
   function bpHtml(){
     const B = S.bp && S.bp[S.exam]; if(!B) return `<div class="card"><p class="msg">Pick an exam above to see its blueprint.</p></div>`;
     const e = S.plan && S.plan.exams[S.exam]; let T = 0, Dn = 0; B.forEach(dom => dom.o.forEach(o => { T++; if(objDone(objInfo(o))) Dn++; }));
@@ -91,7 +94,7 @@
       B.map((dom, di) => { const id = S.exam + di; let d = 0; dom.o.forEach(o => { if(objDone(objInfo(o))) d++; });
         return `<details class="sec" data-bd="${id}"${openB.has(id) ? " open" : ""}><summary><span>${esc(dom.n)}${dom.w != null ? ` <span class="tag">${dom.w}%</span>` : ""}</span><span class="cnt">${d}/${dom.o.length}</span></summary>` +
           dom.o.map((o, oi) => { const x = objInfo(o), st = objDone(x) ? "true" : x.done ? "mixed" : "false";
-            return `<div class="it"><div class="ob"><button class="ckb" role="checkbox" aria-checked="${st}" aria-label="${esc(o.t)}" data-ob="${di}.${oi}">${st === "true" ? "✓" : st === "mixed" ? "–" : ""}</button><div><div>${esc(o.t)}</div><details class="lk"><summary>${x.done}/${x.total} topics</summary>${x.ts.map(t => `<div><a href="#" data-j="${t.s.ord}.${t.i}">${itemDone(t.s, t.i) ? "✓ " : ""}${esc(t.it.t)}</a></div>`).join("")}</details></div></div></div>`; }).join("") + `</details>`; }).join("");
+            return `<div class="it"><div class="ob"><button class="ckb" role="checkbox" aria-checked="${st}" aria-label="${esc(o.t)}" data-ob="${di}.${oi}">${st === "true" ? "✓" : st === "mixed" ? "–" : ""}</button><div><div>${esc(o.t)}</div>${detHtml(S.exam + "." + di + "." + oi)}<details class="lk"><summary>${x.done}/${x.total} topics</summary>${x.ts.map(t => `<div><a href="#" data-j="${t.s.ord}.${t.i}">${itemDone(t.s, t.i) ? "✓ " : ""}${esc(t.it.t)}</a></div>`).join("")}</details></div></div></div>`; }).join("") + `</details>`; }).join("");
   }
 
   const head = () => `<div class="top"><a href="../">← System Design Prep</a><span class="who">${S.user ? esc(S.user.email || "") + ' · <a href="#" id="so">Sign out</a>' : ""}</span></div><h1>Claude Certification Tracker</h1>`;
@@ -103,7 +106,9 @@
   }
   function stepHtml(s, i, it, k, lab){
     const key = s.ord + "." + i + "." + k, on = !!S.done[key]; let body;
-    if(k === "v"){ const c = S.meta.courses[it.v[0]]; body = `<b>Watch:</b> <a href="${esc(safeUrl(c.u))}" target="_blank" rel="noopener noreferrer">${esc(c.n)} — ${esc(it.v[1])}</a>`; }
+    if(k === "v"){ const c = S.meta.courses[it.v[0]], lid = S.meta.lec && S.meta.lec[it.v[0]] && S.meta.lec[it.v[0]][it.v[1]];
+      const href = lid ? c.u.replace(/\/?$/, "/") + "learn/lecture/" + lid : c.u;
+      body = `<b>Watch:</b> <a href="${esc(safeUrl(href))}" target="_blank" rel="noopener noreferrer">${esc(c.n)} — ${esc(it.v[1])}</a>${lid ? "" : ` <span class="m">(course start; find the lecture in the outline)</span>`}`; }
     else if(k === "r"){ const ids = S.dm && S.dm.map[s.ord + "." + i]; const ds = (ids ? ids.map(n => S.dm.docs[n]) : [S.meta.docs[it.r]]).filter(Boolean);
       const weak = S.plan && S.plan.weak && S.plan.weak.includes(s.ord + "." + i);
       body = `<b>Read:</b> ` + (ds.length ? ds.map(d => `<a href="${esc(safeUrl(d.u))}" target="_blank" rel="noopener noreferrer">${esc(d.n)}</a>`).join(" · ") : `<span class="m">${esc(it.n || "No matching docs page.")}</span>`) + (weak && ds.length ? ` <span class="m">(closest pages; no dedicated docs)</span>` : ""); }
