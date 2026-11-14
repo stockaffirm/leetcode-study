@@ -3,7 +3,7 @@ const C=s=>s.replace(/^\n/,"").replace(/\n$/,"").split("\n");
 const ARR="Array / String",HM="Hash Map / Set",STK="Stack / Monotonic Stack",BT="Binary Tree",GR="Graph",HP="Heap",DP="Dynamic Programming",GD="Greedy",MB="Math / Bit Manipulation",BS="Binary Search",SRT="Sorting",SW="Sliding Window",MX="Matrix",UF="Union Find / Segment Tree",TP="Two Pointers",IV="Intervals",BTK="Backtracking",DS="Design",LL="Linked List",TR="Trie",PS="Prefix Sum";
 // ---- Microsoft (3)
 lite({id:2220,slug:"minimum-bit-flips-to-convert-number",title:"Minimum Bit Flips to Convert Number",level:"Easy",topic:MB,name:"Count the bits where start and goal differ",
-w:"start 10 (1010), goal 7 (0111) → 3 bits differ → 3.",k:"A flip changes one bit. The number of flips is the number of positions where the two numbers differ, i.e. the number of 1 bits in start XOR goal.",
+w:"start 10 (1010), goal 7 (0111) → 3 bits differ → 3.",k:"A flip changes one bit. The number of flips is the number of positions where the two numbers differ, i.e. the number of 1 bits in start XOR (exclusive OR) goal.",
 i:"start = 10, goal = 7",o:"3",time:"O(log n)",space:"O(1)",
 code:C(`
 class Solution:
@@ -64,7 +64,7 @@ class Solution:
         return 0
 `)});
 lite({id:1932,slug:"merge-bsts-to-create-single-bst",title:"Merge BSTs to Create Single BST",level:"Hard",topic:BT,name:"Attach trees at leaves, then validate",
-w:"trees [2,1], [3,2,5], [5,4] → merged into [3,2,5,1,null,4].",k:"Each tree has at most 3 nodes. Map each tree's root value to the tree. Find the one root value that is not a leaf value of any other tree: that is the final root. Repeatedly replace a leaf whose value matches another tree's root by that tree (each tree can be used once). In the end all trees must have been used and the result must be a valid BST.",
+w:"trees [2,1], [3,2,5], [5,4] → merged into [3,2,5,1,null,4].",k:"Each tree has at most 3 nodes. Map each tree's root value to the tree. Find the one root value that is not a leaf value of any other tree: that is the final root. Repeatedly replace a leaf whose value matches another tree's root by that tree (each tree can be used once). In the end all trees must have been used and the result must be a valid BST (Binary Search Tree).",
 i:"trees = [[2,1],[3,2,5],[5,4]]",o:"[3, 2, 5, 1, None, 4]",time:"O(n)",space:"O(n)",
 code:C(`
 class Solution:
@@ -382,7 +382,7 @@ class Solution:
         return total
 `)});
 lite({id:2785,slug:"sort-vowels-in-a-string",title:"Sort Vowels in a String",level:"Medium",topic:SRT,name:"Sort the vowels, put them back into the vowel slots",
-w:"'lEetcOde' → 'lEOtcede'.",k:"Collect the vowels (both cases), sort them by ASCII value, and write them back into the vowel positions in order; the consonants stay.",
+w:"'lEetcOde' → 'lEOtcede'.",k:"Collect the vowels (both cases), sort them by ASCII (American Standard Code for Information Interchange) value, and write them back into the vowel positions in order; the consonants stay.",
 i:"s = \"lEetcOde\"",o:"\"lEOtcede\"",time:"O(n log n)",space:"O(n)",
 code:C(`
 class Solution:
@@ -392,7 +392,7 @@ class Solution:
         return ''.join(next(it) if c in 'aeiouAEIOU' else c for c in s)
 `)});
 lite({id:1935,slug:"maximum-number-of-words-you-can-type",title:"Maximum Number of Words You Can Type",level:"Easy",topic:HM,name:"Count words without broken letters",
-w:"'hello world', broken 'ad' → both words are typeable → 2.",k:"A word can be typed if none of its letters is a broken one. Put the broken letters in a set and count the words that avoid it.",
+w:"'hello world', broken 'ad': 'hello' is typeable, 'world' needs the broken 'd' → 1.",k:"A word can be typed if none of its letters is a broken one. Put the broken letters in a set and count the words that avoid it.",
 i:"text = \"hello world\", brokenLetters = \"ad\"",o:"1",time:"O(n)",space:"O(1)",
 code:C(`
 class Solution:
@@ -540,7 +540,7 @@ class Solution:
         return -1 if best == float('inf') else best
 `)});
 lite({id:1559,slug:"detect-cycles-in-2d-grid",title:"Detect Cycles in 2D Grid",level:"Medium",topic:GR,name:"DFS (Depth-First Search) that never steps back to the parent",
-w:"A 2 × 2 block of equal letters forms a cycle → true.",k:"A cycle is a loop of length ≥ 4 through cells with the same letter. DFS from each unvisited cell over equal neighbours, remembering the cell we came from; reaching an already visited cell other than the parent means a cycle exists.",
+w:"A 2 × 2 block of equal letters forms a cycle → true.",k:"A cycle is a loop of length ≥ 4 through cells with the same letter. DFS (Depth-First Search) from each unvisited cell over equal neighbours, remembering the cell we came from; reaching an already visited cell other than the parent means a cycle exists.",
 i:"grid = [[\"a\",\"a\",\"a\",\"a\"],[\"a\",\"b\",\"b\",\"a\"],[\"a\",\"b\",\"b\",\"a\"],[\"a\",\"a\",\"a\",\"a\"]]",o:"true",time:"O(m·n)",space:"O(m·n)",
 code:C(`
 class Solution:
