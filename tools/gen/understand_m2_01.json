@@ -1,0 +1,1337 @@
+{
+ "372": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "pow(result, 10, MOD)",
+       "Computes result^10 mod 1337 in one call (three-argument pow does modular exponentiation without building the huge number)",
+       "You need a power modulo m"
+      ],
+      [
+       "pow(a, d, MOD)",
+       "a^d mod 1337 for one digit d (0 to 9)",
+       "Raising a base to a small exponent under a modulus"
+      ],
+      [
+       "... * ... % MOD",
+       "Multiplies the two parts, then reduces modulo 1337",
+       "Keeping every intermediate value small"
+      ],
+      [
+       "for d in b",
+       "Reads the digits of b from the most significant to the least significant",
+       "Building a number digit by digit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the digit loop works",
+    "p": [
+     "If `p` is the number formed by the digits read so far, appending digit `d` makes the number `10 * p + d`. Then `a^(10p + d) = (a^p)^10 * a^d`. `result` always holds `a^p mod 1337`, so one step is `result^10 * a^d`, reduced modulo 1337."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`a = 2`, `b = [1,0]` (the number 10). `result` starts at `1`, which is `a^0`."
+    ],
+    "table": {
+     "head": [
+      "digit d",
+      "result^10 mod 1337",
+      "a^d mod 1337",
+      "new result",
+      "meaning"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "2",
+       "2",
+       "a^1"
+      ],
+      [
+       "0",
+       "1024",
+       "1",
+       "1024",
+       "a^10 = 1024"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(len(b)), each step is a pair of fast modular powers (exponent 10 or at most 9).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Process the digits of b left to right: the new answer is (old answer)^10 times a^digit, all modulo 1337, so b never has to be turned into a number."
+ },
+ "462": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "nums.sort()",
+       "Sorts the list in place in ascending order",
+       "The answer depends on order statistics such as the median"
+      ],
+      [
+       "nums[len(nums) // 2]",
+       "The middle element (an upper-middle one when the length is even)",
+       "Picking the median of a sorted list"
+      ],
+      [
+       "abs(x - median)",
+       "Distance from one element to the target value, which is the number of +1/-1 moves it needs",
+       "Cost of moving a number to a target"
+      ],
+      [
+       "sum(... for x in nums)",
+       "Adds up those distances with a generator expression",
+       "Totalling a cost without building a list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the median is the best target",
+    "p": [
+     "Take the smallest and the largest element. Together they need at least `max - min` moves to become equal, and any target value between them costs exactly that. So pair up the outermost elements: every pair costs the same for any target inside it. The target that lies inside all pairs is the middle one, the median."
+    ]
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "nums (sorted)",
+      "median",
+      "distances",
+      "answer"
+     ],
+     "rows": [
+      [
+       "[1, 2, 3]",
+       "2",
+       "1 + 0 + 1",
+       "2"
+      ],
+      [
+       "[1, 2, 9, 10]",
+       "9 (index 2)",
+       "8 + 7 + 0 + 1",
+       "16"
+      ]
+     ]
+    },
+    "bullets": [
+     "With an even length, either middle element gives the same total. For `[1, 2, 9, 10]` the target 2 costs `1 + 0 + 7 + 8 = 16` as well."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(1) extra (the sort is in place)."
+    ]
+   }
+  ],
+  "takeaway": "Sort, take the median, and sum the distances to it; the median minimises the total absolute distance."
+ },
+ "728": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str(x)",
+       "Turns the number into a string so each digit is a character",
+       "You need to look at the digits one by one"
+      ],
+      [
+       "d != '0'",
+       "Rejects any number containing a zero digit (and avoids dividing by zero)",
+       "Guarding a division"
+      ],
+      [
+       "x % int(d) == 0",
+       "True when x is divisible by that digit",
+       "Divisibility test"
+      ],
+      [
+       "all(... for d in str(x))",
+       "True only if the test passes for every digit; stops at the first failure",
+       "Checking a rule for every element"
+      ],
+      [
+       "[x for x in range(left, right + 1) if ok(x)]",
+       "List comprehension that keeps the numbers passing ok",
+       "Filtering a range"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`left = 1`, `right = 22`. Single digits always pass (a number divides itself). Checking `10` to `22`:"
+    ],
+    "table": {
+     "head": [
+      "x",
+      "digits",
+      "failing digit",
+      "self-dividing?"
+     ],
+     "rows": [
+      [
+       "10",
+       "1, 0",
+       "0 is not allowed",
+       "no"
+      ],
+      [
+       "11",
+       "1, 1",
+       "–",
+       "yes"
+      ],
+      [
+       "12",
+       "1, 2",
+       "–",
+       "yes"
+      ],
+      [
+       "13",
+       "1, 3",
+       "13 % 3 = 1",
+       "no"
+      ],
+      [
+       "14",
+       "1, 4",
+       "14 % 4 = 2",
+       "no"
+      ],
+      [
+       "15",
+       "1, 5",
+       "–",
+       "yes"
+      ],
+      [
+       "16",
+       "1, 6",
+       "16 % 6 = 4",
+       "no"
+      ],
+      [
+       "17",
+       "1, 7",
+       "17 % 7 = 3",
+       "no"
+      ],
+      [
+       "18",
+       "1, 8",
+       "18 % 8 = 2",
+       "no"
+      ],
+      [
+       "19",
+       "1, 9",
+       "19 % 9 = 1",
+       "no"
+      ],
+      [
+       "20",
+       "2, 0",
+       "0 is not allowed",
+       "no"
+      ],
+      [
+       "21",
+       "2, 1",
+       "21 % 2 = 1",
+       "no"
+      ],
+      [
+       "22",
+       "2, 2",
+       "–",
+       "yes"
+      ]
+     ]
+    },
+    "bullets": [
+     "The result is `[1,2,3,4,5,6,7,8,9,11,12,15,22]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O((right - left + 1) * d), where d is the number of digits (at most 5 here).",
+     "Space: O(1) besides the output list."
+    ]
+   }
+  ],
+  "takeaway": "Test each number digit by digit with all(): reject a zero digit first, then require divisibility by every digit."
+ },
+ "1000": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "(n - 1) % (k - 1)",
+       "Each merge removes k - 1 piles, so n piles can become one only if n - 1 is a multiple of k - 1",
+       "Quick feasibility test (returns -1 otherwise)"
+      ],
+      [
+       "pref",
+       "Prefix sums: pref[j + 1] - pref[i] is the total stones in piles i to j",
+       "Range sums in O(1)"
+      ],
+      [
+       "dp[i][j]",
+       "Minimum cost to merge piles i..j down as far as possible (into one pile when the length fits)",
+       "Interval DP (Dynamic Programming)"
+      ],
+      [
+       "range(i, j, k - 1)",
+       "Split points m that keep the left part mergeable into one pile",
+       "Only trying splits that are valid"
+      ],
+      [
+       "dp[i][m] + dp[m + 1][j]",
+       "Cost of the left part plus the right part",
+       "Combining two subintervals"
+      ],
+      [
+       "if (length - 1) % (k - 1) == 0",
+       "The whole interval can now become a single pile, which costs its total stones once more",
+       "Adding the final merge cost only when it happens"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`stones = [3,2,4,1]`, `k = 2`, so `pref = [0,3,5,9,10]`. Every interval can be merged to one pile because `k - 1 = 1`, so the total is always added."
+    ],
+    "table": {
+     "head": [
+      "interval",
+      "best split",
+      "split cost",
+      "+ total stones",
+      "dp"
+     ],
+     "rows": [
+      [
+       "[0,1]",
+       "m=0: 0+0",
+       "0",
+       "5",
+       "5"
+      ],
+      [
+       "[1,2]",
+       "m=1: 0+0",
+       "0",
+       "6",
+       "6"
+      ],
+      [
+       "[2,3]",
+       "m=2: 0+0",
+       "0",
+       "5",
+       "5"
+      ],
+      [
+       "[0,2]",
+       "m=0: 0+6 = 6, m=1: 5+0 = 5",
+       "5",
+       "9",
+       "14"
+      ],
+      [
+       "[1,3]",
+       "m=1: 0+5 = 5, m=2: 6+0 = 6",
+       "5",
+       "7",
+       "12"
+      ],
+      [
+       "[0,3]",
+       "m=0: 12, m=1: 5+5 = 10, m=2: 14",
+       "10",
+       "10",
+       "20"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `dp[0][3] = 20`.",
+     "With `k = 3` the same input has `(4 - 1) % 2 = 1`, so the function returns `-1` at once."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n^3 / k) (n^2 intervals, each trying about n / (k - 1) splits).",
+     "Space: O(n^2) for dp."
+    ]
+   }
+  ],
+  "takeaway": "Interval DP: the cost of merging piles i..j is the cheapest valid split into two parts, plus the total stones of the interval when it collapses into one pile; check feasibility first with (n - 1) % (k - 1)."
+ },
+ "1035": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "dp = [[0] * (m + 1) for _ in range(n + 1)]",
+       "Grid of zeros with an extra row and column for the empty prefix; the list comprehension makes separate rows",
+       "Building a 2D table (not `[[0]*(m+1)]*(n+1)`, which would share one row)"
+      ],
+      [
+       "dp[i][j]",
+       "Most lines drawable using only the first i numbers of nums1 and the first j of nums2",
+       "LCS (Longest Common Subsequence) style DP"
+      ],
+      [
+       "nums1[i - 1] == nums2[j - 1]",
+       "The two current numbers match (dp is shifted by 1 compared with the arrays)",
+       "Comparing the newest elements"
+      ],
+      [
+       "dp[i - 1][j - 1] + 1",
+       "Draw the line and add it to the best of the smaller prefixes",
+       "A match extends a diagonal"
+      ],
+      [
+       "max(dp[i - 1][j], dp[i][j - 1])",
+       "No match: skip one number from either side",
+       "Keeping the better option"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this is the LCS problem",
+    "p": [
+     "Lines that do not cross keep the same left-to-right order on both rows, so the set of connected numbers forms a common subsequence of the two arrays. The most lines equals the length of the Longest Common Subsequence."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,4,2]`, `nums2 = [1,2,4]`. Each row shows `dp[i][0..3]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "nums1[i-1]",
+      "dp[i][0]",
+      "dp[i][1] (1)",
+      "dp[i][2] (2)",
+      "dp[i][3] (4)"
+     ],
+     "rows": [
+      [
+       "0",
+       "–",
+       "0",
+       "0",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "1",
+       "0",
+       "1",
+       "1",
+       "1"
+      ],
+      [
+       "2",
+       "4",
+       "0",
+       "1",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "2",
+       "0",
+       "1",
+       "2",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "`dp[2][3] = dp[1][2] + 1 = 2` because 4 equals 4.",
+     "`dp[3][2] = dp[2][1] + 1 = 2` because 2 equals 2.",
+     "The answer is `dp[3][3] = 2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n * m).",
+     "Space: O(n * m)."
+    ]
+   }
+  ],
+  "takeaway": "Non-crossing lines between equal numbers is exactly a longest common subsequence: dp[i][j] = diagonal + 1 on a match, otherwise the larger of the up and left cells."
+ },
+ "1317": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "for a in range(1, n)",
+       "Tries every first number a from 1 up to n - 1, smallest first",
+       "Exhaustive search with an early return"
+      ],
+      [
+       "str(a)",
+       "Decimal text of a so its characters can be inspected",
+       "Digit checks"
+      ],
+      [
+       "'0' not in str(a)",
+       "True when the digit 0 does not occur in a",
+       "Substring membership test"
+      ],
+      [
+       "n - a",
+       "The partner b is fixed once a is chosen, since a + b = n",
+       "Removing a free variable"
+      ],
+      [
+       "return [a, n - a]",
+       "Returns the first valid pair at once",
+       "Any valid answer is accepted"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 11`."
+    ],
+    "table": {
+     "head": [
+      "a",
+      "b = 11 - a",
+      "a has 0?",
+      "b has 0?",
+      "result"
+     ],
+     "rows": [
+      [
+       "1",
+       "10",
+       "no",
+       "yes",
+       "skip"
+      ],
+      [
+       "2",
+       "9",
+       "no",
+       "no",
+       "return [2, 9]"
+      ]
+     ]
+    },
+    "bullets": [
+     "For `n = 1010` the loop goes a = 1 (b = 1009 has a 0), 2 (1008), ... 10 (a itself has a 0) and stops at `a = 11`, `b = 999`: it returns `[11, 999]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) in the worst case with O(log n) per digit check; in practice a valid pair appears very early.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Try a = 1, 2, 3, ...; the partner is n - a, and the first pair where neither number contains a zero digit is the answer."
+ },
+ "1404": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "s[1:]",
+       "Every bit except the leading 1",
+       "The leading 1 is handled by the carry at the end"
+      ],
+      [
+       "reversed(...)",
+       "Reads the bits from least significant to most significant",
+       "Simulating arithmetic from the low end"
+      ],
+      [
+       "bit = int(c) + carry",
+       "The bit plus the carry produced by earlier additions",
+       "Adding 1 to a binary number ripples a carry upward"
+      ],
+      [
+       "if bit == 1",
+       "The current number is odd at this position, so add 1 (makes the bit 0 with a carry) then divide: 2 steps",
+       "Odd step followed by a shift"
+      ],
+      [
+       "else: steps += 1",
+       "The bit is even (0 + 0, or 1 + 1 = 2 which is 0 with a carry), so just divide by 2: 1 step",
+       "Even step"
+      ],
+      [
+       "return steps + carry",
+       "If a carry is left, the leading 1 became 10 and needs one more halving",
+       "Finishing the top bit"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"1101\"` (13). We scan the bits `1, 0, 1` of `s[1:] = \"101\"` from right to left."
+    ],
+    "table": {
+     "head": [
+      "c",
+      "carry before",
+      "bit",
+      "action",
+      "steps",
+      "carry after"
+     ],
+     "rows": [
+      [
+       "1",
+       "0",
+       "1",
+       "odd: add 1 then halve (+2)",
+       "2",
+       "1"
+      ],
+      [
+       "0",
+       "1",
+       "1",
+       "odd: add 1 then halve (+2)",
+       "4",
+       "1"
+      ],
+      [
+       "1",
+       "1",
+       "2",
+       "even: halve (+1)",
+       "5",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "`steps + carry = 5 + 1 = 6`, the answer.",
+     "For `s = \"1\"` the loop does not run and the answer is `0`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n) for the sliced and reversed copies (O(1) extra beyond that)."
+    ]
+   }
+  ],
+  "takeaway": "Simulate the process on the bits from the right: an odd bit (after the carry) costs 2 steps and creates a carry, an even bit costs 1, and a leftover carry adds the last step."
+ },
+ "1594": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "hi[i][j], lo[i][j]",
+       "Largest and smallest product of any path ending at (i, j)",
+       "Tracking both extremes because a negative cell swaps them"
+      ],
+      [
+       "cands += [hi[...] * g, lo[...] * g]",
+       "Candidate products from the cell above and from the left, using both extremes",
+       "A negative cell turns the old minimum into a new maximum"
+      ],
+      [
+       "max(cands), min(cands)",
+       "Best and worst product reaching this cell",
+       "DP (Dynamic Programming) with two values per cell"
+      ],
+      [
+       "if i: / if j:",
+       "Only use a neighbour that exists",
+       "Boundary handling on the first row and column"
+      ],
+      [
+       "hi[-1][-1] % (10**9 + 7)",
+       "The modulus is applied only at the very end, after comparing exact values",
+       "Modulo would break comparisons if applied earlier"
+      ],
+      [
+       "else -1",
+       "Even the maximum is negative",
+       "No non-negative path"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[1,-2,1],[1,-2,1],[3,-4,1]]`. Each cell shows `hi / lo`."
+    ],
+    "table": {
+     "head": [
+      "row",
+      "col 0",
+      "col 1",
+      "col 2"
+     ],
+     "rows": [
+      [
+       "0",
+       "1 / 1",
+       "-2 / -2",
+       "-2 / -2"
+      ],
+      [
+       "1",
+       "1 / 1",
+       "4 / -2",
+       "4 / -2"
+      ],
+      [
+       "2",
+       "3 / 3",
+       "8 / -16",
+       "8 / -16"
+      ]
+     ]
+    },
+    "bullets": [
+     "Cell (1,1) has value -2: from above `-2 * -2 = 4`, from the left `1 * -2 = -2`, so `hi = 4`, `lo = -2`.",
+     "Cell (2,1) has value -4: from above `4 * -4 = -16`, `-2 * -4 = 8`; from the left `3 * -4 = -12`; so `hi = 8`, `lo = -16`.",
+     "`hi[2][2] = 8 >= 0`, so the answer is `8 % (10^9 + 7) = 8`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m * n).",
+     "Space: O(m * n) for the two tables."
+    ]
+   }
+  ],
+  "takeaway": "Keep both the maximum and the minimum product for every cell, because multiplying by a negative number turns the minimum into the maximum; take the modulus only on the final value."
+ },
+ "1776": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "res = [-1.0] * n",
+       "Answer array, defaulting to no collision",
+       "Initialising results"
+      ],
+      [
+       "for i in range(n - 1, -1, -1)",
+       "Processes cars from the front of the road to the back, because a car only depends on cars ahead",
+       "Right-to-left scan"
+      ],
+      [
+       "stack",
+       "Monotonic stack of indices of cars ahead that can still be collided with",
+       "Monotonic Stack"
+      ],
+      [
+       "speed <= sj",
+       "Car i is not faster than car j, so it can never catch it; j is not a candidate",
+       "Pruning impossible targets"
+      ],
+      [
+       "t = (pj - pos) / (speed - sj)",
+       "Time to close the gap at the relative speed",
+       "Distance divided by relative speed"
+      ],
+      [
+       "res[j] != -1 and t > res[j]",
+       "Car j merges into something slower before i reaches it, so j is no longer where i will hit; pop it",
+       "Skipping a target that has vanished into a fleet"
+      ],
+      [
+       "res[i] = t; break",
+       "First usable target on the stack is the car i hits",
+       "Ending the search once found"
+      ],
+      [
+       "stack.append(i)",
+       "Car i becomes a candidate for the cars behind it",
+       "Maintaining the stack"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`cars = [[1,2],[2,1],[4,3],[7,2]]` as `[position, speed]`. Cars are processed from index 3 down to 0."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "car",
+      "stack before",
+      "what happens",
+      "res[i]",
+      "stack after"
+     ],
+     "rows": [
+      [
+       "3",
+       "(7, 2)",
+       "[]",
+       "nothing ahead",
+       "-1",
+       "[3]"
+      ],
+      [
+       "2",
+       "(4, 3)",
+       "[3]",
+       "faster than car 3: t = (7-4)/(3-2) = 3, and res[3] is -1",
+       "3.0",
+       "[3, 2]"
+      ],
+      [
+       "1",
+       "(2, 1)",
+       "[3, 2]",
+       "speed 1 <= 3: pop 2; speed 1 <= 2: pop 3; empty",
+       "-1",
+       "[1]"
+      ],
+      [
+       "0",
+       "(1, 2)",
+       "[1]",
+       "faster than car 1: t = (2-1)/(2-1) = 1",
+       "1.0",
+       "[1, 0]"
+      ]
+     ]
+    },
+    "bullets": [
+     "The result is `[1.0, -1.0, 3.0, -1.0]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n). Every index is pushed once and popped at most once.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Scan from the front car backwards with a monotonic stack: pop cars that are too fast to catch or that merge into a slower fleet before being reached, and the stack top is the car you hit."
+ },
+ "1884": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "m = 0",
+       "Candidate number of drops, starting from zero",
+       "Searching for a smallest value"
+      ],
+      [
+       "while m * (m + 1) // 2 < n",
+       "Loops while the triangular number m(m+1)/2 is still too small to cover n floors",
+       "A closed-form bound used as a loop test"
+      ],
+      [
+       "m += 1",
+       "Allow one more drop",
+       "Increasing the budget"
+      ],
+      [
+       "return m",
+       "The smallest m with m(m+1)/2 >= n",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why m(m + 1) / 2 floors",
+    "p": [
+     "With `m` drops, the best first drop is at floor `m`. If the egg breaks, the second egg checks floors below one at a time: at most `m - 1` more drops. If it survives, there are `m - 1` drops left, so the next drop goes `m - 1` floors higher, and so on. The floors covered are `m + (m - 1) + ... + 1 = m(m + 1) / 2`."
+    ]
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "n",
+      "m",
+      "m(m+1)/2",
+      "< n?"
+     ],
+     "rows": [
+      [
+       "6",
+       "0",
+       "0",
+       "yes"
+      ],
+      [
+       "6",
+       "1",
+       "1",
+       "yes"
+      ],
+      [
+       "6",
+       "2",
+       "3",
+       "yes"
+      ],
+      [
+       "6",
+       "3",
+       "6",
+       "no, stop: answer 3"
+      ],
+      [
+       "100",
+       "13",
+       "91",
+       "yes"
+      ],
+      [
+       "100",
+       "14",
+       "105",
+       "no, stop: answer 14"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(sqrt(n)), because m grows until m^2 / 2 reaches n.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "With two eggs and m drops you can cover m + (m-1) + ... + 1 floors, so the answer is the smallest m whose triangular number reaches n."
+ },
+ "2028": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "mean * (len(rolls) + n) - sum(rolls)",
+       "Total the missing rolls must add up to so the full average equals mean",
+       "Turning an average condition into a sum condition"
+      ],
+      [
+       "n <= missing <= 6 * n",
+       "Each missing roll is between 1 and 6, so the total lies in [n, 6n]",
+       "Feasibility check"
+      ],
+      [
+       "divmod(missing, n)",
+       "Quotient and remainder in one call: base value and how many rolls get one extra",
+       "Splitting a total as evenly as possible"
+      ],
+      [
+       "[base + 1] * extra + [base] * (n - extra)",
+       "extra rolls with base + 1 followed by the rest with base",
+       "Building a list by repetition"
+      ],
+      [
+       "return []",
+       "The target total is impossible",
+       "No valid answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "rolls",
+      "mean",
+      "n",
+      "missing total",
+      "feasible range",
+      "divmod",
+      "answer"
+     ],
+     "rows": [
+      [
+       "[3,2,4,3]",
+       "4",
+       "2",
+       "4*6 - 12 = 12",
+       "2 to 12",
+       "(6, 0)",
+       "[6, 6]"
+      ],
+      [
+       "[1,5,6]",
+       "3",
+       "4",
+       "3*7 - 12 = 9",
+       "4 to 24",
+       "(2, 1)",
+       "[3, 2, 2, 2]"
+      ],
+      [
+       "[1,2,3,4]",
+       "6",
+       "4",
+       "6*8 - 10 = 38",
+       "4 to 24",
+       "–",
+       "[]"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m + n) to sum the known rolls and build the answer.",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Convert the mean into the exact total the missing dice must reach, check it fits between n and 6n, then split it as evenly as possible with divmod."
+ },
+ "2054": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "events.sort()",
+       "Sorts by start time (then end, then value)",
+       "Sweeping events in start order"
+      ],
+      [
+       "heap",
+       "Min-heap of (end, value) for events already started",
+       "Priority queue ordered by earliest end"
+      ],
+      [
+       "heap[0][0] < start",
+       "The earliest-ending event finished strictly before this one starts",
+       "Compatibility test"
+      ],
+      [
+       "heappop(heap)[1]",
+       "Pops that event and reads its value",
+       "Moving finished events out of the heap"
+      ],
+      [
+       "best_done",
+       "Best single value among events that finished before the current start",
+       "Best partner for the current event"
+      ],
+      [
+       "res = max(res, value + best_done)",
+       "Current event plus its best partner (or alone when best_done is 0)",
+       "Updating the answer"
+      ],
+      [
+       "heappush(heap, (end, value))",
+       "The current event becomes available as a partner for later ones",
+       "Keeping events pending until they finish"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`events = [[1,3,2],[4,5,2],[2,4,3]]`; sorted by start: `[1,3,2], [2,4,3], [4,5,2]`."
+    ],
+    "table": {
+     "head": [
+      "event",
+      "popped (end < start)",
+      "best_done",
+      "res",
+      "heap after push"
+     ],
+     "rows": [
+      [
+       "[1,3,2]",
+       "none",
+       "0",
+       "2",
+       "(3,2)"
+      ],
+      [
+       "[2,4,3]",
+       "none (3 is not < 2)",
+       "0",
+       "3",
+       "(3,2), (4,3)"
+      ],
+      [
+       "[4,5,2]",
+       "(3,2): 3 < 4",
+       "2",
+       "max(3, 2 + 2) = 4",
+       "(4,3), (5,2)"
+      ]
+     ]
+    },
+    "bullets": [
+     "The event `(4,3)` is not popped for start 4 because `4 < 4` is false, which enforces that the next event must start strictly after the previous one ends.",
+     "The answer is `4`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort and the heap operations.",
+     "Space: O(n) for the heap."
+    ]
+   }
+  ],
+  "takeaway": "Sweep the events by start time; a min-heap by end time releases the events that have finished, keeping the best finished value as the partner for the current event."
+ },
+ "2107": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "total = Counter(candies)",
+       "How many candies of each flavour exist in the whole bag",
+       "Frequency counting"
+      ],
+      [
+       "window = Counter()",
+       "How many of each flavour are inside the group being given away",
+       "Sliding-window counts"
+      ],
+      [
+       "remaining = len(total)",
+       "Number of flavours you still keep at least one candy of",
+       "Distinct-count bookkeeping"
+      ],
+      [
+       "window[c] == total[c]",
+       "Every candy of flavour c is in the window, so that flavour is lost",
+       "Detecting that a flavour is gone"
+      ],
+      [
+       "out = candies[i - k]",
+       "The candy that slides out of the window when it moves right",
+       "Fixed-size sliding window"
+      ],
+      [
+       "i >= k - 1",
+       "The window now holds k candies, so record the answer",
+       "Evaluating each full window"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`candies = [1,2,2,3,4,3]`, `k = 3`. Totals: 1 x1, 2 x2, 3 x2, 4 x1, so `remaining` starts at 4."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "enters",
+      "leaves",
+      "remaining after",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "1",
+       "–",
+       "3 (all 1s inside)",
+       "–"
+      ],
+      [
+       "1",
+       "2",
+       "–",
+       "3",
+       "–"
+      ],
+      [
+       "2",
+       "2",
+       "–",
+       "2 (all 2s inside)",
+       "2"
+      ],
+      [
+       "3",
+       "3",
+       "1",
+       "3",
+       "3"
+      ],
+      [
+       "4",
+       "4",
+       "2",
+       "3",
+       "3"
+      ],
+      [
+       "5",
+       "3",
+       "2",
+       "2",
+       "3"
+      ]
+     ]
+    },
+    "bullets": [
+     "At `i = 3` the window is `[2,2,3]` and you keep `1, 4, 3`: 3 flavours.",
+     "The answer is `3`.",
+     "When `k = 0`, each candy enters and leaves at the same step, so `remaining` ends up as all flavours."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(number of distinct flavours)."
+    ]
+   }
+  ],
+  "takeaway": "Slide a fixed window of the given-away candies and track how many flavours still have a candy outside it by comparing window counts with total counts."
+ }
+}

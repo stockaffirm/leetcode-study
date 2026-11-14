@@ -1,0 +1,1454 @@
+{
+ "2208": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "heap = [-x for x in nums]",
+       "Negated copy of the numbers; Python's heap is a min-heap, so negatives make the largest number pop first",
+       "Simulating a max-heap"
+      ],
+      [
+       "heapify(heap)",
+       "Turns the list into a heap in O(n)",
+       "Building a heap from existing data"
+      ],
+      [
+       "target = sum(nums) / 2",
+       "The amount the total must be reduced by (true division keeps fractions)",
+       "Goal for the loop"
+      ],
+      [
+       "x = -heappop(heap)",
+       "Takes the current largest value and undoes the negation",
+       "Greedy: always halve the biggest number"
+      ],
+      [
+       "removed += x / 2",
+       "Halving x removes x / 2 from the sum",
+       "Tracking the reduction so far"
+      ],
+      [
+       "heappush(heap, -x / 2)",
+       "Puts the halved value back (it may be halved again later)",
+       "Re-inserting an updated item"
+      ],
+      [
+       "ops += 1",
+       "Counts the operation",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why always halve the largest",
+    "p": [
+     "Halving a number removes half of its current value from the sum, so the biggest number gives the biggest reduction in a single operation. Taking the biggest every time reaches the target in the fewest operations."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [5,19,8,1]`, sum 33, so `target = 16.5`."
+    ],
+    "table": {
+     "head": [
+      "op",
+      "largest popped",
+      "removed so far",
+      "pushed back",
+      "values in heap"
+     ],
+     "rows": [
+      [
+       "1",
+       "19",
+       "9.5",
+       "9.5",
+       "9.5, 8, 5, 1"
+      ],
+      [
+       "2",
+       "9.5",
+       "14.25",
+       "4.75",
+       "8, 5, 4.75, 1"
+      ],
+      [
+       "3",
+       "8",
+       "18.25 (>= 16.5, stop)",
+       "4",
+       "5, 4.75, 4, 1"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `3`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + k log n) where k is the number of operations.",
+     "Space: O(n) for the heap."
+    ]
+   }
+  ],
+  "takeaway": "Greedy with a max-heap (simulated by negating values): repeatedly halve the largest number until the total reduction reaches half of the original sum."
+ },
+ "2450": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "len(s) - k + 1",
+       "The number of windows of length k, i.e. the number of distinct operations",
+       "Counting independent choices"
+      ],
+      [
+       "pow(2, e, 10**9 + 7)",
+       "2 to the power e modulo 1,000,000,007 (fast modular exponentiation)",
+       "Large powers under a modulus"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why the answer is 2^(n - k + 1)",
+    "bullets": [
+     "Flipping the same window twice cancels out, and the order of flips does not matter, so each of the `n - k + 1` windows is either used once or not at all.",
+     "Different choices give different strings: look at the leftmost chosen window. Its first position is flipped by that window only (later windows start further right and earlier windows are not chosen), so the first difference from the original appears exactly there.",
+     "So there are `2^(n - k + 1)` reachable strings. The actual bits of `s` do not matter."
+    ]
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "k",
+      "windows n - k + 1",
+      "answer"
+     ],
+     "rows": [
+      [
+       "1001",
+       "3",
+       "2 (1001[0:3], 1001[1:4])",
+       "2^2 = 4"
+      ],
+      [
+       "10110",
+       "5",
+       "1",
+       "2^1 = 2"
+      ]
+     ]
+    },
+    "bullets": [
+     "For `1001` with k = 3 the four reachable strings are `1001`, `0111` (flip the first window), `1110` (flip the second) and `0000` (flip both)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) for the modular power.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Each of the n - k + 1 window positions is an independent on/off switch, so the answer is 2 raised to that count, modulo 1,000,000,007."
+ },
+ "2548": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sum(w for _, w in items) < capacity",
+       "If all items together weigh less than the bag capacity, the bag can never be filled",
+       "Early impossibility check"
+      ],
+      [
+       "sorted(items, key=lambda it: it[0] / it[1], reverse=True)",
+       "Items ordered by price per unit of weight, highest first",
+       "Fractional knapsack greedy"
+      ],
+      [
+       "take = min(weight, capacity)",
+       "Weight we can take: the whole item, or only what still fits",
+       "Taking a fraction when needed"
+      ],
+      [
+       "price * take / weight",
+       "Price of the part taken (price scales with weight)",
+       "Proportional value"
+      ],
+      [
+       "capacity -= take",
+       "Remaining room in the bag",
+       "Tracking space left"
+      ],
+      [
+       "if capacity == 0: break",
+       "Bag is full, stop early",
+       "Early exit"
+      ],
+      [
+       "round(total, 5)",
+       "Rounds to 5 decimals as the problem allows",
+       "Output formatting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`items = [[50,1],[10,8]]`, `capacity = 5`. Total weight 9 >= 5, so it is possible. Ratios: 50 and 1.25, so item `[50,1]` comes first."
+    ],
+    "table": {
+     "head": [
+      "item",
+      "take",
+      "price added",
+      "capacity left",
+      "total"
+     ],
+     "rows": [
+      [
+       "[50, 1]",
+       "min(1, 5) = 1",
+       "50",
+       "4",
+       "50.0"
+      ],
+      [
+       "[10, 8]",
+       "min(8, 4) = 4",
+       "10 * 4 / 8 = 5",
+       "0",
+       "55.0"
+      ]
+     ]
+    },
+    "bullets": [
+     "Capacity reached 0, so the loop breaks and the answer is `55.0`.",
+     "For `items = [[100,30]]`, `capacity = 50` the total weight 30 is below 50, so the answer is `-1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting.",
+     "Space: O(n) for the sorted copy."
+    ]
+   }
+  ],
+  "takeaway": "Fractional knapsack: take items in order of best price per weight, splitting the last one, and return -1 if the items cannot fill the bag."
+ },
+ "2599": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "heap",
+       "Min-heap of the negative numbers seen so far (so the most negative pops first)",
+       "Remembering which negatives could be moved"
+      ],
+      [
+       "total += x",
+       "Running prefix sum",
+       "Prefix sum"
+      ],
+      [
+       "if x < 0: heappush(heap, x)",
+       "Records each negative as a candidate to move to the end",
+       "Keeping options open"
+      ],
+      [
+       "if total < 0",
+       "The prefix sum has become negative, so a move is required",
+       "Detecting a violation"
+      ],
+      [
+       "total -= heappop(heap)",
+       "Removes the most negative number seen so far from the prefix (subtracting a negative adds back its size)",
+       "Undoing the worst element"
+      ],
+      [
+       "moves += 1",
+       "Counts that number as moved to the end",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why moving to the end works",
+    "p": [
+     "Moving a number to the end deletes it from every earlier prefix. The total of the whole array is never negative, so after all moves the full prefix is fine. When a prefix becomes negative, moving the most negative number so far fixes it using the fewest moves, because it raises the prefix by the largest amount."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,-5,-2,6]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "total after adding",
+      "heap",
+      "action",
+      "moves"
+     ],
+     "rows": [
+      [
+       "3",
+       "3",
+       "[]",
+       "none",
+       "0"
+      ],
+      [
+       "-5",
+       "-2",
+       "[-5]",
+       "negative total: pop -5, total = -2 + 5 = 3",
+       "1"
+      ],
+      [
+       "-2",
+       "1",
+       "[-2]",
+       "none",
+       "1"
+      ],
+      [
+       "6",
+       "7",
+       "[-2]",
+       "none",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `1`: move `-5` to the end, giving `[3,-2,6,-5]` with prefix sums `3, 1, 7, 2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Scan left to right with a heap of negatives: whenever the prefix sum goes below zero, move the most negative number seen so far to the end (pop it from the prefix) and count one move."
+ },
+ "2847": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "if n == 1: return \"1\"",
+       "The product 1 needs no digit factors; the smallest positive integer is 1",
+       "Special case"
+      ],
+      [
+       "for d in range(9, 1, -1)",
+       "Tries digits 9, 8, ... 2 (largest first)",
+       "Greedy factoring"
+      ],
+      [
+       "while n % d == 0",
+       "Keeps dividing out d while it divides n",
+       "Extracting repeated factors"
+      ],
+      [
+       "digits.append(d); n //= d",
+       "Records the digit and shrinks n",
+       "Collecting digits"
+      ],
+      [
+       "if n != 1: return \"-1\"",
+       "A leftover prime factor larger than 7 cannot be a digit",
+       "Impossible case"
+      ],
+      [
+       "sorted(digits)",
+       "Sorts ascending so the number is as small as possible",
+       "Smallest number from a multiset of digits"
+      ],
+      [
+       "''.join(map(str, ...))",
+       "Converts the digits to text and joins them",
+       "Building the answer string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why largest digits first",
+    "p": [
+     "Fewer digits means a smaller number, and dividing out large digits (9, then 8, ...) produces the fewest digits. Digit 1 would only lengthen the number, so it is never used. Sorting the digits ascending then gives the smallest arrangement."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 105`."
+    ],
+    "table": {
+     "head": [
+      "d",
+      "divides n?",
+      "digits",
+      "n after"
+     ],
+     "rows": [
+      [
+       "9",
+       "105 % 9 = 6, no",
+       "[]",
+       "105"
+      ],
+      [
+       "8",
+       "no",
+       "[]",
+       "105"
+      ],
+      [
+       "7",
+       "yes (105 = 7 x 15)",
+       "[7]",
+       "15"
+      ],
+      [
+       "7",
+       "15 % 7 = 1, no",
+       "[7]",
+       "15"
+      ],
+      [
+       "6",
+       "15 % 6 = 3, no",
+       "[7]",
+       "15"
+      ],
+      [
+       "5",
+       "yes",
+       "[7, 5]",
+       "3"
+      ],
+      [
+       "4",
+       "no",
+       "[7, 5]",
+       "3"
+      ],
+      [
+       "3",
+       "yes",
+       "[7, 5, 3]",
+       "1"
+      ],
+      [
+       "2",
+       "no",
+       "[7, 5, 3]",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "`n == 1`, so sort `[7, 5, 3]` to `[3, 5, 7]` and return `\"357\"`.",
+     "For `n = 11` nothing divides it, `n` stays `11`, and the answer is `\"-1\"`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n) divisions.",
+     "Space: O(log n) for the digits."
+    ]
+   }
+  ],
+  "takeaway": "Divide n by digits 9 down to 2 to get the fewest digits, fail if anything is left over, then sort the digits ascending to form the smallest number."
+ },
+ "3004": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "adj = defaultdict(list)",
+       "Adjacency list: each node maps to its neighbours; missing keys start as an empty list",
+       "Graph storage"
+      ],
+      [
+       "parent = [-1] * n",
+       "Who each node was reached from",
+       "Rooting the tree"
+      ],
+      [
+       "stack / order",
+       "Iterative DFS (Depth-First Search) from node 0; order is the visiting order",
+       "Avoiding recursion limits on deep trees"
+      ],
+      [
+       "if v != parent[u]",
+       "Skip the edge back to the parent",
+       "Not walking up the tree"
+      ],
+      [
+       "for u in reversed(order)",
+       "Process children before their parents",
+       "Bottom-up accumulation"
+      ],
+      [
+       "size[u]",
+       "Number of nodes in the subtree of u (built by adding each child to its parent)",
+       "Subtree sizes"
+      ],
+      [
+       "same[u]",
+       "True while every node of u's subtree has u's colour",
+       "Uniform-colour flag"
+      ],
+      [
+       "colors[u] != colors[p]",
+       "A child with a different colour spoils the parent",
+       "Propagating a failure upwards"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`edges = [[0,1],[0,2],[2,3],[2,4]]`, `colors = [1,2,3,3,3]`. The visiting order is `0, 2, 4, 3, 1`, so the bottom-up order is `1, 3, 4, 2, 0`."
+    ],
+    "table": {
+     "head": [
+      "u",
+      "same[u]",
+      "best",
+      "effect on parent"
+     ],
+     "rows": [
+      [
+       "1",
+       "True",
+       "1",
+       "size[0] = 2; colour 2 != 1, so same[0] = False"
+      ],
+      [
+       "3",
+       "True",
+       "1",
+       "size[2] = 2; colours equal, same[2] stays True"
+      ],
+      [
+       "4",
+       "True",
+       "1",
+       "size[2] = 3; colours equal"
+      ],
+      [
+       "2",
+       "True",
+       "3",
+       "size[0] = 5; colour 3 != 1, so same[0] = False"
+      ],
+      [
+       "0",
+       "False",
+       "3",
+       "root, no parent"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `3`: the subtree rooted at node 2 (nodes 2, 3, 4)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Root the tree at 0, list nodes in DFS order, then walk that order backwards to accumulate subtree sizes and mark any subtree that contains a different colour."
+ },
+ "3038": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "score = nums[0] + nums[1]",
+       "The score of the first operation, which all later ones must match",
+       "Fixing the target value"
+      ],
+      [
+       "range(0, len(nums) - 1, 2)",
+       "Visits the start of each consecutive pair: 0, 2, 4, ...",
+       "Stepping through pairs"
+      ],
+      [
+       "nums[i] + nums[i + 1] != score",
+       "This pair has a different score",
+       "Stop condition"
+      ],
+      [
+       "break",
+       "Operations must be consecutive from the front, so stop at the first mismatch",
+       "Early exit"
+      ],
+      [
+       "count += 1",
+       "Counts a matching operation",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "nums",
+      "score",
+      "i",
+      "pair sum",
+      "count"
+     ],
+     "rows": [
+      [
+       "[3,2,1,4,5]",
+       "5",
+       "0",
+       "3 + 2 = 5",
+       "1"
+      ],
+      [
+       "",
+       "",
+       "2",
+       "1 + 4 = 5",
+       "2"
+      ],
+      [
+       "[3,2,6,1,4]",
+       "5",
+       "0",
+       "5",
+       "1"
+      ],
+      [
+       "",
+       "",
+       "2",
+       "6 + 1 = 7, mismatch, break",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "For the first array the loop ends after `i = 2` because `i = 4` has no partner. The answers are `2` and `1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Compute the first pair's sum and count consecutive pairs from the front until one has a different sum."
+ },
+ "3111": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "sorted(x for x, _ in points)",
+       "Only the x-coordinates matter (rectangles may be as tall as needed), sorted ascending",
+       "Reducing a 2D problem to 1D"
+      ],
+      [
+       "reach = float('-inf')",
+       "Rightmost x covered by the current rectangle; nothing is covered at the start",
+       "Sentinel value"
+      ],
+      [
+       "if x > reach",
+       "This point is not covered, so start a new rectangle",
+       "Greedy interval covering"
+      ],
+      [
+       "reach = x + w",
+       "The new rectangle starts at this x and extends w to the right",
+       "Placing the rectangle as far right as possible"
+      ],
+      [
+       "count += 1",
+       "One more rectangle",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`points = [[2,1],[1,0],[1,4],[1,8],[3,5],[4,6]]`, `w = 1`. Sorted x values: `1, 1, 1, 2, 3, 4`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "x > reach?",
+      "count",
+      "reach"
+     ],
+     "rows": [
+      [
+       "1",
+       "yes (reach was -inf)",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "no",
+       "1",
+       "2"
+      ],
+      [
+       "1",
+       "no",
+       "1",
+       "2"
+      ],
+      [
+       "2",
+       "no (2 is not > 2)",
+       "1",
+       "2"
+      ],
+      [
+       "3",
+       "yes",
+       "2",
+       "4"
+      ],
+      [
+       "4",
+       "no",
+       "2",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `2`: rectangles covering x in [1, 2] and x in [3, 4]."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the sorted list."
+    ]
+   }
+  ],
+  "takeaway": "Ignore y, sort the x values, and greedily start a rectangle at the first uncovered point, covering everything up to x + w."
+ },
+ "3134": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "need = (total + 1) // 2",
+       "Position (1-based) of the lower median among n(n+1)/2 subarray values",
+       "Median index for an even or odd count"
+      ],
+      [
+       "at_most(k)",
+       "Counts subarrays with at most k distinct values using a sliding window",
+       "Counting with a distinct-values limit"
+      ],
+      [
+       "Counter / del cnt[x]",
+       "Counts of values inside the window; deleting zero entries keeps len(cnt) equal to the distinct count",
+       "Distinct count in a window"
+      ],
+      [
+       "res += right - left + 1",
+       "All subarrays ending at right whose start is in [left, right] are valid",
+       "Counting subarrays per right end"
+      ],
+      [
+       "lo, hi = 1, len(set(nums))",
+       "Binary search range for the answer (distinct values per subarray)",
+       "Binary search on the answer"
+      ],
+      [
+       "at_most(mid) >= need",
+       "At least `need` subarrays have <= mid distinct values, so the median is <= mid",
+       "Predicate that is monotone in mid"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "How the binary search finds the median",
+    "p": [
+     "The median is the smallest `k` such that at least `need` subarrays have at most `k` distinct values. `at_most(k)` never decreases as `k` grows, so binary search applies."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [3,4,3,4,5]`: 15 subarrays, `need = (15 + 1) // 2 = 8`, `hi = 3` distinct values. Counting `at_most(2)` with the window:"
+    ],
+    "table": {
+     "head": [
+      "right",
+      "value",
+      "window after shrinking",
+      "added",
+      "res"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "[3]",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "4",
+       "[3,4]",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "3",
+       "[3,4,3]",
+       "3",
+       "6"
+      ],
+      [
+       "3",
+       "4",
+       "[3,4,3,4]",
+       "4",
+       "10"
+      ],
+      [
+       "4",
+       "5",
+       "[4,5] (shrunk until 2 distinct)",
+       "2",
+       "12"
+      ]
+     ]
+    },
+    "bullets": [
+     "`at_most(1) = 5` and `at_most(2) = 12`, `at_most(3) = 15`.",
+     "Binary search: `mid = 2` gives 12 >= 8, so `hi = 2`; `mid = 1` gives 5 < 8, so `lo = 2`. The answer is `2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log d), where d is the number of distinct values (each at_most is O(n)).",
+     "Space: O(d) for the counter."
+    ]
+   }
+  ],
+  "takeaway": "Binary search the answer k: the median is the smallest k for which at least half of all subarrays have at most k distinct values, counted with a sliding window."
+ },
+ "3212": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "bal[i + 1][j + 1]",
+       "Number of X minus number of Y in the rectangle from (0,0) to (i,j) (2D prefix sum)",
+       "Equal X and Y means balance 0"
+      ],
+      [
+       "xs[i + 1][j + 1]",
+       "Number of X in that rectangle",
+       "Checking at least one X"
+      ],
+      [
+       "d = (c == 'X') - (c == 'Y')",
+       "+1 for X, -1 for Y, 0 for '.' (booleans act as 0 or 1)",
+       "Turning a cell into a score"
+      ],
+      [
+       "a[i][j+1] + a[i+1][j] - a[i][j] + v",
+       "Inclusion-exclusion: add the top and left rectangles, subtract the overlap, add the new cell",
+       "2D prefix sum formula"
+      ],
+      [
+       "bal == 0 and xs > 0",
+       "The rectangle from the top-left corner to this cell qualifies",
+       "Counting valid submatrices"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why only corner-anchored rectangles",
+    "p": [
+     "Every valid submatrix contains the top-left cell, so it is exactly the rectangle from `(0,0)` to some bottom-right cell `(i,j)`. There is one candidate per cell, and prefix sums read its balance in O(1)."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[X,Y,.],[Y,.,.]]`."
+    ],
+    "table": {
+     "head": [
+      "cell",
+      "char",
+      "X minus Y",
+      "X count",
+      "counted?"
+     ],
+     "rows": [
+      [
+       "(0,0)",
+       "X",
+       "1",
+       "1",
+       "no"
+      ],
+      [
+       "(0,1)",
+       "Y",
+       "0",
+       "1",
+       "yes"
+      ],
+      [
+       "(0,2)",
+       ".",
+       "0",
+       "1",
+       "yes"
+      ],
+      [
+       "(1,0)",
+       "Y",
+       "0",
+       "1",
+       "yes"
+      ],
+      [
+       "(1,1)",
+       ".",
+       "-1",
+       "1",
+       "no"
+      ],
+      [
+       "(1,2)",
+       ".",
+       "-1",
+       "1",
+       "no"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `3`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m * n).",
+     "Space: O(m * n) for the two prefix tables."
+    ]
+   }
+  ],
+  "takeaway": "A valid submatrix is a rectangle anchored at the top-left cell, so build 2D prefix sums of X-minus-Y and X counts and count the cells where the first is 0 and the second is positive."
+ },
+ "3315": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "x % 2 == 0",
+       "Even values have no answer: a OR (a + 1) is always odd, because one of a and a + 1 is odd",
+       "Parity shortcut returning -1"
+      ],
+      [
+       "x >> t & 1",
+       "Shifts x right by t and reads the lowest bit (shift binds tighter than &)",
+       "Testing bit t"
+      ],
+      [
+       "while ...: t += 1",
+       "Counts the trailing 1 bits of x",
+       "Finding the run of low ones"
+      ],
+      [
+       "1 << (t - 1)",
+       "A number with a single 1 at position t - 1",
+       "Making a bit mask"
+      ],
+      [
+       "x - (1 << (t - 1))",
+       "Clears the highest bit of that trailing run of ones",
+       "The smallest a whose OR with a + 1 gives x"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Why this works",
+    "p": [
+     "If `a` ends in `0` followed by `t - 1` ones, then `a + 1` turns those ones into zeros and the zero into one. OR-ing them gives a run of `t` ones. So for `x` ending in `t` ones, `a = x` with bit `t - 1` (the top bit of the run) cleared. Clearing that bit gives the smallest such `a`."
+    ]
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [11,13,31]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "binary",
+      "trailing ones t",
+      "a = x - 2^(t-1)",
+      "check a OR (a+1)"
+     ],
+     "rows": [
+      [
+       "11",
+       "1011",
+       "2",
+       "11 - 2 = 9",
+       "1001 OR 1010 = 1011"
+      ],
+      [
+       "13",
+       "1101",
+       "1",
+       "13 - 1 = 12",
+       "1100 OR 1101 = 1101"
+      ],
+      [
+       "31",
+       "11111",
+       "5",
+       "31 - 16 = 15",
+       "01111 OR 10000 = 11111"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `[9, 12, 15]`.",
+     "An even input such as 2 gives `-1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log max(nums)).",
+     "Space: O(n) for the result."
+    ]
+   }
+  ],
+  "takeaway": "Count the trailing 1 bits t of x and clear bit t - 1: that gives the smallest a with a OR (a + 1) equal to x; even x has no answer."
+ },
+ "3442": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "Counter(s).values()",
+       "Frequency of each distinct character (the dictionary values)",
+       "Counting occurrences"
+      ],
+      [
+       "c % 2",
+       "Truthy when the frequency is odd",
+       "Parity test inside a condition"
+      ],
+      [
+       "max(c for c in cnt if c % 2)",
+       "Largest odd frequency",
+       "Best a1"
+      ],
+      [
+       "min(c for c in cnt if c % 2 == 0)",
+       "Smallest even frequency",
+       "Best a2"
+      ],
+      [
+       "... - ...",
+       "The largest odd minus the smallest even maximises the difference",
+       "Maximising a difference"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through examples",
+    "table": {
+     "head": [
+      "s",
+      "frequencies",
+      "odd ones",
+      "even ones",
+      "answer"
+     ],
+     "rows": [
+      [
+       "aaaaabbc",
+       "a:5, b:2, c:1",
+       "5, 1 (max 5)",
+       "2 (min 2)",
+       "5 - 2 = 3"
+      ],
+      [
+       "abcabcab",
+       "a:3, b:3, c:2",
+       "3, 3 (max 3)",
+       "2 (min 2)",
+       "3 - 2 = 1"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) to count, then O(26) for the scans.",
+     "Space: O(26) for the counter."
+    ]
+   }
+  ],
+  "takeaway": "Count frequencies, then subtract the smallest even frequency from the largest odd one."
+ },
+ "3754": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "str(n)",
+       "Digits of n as characters",
+       "Per-digit work"
+      ],
+      [
+       "[c for c in str(n) if c != '0']",
+       "Keeps only the non-zero digit characters in order",
+       "Filtering with a list comprehension"
+      ],
+      [
+       "int(''.join(digits)) if digits else 0",
+       "Joins the digits into x; uses 0 when no digit remains (int of an empty string would fail)",
+       "Building a number from digits"
+      ],
+      [
+       "sum(int(c) for c in digits)",
+       "Digit sum of x (zeros would not change it)",
+       "Summing digits"
+      ],
+      [
+       "x * sum",
+       "The required product",
+       "Answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10203004`."
+    ],
+    "table": {
+     "head": [
+      "step",
+      "value"
+     ],
+     "rows": [
+      [
+       "digits without 0",
+       "1, 2, 3, 4"
+      ],
+      [
+       "x",
+       "1234"
+      ],
+      [
+       "digit sum",
+       "1 + 2 + 3 + 4 = 10"
+      ],
+      [
+       "x * sum",
+       "12340"
+      ]
+     ]
+    },
+    "bullets": [
+     "For `n = 1000` the digits are `1`, so `x = 1`, sum `1`, answer `1`.",
+     "For `n = 0` there are no digits, `x = 0`, answer `0`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(d) where d is the number of digits.",
+     "Space: O(d)."
+    ]
+   }
+  ],
+  "takeaway": "Drop the zero digits, join the rest into x, and multiply x by its digit sum."
+ },
+ "3883": {
+  "blocks": [
+   {
+    "h": "What each operation does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "by = defaultdict(list)",
+       "Maps a digit sum to the list of values with that digit sum",
+       "Grouping values"
+      ],
+      [
+       "sum(map(int, str(x)))",
+       "Digit sum of x",
+       "Computing digit sums"
+      ],
+      [
+       "for x in range(5001)",
+       "Fills the groups in ascending order, so each list is already sorted",
+       "Pre-processing the value range once"
+      ],
+      [
+       "cur, cnt",
+       "cur: allowed values for the previous position; cnt[j]: number of valid arrays ending in cur[j]",
+       "DP (Dynamic Programming) state"
+      ],
+      [
+       "j = run = 0",
+       "Two-pointer over cur and a running total of cnt for entries <= v",
+       "Prefix sums over a sorted list"
+      ],
+      [
+       "while cur[j] <= v: run += cnt[j]",
+       "Adds every earlier value not larger than v",
+       "Non-decreasing constraint"
+      ],
+      [
+       "new[i] = run",
+       "Arrays ending in v: sum of counts of all previous values <= v",
+       "DP transition"
+      ],
+      [
+       "% MOD",
+       "Keeps numbers small",
+       "Answer is modulo 10^9 + 7"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`digitSum = [1,2]`. Values with digit sum 1: `1, 10, 100, 1000` (each count 1). Values with digit sum 2: `2, 11, 20, 101, 110, 200, 1001, 1010, 1100, 2000`."
+    ],
+    "table": {
+     "head": [
+      "v (digit sum 2)",
+      "new previous values added",
+      "run = new[i]"
+     ],
+     "rows": [
+      [
+       "2",
+       "1",
+       "1"
+      ],
+      [
+       "11",
+       "10",
+       "2"
+      ],
+      [
+       "20",
+       "–",
+       "2"
+      ],
+      [
+       "101",
+       "100",
+       "3"
+      ],
+      [
+       "110",
+       "–",
+       "3"
+      ],
+      [
+       "200",
+       "–",
+       "3"
+      ],
+      [
+       "1001",
+       "1000",
+       "4"
+      ],
+      [
+       "1010",
+       "–",
+       "4"
+      ],
+      [
+       "1100",
+       "–",
+       "4"
+      ],
+      [
+       "2000",
+       "–",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "The total is `1 + 2 + 2 + 3 + 3 + 3 + 4 + 4 + 4 + 4 = 30`.",
+     "For the site example `[25, 1]` the six values 799, 889, 898, 979, 988, 997 can precede 1000, so the answer is `6`.",
+     "If a digit sum has no value in range, or the first one has none, the function returns `0`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n * V) where V = 5001 values.",
+     "Space: O(V)."
+    ]
+   }
+  ],
+  "takeaway": "Group 0..5000 by digit sum, then for each position count arrays ending at v as the running sum of counts of all smaller-or-equal previous values using two pointers."
+ }
+}

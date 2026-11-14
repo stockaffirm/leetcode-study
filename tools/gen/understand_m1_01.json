@@ -1,0 +1,1551 @@
+{
+ "313": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`ugly = [1]`",
+       "List of super ugly numbers found so far, in increasing order; starts with 1",
+       "You build a sorted sequence one term at a time"
+      ],
+      [
+       "`ptr = [0] * len(primes)`",
+       "One pointer per prime: the index in `ugly` whose value that prime will multiply next",
+       "Merging several sorted streams (a multi-pointer merge)"
+      ],
+      [
+       "`p * ugly[i] for p, i in zip(primes, ptr)`",
+       "The next candidate from every prime; `zip` pairs each prime with its pointer",
+       "Walking two lists in step"
+      ],
+      [
+       "`min(...)`",
+       "Smallest candidate, which is the next super ugly number",
+       "Picking the smallest of several sorted streams"
+      ],
+      [
+       "`for j, p in enumerate(primes)`",
+       "Loops over every prime together with its position `j`",
+       "You need both the index and the value"
+      ],
+      [
+       "`if p * ugly[ptr[j]] == nxt: ptr[j] += 1`",
+       "Every prime that produced `nxt` moves its pointer forward",
+       "Skipping duplicates: two primes can create the same number, e.g. 2*7 and 7*2"
+      ],
+      [
+       "`return ugly[-1]`",
+       "The last element is the n-th number",
+       "Result sits at the end of the list"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 12`, `primes = [2,7,13,19]`. Each row shows the four candidates `prime * ugly[ptr]`, the smallest one chosen, and the pointers afterwards."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Candidates (2, 7, 13, 19)",
+      "Chosen",
+      "ptr after"
+     ],
+     "rows": [
+      [
+       "2",
+       "2, 7, 13, 19",
+       "2",
+       "[1,0,0,0]"
+      ],
+      [
+       "3",
+       "4, 7, 13, 19",
+       "4",
+       "[2,0,0,0]"
+      ],
+      [
+       "4",
+       "8, 7, 13, 19",
+       "7",
+       "[2,1,0,0]"
+      ],
+      [
+       "5",
+       "8, 14, 13, 19",
+       "8",
+       "[3,1,0,0]"
+      ],
+      [
+       "6",
+       "14, 14, 13, 19",
+       "13",
+       "[3,1,1,0]"
+      ],
+      [
+       "7",
+       "14, 14, 26, 19",
+       "14",
+       "[4,2,1,0]"
+      ],
+      [
+       "...",
+       "",
+       "",
+       ""
+      ],
+      [
+       "12",
+       "32, 49, 52, 38",
+       "32",
+       "[8,3,2,1]"
+      ]
+     ]
+    },
+    "bullets": [
+     "At step 7 both 2 and 7 give 14, so both pointers move; otherwise 14 would be added twice.",
+     "After 12 numbers the list is `[1,2,4,7,8,13,14,16,19,26,28,32]`, so the answer is `32`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n * k), where k is the number of primes: each new number scans all k candidates twice.",
+     "Space: O(n + k) for the list and the pointers."
+    ]
+   }
+  ],
+  "takeaway": "Keep one pointer per prime into the sorted list of results and repeatedly take the smallest prime-times-pointer candidate, advancing every pointer that produced it so duplicates never appear."
+ },
+ "449": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pre(node)`",
+       "Recursive preorder walk: visit the node, then its left subtree, then its right subtree",
+       "Writing a tree to a flat sequence; preorder of a BST (Binary Search Tree) is enough to rebuild it"
+      ],
+      [
+       "`out.append(str(node.val))`",
+       "Collects each value as text",
+       "Building a string piece by piece"
+      ],
+      [
+       "`','.join(out)`",
+       "Glues the values together with commas",
+       "Turning a list into one string"
+      ],
+      [
+       "`if not data: return None`",
+       "Empty string means an empty tree",
+       "Base case"
+      ],
+      [
+       "`deque(int(x) for x in data.split(','))`",
+       "Splits the text on commas, converts to integers and stores them in a queue that can pop from the front in O(1)",
+       "Consuming values left to right"
+      ],
+      [
+       "`build(bound)`",
+       "Builds a subtree from the front of the queue, taking only values `<= bound`",
+       "Rebuilding a BST: no node in the subtree may exceed the ancestor limit"
+      ],
+      [
+       "`if not vals or vals[0] > bound: return None`",
+       "Stop when the values run out or the next value belongs to an ancestor's right side",
+       "Deciding that this subtree is finished"
+      ],
+      [
+       "`node.left = build(node.val)`",
+       "Left subtree values must be at most the node's own value",
+       "The BST rule for the left side"
+      ],
+      [
+       "`node.right = build(bound)`",
+       "Right subtree keeps the ancestor's bound",
+       "The BST rule for the right side"
+      ],
+      [
+       "`float('inf')`",
+       "No upper limit for the root",
+       "Starting bound"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[2,1,3]`: serialize gives `\"2,1,3\"` (preorder: 2, then 1, then 3). Deserialize starts with queue `[2,1,3]`."
+    ],
+    "table": {
+     "head": [
+      "Call",
+      "Front value",
+      "Check against bound",
+      "Result"
+     ],
+     "rows": [
+      [
+       "build(inf)",
+       "2",
+       "2 <= inf",
+       "create node 2"
+      ],
+      [
+       "build(2) for left",
+       "1",
+       "1 <= 2",
+       "create node 1"
+      ],
+      [
+       "build(1) for left of 1",
+       "3",
+       "3 > 1",
+       "None"
+      ],
+      [
+       "build(2) for right of 1",
+       "3",
+       "3 > 2",
+       "None"
+      ],
+      [
+       "build(inf) for right of 2",
+       "3",
+       "3 <= inf",
+       "create node 3; its children see an empty queue and return None"
+      ]
+     ]
+    },
+    "bullets": [
+     "The rebuilt tree is 2 with left child 1 and right child 3, the same as the original."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) for both directions: each node is visited once when writing and once when rebuilding.",
+     "Space: O(n) for the string and queue, plus O(h) recursion depth where h is the tree height."
+    ]
+   }
+  ],
+  "takeaway": "A BST needs no null markers: write it in preorder, and rebuild by reading values in order while an upper bound tells each call when its subtree has ended."
+ },
+ "538": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total = 0`",
+       "Running sum of every value visited so far",
+       "Accumulating a sum while walking"
+      ],
+      [
+       "`stack = []`",
+       "Explicit stack that replaces recursion",
+       "Tree walks without recursion"
+      ],
+      [
+       "`while node: stack.append(node); node = node.right`",
+       "Push the node and slide down to the right-most node, because bigger values live on the right",
+       "Reaching the largest value first in a BST (Binary Search Tree)"
+      ],
+      [
+       "`node = stack.pop()`",
+       "Take the most recent pending node: the next-largest value",
+       "Visiting nodes in descending order"
+      ],
+      [
+       "`total += node.val; node.val = total`",
+       "Add this value to the running sum and store it back; the sum now equals the value plus everything larger",
+       "The actual Greater Tree update"
+      ],
+      [
+       "`node = node.left`",
+       "After a node, continue with its left subtree, which holds smaller values",
+       "Moving to the next smaller part"
+      ],
+      [
+       "`while stack or node`",
+       "Continue while a subtree or a pending node remains",
+       "Loop condition of iterative inorder traversal"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "Tree `[4,1,6,0,2,5,7,null,null,null,3,null,null,null,8]`. Reverse inorder (right, node, left) visits values in descending order 8, 7, 6, 5, 4, 3, 2, 1, 0:"
+    ],
+    "table": {
+     "head": [
+      "Visit",
+      "Running total",
+      "New value"
+     ],
+     "rows": [
+      [
+       "8",
+       "8",
+       "8"
+      ],
+      [
+       "7",
+       "15",
+       "15"
+      ],
+      [
+       "6",
+       "21",
+       "21"
+      ],
+      [
+       "5",
+       "26",
+       "26"
+      ],
+      [
+       "4",
+       "30",
+       "30"
+      ],
+      [
+       "3",
+       "33",
+       "33"
+      ],
+      [
+       "2",
+       "35",
+       "35"
+      ],
+      [
+       "1",
+       "36",
+       "36"
+      ],
+      [
+       "0",
+       "36",
+       "36"
+      ]
+     ]
+    },
+    "bullets": [
+     "Reading the new values back into the tree gives `[30,36,21,36,35,26,15,null,null,null,33,null,null,null,8]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is pushed and popped once.",
+     "Space: O(h) for the stack, where h is the tree height (O(n) for a skewed tree)."
+    ]
+   }
+  ],
+  "takeaway": "Walking a BST right, node, left visits values from largest to smallest, so one running sum is exactly the 'value plus all greater values' each node needs."
+ },
+ "757": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`intervals.sort(key=lambda iv: (iv[1], -iv[0]))`",
+       "Sort by end ascending; for equal ends, longer interval (smaller start) first",
+       "Greedy over intervals: finish early ones first"
+      ],
+      [
+       "`a, b = -1, -1`",
+       "The two largest chosen numbers so far (`a < b`)",
+       "Remembering the last two picks"
+      ],
+      [
+       "`count`",
+       "Size of the chosen set",
+       "Counting picks"
+      ],
+      [
+       "`for s, e in intervals`",
+       "Unpacks each interval into start `s` and end `e`",
+       "Looping over pairs"
+      ],
+      [
+       "`if s > b`",
+       "The interval misses both chosen numbers: pick two new ones at its end",
+       "No overlap with the last picks"
+      ],
+      [
+       "`a, b = e - 1, e; count += 2`",
+       "The latest picks are the two largest numbers inside the interval",
+       "Placing picks as far right as possible"
+      ],
+      [
+       "`elif s > a`",
+       "Only `b` is inside the interval: add one more number, the end `e`",
+       "Exactly one overlap"
+      ],
+      [
+       "`a, b = b, e; count += 1`",
+       "Shift: the last two picks are now the old `b` and `e`",
+       "Updating after one new pick"
+      ],
+      [
+       "`return count`",
+       "Total numbers chosen",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`intervals = [[1,3],[3,7],[8,9]]`, already in sorted order by end."
+    ],
+    "table": {
+     "head": [
+      "Interval",
+      "Check",
+      "a, b after",
+      "count"
+     ],
+     "rows": [
+      [
+       "start",
+       "",
+       "-1, -1",
+       "0"
+      ],
+      [
+       "[1,3]",
+       "1 > b(-1): picks 2 and 3",
+       "2, 3",
+       "2"
+      ],
+      [
+       "[3,7]",
+       "3 > b(3)? no; 3 > a(2)? yes: add 7",
+       "3, 7",
+       "3"
+      ],
+      [
+       "[8,9]",
+       "8 > b(7): picks 8 and 9",
+       "8, 9",
+       "5"
+      ]
+     ]
+    },
+    "bullets": [
+     "The chosen numbers are 2, 3, 7, 8, 9 and each interval holds at least two of them, so the answer is `5`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort, then O(n) for the scan.",
+     "Space: O(1) extra besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "Sort by right end and keep the last two picks; each new interval either already contains both, one, or none of them, and you add as few numbers as needed at the far right."
+ },
+ "1007": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n = len(tops)`",
+       "Number of dominoes",
+       "Counting items"
+      ],
+      [
+       "`best = float('inf')`",
+       "Largest possible number as the starting minimum",
+       "Tracking a minimum"
+      ],
+      [
+       "`{tops[0], bottoms[0]}`",
+       "A set of at most two candidate values; the target must appear on the first domino",
+       "Narrowing the answer to a few candidates"
+      ],
+      [
+       "`zip(tops, bottoms)`",
+       "Pairs the top and bottom of each domino",
+       "Walking two lists together"
+      ],
+      [
+       "`all(t == v or b == v for ...)`",
+       "True when every domino has `v` on at least one side",
+       "Feasibility check"
+      ],
+      [
+       "`n - tops.count(v)`",
+       "Dominoes whose top is not `v`: flips needed to make the top row all `v`",
+       "Cost to fill the top row"
+      ],
+      [
+       "`n - bottoms.count(v)`",
+       "Flips needed to make the bottom row all `v`",
+       "Cost to fill the bottom row"
+      ],
+      [
+       "`-1 if best == float('inf') else best`",
+       "No candidate worked: return -1",
+       "Reporting impossible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`tops = [2,1,2,4,2,2]`, `bottoms = [5,2,6,2,3,2]`. Candidates are `{2, 5}`."
+    ],
+    "table": {
+     "head": [
+      "Candidate v",
+      "Every domino has v?",
+      "Cost for top row",
+      "Cost for bottom row"
+     ],
+     "rows": [
+      [
+       "2",
+       "yes: pairs (2,5), (1,2), (2,6), (4,2), (2,3), (2,2) all contain 2",
+       "6 - 4 = 2",
+       "6 - 3 = 3"
+      ],
+      [
+       "5",
+       "no: domino (1,2) has no 5",
+       "-",
+       "-"
+      ]
+     ]
+    },
+    "bullets": [
+     "The minimum over the feasible cost values is `2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), a few passes over the arrays.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "The final value must already be on the first domino, so only two candidates exist; for each, check every domino holds it and flip whichever row needs fewer flips."
+ },
+ "1186": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`keep`",
+       "Best sum of a subarray ending at the current element with nothing deleted",
+       "DP (Dynamic Programming) state: ending here, no deletion"
+      ],
+      [
+       "`deleted`",
+       "Best sum of a subarray ending at the current element with exactly one element removed",
+       "DP state: ending here, one deletion used"
+      ],
+      [
+       "`best`",
+       "Best answer seen so far",
+       "Running maximum"
+      ],
+      [
+       "`arr[1:]`",
+       "Copy of the array without its first element",
+       "Looping from the second element"
+      ],
+      [
+       "`deleted = max(deleted + x, keep)`",
+       "Either extend a subarray that already deleted something, or delete `x` itself from the best no-deletion subarray before it",
+       "Choosing where the deletion happens"
+      ],
+      [
+       "`keep = max(keep + x, x)`",
+       "Extend the previous subarray, or start fresh at `x`",
+       "Kadane's maximum-subarray step"
+      ],
+      [
+       "`max(best, keep, deleted)`",
+       "Update the answer with both states",
+       "Collecting the maximum"
+      ],
+      [
+       "`float('-inf')`",
+       "No deletion state exists before the second element",
+       "Impossible start value"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [1,-2,0,3]`; start `keep = 1`, `deleted = -inf`, `best = 1`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "deleted (new)",
+      "keep (new)",
+      "best"
+     ],
+     "rows": [
+      [
+       "-2",
+       "max(-inf, 1) = 1",
+       "max(1-2, -2) = -1",
+       "1"
+      ],
+      [
+       "0",
+       "max(1+0, -1) = 1",
+       "max(-1+0, 0) = 0",
+       "1"
+      ],
+      [
+       "3",
+       "max(1+3, 0) = 4",
+       "max(0+3, 3) = 3",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "The 4 comes from the subarray `[1,-2,0,3]` with `-2` deleted, giving `1 + 0 + 3`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), one pass.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Extend Kadane's algorithm with a second state that remembers a deletion has already been used, and update both states for every element."
+ },
+ "1356": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(arr, key=...)`",
+       "Returns a new sorted list; the `key` function says what to compare",
+       "Custom ordering"
+      ],
+      [
+       "`lambda x: (a, b)`",
+       "Anonymous function that returns a tuple; tuples compare left to right",
+       "Sorting by one rule, then a tie-breaker"
+      ],
+      [
+       "`bin(x)`",
+       "Binary text of `x`, such as `'0b101'` for 5",
+       "Looking at the bits of a number"
+      ],
+      [
+       "`.count('1')`",
+       "Number of `1` characters in that text, which is the number of set bits",
+       "Counting 1 bits"
+      ],
+      [
+       "`, x`",
+       "Second tuple item: ties on bit count are ordered by value",
+       "Tie-break"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`arr = [0,1,2,3,4,5,6,7,8]`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "bin(x)",
+      "number of 1 bits",
+      "key"
+     ],
+     "rows": [
+      [
+       "0",
+       "0b0",
+       "0",
+       "(0,0)"
+      ],
+      [
+       "1",
+       "0b1",
+       "1",
+       "(1,1)"
+      ],
+      [
+       "2",
+       "0b10",
+       "1",
+       "(1,2)"
+      ],
+      [
+       "3",
+       "0b11",
+       "2",
+       "(2,3)"
+      ],
+      [
+       "4",
+       "0b100",
+       "1",
+       "(1,4)"
+      ],
+      [
+       "5",
+       "0b101",
+       "2",
+       "(2,5)"
+      ],
+      [
+       "6",
+       "0b110",
+       "2",
+       "(2,6)"
+      ],
+      [
+       "7",
+       "0b111",
+       "3",
+       "(3,7)"
+      ],
+      [
+       "8",
+       "0b1000",
+       "1",
+       "(1,8)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Sorting by key gives `[0,1,2,4,8,3,5,6,7]`: bit count 0, then 1 (1,2,4,8), then 2 (3,5,6), then 3 (7)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort; each key costs O(log value) to compute.",
+     "Space: O(n) for the new list."
+    ]
+   }
+  ],
+  "takeaway": "Sort with a tuple key: first the number of 1 bits, then the value itself to break ties."
+ },
+ "1463": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`m, n = len(grid), len(grid[0])`",
+       "Number of rows and columns",
+       "Reading the grid size"
+      ],
+      [
+       "`nxt`",
+       "`nxt[a][b]` is the best total from the row below onward when robot 1 stands at column `a` and robot 2 at column `b`; starts as zeros below the last row",
+       "DP (Dynamic Programming) table for the next row"
+      ],
+      [
+       "`for r in range(m - 1, -1, -1)`",
+       "Process rows from bottom to top",
+       "Filling a DP in reverse so the future is already known"
+      ],
+      [
+       "`cur = [[-inf] * n for _ in range(n)]`",
+       "Fresh table for this row",
+       "Avoiding aliasing: each row needs its own lists"
+      ],
+      [
+       "`gain = grid[r][a] + (grid[r][b] if a != b else 0)`",
+       "Cherries picked in this row; a shared cell counts once",
+       "Handling overlap"
+      ],
+      [
+       "`for x in (a - 1, a, a + 1) if 0 <= x < n`",
+       "Robot 1's three possible next columns, inside the grid",
+       "Bounded moves"
+      ],
+      [
+       "`for y in (b - 1, b, b + 1) ...`",
+       "Robot 2's possible next columns",
+       "Nine combined moves"
+      ],
+      [
+       "`best = max(nxt[x][y] ...)`",
+       "Best continuation among the nine",
+       "Taking the best option"
+      ],
+      [
+       "`cur[a][b] = gain + best`",
+       "Total from this row onward",
+       "DP transition"
+      ],
+      [
+       "`return nxt[0][n - 1]`",
+       "After the top row, robots start at columns 0 and n-1",
+       "Answer cell"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[3,1,1],[2,5,1],[1,5,5],[2,1,1]]`. Each table row lists `cur[a][b]` after processing that grid row (rows of the matrix are `a = 0,1,2`)."
+    ],
+    "table": {
+     "head": [
+      "Grid row",
+      "cur[0]",
+      "cur[1]",
+      "cur[2]"
+     ],
+     "rows": [
+      [
+       "3",
+       "[2, 3, 3]",
+       "[3, 1, 2]",
+       "[3, 2, 1]"
+      ],
+      [
+       "2",
+       "[4, 9, 9]",
+       "[9, 8, 13]",
+       "[9, 13, 7]"
+      ],
+      [
+       "1",
+       "[11, 20, 16]",
+       "[20, 18, 19]",
+       "[16, 19, 14]"
+      ],
+      [
+       "0",
+       "[23, 24, 24]",
+       "[24, 21, 22]",
+       "[24, 22, 20]"
+      ]
+     ]
+    },
+    "bullets": [
+     "For the last row, `cur[0][1] = 2 + 1 = 3`, the two cells' cherries. The final answer is `cur[0][2]` at the top row, which is `24`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(m * n^2 * 9), nine moves for each of n^2 column pairs per row.",
+     "Space: O(n^2) because only the next row's table is kept."
+    ]
+   }
+  ],
+  "takeaway": "Move both robots together row by row: the state is just the pair of columns, and processing rows bottom-up lets each cell take the best of nine follow-up states."
+ },
+ "1716": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`total = 0`",
+       "Money saved so far",
+       "Accumulator"
+      ],
+      [
+       "`for day in range(n)`",
+       "Days numbered from 0",
+       "Counting days"
+      ],
+      [
+       "`divmod(day, 7)`",
+       "Returns `(day // 7, day % 7)`: the week number and the weekday",
+       "Splitting a count into groups and remainder"
+      ],
+      [
+       "`week`",
+       "Zero-based week; each week raises Monday's deposit by 1",
+       "Weekly increase"
+      ],
+      [
+       "`d`",
+       "Zero-based weekday (0 = Monday)",
+       "Daily increase"
+      ],
+      [
+       "`week + d + 1`",
+       "Deposit that day",
+       "Combining the two increases"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 10`."
+    ],
+    "table": {
+     "head": [
+      "day",
+      "week",
+      "d",
+      "deposit",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "0",
+       "1",
+       "1"
+      ],
+      [
+       "1",
+       "0",
+       "1",
+       "2",
+       "3"
+      ],
+      [
+       "2",
+       "0",
+       "2",
+       "3",
+       "6"
+      ],
+      [
+       "3",
+       "0",
+       "3",
+       "4",
+       "10"
+      ],
+      [
+       "4",
+       "0",
+       "4",
+       "5",
+       "15"
+      ],
+      [
+       "5",
+       "0",
+       "5",
+       "6",
+       "21"
+      ],
+      [
+       "6",
+       "0",
+       "6",
+       "7",
+       "28"
+      ],
+      [
+       "7",
+       "1",
+       "0",
+       "2",
+       "30"
+      ],
+      [
+       "8",
+       "1",
+       "1",
+       "3",
+       "33"
+      ],
+      [
+       "9",
+       "1",
+       "2",
+       "4",
+       "37"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total after 10 days: `37`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Split the day count with divmod into week and weekday; the deposit is week + weekday + 1, summed over all days."
+ },
+ "1859": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`s.split()`",
+       "Cuts the sentence into words at whitespace",
+       "Breaking text into words"
+      ],
+      [
+       "`sorted(..., key=lambda w: w[-1])`",
+       "Orders words by their last character, which is the position digit",
+       "Sorting by a derived key"
+      ],
+      [
+       "`w[-1]`",
+       "Last character of a word",
+       "Reading the position digit"
+      ],
+      [
+       "`w[:-1]`",
+       "The word without its last character",
+       "Dropping the digit"
+      ],
+      [
+       "`' '.join(...)`",
+       "Joins the cleaned words with single spaces",
+       "Rebuilding the sentence"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"is2 sentence4 This1 a3\"`."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Result"
+     ],
+     "rows": [
+      [
+       "split",
+       "`is2`, `sentence4`, `This1`, `a3`"
+      ],
+      [
+       "sort by last char",
+       "`This1`, `is2`, `a3`, `sentence4`"
+      ],
+      [
+       "strip last char",
+       "`This`, `is`, `a`, `sentence`"
+      ],
+      [
+       "join",
+       "\"This is a sentence\""
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k log k) for k words; there are at most 9, so effectively O(n) for the length n.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Each word carries its own position at the end, so sort by the last character, strip it, and join."
+ },
+ "2017": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`top = sum(grid[0])`",
+       "Points still on the top row to the right of where the first robot goes down",
+       "Prefix/suffix sums"
+      ],
+      [
+       "`bottom = 0`",
+       "Points on the bottom row left of the column where the first robot goes down",
+       "Prefix sum of the other row"
+      ],
+      [
+       "`for i in range(len(grid[0]))`",
+       "Tries every column `i` where robot 1 turns down",
+       "Enumerating the turning point"
+      ],
+      [
+       "`top -= grid[0][i]`",
+       "Remove cells robot 1 has taken from the top row; `top` is now the points on top to the right of `i`",
+       "Updating a suffix sum"
+      ],
+      [
+       "`max(top, bottom)`",
+       "Robot 2 either goes along the rest of the top row or along the start of the bottom row, so it gets the larger of the two",
+       "Second player picks the best side"
+      ],
+      [
+       "`best = min(best, ...)`",
+       "Robot 1 picks the turning column that leaves the least",
+       "Minimax: the first player minimises"
+      ],
+      [
+       "`bottom += grid[1][i]`",
+       "Add this column's bottom cell for the next turning point",
+       "Growing the prefix sum"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`grid = [[2,5,4],[1,5,1]]`; start `top = 11`, `bottom = 0`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "top after",
+      "bottom",
+      "max(top, bottom)",
+      "best"
+     ],
+     "rows": [
+      [
+       "0",
+       "9",
+       "0",
+       "9",
+       "9"
+      ],
+      [
+       "1",
+       "4",
+       "1",
+       "4",
+       "4"
+      ],
+      [
+       "2",
+       "0",
+       "6",
+       "6",
+       "4"
+      ]
+     ]
+    },
+    "bullets": [
+     "Turning down at column 1 leaves the second robot at most `4`, the minimum."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Robot 2 can only take the top cells to the right or the bottom cells to the left of robot 1's turn, so compare the two prefix/suffix sums at each turn and keep the minimum of their maximum."
+ },
+ "2029": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`cnt = [0, 0, 0]`",
+       "Number of stones whose value is 0, 1 or 2 modulo 3",
+       "Only the remainder mod 3 matters"
+      ],
+      [
+       "`s % 3`",
+       "Remainder when `s` is divided by 3",
+       "Working with divisibility"
+      ],
+      [
+       "`cnt[s % 3] += 1`",
+       "Counts the stones by remainder",
+       "Bucket counting"
+      ],
+      [
+       "`cnt[0] % 2 == 0`",
+       "Stones with remainder 0 come in an even number: they cancel out, so the order of play on 1s and 2s is what matters",
+       "Parity (odd or even) of a count"
+      ],
+      [
+       "`cnt[1] > 0 and cnt[2] > 0`",
+       "With an even count of remainder-0 stones, Alice wins only if both other kinds exist",
+       "Win condition for the even case"
+      ],
+      [
+       "`abs(cnt[1] - cnt[2]) > 2`",
+       "With an odd count of remainder-0 stones, the known result is that Alice wins only when the counts of 1s and 2s differ by more than 2",
+       "Win condition for the odd case"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`stones = [2,1]`: remainders are 2 and 1."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "cnt",
+       "[0, 1, 1]"
+      ],
+      [
+       "cnt[0] % 2 == 0",
+       "true"
+      ],
+      [
+       "cnt[1] > 0 and cnt[2] > 0",
+       "true"
+      ],
+      [
+       "result",
+       "Alice wins: `true`"
+      ]
+     ]
+    },
+    "bullets": [
+     "Check with `[5,1,2,4,3]`: remainders 2,1,2,1,0 so `cnt = [1,2,2]`. `cnt[0]` is odd, and `abs(2 - 2) = 0`, which is not greater than 2, so the answer is `false`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) to count.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Only stone values modulo 3 matter, so count the three kinds and decide the winner from the parity of the zeros and the balance between ones and twos."
+ },
+ "2098": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`sorted(nums, reverse=True)`",
+       "Copy sorted from largest to smallest",
+       "The best sums use the biggest numbers"
+      ],
+      [
+       "`chosen, rest = nums[:k], nums[k:]`",
+       "The `k` largest and everything else",
+       "Splitting a list with slices"
+      ],
+      [
+       "`total = sum(chosen)`",
+       "Sum of the largest `k`",
+       "Best possible sum"
+      ],
+      [
+       "`if total % 2 == 0: return total`",
+       "Already even: nothing to fix",
+       "Early return"
+      ],
+      [
+       "`odd_in`, `even_in`",
+       "Odd and even numbers inside the chosen group",
+       "List comprehensions that filter"
+      ],
+      [
+       "`even_out`, `odd_out`",
+       "Even and odd numbers outside the chosen group",
+       "Candidates to swap in"
+      ],
+      [
+       "`total - min(odd_in) + max(even_out)`",
+       "Swap the smallest chosen odd for the largest unchosen even to fix parity",
+       "Option 1 to make the sum even"
+      ],
+      [
+       "`total - min(even_in) + max(odd_out)`",
+       "Swap the smallest chosen even for the largest unchosen odd",
+       "Option 2"
+      ],
+      [
+       "`best = -1` and `max(best, ...)`",
+       "Keep the better option; stay -1 if neither swap exists",
+       "Reporting impossible"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [2,3,5,4]`, `k = 2` (the first example `[4,1,5,3,1]` with `k = 3` already has an even top-3 sum of `5 + 4 + 3 = 12`)."
+    ],
+    "table": {
+     "head": [
+      "Step",
+      "Value"
+     ],
+     "rows": [
+      [
+       "sorted",
+       "[5, 4, 3, 2]"
+      ],
+      [
+       "chosen / rest",
+       "[5, 4] / [3, 2]; total 9 (odd)"
+      ],
+      [
+       "option 1",
+       "9 - 5 + 2 = 6"
+      ],
+      [
+       "option 2",
+       "9 - 4 + 3 = 8"
+      ],
+      [
+       "answer",
+       "8, from `[5, 3]`"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(n) for the copies."
+    ]
+   }
+  ],
+  "takeaway": "Take the k largest numbers; if their sum is odd, the best fix is one swap of a chosen number for an unchosen one of the opposite parity, losing as little as possible."
+ },
+ "2182": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`Counter(s)`",
+       "Dictionary of letter counts",
+       "Counting frequencies"
+      ],
+      [
+       "`sorted(cnt, reverse=True)`",
+       "Letters from `z` down to `a`",
+       "Largest-first order"
+      ],
+      [
+       "`next((c for c in letters if cnt[c] > 0), None)`",
+       "First letter in that order that still has copies, or `None` when none are left",
+       "Finding the first match with a default"
+      ],
+      [
+       "`take = min(cnt[top], repeatLimit)`",
+       "Use as many copies as allowed in a row",
+       "Respecting the repeat limit"
+      ],
+      [
+       "`out.append(top * take)`",
+       "String repetition: `'z' * 2` is `'zz'`",
+       "Adding a block of equal letters"
+      ],
+      [
+       "`cnt[top] -= take`",
+       "Spend those letters",
+       "Updating counts"
+      ],
+      [
+       "`if cnt[top] > 0`",
+       "The big letter hit its limit with some left, so a smaller separator is required",
+       "Deciding to break the run"
+      ],
+      [
+       "`nxt = next((c ... if c < top and cnt[c] > 0), None)`",
+       "Largest smaller letter available",
+       "Separator choice"
+      ],
+      [
+       "`if nxt is None: break`",
+       "No separator: the rest of `top` must be dropped",
+       "Stopping when stuck"
+      ],
+      [
+       "`''.join(out)`",
+       "Glue the blocks into the answer",
+       "Building the string"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`s = \"cczazcc\"` gives counts `c:4, z:2, a:1`, with `repeatLimit = 3`."
+    ],
+    "table": {
+     "head": [
+      "Round",
+      "top",
+      "Appended",
+      "Counts left"
+     ],
+     "rows": [
+      [
+       "1",
+       "z",
+       "`zz` (take 2; none left, no separator)",
+       "z:0, c:4, a:1"
+      ],
+      [
+       "2",
+       "c",
+       "`ccc` (take 3), then `c` still has 1 left so the separator `a` is appended",
+       "c:1, a:0"
+      ],
+      [
+       "3",
+       "c",
+       "`c`",
+       "c:0"
+      ],
+      [
+       "4",
+       "none",
+       "stop",
+       ""
+      ]
+     ]
+    },
+    "bullets": [
+     "Joined, the blocks give `zzcccac`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + 26 * rounds), effectively O(n) since the alphabet is fixed.",
+     "Space: O(n) for the output."
+    ]
+   }
+  ],
+  "takeaway": "Always place the largest letter up to the limit; when it still has copies left, insert exactly one copy of the next-largest letter to break the run."
+ }
+}

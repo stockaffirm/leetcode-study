@@ -1,0 +1,1365 @@
+{
+ "2391": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pref = [0]`",
+       "Prefix sums of travel: `pref[i]` is the time to drive from house 0 to house i",
+       "Reading a distance in O(1)"
+      ],
+      [
+       "`pref.append(pref[-1] + t)`",
+       "Adds the next road's time to the running total",
+       "Building a prefix-sum array"
+      ],
+      [
+       "`sum(len(g) for g in garbage)`",
+       "Every piece takes 1 minute to pick up, so total pickup time is the total string length",
+       "Summing with a generator expression"
+      ],
+      [
+       "`for kind in 'MPG'`",
+       "Handles each truck separately; a string can be looped over letter by letter",
+       "Looping over characters"
+      ],
+      [
+       "`kind in g`",
+       "True if house string `g` contains that letter",
+       "Substring membership"
+      ],
+      [
+       "`max((i for i, g in enumerate(garbage) if kind in g), default=0)`",
+       "Index of the last house that has this kind; `default=0` covers a kind that never appears",
+       "Finding the last match safely"
+      ],
+      [
+       "`total += pref[last]`",
+       "Add the driving time of that truck",
+       "Adding the travel cost"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`garbage = [\"G\",\"P\",\"GP\",\"GG\"]`, `travel = [2,4,3]`, so `pref = [0,2,6,9]`. Pickup time is `1 + 1 + 2 + 2 = 6`."
+    ],
+    "table": {
+     "head": [
+      "Truck",
+      "Last house",
+      "Driving time pref[last]",
+      "Running total"
+     ],
+     "rows": [
+      [
+       "M",
+       "none, default 0",
+       "0",
+       "6"
+      ],
+      [
+       "P",
+       "2",
+       "6",
+       "12"
+      ],
+      [
+       "G",
+       "3",
+       "9",
+       "21"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `21`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n + total garbage length) for the prefix sums and scans.",
+     "Space: O(n) for the prefix array."
+    ]
+   }
+  ],
+  "takeaway": "Pickup time is the total garbage count; each truck only drives to the last house that has its type, which a prefix sum of travel times gives in one lookup."
+ },
+ "2487": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`stack = []`",
+       "Holds the nodes that survive so far, with values that never increase from bottom to top",
+       "Monotonic (non-increasing) stack"
+      ],
+      [
+       "`node = head`",
+       "Walker that visits each node once",
+       "Linked-list traversal"
+      ],
+      [
+       "`while stack and stack[-1].val < node.val: stack.pop()`",
+       "Any earlier node smaller than the current one has a greater node to its right, so it is removed",
+       "Discarding nodes that lose to a bigger later value"
+      ],
+      [
+       "`stack.append(node)`",
+       "Keep the current node",
+       "Pushing the survivor"
+      ],
+      [
+       "`node = node.next`",
+       "Advance to the next node",
+       "Moving along the list"
+      ],
+      [
+       "`for a, b in zip(stack, stack[1:])`",
+       "Pairs each survivor with the next survivor",
+       "Walking adjacent pairs"
+      ],
+      [
+       "`a.next = b`",
+       "Re-link survivors, skipping the removed nodes",
+       "Rewiring a linked list"
+      ],
+      [
+       "`stack[-1].next = None`",
+       "Cut off the old tail link",
+       "Ending the list cleanly"
+      ],
+      [
+       "`return stack[0]`",
+       "The first survivor is the new head",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`head = [5,2,13,3,8]`."
+    ],
+    "table": {
+     "head": [
+      "Visit",
+      "Pops",
+      "Stack after"
+     ],
+     "rows": [
+      [
+       "5",
+       "none",
+       "[5]"
+      ],
+      [
+       "2",
+       "none (5 is not smaller)",
+       "[5, 2]"
+      ],
+      [
+       "13",
+       "2, then 5",
+       "[13]"
+      ],
+      [
+       "3",
+       "none",
+       "[13, 3]"
+      ],
+      [
+       "8",
+       "3",
+       "[13, 8]"
+      ]
+     ]
+    },
+    "bullets": [
+     "Re-linking `13 -> 8` and ending the list gives `[13,8]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), each node is pushed and popped at most once.",
+     "Space: O(n) for the stack."
+    ]
+   }
+  ],
+  "takeaway": "Walk the list with a stack, popping every earlier node that is smaller than the current node; what remains is exactly the nodes with no greater node to their right."
+ },
+ "2594": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`lo, hi = 1, min(ranks) * cars * cars`",
+       "Search range of minutes: the best mechanic alone can repair every car by `hi`",
+       "Binary search needs a safe upper bound"
+      ],
+      [
+       "`while lo < hi`",
+       "Loop until the range narrows to one value",
+       "Binary search on the answer"
+      ],
+      [
+       "`mid = (lo + hi) // 2`",
+       "Middle of the range, integer division",
+       "Halving the range"
+      ],
+      [
+       "`mid // r`",
+       "How many `n^2` units fit: since time is `r * n^2`, we need `n^2 <= mid / r`",
+       "Inverting the cost formula"
+      ],
+      [
+       "`isqrt(...)`",
+       "Integer square root, rounded down: cars one mechanic can fix in `mid` minutes",
+       "Exact integer root"
+      ],
+      [
+       "`sum(... for r in ranks) >= cars`",
+       "Total cars all mechanics repair in `mid` minutes, compared with the target",
+       "Feasibility test"
+      ],
+      [
+       "`hi = mid`",
+       "`mid` works, so try smaller (keep `mid`)",
+       "Moving the upper bound"
+      ],
+      [
+       "`lo = mid + 1`",
+       "`mid` is too small, so the answer is larger",
+       "Moving the lower bound"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`ranks = [4,2,3,1]`, `cars = 10`; `hi` starts at `1 * 10 * 10 = 100`."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "cars per mechanic",
+      "total",
+      "action"
+     ],
+     "rows": [
+      [
+       "1",
+       "100",
+       "50",
+       "3,5,4,7",
+       "19",
+       "hi = 50"
+      ],
+      [
+       "1",
+       "50",
+       "25",
+       "2,3,2,5",
+       "12",
+       "hi = 25"
+      ],
+      [
+       "1",
+       "25",
+       "13",
+       "1,2,2,3",
+       "8",
+       "lo = 14"
+      ],
+      [
+       "14",
+       "25",
+       "19",
+       "2,3,2,4",
+       "11",
+       "hi = 19"
+      ],
+      [
+       "14",
+       "19",
+       "16",
+       "2,2,2,4",
+       "10",
+       "hi = 16"
+      ],
+      [
+       "14",
+       "16",
+       "15",
+       "1,2,2,3",
+       "8",
+       "lo = 16"
+      ]
+     ]
+    },
+    "bullets": [
+     "`lo` and `hi` meet at `16`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(k log(min(ranks) * cars^2)) for k mechanics.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Binary search the number of minutes: for a given time each mechanic repairs isqrt(time / rank) cars, and the smallest time whose total reaches the target is the answer."
+ },
+ "2616": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`nums.sort()`",
+       "Close numbers become neighbours, so the best pairs are adjacent",
+       "Sorting before pairing"
+      ],
+      [
+       "`def pairs(d)`",
+       "Counts how many disjoint pairs can be made whose difference is at most `d`",
+       "Greedy feasibility check"
+      ],
+      [
+       "`count = i = 0`",
+       "Two variables both set to 0: pairs found and current position",
+       "Chained assignment"
+      ],
+      [
+       "`nums[i + 1] - nums[i] <= d`",
+       "The neighbours are close enough to pair",
+       "Greedy pairing test"
+      ],
+      [
+       "`i += 2`",
+       "Both numbers are used, skip past them",
+       "Consuming a pair"
+      ],
+      [
+       "`i += 1`",
+       "Not pairable; try the next start",
+       "Moving on"
+      ],
+      [
+       "`lo, hi = 0, nums[-1] - nums[0]`",
+       "Possible answers run from 0 to the largest gap",
+       "Search range"
+      ],
+      [
+       "`pairs(mid) >= p`",
+       "Enough pairs exist, so a smaller difference may also work",
+       "Binary search condition"
+      ],
+      [
+       "`hi = mid` / `lo = mid + 1`",
+       "Narrow toward the smallest feasible difference",
+       "Binary search on the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums = [10,1,2,7,1,3]` sorted is `[1,1,2,3,7,10]`, `p = 2`."
+    ],
+    "table": {
+     "head": [
+      "lo",
+      "hi",
+      "mid",
+      "pairs(mid)",
+      "action"
+     ],
+     "rows": [
+      [
+       "0",
+       "9",
+       "4",
+       "3",
+       "hi = 4"
+      ],
+      [
+       "0",
+       "4",
+       "2",
+       "2",
+       "hi = 2"
+      ],
+      [
+       "0",
+       "2",
+       "1",
+       "2",
+       "hi = 1"
+      ],
+      [
+       "0",
+       "1",
+       "0",
+       "1",
+       "lo = 1"
+      ]
+     ]
+    },
+    "bullets": [
+     "With `d = 1` the pairs are `(1,1)` and `(2,3)`, so the answer is `1`; with `d = 0` only one pair exists."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort plus O(n log(max difference)) for the search.",
+     "Space: O(1) besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "Sort, binary search the maximum difference, and greedily pair neighbours to test whether that many pairs fit."
+ },
+ "3002": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`n = len(nums1)`",
+       "Array length; each side keeps `n / 2` elements",
+       "Reading the size"
+      ],
+      [
+       "`set(nums1)`",
+       "Distinct values of an array",
+       "Removing duplicates"
+      ],
+      [
+       "`s1 & s2`",
+       "Set intersection: values in both arrays",
+       "Finding common values"
+      ],
+      [
+       "`len(s1 & s2)`",
+       "Number of shared distinct values",
+       "Overlap size"
+      ],
+      [
+       "`min(len(s1), n // 2)`",
+       "Array 1 keeps `n / 2` elements, so it can contribute at most that many distinct values",
+       "Capacity limit per side"
+      ],
+      [
+       "`len(s1) + len(s2) - common`",
+       "Number of distinct values across both arrays",
+       "Upper bound from the data"
+      ],
+      [
+       "`min(n, ...)`",
+       "Final cap: two kept halves hold `n` elements in total",
+       "Overall cap"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`nums1 = [1,2,1,2]`, `nums2 = [1,1,1,1]`, `n = 4`."
+    ],
+    "table": {
+     "head": [
+      "Quantity",
+      "Value"
+     ],
+     "rows": [
+      [
+       "s1, s2",
+       "{1,2}, {1}"
+      ],
+      [
+       "common",
+       "1"
+      ],
+      [
+       "min(len(s1), 2) + min(len(s2), 2)",
+       "2 + 1 = 3"
+      ],
+      [
+       "len(s1) + len(s2) - common",
+       "2 + 1 - 1 = 2"
+      ],
+      [
+       "answer = min(4, 3, 2)",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "Second example, `[1,2,3,4,5,6]` and `[2,3,2,3,2,3]`: `s1` has 6, `s2` has 2, common is 2, so the three limits are `6`, `3 + 2 = 5` and `6 + 2 - 2 = 6`, giving `5`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) to build the sets.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "The answer is the smallest of three limits: the total kept elements n, what each half can hold (n/2 per array), and the number of distinct values overall."
+ },
+ "3009": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`events = defaultdict(int)`",
+       "Dictionary where missing keys start at 0",
+       "Difference array without a fixed size"
+      ],
+      [
+       "`2 * a`, `2 * b - 1`",
+       "Heights are doubled so every integer is a point and every odd number is the gap between two integers",
+       "Representing half-integer heights"
+      ],
+      [
+       "`if a < b`",
+       "Going up: the segment covers heights from `a` up to just below `b`",
+       "Up segment"
+      ],
+      [
+       "`lo, hi = 2*a, 2*b - 1`",
+       "Up segment covers `[a, b)`; the start point is counted, the end is left to the next segment",
+       "Counting each shared vertex once"
+      ],
+      [
+       "`lo, hi = 2*b + 1, 2*a`",
+       "Down segment covers `(b, a]`",
+       "Down segment"
+      ],
+      [
+       "`events[lo] += 1; events[hi + 1] -= 1`",
+       "Add 1 where the segment starts, subtract it just after it ends",
+       "Sweep line difference array"
+      ],
+      [
+       "`events[2*y[-1]] += 1 ... -= 1`",
+       "The last point belongs to no segment's start, so add it on its own",
+       "Counting the final vertex"
+      ],
+      [
+       "`for level in sorted(events)`",
+       "Sweep the heights upward",
+       "Prefix sum over sorted keys"
+      ],
+      [
+       "`cur += events[level]; best = max(best, cur)`",
+       "Running number of segments covering this height; keep the maximum",
+       "Max overlap"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`y = [1,2,1,2,1,3,2]`."
+    ],
+    "table": {
+     "head": [
+      "Segment",
+      "lo..hi (doubled)",
+      "Events"
+     ],
+     "rows": [
+      [
+       "1 -> 2",
+       "2..3",
+       "+1 at 2, -1 at 4"
+      ],
+      [
+       "2 -> 1",
+       "3..4",
+       "+1 at 3, -1 at 5"
+      ],
+      [
+       "1 -> 2",
+       "2..3",
+       "+1 at 2, -1 at 4"
+      ],
+      [
+       "2 -> 1",
+       "3..4",
+       "+1 at 3, -1 at 5"
+      ],
+      [
+       "1 -> 3",
+       "2..5",
+       "+1 at 2, -1 at 6"
+      ],
+      [
+       "3 -> 2",
+       "5..6",
+       "+1 at 5, -1 at 7"
+      ],
+      [
+       "last point 2",
+       "4..4",
+       "+1 at 4, -1 at 5"
+      ]
+     ]
+    },
+    "bullets": [
+     "Sweeping keys 2, 3, 4, 5, 6, 7 gives running counts 3, 5, 4, 2, 1, 0; the maximum is `5`, reached at level 3 (height 1.5)."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting the event keys.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Double the heights so half-integer lines become integers, record each segment's covered range as +1/-1 events, and sweep for the largest overlap."
+ },
+ "3075": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`happiness.sort(reverse=True)`",
+       "Largest first, so the best children are chosen first",
+       "Greedy order"
+      ],
+      [
+       "`range(k)`",
+       "Index `i` is also the number of turns already taken",
+       "Counting turns"
+      ],
+      [
+       "`happiness[i] - i`",
+       "After `i` earlier picks the child has lost `i` points",
+       "Decay per turn"
+      ],
+      [
+       "`max(0, ...)`",
+       "Happiness never goes below zero",
+       "Clamping at 0"
+      ],
+      [
+       "`sum(... for i in range(k))`",
+       "Adds the values of the `k` picks",
+       "Summing a generator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`happiness = [1,2,3]`, `k = 2`; sorted `[3,2,1]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "happiness[i]",
+      "after losing i",
+      "added"
+     ],
+     "rows": [
+      [
+       "0",
+       "3",
+       "3",
+       "3"
+      ],
+      [
+       "1",
+       "2",
+       "1",
+       "1"
+      ]
+     ]
+    },
+    "bullets": [
+     "Total `3 + 1 = 4`. For `[1,1,1,1]`, `k = 2`: `1 + max(0, 1 - 1) = 1`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for the sort.",
+     "Space: O(1) besides sorting."
+    ]
+   }
+  ],
+  "takeaway": "Pick the largest values first: the pick made at turn i is worth its value minus i, never below zero."
+ },
+ "3121": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`last_lower, first_upper = {}, {}`",
+       "Two dictionaries: last position of each lowercase letter, first position of each uppercase letter",
+       "Position tracking"
+      ],
+      [
+       "`enumerate(word)`",
+       "Gives index and character together",
+       "Looping with positions"
+      ],
+      [
+       "`c.islower()`",
+       "True for a lowercase letter",
+       "Testing case"
+      ],
+      [
+       "`last_lower[c] = i`",
+       "Overwrites each time, so it ends with the last lowercase position",
+       "Keeping the latest index"
+      ],
+      [
+       "`first_upper.setdefault(c.lower(), i)`",
+       "Stores the index only if the letter has no entry yet, so the first uppercase position stays",
+       "Keeping the earliest index"
+      ],
+      [
+       "`c.lower()`",
+       "Converts to lowercase so both cases share one key",
+       "Normalising keys"
+      ],
+      [
+       "`last_lower[c] < first_upper[c]`",
+       "All lowercase copies come before the first uppercase copy",
+       "The special-letter rule"
+      ],
+      [
+       "`sum(1 for ...)`",
+       "Counts the letters that pass",
+       "Counting with a generator"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`word = \"aaAbcBC\"`."
+    ],
+    "table": {
+     "head": [
+      "Letter",
+      "last lowercase index",
+      "first uppercase index",
+      "special?"
+     ],
+     "rows": [
+      [
+       "a",
+       "1",
+       "2",
+       "yes (1 < 2)"
+      ],
+      [
+       "b",
+       "3",
+       "5",
+       "yes (3 < 5)"
+      ],
+      [
+       "c",
+       "4",
+       "6",
+       "yes (4 < 6)"
+      ]
+     ]
+    },
+    "bullets": [
+     "Three special letters, so the answer is `3`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n).",
+     "Space: O(1), since at most 26 letters per dictionary."
+    ]
+   }
+  ],
+  "takeaway": "Track the last lowercase and the first uppercase position of each letter; a letter is special exactly when it has both and the first is smaller."
+ },
+ "3157": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`level = [root]`",
+       "The nodes of the current level",
+       "BFS (Breadth-First Search) one level at a time"
+      ],
+      [
+       "`best_sum, best_level = float('inf'), 1`",
+       "Smallest level sum and its level so far",
+       "Tracking a minimum"
+      ],
+      [
+       "`depth`",
+       "Level number, starting at 1",
+       "Counting levels"
+      ],
+      [
+       "`sum(node.val for node in level)`",
+       "Sum of the values of this level",
+       "Level sum"
+      ],
+      [
+       "`if total < best_sum`",
+       "Strictly smaller, so on ties the earlier level stays",
+       "Smallest level on ties"
+      ],
+      [
+       "`[c for node in level for c in (node.left, node.right) if c]`",
+       "The next level: all existing children of this level's nodes",
+       "Nested list comprehension"
+      ],
+      [
+       "`while level`",
+       "Stops when a level has no nodes",
+       "Loop condition"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`root = [50,6,2,30,80,7]`."
+    ],
+    "table": {
+     "head": [
+      "Level",
+      "Nodes",
+      "Sum",
+      "Best so far"
+     ],
+     "rows": [
+      [
+       "1",
+       "50",
+       "50",
+       "level 1 (50)"
+      ],
+      [
+       "2",
+       "6, 2",
+       "8",
+       "level 2 (8)"
+      ],
+      [
+       "3",
+       "30, 80, 7",
+       "117",
+       "level 2"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is level `2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n), every node is visited once.",
+     "Space: O(w) where w is the widest level."
+    ]
+   }
+  ],
+  "takeaway": "Process the tree one level at a time, compute each level's sum, and keep the first level that sets a new minimum."
+ },
+ "3243": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`adj = defaultdict(list)`",
+       "Adjacency list: each city maps to the cities it points to",
+       "Graph storage"
+      ],
+      [
+       "`adj[i].append(i + 1)`",
+       "The original roads",
+       "Initial graph"
+      ],
+      [
+       "`for u, v in queries: adj[u].append(v)`",
+       "Add each new road before measuring",
+       "Applying a query"
+      ],
+      [
+       "`dist = {0: 0}`",
+       "Distance from city 0; also marks cities already seen",
+       "BFS (Breadth-First Search) bookkeeping"
+      ],
+      [
+       "`deque([0])`",
+       "Queue with O(1) pops from the front",
+       "BFS queue"
+      ],
+      [
+       "`q.popleft()`",
+       "Takes the oldest city in the queue",
+       "First in, first out"
+      ],
+      [
+       "`if y not in dist`",
+       "Visit each city once",
+       "Avoiding repeats"
+      ],
+      [
+       "`dist[y] = dist[x] + 1`",
+       "One more road than the way here",
+       "Edge-count distance"
+      ],
+      [
+       "`res.append(dist[n - 1])`",
+       "Shortest distance to the last city",
+       "Recording the answer"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`, query `[2,4]` added to roads 0→1→2→3→4."
+    ],
+    "table": {
+     "head": [
+      "City",
+      "Distance",
+      "Reached from"
+     ],
+     "rows": [
+      [
+       "0",
+       "0",
+       "start"
+      ],
+      [
+       "1",
+       "1",
+       "0"
+      ],
+      [
+       "2",
+       "2",
+       "1"
+      ],
+      [
+       "3",
+       "3",
+       "2"
+      ],
+      [
+       "4",
+       "3",
+       "2 (via the new road)"
+      ]
+     ]
+    },
+    "bullets": [
+     "After query 1 the answer is `3`. Query `[0,2]` makes cities 1 and 2 both distance 1, and 3 and 4 distance 2, so the answer is `2`. Query `[1,3]` changes nothing, giving `[3,2,2]`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(q * (n + q)) for q queries, one BFS per query.",
+     "Space: O(n + q)."
+    ]
+   }
+  ],
+  "takeaway": "Add each road to an adjacency list and rerun BFS from city 0; every road has length 1, so BFS finds the shortest path."
+ },
+ "3370": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`x = 1`",
+       "The smallest number made only of 1 bits (binary `1`)",
+       "Starting candidate"
+      ],
+      [
+       "`while x < n`",
+       "Keep growing while the candidate is too small",
+       "Search loop"
+      ],
+      [
+       "`x * 2 + 1`",
+       "Shifts the bits left and adds a new 1: `1`, `11`, `111`, ...",
+       "Next all-ones number"
+      ],
+      [
+       "`return x`",
+       "First candidate that is at least `n`",
+       "Result"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`n = 5`."
+    ],
+    "table": {
+     "head": [
+      "x",
+      "binary",
+      "x < 5?"
+     ],
+     "rows": [
+      [
+       "1",
+       "1",
+       "yes"
+      ],
+      [
+       "3",
+       "11",
+       "yes"
+      ],
+      [
+       "7",
+       "111",
+       "no, stop"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `7`. For `n = 10` the values are 1, 3, 7, 15, giving `15`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(log n), about one step per bit.",
+     "Space: O(1)."
+    ]
+   }
+  ],
+  "takeaway": "Numbers of all 1 bits are 1, 3, 7, 15, ...; keep doubling and adding 1 until the value reaches n."
+ },
+ "3728": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`pref`",
+       "`pref[i]` is the sum of the first `i` elements",
+       "Prefix sums"
+      ],
+      [
+       "`seen = Counter()`",
+       "Counts keys, with 0 for missing ones",
+       "Hash counting"
+      ],
+      [
+       "`r >= 2` and `l = r - 2`",
+       "Only left ends at least two positions before `r` give a subarray of length 3 or more",
+       "Enforcing the minimum length"
+      ],
+      [
+       "`seen[(capacity[l], pref[l + 1])] += 1`",
+       "Records left ends by value and by the sum of everything up to and including `l`",
+       "Hash key built from two numbers"
+      ],
+      [
+       "`pref[r] - capacity[r]`",
+       "Sum of elements before position `r`",
+       "What the matching left end must have"
+      ],
+      [
+       "`seen[(capacity[r], pref[r] - capacity[r])]`",
+       "How many left ends have the same value and satisfy: the sum between them equals that value",
+       "Looking up matches"
+      ],
+      [
+       "`total += ...`",
+       "Add the matches for this right end",
+       "Counting"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`capacity = [9,3,3,3,9]`, `pref = [0,9,12,15,18,27]`."
+    ],
+    "table": {
+     "head": [
+      "r",
+      "Left end added",
+      "Lookup key",
+      "Matches",
+      "total"
+     ],
+     "rows": [
+      [
+       "0",
+       "-",
+       "(9, -9)",
+       "0",
+       "0"
+      ],
+      [
+       "1",
+       "-",
+       "(3, 6)",
+       "0",
+       "0"
+      ],
+      [
+       "2",
+       "l=0: (9, 9)",
+       "(3, 9)",
+       "0",
+       "0"
+      ],
+      [
+       "3",
+       "l=1: (3, 12)",
+       "(3, 12)",
+       "1",
+       "1"
+      ],
+      [
+       "4",
+       "l=2: (3, 15)",
+       "(9, 9)",
+       "1",
+       "2"
+      ]
+     ]
+    },
+    "bullets": [
+     "At `r = 3` the match is `[3,3,3]`; at `r = 4` it is the whole array. The answer is `2`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n) average with hash maps.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "A stable subarray needs equal ends and interior sum equal to them, which prefix sums turn into a hash lookup on (value, prefix sum) pairs."
+ },
+ "3814": {
+  "blocks": [
+   {
+    "h": "What each piece does",
+    "table": {
+     "head": [
+      "Code",
+      "What it does",
+      "Reach for it when"
+     ],
+     "rows": [
+      [
+       "`zip(costs, capacity)`",
+       "Pairs each machine's cost with its capacity",
+       "Combining two lists"
+      ],
+      [
+       "`sorted(...)`",
+       "Sorts the pairs by cost",
+       "Sorting by price"
+      ],
+      [
+       "`cs`",
+       "The sorted costs only",
+       "Needed for binary search"
+      ],
+      [
+       "`prefix[i]`",
+       "Largest capacity among the first `i + 1` cheapest machines",
+       "Prefix maximum"
+      ],
+      [
+       "`if c >= budget: break`",
+       "This machine alone is too expensive; so are all later ones",
+       "Pruning sorted data"
+      ],
+      [
+       "`res = max(res, cap)`",
+       "Using one machine alone",
+       "Single-machine option"
+      ],
+      [
+       "`bisect_left(cs, budget - c, 0, i)`",
+       "Count of earlier machines whose cost is below `budget - c`",
+       "Binary search for affordable partners"
+      ],
+      [
+       "`cap + prefix[limit - 1]`",
+       "This machine plus the best affordable earlier partner",
+       "Two-machine option"
+      ]
+     ]
+    }
+   },
+   {
+    "h": "Walk through an example",
+    "p": [
+     "`costs = [4,8,5,3]`, `capacity = [1,5,2,7]`, `budget = 8`. Sorted machines are `(3,7), (4,1), (5,2), (8,5)`; `prefix = [7,7,7,7]`."
+    ],
+    "table": {
+     "head": [
+      "i",
+      "(cost, cap)",
+      "partners with cost < budget - c",
+      "res"
+     ],
+     "rows": [
+      [
+       "0",
+       "(3, 7)",
+       "none earlier",
+       "7"
+      ],
+      [
+       "1",
+       "(4, 1)",
+       "cost < 4: machine 0 -> 1 + 7 = 8",
+       "8"
+      ],
+      [
+       "2",
+       "(5, 2)",
+       "cost < 3: none",
+       "8"
+      ],
+      [
+       "3",
+       "(8, 5)",
+       "c >= budget, stop",
+       "8"
+      ]
+     ]
+    },
+    "bullets": [
+     "The answer is `8`."
+    ]
+   },
+   {
+    "h": "Time and space",
+    "bullets": [
+     "Time: O(n log n) for sorting and the binary searches.",
+     "Space: O(n)."
+    ]
+   }
+  ],
+  "takeaway": "Sort by cost, keep a prefix maximum of capacity, and for each machine binary search how many cheaper machines still fit the budget."
+ }
+}

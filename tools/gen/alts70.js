@@ -423,7 +423,7 @@ class Solution:
                     count += 1
         return count
 `)});
-alt(333,{name:"Check each subtree by inorder values",tag:"Brute force",time:"O(n²)",space:"O(h)",explain:"For every node test whether its subtree is a BST and measure it.",code:C(`
+alt(333,{name:"Check each subtree by inorder values",tag:"Brute force",time:"O(n²)",space:"O(h)",explain:"For every node test whether its subtree is a BST (Binary Search Tree) and measure it.",code:C(`
 class Solution:
     def largestBSTSubtree(self, root):
         def inorder(node):

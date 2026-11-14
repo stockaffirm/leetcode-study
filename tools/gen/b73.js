@@ -557,7 +557,7 @@ class Solution:
         return total
 `)});
 lite({id:333,slug:"largest-bst-subtree",title:"Largest BST Subtree",level:"Medium",topic:BT,name:"Post-order: (is BST, size, min, max)",
-w:"[10,5,15,1,8,null,7] → the subtree rooted at 5 is a BST of size 3.",k:"Combine the children's results from the bottom: a node roots a BST when both subtrees are BSTs and left.max < val < right.min; its size is left + right + 1. Otherwise report that the subtree is not a BST. Track the largest BST size seen.",
+w:"[10,5,15,1,8,null,7] → the subtree rooted at 5 is a BST (Binary Search Tree) of size 3.",k:"Combine the children's results from the bottom: a node roots a BST when both subtrees are BSTs and left.max < val < right.min; its size is left + right + 1. Otherwise report that the subtree is not a BST. Track the largest BST size seen.",
 i:"root = [10,5,15,1,8,null,7]",o:"3",time:"O(n)",space:"O(h)",
 code:C(`
 class Solution:
@@ -636,6 +636,8 @@ lite({id:972,slug:"equal-rational-numbers",title:"Equal Rational Numbers",level:
 w:"'0.(52)' and '0.5(25)' are both 52/99 → true.",k:"A number looks like <int>, <int>.<frac>, or <int>.<frac>(<repeat>). Convert exactly: value = int + frac / 10^len(frac) + repeat / (10^len(frac) · (10^len(repeat) − 1)). Compare the two exact fractions.",
 i:"s = \"0.(52)\", t = \"0.5(25)\"",o:"true",time:"O(L)",space:"O(L)",
 code:C(`
+from fractions import Fraction
+
 class Solution:
     def isRationalEqual(self, s, t):
         def value(x):
@@ -667,7 +669,7 @@ class Solution:
 `)});
 lite({id:1093,slug:"statistics-from-a-large-sample",title:"Statistics from a Large Sample",level:"Medium",topic:ARR,name:"One pass over the counts",
 w:"count[v] = how many times v occurs → [min, max, mean, median, mode].",k:"count[k] is how many samples equal k (k = 0…255). The minimum and maximum are the first and last non-zero index; the mean is Σ k·count / total; the mode is the index with the biggest count; the median is the middle value (or the average of the two middle values) found by walking the cumulative counts.",
-i:"count = [0, 1, 3, 4] followed by 252 zeros",o:"[1.0, 3.0, 2.375, 2.5, 3.0]",time:"O(256)",space:"O(1)",
+i:"count = [0, 1, 3, 4] followed by 252 zeros",o:"[1, 3, 2.375, 2.5, 3]",time:"O(256)",space:"O(1)",
 code:C(`
 class Solution:
     def sampleStats(self, count):
